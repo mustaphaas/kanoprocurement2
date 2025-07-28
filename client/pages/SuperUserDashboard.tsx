@@ -362,9 +362,150 @@ export default function SuperUserDashboard() {
       }
     ];
 
+    const mockTenders: Tender[] = [
+      {
+        id: "KS-2024-001",
+        title: "Hospital Equipment Supply",
+        description: "Supply of medical equipment for 5 primary healthcare centers",
+        category: "Healthcare",
+        ministry: "Ministry of Health",
+        estimatedValue: "₦850M",
+        status: "Published",
+        publishDate: "2024-01-15",
+        closeDate: "2024-02-15",
+        bidsReceived: 12,
+        ocdsReleased: true,
+        addendaCount: 1,
+        procuringEntity: "Kano State Primary Healthcare Development Agency"
+      },
+      {
+        id: "KS-2024-002",
+        title: "Road Construction Project",
+        description: "Construction of 25km rural roads in Kano North LGA",
+        category: "Infrastructure",
+        ministry: "Ministry of Works",
+        estimatedValue: "₦2.5B",
+        status: "Closed",
+        publishDate: "2024-01-10",
+        closeDate: "2024-01-25",
+        openDate: "2024-01-26",
+        bidsReceived: 8,
+        ocdsReleased: true,
+        addendaCount: 2,
+        procuringEntity: "Kano State Ministry of Works"
+      },
+      {
+        id: "KS-2024-003",
+        title: "ICT Infrastructure Upgrade",
+        description: "Upgrade of government ICT infrastructure and network systems",
+        category: "Technology",
+        ministry: "Ministry of Science and Technology",
+        estimatedValue: "₦1.2B",
+        status: "Awarded",
+        publishDate: "2024-01-05",
+        closeDate: "2024-01-20",
+        openDate: "2024-01-21",
+        awardDate: "2024-01-30",
+        awardedCompany: "TechSolutions Nigeria",
+        awardAmount: "₦1.1B",
+        bidsReceived: 15,
+        ocdsReleased: true,
+        addendaCount: 0,
+        evaluationScore: 92,
+        procuringEntity: "Kano State ICT Development Agency"
+      }
+    ];
+
+    const mockTenderEvaluations: TenderEvaluation[] = [
+      {
+        id: "1",
+        tenderId: "KS-2024-002",
+        companyId: "1",
+        companyName: "Northern Construction Ltd",
+        bidAmount: "₦2.3B",
+        technicalScore: 85,
+        financialScore: 90,
+        totalScore: 87.5,
+        comments: "Strong technical proposal with competitive pricing",
+        evaluatedBy: "Evaluation Committee",
+        evaluatedDate: "2024-01-27",
+        status: "Completed"
+      },
+      {
+        id: "2",
+        tenderId: "KS-2024-002",
+        companyId: "4",
+        companyName: "BuildRight Engineering",
+        bidAmount: "₦2.6B",
+        technicalScore: 78,
+        financialScore: 75,
+        totalScore: 76.5,
+        comments: "Good technical capability but higher pricing",
+        evaluatedBy: "Evaluation Committee",
+        evaluatedDate: "2024-01-27",
+        status: "Completed"
+      }
+    ];
+
+    const mockVendorPerformances: VendorPerformance[] = [
+      {
+        id: "1",
+        contractId: "CON-2024-001",
+        tenderId: "KS-2024-003",
+        companyId: "3",
+        companyName: "TechSolutions Nigeria",
+        projectTitle: "ICT Infrastructure Upgrade",
+        contractValue: "₦1.1B",
+        startDate: "2024-02-01",
+        expectedEndDate: "2024-08-01",
+        milestones: [
+          {
+            id: "1",
+            title: "Network Assessment",
+            description: "Complete assessment of existing network infrastructure",
+            expectedDate: "2024-03-01",
+            actualDate: "2024-02-28",
+            status: "Completed",
+            completionPercentage: 100,
+            notes: "Completed ahead of schedule",
+            documents: ["assessment_report.pdf"]
+          },
+          {
+            id: "2",
+            title: "Equipment Procurement",
+            description: "Procure and deliver network equipment",
+            expectedDate: "2024-04-15",
+            status: "Pending",
+            completionPercentage: 30,
+            documents: []
+          }
+        ],
+        overallScore: 88,
+        qualityScore: 90,
+        timelinessScore: 85,
+        budgetCompliance: 95,
+        issues: [
+          {
+            id: "1",
+            type: "Timeline",
+            description: "Minor delay in equipment delivery due to supplier issues",
+            severity: "Low",
+            reportedDate: "2024-03-15",
+            status: "Resolved",
+            resolvedDate: "2024-03-18",
+            actionTaken: "Alternative supplier sourced"
+          }
+        ],
+        status: "Active"
+      }
+    ];
+
     setCompanies(mockCompanies);
     setAuditLogs(mockAuditLogs);
     setAIRecommendations(mockAIRecommendations);
+    setTenders(mockTenders);
+    setTenderEvaluations(mockTenderEvaluations);
+    setVendorPerformances(mockVendorPerformances);
   }, []);
 
   const handleLogout = () => {
