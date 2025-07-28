@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CompanyRegistration from "./pages/CompanyRegistration";
+import CompanyLogin from "./pages/CompanyLogin";
 import AdminLogin from "./pages/AdminLogin";
 import SuperUserLogin from "./pages/SuperUserLogin";
 import AdminDashboard from "./pages/AdminDashboard";
