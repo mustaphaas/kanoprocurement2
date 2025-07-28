@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read and write their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Companies collection
+    match /companies/{companyId} {
+      // Allow company to read/write their own data
+      allow read, write: if request.auth != null && 
+        (request.auth.uid == resource.data.userId || 
+         hasAdminRole(request.auth.uid));
+      
+      // Allow creation for authenticated users
+      allow create: if request.auth != null;
+    }
+    
+    // Tenders collection - read access for all authenticated users
+    match /tenders/{tenderId} {
+      allow read: if request.auth != null;
+      allow write: if hasAdminRole(request.auth.uid) || hasSuperUserRole(request.auth.uid);
+      
+      // Bids subcollection
+      match /bids/{bidId} {
+        allow read: if request.auth != null && 
+          (request.auth.uid == resource.data.companyUserId || 
+           hasAdminRole(request.auth.uid));
+        allow write: if request.auth != null && 
+          request.auth.uid == resource.data.companyUserId;
+      }
+    }
+    
+    // Contracts collection
+    match /contracts/{contractId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.companyUserId || 
+         hasAdminRole(request.auth.uid));
+      allow write: if hasAdminRole(request.auth.uid) || hasSuperUserRole(request.auth.uid);
+    }
+    
+    // Messages collection
+    match /messages/{messageId} {
+      allow read, write: if request.auth != null && 
+        (request.auth.uid == resource.data.senderId || 
+         request.auth.uid == resource.data.recipientId ||
+         hasAdminRole(request.auth.uid));
+    }
+    
+    // Notifications collection
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      allow write: if hasAdminRole(request.auth.uid) || hasSuperUserRole(request.auth.uid);
+    }
+    
+    // Audit logs - admin only
+    match /auditLogs/{logId} {
+      allow read, write: if hasAdminRole(request.auth.uid) || hasSuperUserRole(request.auth.uid);
+    }
+    
+    // Helper functions
+    function hasAdminRole(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId)) &&
+        get(/databases/$(database)/documents/users/$(userId)).data.role == 'admin';
+    }
+    
+    function hasSuperUserRole(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId)) &&
+        get(/databases/$(database)/documents/users/$(userId)).data.role == 'superuser';
+    }
+  }
+}
