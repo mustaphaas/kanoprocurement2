@@ -45,8 +45,8 @@ export default function AppStatus() {
       {!user && (
         <div className="mt-2 pt-2 border-t text-xs text-blue-600">
           <div><strong>Demo Login:</strong></div>
-          <div>admin@kanoproc.gov.ng</div>
-          <div>company@example.com</div>
+          <div>Any email/password works</div>
+          <div>Use "admin" or "super" in email for roles</div>
         </div>
       )}
     </div>
