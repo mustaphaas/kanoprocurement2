@@ -60,23 +60,16 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any credentials
-      if (formData.username && formData.password) {
-        navigate("/admin/dashboard");
-      } else {
-        setErrors({ general: "Invalid credentials" });
-      }
+      await signIn(formData.username, formData.password);
+      navigate("/admin/dashboard");
     } catch (error) {
-      setErrors({ general: "Login failed. Please try again." });
+      setErrors({ general: error instanceof Error ? error.message : "Login failed. Please try again." });
     } finally {
       setIsLoading(false);
     }
