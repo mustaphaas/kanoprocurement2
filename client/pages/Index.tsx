@@ -798,10 +798,10 @@ export default function Index() {
                 procurement opportunities in Kano State.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="inline-flex items-center px-8 py-4 bg-white text-green-700 rounded-lg font-medium hover:bg-gray-50">
+                <Link to="/register" className="inline-flex items-center px-8 py-4 bg-white text-green-700 rounded-lg font-medium hover:bg-gray-50">
                   <UserPlus className="mr-2 h-5 w-5" />
                   Register Now
-                </button>
+                </Link>
                 <button className="inline-flex items-center px-8 py-4 border border-white text-white rounded-lg font-medium hover:bg-green-600">
                   <FileText className="mr-2 h-5 w-5" />
                   Read Guidelines
