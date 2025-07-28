@@ -859,8 +859,8 @@ export default function Index() {
         </div>
       </footer>
 
-      {/* Firebase Status (Development Only) */}
-      <FirebaseStatus />
+      {/* App Status (Development Only) */}
+      <AppStatus />
     </div>
   );
 }
