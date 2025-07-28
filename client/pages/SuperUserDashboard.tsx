@@ -272,7 +272,7 @@ export default function SuperUserDashboard() {
     awardedContractsToday: 3,
     awardedContractsWeek: 15,
     awardedContractsMonth: 68,
-    totalContractValue: "₦15.7B"
+    totalContractValue: "���15.7B"
   };
 
   // Mock data initialization
@@ -1230,6 +1230,1130 @@ export default function SuperUserDashboard() {
                       ))}
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "tenders":
+        return (
+          <div className="space-y-8">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">Tender Management</h1>
+              <p className="text-gray-600">Comprehensive tender lifecycle management with OCDS integration.</p>
+            </div>
+
+            {/* Tender Management Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Active Tenders</p>
+                    <p className="text-3xl font-bold text-blue-600">{tenders.filter(t => t.status === "Published").length}</p>
+                  </div>
+                  <FileText className="h-8 w-8 text-blue-600" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Pending Evaluation</p>
+                    <p className="text-3xl font-bold text-orange-600">{tenders.filter(t => t.status === "Closed").length}</p>
+                  </div>
+                  <ClipboardList className="h-8 w-8 text-orange-600" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Awarded Contracts</p>
+                    <p className="text-3xl font-bold text-green-600">{tenders.filter(t => t.status === "Awarded").length}</p>
+                  </div>
+                  <Award className="h-8 w-8 text-green-600" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Total Bids Received</p>
+                    <p className="text-3xl font-bold text-purple-600">{tenders.reduce((sum, t) => sum + t.bidsReceived, 0)}</p>
+                  </div>
+                  <Users className="h-8 w-8 text-purple-600" />
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <button
+                onClick={() => setActiveTab("create-tender")}
+                className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create New Tender
+              </button>
+
+              <button
+                onClick={() => setActiveTab("manage-tenders")}
+                className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <Edit className="h-5 w-5 mr-2" />
+                Manage Tenders
+              </button>
+
+              <button
+                onClick={() => setActiveTab("tender-evaluation")}
+                className="flex items-center justify-center px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
+                <ClipboardList className="h-5 w-5 mr-2" />
+                Evaluate Tenders
+              </button>
+
+              <button
+                onClick={() => setActiveTab("vendor-performance")}
+                className="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                <BarChart3 className="h-5 w-5 mr-2" />
+                Vendor Performance
+              </button>
+            </div>
+
+            {/* Recent Tenders */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Recent Tenders</h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tender</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bids</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {tenders.slice(0, 5).map((tender) => (
+                      <tr key={tender.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">{tender.title}</div>
+                            <div className="text-sm text-gray-500">{tender.id}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{tender.category}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{tender.estimatedValue}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            tender.status === "Published" ? "bg-blue-100 text-blue-800" :
+                            tender.status === "Closed" ? "bg-orange-100 text-orange-800" :
+                            tender.status === "Awarded" ? "bg-green-100 text-green-800" :
+                            tender.status === "Draft" ? "bg-gray-100 text-gray-800" :
+                            "bg-red-100 text-red-800"
+                          }`}>
+                            {tender.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{tender.bidsReceived}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                          <button className="text-blue-600 hover:text-blue-900">View</button>
+                          <button className="text-green-600 hover:text-green-900">Edit</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "create-tender":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Create New Tender</h1>
+                <p className="text-gray-600">Create a new procurement tender with OCDS integration.</p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setShowBulkUploadModal(true)}
+                  className="flex items-center px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Bulk Upload
+                </button>
+                <button
+                  onClick={() => setActiveTab("tenders")}
+                  className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  ← Back to Tenders
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Tender Information</h2>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Tender Title *</label>
+                    <input
+                      type="text"
+                      value={tenderForm.title}
+                      onChange={(e) => setTenderForm(prev => ({...prev, title: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter tender title"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                    <select
+                      value={tenderForm.category}
+                      onChange={(e) => setTenderForm(prev => ({...prev, category: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Select category</option>
+                      <option value="Healthcare">Healthcare</option>
+                      <option value="Infrastructure">Infrastructure</option>
+                      <option value="Technology">Technology</option>
+                      <option value="Education">Education</option>
+                      <option value="Transportation">Transportation</option>
+                      <option value="Energy">Energy</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Ministry *</label>
+                    <select
+                      value={tenderForm.ministry}
+                      onChange={(e) => setTenderForm(prev => ({...prev, ministry: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Select ministry</option>
+                      <option value="Ministry of Health">Ministry of Health</option>
+                      <option value="Ministry of Works">Ministry of Works</option>
+                      <option value="Ministry of Education">Ministry of Education</option>
+                      <option value="Ministry of Science and Technology">Ministry of Science and Technology</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Procuring Entity *</label>
+                    <input
+                      type="text"
+                      value={tenderForm.procuringEntity}
+                      onChange={(e) => setTenderForm(prev => ({...prev, procuringEntity: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter procuring entity"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Value *</label>
+                    <div className="flex">
+                      <select
+                        value={tenderForm.currency}
+                        onChange={(e) => setTenderForm(prev => ({...prev, currency: e.target.value}))}
+                        className="px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="NGN">₦ NGN</option>
+                        <option value="USD">$ USD</option>
+                      </select>
+                      <input
+                        type="text"
+                        value={tenderForm.estimatedValue}
+                        onChange={(e) => setTenderForm(prev => ({...prev, estimatedValue: e.target.value}))}
+                        className="flex-1 px-3 py-2 border-t border-r border-b border-gray-300 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter estimated value"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contract Duration</label>
+                    <input
+                      type="text"
+                      value={tenderForm.contractDuration}
+                      onChange={(e) => setTenderForm(prev => ({...prev, contractDuration: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="e.g., 6 months, 1 year"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Publish Date *</label>
+                    <input
+                      type="date"
+                      value={tenderForm.publishDate}
+                      onChange={(e) => setTenderForm(prev => ({...prev, publishDate: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Close Date *</label>
+                    <input
+                      type="date"
+                      value={tenderForm.closeDate}
+                      onChange={(e) => setTenderForm(prev => ({...prev, closeDate: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Bid Opening Date</label>
+                    <input
+                      type="date"
+                      value={tenderForm.openDate}
+                      onChange={(e) => setTenderForm(prev => ({...prev, openDate: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Location</label>
+                    <input
+                      type="text"
+                      value={tenderForm.deliveryLocation}
+                      onChange={(e) => setTenderForm(prev => ({...prev, deliveryLocation: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter delivery location"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                  <textarea
+                    rows={4}
+                    value={tenderForm.description}
+                    onChange={(e) => setTenderForm(prev => ({...prev, description: e.target.value}))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter detailed tender description"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Eligibility Criteria</label>
+                  <textarea
+                    rows={3}
+                    value={tenderForm.eligibilityCriteria}
+                    onChange={(e) => setTenderForm(prev => ({...prev, eligibilityCriteria: e.target.value}))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter eligibility requirements"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Technical Requirements</label>
+                  <textarea
+                    rows={3}
+                    value={tenderForm.technicalRequirements}
+                    onChange={(e) => setTenderForm(prev => ({...prev, technicalRequirements: e.target.value}))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter technical specifications"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Evaluation Criteria</label>
+                  <textarea
+                    rows={3}
+                    value={tenderForm.evaluationCriteria}
+                    onChange={(e) => setTenderForm(prev => ({...prev, evaluationCriteria: e.target.value}))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter evaluation criteria and scoring methodology"
+                  />
+                </div>
+
+                {/* OCDS Integration Fields */}
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">OCDS Integration Fields</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">OCDS ID</label>
+                      <input
+                        type="text"
+                        value={tenderForm.ocdsId}
+                        onChange={(e) => setTenderForm(prev => ({...prev, ocdsId: e.target.value}))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Auto-generated OCDS identifier"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Procurement Method</label>
+                      <select
+                        value={tenderForm.procurementMethod}
+                        onChange={(e) => setTenderForm(prev => ({...prev, procurementMethod: e.target.value}))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select method</option>
+                        <option value="open">Open Tendering</option>
+                        <option value="selective">Selective Tendering</option>
+                        <option value="limited">Limited Tendering</option>
+                        <option value="direct">Direct Award</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Main Procurement Category</label>
+                      <select
+                        value={tenderForm.mainProcurementCategory}
+                        onChange={(e) => setTenderForm(prev => ({...prev, mainProcurementCategory: e.target.value}))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select category</option>
+                        <option value="goods">Goods</option>
+                        <option value="services">Services</option>
+                        <option value="works">Works</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                  <button
+                    onClick={() => setActiveTab("tenders")}
+                    className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button className="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
+                    Save as Draft
+                  </button>
+                  <button className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Publish Tender
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "manage-tenders":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Manage Existing Tenders</h1>
+                <p className="text-gray-600">Edit, close, issue addenda, open bids, view bids, and award tenders.</p>
+              </div>
+              <button
+                onClick={() => setActiveTab("tenders")}
+                className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                ← Back to Tenders
+              </button>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-gray-900">All Tenders</h2>
+                  <div className="flex items-center space-x-3">
+                    <button className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                      <Filter className="h-4 w-4 mr-2" />
+                      Filter
+                    </button>
+                    <button className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                      <Download className="h-4 w-4 mr-2" />
+                      Export
+                    </button>
+                    <button className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                      Print
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <input
+                    type="text"
+                    placeholder="Search tenders..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tender Details</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bids</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OCDS</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {tenders.map((tender) => (
+                      <tr key={tender.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">{tender.title}</div>
+                            <div className="text-sm text-gray-500">{tender.id} • {tender.category}</div>
+                            <div className="text-sm text-gray-500">{tender.estimatedValue}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            tender.status === "Published" ? "bg-blue-100 text-blue-800" :
+                            tender.status === "Closed" ? "bg-orange-100 text-orange-800" :
+                            tender.status === "Awarded" ? "bg-green-100 text-green-800" :
+                            tender.status === "Draft" ? "bg-gray-100 text-gray-800" :
+                            "bg-red-100 text-red-800"
+                          }`}>
+                            {tender.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <div>Published: {new Date(tender.publishDate).toLocaleDateString()}</div>
+                          <div>Closes: {new Date(tender.closeDate).toLocaleDateString()}</div>
+                          {tender.openDate && <div>Opens: {new Date(tender.openDate).toLocaleDateString()}</div>}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <div className="flex items-center">
+                            <Users className="h-4 w-4 mr-1 text-gray-400" />
+                            {tender.bidsReceived}
+                          </div>
+                          {tender.addendaCount > 0 && (
+                            <div className="text-xs text-gray-500">{tender.addendaCount} addenda</div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            {tender.ocdsReleased ? (
+                              <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
+                            ) : (
+                              <XCircle className="h-4 w-4 text-red-500 mr-1" />
+                            )}
+                            <span className="text-sm text-gray-900">
+                              {tender.ocdsReleased ? "Released" : "Pending"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center space-x-2">
+                            <button className="text-blue-600 hover:text-blue-900 text-sm">
+                              <Eye className="h-4 w-4" />
+                            </button>
+                            <button className="text-green-600 hover:text-green-900 text-sm">
+                              <Edit className="h-4 w-4" />
+                            </button>
+                            {tender.status === "Published" && (
+                              <button className="text-orange-600 hover:text-orange-900 text-sm">
+                                <Send className="h-4 w-4" />
+                              </button>
+                            )}
+                            {tender.status === "Closed" && (
+                              <button className="text-purple-600 hover:text-purple-900 text-sm">
+                                <Play className="h-4 w-4" />
+                              </button>
+                            )}
+                            <button className="text-gray-600 hover:text-gray-900 text-sm">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "tender-evaluation":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Tender Evaluation</h1>
+                <p className="text-gray-600">Evaluate submitted bids with scoring and comments.</p>
+              </div>
+              <button
+                onClick={() => setActiveTab("tenders")}
+                className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                ← Back to Tenders
+              </button>
+            </div>
+
+            {/* Tenders Ready for Evaluation */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Tenders Ready for Evaluation</h2>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {tenders.filter(t => t.status === "Closed").map((tender) => (
+                    <div key={tender.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h3 className="font-medium text-gray-900">{tender.title}</h3>
+                          <p className="text-sm text-gray-600">{tender.id} • {tender.category} • {tender.estimatedValue}</p>
+                          <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                            <span>Closed: {new Date(tender.closeDate).toLocaleDateString()}</span>
+                            <span>•</span>
+                            <span>{tender.bidsReceived} bids received</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                            <ClipboardList className="h-4 w-4 mr-1" />
+                            Start Evaluation
+                          </button>
+                          <button className="flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm">
+                            <Eye className="h-4 w-4 mr-1" />
+                            View Bids
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Sample Evaluation Interface */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Evaluation: Road Construction Project</h2>
+                <p className="text-sm text-gray-600">KS-2024-002 • {tenderEvaluations.length} bids to evaluate</p>
+              </div>
+              <div className="p-6">
+                <div className="space-y-6">
+                  {tenderEvaluations.map((evaluation) => (
+                    <div key={evaluation.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <h3 className="font-medium text-gray-900">{evaluation.companyName}</h3>
+                          <p className="text-sm text-gray-600">Bid Amount: {evaluation.bidAmount}</p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {evaluation.status === "Flagged" && (
+                            <div className="flex items-center px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">
+                              <Flag className="h-3 w-3 mr-1" />
+                              Flagged: {evaluation.flagReason}
+                            </div>
+                          )}
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            evaluation.status === "Completed" ? "bg-green-100 text-green-800" :
+                            evaluation.status === "Flagged" ? "bg-red-100 text-red-800" :
+                            "bg-yellow-100 text-yellow-800"
+                          }`}>
+                            {evaluation.status}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Technical Score (40%)</label>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={evaluation.technicalScore}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            readOnly={evaluation.status === "Completed"}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Financial Score (60%)</label>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={evaluation.financialScore}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            readOnly={evaluation.status === "Completed"}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Total Score</label>
+                          <input
+                            type="number"
+                            value={evaluation.totalScore}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Comments/Justification</label>
+                        <textarea
+                          rows={3}
+                          value={evaluation.comments}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Enter evaluation comments and justification..."
+                          readOnly={evaluation.status === "Completed"}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm text-gray-500">
+                          Evaluated by {evaluation.evaluatedBy} on {new Date(evaluation.evaluatedDate).toLocaleDateString()}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {evaluation.status !== "Completed" && (
+                            <>
+                              <button className="flex items-center px-3 py-2 border border-orange-300 text-orange-700 rounded-md hover:bg-orange-50 text-sm">
+                                <MessageCircle className="h-4 w-4 mr-1" />
+                                Request Info
+                              </button>
+                              <button className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm">
+                                <CheckCircle2 className="h-4 w-4 mr-1" />
+                                Complete Evaluation
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button className="flex items-center px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Evaluation Report
+                  </button>
+                  <button className="flex items-center px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                    Print Report
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("tender-awards")}
+                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
+                    <Gavel className="h-4 w-4 mr-2" />
+                    Proceed to Award
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "tender-awards":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Tender Awards</h1>
+                <p className="text-gray-600">Award tenders to winning bidders and manage contract signing.</p>
+              </div>
+              <button
+                onClick={() => setActiveTab("tenders")}
+                className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                ← Back to Tenders
+              </button>
+            </div>
+
+            {/* Evaluated Tenders Ready for Award */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Tenders Ready for Award</h2>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {tenders.filter(t => t.status === "Closed" || t.status === "Awarded").map((tender) => (
+                    <div key={tender.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h3 className="font-medium text-gray-900">{tender.title}</h3>
+                          <p className="text-sm text-gray-600">{tender.id} • {tender.category} • {tender.estimatedValue}</p>
+                          {tender.awardedCompany && (
+                            <div className="mt-2 flex items-center space-x-4 text-sm">
+                              <span className="text-green-600 font-medium">
+                                Awarded to: {tender.awardedCompany}
+                              </span>
+                              <span className="text-gray-500">
+                                Amount: {tender.awardAmount}
+                              </span>
+                              <span className="text-gray-500">
+                                Date: {tender.awardDate ? new Date(tender.awardDate).toLocaleDateString() : 'N/A'}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {tender.status === "Closed" ? (
+                            <button className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm">
+                              <Gavel className="h-4 w-4 mr-1" />
+                              Award Tender
+                            </button>
+                          ) : (
+                            <div className="flex items-center space-x-2">
+                              <button className="flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm">
+                                <Mail className="h-4 w-4 mr-1" />
+                                Send Award Letter
+                              </button>
+                              <button className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                                <FileCheck className="h-4 w-4 mr-1" />
+                                Sign Contract
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Sample Award Form */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Award Tender: Road Construction Project</h2>
+                <p className="text-sm text-gray-600">KS-2024-002</p>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Winning Company *</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <option value="">Select winning bidder</option>
+                      <option value="1">Northern Construction Ltd (₦2.3B - Score: 87.5)</option>
+                      <option value="2">BuildRight Engineering (₦2.6B - Score: 76.5)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Award Amount *</label>
+                    <input
+                      type="text"
+                      placeholder="Enter final award amount"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Award Date *</label>
+                    <input
+                      type="date"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contract Duration</label>
+                    <input
+                      type="text"
+                      placeholder="e.g., 12 months"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Upload Award Letter/Letter of Intent</label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                    <div className="text-center">
+                      <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Click to upload award letter or drag and drop</p>
+                      <input type="file" className="hidden" accept=".pdf,.doc,.docx" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="notifyWinner"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="notifyWinner" className="text-sm text-gray-700">
+                    Notify winning company via email
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="notifyUnsuccessful"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="notifyUnsuccessful" className="text-sm text-gray-700">
+                    Notify unsuccessful companies
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="publishOCDS"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="publishOCDS" className="text-sm text-gray-700">
+                    Publish OCDS award release
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="initiatePerformanceTracking"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="initiatePerformanceTracking" className="text-sm text-gray-700">
+                    Initiate vendor performance tracking
+                  </label>
+                </div>
+
+                <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                  <button className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    Cancel
+                  </button>
+                  <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                    Award Tender
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "vendor-performance":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Vendor Performance Management</h1>
+                <p className="text-gray-600">Track and record contractor performance during project implementation.</p>
+              </div>
+              <button
+                onClick={() => setActiveTab("tenders")}
+                className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                ← Back to Tenders
+              </button>
+            </div>
+
+            {/* Performance Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Active Contracts</p>
+                    <p className="text-3xl font-bold text-blue-600">{vendorPerformances.filter(v => v.status === "Active").length}</p>
+                  </div>
+                  <Activity className="h-8 w-8 text-blue-600" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Avg Performance Score</p>
+                    <p className="text-3xl font-bold text-green-600">
+                      {Math.round(vendorPerformances.reduce((sum, v) => sum + v.overallScore, 0) / vendorPerformances.length)}%
+                    </p>
+                  </div>
+                  <BarChart3 className="h-8 w-8 text-green-600" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Delayed Projects</p>
+                    <p className="text-3xl font-bold text-orange-600">{vendorPerformances.filter(v => v.status === "Delayed").length}</p>
+                  </div>
+                  <Clock className="h-8 w-8 text-orange-600" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Open Issues</p>
+                    <p className="text-3xl font-bold text-red-600">
+                      {vendorPerformances.reduce((sum, v) => sum + v.issues.filter(i => i.status === "Open").length, 0)}
+                    </p>
+                  </div>
+                  <AlertTriangle className="h-8 w-8 text-red-600" />
+                </div>
+              </div>
+            </div>
+
+            {/* Active Contracts */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-gray-900">Active Contract Performance</h2>
+                  <div className="flex items-center space-x-3">
+                    <button className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                      <Filter className="h-4 w-4 mr-2" />
+                      Filter
+                    </button>
+                    <button className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                      <Download className="h-4 w-4 mr-2" />
+                      Export
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <div className="space-y-6">
+                  {vendorPerformances.map((performance) => (
+                    <div key={performance.id} className="border rounded-lg p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-medium text-gray-900">{performance.projectTitle}</h3>
+                          <p className="text-sm text-gray-600">
+                            {performance.companyName} • Contract: {performance.contractId}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Value: {performance.contractValue} • Started: {new Date(performance.startDate).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-green-600">{performance.overallScore}%</div>
+                            <div className="text-xs text-gray-500">Overall Score</div>
+                          </div>
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            performance.status === "Active" ? "bg-green-100 text-green-800" :
+                            performance.status === "Delayed" ? "bg-orange-100 text-orange-800" :
+                            performance.status === "Completed" ? "bg-blue-100 text-blue-800" :
+                            "bg-red-100 text-red-800"
+                          }`}>
+                            {performance.status}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Performance Metrics */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div className="bg-green-50 p-3 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-green-800">Quality Score</span>
+                            <span className="text-lg font-bold text-green-600">{performance.qualityScore}%</span>
+                          </div>
+                        </div>
+                        <div className="bg-blue-50 p-3 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-blue-800">Timeliness Score</span>
+                            <span className="text-lg font-bold text-blue-600">{performance.timelinessScore}%</span>
+                          </div>
+                        </div>
+                        <div className="bg-purple-50 p-3 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-purple-800">Budget Compliance</span>
+                            <span className="text-lg font-bold text-purple-600">{performance.budgetCompliance}%</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Milestones */}
+                      <div className="mb-4">
+                        <h4 className="font-medium text-gray-900 mb-2">Project Milestones</h4>
+                        <div className="space-y-2">
+                          {performance.milestones.slice(0, 3).map((milestone) => (
+                            <div key={milestone.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-900">{milestone.title}</span>
+                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                    milestone.status === "Completed" ? "bg-green-100 text-green-800" :
+                                    milestone.status === "Delayed" ? "bg-red-100 text-red-800" :
+                                    "bg-yellow-100 text-yellow-800"
+                                  }`}>
+                                    {milestone.status}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-gray-600 mt-1">
+                                  Expected: {new Date(milestone.expectedDate).toLocaleDateString()}
+                                  {milestone.actualDate && ` | Actual: ${new Date(milestone.actualDate).toLocaleDateString()}`}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-sm font-medium text-gray-900">{milestone.completionPercentage}%</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Issues */}
+                      {performance.issues.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="font-medium text-gray-900 mb-2">Recent Issues</h4>
+                          <div className="space-y-2">
+                            {performance.issues.slice(0, 2).map((issue) => (
+                              <div key={issue.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                                <div className="flex-1">
+                                  <div className="flex items-center space-x-2">
+                                    <span className="text-sm font-medium text-red-900">{issue.type}: {issue.description}</span>
+                                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                      issue.severity === "Critical" ? "bg-red-100 text-red-800" :
+                                      issue.severity === "High" ? "bg-orange-100 text-orange-800" :
+                                      issue.severity === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                                      "bg-gray-100 text-gray-800"
+                                    }`}>
+                                      {issue.severity}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-red-700 mt-1">
+                                    Reported: {new Date(issue.reportedDate).toLocaleDateString()}
+                                    {issue.resolvedDate && ` | Resolved: ${new Date(issue.resolvedDate).toLocaleDateString()}`}
+                                  </p>
+                                </div>
+                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                  issue.status === "Resolved" ? "bg-green-100 text-green-800" :
+                                  issue.status === "In Progress" ? "bg-yellow-100 text-yellow-800" :
+                                  "bg-red-100 text-red-800"
+                                }`}>
+                                  {issue.status}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-end space-x-2">
+                        <button className="flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm">
+                          <Eye className="h-4 w-4 mr-1" />
+                          View Details
+                        </button>
+                        <button className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                          <Edit className="h-4 w-4 mr-1" />
+                          Update Progress
+                        </button>
+                        <button className="flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm">
+                          <Download className="h-4 w-4 mr-1" />
+                          Export Report
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
