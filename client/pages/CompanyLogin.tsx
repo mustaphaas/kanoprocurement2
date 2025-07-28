@@ -69,17 +69,10 @@ export default function CompanyLogin() {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any valid email/password
-      if (formData.email && formData.password) {
-        navigate("/company/dashboard");
-      } else {
-        setErrors({ general: "Invalid credentials" });
-      }
+      await signIn(formData.email, formData.password);
+      navigate("/company/dashboard");
     } catch (error) {
-      setErrors({ general: "Login failed. Please try again." });
+      setErrors({ general: error instanceof Error ? error.message : "Login failed. Please try again." });
     } finally {
       setIsLoading(false);
     }

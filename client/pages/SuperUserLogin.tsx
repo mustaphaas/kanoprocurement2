@@ -67,17 +67,10 @@ export default function SuperUserLogin() {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any credentials
-      if (formData.username && formData.password) {
-        navigate("/superuser/dashboard");
-      } else {
-        setErrors({ general: "Invalid credentials" });
-      }
+      await signIn(formData.username, formData.password);
+      navigate("/superuser/dashboard");
     } catch (error) {
-      setErrors({ general: "Login failed. Please try again." });
+      setErrors({ general: error instanceof Error ? error.message : "Login failed. Please try again." });
     } finally {
       setIsLoading(false);
     }
