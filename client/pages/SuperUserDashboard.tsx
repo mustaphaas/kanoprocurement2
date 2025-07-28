@@ -230,10 +230,39 @@ export default function SuperUserDashboard() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [aiRecommendations, setAIRecommendations] = useState<AIRecommendation[]>([]);
+  const [tenders, setTenders] = useState<Tender[]>([]);
+  const [tenderEvaluations, setTenderEvaluations] = useState<TenderEvaluation[]>([]);
+  const [vendorPerformances, setVendorPerformances] = useState<VendorPerformance[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+  const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [blacklistReason, setBlacklistReason] = useState("");
   const [showBlacklistModal, setShowBlacklistModal] = useState(false);
+  const [showCreateTenderModal, setShowCreateTenderModal] = useState(false);
+  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
+  const [tenderForm, setTenderForm] = useState<TenderForm>({
+    title: "",
+    description: "",
+    category: "",
+    ministry: "",
+    procuringEntity: "",
+    estimatedValue: "",
+    currency: "NGN",
+    publishDate: "",
+    closeDate: "",
+    openDate: "",
+    eligibilityCriteria: "",
+    technicalRequirements: "",
+    evaluationCriteria: "",
+    contractDuration: "",
+    deliveryLocation: "",
+    paymentTerms: "",
+    ocdsId: "",
+    procurementMethod: "",
+    procurementCategory: "",
+    mainProcurementCategory: "",
+    additionalProcurementCategories: []
+  });
   const navigate = useNavigate();
 
   const dashboardStats: DashboardStats = {
