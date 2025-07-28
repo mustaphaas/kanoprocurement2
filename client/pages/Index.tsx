@@ -173,10 +173,10 @@ export default function Index() {
                   <span>About</span>
                 </a>
                 <div className="pt-4 border-t space-y-2">
-                  <button className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-700 w-full">
+                  <Link to="/login" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-700 w-full">
                     <LogIn className="h-4 w-4" />
                     <span>Login</span>
-                  </button>
+                  </Link>
                   <Link to="/register" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium bg-green-700 text-white hover:bg-green-800 w-full">
                     <UserPlus className="h-4 w-4" />
                     <span>Register</span>
