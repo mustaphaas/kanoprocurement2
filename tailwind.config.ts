@@ -57,6 +57,20 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Kano State color scheme
+        green: {
+          25: "hsl(151, 15%, 98%)",
+          50: "hsl(151, 15%, 95%)",
+          100: "hsl(151, 15%, 88%)",
+          200: "hsl(151, 15%, 80%)",
+          300: "hsl(151, 15%, 70%)",
+          400: "hsl(151, 15%, 60%)",
+          500: "hsl(151, 15%, 50%)",
+          600: "hsl(153, 48%, 40%)",
+          700: "hsl(153, 48%, 30%)",
+          800: "hsl(153, 48%, 20%)",
+          900: "hsl(153, 48%, 10%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -84,6 +98,13 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "slide-progress": "slideProgress 4s linear infinite",
+      },
+      keyframes: {
+        slideProgress: {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
       },
     },
   },
