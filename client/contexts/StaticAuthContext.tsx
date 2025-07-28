@@ -1,0 +1,158 @@
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+
+interface User {
+  email: string;
+  uid: string;
+}
+
+interface UserProfile {
+  role: 'admin' | 'superuser' | 'company';
+  email: string;
+  name: string;
+  companyName?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  userProfile: UserProfile | null;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+// Static demo users for mockup
+const demoUsers: Record<string, { password: string; profile: UserProfile }> = {
+  'admin@kanoproc.gov.ng': {
+    password: 'admin123',
+    profile: {
+      role: 'admin',
+      email: 'admin@kanoproc.gov.ng',
+      name: 'System Administrator'
+    }
+  },
+  'superuser@kanoproc.gov.ng': {
+    password: 'super123',
+    profile: {
+      role: 'superuser',
+      email: 'superuser@kanoproc.gov.ng',
+      name: 'Super User'
+    }
+  },
+  'company@example.com': {
+    password: 'company123',
+    profile: {
+      role: 'company',
+      email: 'company@example.com',
+      name: 'Company Representative',
+      companyName: 'Demo Construction Ltd'
+    }
+  }
+};
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const signIn = async (email: string, password: string) => {
+    setLoading(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const demoUser = demoUsers[email];
+    if (demoUser && demoUser.password === password) {
+      const mockUser = { email, uid: `demo-${Date.now()}` };
+      setUser(mockUser);
+      setUserProfile(demoUser.profile);
+    } else {
+      throw new Error('Invalid email or password');
+    }
+    
+    setLoading(false);
+  };
+
+  const signOut = async () => {
+    setUser(null);
+    setUserProfile(null);
+  };
+
+  const value: AuthContextType = {
+    user,
+    userProfile,
+    loading,
+    signIn,
+    signOut
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+interface ProtectedRouteProps {
+  children: ReactNode;
+  requiredRole?: 'admin' | 'superuser' | 'company';
+}
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  children, 
+  requiredRole 
+}) => {
+  const { user, userProfile, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || !userProfile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8 p-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900">Access Denied</h2>
+            <p className="mt-2 text-gray-600">Please sign in to access this page.</p>
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
+              <p><strong>Demo Credentials:</strong></p>
+              <p>Admin: admin@kanoproc.gov.ng / admin123</p>
+              <p>Super User: superuser@kanoproc.gov.ng / super123</p>
+              <p>Company: company@example.com / company123</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (requiredRole && userProfile.role !== requiredRole) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8 p-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900">Access Denied</h2>
+          <p className="text-gray-600">You don't have permission to access this page.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+};
