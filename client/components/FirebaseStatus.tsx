@@ -130,7 +130,14 @@ export default function FirebaseStatus() {
       </div>
       
       <div className="mt-2 pt-2 border-t text-xs text-gray-500">
-        Environment: {import.meta.env.DEV ? 'Development' : 'Production'}
+        <div>Environment: {import.meta.env.DEV ? 'Development' : 'Production'}</div>
+        {(import.meta.env.VITE_FIREBASE_PROJECT_ID === 'demo-project' ||
+          !import.meta.env.VITE_FIREBASE_API_KEY ||
+          import.meta.env.VITE_FIREBASE_API_KEY === 'demo-api-key') && (
+          <div className="text-yellow-600 font-medium mt-1">
+            🚧 Demo Mode - No persistence
+          </div>
+        )}
       </div>
     </div>
   );
