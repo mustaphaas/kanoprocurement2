@@ -1,0 +1,40 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Company documents
+    match /company-documents/{companyId}/{document} {
+      allow read, write: if request.auth != null && 
+        (request.auth.uid == companyId || hasAdminAccess());
+    }
+    
+    // Tender documents
+    match /tender-documents/{tenderId}/{document} {
+      allow read: if request.auth != null;
+      allow write: if hasAdminAccess();
+    }
+    
+    // Bid documents
+    match /bid-documents/{companyId}/{tenderId}/{document} {
+      allow read, write: if request.auth != null && 
+        (request.auth.uid == companyId || hasAdminAccess());
+    }
+    
+    // Contract documents
+    match /contract-documents/{contractId}/{document} {
+      allow read: if request.auth != null && hasContractAccess(contractId);
+      allow write: if hasAdminAccess();
+    }
+    
+    // Helper function to check admin access
+    function hasAdminAccess() {
+      return request.auth != null && 
+        ('admin' in request.auth.token && request.auth.token.admin == true) ||
+        ('superuser' in request.auth.token && request.auth.token.superuser == true);
+    }
+    
+    // Helper function to check contract access
+    function hasContractAccess(contractId) {
+      return request.auth != null;
+    }
+  }
+}
