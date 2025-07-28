@@ -143,10 +143,10 @@ export default function Index() {
                 <LogIn className="h-4 w-4 mr-2" />
                 Login
               </button>
-              <button className="hidden sm:flex items-center px-4 py-2 bg-green-700 text-white rounded-md text-sm font-medium hover:bg-green-800">
+              <Link to="/register" className="hidden sm:flex items-center px-4 py-2 bg-green-700 text-white rounded-md text-sm font-medium hover:bg-green-800">
                 <UserPlus className="h-4 w-4 mr-2" />
                 Register
-              </button>
+              </Link>
               <button 
                 className="md:hidden"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
