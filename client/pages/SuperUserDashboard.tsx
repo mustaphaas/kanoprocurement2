@@ -62,17 +62,22 @@ import {
   MoreHorizontal
 } from "lucide-react";
 
-type ActiveTab = 
-  | "dashboard" 
-  | "companies" 
-  | "tenders" 
-  | "users" 
-  | "reports" 
-  | "ocds" 
-  | "ai-insights" 
-  | "company-status" 
-  | "audit-logs" 
-  | "settings" 
+type ActiveTab =
+  | "dashboard"
+  | "companies"
+  | "tenders"
+  | "create-tender"
+  | "manage-tenders"
+  | "tender-evaluation"
+  | "tender-awards"
+  | "vendor-performance"
+  | "users"
+  | "reports"
+  | "ocds"
+  | "ai-insights"
+  | "company-status"
+  | "audit-logs"
+  | "settings"
   | "feedback";
 
 interface DashboardStats {
