@@ -34,27 +34,28 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Helper function to determine role based on email/username
-const determineUserRole = (email: string): UserProfile => {
-  const lowerEmail = email.toLowerCase();
-
-  if (lowerEmail.includes('admin') || lowerEmail.includes('administrator')) {
-    return {
+// Static demo credentials
+const demoCredentials: Record<string, { password: string; profile: UserProfile }> = {
+  'admin': {
+    password: 'admin123',
+    profile: {
       role: 'admin',
-      email: email,
+      email: 'admin@kanoproc.gov.ng',
       name: 'System Administrator'
-    };
-  }
-
-  if (lowerEmail.includes('super') || lowerEmail.includes('superuser')) {
-    return {
+    }
+  },
+  'superuser': {
+    password: 'superuser123',
+    profile: {
       role: 'superuser',
-      email: email,
+      email: 'superuser@kanoproc.gov.ng',
       name: 'Super User'
-    };
+    }
   }
+};
 
-  // Default to company role
+// Helper function to determine role for other logins (company emails)
+const determineCompanyRole = (email: string): UserProfile => {
   return {
     role: 'company',
     email: email,
@@ -74,15 +75,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // For demo purposes, accept any credentials as long as they're not empty
-    if (email.trim() && password.trim()) {
+    // Check for specific admin/superuser credentials
+    const demoUser = demoCredentials[email];
+    if (demoUser && demoUser.password === password) {
+      const mockUser = { email: demoUser.profile.email, uid: `demo-${Date.now()}` };
+      setUser(mockUser);
+      setUserProfile(demoUser.profile);
+    } else if (email.trim() && password.trim() && email.includes('@')) {
+      // For company logins, accept any valid email/password
       const mockUser = { email, uid: `demo-${Date.now()}` };
-      const profile = determineUserRole(email);
+      const profile = determineCompanyRole(email);
 
       setUser(mockUser);
       setUserProfile(profile);
     } else {
-      throw new Error('Email and password are required');
+      throw new Error('Invalid username or password');
     }
 
     setLoading(false);
@@ -134,11 +141,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             <h2 className="text-3xl font-bold text-gray-900">Access Denied</h2>
             <p className="mt-2 text-gray-600">Please sign in to access this page.</p>
             <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
-              <p><strong>Demo Mode:</strong></p>
-              <p>Use any email/username and password to login</p>
-              <p>• Include "admin" for admin access</p>
-              <p>• Include "super" for superuser access</p>
-              <p>• Any other email for company access</p>
+              <p><strong>Demo Credentials:</strong></p>
+              <p>Admin: username <code>admin</code> / password <code>admin123</code></p>
+              <p>Super User: username <code>superuser</code> / password <code>superuser123</code></p>
+              <p>Company: any email@domain.com / any password</p>
             </div>
           </div>
         </div>
