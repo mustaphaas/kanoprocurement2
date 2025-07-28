@@ -211,10 +211,10 @@ export default function Index() {
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <button className="inline-flex items-center px-8 py-4 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800">
+                  <Link to="/register" className="inline-flex items-center px-8 py-4 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800">
                     <Building2 className="mr-2 h-5 w-5" />
                     Register Your Company
-                  </button>
+                  </Link>
                   <button className="inline-flex items-center px-8 py-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">
                     <Search className="mr-2 h-5 w-5" />
                     Browse Tenders
