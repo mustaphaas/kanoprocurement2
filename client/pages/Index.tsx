@@ -139,10 +139,10 @@ export default function Index() {
               <button className="hidden md:flex items-center px-3 py-2 text-gray-600 hover:text-green-700">
                 <Bell className="h-4 w-4" />
               </button>
-              <button className="hidden sm:flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:text-green-700">
+              <Link to="/login" className="hidden sm:flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:text-green-700">
                 <LogIn className="h-4 w-4 mr-2" />
                 Login
-              </button>
+              </Link>
               <Link to="/register" className="hidden sm:flex items-center px-4 py-2 bg-green-700 text-white rounded-md text-sm font-medium hover:bg-green-800">
                 <UserPlus className="h-4 w-4 mr-2" />
                 Register
