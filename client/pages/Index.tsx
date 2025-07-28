@@ -177,10 +177,10 @@ export default function Index() {
                     <LogIn className="h-4 w-4" />
                     <span>Login</span>
                   </button>
-                  <button className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium bg-green-700 text-white hover:bg-green-800 w-full">
+                  <Link to="/register" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium bg-green-700 text-white hover:bg-green-800 w-full">
                     <UserPlus className="h-4 w-4" />
                     <span>Register</span>
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
