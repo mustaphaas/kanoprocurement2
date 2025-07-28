@@ -24,23 +24,6 @@ export default function FirebaseStatus() {
   useEffect(() => {
     const checkFirebaseStatus = async () => {
       try {
-        // Check if we're in demo mode
-        const isDemoMode = import.meta.env.VITE_FIREBASE_PROJECT_ID === 'demo-project' ||
-                          !import.meta.env.VITE_FIREBASE_API_KEY ||
-                          import.meta.env.VITE_FIREBASE_API_KEY === 'demo-api-key';
-
-        if (isDemoMode) {
-          // In demo mode, show as connected but with demo data
-          setStatus({
-            auth: 'connected',
-            firestore: 'connected',
-            userCount: 0,
-            tenderCount: 0,
-            companyCount: 0
-          });
-          return;
-        }
-
         // Check Firestore connection
         const usersQuery = query(collection(db, 'users'), limit(1));
         const tendersQuery = query(collection(db, 'tenders'), limit(1));
@@ -53,7 +36,7 @@ export default function FirebaseStatus() {
         ]);
 
         setStatus({
-          auth: 'connected',
+          auth: user ? 'connected' : 'error',
           firestore: 'connected',
           userCount: usersSnap.size,
           tenderCount: tendersSnap.size,
@@ -61,26 +44,11 @@ export default function FirebaseStatus() {
         });
       } catch (error) {
         console.error('Firebase status check failed:', error);
-
-        // More specific error handling
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-        if (errorMessage.includes('auth/invalid-api-key') || errorMessage.includes('invalid-api-key')) {
-          console.log('Invalid API key detected, switching to demo mode');
-          setStatus({
-            auth: 'connected',
-            firestore: 'connected',
-            userCount: 0,
-            tenderCount: 0,
-            companyCount: 0
-          });
-        } else {
-          setStatus(prev => ({
-            ...prev,
-            auth: 'error',
-            firestore: 'error'
-          }));
-        }
+        setStatus(prev => ({
+          ...prev,
+          auth: user ? 'connected' : 'error',
+          firestore: 'error'
+        }));
       }
     };
 
@@ -130,14 +98,7 @@ export default function FirebaseStatus() {
       </div>
       
       <div className="mt-2 pt-2 border-t text-xs text-gray-500">
-        <div>Environment: {import.meta.env.DEV ? 'Development' : 'Production'}</div>
-        {(import.meta.env.VITE_FIREBASE_PROJECT_ID === 'demo-project' ||
-          !import.meta.env.VITE_FIREBASE_API_KEY ||
-          import.meta.env.VITE_FIREBASE_API_KEY === 'demo-api-key') && (
-          <div className="text-yellow-600 font-medium mt-1">
-            🚧 Demo Mode - No persistence
-          </div>
-        )}
+        Environment: {import.meta.env.DEV ? 'Development' : 'Production'}
       </div>
     </div>
   );
