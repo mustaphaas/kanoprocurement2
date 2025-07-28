@@ -120,6 +120,111 @@ interface AIRecommendation {
   status: "new" | "reviewed" | "implemented";
 }
 
+interface Tender {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  ministry: string;
+  estimatedValue: string;
+  status: "Draft" | "Published" | "Closed" | "Evaluated" | "Awarded" | "Cancelled";
+  publishDate: string;
+  closeDate: string;
+  openDate?: string;
+  awardDate?: string;
+  awardedCompany?: string;
+  awardAmount?: string;
+  bidsReceived: number;
+  ocdsReleased: boolean;
+  addendaCount: number;
+  evaluationScore?: number;
+  procuringEntity: string;
+}
+
+interface TenderEvaluation {
+  id: string;
+  tenderId: string;
+  companyId: string;
+  companyName: string;
+  bidAmount: string;
+  technicalScore: number;
+  financialScore: number;
+  totalScore: number;
+  comments: string;
+  evaluatedBy: string;
+  evaluatedDate: string;
+  status: "Pending" | "Completed" | "Flagged";
+  flagReason?: string;
+}
+
+interface VendorPerformance {
+  id: string;
+  contractId: string;
+  tenderId: string;
+  companyId: string;
+  companyName: string;
+  projectTitle: string;
+  contractValue: string;
+  startDate: string;
+  expectedEndDate: string;
+  actualEndDate?: string;
+  milestones: Milestone[];
+  overallScore: number;
+  qualityScore: number;
+  timelinessScore: number;
+  budgetCompliance: number;
+  issues: Issue[];
+  status: "Active" | "Completed" | "Delayed" | "Terminated";
+}
+
+interface Milestone {
+  id: string;
+  title: string;
+  description: string;
+  expectedDate: string;
+  actualDate?: string;
+  status: "Pending" | "Completed" | "Delayed";
+  completionPercentage: number;
+  notes?: string;
+  documents: string[];
+}
+
+interface Issue {
+  id: string;
+  type: "Quality" | "Timeline" | "Budget" | "Compliance" | "Other";
+  description: string;
+  severity: "Low" | "Medium" | "High" | "Critical";
+  reportedDate: string;
+  resolvedDate?: string;
+  status: "Open" | "In Progress" | "Resolved";
+  actionTaken?: string;
+}
+
+interface TenderForm {
+  title: string;
+  description: string;
+  category: string;
+  ministry: string;
+  procuringEntity: string;
+  estimatedValue: string;
+  currency: string;
+  publishDate: string;
+  closeDate: string;
+  openDate: string;
+  eligibilityCriteria: string;
+  technicalRequirements: string;
+  evaluationCriteria: string;
+  contractDuration: string;
+  deliveryLocation: string;
+  paymentTerms: string;
+  // OCDS Integration fields
+  ocdsId: string;
+  procurementMethod: string;
+  procurementCategory: string;
+  mainProcurementCategory: string;
+  additionalProcurementCategories: string[];
+}
+
 export default function SuperUserDashboard() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("dashboard");
   const [companies, setCompanies] = useState<Company[]>([]);
