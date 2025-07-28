@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import FirebaseStatus from "@/components/FirebaseStatus";
+import AppStatus from "@/components/FirebaseStatus";
 import {
   Building2,
   FileText,
