@@ -72,9 +72,7 @@ export default function CompanyLogin() {
       
       // For demo purposes, accept any valid email/password
       if (formData.email && formData.password) {
-        // In a real app, this would redirect to company dashboard
-        alert("Login successful! Company dashboard would load here.");
-        navigate("/");
+        navigate("/company/dashboard");
       } else {
         setErrors({ general: "Invalid credentials" });
       }
