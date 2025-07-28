@@ -38,7 +38,28 @@ import {
   RefreshCw,
   AlertCircle,
   CheckSquare,
-  Monitor
+  Monitor,
+  Plus,
+  Edit,
+  Upload,
+  Send,
+  ClipboardList,
+  Gavel,
+  FileCheck,
+  Mail,
+  Play,
+  Pause,
+  CheckCircle2,
+  MessageCircle,
+  Calendar as CalendarIcon,
+  DollarSign as DollarSignIcon,
+  TrendingDown,
+  ExternalLink,
+  Flag,
+  Bookmark,
+  Copy,
+  Trash2,
+  MoreHorizontal
 } from "lucide-react";
 
 type ActiveTab = 
