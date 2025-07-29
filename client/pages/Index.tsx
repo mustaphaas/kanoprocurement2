@@ -36,6 +36,7 @@ interface FeaturedTender {
 
 export default function Index() {
   const [currentTenderIndex, setCurrentTenderIndex] = useState(0);
+  const [showGuidelines, setShowGuidelines] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const featuredTenders: FeaturedTender[] = [
