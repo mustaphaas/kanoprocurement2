@@ -1210,6 +1210,361 @@ export default function CompanyDashboard() {
           </div>
         );
 
+      case "detailed-compliance":
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Detailed Compliance Overview</h2>
+                <p className="text-sm text-gray-600 mt-1">Comprehensive compliance status and requirements</p>
+              </div>
+              <div className="p-6">
+                {/* Compliance Summary */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Compliance Summary</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                      <div className="flex items-center">
+                        <CheckCircle className="h-8 w-8 text-green-600" />
+                        <div className="ml-3">
+                          <p className="text-sm font-medium text-green-900">Compliant</p>
+                          <p className="text-2xl font-bold text-green-600">6</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                      <div className="flex items-center">
+                        <AlertTriangle className="h-8 w-8 text-yellow-600" />
+                        <div className="ml-3">
+                          <p className="text-sm font-medium text-yellow-900">Expiring Soon</p>
+                          <p className="text-2xl font-bold text-yellow-600">2</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+                      <div className="flex items-center">
+                        <AlertCircle className="h-8 w-8 text-red-600" />
+                        <div className="ml-3">
+                          <p className="text-sm font-medium text-red-900">Non-Compliant</p>
+                          <p className="text-2xl font-bold text-red-600">1</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <div className="flex items-center">
+                        <Shield className="h-8 w-8 text-gray-600" />
+                        <div className="ml-3">
+                          <p className="text-sm font-medium text-gray-900">Overall Score</p>
+                          <p className="text-2xl font-bold text-gray-600">78%</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Detailed Requirements */}
+                <div className="space-y-6">
+                  <h3 className="text-lg font-medium text-gray-900">Compliance Requirements</h3>
+
+                  {/* Legal & Registration Requirements */}
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h4 className="font-medium text-gray-900 mb-4 flex items-center">
+                      <FileText className="h-5 w-5 mr-2" />
+                      Legal & Registration Requirements
+                    </h4>
+                    <div className="space-y-4">
+                      {[
+                        {
+                          name: "Certificate of Incorporation (CAC)",
+                          status: "Compliant",
+                          description: "Valid registration with Corporate Affairs Commission",
+                          lastUpdated: "2024-01-15",
+                          expiry: "2025-03-15",
+                          documents: ["CAC_Certificate.pdf"],
+                          priority: "High"
+                        },
+                        {
+                          name: "Tax Identification Number (TIN)",
+                          status: "Compliant",
+                          description: "Valid Tax Identification Number from FIRS",
+                          lastUpdated: "2024-01-10",
+                          expiry: "N/A",
+                          documents: ["TIN_Certificate.pdf"],
+                          priority: "High"
+                        },
+                        {
+                          name: "Value Added Tax (VAT) Registration",
+                          status: "Compliant",
+                          description: "VAT registration certificate",
+                          lastUpdated: "2023-12-20",
+                          expiry: "N/A",
+                          documents: ["VAT_Certificate.pdf"],
+                          priority: "Medium"
+                        }
+                      ].map((req) => (
+                        <div key={req.name} className="bg-white rounded-lg border p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-2">
+                                <h5 className="font-medium text-gray-900">{req.name}</h5>
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                  req.status === "Compliant" ? "bg-green-100 text-green-800" :
+                                  req.status === "Expiring Soon" ? "bg-yellow-100 text-yellow-800" :
+                                  "bg-red-100 text-red-800"
+                                }`}>
+                                  {req.status}
+                                </span>
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                  req.priority === "High" ? "bg-red-100 text-red-800" :
+                                  req.priority === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                                  "bg-green-100 text-green-800"
+                                }`}>
+                                  {req.priority} Priority
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-600 mb-3">{req.description}</p>
+                              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs text-gray-500">
+                                <div>
+                                  <span className="font-medium">Last Updated:</span>
+                                  <p>{new Date(req.lastUpdated).toLocaleDateString()}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Expires:</span>
+                                  <p>{req.expiry}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Documents:</span>
+                                  <p>{req.documents.length} file(s)</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex space-x-2 ml-4">
+                              <button className="inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                                <Eye className="h-3 w-3 mr-1" />
+                                View
+                              </button>
+                              <button className="inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                                <Upload className="h-3 w-3 mr-1" />
+                                Update
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Financial Requirements */}
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h4 className="font-medium text-gray-900 mb-4 flex items-center">
+                      <DollarSign className="h-5 w-5 mr-2" />
+                      Financial Requirements
+                    </h4>
+                    <div className="space-y-4">
+                      {[
+                        {
+                          name: "Tax Clearance Certificate",
+                          status: "Compliant",
+                          description: "Valid tax clearance from relevant tax authorities",
+                          lastUpdated: "2024-01-20",
+                          expiry: "2024-12-31",
+                          documents: ["Tax_Clearance_2024.pdf"],
+                          priority: "High"
+                        },
+                        {
+                          name: "Audited Financial Statements",
+                          status: "Compliant",
+                          description: "Audited financial statements for the last 3 years",
+                          lastUpdated: "2024-01-18",
+                          expiry: "2024-12-31",
+                          documents: ["Audited_Statements_2023.pdf", "Audited_Statements_2022.pdf"],
+                          priority: "High"
+                        },
+                        {
+                          name: "Bank Reference Letter",
+                          status: "Expiring Soon",
+                          description: "Bank reference letter not older than 6 months",
+                          lastUpdated: "2023-08-15",
+                          expiry: "2024-02-15",
+                          documents: ["Bank_Reference.pdf"],
+                          priority: "Medium"
+                        }
+                      ].map((req) => (
+                        <div key={req.name} className="bg-white rounded-lg border p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-2">
+                                <h5 className="font-medium text-gray-900">{req.name}</h5>
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                  req.status === "Compliant" ? "bg-green-100 text-green-800" :
+                                  req.status === "Expiring Soon" ? "bg-yellow-100 text-yellow-800" :
+                                  "bg-red-100 text-red-800"
+                                }`}>
+                                  {req.status}
+                                </span>
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                  req.priority === "High" ? "bg-red-100 text-red-800" :
+                                  req.priority === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                                  "bg-green-100 text-green-800"
+                                }`}>
+                                  {req.priority} Priority
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-600 mb-3">{req.description}</p>
+                              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs text-gray-500">
+                                <div>
+                                  <span className="font-medium">Last Updated:</span>
+                                  <p>{new Date(req.lastUpdated).toLocaleDateString()}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Expires:</span>
+                                  <p className={req.status === "Expiring Soon" ? "text-yellow-600 font-medium" : ""}>{req.expiry}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Documents:</span>
+                                  <p>{req.documents.length} file(s)</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex space-x-2 ml-4">
+                              <button className="inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                                <Eye className="h-3 w-3 mr-1" />
+                                View
+                              </button>
+                              <button className="inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                                <Upload className="h-3 w-3 mr-1" />
+                                Update
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Professional Requirements */}
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h4 className="font-medium text-gray-900 mb-4 flex items-center">
+                      <Award className="h-5 w-5 mr-2" />
+                      Professional Requirements
+                    </h4>
+                    <div className="space-y-4">
+                      {[
+                        {
+                          name: "Professional License/Certification",
+                          status: "Non-Compliant",
+                          description: "Valid professional license from relevant regulatory body",
+                          lastUpdated: "2023-12-15",
+                          expiry: "2024-01-15",
+                          documents: ["Professional_License.pdf"],
+                          priority: "High"
+                        },
+                        {
+                          name: "Insurance Certificate",
+                          status: "Expiring Soon",
+                          description: "Valid professional indemnity and public liability insurance",
+                          lastUpdated: "2023-11-20",
+                          expiry: "2024-02-20",
+                          documents: ["Insurance_Certificate.pdf"],
+                          priority: "Medium"
+                        },
+                        {
+                          name: "Quality Management Certification",
+                          status: "Compliant",
+                          description: "ISO 9001 or equivalent quality management system certification",
+                          lastUpdated: "2024-01-05",
+                          expiry: "2025-01-05",
+                          documents: ["ISO9001_Certificate.pdf"],
+                          priority: "Low"
+                        }
+                      ].map((req) => (
+                        <div key={req.name} className="bg-white rounded-lg border p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-2">
+                                <h5 className="font-medium text-gray-900">{req.name}</h5>
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                  req.status === "Compliant" ? "bg-green-100 text-green-800" :
+                                  req.status === "Expiring Soon" ? "bg-yellow-100 text-yellow-800" :
+                                  "bg-red-100 text-red-800"
+                                }`}>
+                                  {req.status}
+                                </span>
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                  req.priority === "High" ? "bg-red-100 text-red-800" :
+                                  req.priority === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                                  "bg-green-100 text-green-800"
+                                }`}>
+                                  {req.priority} Priority
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-600 mb-3">{req.description}</p>
+                              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs text-gray-500">
+                                <div>
+                                  <span className="font-medium">Last Updated:</span>
+                                  <p>{new Date(req.lastUpdated).toLocaleDateString()}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Expires:</span>
+                                  <p className={req.status === "Non-Compliant" ? "text-red-600 font-medium" :
+                                                req.status === "Expiring Soon" ? "text-yellow-600 font-medium" : ""}>{req.expiry}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Documents:</span>
+                                  <p>{req.documents.length} file(s)</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex space-x-2 ml-4">
+                              <button className="inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                                <Eye className="h-3 w-3 mr-1" />
+                                View
+                              </button>
+                              <button className="inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                                <Upload className="h-3 w-3 mr-1" />
+                                Update
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Compliance Actions */}
+                  <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                    <h4 className="font-medium text-blue-900 mb-4">Recommended Actions</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Urgent: Professional License Expired</p>
+                          <p className="text-sm text-gray-600">Your professional license expired on January 15, 2024. Please renew immediately to maintain compliance.</p>
+                          <button className="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700">
+                            <Upload className="h-3 w-3 mr-1" />
+                            Upload Renewed License
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Warning: Documents Expiring Soon</p>
+                          <p className="text-sm text-gray-600">2 documents will expire within the next 30 days. Schedule renewals to avoid compliance issues.</p>
+                          <button className="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200">
+                            <Calendar className="h-3 w-3 mr-1" />
+                            Schedule Renewals
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="text-center py-12">
