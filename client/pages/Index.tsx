@@ -862,7 +862,237 @@ export default function Index() {
         </div>
       </footer>
 
+      {/* Guidelines Modal */}
+      {showGuidelines && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setShowGuidelines(false)}></div>
 
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Kano State E-Procurement Guidelines</h2>
+                  <button
+                    onClick={() => setShowGuidelines(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                <div className="max-h-96 overflow-y-auto space-y-6">
+                  {/* Quick Start Guide */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-green-700 mb-3 flex items-center">
+                      <Award className="h-5 w-5 mr-2" />
+                      Quick Start Guide
+                    </h3>
+                    <div className="bg-green-50 rounded-lg p-4 space-y-2">
+                      <div className="flex items-start space-x-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                        <p className="text-sm text-green-800"><strong>Register Your Company:</strong> Complete the online registration with all required documents</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                        <p className="text-sm text-green-800"><strong>Get Approved:</strong> Wait for administrative approval (typically 3-5 business days)</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+                        <p className="text-sm text-green-800"><strong>Browse Tenders:</strong> Search and view available procurement opportunities</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</span>
+                        <p className="text-sm text-green-800"><strong>Submit Bids:</strong> Purchase tender documents and submit your proposals</p>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Company Registration Requirements */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-blue-700 mb-3 flex items-center">
+                      <Building2 className="h-5 w-5 mr-2" />
+                      Company Registration Requirements
+                    </h3>
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h4 className="font-medium text-blue-900 mb-2">Required Documents:</h4>
+                      <ul className="space-y-1 text-sm text-blue-800">
+                        <li>• Certificate of Incorporation (CAC)</li>
+                        <li>• Tax Clearance Certificate (valid)</li>
+                        <li>• VAT Registration Certificate</li>
+                        <li>• Professional License (where applicable)</li>
+                        <li>• Insurance Certificate</li>
+                        <li>• Bank Reference Letter</li>
+                        <li>• Audited Financial Statements (last 3 years)</li>
+                        <li>• Company Profile with track record</li>
+                      </ul>
+                      <p className="text-xs text-blue-600 mt-3"><strong>Note:</strong> All documents must be current and properly notarized</p>
+                    </div>
+                  </section>
+
+                  {/* Bidding Process */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-purple-700 mb-3 flex items-center">
+                      <FileText className="h-5 w-5 mr-2" />
+                      Bidding Process Guidelines
+                    </h3>
+                    <div className="bg-purple-50 rounded-lg p-4 space-y-3">
+                      <div>
+                        <h4 className="font-medium text-purple-900">Before Bidding:</h4>
+                        <ul className="text-sm text-purple-800 ml-4 space-y-1">
+                          <li>• Purchase tender documents with valid payment</li>
+                          <li>• Read all requirements and specifications carefully</li>
+                          <li>• Attend pre-bid meetings (if scheduled)</li>
+                          <li>• Submit clarification requests if needed</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-purple-900">Bid Submission:</h4>
+                        <ul className="text-sm text-purple-800 ml-4 space-y-1">
+                          <li>• Submit all required technical and financial documents</li>
+                          <li>• Ensure compliance with specifications</li>
+                          <li>• Submit before deadline (late submissions not accepted)</li>
+                          <li>• Provide bid security/bond if required</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Evaluation Criteria */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-orange-700 mb-3 flex items-center">
+                      <TrendingUp className="h-5 w-5 mr-2" />
+                      Evaluation Criteria
+                    </h3>
+                    <div className="bg-orange-50 rounded-lg p-4">
+                      <p className="text-sm text-orange-800 mb-3">Bids are typically evaluated based on:</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-orange-900">Technical (70%):</h4>
+                          <ul className="text-sm text-orange-800 ml-4">
+                            <li>• Technical specifications compliance</li>
+                            <li>• Company experience and track record</li>
+                            <li>• Personnel qualifications</li>
+                            <li>• Methodology and approach</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-orange-900">Financial (30%):</h4>
+                          <ul className="text-sm text-orange-800 ml-4">
+                            <li>• Price competitiveness</li>
+                            <li>• Value for money</li>
+                            <li>• Financial capacity</li>
+                            <li>• Payment terms</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Compliance & Legal */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-red-700 mb-3 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      Compliance & Legal Requirements
+                    </h3>
+                    <div className="bg-red-50 rounded-lg p-4 space-y-3">
+                      <div>
+                        <h4 className="font-medium text-red-900">Mandatory Compliance:</h4>
+                        <ul className="text-sm text-red-800 ml-4 space-y-1">
+                          <li>• Nigerian company registration (minimum 51% Nigerian ownership)</li>
+                          <li>• Valid tax payments and clearances</li>
+                          <li>• No involvement in corrupt practices</li>
+                          <li>• Compliance with labor laws and standards</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-red-900">Prohibited Practices:</h4>
+                        <ul className="text-sm text-red-800 ml-4 space-y-1">
+                          <li>• Bribery, corruption, or fraudulent practices</li>
+                          <li>• Collusion with other bidders</li>
+                          <li>• Submission of false information</li>
+                          <li>• Conflict of interest situations</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Payment & Contract Terms */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                      <DollarSign className="h-5 w-5 mr-2" />
+                      Payment & Contract Terms
+                    </h3>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-gray-900">Payment Schedule:</h4>
+                          <ul className="text-sm text-gray-700 ml-4">
+                            <li>• Advance payment: Up to 15%</li>
+                            <li>• Progress payments: Based on milestones</li>
+                            <li>• Final payment: After completion & acceptance</li>
+                            <li>• Retention: 5-10% for defect liability period</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900">Contract Management:</h4>
+                          <ul className="text-sm text-gray-700 ml-4">
+                            <li>• Regular progress reporting required</li>
+                            <li>• Quality assurance checks</li>
+                            <li>• Change order procedures</li>
+                            <li>• Dispute resolution mechanisms</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Contact Information */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-green-700 mb-3 flex items-center">
+                      <MapPin className="h-5 w-5 mr-2" />
+                      Contact & Support
+                    </h3>
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-green-900">Technical Support:</h4>
+                          <p className="text-sm text-green-800">Email: support@kanoproc.gov.ng</p>
+                          <p className="text-sm text-green-800">Phone: +234 (0) 64 123-4567</p>
+                          <p className="text-sm text-green-800">Hours: Mon-Fri, 8AM-5PM</p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-green-900">Procurement Office:</h4>
+                          <p className="text-sm text-green-800">Kano State Government House</p>
+                          <p className="text-sm text-green-800">Kano, Kano State, Nigeria</p>
+                          <p className="text-sm text-green-800">procurement@kanostate.gov.ng</p>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-gray-200 flex justify-between items-center">
+                  <div className="text-sm text-gray-500">
+                    Last updated: January 2024 • Version 2.1
+                  </div>
+                  <div className="flex space-x-3">
+                    <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download PDF
+                    </button>
+                    <button
+                      onClick={() => setShowGuidelines(false)}
+                      className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
