@@ -514,6 +514,18 @@ export default function SuperUserDashboard() {
     navigate("/");
   };
 
+  const handleStartEvaluation = (tender: Tender) => {
+    setActiveEvaluationTender(tender);
+    setShowEvaluationInterface(true);
+    // Scroll to evaluation interface
+    setTimeout(() => {
+      const element = document.getElementById('evaluation-interface');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   const handleBlacklistCompany = (company: Company) => {
     setSelectedCompany(company);
     setShowBlacklistModal(true);
