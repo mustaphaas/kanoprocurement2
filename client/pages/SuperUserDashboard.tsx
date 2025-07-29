@@ -371,7 +371,7 @@ export default function SuperUserDashboard() {
         description: "Supply of medical equipment for 5 primary healthcare centers",
         category: "Healthcare",
         ministry: "Ministry of Health",
-        estimatedValue: "₦850M",
+        estimatedValue: "��850M",
         status: "Published",
         publishDate: "2024-01-15",
         closeDate: "2024-02-15",
@@ -1963,11 +1963,22 @@ export default function SuperUserDashboard() {
                         <div className="flex items-center space-x-2">
                           {evaluation.status !== "Completed" && (
                             <>
-                              <button className="flex items-center px-3 py-2 border border-orange-300 text-orange-700 rounded-md hover:bg-orange-50 text-sm">
-                                <MessageCircle className="h-4 w-4 mr-1" />
-                                Request Info
+                              <button
+                                onClick={() => {
+                                  const reason = prompt("Enter reason for flagging this bid:");
+                                  if (reason) {
+                                    handleFlagBid(evaluation.id, reason);
+                                  }
+                                }}
+                                className="flex items-center px-3 py-2 border border-red-300 text-red-700 rounded-md hover:bg-red-50 text-sm transition-colors"
+                              >
+                                <Flag className="h-4 w-4 mr-1" />
+                                Flag Bid
                               </button>
-                              <button className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm">
+                              <button
+                                onClick={() => handleCompleteEvaluation(evaluation.id)}
+                                className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm transition-colors"
+                              >
                                 <CheckCircle2 className="h-4 w-4 mr-1" />
                                 Complete Evaluation
                               </button>
