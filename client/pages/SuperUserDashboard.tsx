@@ -526,6 +526,22 @@ export default function SuperUserDashboard() {
     }, 100);
   };
 
+  const handleCompleteEvaluation = (evaluationId: string) => {
+    setTenderEvaluations(prev => prev.map(evaluation =>
+      evaluation.id === evaluationId
+        ? { ...evaluation, status: "Completed" as const }
+        : evaluation
+    ));
+  };
+
+  const handleFlagBid = (evaluationId: string, reason: string) => {
+    setTenderEvaluations(prev => prev.map(evaluation =>
+      evaluation.id === evaluationId
+        ? { ...evaluation, status: "Flagged" as const, flagReason: reason }
+        : evaluation
+    ));
+  };
+
   const handleBlacklistCompany = (company: Company) => {
     setSelectedCompany(company);
     setShowBlacklistModal(true);
