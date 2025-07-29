@@ -701,6 +701,515 @@ export default function CompanyDashboard() {
           </div>
         );
 
+      case "purchased-bids":
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Purchased Bids</h2>
+                <p className="text-sm text-gray-600 mt-1">Tender documents you have purchased</p>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {[
+                    {
+                      id: "TB001",
+                      title: "Road Construction and Maintenance Services",
+                      purchaseDate: "2024-01-15",
+                      amount: "₦5,000",
+                      status: "Active",
+                      deadline: "2024-02-15",
+                      category: "Infrastructure"
+                    },
+                    {
+                      id: "TB002",
+                      title: "Supply of Medical Equipment to General Hospitals",
+                      purchaseDate: "2024-01-10",
+                      amount: "₦3,000",
+                      status: "Submitted",
+                      deadline: "2024-02-10",
+                      category: "Healthcare"
+                    },
+                    {
+                      id: "TB003",
+                      title: "School Building Renovation Project",
+                      purchaseDate: "2024-01-08",
+                      amount: "₦4,500",
+                      status: "Closed",
+                      deadline: "2024-01-30",
+                      category: "Education"
+                    }
+                  ].map((bid) => (
+                    <div key={bid.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="font-medium text-gray-900">{bid.title}</h3>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              bid.status === "Active" ? "bg-green-100 text-green-800" :
+                              bid.status === "Submitted" ? "bg-blue-100 text-blue-800" :
+                              "bg-gray-100 text-gray-800"
+                            }`}>
+                              {bid.status}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+                            <div>
+                              <p className="font-medium text-gray-900">Tender ID</p>
+                              <p>{bid.id}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">Purchase Date</p>
+                              <p>{new Date(bid.purchaseDate).toLocaleDateString()}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">Amount Paid</p>
+                              <p className="text-green-600 font-medium">{bid.amount}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">Deadline</p>
+                              <p>{new Date(bid.deadline).toLocaleDateString()}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2 ml-4">
+                          <button className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <Download className="h-4 w-4 mr-1" />
+                            Download
+                          </button>
+                          <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                            <Eye className="h-4 w-4 mr-1" />
+                            View Details
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "awarded-bids":
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Awarded Bids</h2>
+                <p className="text-sm text-gray-600 mt-1">Contracts you have won and their status</p>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {[
+                    {
+                      id: "AW001",
+                      title: "Supply of Office Furniture to Government Secretariat",
+                      awardDate: "2024-01-20",
+                      contractValue: "₦15,500,000",
+                      status: "Contract Signed",
+                      progress: 65,
+                      completionDate: "2024-03-20",
+                      category: "Supply"
+                    },
+                    {
+                      id: "AW002",
+                      title: "Construction of Primary Health Care Center",
+                      awardDate: "2023-12-15",
+                      contractValue: "₦85,000,000",
+                      status: "In Progress",
+                      progress: 40,
+                      completionDate: "2024-06-15",
+                      category: "Construction"
+                    }
+                  ].map((award) => (
+                    <div key={award.id} className="border rounded-lg p-6 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="font-medium text-gray-900">{award.title}</h3>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              award.status === "Contract Signed" ? "bg-green-100 text-green-800" :
+                              award.status === "In Progress" ? "bg-blue-100 text-blue-800" :
+                              "bg-yellow-100 text-yellow-800"
+                            }`}>
+                              <Award className="h-3 w-3 mr-1" />
+                              {award.status}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                            <div>
+                              <p className="font-medium text-gray-900">Contract ID</p>
+                              <p>{award.id}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">Award Date</p>
+                              <p>{new Date(award.awardDate).toLocaleDateString()}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">Contract Value</p>
+                              <p className="text-green-600 font-medium">{award.contractValue}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">Expected Completion</p>
+                              <p>{new Date(award.completionDate).toLocaleDateString()}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">Category</p>
+                              <p>{award.category}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">Progress</p>
+                              <div className="flex items-center space-x-2">
+                                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                  <div
+                                    className="bg-green-600 h-2 rounded-full"
+                                    style={{ width: `${award.progress}%` }}
+                                  ></div>
+                                </div>
+                                <span className="text-sm font-medium">{award.progress}%</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex space-x-3">
+                        <button className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                          <FileText className="h-4 w-4 mr-1" />
+                          View Contract
+                        </button>
+                        <button className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                          <Upload className="h-4 w-4 mr-1" />
+                          Submit Progress
+                        </button>
+                        <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                          <MessageSquare className="h-4 w-4 mr-1" />
+                          Contact PM
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "my-profile":
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Company Profile</h2>
+                <p className="text-sm text-gray-600 mt-1">Manage your company information and settings</p>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Company Information */}
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Company Information</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Company Name</label>
+                          <input
+                            type="text"
+                            value={companyData.name}
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Registration Number</label>
+                          <input
+                            type="text"
+                            value="RC-1234567"
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Business Type</label>
+                          <input
+                            type="text"
+                            value="Limited Liability Company"
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Industry</label>
+                          <input
+                            type="text"
+                            value="Construction & Engineering"
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Contact Information</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Email Address</label>
+                          <input
+                            type="email"
+                            value="contact@democompany.com"
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                          <input
+                            type="tel"
+                            value="+234 803 123 4567"
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Address</label>
+                          <textarea
+                            rows={3}
+                            value="123 Business District, Kano State, Nigeria"
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Company Status & Statistics */}
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Account Status</h3>
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-sm font-medium text-gray-700">Current Status</span>
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
+                            companyData.status === "Approved" ? "bg-green-100 text-green-800" :
+                            companyData.status === "Suspended" ? "bg-orange-100 text-orange-800" :
+                            "bg-red-100 text-red-800"
+                          }`}>
+                            {companyData.status === "Approved" && <CheckCircle className="h-4 w-4 mr-1" />}
+                            {companyData.status === "Suspended" && <AlertTriangle className="h-4 w-4 mr-1" />}
+                            {companyData.status === "Blacklisted" && <Ban className="h-4 w-4 mr-1" />}
+                            {companyData.status}
+                          </span>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          <p>Account created: January 2023</p>
+                          <p>Last updated: {new Date().toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Performance Statistics</h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Bids Submitted</span>
+                          <span className="font-medium">24</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Contracts Won</span>
+                          <span className="font-medium text-green-600">8</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Success Rate</span>
+                          <span className="font-medium">33.3%</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Total Contract Value</span>
+                          <span className="font-medium text-green-600">₦240,500,000</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Compliance Status</h3>
+                      <div className="space-y-3">
+                        {[
+                          { name: "Tax Clearance Certificate", status: "Valid", expiry: "2024-12-31" },
+                          { name: "Business Registration", status: "Valid", expiry: "2025-03-15" },
+                          { name: "Professional License", status: "Expired", expiry: "2024-01-15" },
+                          { name: "Insurance Certificate", status: "Valid", expiry: "2024-11-20" }
+                        ].map((cert) => (
+                          <div key={cert.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">{cert.name}</p>
+                              <p className="text-xs text-gray-500">Expires: {cert.expiry}</p>
+                            </div>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              cert.status === "Valid" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                            }`}>
+                              {cert.status}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex justify-end space-x-3">
+                  <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Cancel
+                  </button>
+                  <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                    <Edit className="h-4 w-4 mr-1" />
+                    Update Profile
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "my-documents":
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">My Documents</h2>
+                    <p className="text-sm text-gray-600 mt-1">Manage your company documents and certificates</p>
+                  </div>
+                  <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                    <Plus className="h-4 w-4 mr-1" />
+                    Upload Document
+                  </button>
+                </div>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[
+                    {
+                      name: "Tax Clearance Certificate",
+                      type: "PDF",
+                      size: "2.4 MB",
+                      uploadDate: "2024-01-15",
+                      status: "Verified",
+                      expiry: "2024-12-31"
+                    },
+                    {
+                      name: "CAC Certificate",
+                      type: "PDF",
+                      size: "1.8 MB",
+                      uploadDate: "2024-01-10",
+                      status: "Verified",
+                      expiry: "2025-03-15"
+                    },
+                    {
+                      name: "Professional License",
+                      type: "PDF",
+                      size: "3.1 MB",
+                      uploadDate: "2023-12-20",
+                      status: "Expired",
+                      expiry: "2024-01-15"
+                    },
+                    {
+                      name: "Insurance Certificate",
+                      type: "PDF",
+                      size: "2.7 MB",
+                      uploadDate: "2023-11-20",
+                      status: "Verified",
+                      expiry: "2024-11-20"
+                    },
+                    {
+                      name: "Company Profile",
+                      type: "PDF",
+                      size: "5.2 MB",
+                      uploadDate: "2024-01-08",
+                      status: "Under Review",
+                      expiry: "N/A"
+                    },
+                    {
+                      name: "Financial Statement 2023",
+                      type: "PDF",
+                      size: "4.6 MB",
+                      uploadDate: "2024-01-05",
+                      status: "Verified",
+                      expiry: "N/A"
+                    }
+                  ].map((doc) => (
+                    <div key={doc.name} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                            <FileText className="h-5 w-5 text-red-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-sm">{doc.name}</h3>
+                            <p className="text-xs text-gray-500">{doc.type} • {doc.size}</p>
+                          </div>
+                        </div>
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          doc.status === "Verified" ? "bg-green-100 text-green-800" :
+                          doc.status === "Under Review" ? "bg-yellow-100 text-yellow-800" :
+                          "bg-red-100 text-red-800"
+                        }`}>
+                          {doc.status}
+                        </span>
+                      </div>
+
+                      <div className="space-y-2 text-xs text-gray-600">
+                        <div className="flex justify-between">
+                          <span>Uploaded:</span>
+                          <span>{new Date(doc.uploadDate).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Expires:</span>
+                          <span className={doc.expiry !== "N/A" && new Date(doc.expiry) < new Date() ? "text-red-600" : ""}>
+                            {doc.expiry}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex space-x-2">
+                        <button className="flex-1 inline-flex items-center justify-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                          <Eye className="h-3 w-3 mr-1" />
+                          View
+                        </button>
+                        <button className="flex-1 inline-flex items-center justify-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                          <Download className="h-3 w-3 mr-1" />
+                          Download
+                        </button>
+                        <button className="flex-1 inline-flex items-center justify-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                          <Upload className="h-3 w-3 mr-1" />
+                          Replace
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Document Upload Area */}
+                <div className="mt-8 border-2 border-dashed border-gray-300 rounded-lg p-6">
+                  <div className="text-center">
+                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                    <h3 className="mt-2 text-sm font-medium text-gray-900">Upload new document</h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Drag and drop files here, or click to browse
+                    </p>
+                    <div className="mt-4">
+                      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200">
+                        <Plus className="h-4 w-4 mr-1" />
+                        Choose Files
+                      </button>
+                    </div>
+                    <p className="mt-2 text-xs text-gray-500">
+                      Supported formats: PDF, DOC, DOCX, JPG, PNG (Max 10MB)
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="text-center py-12">
