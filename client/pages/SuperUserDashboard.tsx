@@ -56,7 +56,6 @@ import {
   DollarSign as DollarSignIcon,
   TrendingDown,
   ExternalLink,
-  Flag,
   Bookmark,
   Copy,
   Trash2,
