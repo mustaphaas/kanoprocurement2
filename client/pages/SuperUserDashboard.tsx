@@ -240,6 +240,8 @@ export default function SuperUserDashboard() {
   const [showBlacklistModal, setShowBlacklistModal] = useState(false);
   const [showCreateTenderModal, setShowCreateTenderModal] = useState(false);
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
+  const [activeEvaluationTender, setActiveEvaluationTender] = useState<Tender | null>(null);
+  const [showEvaluationInterface, setShowEvaluationInterface] = useState(false);
   const [tenderForm, setTenderForm] = useState<TenderForm>({
     title: "",
     description: "",
