@@ -803,7 +803,10 @@ export default function Index() {
                   <UserPlus className="mr-2 h-5 w-5" />
                   Register Now
                 </Link>
-                <button className="inline-flex items-center px-8 py-4 border border-white text-white rounded-lg font-medium hover:bg-green-600">
+                <button
+                  onClick={() => setShowGuidelines(true)}
+                  className="inline-flex items-center px-8 py-4 border border-white text-white rounded-lg font-medium hover:bg-green-600 transition-colors"
+                >
                   <FileText className="mr-2 h-5 w-5" />
                   Read Guidelines
                 </button>
