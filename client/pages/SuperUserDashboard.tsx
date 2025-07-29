@@ -2034,7 +2034,7 @@ export default function SuperUserDashboard() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Winning Company *</label>
                     <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">Select winning bidder</option>
-                      <option value="1">Northern Construction Ltd (₦2.3B - Score: 87.5)</option>
+                      <option value="1">Northern Construction Ltd (���2.3B - Score: 87.5)</option>
                       <option value="2">BuildRight Engineering (₦2.6B - Score: 76.5)</option>
                     </select>
                   </div>
@@ -2355,6 +2355,689 @@ export default function SuperUserDashboard() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "users":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+                <p className="text-gray-600 mt-1">Manage system users and their permissions</p>
+              </div>
+              <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Create User
+              </button>
+            </div>
+
+            {/* User Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Users className="h-8 w-8 text-blue-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Total Users</p>
+                    <p className="text-2xl font-bold text-gray-900">1,247</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <UserCheck className="h-8 w-8 text-green-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Active Users</p>
+                    <p className="text-2xl font-bold text-gray-900">1,189</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Shield className="h-8 w-8 text-yellow-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Admin Users</p>
+                    <p className="text-2xl font-bold text-gray-900">15</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Ban className="h-8 w-8 text-red-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Suspended</p>
+                    <p className="text-2xl font-bold text-gray-900">58</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* User Management Table */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-gray-900">System Users</h2>
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search users..."
+                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <button className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                      <Filter className="h-4 w-4 mr-2" />
+                      Filter
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Active</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      {
+                        id: "USR001",
+                        name: "Ahmed Musa",
+                        email: "ahmed.musa@kanoproc.gov.ng",
+                        role: "Super Admin",
+                        status: "Active",
+                        lastActive: "2024-01-28T10:30:00Z",
+                        avatar: "AM"
+                      },
+                      {
+                        id: "USR002",
+                        name: "Fatima Ibrahim",
+                        email: "fatima.ibrahim@kanoproc.gov.ng",
+                        role: "Procurement Officer",
+                        status: "Active",
+                        lastActive: "2024-01-28T09:15:00Z",
+                        avatar: "FI"
+                      },
+                      {
+                        id: "USR003",
+                        name: "Usman Garba",
+                        email: "usman.garba@kanoproc.gov.ng",
+                        role: "Finance Officer",
+                        status: "Active",
+                        lastActive: "2024-01-28T08:45:00Z",
+                        avatar: "UG"
+                      },
+                      {
+                        id: "USR004",
+                        name: "Aisha Mohammed",
+                        email: "aisha.mohammed@kanoproc.gov.ng",
+                        role: "Legal Officer",
+                        status: "Suspended",
+                        lastActive: "2024-01-25T16:20:00Z",
+                        avatar: "AM"
+                      },
+                      {
+                        id: "USR005",
+                        name: "Sani Abdullahi",
+                        email: "sani.abdullahi@kanoproc.gov.ng",
+                        role: "Technical Officer",
+                        status: "Active",
+                        lastActive: "2024-01-28T07:30:00Z",
+                        avatar: "SA"
+                      }
+                    ].map((user) => (
+                      <tr key={user.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                              <span className="text-sm font-medium text-blue-600">{user.avatar}</span>
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                              <div className="text-sm text-gray-500">{user.email}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            user.role === "Super Admin" ? "bg-purple-100 text-purple-800" :
+                            user.role.includes("Officer") ? "bg-blue-100 text-blue-800" :
+                            "bg-gray-100 text-gray-800"
+                          }`}>
+                            {user.role}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            user.status === "Active" ? "bg-green-100 text-green-800" :
+                            user.status === "Suspended" ? "bg-red-100 text-red-800" :
+                            "bg-yellow-100 text-yellow-800"
+                          }`}>
+                            {user.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(user.lastActive).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                          <button className="text-blue-600 hover:text-blue-900">
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          <button className="text-green-600 hover:text-green-900">
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button className="text-red-600 hover:text-red-900">
+                            <Ban className="h-4 w-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "companies":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Company Approvals</h1>
+                <p className="text-gray-600 mt-1">Review and approve company registrations</p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export List
+                </button>
+                <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                  <CheckSquare className="h-4 w-4 mr-2" />
+                  Bulk Approve
+                </button>
+              </div>
+            </div>
+
+            {/* Approval Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Clock className="h-8 w-8 text-yellow-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Pending Review</p>
+                    <p className="text-2xl font-bold text-gray-900">23</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <CheckCircle className="h-8 w-8 text-green-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Approved</p>
+                    <p className="text-2xl font-bold text-gray-900">847</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <XCircle className="h-8 w-8 text-red-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Rejected</p>
+                    <p className="text-2xl font-bold text-gray-900">67</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <AlertTriangle className="h-8 w-8 text-orange-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Under Review</p>
+                    <p className="text-2xl font-bold text-gray-900">12</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Company Approval Queue */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-gray-900">Company Registration Queue</h2>
+                  <div className="flex items-center space-x-3">
+                    <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="all">All Status</option>
+                      <option value="pending">Pending Review</option>
+                      <option value="under-review">Under Review</option>
+                      <option value="approved">Approved</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
+                    <div className="relative">
+                      <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search companies..."
+                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registration</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documents</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      {
+                        id: "COM001",
+                        name: "Northern Construction Ltd",
+                        email: "info@northernconst.com",
+                        regNumber: "RC-456789",
+                        submissionDate: "2024-01-28",
+                        status: "Pending Review",
+                        documentsComplete: true,
+                        category: "Construction"
+                      },
+                      {
+                        id: "COM002",
+                        name: "Sahel Engineering Services",
+                        email: "contact@saheleng.com",
+                        regNumber: "RC-789012",
+                        submissionDate: "2024-01-27",
+                        status: "Under Review",
+                        documentsComplete: false,
+                        category: "Engineering"
+                      },
+                      {
+                        id: "COM003",
+                        name: "Kano Medical Supplies",
+                        email: "orders@kanomedical.com",
+                        regNumber: "RC-345678",
+                        submissionDate: "2024-01-26",
+                        status: "Pending Review",
+                        documentsComplete: true,
+                        category: "Healthcare"
+                      },
+                      {
+                        id: "COM004",
+                        name: "Tech Solutions Nigeria",
+                        email: "hello@techsolutions.ng",
+                        regNumber: "RC-234567",
+                        submissionDate: "2024-01-25",
+                        status: "Approved",
+                        documentsComplete: true,
+                        category: "Technology"
+                      }
+                    ].map((company) => (
+                      <tr key={company.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">{company.name}</div>
+                            <div className="text-sm text-gray-500">{company.email}</div>
+                            <div className="text-xs text-gray-400">{company.category}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{company.regNumber}</div>
+                          <div className="text-sm text-gray-500">
+                            Submitted: {new Date(company.submissionDate).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            company.status === "Approved" ? "bg-green-100 text-green-800" :
+                            company.status === "Pending Review" ? "bg-yellow-100 text-yellow-800" :
+                            company.status === "Under Review" ? "bg-blue-100 text-blue-800" :
+                            "bg-red-100 text-red-800"
+                          }`}>
+                            {company.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            {company.documentsComplete ? (
+                              <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                            ) : (
+                              <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
+                            )}
+                            <span className="text-sm text-gray-900">
+                              {company.documentsComplete ? "Complete" : "Incomplete"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                          <button className="inline-flex items-center px-2 py-1 border border-gray-300 rounded text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            <Eye className="h-3 w-3 mr-1" />
+                            Review
+                          </button>
+                          {company.status === "Pending Review" && (
+                            <>
+                              <button className="inline-flex items-center px-2 py-1 border border-transparent rounded text-xs font-medium text-white bg-green-600 hover:bg-green-700">
+                                <CheckCircle className="h-3 w-3 mr-1" />
+                                Approve
+                              </button>
+                              <button className="inline-flex items-center px-2 py-1 border border-transparent rounded text-xs font-medium text-white bg-red-600 hover:bg-red-700">
+                                <XCircle className="h-3 w-3 mr-1" />
+                                Reject
+                              </button>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "ocds":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">OCDS Data Management</h1>
+                <p className="text-gray-600 mt-1">Open Contracting Data Standard compliance and publishing</p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export OCDS
+                </button>
+                <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Sync Data
+                </button>
+              </div>
+            </div>
+
+            {/* OCDS Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Database className="h-8 w-8 text-blue-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Total Records</p>
+                    <p className="text-2xl font-bold text-gray-900">1,847</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <CheckCircle className="h-8 w-8 text-green-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Published</p>
+                    <p className="text-2xl font-bold text-gray-900">1,723</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Clock className="h-8 w-8 text-yellow-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Pending</p>
+                    <p className="text-2xl font-bold text-gray-900">89</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <AlertCircle className="h-8 w-8 text-red-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Failed</p>
+                    <p className="text-2xl font-bold text-gray-900">35</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* OCDS Data Overview */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Data Quality */}
+              <div className="bg-white rounded-lg shadow-sm border">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900">Data Quality Score</h2>
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <div className="text-3xl font-bold text-green-600">94.2%</div>
+                      <p className="text-sm text-gray-600">Overall compliance score</p>
+                    </div>
+                    <div className="w-20 h-20">
+                      <PieChart className="w-full h-full text-green-600" />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    {[
+                      { field: "Planning Data", score: 98, status: "excellent" },
+                      { field: "Tender Data", score: 95, status: "good" },
+                      { field: "Award Data", score: 92, status: "good" },
+                      { field: "Contract Data", score: 89, status: "fair" },
+                      { field: "Implementation Data", score: 85, status: "fair" }
+                    ].map((item) => (
+                      <div key={item.field} className="flex items-center justify-between">
+                        <span className="text-sm text-gray-700">{item.field}</span>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-20 bg-gray-200 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full ${
+                                item.status === "excellent" ? "bg-green-500" :
+                                item.status === "good" ? "bg-blue-500" :
+                                "bg-yellow-500"
+                              }`}
+                              style={{ width: `${item.score}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-medium text-gray-900">{item.score}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Publications */}
+              <div className="bg-white rounded-lg shadow-sm border">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900">Recent Publications</h2>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    {[
+                      {
+                        type: "Tender",
+                        title: "Road Construction Tender",
+                        id: "OCDS-KN-2024-001",
+                        publishedAt: "2024-01-28T10:30:00Z",
+                        status: "Published"
+                      },
+                      {
+                        type: "Award",
+                        title: "Medical Equipment Supply Award",
+                        id: "OCDS-KN-2024-002",
+                        publishedAt: "2024-01-28T09:15:00Z",
+                        status: "Published"
+                      },
+                      {
+                        type: "Contract",
+                        title: "School Building Contract",
+                        id: "OCDS-KN-2024-003",
+                        publishedAt: "2024-01-27T16:45:00Z",
+                        status: "Published"
+                      },
+                      {
+                        type: "Planning",
+                        title: "Infrastructure Development Plan",
+                        id: "OCDS-KN-2024-004",
+                        publishedAt: "2024-01-27T14:20:00Z",
+                        status: "Failed"
+                      }
+                    ].map((publication) => (
+                      <div key={publication.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              publication.type === "Tender" ? "bg-blue-100 text-blue-800" :
+                              publication.type === "Award" ? "bg-green-100 text-green-800" :
+                              publication.type === "Contract" ? "bg-purple-100 text-purple-800" :
+                              "bg-gray-100 text-gray-800"
+                            }`}>
+                              {publication.type}
+                            </span>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              publication.status === "Published" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                            }`}>
+                              {publication.status}
+                            </span>
+                          </div>
+                          <p className="text-sm font-medium text-gray-900">{publication.title}</p>
+                          <p className="text-xs text-gray-500">{publication.id}</p>
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {new Date(publication.publishedAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* OCDS Data Table */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-gray-900">OCDS Records</h2>
+                  <div className="flex items-center space-x-3">
+                    <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="all">All Types</option>
+                      <option value="planning">Planning</option>
+                      <option value="tender">Tender</option>
+                      <option value="award">Award</option>
+                      <option value="contract">Contract</option>
+                    </select>
+                    <div className="relative">
+                      <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search OCDS records..."
+                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OCDS ID</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Updated</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      {
+                        ocdsId: "OCDS-KN-2024-001",
+                        type: "Tender",
+                        title: "Road Construction and Maintenance Services",
+                        status: "Published",
+                        lastUpdated: "2024-01-28T10:30:00Z",
+                        dataQuality: 95
+                      },
+                      {
+                        ocdsId: "OCDS-KN-2024-002",
+                        type: "Award",
+                        title: "Medical Equipment Supply Award",
+                        status: "Published",
+                        lastUpdated: "2024-01-28T09:15:00Z",
+                        dataQuality: 92
+                      },
+                      {
+                        ocdsId: "OCDS-KN-2024-003",
+                        type: "Contract",
+                        title: "School Building Construction Contract",
+                        status: "Pending",
+                        lastUpdated: "2024-01-27T16:45:00Z",
+                        dataQuality: 88
+                      },
+                      {
+                        ocdsId: "OCDS-KN-2024-004",
+                        type: "Planning",
+                        title: "Infrastructure Development Planning",
+                        status: "Failed",
+                        lastUpdated: "2024-01-27T14:20:00Z",
+                        dataQuality: 65
+                      }
+                    ].map((record) => (
+                      <tr key={record.ocdsId} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">{record.ocdsId}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            record.type === "Tender" ? "bg-blue-100 text-blue-800" :
+                            record.type === "Award" ? "bg-green-100 text-green-800" :
+                            record.type === "Contract" ? "bg-purple-100 text-purple-800" :
+                            "bg-gray-100 text-gray-800"
+                          }`}>
+                            {record.type}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900">{record.title}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            record.status === "Published" ? "bg-green-100 text-green-800" :
+                            record.status === "Pending" ? "bg-yellow-100 text-yellow-800" :
+                            "bg-red-100 text-red-800"
+                          }`}>
+                            {record.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(record.lastUpdated).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                          <button className="text-blue-600 hover:text-blue-900">
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          <button className="text-green-600 hover:text-green-900">
+                            <Download className="h-4 w-4" />
+                          </button>
+                          {record.status === "Failed" && (
+                            <button className="text-orange-600 hover:text-orange-900">
+                              <RefreshCw className="h-4 w-4" />
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
