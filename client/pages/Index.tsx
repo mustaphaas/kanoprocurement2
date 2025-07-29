@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AppStatus from "@/components/FirebaseStatus";
 import {
   Building2,
   FileText,
@@ -859,8 +858,7 @@ export default function Index() {
         </div>
       </footer>
 
-      {/* App Status (Development Only) */}
-      <AppStatus />
+
     </div>
   );
 }
