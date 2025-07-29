@@ -52,8 +52,6 @@ import {
   CheckCircle2,
   MessageCircle,
   Pause,
-  CheckCircle2,
-  MessageCircle,
   Calendar as CalendarIcon,
   DollarSign as DollarSignIcon,
   TrendingDown,
