@@ -79,7 +79,8 @@ type ActiveTab =
   | "company-status"
   | "audit-logs"
   | "settings"
-  | "feedback";
+  | "feedback"
+  | "no-objection-certificate";
 
 interface DashboardStats {
   newRegistrationsPending: number;
