@@ -1830,7 +1830,10 @@ export default function SuperUserDashboard() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                          <button
+                            onClick={() => handleStartEvaluation(tender)}
+                            className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm transition-colors"
+                          >
                             <ClipboardList className="h-4 w-4 mr-1" />
                             Start Evaluation
                           </button>
