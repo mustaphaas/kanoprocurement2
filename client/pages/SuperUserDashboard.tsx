@@ -1865,11 +1865,25 @@ export default function SuperUserDashboard() {
               </div>
             </div>
 
-            {/* Sample Evaluation Interface */}
-            <div className="bg-white rounded-lg shadow-sm border">
+            {/* Dynamic Evaluation Interface */}
+            <div id="evaluation-interface" className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Evaluation: Road Construction Project</h2>
-                <p className="text-sm text-gray-600">KS-2024-002 • {tenderEvaluations.length} bids to evaluate</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Evaluation: {activeEvaluationTender ? activeEvaluationTender.title : 'Road Construction Project'}
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      {activeEvaluationTender ? activeEvaluationTender.id : 'KS-2024-002'} • {tenderEvaluations.length} bids to evaluate
+                    </p>
+                  </div>
+                  {activeEvaluationTender && (
+                    <div className="text-sm text-gray-500">
+                      <p>Status: <span className="font-medium">{activeEvaluationTender.status}</span></p>
+                      <p>Value: <span className="font-medium">{activeEvaluationTender.estimatedValue}</span></p>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="p-6">
                 <div className="space-y-6">
