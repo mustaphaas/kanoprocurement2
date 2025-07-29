@@ -3184,6 +3184,7 @@ export default function SuperUserDashboard() {
               { key: "ai-insights", label: "AI Insights", icon: Brain },
               { key: "company-status", label: "Company Status", icon: Shield },
               { key: "audit-logs", label: "Audit Logs", icon: Activity },
+              { key: "no-objection-certificate", label: "No Objection Certificate", icon: FileCheck },
               { key: "settings", label: "Settings", icon: Settings },
               { key: "feedback", label: "Feedback", icon: MessageSquare }
             ].map((tab) => (
