@@ -907,25 +907,91 @@ export default function Index() {
                     </div>
                   </section>
 
-                  {/* Company Registration Requirements */}
+                  {/* Contractors Registration Requirements */}
                   <section>
                     <h3 className="text-lg font-semibold text-blue-700 mb-3 flex items-center">
                       <Building2 className="h-5 w-5 mr-2" />
-                      Company Registration Requirements
+                      Contractors Registration Requirements
                     </h3>
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <h4 className="font-medium text-blue-900 mb-2">Required Documents:</h4>
-                      <ul className="space-y-1 text-sm text-blue-800">
-                        <li>• Certificate of Incorporation (CAC)</li>
-                        <li>• Tax Clearance Certificate (valid)</li>
-                        <li>• VAT Registration Certificate</li>
-                        <li>• Professional License (where applicable)</li>
-                        <li>• Insurance Certificate</li>
-                        <li>• Bank Reference Letter</li>
-                        <li>• Audited Financial Statements (last 3 years)</li>
-                        <li>• Company Profile with track record</li>
-                      </ul>
-                      <p className="text-xs text-blue-600 mt-3"><strong>Note:</strong> All documents must be current and properly notarized</p>
+                    <div className="bg-blue-50 rounded-lg p-4 space-y-4">
+                      <div>
+                        <h4 className="font-medium text-blue-900 mb-2">Required Documents:</h4>
+                        <ul className="space-y-1 text-sm text-blue-800">
+                          <li>• <strong>Evidence of Incorporation:</strong> Certificate from Corporate Affairs Commission (CAC)</li>
+                          <li>• <strong>Memorandum and Articles of Association:</strong> Including names of Directors with their addresses and corresponding shares</li>
+                          <li>• <strong>Key Personnel Details:</strong> Names, CVs, and professional registration certificates with recognized professional bodies</li>
+                          <li>• <strong>Tax Clearance Certificates (TCC):</strong> For the most recent three (3) years</li>
+                          <li>• <strong>Professional and Technical Qualifications:</strong> Of personnel assigned to execute the procurement</li>
+                          <li>• <strong>Previous Experience:</strong> Evidence of projects, programmes, and services executed with Kano State Government or any other government agency (national/international)</li>
+                          <li>• <strong>Financial Capability:</strong> Bank statements or audited company accounts</li>
+                          <li>• <strong>List of Equipment and Infrastructure:</strong> To be physically verified</li>
+                          <li>• <strong>Business Premises License</strong></li>
+                          <li>• <strong>Evidence of Registration with SCUML:</strong> Special Control Unit Against Money Laundering under EFCC</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-blue-900 mb-2">Sworn Court Affidavit (High Court of Justice) Testifying That:</h4>
+                        <ul className="space-y-1 text-sm text-blue-800">
+                          <li>• The company is not in receivership or subject to insolvency or bankruptcy</li>
+                          <li>• The company is compliant with payment of taxes, pensions, and social security obligations</li>
+                          <li>• No director has been convicted for criminal offenses relating to financial impropriety or falsification</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-blue-900 mb-2">Compliance Certificates Required:</h4>
+                        <ul className="space-y-1 text-sm text-blue-800">
+                          <li>• National Social Insurance Trust Fund (NSITF)</li>
+                          <li>• Industrial Training Fund (ITF)</li>
+                          <li>• National Pension Commission (PENCOM)</li>
+                          <li>• Registration with Relevant Professional Bodies (for consultancy firms)</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-blue-900 mb-3">Category of Contractors Registration & Fees:</h4>
+                        <div className="overflow-x-auto">
+                          <table className="min-w-full text-sm text-blue-800">
+                            <thead>
+                              <tr className="border-b border-blue-200">
+                                <th className="text-left py-2 font-semibold">Category</th>
+                                <th className="text-left py-2 font-semibold">Contract Value Range (₦)</th>
+                                <th className="text-left py-2 font-semibold">Registration Fee (₦)</th>
+                              </tr>
+                            </thead>
+                            <tbody className="space-y-1">
+                              <tr className="border-b border-blue-100">
+                                <td className="py-2 font-medium">A</td>
+                                <td className="py-2">1,000,000.00 – 50,000,000.00</td>
+                                <td className="py-2 text-green-700 font-medium">50,000.00</td>
+                              </tr>
+                              <tr className="border-b border-blue-100">
+                                <td className="py-2 font-medium">B</td>
+                                <td className="py-2">50,000,000.01 – 150,000,000.00</td>
+                                <td className="py-2 text-green-700 font-medium">100,000.00</td>
+                              </tr>
+                              <tr className="border-b border-blue-100">
+                                <td className="py-2 font-medium">C</td>
+                                <td className="py-2">150,000,000.01 – 500,000,000.00</td>
+                                <td className="py-2 text-green-700 font-medium">200,000.00</td>
+                              </tr>
+                              <tr className="border-b border-blue-100">
+                                <td className="py-2 font-medium">D</td>
+                                <td className="py-2">500,000,000.01 and above</td>
+                                <td className="py-2 text-green-700 font-medium">300,000.00</td>
+                              </tr>
+                              <tr>
+                                <td className="py-2 font-medium">E</td>
+                                <td className="py-2">Multiple Registration</td>
+                                <td className="py-2 text-green-700 font-medium">350,000.00</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-blue-600 mt-3"><strong>Note:</strong> All documents must be current, properly notarized, and submitted with the appropriate registration fee based on your category.</p>
                     </div>
                   </section>
 
