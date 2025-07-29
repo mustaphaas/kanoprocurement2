@@ -275,7 +275,7 @@ export default function SuperUserDashboard() {
     awardedContractsToday: 3,
     awardedContractsWeek: 15,
     awardedContractsMonth: 68,
-    totalContractValue: "���15.7B"
+    totalContractValue: "₦15.7B"
   };
 
   // Mock data initialization
