@@ -38,6 +38,7 @@ interface FeaturedTender {
 export default function Index() {
   const [currentTenderIndex, setCurrentTenderIndex] = useState(0);
   const [showGuidelines, setShowGuidelines] = useState(false);
+  const [showPolicies, setShowPolicies] = useState(false);
   const [selectedTender, setSelectedTender] = useState<any>(null);
   const [showTenderDetails, setShowTenderDetails] = useState(false);
 
@@ -1181,7 +1182,7 @@ export default function Index() {
                           <li>• Nigerian company registration (minimum 51% Nigerian ownership)</li>
                           <li>• Valid tax payments and clearances</li>
                           <li>• No involvement in corrupt practices</li>
-                          <li>• Compliance with labor laws and standards</li>
+                          <li>�� Compliance with labor laws and standards</li>
                         </ul>
                       </div>
                       <div>
