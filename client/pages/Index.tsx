@@ -20,7 +20,8 @@ import {
   MapPin,
   Award,
   Download,
-  X
+  X,
+  Calendar
 } from "lucide-react";
 
 interface FeaturedTender {
@@ -1035,7 +1036,7 @@ export default function Index() {
                           <li>• <strong>Key Personnel Details:</strong> Names, CVs, and professional registration certificates with recognized professional bodies</li>
                           <li>• <strong>Tax Clearance Certificates (TCC):</strong> For the most recent three (3) years</li>
                           <li>• <strong>Professional and Technical Qualifications:</strong> Of personnel assigned to execute the procurement</li>
-                          <li>• <strong>Previous Experience:</strong> Evidence of projects, programmes, and services executed with Kano State Government or any other government agency (national/international)</li>
+                          <li>��� <strong>Previous Experience:</strong> Evidence of projects, programmes, and services executed with Kano State Government or any other government agency (national/international)</li>
                           <li>• <strong>Financial Capability:</strong> Bank statements or audited company accounts</li>
                           <li>• <strong>List of Equipment and Infrastructure:</strong> To be physically verified</li>
                           <li>• <strong>Business Premises License</strong></li>
