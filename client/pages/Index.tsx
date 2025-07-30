@@ -925,6 +925,13 @@ export default function Index() {
                   <FileText className="mr-2 h-5 w-5" />
                   Read Guidelines
                 </button>
+                <button
+                  onClick={() => setShowPolicies(true)}
+                  className="inline-flex items-center px-8 py-4 bg-white text-green-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                >
+                  <Shield className="mr-2 h-5 w-5" />
+                  Procurement Policies
+                </button>
               </div>
             </div>
           </div>
@@ -1182,7 +1189,7 @@ export default function Index() {
                           <li>• Nigerian company registration (minimum 51% Nigerian ownership)</li>
                           <li>• Valid tax payments and clearances</li>
                           <li>• No involvement in corrupt practices</li>
-                          <li>�� Compliance with labor laws and standards</li>
+                          <li>• Compliance with labor laws and standards</li>
                         </ul>
                       </div>
                       <div>
