@@ -44,7 +44,8 @@ import {
   Bookmark,
   History,
   Shield,
-  Gavel
+  Gavel,
+  Archive
 } from "lucide-react";
 
 type CompanyStatus = "Approved" | "Suspended" | "Blacklisted";
