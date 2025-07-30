@@ -39,6 +39,108 @@ export default function Index() {
   const [showGuidelines, setShowGuidelines] = useState(false);
   const [selectedTender, setSelectedTender] = useState<any>(null);
   const [showTenderDetails, setShowTenderDetails] = useState(false);
+
+  // Comprehensive tender data
+  const recentTenders = [
+    {
+      id: "KS-2024-001",
+      title: "Construction of 50km Rural Roads in Kano North",
+      category: "Infrastructure",
+      value: "₦2.5B",
+      deadline: "2024-02-15",
+      location: "Kano North LGA",
+      views: 245,
+      status: "Open",
+      description: "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
+      publishDate: "2024-01-15",
+      closingDate: "2024-02-15",
+      tenderFee: "₦25,000",
+      procuringEntity: "Kano State Ministry of Works",
+      duration: "18 months",
+      eligibility: "Category C contractors with road construction experience",
+      requirements: [
+        "Valid CAC certificate",
+        "Tax clearance for last 3 years",
+        "Professional license for civil engineering",
+        "Evidence of similar projects (minimum 3)",
+        "Financial capacity of at least ₦500M"
+      ],
+      technicalSpecs: [
+        "Road width: 7.3 meters",
+        "Pavement type: Flexible pavement with asphalt concrete wearing course",
+        "Base course: Crushed stone base 150mm thick",
+        "Sub-base: Selected material 200mm thick",
+        "Drainage: Concrete lined drains on both sides"
+      ]
+    },
+    {
+      id: "KS-2024-002",
+      title: "Supply of Medical Equipment to Primary Health Centers",
+      category: "Healthcare",
+      value: "₦850M",
+      deadline: "2024-02-20",
+      location: "Statewide",
+      views: 189,
+      status: "Open",
+      description: "Procurement of essential medical equipment for 50 Primary Health Centers across Kano State to improve healthcare delivery and patient outcomes.",
+      publishDate: "2024-01-20",
+      closingDate: "2024-02-20",
+      tenderFee: "₦15,000",
+      procuringEntity: "Kano State Ministry of Health",
+      duration: "6 months",
+      eligibility: "Category B suppliers with healthcare equipment experience",
+      requirements: [
+        "Valid business registration",
+        "ISO certification for medical devices",
+        "Tax clearance certificates",
+        "Manufacturer authorization letters",
+        "After-sales service capability"
+      ],
+      technicalSpecs: [
+        "Digital X-ray machines: 10 units",
+        "Patient monitors: 50 units",
+        "Ultrasound machines: 15 units",
+        "Laboratory equipment: Complete set for 50 centers",
+        "Installation and training included"
+      ]
+    },
+    {
+      id: "KS-2024-003",
+      title: "Rehabilitation of Government Secondary Schools",
+      category: "Education",
+      value: "₦1.8B",
+      deadline: "2024-02-25",
+      location: "Various LGAs",
+      views: 156,
+      status: "Open",
+      description: "Comprehensive rehabilitation and renovation of 25 government secondary schools across Kano State including classroom blocks, laboratories, and recreational facilities.",
+      publishDate: "2024-01-25",
+      closingDate: "2024-02-25",
+      tenderFee: "₦20,000",
+      procuringEntity: "Kano State Ministry of Education",
+      duration: "12 months",
+      eligibility: "Category C contractors with school construction experience",
+      requirements: [
+        "Valid contractor registration",
+        "Professional indemnity insurance",
+        "Evidence of school projects completed",
+        "Qualified project management team",
+        "Environmental impact assessment capability"
+      ],
+      technicalSpecs: [
+        "Classroom renovation: 150 classrooms",
+        "Laboratory upgrade: 50 science labs",
+        "Library facilities: 25 libraries",
+        "Sports facilities: Football fields and courts",
+        "Solar power installation for all schools"
+      ]
+    }
+  ];
+
+  const handleViewTenderDetails = (tender: any) => {
+    setSelectedTender(tender);
+    setShowTenderDetails(true);
+  };
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const featuredTenders: FeaturedTender[] = [
