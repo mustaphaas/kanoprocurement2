@@ -48,7 +48,7 @@ import {
 } from "lucide-react";
 
 type CompanyStatus = "Approved" | "Suspended" | "Blacklisted";
-type ActiveSection = 
+type ActiveSection =
   | "dashboard"
   | "tender-ads"
   | "purchased-bids"
@@ -62,7 +62,9 @@ type ActiveSection =
   | "transaction-history"
   | "contracts-awarded"
   | "annual-report"
-  | "grievance";
+  | "grievance"
+  | "eportal"
+  | "open-contracting-portal";
 
 interface CompanyData {
   name: string;
