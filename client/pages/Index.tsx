@@ -637,7 +637,10 @@ export default function Index() {
                     </div>
                   </div>
 
-                  <button className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800">
+                  <button
+                    onClick={() => handleViewTenderDetails(recentTenders[1])}
+                    className="w-full mt-4 inline-flex items-center justify-center px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 transition-colors"
+                  >
                     View Details
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </button>
