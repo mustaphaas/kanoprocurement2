@@ -21,7 +21,8 @@ import {
   Award,
   Download,
   X,
-  Calendar
+  Calendar,
+  AlertTriangle
 } from "lucide-react";
 
 interface FeaturedTender {
@@ -56,7 +57,7 @@ export default function Index() {
       description: "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
       closingDate: "2024-02-15",
-      tenderFee: "₦25,000",
+      tenderFee: "���25,000",
       procuringEntity: "Kano State Ministry of Works",
       duration: "18 months",
       eligibility: "Category C contractors with road construction experience",
@@ -1574,7 +1575,7 @@ export default function Index() {
                         <ul className="text-sm text-indigo-800 ml-4 space-y-1">
                           <li>• Cost savings achieved through competitive bidding</li>
                           <li>• Procurement cycle time efficiency</li>
-                          <li>• Vendor performance and delivery rates</li>
+                          <li>��� Vendor performance and delivery rates</li>
                           <li>• Compliance with procurement procedures</li>
                         </ul>
                       </div>
