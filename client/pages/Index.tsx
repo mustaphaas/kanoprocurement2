@@ -1272,6 +1272,196 @@ export default function Index() {
           </div>
         </div>
       )}
+
+      {/* Tender Details Modal */}
+      {showTenderDetails && selectedTender && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setShowTenderDetails(false)}></div>
+
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">{selectedTender.title}</h2>
+                    <div className="flex items-center space-x-3 mt-2">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                        {selectedTender.id}
+                      </span>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
+                        selectedTender.status === "Open" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                      }`}>
+                        {selectedTender.status}
+                      </span>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                        {selectedTender.category}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowTenderDetails(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                <div className="max-h-96 overflow-y-auto space-y-6">
+                  {/* Overview */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Project Overview</h3>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <p className="text-gray-700 mb-4">{selectedTender.description}</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                          <p className="text-sm text-gray-600">Contract Value</p>
+                          <p className="text-lg font-bold text-green-600">{selectedTender.value}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Tender Fee</p>
+                          <p className="text-lg font-bold text-blue-600">{selectedTender.tenderFee}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Duration</p>
+                          <p className="text-lg font-medium text-gray-900">{selectedTender.duration}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Location</p>
+                          <p className="text-lg font-medium text-gray-900">{selectedTender.location}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Important Dates */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Important Dates</h3>
+                    <div className="bg-yellow-50 rounded-lg p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="flex items-center space-x-3">
+                          <Calendar className="h-5 w-5 text-yellow-600" />
+                          <div>
+                            <p className="text-sm text-yellow-800 font-medium">Published</p>
+                            <p className="text-yellow-900">{new Date(selectedTender.publishDate).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <Clock className="h-5 w-5 text-red-600" />
+                          <div>
+                            <p className="text-sm text-red-800 font-medium">Closing Date</p>
+                            <p className="text-red-900 font-bold">{new Date(selectedTender.closingDate).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <Building2 className="h-5 w-5 text-blue-600" />
+                          <div>
+                            <p className="text-sm text-blue-800 font-medium">Procuring Entity</p>
+                            <p className="text-blue-900">{selectedTender.procuringEntity}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Eligibility Criteria */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Eligibility Criteria</h3>
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <p className="text-blue-900 font-medium mb-3">{selectedTender.eligibility}</p>
+                      <h4 className="font-medium text-blue-900 mb-2">Required Documents:</h4>
+                      <ul className="space-y-1">
+                        {selectedTender.requirements.map((req: string, index: number) => (
+                          <li key={index} className="flex items-start space-x-2 text-sm text-blue-800">
+                            <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <span>{req}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Technical Specifications */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Technical Specifications</h3>
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <ul className="space-y-2">
+                        {selectedTender.technicalSpecs.map((spec: string, index: number) => (
+                          <li key={index} className="flex items-start space-x-2 text-sm text-green-800">
+                            <FileText className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                            <span>{spec}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Procurement Process */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">How to Apply</h3>
+                    <div className="bg-purple-50 rounded-lg p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <span className="flex-shrink-0 w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                          <div>
+                            <p className="font-medium text-purple-900">Register Your Company</p>
+                            <p className="text-sm text-purple-800">Complete online registration and get approved</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <span className="flex-shrink-0 w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                          <div>
+                            <p className="font-medium text-purple-900">Purchase Tender Documents</p>
+                            <p className="text-sm text-purple-800">Pay {selectedTender.tenderFee} tender fee and download documents</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <span className="flex-shrink-0 w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+                          <div>
+                            <p className="font-medium text-purple-900">Prepare Your Bid</p>
+                            <p className="text-sm text-purple-800">Submit technical and financial proposals before deadline</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <span className="flex-shrink-0 w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</span>
+                          <div>
+                            <p className="font-medium text-purple-900">Await Evaluation</p>
+                            <p className="text-sm text-purple-800">Evaluation results will be communicated within 30 days</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-gray-200 flex justify-between items-center">
+                  <div className="text-sm text-gray-500">
+                    Views: {selectedTender.views} • Published: {new Date(selectedTender.publishDate).toLocaleDateString()}
+                  </div>
+                  <div className="flex space-x-3">
+                    <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Documents
+                    </button>
+                    <Link
+                      to="/register"
+                      className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                    >
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Register to Bid
+                    </Link>
+                    <button
+                      onClick={() => setShowTenderDetails(false)}
+                      className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
