@@ -1909,10 +1909,15 @@ export default function CompanyDashboard() {
                 <HelpCircle className="h-4 w-4 mr-1" />
                 How it Works
               </Link>
-              <Link to="#" className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center">
+              <button
+                onClick={() => setActiveSection("eportal")}
+                className={`text-sm font-medium flex items-center ${
+                  activeSection === "eportal" ? "text-green-700" : "text-gray-700 hover:text-green-700"
+                }`}
+              >
                 <Globe className="h-4 w-4 mr-1" />
                 ePortal
-              </Link>
+              </button>
               <Link to="#" className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center">
                 <ExternalLink className="h-4 w-4 mr-1" />
                 Open Contracting Portal
