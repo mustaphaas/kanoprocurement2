@@ -1918,10 +1918,15 @@ export default function CompanyDashboard() {
                 <Globe className="h-4 w-4 mr-1" />
                 ePortal
               </button>
-              <Link to="#" className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center">
+              <button
+                onClick={() => setActiveSection("open-contracting-portal")}
+                className={`text-sm font-medium flex items-center ${
+                  activeSection === "open-contracting-portal" ? "text-green-700" : "text-gray-700 hover:text-green-700"
+                }`}
+              >
                 <ExternalLink className="h-4 w-4 mr-1" />
                 Open Contracting Portal
-              </Link>
+              </button>
               <Link to="#" className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center">
                 <Phone className="h-4 w-4 mr-1" />
                 Contact Us
