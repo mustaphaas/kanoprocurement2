@@ -1865,6 +1865,353 @@ export default function CompanyDashboard() {
           </div>
         );
 
+      case "eportal":
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900">Kano State ePortal</h2>
+                <p className="text-sm text-gray-600 mt-1">Comprehensive digital government services and resources portal</p>
+              </div>
+              <div className="p-6">
+                {/* Welcome Section */}
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Welcome to Kano State Digital Services</h3>
+                  <p className="text-gray-700">Access a wide range of government services, information, and resources all in one place. Our ePortal makes it easier for companies and citizens to interact with government services efficiently.</p>
+                </div>
+
+                {/* Service Categories */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                      <FileText className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Business Registration</h4>
+                    <p className="text-sm text-gray-600 mb-4">Register your business, obtain permits, and manage your business documentation online.</p>
+                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center">
+                      Access Service <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                      <DollarSign className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tax Services</h4>
+                    <p className="text-sm text-gray-600 mb-4">File tax returns, make payments, and access tax clearance certificates.</p>
+                    <button className="text-green-600 text-sm font-medium hover:text-green-800 flex items-center">
+                      Access Service <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                      <Shield className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Licensing & Permits</h4>
+                    <p className="text-sm text-gray-600 mb-4">Apply for and renew various business licenses and permits online.</p>
+                    <button className="text-purple-600 text-sm font-medium hover:text-purple-800 flex items-center">
+                      Access Service <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                      <Building2 className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Property Services</h4>
+                    <p className="text-sm text-gray-600 mb-4">Land registration, property tax, and real estate documentation services.</p>
+                    <button className="text-orange-600 text-sm font-medium hover:text-orange-800 flex items-center">
+                      Access Service <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                      <Users className="h-6 w-6 text-red-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Citizen Services</h4>
+                    <p className="text-sm text-gray-600 mb-4">Birth certificates, marriage certificates, and other vital records.</p>
+                    <button className="text-red-600 text-sm font-medium hover:text-red-800 flex items-center">
+                      Access Service <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+                      <Globe className="h-6 w-6 text-indigo-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Digital Resources</h4>
+                    <p className="text-sm text-gray-600 mb-4">Access government publications, forms, and digital resources.</p>
+                    <button className="text-indigo-600 text-sm font-medium hover:text-indigo-800 flex items-center">
+                      Access Service <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Recent Updates */}
+                <div className="bg-white border rounded-lg">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900">Recent Updates & Announcements</h3>
+                  </div>
+                  <div className="p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg">
+                        <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
+                        <div>
+                          <h4 className="font-medium text-gray-900">New Online Tax Payment System</h4>
+                          <p className="text-sm text-gray-600 mt-1">Enhanced online tax payment system is now available with mobile money integration.</p>
+                          <p className="text-xs text-gray-500 mt-2">January 28, 2024</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 p-4 bg-green-50 rounded-lg">
+                        <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                        <div>
+                          <h4 className="font-medium text-gray-900">Business Registration Process Simplified</h4>
+                          <p className="text-sm text-gray-600 mt-1">New streamlined business registration process reduces approval time to 3 business days.</p>
+                          <p className="text-xs text-gray-500 mt-2">January 25, 2024</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 p-4 bg-orange-50 rounded-lg">
+                        <AlertTriangle className="h-5 w-5 text-orange-600 mt-0.5" />
+                        <div>
+                          <h4 className="font-medium text-gray-900">System Maintenance Notice</h4>
+                          <p className="text-sm text-gray-600 mt-1">Scheduled maintenance on February 1, 2024, from 12:00 AM to 4:00 AM.</p>
+                          <p className="text-xs text-gray-500 mt-2">January 22, 2024</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "open-contracting-portal":
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900">Open Contracting Data Portal</h2>
+                <p className="text-sm text-gray-600 mt-1">Transparent access to government procurement and contracting data</p>
+              </div>
+              <div className="p-6">
+                {/* Overview Section */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Transparency in Government Contracting</h3>
+                  <p className="text-gray-700 mb-4">Access comprehensive data on government procurement processes, contract awards, and implementation progress. Our commitment to transparency ensures accountability and promotes fair competition.</p>
+                  <div className="flex items-center space-x-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      OCDS Compliant
+                    </span>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                      <Shield className="h-4 w-4 mr-1" />
+                      Real-time Data
+                    </span>
+                  </div>
+                </div>
+
+                {/* Contract Statistics */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                  <div className="bg-white border rounded-lg p-6 text-center">
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <FileText className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <h4 className="text-2xl font-bold text-gray-900">1,247</h4>
+                    <p className="text-sm text-gray-600">Total Contracts</p>
+                    <p className="text-xs text-green-600 mt-1">+15% this quarter</p>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 text-center">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <DollarSign className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h4 className="text-2xl font-bold text-gray-900">₦89.2B</h4>
+                    <p className="text-sm text-gray-600">Total Value</p>
+                    <p className="text-xs text-green-600 mt-1">+22% this year</p>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 text-center">
+                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Award className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <h4 className="text-2xl font-bold text-gray-900">847</h4>
+                    <p className="text-sm text-gray-600">Active Contracts</p>
+                    <p className="text-xs text-blue-600 mt-1">68% completion rate</p>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 text-center">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Building2 className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <h4 className="text-2xl font-bold text-gray-900">156</h4>
+                    <p className="text-sm text-gray-600">Registered Suppliers</p>
+                    <p className="text-xs text-green-600 mt-1">+8% this month</p>
+                  </div>
+                </div>
+
+                {/* Data Access Tools */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                      <BarChart3 className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Contract Analytics</h4>
+                    <p className="text-sm text-gray-600 mb-4">Interactive dashboards and analytics on procurement trends, spending patterns, and performance metrics.</p>
+                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center">
+                      View Analytics <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                      <Download className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Data Downloads</h4>
+                    <p className="text-sm text-gray-600 mb-4">Download procurement data in various formats including CSV, JSON, and OCDS standard format.</p>
+                    <button className="text-green-600 text-sm font-medium hover:text-green-800 flex items-center">
+                      Download Data <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                      <Search className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Contract Search</h4>
+                    <p className="text-sm text-gray-600 mb-4">Advanced search tools to find specific contracts, suppliers, and procurement opportunities.</p>
+                    <button className="text-purple-600 text-sm font-medium hover:text-purple-800 flex items-center">
+                      Search Contracts <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                      <Globe className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">API Access</h4>
+                    <p className="text-sm text-gray-600 mb-4">Programmatic access to procurement data through our RESTful API endpoints.</p>
+                    <button className="text-orange-600 text-sm font-medium hover:text-orange-800 flex items-center">
+                      API Documentation <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                      <AlertTriangle className="h-6 w-6 text-red-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Red Flag Analysis</h4>
+                    <p className="text-sm text-gray-600 mb-4">Automated detection of potential procurement irregularities and risk indicators.</p>
+                    <button className="text-red-600 text-sm font-medium hover:text-red-800 flex items-center">
+                      View Analysis <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+                      <History className="h-6 w-6 text-indigo-600" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Historical Data</h4>
+                    <p className="text-sm text-gray-600 mb-4">Access to historical procurement records and trend analysis over time.</p>
+                    <button className="text-indigo-600 text-sm font-medium hover:text-indigo-800 flex items-center">
+                      Historical Records <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Recent Contract Awards */}
+                <div className="bg-white border rounded-lg">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900">Recent Contract Awards</h3>
+                      <button className="text-sm text-blue-600 hover:text-blue-800">View All Awards</button>
+                    </div>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Title</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Awarded To</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Award Date</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">Rural Road Construction - Phase 3</div>
+                            <div className="text-sm text-gray-500">Ministry of Works</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            Kano Construction Co. Ltd
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            ₦2.8B
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            Jan 28, 2024
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                              Active
+                            </span>
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">Medical Equipment Supply</div>
+                            <div className="text-sm text-gray-500">Ministry of Health</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            MedTech Solutions Nigeria
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            ₦1.5B
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            Jan 26, 2024
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                              In Progress
+                            </span>
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">School Infrastructure Upgrade</div>
+                            <div className="text-sm text-gray-500">Ministry of Education</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            Northern Builders Ltd
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            ₦950M
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            Jan 25, 2024
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                              Active
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="text-center py-12">
