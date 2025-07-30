@@ -1282,6 +1282,339 @@ export default function Index() {
         </div>
       )}
 
+      {/* Procurement Policies Modal */}
+      {showPolicies && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setShowPolicies(false)}></div>
+
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Kano State Procurement Policies</h2>
+                  <button
+                    onClick={() => setShowPolicies(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                <div className="max-h-96 overflow-y-auto space-y-6">
+                  {/* General Procurement Policy */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-blue-700 mb-3 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      General Procurement Policy
+                    </h3>
+                    <div className="bg-blue-50 rounded-lg p-4 space-y-3">
+                      <p className="text-sm text-blue-800"><strong>Objective:</strong> To ensure transparency, accountability, efficiency, and value for money in all procurement activities of Kano State Government.</p>
+
+                      <div>
+                        <h4 className="font-medium text-blue-900 mb-2">Core Principles:</h4>
+                        <ul className="space-y-1 text-sm text-blue-800">
+                          <li>• <strong>Transparency:</strong> All procurement processes shall be conducted in an open and transparent manner</li>
+                          <li>• <strong>Competition:</strong> Fair and open competition among qualified suppliers</li>
+                          <li>• <strong>Accountability:</strong> Clear responsibility and documentation for all procurement decisions</li>
+                          <li>• <strong>Value for Money:</strong> Optimal combination of quality, price, and performance</li>
+                          <li>• <strong>Integrity:</strong> Zero tolerance for corruption and unethical practices</li>
+                          <li>• <strong>Equality:</strong> Non-discrimination and equal treatment of all bidders</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Procurement Methods */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-green-700 mb-3 flex items-center">
+                      <FileText className="h-5 w-5 mr-2" />
+                      Procurement Methods
+                    </h3>
+                    <div className="bg-green-50 rounded-lg p-4 space-y-4">
+                      <div>
+                        <h4 className="font-medium text-green-900">1. Open Competitive Bidding (OCB)</h4>
+                        <p className="text-sm text-green-800">Default method for procurement above ₦25 million. Open to all qualified bidders with adequate notice period.</p>
+                        <p className="text-xs text-green-600 mt-1"><strong>Timeline:</strong> Minimum 30 days notice period</p>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-green-900">2. Selective Bidding</h4>
+                        <p className="text-sm text-green-800">For specialized goods/services where limited qualified suppliers exist. Pre-qualification required.</p>
+                        <p className="text-xs text-green-600 mt-1"><strong>Threshold:</strong> ₦10 million - ₦25 million</p>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-green-900">3. Direct Procurement</h4>
+                        <p className="text-sm text-green-800">For procurement below ₦10 million or emergency situations with proper justification.</p>
+                        <p className="text-xs text-green-600 mt-1"><strong>Approval:</strong> Requires MDA head approval with justification</p>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-green-900">4. Request for Quotation (RFQ)</h4>
+                        <p className="text-sm text-green-800">For goods/services below ₦5 million. Minimum three quotations required.</p>
+                        <p className="text-xs text-green-600 mt-1"><strong>Process:</strong> Simplified procurement with shorter timelines</p>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Approval Thresholds */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-purple-700 mb-3 flex items-center">
+                      <DollarSign className="h-5 w-5 mr-2" />
+                      Approval Authority & Thresholds
+                    </h3>
+                    <div className="bg-purple-50 rounded-lg p-4">
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm text-purple-800">
+                          <thead>
+                            <tr className="border-b border-purple-200">
+                              <th className="text-left py-2 font-semibold">Authority Level</th>
+                              <th className="text-left py-2 font-semibold">Approval Limit</th>
+                              <th className="text-left py-2 font-semibold">Requirements</th>
+                            </tr>
+                          </thead>
+                          <tbody className="space-y-1">
+                            <tr className="border-b border-purple-100">
+                              <td className="py-2 font-medium">Procurement Officer</td>
+                              <td className="py-2">Up to ₦1,000,000</td>
+                              <td className="py-2">Three quotations required</td>
+                            </tr>
+                            <tr className="border-b border-purple-100">
+                              <td className="py-2 font-medium">MDA Head</td>
+                              <td className="py-2">₦1,000,001 - ₦25,000,000</td>
+                              <td className="py-2">Competitive bidding process</td>
+                            </tr>
+                            <tr className="border-b border-purple-100">
+                              <td className="py-2 font-medium">State Tender Board</td>
+                              <td className="py-2">₦25,000,001 - ₦250,000,000</td>
+                              <td className="py-2">Open competitive bidding mandatory</td>
+                            </tr>
+                            <tr>
+                              <td className="py-2 font-medium">Governor/Executive Council</td>
+                              <td className="py-2">Above ₦250,000,000</td>
+                              <td className="py-2">Cabinet approval required</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Vendor Management */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-orange-700 mb-3 flex items-center">
+                      <Users className="h-5 w-5 mr-2" />
+                      Vendor Management Policy
+                    </h3>
+                    <div className="bg-orange-50 rounded-lg p-4 space-y-3">
+                      <div>
+                        <h4 className="font-medium text-orange-900">Registration Requirements:</h4>
+                        <ul className="text-sm text-orange-800 ml-4 space-y-1">
+                          <li>• Valid business registration and tax compliance</li>
+                          <li>• Professional qualifications and experience verification</li>
+                          <li>• Financial capacity assessment</li>
+                          <li>• Background checks and integrity verification</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-orange-900">Performance Monitoring:</h4>
+                        <ul className="text-sm text-orange-800 ml-4 space-y-1">
+                          <li>• Regular performance evaluations for all contractors</li>
+                          <li>• Quality assurance and delivery timeline tracking</li>
+                          <li>• Customer satisfaction feedback collection</li>
+                          <li>• Performance-based vendor rating system</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-orange-900">Sanctions and Debarment:</h4>
+                        <ul className="text-sm text-orange-800 ml-4 space-y-1">
+                          <li>• Suspension for poor performance or contract violations</li>
+                          <li>• Debarment for fraudulent activities or corruption</li>
+                          <li>• Appeals process for contested sanctions</li>
+                          <li>• Rehabilitation program for suspended vendors</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Anti-Corruption Policy */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-red-700 mb-3 flex items-center">
+                      <AlertTriangle className="h-5 w-5 mr-2" />
+                      Anti-Corruption & Ethics Policy
+                    </h3>
+                    <div className="bg-red-50 rounded-lg p-4 space-y-3">
+                      <div>
+                        <h4 className="font-medium text-red-900">Zero Tolerance Policy:</h4>
+                        <p className="text-sm text-red-800">Kano State Government maintains zero tolerance for corruption in all forms including bribery, kickbacks, conflicts of interest, and fraudulent practices.</p>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-red-900">Prohibited Practices:</h4>
+                        <ul className="text-sm text-red-800 ml-4 space-y-1">
+                          <li>• Offering or accepting bribes, gifts, or favors</li>
+                          <li>• Bid rigging, collusion, or price fixing</li>
+                          <li>• Conflicts of interest without proper disclosure</li>
+                          <li>• Fraudulent documentation or misrepresentation</li>
+                          <li>• Abuse of confidential information</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-red-900">Reporting Mechanisms:</h4>
+                        <ul className="text-sm text-red-800 ml-4 space-y-1">
+                          <li>• Anonymous whistleblower hotline: 0800-REPORT</li>
+                          <li>• Online reporting portal: report.kanoproc.gov.ng</li>
+                          <li>• Protection for whistleblowers and witnesses</li>
+                          <li>• Independent investigation procedures</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Contract Management */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                      <FileText className="h-5 w-5 mr-2" />
+                      Contract Management Policy
+                    </h3>
+                    <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                      <div>
+                        <h4 className="font-medium text-gray-900">Contract Administration:</h4>
+                        <ul className="text-sm text-gray-700 ml-4 space-y-1">
+                          <li>• Designated contract managers for all major contracts</li>
+                          <li>• Regular progress monitoring and milestone tracking</li>
+                          <li>• Quality assurance and compliance verification</li>
+                          <li>• Change order procedures and approval protocols</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-gray-900">Payment Terms:</h4>
+                        <ul className="text-sm text-gray-700 ml-4 space-y-1">
+                          <li>• Standard payment terms: 30 days upon delivery and acceptance</li>
+                          <li>• Advance payments limited to 15% with bank guarantee</li>
+                          <li>• Retention of 5-10% for defect liability period</li>
+                          <li>• Performance-based payment schedules for service contracts</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-gray-900">Dispute Resolution:</h4>
+                        <ul className="text-sm text-gray-700 ml-4 space-y-1">
+                          <li>• Structured dispute resolution procedures</li>
+                          <li>• Mediation and arbitration mechanisms</li>
+                          <li>• Legal recourse for unresolved disputes</li>
+                          <li>• Contract termination procedures</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Sustainability & Local Content */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-green-700 mb-3 flex items-center">
+                      <Globe className="h-5 w-5 mr-2" />
+                      Sustainability & Local Content Policy
+                    </h3>
+                    <div className="bg-green-50 rounded-lg p-4 space-y-3">
+                      <div>
+                        <h4 className="font-medium text-green-900">Environmental Considerations:</h4>
+                        <ul className="text-sm text-green-800 ml-4 space-y-1">
+                          <li>• Environmental impact assessment for major projects</li>
+                          <li>• Preference for environmentally friendly products and services</li>
+                          <li>• Waste reduction and recycling requirements</li>
+                          <li>• Energy efficiency considerations in procurement decisions</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-green-900">Local Content Requirements:</h4>
+                        <ul className="text-sm text-green-800 ml-4 space-y-1">
+                          <li>• Minimum 60% Nigerian content for goods and services</li>
+                          <li>• Priority for locally manufactured products</li>
+                          <li>• Local skills development and technology transfer</li>
+                          <li>• Support for small and medium enterprises (SMEs)</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-green-900">Social Responsibility:</h4>
+                        <ul className="text-sm text-green-800 ml-4 space-y-1">
+                          <li>• Community development and job creation priorities</li>
+                          <li>• Gender equality and youth employment initiatives</li>
+                          <li>• Disabled-friendly procurement practices</li>
+                          <li>• Corporate social responsibility requirements</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Compliance and Monitoring */}
+                  <section>
+                    <h3 className="text-lg font-semibold text-indigo-700 mb-3 flex items-center">
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                      Compliance & Monitoring
+                    </h3>
+                    <div className="bg-indigo-50 rounded-lg p-4 space-y-3">
+                      <div>
+                        <h4 className="font-medium text-indigo-900">Regular Audits:</h4>
+                        <ul className="text-sm text-indigo-800 ml-4 space-y-1">
+                          <li>• Internal audit of all procurement activities</li>
+                          <li>• External audit by independent auditors</li>
+                          <li>• Public procurement audit by Auditor General</li>
+                          <li>• Quarterly compliance reports</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-indigo-900">Key Performance Indicators:</h4>
+                        <ul className="text-sm text-indigo-800 ml-4 space-y-1">
+                          <li>• Cost savings achieved through competitive bidding</li>
+                          <li>• Procurement cycle time efficiency</li>
+                          <li>• Vendor performance and delivery rates</li>
+                          <li>• Compliance with procurement procedures</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-indigo-900">Continuous Improvement:</h4>
+                        <ul className="text-sm text-indigo-800 ml-4 space-y-1">
+                          <li>• Regular policy reviews and updates</li>
+                          <li>• Stakeholder feedback incorporation</li>
+                          <li>• Best practice adoption and innovation</li>
+                          <li>• Training and capacity building programs</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-gray-200 flex justify-between items-center">
+                  <div className="text-sm text-gray-500">
+                    Effective Date: January 2024 • Version 3.0 • Review Date: January 2025
+                  </div>
+                  <div className="flex space-x-3">
+                    <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download PDF
+                    </button>
+                    <button
+                      onClick={() => setShowPolicies(false)}
+                      className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Tender Details Modal */}
       {showTenderDetails && selectedTender && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
