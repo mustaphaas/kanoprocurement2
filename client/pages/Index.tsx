@@ -547,10 +547,10 @@ export default function Index() {
                   Latest procurement opportunities from Kano State Government
                 </p>
               </div>
-              <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+              <Link to="/tenders" className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
                 View All Tenders
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </button>
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
