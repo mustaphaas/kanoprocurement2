@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, ProtectedRoute } from "@/contexts/StaticAuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import AllTenders from "./pages/AllTenders";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import CompanyLogin from "./pages/CompanyLogin";
 import CompanyDashboard from "./pages/CompanyDashboard";
