@@ -2320,7 +2320,7 @@ The award letter has been:
                                 Flag Bid
                               </button>
                               <button
-                                onClick={() => handleCompleteEvaluation(evaluation.id)}
+                                onClick={() => handleCompleteEvaluationOld(evaluation.id)}
                                 className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm transition-colors"
                               >
                                 <CheckCircle2 className="h-4 w-4 mr-1" />
