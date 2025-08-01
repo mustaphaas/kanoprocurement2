@@ -626,6 +626,17 @@ export default function SuperUserDashboard() {
   };
 
   const handleAwardTender = (tender: Tender) => {
+    // Check if NOC has been approved before allowing award
+    if (!tender.nocApproved) {
+      alert("Error: No Objection Certificate (NOC) must be approved before awarding the tender.");
+      return;
+    }
+
+    if (tender.workflowStatus !== "NOC_Approved") {
+      alert("Error: Tender workflow must complete NOC approval step before award.");
+      return;
+    }
+
     setSelectedAwardTender(tender);
     setAwardFormData({
       winningCompany: "",
@@ -677,6 +688,17 @@ export default function SuperUserDashboard() {
   };
 
   const handleSignContract = (tender: Tender) => {
+    // Ensure NOC is approved before contract signing
+    if (!tender.nocApproved) {
+      alert("Error: Contract cannot be signed. No Objection Certificate (NOC) must be approved first.");
+      return;
+    }
+
+    if (tender.workflowStatus !== "NOC_Approved" && tender.workflowStatus !== "Contract_Awarded") {
+      alert("Error: NOC approval is required before contract signing.");
+      return;
+    }
+
     setSelectedAwardTender(tender);
     setShowContractModal(true);
   };
@@ -745,6 +767,17 @@ export default function SuperUserDashboard() {
   };
 
   const generateAwardLetter = (tender: Tender) => {
+    // Mandatory NOC approval check before generating award letter
+    if (!tender.nocApproved) {
+      alert("Error: E-Award Letter cannot be generated. No Objection Certificate (NOC) must be approved first.");
+      return;
+    }
+
+    if (tender.workflowStatus !== "NOC_Approved" && tender.workflowStatus !== "Contract_Awarded") {
+      alert("Error: NOC approval is required before generating award letter.");
+      return;
+    }
+
     const currentDate = new Date();
     const referenceNumber = `KSG/BPP/${currentDate.getFullYear()}/${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
 
