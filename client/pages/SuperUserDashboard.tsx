@@ -2185,7 +2185,11 @@ export default function SuperUserDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Winning Company *</label>
-                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <select
+                      value={awardFormData.winningCompany}
+                      onChange={(e) => setAwardFormData({...awardFormData, winningCompany: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
                       <option value="">Select winning bidder</option>
                       <option value="1">Northern Construction Ltd (���2.3B - Score: 87.5)</option>
                       <option value="2">BuildRight Engineering (₦2.6B - Score: 76.5)</option>
