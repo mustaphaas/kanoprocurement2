@@ -617,27 +617,59 @@ export default function CompanyRegistration() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     CAC Form *
+                    <span className="text-xs text-gray-500 ml-2">(PDF, JPG, PNG - Max 5MB)</span>
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                  <div
+                    className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-green-400 transition-colors"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.classList.add('border-green-400', 'bg-green-50');
+                    }}
+                    onDragLeave={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.classList.remove('border-green-400', 'bg-green-50');
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.classList.remove('border-green-400', 'bg-green-50');
+                      const files = e.dataTransfer.files;
+                      if (files.length > 0) {
+                        const mockEvent = {
+                          target: { files }
+                        } as React.ChangeEvent<HTMLInputElement>;
+                        handleFileUpload(mockEvent, 'cacForm');
+                      }
+                    }}
+                  >
                     {uploadedFiles.cacForm ? (
                       <div className="flex items-center justify-between bg-green-50 p-3 rounded-md">
                         <div className="flex items-center">
                           <FileText className="h-5 w-5 text-green-600 mr-2" />
-                          <span className="text-sm text-green-800">{uploadedFiles.cacForm.name}</span>
+                          <div>
+                            <span className="text-sm text-green-800 block">{uploadedFiles.cacForm.name}</span>
+                            <span className="text-xs text-green-600">
+                              {(uploadedFiles.cacForm.size / 1024 / 1024).toFixed(2)} MB
+                            </span>
+                          </div>
                         </div>
                         <button
                           type="button"
                           onClick={() => removeFile('cacForm')}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-500 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"
                         >
                           Remove
                         </button>
                       </div>
                     ) : (
-                      <div className="text-center">
-                        <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <label htmlFor="cacForm" className="cursor-pointer">
-                          <span className="text-sm text-gray-600">Click to upload or drag and drop</span>
+                      <div className="text-center py-6">
+                        <Upload className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                        <label htmlFor="cacForm" className="cursor-pointer block">
+                          <span className="text-sm text-gray-600 block mb-1">
+                            <strong>Click to upload</strong> or drag and drop your CAC Form
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            PDF, JPG, JPEG or PNG (max. 5MB)
+                          </span>
                           <input
                             type="file"
                             id="cacForm"
