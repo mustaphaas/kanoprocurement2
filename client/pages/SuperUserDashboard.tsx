@@ -419,6 +419,8 @@ export default function SuperUserDashboard() {
         ministry: "Ministry of Health",
         estimatedValue: "₦850M",
         status: "Published",
+        workflowStatus: "Bidding",
+        workflowStep: 3,
         publishDate: "2024-01-15",
         closeDate: "2024-02-15",
         bidsReceived: 12,
@@ -434,13 +436,16 @@ export default function SuperUserDashboard() {
         ministry: "Ministry of Works",
         estimatedValue: "₦2.5B",
         status: "Closed",
+        workflowStatus: "Evaluation",
+        workflowStep: 4,
         publishDate: "2024-01-10",
         closeDate: "2024-01-25",
         openDate: "2024-01-26",
         bidsReceived: 8,
         ocdsReleased: true,
         addendaCount: 2,
-        procuringEntity: "Kano State Ministry of Works"
+        procuringEntity: "Kano State Ministry of Works",
+        evaluationCompleted: true
       },
       {
         id: "KS-2024-003",
