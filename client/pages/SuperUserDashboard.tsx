@@ -256,6 +256,29 @@ export default function SuperUserDashboard() {
     publishOCDS: true,
     initiatePerformanceTracking: true
   });
+  const [showDigitalSignModal, setShowDigitalSignModal] = useState(false);
+  const [showAwardLetterModal, setShowAwardLetterModal] = useState(false);
+  const [digitalSignatureData, setDigitalSignatureData] = useState({
+    certificateId: "",
+    signatureMethod: "PKI", // PKI, HSM, or Cloud
+    timestamp: "",
+    signedHash: "",
+    signedBy: "Super User",
+    purpose: "",
+    location: "Kano State Government",
+    reason: "Official Contract Execution"
+  });
+  const [awardLetterData, setAwardLetterData] = useState({
+    letterDate: "",
+    referenceNumber: "",
+    subject: "",
+    recipientName: "",
+    recipientAddress: "",
+    contractDetails: "",
+    terms: "",
+    validity: "30",
+    attachments: []
+  });
   const [tenderForm, setTenderForm] = useState<TenderForm>({
     title: "",
     description: "",
