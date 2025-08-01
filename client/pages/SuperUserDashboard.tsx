@@ -3747,6 +3747,320 @@ The award letter has been:
         {renderDashboardContent()}
       </main>
 
+      {/* Digital Signature Modal */}
+      {showDigitalSignModal && selectedAwardTender && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              🔐 Digital Contract Signing
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">
+              Contract: {selectedAwardTender.title} • Awarded to: {selectedAwardTender.awardedCompany}
+            </p>
+
+            <div className="space-y-6">
+              {/* Digital Certificate Information */}
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                <h4 className="font-medium text-blue-900 mb-3 flex items-center">
+                  <Shield className="h-5 w-5 mr-2" />
+                  Digital Certificate Information
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium text-blue-800">Certificate Authority:</span>
+                    <p className="text-blue-700">Kano State Government PKI</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-blue-800">Certificate ID:</span>
+                    <p className="text-blue-700">{digitalSignatureData.certificateId || 'CERT-KS-2024-001'}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-blue-800">Signing Method:</span>
+                    <p className="text-blue-700">PKI with SHA-256 Hash</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-blue-800">Validity:</span>
+                    <p className="text-green-700">✅ Valid & Active</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Signature Configuration */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Signature Method</label>
+                  <select
+                    value={digitalSignatureData.signatureMethod}
+                    onChange={(e) => setDigitalSignatureData({...digitalSignatureData, signatureMethod: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="PKI">PKI Certificate (Government Standard)</option>
+                    <option value="HSM">Hardware Security Module</option>
+                    <option value="Cloud">Cloud-based Signing</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Signing Purpose</label>
+                  <input
+                    type="text"
+                    value={digitalSignatureData.purpose}
+                    onChange={(e) => setDigitalSignatureData({...digitalSignatureData, purpose: e.target.value})}
+                    placeholder="e.g., Contract Execution and Authorization"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Signing Location</label>
+                  <input
+                    type="text"
+                    value={digitalSignatureData.location}
+                    onChange={(e) => setDigitalSignatureData({...digitalSignatureData, location: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Contract Hash Preview */}
+              <div className="bg-gray-50 rounded-lg p-4 border">
+                <h4 className="font-medium text-gray-900 mb-2">📄 Document Hash Preview</h4>
+                <p className="text-xs font-mono text-gray-600 break-all">
+                  SHA256: {digitalSignatureData.signedHash || 'Will be generated upon signing...'}
+                </p>
+              </div>
+
+              {/* Legal Notice */}
+              <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                <div className="flex items-start space-x-3">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-yellow-900">Legal Notice</h4>
+                    <p className="text-sm text-yellow-800 mt-1">
+                      This digital signature has the same legal validity as a handwritten signature under the Electronic Transactions Act.
+                      By proceeding, you certify that you have the authority to execute this contract on behalf of Kano State Government.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Signature Options */}
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="timestampSign"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="timestampSign" className="text-sm text-gray-700">
+                    Apply trusted timestamp
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="blockchainRecord"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="blockchainRecord" className="text-sm text-gray-700">
+                    Record on blockchain for immutable audit trail
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="notifyParties"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="notifyParties" className="text-sm text-gray-700">
+                    Send signed contract to all parties
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowDigitalSignModal(false);
+                  setSelectedAwardTender(null);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDigitalSign}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Apply Digital Signature
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* E-Award Letter Modal */}
+      {showAwardLetterModal && selectedAwardTender && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              📧 Generate Electronic Award Letter
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">
+              Contract: {selectedAwardTender.title} • Awarded to: {selectedAwardTender.awardedCompany}
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Letter Configuration */}
+              <div className="space-y-4">
+                <h4 className="font-medium text-gray-900">Letter Configuration</h4>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Reference Number</label>
+                  <input
+                    type="text"
+                    value={awardLetterData.referenceNumber}
+                    onChange={(e) => setAwardLetterData({...awardLetterData, referenceNumber: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Letter Date</label>
+                  <input
+                    type="date"
+                    value={awardLetterData.letterDate}
+                    onChange={(e) => setAwardLetterData({...awardLetterData, letterDate: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                  <input
+                    type="text"
+                    value={awardLetterData.subject}
+                    onChange={(e) => setAwardLetterData({...awardLetterData, subject: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Recipient Name</label>
+                  <input
+                    type="text"
+                    value={awardLetterData.recipientName}
+                    onChange={(e) => setAwardLetterData({...awardLetterData, recipientName: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Contract Details</label>
+                  <textarea
+                    rows={4}
+                    value={awardLetterData.contractDetails}
+                    onChange={(e) => setAwardLetterData({...awardLetterData, contractDetails: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Validity Period (Days)</label>
+                  <input
+                    type="number"
+                    value={awardLetterData.validity}
+                    onChange={(e) => setAwardLetterData({...awardLetterData, validity: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+              </div>
+
+              {/* Letter Preview */}
+              <div className="space-y-4">
+                <h4 className="font-medium text-gray-900">Letter Preview</h4>
+                <div className="bg-gray-50 border rounded-lg p-4 text-sm">
+                  <div className="text-center mb-4">
+                    <h5 className="font-bold text-green-700">KANO STATE GOVERNMENT</h5>
+                    <p className="text-xs">Bureau of Public Procurement</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <p><strong>Ref:</strong> {awardLetterData.referenceNumber}</p>
+                    <p><strong>Date:</strong> {awardLetterData.letterDate ? new Date(awardLetterData.letterDate).toLocaleDateString() : ''}</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <p><strong>To:</strong><br />
+                    {awardLetterData.recipientName}<br />
+                    [Company Address]</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <p><strong>Subject:</strong> {awardLetterData.subject}</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <p>Dear Sir/Madam,</p>
+                    <p className="mt-2">
+                      We are pleased to inform you that your company has been awarded the above-mentioned contract.
+                    </p>
+                    <div className="mt-2 p-2 bg-white border rounded">
+                      {awardLetterData.contractDetails}
+                    </div>
+                    <p className="mt-2">
+                      This award is valid for {awardLetterData.validity} days from the date of this letter.
+                    </p>
+                  </div>
+
+                  <div className="mt-4">
+                    <p>Yours sincerely,</p>
+                    <div className="mt-4">
+                      <p className="font-bold">Director General</p>
+                      <p className="text-xs">Bureau of Public Procurement</p>
+                      <p className="text-xs">🔐 Digitally Signed</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowAwardLetterModal(false);
+                  setSelectedAwardTender(null);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="px-4 py-2 border border-green-300 rounded-md text-green-700 hover:bg-green-50"
+              >
+                <Download className="h-4 w-4 mr-2 inline" />
+                Download PDF
+              </button>
+              <button
+                onClick={sendEAwardLetter}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center"
+              >
+                <Mail className="h-4 w-4 mr-2" />
+                Send E-Award Letter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Award Modal */}
       {showAwardModal && selectedAwardTender && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
