@@ -2221,6 +2221,8 @@ export default function SuperUserDashboard() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Contract Duration</label>
                     <input
                       type="text"
+                      value={awardFormData.contractDuration}
+                      onChange={(e) => setAwardFormData({...awardFormData, contractDuration: e.target.value})}
                       placeholder="e.g., 12 months"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
