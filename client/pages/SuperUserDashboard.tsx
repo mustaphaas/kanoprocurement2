@@ -288,7 +288,7 @@ export default function SuperUserDashboard() {
     awardedContractsToday: 3,
     awardedContractsWeek: 15,
     awardedContractsMonth: 68,
-    totalContractValue: "₦15.7B"
+    totalContractValue: "��15.7B"
   };
 
   // Mock data initialization
@@ -2145,7 +2145,10 @@ export default function SuperUserDashboard() {
                         </div>
                         <div className="flex items-center space-x-2">
                           {tender.status === "Closed" ? (
-                            <button className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm">
+                            <button
+                              onClick={() => handleAwardTender(tender)}
+                              className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
+                            >
                               <Gavel className="h-4 w-4 mr-1" />
                               Award Tender
                             </button>
@@ -2181,7 +2184,7 @@ export default function SuperUserDashboard() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Winning Company *</label>
                     <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">Select winning bidder</option>
-                      <option value="1">Northern Construction Ltd (���2.3B - Score: 87.5)</option>
+                      <option value="1">Northern Construction Ltd (����2.3B - Score: 87.5)</option>
                       <option value="2">BuildRight Engineering (₦2.6B - Score: 76.5)</option>
                     </select>
                   </div>
