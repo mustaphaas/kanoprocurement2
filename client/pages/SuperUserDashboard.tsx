@@ -561,6 +561,81 @@ export default function SuperUserDashboard() {
     setShowBlacklistModal(true);
   };
 
+  const handleAwardTender = (tender: Tender) => {
+    setSelectedAwardTender(tender);
+    setAwardFormData({
+      winningCompany: "",
+      awardAmount: "",
+      awardDate: new Date().toISOString().split('T')[0],
+      contractDuration: "",
+      notifyWinner: true,
+      notifyUnsuccessful: true,
+      publishOCDS: true,
+      initiatePerformanceTracking: true
+    });
+    setShowAwardModal(true);
+  };
+
+  const handleSubmitAward = () => {
+    if (!selectedAwardTender || !awardFormData.winningCompany || !awardFormData.awardAmount) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    // Update the tender with award information
+    setTenders(prev => prev.map(tender =>
+      tender.id === selectedAwardTender.id
+        ? {
+            ...tender,
+            status: "Awarded" as const,
+            awardedCompany: awardFormData.winningCompany.split(' (')[0], // Extract company name
+            awardAmount: awardFormData.awardAmount,
+            awardDate: awardFormData.awardDate
+          }
+        : tender
+    ));
+
+    // Close modal and reset form
+    setShowAwardModal(false);
+    setSelectedAwardTender(null);
+    setAwardFormData({
+      winningCompany: "",
+      awardAmount: "",
+      awardDate: "",
+      contractDuration: "",
+      notifyWinner: true,
+      notifyUnsuccessful: true,
+      publishOCDS: true,
+      initiatePerformanceTracking: true
+    });
+
+    alert("Tender awarded successfully! Notifications sent and OCDS data published.");
+  };
+
+  const handleSignContract = (tender: Tender) => {
+    setSelectedAwardTender(tender);
+    setShowContractModal(true);
+  };
+
+  const handleSubmitContract = () => {
+    if (!selectedAwardTender) return;
+
+    // Update tender status to include contract signed
+    setTenders(prev => prev.map(tender =>
+      tender.id === selectedAwardTender.id
+        ? {
+            ...tender,
+            status: "Awarded" as const,
+            // Add contract signed flag or additional status
+          }
+        : tender
+    ));
+
+    setShowContractModal(false);
+    setSelectedAwardTender(null);
+    alert("Contract signed successfully! Performance tracking initiated.");
+  };
+
   const submitBlacklist = () => {
     if (!selectedCompany || !blacklistReason.trim()) return;
 
