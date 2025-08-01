@@ -823,6 +823,20 @@ The award letter has been:
     setSelectedAwardTender(null);
   };
 
+  const handleUpdateProgress = (performance: VendorPerformance) => {
+    setSelectedVendorPerformance(performance);
+    setShowUpdateProgressModal(true);
+  };
+
+  const updateVendorPerformance = (updatedPerformance: VendorPerformance) => {
+    setVendorPerformances(prev => prev.map(perf =>
+      perf.id === updatedPerformance.id ? updatedPerformance : perf
+    ));
+    setShowUpdateProgressModal(false);
+    setSelectedVendorPerformance(null);
+    alert("Vendor performance updated successfully!");
+  };
+
   // Workflow Management Functions
   const getWorkflowStepName = (step: number) => {
     const steps = {
