@@ -2981,7 +2981,10 @@ The award letter has been:
                           <Eye className="h-4 w-4 mr-1" />
                           View Details
                         </button>
-                        <button className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                        <button
+                          onClick={() => handleUpdateProgress(performance)}
+                          className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                        >
                           <Edit className="h-4 w-4 mr-1" />
                           Update Progress
                         </button>
