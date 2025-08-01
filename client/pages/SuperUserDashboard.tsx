@@ -455,6 +455,8 @@ export default function SuperUserDashboard() {
         ministry: "Ministry of Science and Technology",
         estimatedValue: "₦1.2B",
         status: "Awarded",
+        workflowStatus: "Contract_Awarded",
+        workflowStep: 6,
         publishDate: "2024-01-05",
         closeDate: "2024-01-20",
         openDate: "2024-01-21",
@@ -465,7 +467,32 @@ export default function SuperUserDashboard() {
         ocdsReleased: true,
         addendaCount: 0,
         evaluationScore: 92,
-        procuringEntity: "Kano State ICT Development Agency"
+        procuringEntity: "Kano State ICT Development Agency",
+        evaluationCompleted: true,
+        nocRequested: true,
+        nocApproved: true,
+        nocRequestDate: "2024-01-25",
+        nocApprovalDate: "2024-01-28"
+      },
+      {
+        id: "KS-2024-004",
+        title: "Medical Equipment Supply",
+        description: "Supply of advanced medical equipment for specialist units",
+        category: "Healthcare",
+        ministry: "Ministry of Health",
+        estimatedValue: "₦950M",
+        status: "Closed",
+        workflowStatus: "NOC_Requested",
+        workflowStep: 5,
+        publishDate: "2024-01-12",
+        closeDate: "2024-01-28",
+        bidsReceived: 7,
+        ocdsReleased: true,
+        addendaCount: 1,
+        procuringEntity: "Kano State Specialist Hospital",
+        evaluationCompleted: true,
+        nocRequested: true,
+        nocRequestDate: "2024-01-30"
       }
     ];
 
