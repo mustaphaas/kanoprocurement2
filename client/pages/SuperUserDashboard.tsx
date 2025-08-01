@@ -3620,6 +3620,255 @@ export default function SuperUserDashboard() {
         {renderDashboardContent()}
       </main>
 
+      {/* Award Modal */}
+      {showAwardModal && selectedAwardTender && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Award Tender: {selectedAwardTender.title}
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">{selectedAwardTender.id}</p>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Winning Company *</label>
+                  <select
+                    value={awardFormData.winningCompany}
+                    onChange={(e) => setAwardFormData({...awardFormData, winningCompany: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    <option value="">Select winning bidder</option>
+                    <option value="Northern Construction Ltd (₦2.3B - Score: 87.5)">Northern Construction Ltd (₦2.3B - Score: 87.5)</option>
+                    <option value="BuildRight Engineering (₦2.6B - Score: 76.5)">BuildRight Engineering (₦2.6B - Score: 76.5)</option>
+                    <option value="Kano Infrastructure Corp (₦2.1B - Score: 82.0)">Kano Infrastructure Corp (₦2.1B - Score: 82.0)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Award Amount *</label>
+                  <input
+                    type="text"
+                    value={awardFormData.awardAmount}
+                    onChange={(e) => setAwardFormData({...awardFormData, awardAmount: e.target.value})}
+                    placeholder="Enter final award amount"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Award Date *</label>
+                  <input
+                    type="date"
+                    value={awardFormData.awardDate}
+                    onChange={(e) => setAwardFormData({...awardFormData, awardDate: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Contract Duration</label>
+                  <input
+                    type="text"
+                    value={awardFormData.contractDuration}
+                    onChange={(e) => setAwardFormData({...awardFormData, contractDuration: e.target.value})}
+                    placeholder="e.g., 12 months"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="notifyWinner"
+                    checked={awardFormData.notifyWinner}
+                    onChange={(e) => setAwardFormData({...awardFormData, notifyWinner: e.target.checked})}
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="notifyWinner" className="text-sm text-gray-700">
+                    Notify winning company via email
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="notifyUnsuccessful"
+                    checked={awardFormData.notifyUnsuccessful}
+                    onChange={(e) => setAwardFormData({...awardFormData, notifyUnsuccessful: e.target.checked})}
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="notifyUnsuccessful" className="text-sm text-gray-700">
+                    Notify unsuccessful companies
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="publishOCDS"
+                    checked={awardFormData.publishOCDS}
+                    onChange={(e) => setAwardFormData({...awardFormData, publishOCDS: e.target.checked})}
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="publishOCDS" className="text-sm text-gray-700">
+                    Publish OCDS award release
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="initiatePerformanceTracking"
+                    checked={awardFormData.initiatePerformanceTracking}
+                    onChange={(e) => setAwardFormData({...awardFormData, initiatePerformanceTracking: e.target.checked})}
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="initiatePerformanceTracking" className="text-sm text-gray-700">
+                    Initiate vendor performance tracking
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowAwardModal(false);
+                  setSelectedAwardTender(null);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitAward}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Award Tender
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Contract Signing Modal */}
+      {showContractModal && selectedAwardTender && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Contract Signing: {selectedAwardTender.title}
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">
+              {selectedAwardTender.id} • Awarded to: {selectedAwardTender.awardedCompany}
+            </p>
+
+            <div className="space-y-6">
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h4 className="font-medium text-blue-900 mb-2">Contract Details</h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium">Contract Value:</span>
+                    <p className="text-blue-800">{selectedAwardTender.awardAmount || selectedAwardTender.estimatedValue}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Award Date:</span>
+                    <p className="text-blue-800">{selectedAwardTender.awardDate ? new Date(selectedAwardTender.awardDate).toLocaleDateString() : 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Contract Document</label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                  <div className="text-center">
+                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600">Upload signed contract document</p>
+                    <input type="file" className="hidden" accept=".pdf,.doc,.docx" />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Contract Start Date</label>
+                <input
+                  type="date"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Performance Bond Amount (%)</label>
+                <input
+                  type="number"
+                  placeholder="e.g., 10"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="notifyContractSigning"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="notifyContractSigning" className="text-sm text-gray-700">
+                    Notify all stakeholders of contract signing
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="initiateProjectTracking"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="initiateProjectTracking" className="text-sm text-gray-700">
+                    Initiate project performance tracking
+                  </label>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="setupPaymentSchedule"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    defaultChecked
+                  />
+                  <label htmlFor="setupPaymentSchedule" className="text-sm text-gray-700">
+                    Setup automatic payment schedule
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowContractModal(false);
+                  setSelectedAwardTender(null);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitContract}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                <FileCheck className="h-4 w-4 mr-2 inline" />
+                Sign Contract
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Blacklist Modal */}
       {showBlacklistModal && selectedCompany && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
