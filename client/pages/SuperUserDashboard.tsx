@@ -267,6 +267,8 @@ export default function SuperUserDashboard() {
   });
   const [showDigitalSignModal, setShowDigitalSignModal] = useState(false);
   const [showAwardLetterModal, setShowAwardLetterModal] = useState(false);
+  const [showUpdateProgressModal, setShowUpdateProgressModal] = useState(false);
+  const [selectedVendorPerformance, setSelectedVendorPerformance] = useState<VendorPerformance | null>(null);
   const [digitalSignatureData, setDigitalSignatureData] = useState({
     certificateId: "",
     signatureMethod: "PKI", // PKI, HSM, or Cloud
