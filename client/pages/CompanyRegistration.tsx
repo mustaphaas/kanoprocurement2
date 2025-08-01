@@ -94,17 +94,44 @@ export default function CompanyRegistration() {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, fileType: keyof UploadedFiles) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
+
+    // File validation
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+
+    const filesToProcess = Array.from(files);
+    const validFiles = filesToProcess.filter(file => {
+      if (file.size > maxSize) {
+        alert(`File "${file.name}" is too large. Maximum size allowed is 5MB.`);
+        return false;
+      }
+      if (!allowedTypes.includes(file.type)) {
+        alert(`File "${file.name}" has an invalid format. Only PDF, JPG, JPEG, and PNG files are allowed.`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
 
     if (fileType === "otherDocuments") {
       setUploadedFiles(prev => ({
         ...prev,
-        [fileType]: [...prev.otherDocuments, ...Array.from(files)]
+        [fileType]: [...prev.otherDocuments, ...validFiles]
       }));
     } else {
       setUploadedFiles(prev => ({
         ...prev,
-        [fileType]: files[0]
+        [fileType]: validFiles[0]
+      }));
+    }
+
+    // Clear any previous errors for this field
+    if (errors[fileType]) {
+      setErrors(prev => ({
+        ...prev,
+        [fileType]: ""
       }));
     }
   };
