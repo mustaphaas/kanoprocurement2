@@ -2406,50 +2406,144 @@ The award letter has been:
               </div>
             </div>
 
-            {/* Evaluated Tenders Ready for Award */}
+            {/* Workflow-based Tender Management */}
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Tenders Ready for Award</h2>
+                <h2 className="text-lg font-semibold text-gray-900">Tender Workflow Management</h2>
+                <p className="text-sm text-gray-600">Manage tenders through the mandatory procurement sequence</p>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
-                  {tenders.filter(t => t.status === "Closed" || t.status === "Awarded").map((tender) => (
+                  {tenders.map((tender) => (
                     <div key={tender.id} className="border rounded-lg p-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h3 className="font-medium text-gray-900">{tender.title}</h3>
-                          <p className="text-sm text-gray-600">{tender.id} • {tender.category} • {tender.estimatedValue}</p>
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="font-medium text-gray-900">{tender.title}</h3>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              tender.status === "Published" ? "bg-blue-100 text-blue-800" :
+                              tender.status === "Closed" ? "bg-orange-100 text-orange-800" :
+                              tender.status === "Awarded" ? "bg-green-100 text-green-800" :
+                              "bg-gray-100 text-gray-800"
+                            }`}>
+                              {tender.status}
+                            </span>
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                              Step {tender.workflowStep || 1}: {getWorkflowStepName(tender.workflowStep || 1)}
+                            </span>
+                          </div>
+
+                          <p className="text-sm text-gray-600 mb-2">{tender.id} • {tender.category} • {tender.estimatedValue}</p>
+
+                          {/* Workflow Progress Bar */}
+                          <div className="flex items-center space-x-2 mb-3">
+                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${((tender.workflowStep || 1) / 6) * 100}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-xs text-gray-500">{tender.workflowStep || 1}/6</span>
+                          </div>
+
+                          {/* Current Status Details */}
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                              <span className="font-medium text-gray-700">Bids Received:</span>
+                              <span className={`ml-1 ${tender.bidsReceived > 0 ? 'text-green-600' : 'text-gray-500'}`}>
+                                {tender.bidsReceived}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="font-medium text-gray-700">Evaluation:</span>
+                              <span className={`ml-1 ${tender.evaluationCompleted ? 'text-green-600' : 'text-gray-500'}`}>
+                                {tender.evaluationCompleted ? '✅ Complete' : '⏳ Pending'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="font-medium text-gray-700">NOC Status:</span>
+                              <span className={`ml-1 ${
+                                tender.nocApproved ? 'text-green-600' :
+                                tender.nocRequested ? 'text-yellow-600' : 'text-gray-500'
+                              }`}>
+                                {tender.nocApproved ? '✅ Approved' :
+                                 tender.nocRequested ? '⏳ Requested' : '❌ Not Requested'}
+                              </span>
+                            </div>
+                          </div>
+
                           {tender.awardedCompany && (
-                            <div className="mt-2 flex items-center space-x-4 text-sm">
-                              <span className="text-green-600 font-medium">
-                                Awarded to: {tender.awardedCompany}
-                              </span>
-                              <span className="text-gray-500">
-                                Amount: {tender.awardAmount}
-                              </span>
-                              <span className="text-gray-500">
-                                Date: {tender.awardDate ? new Date(tender.awardDate).toLocaleDateString() : 'N/A'}
-                              </span>
+                            <div className="mt-2 p-2 bg-green-50 rounded border border-green-200">
+                              <div className="flex items-center space-x-4 text-sm">
+                                <span className="text-green-700 font-medium">
+                                  Awarded to: {tender.awardedCompany}
+                                </span>
+                                <span className="text-green-600">
+                                  Amount: {tender.awardAmount}
+                                </span>
+                                <span className="text-green-600">
+                                  Date: {tender.awardDate ? new Date(tender.awardDate).toLocaleDateString() : 'N/A'}
+                                </span>
+                              </div>
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center space-x-2">
-                          {tender.status === "Closed" ? (
+
+                        {/* Workflow Action Buttons */}
+                        <div className="flex flex-col space-y-2 ml-4">
+                          {/* Step 4: Evaluation Actions */}
+                          {tender.workflowStep === 4 && tender.status === "Closed" && (
                             <button
-                              onClick={() => handleAwardTender(tender)}
+                              onClick={() => handleStartEvaluation(tender)}
+                              disabled={!canProceedToNextStep(tender, 4)}
+                              className="flex items-center px-3 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 text-sm disabled:opacity-50"
+                            >
+                              <ClipboardList className="h-4 w-4 mr-1" />
+                              Complete Evaluation
+                            </button>
+                          )}
+
+                          {/* Step 5: NOC Actions */}
+                          {tender.workflowStep === 4 && tender.evaluationCompleted && !tender.nocRequested && (
+                            <button
+                              onClick={() => requestNOC(tender)}
+                              className="flex items-center px-3 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 text-sm"
+                            >
+                              <FileCheck className="h-4 w-4 mr-1" />
+                              Request NOC
+                            </button>
+                          )}
+
+                          {tender.nocRequested && !tender.nocApproved && (
+                            <button
+                              onClick={() => approveNOC(tender)}
+                              className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                            >
+                              <CheckCircle className="h-4 w-4 mr-1" />
+                              Approve NOC
+                            </button>
+                          )}
+
+                          {/* Step 6: Final Approval */}
+                          {tender.nocApproved && tender.finalApprovalRequired && (
+                            <button
+                              onClick={() => handleFinalApproval(tender)}
                               className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
                             >
-                              <Gavel className="h-4 w-4 mr-1" />
-                              Award Tender
+                              <Award className="h-4 w-4 mr-1" />
+                              Final Approval
                             </button>
-                          ) : (
-                            <div className="flex items-center space-x-2">
+                          )}
+
+                          {/* Post-Approval Actions */}
+                          {tender.status === "Awarded" && (
+                            <div className="flex flex-col space-y-1">
                               <button
                                 onClick={() => generateAwardLetter(tender)}
                                 className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
                               >
                                 <Mail className="h-4 w-4 mr-1" />
-                                Generate E-Award Letter
+                                E-Award Letter
                               </button>
                               <button
                                 onClick={() => {
@@ -2459,10 +2553,16 @@ The award letter has been:
                                 className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
                               >
                                 <FileCheck className="h-4 w-4 mr-1" />
-                                Digital Sign Contract
+                                Digital Sign
                               </button>
                             </div>
                           )}
+
+                          {/* View Details */}
+                          <button className="flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm">
+                            <Eye className="h-4 w-4 mr-1" />
+                            View Details
+                          </button>
                         </div>
                       </div>
                     </div>
