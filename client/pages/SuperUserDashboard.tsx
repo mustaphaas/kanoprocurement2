@@ -2360,8 +2360,8 @@ The award letter has been:
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Tender Awards</h1>
-                <p className="text-gray-600">Award tenders to winning bidders and manage contract signing.</p>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Tender Awards & Workflow Management</h1>
+                <p className="text-gray-600">Manage the complete procurement workflow from bidding to final approval.</p>
               </div>
               <button
                 onClick={() => setActiveTab("tenders")}
@@ -2369,6 +2369,41 @@ The award letter has been:
               >
                 ← Back to Tenders
               </button>
+            </div>
+
+            {/* Workflow Status Overview */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Procurement Workflow Status</h2>
+                <p className="text-sm text-gray-600">Track progress through the mandatory sequence</p>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 mb-6">
+                  {[
+                    { step: 1, title: "Company Registration", icon: UserCheck, color: "bg-green-100 text-green-800" },
+                    { step: 2, title: "Login & Verification", icon: Shield, color: "bg-blue-100 text-blue-800" },
+                    { step: 3, title: "Bidding Process", icon: Send, color: "bg-purple-100 text-purple-800" },
+                    { step: 4, title: "Tender Evaluation", icon: ClipboardList, color: "bg-orange-100 text-orange-800" },
+                    { step: 5, title: "No Objection Certificate", icon: FileCheck, color: "bg-yellow-100 text-yellow-800" },
+                    { step: 6, title: "Final Approval", icon: Award, color: "bg-red-100 text-red-800" }
+                  ].map(({ step, title, icon: Icon, color }) => (
+                    <div key={step} className="text-center">
+                      <div className={`w-12 h-12 mx-auto rounded-full flex items-center justify-center ${color} mb-2`}>
+                        <Icon className="h-6 w-6" />
+                      </div>
+                      <p className="text-xs font-medium text-gray-900">{step}. {title}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <h3 className="font-medium text-blue-900 mb-2">📋 Mandatory Sequence</h3>
+                  <p className="text-sm text-blue-800">
+                    All tenders must follow this exact sequence. Each step must be completed before proceeding to the next.
+                    This ensures compliance with procurement regulations and maintains audit trail integrity.
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Evaluated Tenders Ready for Award */}
