@@ -4712,6 +4712,303 @@ The award letter has been:
           </div>
         </div>
       )}
+
+      {/* Update Progress Modal */}
+      {showUpdateProgressModal && selectedVendorPerformance && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <Edit className="h-5 w-5 mr-2 text-blue-600" />
+              Update Progress - {selectedVendorPerformance.projectTitle}
+            </h3>
+
+            {/* Project Overview */}
+            <div className="bg-gray-50 p-4 rounded-lg mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Company</p>
+                  <p className="text-gray-900">{selectedVendorPerformance.companyName}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Contract Value</p>
+                  <p className="text-gray-900">{selectedVendorPerformance.contractValue}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Status</p>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    selectedVendorPerformance.status === "Active" ? "bg-green-100 text-green-800" :
+                    selectedVendorPerformance.status === "Delayed" ? "bg-orange-100 text-orange-800" :
+                    selectedVendorPerformance.status === "Completed" ? "bg-blue-100 text-blue-800" :
+                    "bg-red-100 text-red-800"
+                  }`}>
+                    {selectedVendorPerformance.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Performance Scores */}
+            <div className="mb-6">
+              <h4 className="text-md font-semibold text-gray-900 mb-3">Performance Metrics</h4>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Quality Score (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    defaultValue={selectedVendorPerformance.qualityScore}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onChange={(e) => {
+                      const updated = {...selectedVendorPerformance, qualityScore: parseInt(e.target.value) || 0};
+                      setSelectedVendorPerformance(updated);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Timeliness Score (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    defaultValue={selectedVendorPerformance.timelinessScore}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onChange={(e) => {
+                      const updated = {...selectedVendorPerformance, timelinessScore: parseInt(e.target.value) || 0};
+                      setSelectedVendorPerformance(updated);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Budget Compliance (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    defaultValue={selectedVendorPerformance.budgetCompliance}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onChange={(e) => {
+                      const updated = {...selectedVendorPerformance, budgetCompliance: parseInt(e.target.value) || 0};
+                      setSelectedVendorPerformance(updated);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Project Status</label>
+                  <select
+                    defaultValue={selectedVendorPerformance.status}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onChange={(e) => {
+                      const updated = {...selectedVendorPerformance, status: e.target.value as "Active" | "Completed" | "Delayed" | "Terminated"};
+                      setSelectedVendorPerformance(updated);
+                    }}
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Delayed">Delayed</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Terminated">Terminated</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Milestones */}
+            <div className="mb-6">
+              <h4 className="text-md font-semibold text-gray-900 mb-3">Project Milestones</h4>
+              <div className="space-y-4">
+                {selectedVendorPerformance.milestones.map((milestone, index) => (
+                  <div key={milestone.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Milestone</label>
+                        <p className="text-sm text-gray-900">{milestone.title}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select
+                          defaultValue={milestone.status}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                          onChange={(e) => {
+                            const updatedMilestones = [...selectedVendorPerformance.milestones];
+                            updatedMilestones[index] = {...milestone, status: e.target.value as "Pending" | "Completed" | "Delayed"};
+                            setSelectedVendorPerformance({...selectedVendorPerformance, milestones: updatedMilestones});
+                          }}
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Completed">Completed</option>
+                          <option value="Delayed">Delayed</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Completion (%)</label>
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          defaultValue={milestone.completionPercentage}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                          onChange={(e) => {
+                            const updatedMilestones = [...selectedVendorPerformance.milestones];
+                            updatedMilestones[index] = {...milestone, completionPercentage: parseInt(e.target.value) || 0};
+                            setSelectedVendorPerformance({...selectedVendorPerformance, milestones: updatedMilestones});
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Actual Date</label>
+                        <input
+                          type="date"
+                          defaultValue={milestone.actualDate}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                          onChange={(e) => {
+                            const updatedMilestones = [...selectedVendorPerformance.milestones];
+                            updatedMilestones[index] = {...milestone, actualDate: e.target.value};
+                            setSelectedVendorPerformance({...selectedVendorPerformance, milestones: updatedMilestones});
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Add New Issue */}
+            <div className="mb-6">
+              <h4 className="text-md font-semibold text-gray-900 mb-3">Report New Issue</h4>
+              <div className="border border-gray-200 rounded-lg p-4 bg-red-50">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Issue Type</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm">
+                      <option value="">Select type...</option>
+                      <option value="Quality">Quality</option>
+                      <option value="Timeline">Timeline</option>
+                      <option value="Budget">Budget</option>
+                      <option value="Compliance">Compliance</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Severity</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm">
+                      <option value="">Select severity...</option>
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                      <option value="Critical">Critical</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm">
+                      <option value="Open">Open</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Resolved">Resolved</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                    <input
+                      type="date"
+                      defaultValue={new Date().toISOString().split('T')[0]}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Issue Description</label>
+                  <textarea
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+                    placeholder="Describe the issue in detail..."
+                  />
+                </div>
+                <button className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm">
+                  <Plus className="h-4 w-4 mr-1 inline" />
+                  Add Issue
+                </button>
+              </div>
+            </div>
+
+            {/* Current Issues */}
+            {selectedVendorPerformance.issues.length > 0 && (
+              <div className="mb-6">
+                <h4 className="text-md font-semibold text-gray-900 mb-3">Current Issues</h4>
+                <div className="space-y-2">
+                  {selectedVendorPerformance.issues.map((issue, index) => (
+                    <div key={issue.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <span className="text-sm font-medium text-gray-900">{issue.type}: {issue.description}</span>
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            issue.severity === "Critical" ? "bg-red-100 text-red-800" :
+                            issue.severity === "High" ? "bg-orange-100 text-orange-800" :
+                            issue.severity === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                            "bg-gray-100 text-gray-800"
+                          }`}>
+                            {issue.severity}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-600">
+                          Reported: {new Date(issue.reportedDate).toLocaleDateString()}
+                          {issue.resolvedDate && ` | Resolved: ${new Date(issue.resolvedDate).toLocaleDateString()}`}
+                        </p>
+                      </div>
+                      <select
+                        defaultValue={issue.status}
+                        className="px-2 py-1 border border-gray-300 rounded text-xs"
+                        onChange={(e) => {
+                          const updatedIssues = [...selectedVendorPerformance.issues];
+                          updatedIssues[index] = {...issue, status: e.target.value as "Open" | "In Progress" | "Resolved"};
+                          if (e.target.value === "Resolved" && !issue.resolvedDate) {
+                            updatedIssues[index].resolvedDate = new Date().toISOString();
+                          }
+                          setSelectedVendorPerformance({...selectedVendorPerformance, issues: updatedIssues});
+                        }}
+                      >
+                        <option value="Open">Open</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+              <button
+                onClick={() => {
+                  setShowUpdateProgressModal(false);
+                  setSelectedVendorPerformance(null);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (selectedVendorPerformance) {
+                    // Calculate overall score based on updated metrics
+                    const overallScore = Math.round(
+                      (selectedVendorPerformance.qualityScore +
+                       selectedVendorPerformance.timelinessScore +
+                       selectedVendorPerformance.budgetCompliance) / 3
+                    );
+                    updateVendorPerformance({...selectedVendorPerformance, overallScore});
+                  }
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                <CheckSquare className="h-4 w-4 mr-2 inline" />
+                Update Progress
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
