@@ -2270,11 +2270,14 @@ The award letter has been:
                                 Send Award Letter
                               </button>
                               <button
-                                onClick={() => handleSignContract(tender)}
+                                onClick={() => {
+                                  setSelectedAwardTender(tender);
+                                  setShowDigitalSignModal(true);
+                                }}
                                 className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
                               >
                                 <FileCheck className="h-4 w-4 mr-1" />
-                                Sign Contract
+                                Digital Sign Contract
                               </button>
                             </div>
                           )}
