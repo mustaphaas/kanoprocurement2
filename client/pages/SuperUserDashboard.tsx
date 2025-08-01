@@ -129,6 +129,7 @@ interface Tender {
   ministry: string;
   estimatedValue: string;
   status: "Draft" | "Published" | "Closed" | "Evaluated" | "Awarded" | "Cancelled";
+  workflowStatus: "Draft" | "Published" | "Bidding" | "Evaluation" | "NOC_Requested" | "NOC_Approved" | "Contract_Awarded" | "Completed";
   publishDate: string;
   closeDate: string;
   openDate?: string;
@@ -140,6 +141,14 @@ interface Tender {
   addendaCount: number;
   evaluationScore?: number;
   procuringEntity: string;
+  workflowStep: number; // 1=Registration, 2=Login, 3=Bidding, 4=Evaluation, 5=NOC, 6=Approval
+  nocRequested?: boolean;
+  nocApproved?: boolean;
+  nocRequestDate?: string;
+  nocApprovalDate?: string;
+  nocReason?: string;
+  evaluationCompleted?: boolean;
+  finalApprovalRequired?: boolean;
 }
 
 interface TenderEvaluation {
