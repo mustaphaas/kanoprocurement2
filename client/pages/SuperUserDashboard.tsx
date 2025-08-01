@@ -243,6 +243,19 @@ export default function SuperUserDashboard() {
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const [activeEvaluationTender, setActiveEvaluationTender] = useState<Tender | null>(null);
   const [showEvaluationInterface, setShowEvaluationInterface] = useState(false);
+  const [showAwardModal, setShowAwardModal] = useState(false);
+  const [showContractModal, setShowContractModal] = useState(false);
+  const [selectedAwardTender, setSelectedAwardTender] = useState<Tender | null>(null);
+  const [awardFormData, setAwardFormData] = useState({
+    winningCompany: "",
+    awardAmount: "",
+    awardDate: "",
+    contractDuration: "",
+    notifyWinner: true,
+    notifyUnsuccessful: true,
+    publishOCDS: true,
+    initiatePerformanceTracking: true
+  });
   const [tenderForm, setTenderForm] = useState<TenderForm>({
     title: "",
     description: "",
