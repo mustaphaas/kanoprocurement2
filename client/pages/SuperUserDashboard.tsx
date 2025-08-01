@@ -2200,6 +2200,8 @@ export default function SuperUserDashboard() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Award Amount *</label>
                     <input
                       type="text"
+                      value={awardFormData.awardAmount}
+                      onChange={(e) => setAwardFormData({...awardFormData, awardAmount: e.target.value})}
                       placeholder="Enter final award amount"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
