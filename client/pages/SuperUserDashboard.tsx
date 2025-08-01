@@ -2265,9 +2265,12 @@ The award letter has been:
                             </button>
                           ) : (
                             <div className="flex items-center space-x-2">
-                              <button className="flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm">
+                              <button
+                                onClick={() => generateAwardLetter(tender)}
+                                className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
+                              >
                                 <Mail className="h-4 w-4 mr-1" />
-                                Send Award Letter
+                                Generate E-Award Letter
                               </button>
                               <button
                                 onClick={() => {
