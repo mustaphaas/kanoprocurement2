@@ -801,7 +801,7 @@ The award letter has been:
     ));
   };
 
-  const handleCompleteEvaluation = (evaluationId: string) => {
+  const handleCompleteEvaluationOld = (evaluationId: string) => {
     setTenderEvaluations(prev => prev.map(evaluation =>
       evaluation.id === evaluationId
         ? { ...evaluation, status: "Completed" as const }
