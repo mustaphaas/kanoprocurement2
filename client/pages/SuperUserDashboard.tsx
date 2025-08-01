@@ -2282,7 +2282,10 @@ export default function SuperUserDashboard() {
                   <button className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
                     Cancel
                   </button>
-                  <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                  <button
+                    onClick={handleSubmitAward}
+                    className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
                     Award Tender
                   </button>
                 </div>
