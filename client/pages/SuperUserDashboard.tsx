@@ -659,6 +659,94 @@ export default function SuperUserDashboard() {
     alert("Contract signed successfully! Performance tracking initiated.");
   };
 
+  const generateDigitalSignature = () => {
+    // Simulate digital signature generation
+    const timestamp = new Date().toISOString();
+    const contractHash = `SHA256-${Math.random().toString(36).substring(2, 15)}`;
+    const digitalSignature = `DS-${Math.random().toString(36).substring(2, 15).toUpperCase()}`;
+
+    setDigitalSignatureData(prev => ({
+      ...prev,
+      timestamp,
+      signedHash: contractHash,
+      certificateId: `CERT-KS-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)}`
+    }));
+
+    return {
+      signature: digitalSignature,
+      timestamp,
+      hash: contractHash,
+      valid: true
+    };
+  };
+
+  const handleDigitalSign = () => {
+    if (!selectedAwardTender) return;
+
+    const signature = generateDigitalSignature();
+
+    // Update tender with digital signature
+    setTenders(prev => prev.map(tender =>
+      tender.id === selectedAwardTender.id
+        ? {
+            ...tender,
+            status: "Awarded" as const,
+            digitalSignature: signature,
+            contractSigned: true,
+            signedDate: new Date().toISOString()
+          }
+        : tender
+    ));
+
+    setShowDigitalSignModal(false);
+    setSelectedAwardTender(null);
+    alert("Contract digitally signed successfully! Digital certificate generated and blockchain recorded.");
+  };
+
+  const generateAwardLetter = (tender: Tender) => {
+    const currentDate = new Date();
+    const referenceNumber = `KSG/BPP/${currentDate.getFullYear()}/${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+
+    setAwardLetterData({
+      letterDate: currentDate.toISOString().split('T')[0],
+      referenceNumber,
+      subject: `AWARD OF CONTRACT - ${tender.title.toUpperCase()}`,
+      recipientName: tender.awardedCompany || "Selected Contractor",
+      recipientAddress: "", // Would be fetched from company database
+      contractDetails: `Contract Value: ${tender.awardAmount || tender.estimatedValue}\nProject: ${tender.title}\nDuration: ${awardFormData.contractDuration || "As specified"}\nCommencement: ${awardFormData.awardDate}`,
+      terms: "Standard government contract terms and conditions apply",
+      validity: "30",
+      attachments: ["Contract Document", "Technical Specifications", "Terms & Conditions"]
+    });
+
+    setSelectedAwardTender(tender);
+    setShowAwardLetterModal(true);
+  };
+
+  const sendEAwardLetter = () => {
+    if (!selectedAwardTender) return;
+
+    // Simulate email sending and document generation
+    const documentId = `AWD-${Date.now()}`;
+
+    alert(`E-Award Letter Generated and Sent Successfully!
+
+📄 Document ID: ${documentId}
+📧 Sent to: ${selectedAwardTender.awardedCompany}
+🔐 Digital Signature: Applied
+📋 Reference: ${awardLetterData.referenceNumber}
+🕐 Validity: ${awardLetterData.validity} days
+
+The award letter has been:
+✅ Digitally signed with government certificate
+✅ Sent via secure email
+✅ Logged in blockchain for integrity
+✅ Copied to procurement records`);
+
+    setShowAwardLetterModal(false);
+    setSelectedAwardTender(null);
+  };
+
   const submitBlacklist = () => {
     if (!selectedCompany || !blacklistReason.trim()) return;
 
