@@ -756,6 +756,136 @@ The award letter has been:
     setSelectedAwardTender(null);
   };
 
+  // Workflow Management Functions
+  const getWorkflowStepName = (step: number) => {
+    const steps = {
+      1: "Company Registration",
+      2: "Company Login & Verification",
+      3: "Bidding Process",
+      4: "Tender Evaluation",
+      5: "No Objection Certificate",
+      6: "Final Approval & Award"
+    };
+    return steps[step as keyof typeof steps] || "Unknown Step";
+  };
+
+  const canProceedToNextStep = (tender: Tender, currentStep: number) => {
+    switch (currentStep) {
+      case 1: // Registration complete
+        return true; // Companies can always register
+      case 2: // Login complete
+        return true; // Registered companies can login
+      case 3: // Ready for bidding
+        return tender.status === "Published" && tender.workflowStep >= 2;
+      case 4: // Ready for evaluation
+        return tender.status === "Closed" && tender.bidsReceived > 0 && tender.workflowStep >= 3;
+      case 5: // Ready for NOC
+        return tender.evaluationCompleted && tender.workflowStep >= 4;
+      case 6: // Ready for final approval
+        return tender.nocApproved && tender.workflowStep >= 5;
+      default:
+        return false;
+    }
+  };
+
+  const advanceWorkflowStep = (tenderId: string, newStep: number) => {
+    setTenders(prev => prev.map(tender =>
+      tender.id === tenderId
+        ? { ...tender, workflowStep: newStep }
+        : tender
+    ));
+  };
+
+  const handleCompleteEvaluation = (evaluationId: string) => {
+    setTenderEvaluations(prev => prev.map(evaluation =>
+      evaluation.id === evaluationId
+        ? { ...evaluation, status: "Completed" as const }
+        : evaluation
+    ));
+
+    // Check if all evaluations are complete for this tender
+    const allEvaluations = tenderEvaluations.filter(e => e.tenderId === activeEvaluationTender?.id);
+    const completedEvaluations = allEvaluations.filter(e => e.status === "Completed" || e.id === evaluationId);
+
+    if (completedEvaluations.length === allEvaluations.length) {
+      // Mark evaluation as complete and advance workflow
+      setTenders(prev => prev.map(tender =>
+        tender.id === activeEvaluationTender?.id
+          ? {
+              ...tender,
+              evaluationCompleted: true,
+              workflowStep: Math.max(tender.workflowStep || 3, 4),
+              workflowStatus: "Evaluation" as const
+            }
+          : tender
+      ));
+    }
+  };
+
+  const requestNOC = (tender: Tender) => {
+    if (!canProceedToNextStep(tender, 5)) {
+      alert("Cannot request NOC: Evaluation must be completed first");
+      return;
+    }
+
+    setTenders(prev => prev.map(t =>
+      t.id === tender.id
+        ? {
+            ...t,
+            nocRequested: true,
+            nocRequestDate: new Date().toISOString(),
+            workflowStep: 5,
+            workflowStatus: "NOC_Requested" as const
+          }
+        : t
+    ));
+
+    alert("No Objection Certificate request submitted successfully!");
+  };
+
+  const approveNOC = (tender: Tender) => {
+    if (!tender.nocRequested) {
+      alert("NOC must be requested before approval");
+      return;
+    }
+
+    setTenders(prev => prev.map(t =>
+      t.id === tender.id
+        ? {
+            ...t,
+            nocApproved: true,
+            nocApprovalDate: new Date().toISOString(),
+            workflowStep: 6,
+            workflowStatus: "NOC_Approved" as const,
+            finalApprovalRequired: true
+          }
+        : t
+    ));
+
+    alert("No Objection Certificate approved! Ready for final contract award.");
+  };
+
+  const handleFinalApproval = (tender: Tender) => {
+    if (!tender.nocApproved) {
+      alert("NOC must be approved before final award");
+      return;
+    }
+
+    setTenders(prev => prev.map(t =>
+      t.id === tender.id
+        ? {
+            ...t,
+            status: "Awarded" as const,
+            workflowStatus: "Contract_Awarded" as const,
+            finalApprovalRequired: false,
+            awardDate: new Date().toISOString()
+          }
+        : t
+    ));
+
+    alert("Final approval completed! Contract has been awarded.");
+  };
+
   const submitBlacklist = () => {
     if (!selectedCompany || !blacklistReason.trim()) return;
 
