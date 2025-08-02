@@ -744,18 +744,72 @@ export default function CompanyRegistration() {
                   </label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                     {uploadedFiles.taxClearance ? (
-                      <div className="flex items-center justify-between bg-green-50 p-3 rounded-md">
-                        <div className="flex items-center">
-                          <FileText className="h-5 w-5 text-green-600 mr-2" />
-                          <span className="text-sm text-green-800">{uploadedFiles.taxClearance.name}</span>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between bg-green-50 p-3 rounded-md">
+                          <div className="flex items-center">
+                            <FileText className="h-5 w-5 text-green-600 mr-2" />
+                            <div>
+                              <span className="text-sm text-green-800 block">{uploadedFiles.taxClearance.name}</span>
+                              <span className="text-xs text-green-600">
+                                {(uploadedFiles.taxClearance.size / 1024 / 1024).toFixed(2)} MB
+                              </span>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeFile('taxClearance')}
+                            className="text-red-500 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"
+                          >
+                            Remove
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => removeFile('taxClearance')}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          Remove
-                        </button>
+
+                        {/* Expiry Date Extraction Status */}
+                        <div className="bg-blue-50 p-3 rounded-md">
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="text-sm font-medium text-blue-900">Document Expiry Date:</label>
+                            {extractionStatus.taxClearance === 'processing' && (
+                              <div className="flex items-center text-blue-600">
+                                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                                <span className="text-xs">Extracting...</span>
+                              </div>
+                            )}
+                            {extractionStatus.taxClearance === 'success' && (
+                              <div className="flex items-center text-green-600">
+                                <CheckCircle2 className="h-4 w-4 mr-1" />
+                                <span className="text-xs">Auto-detected</span>
+                              </div>
+                            )}
+                            {extractionStatus.taxClearance === 'failed' && (
+                              <div className="flex items-center text-yellow-600">
+                                <XCircle className="h-4 w-4 mr-1" />
+                                <span className="text-xs">Manual input required</span>
+                              </div>
+                            )}
+                            {extractionStatus.taxClearance === 'manual' && (
+                              <div className="flex items-center text-blue-600">
+                                <Edit3 className="h-4 w-4 mr-1" />
+                                <span className="text-xs">Manually entered</span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            <Calendar className="h-4 w-4 text-blue-600" />
+                            <input
+                              type="date"
+                              value={documentExpiry.taxClearance || ''}
+                              onChange={(e) => handleManualDateInput('taxClearance', e.target.value)}
+                              className="text-sm border border-blue-300 rounded px-2 py-1 bg-white"
+                              min={new Date().toISOString().split('T')[0]}
+                            />
+                            {documentExpiry.taxClearance && (
+                              <span className="text-xs text-blue-700">
+                                Valid for {Math.ceil((new Date(documentExpiry.taxClearance).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       <div className="text-center">
