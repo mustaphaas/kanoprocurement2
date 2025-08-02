@@ -1078,6 +1078,383 @@ export default function Index() {
           </div>
         </section>
 
+        {/* Success Stories & Testimonials */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium mb-4">
+                <Star className="h-4 w-4 mr-2" />
+                Success Stories
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Transforming Lives Through Digital Procurement
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Real stories from contractors and government agencies experiencing the benefits of our platform
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+              {/* Success Story 1 */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 border">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                    <Building2 className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-green-900">Dangote Construction Ltd</h3>
+                    <p className="text-sm text-green-700">Infrastructure Contractor</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-green-800 text-sm mb-4">
+                  "KanoProc has revolutionized our bidding process. The digital submission system saved us 75% of the time we used to spend on paperwork. We've won 12 contracts in the last 6 months!"
+                </p>
+                <div className="text-xs text-green-600">
+                  <strong>Impact:</strong> ₦8.5B in contracts secured • 40% faster project delivery
+                </div>
+              </div>
+
+              {/* Success Story 2 */}
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                    <Shield className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-blue-900">Ministry of Health</h3>
+                    <p className="text-sm text-blue-700">Government Agency</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-blue-800 text-sm mb-4">
+                  "The transparency and efficiency of KanoProc has helped us procure medical equipment 60% faster. The AI fraud detection gives us confidence in our vendor selection process."
+                </p>
+                <div className="text-xs text-blue-600">
+                  <strong>Achievement:</strong> 50 healthcare centers equipped • Zero fraud incidents
+                </div>
+              </div>
+
+              {/* Success Story 3 */}
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 border">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-purple-900">Northern Tech Solutions</h3>
+                    <p className="text-sm text-purple-700">ICT Service Provider</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-purple-800 text-sm mb-4">
+                  "As a small business, KanoProc leveled the playing field. The digital platform eliminated barriers and gave us equal opportunity to compete with larger companies."
+                </p>
+                <div className="text-xs text-purple-600">
+                  <strong>Growth:</strong> 300% revenue increase • 25 new employees hired
+                </div>
+              </div>
+            </div>
+
+            {/* Impact Statistics */}
+            <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg p-8 text-white">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold mb-2">Platform Impact in Numbers</h3>
+                <p className="text-gray-300">Measuring success through tangible results</p>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-400 mb-2">₦45.2B</div>
+                  <div className="text-sm text-gray-300">Total Contract Value</div>
+                  <div className="text-xs text-green-400 mt-1">+22% this year</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-400 mb-2">2,847</div>
+                  <div className="text-sm text-gray-300">Registered Vendors</div>
+                  <div className="text-xs text-blue-400 mt-1">85% satisfaction rate</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-yellow-400 mb-2">75%</div>
+                  <div className="text-sm text-gray-300">Process Time Reduction</div>
+                  <div className="text-xs text-yellow-400 mt-1">vs. traditional methods</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-purple-400 mb-2">99.8%</div>
+                  <div className="text-sm text-gray-300">Fraud Prevention Rate</div>
+                  <div className="text-xs text-purple-400 mt-1">AI-powered security</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Live Tender Feed */}
+        <section className="py-20 bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium mb-4">
+                <Target className="h-4 w-4 mr-2" />
+                Live Feed
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Real-Time Procurement Activity
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Watch live as tenders are published, bids are submitted, and contracts are awarded across Kano State
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Live Activity Feed */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900">Live Activity</h3>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-green-600">Live</span>
+                  </div>
+                </div>
+
+                <div className="space-y-4 max-h-80 overflow-y-auto">
+                  <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-green-900">New tender published</p>
+                      <p className="text-xs text-green-700">Road Construction - ₦3.2B • Ministry of Works</p>
+                      <p className="text-xs text-gray-500">2 minutes ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-blue-900">Bid submitted</p>
+                      <p className="text-xs text-blue-700">Healthcare Equipment Tender • Dangote Construction</p>
+                      <p className="text-xs text-gray-500">5 minutes ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-3 bg-purple-50 rounded-lg">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-purple-900">Contract awarded</p>
+                      <p className="text-xs text-purple-700">School Renovation Project • Northern Tech Solutions</p>
+                      <p className="text-xs text-gray-500">12 minutes ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-yellow-900">New vendor registered</p>
+                      <p className="text-xs text-yellow-700">Kano Building Solutions Ltd • Category B</p>
+                      <p className="text-xs text-gray-500">18 minutes ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-orange-900">Tender deadline reminder</p>
+                      <p className="text-xs text-orange-700">ICT Infrastructure Upgrade • Closes in 2 days</p>
+                      <p className="text-xs text-gray-500">25 minutes ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-2 h-2 bg-gray-500 rounded-full mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900">Evaluation completed</p>
+                      <p className="text-xs text-gray-700">Water Treatment Plant • Technical evaluation phase</p>
+                      <p className="text-xs text-gray-500">32 minutes ago</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Live Statistics */}
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Today's Activity</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <FileText className="h-4 w-4 text-green-600" />
+                        </div>
+                        <span className="text-sm text-gray-600">Tenders Published</span>
+                      </div>
+                      <span className="text-2xl font-bold text-green-600">7</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Send className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <span className="text-sm text-gray-600">Bids Submitted</span>
+                      </div>
+                      <span className="text-2xl font-bold text-blue-600">23</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                          <Award className="h-4 w-4 text-purple-600" />
+                        </div>
+                        <span className="text-sm text-gray-600">Contracts Awarded</span>
+                      </div>
+                      <span className="text-2xl font-bold text-purple-600">4</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                          <UserPlus className="h-4 w-4 text-yellow-600" />
+                        </div>
+                        <span className="text-sm text-gray-600">New Registrations</span>
+                      </div>
+                      <span className="text-2xl font-bold text-yellow-600">12</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Trending Categories</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Infrastructure</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-20 h-2 bg-gray-200 rounded-full">
+                          <div className="w-16 h-2 bg-green-500 rounded-full"></div>
+                        </div>
+                        <span className="text-xs text-gray-500">80%</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Healthcare</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-20 h-2 bg-gray-200 rounded-full">
+                          <div className="w-12 h-2 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <span className="text-xs text-gray-500">60%</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Education</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-20 h-2 bg-gray-200 rounded-full">
+                          <div className="w-10 h-2 bg-purple-500 rounded-full"></div>
+                        </div>
+                        <span className="text-xs text-gray-500">50%</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Technology</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-20 h-2 bg-gray-200 rounded-full">
+                          <div className="w-8 h-2 bg-orange-500 rounded-full"></div>
+                        </div>
+                        <span className="text-xs text-gray-500">40%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact & Support Section */}
+        <section className="py-20 bg-gray-900 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+                Need Help? We're Here for You
+              </h2>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                Get expert support for all your procurement needs - from registration to contract management
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              {/* Phone Support */}
+              <div className="text-center p-6 bg-gray-800 rounded-lg">
+                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Phone className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Phone Support</h3>
+                <p className="text-gray-300 mb-4">Speak with our experts directly</p>
+                <p className="text-green-400 font-medium">+234 (0) 64 123-4567</p>
+                <p className="text-sm text-gray-400">Mon-Fri, 8AM-5PM WAT</p>
+              </div>
+
+              {/* Email Support */}
+              <div className="text-center p-6 bg-gray-800 rounded-lg">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Mail className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Email Support</h3>
+                <p className="text-gray-300 mb-4">Get detailed help via email</p>
+                <p className="text-blue-400 font-medium">support@kanoproc.gov.ng</p>
+                <p className="text-sm text-gray-400">Response within 2 hours</p>
+              </div>
+
+              {/* Live Chat */}
+              <div className="text-center p-6 bg-gray-800 rounded-lg">
+                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MessageSquare className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Live Chat</h3>
+                <p className="text-gray-300 mb-4">Instant help and guidance</p>
+                <button className="text-purple-400 font-medium hover:text-purple-300">
+                  Start Chat Now
+                </button>
+                <p className="text-sm text-gray-400 mt-1">Available 24/7</p>
+              </div>
+            </div>
+
+            {/* FAQ Quick Links */}
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 text-center">Frequently Asked Questions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button className="text-left p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                  <p className="font-medium text-green-400">How do I register my company?</p>
+                  <p className="text-sm text-gray-300 mt-1">Complete guide to company registration process</p>
+                </button>
+                <button className="text-left p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                  <p className="font-medium text-blue-400">What documents do I need?</p>
+                  <p className="text-sm text-gray-300 mt-1">Required documents for different contractor categories</p>
+                </button>
+                <button className="text-left p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                  <p className="font-medium text-purple-400">How does the bidding process work?</p>
+                  <p className="text-sm text-gray-300 mt-1">Step-by-step guide to submitting winning bids</p>
+                </button>
+                <button className="text-left p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                  <p className="font-medium text-yellow-400">When will I receive payment?</p>
+                  <p className="text-sm text-gray-300 mt-1">Payment schedules and terms for contractors</p>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* CTA Section */}
         <section className="py-20 bg-green-700 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
