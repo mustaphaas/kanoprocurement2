@@ -310,7 +310,10 @@ export default function CompanyLogin() {
               <p className="text-xs text-green-700 mb-3">Full access to all features</p>
               <div className="space-y-1">
                 <p className="text-sm text-green-800">
-                  <strong>Email:</strong> <code className="bg-green-100 px-1 rounded text-xs">approved@company.com</code>
+                  <strong>Email:</strong> <button
+                    onClick={() => fillTestAccount("approved@company.com", "password123")}
+                    className="bg-green-100 px-1 rounded text-xs hover:bg-green-200 cursor-pointer transition-colors"
+                  >approved@company.com</button>
                 </p>
                 <p className="text-sm text-green-800">
                   <strong>Password:</strong> <code className="bg-green-100 px-1 rounded text-xs">password123</code>
