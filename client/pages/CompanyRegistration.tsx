@@ -141,6 +141,9 @@ export default function CompanyRegistration() {
         ...prev,
         [fileType]: validFiles[0]
       }));
+
+      // Automatically process document for expiry date extraction
+      processDocumentForExpiry(validFiles[0], fileType);
     }
 
     // Clear any previous errors for this field
