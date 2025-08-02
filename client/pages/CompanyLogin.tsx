@@ -63,7 +63,7 @@ export default function CompanyLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -76,6 +76,11 @@ export default function CompanyLogin() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const fillTestAccount = (email: string, password: string) => {
+    setFormData({ email, password });
+    setErrors({});
   };
 
   return (
