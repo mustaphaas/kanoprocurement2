@@ -432,6 +432,110 @@ export default function CompanyDashboard() {
             {/* Status Alert */}
             {getStatusAlert()}
 
+            {/* Restricted Access Message for Pending Companies */}
+            {companyData.status === "Pending" && (
+              <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
+                <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                  <Clock className="h-8 w-8 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Account Under Review</h3>
+                <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                  Your company registration is currently being reviewed by the Bureau of Public Procurement.
+                  During this review period, you have limited access to the portal. Once approved, you will
+                  have full access to all tender opportunities and features.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h4 className="font-medium text-gray-900 mb-3">What You Can Do Now:</h4>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                        View your company profile and update contact information
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                        Upload and manage required documents
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                        Browse publicly available tender information
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                        Access the ePortal and government services
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-red-50 rounded-lg p-6">
+                    <h4 className="font-medium text-gray-900 mb-3">Restricted Until Approval:</h4>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start">
+                        <X className="h-4 w-4 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+                        Express interest in tenders
+                      </li>
+                      <li className="flex items-start">
+                        <X className="h-4 w-4 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+                        Submit bids or proposals
+                      </li>
+                      <li className="flex items-start">
+                        <X className="h-4 w-4 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+                        Download tender documents
+                      </li>
+                      <li className="flex items-start">
+                        <X className="h-4 w-4 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+                        Submit clarification requests
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <h4 className="font-medium text-gray-900 mb-4">Review Timeline</h4>
+                  <div className="flex items-center justify-center space-x-4 text-sm">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                        <span className="text-blue-600 font-medium">1</span>
+                      </div>
+                      <span className="text-gray-600">Application Submitted</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-2">
+                        <span className="text-white font-medium">2</span>
+                      </div>
+                      <span className="text-blue-600 font-medium">Under Review</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-2">
+                        <span className="text-gray-600 font-medium">3</span>
+                      </div>
+                      <span className="text-gray-500">Approval Decision</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex justify-center space-x-4">
+                  <button
+                    onClick={() => setActiveSection("my-profile")}
+                    className="inline-flex items-center px-4 py-2 border border-blue-300 rounded-md text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100"
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Update Profile
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("my-documents")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Manage Documents
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white rounded-lg shadow-sm border p-6">
