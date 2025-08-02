@@ -908,23 +908,89 @@ export default function CompanyRegistration() {
                     }}
                   >
                     {uploadedFiles.cacForm ? (
-                      <div className="flex items-center justify-between bg-green-50 p-3 rounded-md">
-                        <div className="flex items-center">
-                          <FileText className="h-5 w-5 text-green-600 mr-2" />
-                          <div>
-                            <span className="text-sm text-green-800 block">{uploadedFiles.cacForm.name}</span>
-                            <span className="text-xs text-green-600">
-                              {(uploadedFiles.cacForm.size / 1024 / 1024).toFixed(2)} MB
-                            </span>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between bg-green-50 p-3 rounded-md">
+                          <div className="flex items-center">
+                            <FileText className="h-5 w-5 text-green-600 mr-2" />
+                            <div>
+                              <span className="text-sm text-green-800 block">{uploadedFiles.cacForm.name}</span>
+                              <span className="text-xs text-green-600">
+                                {(uploadedFiles.cacForm.size / 1024 / 1024).toFixed(2)} MB
+                              </span>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeFile('cacForm')}
+                            className="text-red-500 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"
+                          >
+                            Remove
+                          </button>
+                        </div>
+
+                        {/* AI Document Processing Status */}
+                        <div className="bg-purple-50 p-3 rounded-md border border-purple-200">
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="text-sm font-medium text-purple-900 flex items-center">
+                              <Shield className="h-4 w-4 mr-1" />
+                              AI Document Analysis
+                            </label>
+                            {extractionStatus.cacForm === 'processing' && (
+                              <div className="flex items-center text-purple-600">
+                                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                                <span className="text-xs">Processing...</span>
+                              </div>
+                            )}
+                            {extractionStatus.cacForm === 'success' && (
+                              <div className="flex items-center text-green-600">
+                                <CheckCircle2 className="h-4 w-4 mr-1" />
+                                <span className="text-xs">Validated</span>
+                              </div>
+                            )}
+                            {extractionStatus.cacForm === 'failed' && (
+                              <div className="flex items-center text-amber-600">
+                                <XCircle className="h-4 w-4 mr-1" />
+                                <span className="text-xs">Verify manually</span>
+                              </div>
+                            )}
+                            {extractionStatus.cacForm === 'manual' && (
+                              <div className="flex items-center text-blue-600">
+                                <Edit3 className="h-4 w-4 mr-1" />
+                                <span className="text-xs">User verified</span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-2">
+                              <Calendar className="h-4 w-4 text-purple-600" />
+                              <span className="text-xs text-purple-800">Document Validity Period:</span>
+                              <input
+                                type="date"
+                                value={documentExpiry.cacForm || ''}
+                                onChange={(e) => handleManualDateInput('cacForm', e.target.value)}
+                                className="text-xs border border-purple-300 rounded px-2 py-1 bg-white"
+                                min={new Date().toISOString().split('T')[0]}
+                              />
+                            </div>
+
+                            {documentExpiry.cacForm && (
+                              <div className="text-xs text-purple-700 bg-purple-100 p-2 rounded">
+                                <strong>Validity Status:</strong> {
+                                  new Date(documentExpiry.cacForm) > new Date()
+                                    ? `Valid for ${Math.ceil((new Date(documentExpiry.cacForm).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days`
+                                    : 'Document Expired - Upload new version'
+                                }
+                              </div>
+                            )}
+
+                            {extractionStatus.cacForm === 'processing' && (
+                              <div className="text-xs text-purple-600 bg-purple-100 p-2 rounded">
+                                <strong>AI Processing:</strong> Extracting validity period, registration details, and verification codes...
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => removeFile('cacForm')}
-                          className="text-red-500 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"
-                        >
-                          Remove
-                        </button>
                       </div>
                     ) : (
                       <div className="text-center py-6">
@@ -935,6 +1001,9 @@ export default function CompanyRegistration() {
                           </span>
                           <span className="text-xs text-gray-500">
                             PDF, JPG, JPEG or PNG (max. 5MB)
+                          </span>
+                          <span className="text-xs text-blue-600 block mt-1">
+                            ✨ AI will automatically extract expiry dates and validate document
                           </span>
                           <input
                             type="file"
