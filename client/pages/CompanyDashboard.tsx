@@ -1115,10 +1115,12 @@ export default function CompanyDashboard() {
                           <span className="text-sm font-medium text-gray-700">Current Status</span>
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
                             companyData.status === "Approved" ? "bg-green-100 text-green-800" :
+                            companyData.status === "Pending" ? "bg-blue-100 text-blue-800" :
                             companyData.status === "Suspended" ? "bg-orange-100 text-orange-800" :
                             "bg-red-100 text-red-800"
                           }`}>
                             {companyData.status === "Approved" && <CheckCircle className="h-4 w-4 mr-1" />}
+                            {companyData.status === "Pending" && <Clock className="h-4 w-4 mr-1" />}
                             {companyData.status === "Suspended" && <AlertTriangle className="h-4 w-4 mr-1" />}
                             {companyData.status === "Blacklisted" && <Ban className="h-4 w-4 mr-1" />}
                             {companyData.status}
