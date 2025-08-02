@@ -119,6 +119,9 @@ export default function CompanyDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [showExpressInterestModal, setShowExpressInterestModal] = useState(false);
+  const [showSubmitBidModal, setShowSubmitBidModal] = useState(false);
+  const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const navigate = useNavigate();
 
   // Mock company data
@@ -251,6 +254,80 @@ export default function CompanyDashboard() {
 
   const handleLogout = () => {
     navigate("/");
+  };
+
+  const handleExpressInterest = (tender: Tender) => {
+    if (companyData.status !== "Approved") {
+      alert("Your account must be approved to express interest in tenders.");
+      return;
+    }
+    setSelectedTender(tender);
+    setShowExpressInterestModal(true);
+  };
+
+  const handleSubmitBid = (tender: Tender) => {
+    if (companyData.status !== "Approved") {
+      alert("Your account must be approved to submit bids.");
+      return;
+    }
+    if (!tender.hasExpressedInterest) {
+      alert("You must express interest in this tender before submitting a bid.");
+      return;
+    }
+    setSelectedTender(tender);
+    setShowSubmitBidModal(true);
+  };
+
+  const confirmExpressInterest = () => {
+    if (!selectedTender) return;
+
+    // Update the tender to show interest has been expressed
+    setTenders(prevTenders =>
+      prevTenders.map(tender =>
+        tender.id === selectedTender.id
+          ? { ...tender, hasExpressedInterest: true }
+          : tender
+      )
+    );
+
+    // Update company stats
+    setNotifications(prev => [{
+      id: Date.now().toString(),
+      type: "success",
+      title: "Interest Expressed",
+      message: `You have successfully expressed interest in ${selectedTender.title}`,
+      date: new Date().toISOString().split('T')[0],
+      read: false
+    }, ...prev]);
+
+    setShowExpressInterestModal(false);
+    setSelectedTender(null);
+  };
+
+  const confirmSubmitBid = () => {
+    if (!selectedTender) return;
+
+    // Update the tender to show bid has been submitted
+    setTenders(prevTenders =>
+      prevTenders.map(tender =>
+        tender.id === selectedTender.id
+          ? { ...tender, hasBid: true }
+          : tender
+      )
+    );
+
+    // Update company stats and add notification
+    setNotifications(prev => [{
+      id: Date.now().toString(),
+      type: "success",
+      title: "Bid Submitted",
+      message: `Your bid for ${selectedTender.title} has been successfully submitted and is under evaluation`,
+      date: new Date().toISOString().split('T')[0],
+      read: false
+    }, ...prev]);
+
+    setShowSubmitBidModal(false);
+    setSelectedTender(null);
   };
 
   const getStatusAlert = () => {
@@ -610,12 +687,18 @@ export default function CompanyDashboard() {
                         {companyData.status === "Approved" && tender.status === "Open" && (
                           <>
                             {!tender.hasExpressedInterest ? (
-                              <button className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                              <button
+                                onClick={() => handleExpressInterest(tender)}
+                                className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                              >
                                 <Plus className="h-4 w-4 mr-1" />
                                 Express Interest
                               </button>
                             ) : !tender.hasBid ? (
-                              <button className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm">
+                              <button
+                                onClick={() => handleSubmitBid(tender)}
+                                className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
+                              >
                                 <Send className="h-4 w-4 mr-1" />
                                 Submit Bid
                               </button>
@@ -2461,6 +2544,252 @@ export default function CompanyDashboard() {
           {renderMainContent()}
         </main>
       </div>
+
+      {/* Express Interest Modal */}
+      {showExpressInterestModal && selectedTender && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">Express Interest</h3>
+                <button
+                  onClick={() => setShowExpressInterestModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                  <h4 className="font-medium text-blue-900 mb-2">{selectedTender.title}</h4>
+                  <div className="text-sm text-blue-800 space-y-1">
+                    <p><span className="font-medium">Ministry:</span> {selectedTender.ministry}</p>
+                    <p><span className="font-medium">Value:</span> {selectedTender.value}</p>
+                    <p><span className="font-medium">Deadline:</span> {new Date(selectedTender.deadline).toLocaleDateString()}</p>
+                    <p><span className="font-medium">Location:</span> {selectedTender.location}</p>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                  <div className="flex items-start">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-2" />
+                    <div className="text-sm text-yellow-800">
+                      <p className="font-medium mb-1">Important Notice:</p>
+                      <p>By expressing interest, you acknowledge that you meet the basic requirements and intend to participate in this tender. This action will make you eligible to submit a bid.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      required
+                    />
+                    <span className="ml-2 text-sm text-gray-700">
+                      I confirm that my company meets the basic eligibility requirements
+                    </span>
+                  </label>
+
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      required
+                    />
+                    <span className="ml-2 text-sm text-gray-700">
+                      I understand the tender requirements and deadlines
+                    </span>
+                  </label>
+
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      required
+                    />
+                    <span className="ml-2 text-sm text-gray-700">
+                      I agree to the terms and conditions
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end space-x-3">
+                <button
+                  onClick={() => setShowExpressInterestModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmExpressInterest}
+                  className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                >
+                  Confirm Interest
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Submit Bid Modal */}
+      {showSubmitBidModal && selectedTender && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">Submit Bid</h3>
+                <button
+                  onClick={() => setShowSubmitBidModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="mb-6 max-h-96 overflow-y-auto">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                  <h4 className="font-medium text-green-900 mb-2">{selectedTender.title}</h4>
+                  <div className="text-sm text-green-800 grid grid-cols-2 gap-4">
+                    <div>
+                      <p><span className="font-medium">Tender ID:</span> {selectedTender.id}</p>
+                      <p><span className="font-medium">Ministry:</span> {selectedTender.ministry}</p>
+                    </div>
+                    <div>
+                      <p><span className="font-medium">Value:</span> {selectedTender.value}</p>
+                      <p><span className="font-medium">Deadline:</span> {new Date(selectedTender.deadline).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Bid Amount (₦)</label>
+                    <input
+                      type="text"
+                      placeholder="Enter your bid amount"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Project Timeline (Days)</label>
+                    <input
+                      type="number"
+                      placeholder="Enter completion timeline in days"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Technical Proposal</label>
+                    <textarea
+                      rows={4}
+                      placeholder="Describe your technical approach and methodology"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Financial Proposal</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Provide breakdown of costs and payment terms"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Supporting Documents</label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                      <div className="text-center">
+                        <Upload className="mx-auto h-8 w-8 text-gray-400" />
+                        <p className="mt-2 text-sm text-gray-600">Upload bid documents (PDF, DOC, DOCX)</p>
+                        <button className="mt-2 inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200">
+                          <Plus className="h-4 w-4 mr-1" />
+                          Choose Files
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex items-start">
+                      <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 mr-2" />
+                      <div className="text-sm text-red-800">
+                        <p className="font-medium mb-1">Important:</p>
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>Ensure all required documents are uploaded</li>
+                          <li>Review your bid carefully before submission</li>
+                          <li>Bids cannot be modified after submission deadline</li>
+                          <li>Late submissions will not be accepted</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        required
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        I confirm that all information provided is accurate and complete
+                      </span>
+                    </label>
+
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        required
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        I understand that this bid is legally binding upon acceptance
+                      </span>
+                    </label>
+
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        required
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        I agree to the terms and conditions of the tender
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => setShowSubmitBidModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                  Save as Draft
+                </button>
+                <button
+                  onClick={confirmSubmitBid}
+                  className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                >
+                  Submit Bid
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
