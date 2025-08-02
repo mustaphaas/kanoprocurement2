@@ -1633,6 +1633,290 @@ The award letter has been:
               </div>
             </div>
 
+            {/* Report Generation */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Download className="h-5 w-5 text-green-600 mr-2" />
+                  Generate Custom Reports
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Report Configuration */}
+                  <div>
+                    <h3 className="text-md font-semibold text-gray-900 mb-4">Report Configuration</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Report Type</label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                          <option>Procurement Summary Report</option>
+                          <option>Vendor Performance Report</option>
+                          <option>Financial Analysis Report</option>
+                          <option>Compliance Audit Report</option>
+                          <option>Contract Lifecycle Report</option>
+                          <option>Risk Assessment Report</option>
+                          <option>Payment Status Report</option>
+                          <option>OCDS Data Export</option>
+                        </select>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Date From</label>
+                          <input
+                            type="date"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            defaultValue="2024-01-01"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Date To</label>
+                          <input
+                            type="date"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            defaultValue={new Date().toISOString().split('T')[0]}
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <label className="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="format" value="pdf" className="text-green-600 focus:ring-green-500" defaultChecked />
+                            <div className="ml-3">
+                              <p className="text-sm font-medium text-gray-900">PDF Report</p>
+                              <p className="text-xs text-gray-600">Professional formatted document</p>
+                            </div>
+                          </label>
+                          <label className="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="format" value="excel" className="text-green-600 focus:ring-green-500" />
+                            <div className="ml-3">
+                              <p className="text-sm font-medium text-gray-900">Excel Spreadsheet</p>
+                              <p className="text-xs text-gray-600">Detailed data with calculations</p>
+                            </div>
+                          </label>
+                          <label className="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="format" value="csv" className="text-green-600 focus:ring-green-500" />
+                            <div className="ml-3">
+                              <p className="text-sm font-medium text-gray-900">CSV Data</p>
+                              <p className="text-xs text-gray-600">Raw data for analysis</p>
+                            </div>
+                          </label>
+                          <label className="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="format" value="json" className="text-green-600 focus:ring-green-500" />
+                            <div className="ml-3">
+                              <p className="text-sm font-medium text-gray-900">JSON Export</p>
+                              <p className="text-xs text-gray-600">Structured data for APIs</p>
+                            </div>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Filter Options</label>
+                        <div className="space-y-2">
+                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">All Ministries</option>
+                            <option>Ministry of Health</option>
+                            <option>Ministry of Education</option>
+                            <option>Ministry of Works</option>
+                            <option>Ministry of Agriculture</option>
+                          </select>
+                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">All Categories</option>
+                            <option>Infrastructure</option>
+                            <option>Healthcare</option>
+                            <option>Education</option>
+                            <option>Technology</option>
+                            <option>Agriculture</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Minimum contract value (₦)"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Report Templates */}
+                  <div>
+                    <h3 className="text-md font-semibold text-gray-900 mb-4">Quick Report Templates</h3>
+                    <div className="space-y-3">
+                      <button className="w-full text-left p-4 border border-green-200 rounded-lg hover:bg-green-50 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-green-900">Monthly Procurement Summary</p>
+                            <p className="text-sm text-green-700">Complete overview of all procurement activities</p>
+                          </div>
+                          <Download className="h-5 w-5 text-green-600" />
+                        </div>
+                      </button>
+
+                      <button className="w-full text-left p-4 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-blue-900">Vendor Performance Dashboard</p>
+                            <p className="text-sm text-blue-700">Top performing and underperforming vendors</p>
+                          </div>
+                          <Download className="h-5 w-5 text-blue-600" />
+                        </div>
+                      </button>
+
+                      <button className="w-full text-left p-4 border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-purple-900">Financial Analysis Report</p>
+                            <p className="text-sm text-purple-700">Budget utilization and cost savings analysis</p>
+                          </div>
+                          <Download className="h-5 w-5 text-purple-600" />
+                        </div>
+                      </button>
+
+                      <button className="w-full text-left p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-orange-900">Compliance Audit Trail</p>
+                            <p className="text-sm text-orange-700">Regulatory compliance and audit findings</p>
+                          </div>
+                          <Download className="h-5 w-5 text-orange-600" />
+                        </div>
+                      </button>
+
+                      <button className="w-full text-left p-4 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-red-900">Risk Assessment Report</p>
+                            <p className="text-sm text-red-700">Risk factors and mitigation strategies</p>
+                          </div>
+                          <Download className="h-5 w-5 text-red-600" />
+                        </div>
+                      </button>
+
+                      <button className="w-full text-left p-4 border border-yellow-200 rounded-lg hover:bg-yellow-50 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-yellow-900">OCDS Open Data Export</p>
+                            <p className="text-sm text-yellow-700">Open Contracting Data Standard format</p>
+                          </div>
+                          <Download className="h-5 w-5 text-yellow-600" />
+                        </div>
+                      </button>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Advanced Export Options</h4>
+                      <div className="space-y-2">
+                        <label className="flex items-center">
+                          <input type="checkbox" className="rounded border-gray-300 text-green-600 focus:ring-green-500" defaultChecked />
+                          <span className="ml-2 text-sm text-gray-700">Include charts and visualizations</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                          <span className="ml-2 text-sm text-gray-700">Add executive summary</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="rounded border-gray-300 text-green-600 focus:ring-green-500" defaultChecked />
+                          <span className="ml-2 text-sm text-gray-700">Include detailed appendix</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                          <span className="ml-2 text-sm text-gray-700">Password protect document</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
+                  <div className="text-sm text-gray-600">
+                    Report generation typically takes 30-60 seconds depending on data range
+                  </div>
+                  <div className="flex space-x-3">
+                    <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                      Save Template
+                    </button>
+                    <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center">
+                      <Download className="h-4 w-4 mr-2" />
+                      Generate Report
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Scheduled Reports */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Calendar className="h-5 w-5 text-blue-600 mr-2" />
+                  Scheduled Reports
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {[
+                    { name: "Weekly Procurement Summary", frequency: "Every Monday 8:00 AM", format: "PDF", recipients: "admin@kanostate.gov.ng", nextRun: "2024-02-05 08:00", status: "Active" },
+                    { name: "Monthly Financial Report", frequency: "1st of every month", format: "Excel", recipients: "finance@kanostate.gov.ng", nextRun: "2024-03-01 09:00", status: "Active" },
+                    { name: "Quarterly Compliance Report", frequency: "Every 3 months", format: "PDF", recipients: "compliance@kanostate.gov.ng", nextRun: "2024-04-01 10:00", status: "Paused" }
+                  ].map((report, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h4 className="font-medium text-gray-900">{report.name}</h4>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              report.status === "Active" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                            }`}>
+                              {report.status}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+                            <div>
+                              <span className="font-medium">Frequency:</span> {report.frequency}
+                            </div>
+                            <div>
+                              <span className="font-medium">Format:</span> {report.format}
+                            </div>
+                            <div>
+                              <span className="font-medium">Next Run:</span> {report.nextRun}
+                            </div>
+                            <div>
+                              <span className="font-medium">Recipients:</span> {report.recipients}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button className="p-2 text-green-600 hover:bg-green-50 rounded">
+                            <Play className="h-4 w-4" />
+                          </button>
+                          <button className="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                            <Pause className="h-4 w-4" />
+                          </button>
+                          <button className="p-2 text-red-600 hover:bg-red-50 rounded">
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Scheduled Report
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Predictive Analytics */}
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
