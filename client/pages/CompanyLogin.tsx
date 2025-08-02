@@ -370,7 +370,10 @@ export default function CompanyLogin() {
               <p className="text-xs text-red-700 mb-3">Banned from all procurement activities</p>
               <div className="space-y-1">
                 <p className="text-sm text-red-800">
-                  <strong>Email:</strong> <code className="bg-red-100 px-1 rounded text-xs">blacklisted@company.com</code>
+                  <strong>Email:</strong> <button
+                    onClick={() => fillTestAccount("blacklisted@company.com", "password123")}
+                    className="bg-red-100 px-1 rounded text-xs hover:bg-red-200 cursor-pointer transition-colors"
+                  >blacklisted@company.com</button>
                 </p>
                 <p className="text-sm text-red-800">
                   <strong>Password:</strong> <code className="bg-red-100 px-1 rounded text-xs">password123</code>
