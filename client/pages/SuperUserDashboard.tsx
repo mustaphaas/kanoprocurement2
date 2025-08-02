@@ -3998,6 +3998,293 @@ The award letter has been:
           </div>
         );
 
+      case "settings":
+        return (
+          <div className="space-y-8">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">System Settings</h1>
+              <p className="text-gray-600">Configure system parameters, user preferences, and administrative settings</p>
+            </div>
+
+            {/* Quick Settings Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* System Configuration */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Settings className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">System Configuration</h3>
+                </div>
+                <div className="space-y-3">
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">General Settings</p>
+                    <p className="text-sm text-gray-600">Platform name, timezone, currency</p>
+                  </button>
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Email Configuration</p>
+                    <p className="text-sm text-gray-600">SMTP settings, templates</p>
+                  </button>
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">File Upload Limits</p>
+                    <p className="text-sm text-gray-600">Max sizes, allowed types</p>
+                  </button>
+                </div>
+              </div>
+
+              {/* Security Settings */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                    <Shield className="h-6 w-6 text-red-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">Security & Access</h3>
+                </div>
+                <div className="space-y-3">
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Password Policies</p>
+                    <p className="text-sm text-gray-600">Requirements, expiration</p>
+                  </button>
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Two-Factor Authentication</p>
+                    <p className="text-sm text-gray-600">Enable/disable 2FA</p>
+                  </button>
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Session Management</p>
+                    <p className="text-sm text-gray-600">Timeout, concurrent sessions</p>
+                  </button>
+                </div>
+              </div>
+
+              {/* Procurement Settings */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                    <FileText className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">Procurement Rules</h3>
+                </div>
+                <div className="space-y-3">
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Approval Thresholds</p>
+                    <p className="text-sm text-gray-600">Monetary limits by authority</p>
+                  </button>
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Tender Timelines</p>
+                    <p className="text-sm text-gray-600">Minimum notice periods</p>
+                  </button>
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Evaluation Criteria</p>
+                    <p className="text-sm text-gray-600">Default scoring weights</p>
+                  </button>
+                </div>
+              </div>
+
+              {/* Notification Settings */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                    <Bell className="h-6 w-6 text-yellow-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">Email Notifications</p>
+                      <p className="text-sm text-gray-600">System alerts via email</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" defaultChecked />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">SMS Notifications</p>
+                      <p className="text-sm text-gray-600">Critical alerts via SMS</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">Push Notifications</p>
+                      <p className="text-sm text-gray-600">Browser notifications</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" defaultChecked />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* AI & Automation */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Brain className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">AI & Automation</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">Fraud Detection</p>
+                      <p className="text-sm text-gray-600">AI-powered fraud detection</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" defaultChecked />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">Smart Matching</p>
+                      <p className="text-sm text-gray-600">Auto-match vendors to tenders</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" defaultChecked />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">Auto Reminders</p>
+                      <p className="text-sm text-gray-600">Automated deadline alerts</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" defaultChecked />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Report Generation */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <BarChart3 className="h-6 w-6 text-indigo-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">Report Settings</h3>
+                </div>
+                <div className="space-y-3">
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Auto-Generated Reports</p>
+                    <p className="text-sm text-gray-600">Schedule automated reports</p>
+                  </button>
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Export Formats</p>
+                    <p className="text-sm text-gray-600">PDF, Excel, CSV preferences</p>
+                  </button>
+                  <button className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p className="font-medium text-gray-900">Data Retention</p>
+                    <p className="text-sm text-gray-600">Archive and backup settings</p>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Advanced Configuration */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Advanced Configuration</h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* API Configuration */}
+                  <div>
+                    <h3 className="text-md font-semibold text-gray-900 mb-4">API & Integration Settings</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">API Rate Limiting</label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option>1000 requests/hour</option>
+                          <option>5000 requests/hour</option>
+                          <option>10000 requests/hour</option>
+                          <option>Unlimited</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Webhook URL</label>
+                        <input
+                          type="url"
+                          placeholder="https://your-system.com/webhook"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">External System Integration</label>
+                        <div className="space-y-2">
+                          <label className="flex items-center">
+                            <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" defaultChecked />
+                            <span className="ml-2 text-sm text-gray-700">REMITA Payment Gateway</span>
+                          </label>
+                          <label className="flex items-center">
+                            <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                            <span className="ml-2 text-sm text-gray-700">CAC Verification System</span>
+                          </label>
+                          <label className="flex items-center">
+                            <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" defaultChecked />
+                            <span className="ml-2 text-sm text-gray-700">FIRS Tax Verification</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Performance Settings */}
+                  <div>
+                    <h3 className="text-md font-semibold text-gray-900 mb-4">Performance & Monitoring</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Cache Duration</label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option>5 minutes</option>
+                          <option>15 minutes</option>
+                          <option>1 hour</option>
+                          <option>24 hours</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Database Cleanup Schedule</label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option>Daily at 2 AM</option>
+                          <option>Weekly (Sunday 2 AM)</option>
+                          <option>Monthly</option>
+                          <option>Manual only</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Log Retention Period</label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option>30 days</option>
+                          <option>90 days</option>
+                          <option>1 year</option>
+                          <option>Indefinite</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-3">
+                  <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    Reset to Defaults
+                  </button>
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Save Configuration
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="text-center py-12">
