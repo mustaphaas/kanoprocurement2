@@ -333,10 +333,10 @@ export default function Index() {
                     <Building2 className="mr-2 h-5 w-5" />
                     Register Your Company
                   </Link>
-                  <button className="inline-flex items-center px-8 py-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">
+                  <Link to="/tenders" className="inline-flex items-center px-8 py-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">
                     <Search className="mr-2 h-5 w-5" />
                     Browse Tenders
-                  </button>
+                  </Link>
                 </div>
 
                 <div className="flex items-center space-x-6 text-sm text-gray-600">
