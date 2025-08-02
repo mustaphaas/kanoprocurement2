@@ -9,7 +9,7 @@ import {
   EyeOff,
   AlertCircle,
   ArrowLeft,
-  UserCheck
+  UserCheck,
 } from "lucide-react";
 
 interface LoginData {
@@ -20,7 +20,7 @@ interface LoginData {
 export default function CompanyLogin() {
   const [formData, setFormData] = useState<LoginData>({
     email: "",
-    password: ""
+    password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -30,16 +30,16 @@ export default function CompanyLogin() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
@@ -72,7 +72,12 @@ export default function CompanyLogin() {
       await signIn(formData.email, formData.password);
       navigate("/company/dashboard");
     } catch (error) {
-      setErrors({ general: error instanceof Error ? error.message : "Login failed. Please try again." });
+      setErrors({
+        general:
+          error instanceof Error
+            ? error.message
+            : "Login failed. Please try again.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +102,7 @@ export default function CompanyLogin() {
             </div>
           </div>
         </Link>
-        
+
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Company Login
         </h2>
@@ -123,7 +128,10 @@ export default function CompanyLogin() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Company Email Address
               </label>
               <div className="mt-1 relative">
@@ -139,7 +147,7 @@ export default function CompanyLogin() {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
+                    errors.email ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter your company email"
                 />
@@ -153,7 +161,10 @@ export default function CompanyLogin() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
@@ -169,7 +180,7 @@ export default function CompanyLogin() {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                    errors.password ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter your password"
                 />
@@ -203,13 +214,19 @@ export default function CompanyLogin() {
                   type="checkbox"
                   className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm text-gray-900"
+                >
                   Remember me
                 </label>
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-green-600 hover:text-green-500">
+                <a
+                  href="#"
+                  className="font-medium text-green-600 hover:text-green-500"
+                >
                   Forgot your password?
                 </a>
               </div>
@@ -239,7 +256,9 @@ export default function CompanyLogin() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">New to KanoProc?</span>
+                <span className="px-2 bg-white text-gray-500">
+                  New to KanoProc?
+                </span>
               </div>
             </div>
 
@@ -260,7 +279,9 @@ export default function CompanyLogin() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Admin access</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Admin access
+                </span>
               </div>
             </div>
 
@@ -295,9 +316,12 @@ export default function CompanyLogin() {
       {/* Test Accounts for Different Statuses */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4 text-center">Test Company Accounts</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-4 text-center">
+            Test Company Accounts
+          </h3>
           <p className="text-sm text-blue-700 mb-4 text-center">
-            Login with these test accounts to experience different company statuses
+            Login with these test accounts to experience different company
+            statuses
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -305,18 +329,30 @@ export default function CompanyLogin() {
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <div className="flex items-center mb-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                <h4 className="font-medium text-green-900">✅ Approved Company</h4>
+                <h4 className="font-medium text-green-900">
+                  ✅ Approved Company
+                </h4>
               </div>
-              <p className="text-xs text-green-700 mb-3">Full access to all features</p>
+              <p className="text-xs text-green-700 mb-3">
+                Full access to all features
+              </p>
               <div className="space-y-1">
                 <p className="text-sm text-green-800">
-                  <strong>Email:</strong> <button
-                    onClick={() => fillTestAccount("approved@company.com", "password123")}
+                  <strong>Email:</strong>{" "}
+                  <button
+                    onClick={() =>
+                      fillTestAccount("approved@company.com", "password123")
+                    }
                     className="bg-green-100 px-1 rounded text-xs hover:bg-green-200 cursor-pointer transition-colors"
-                  >approved@company.com</button>
+                  >
+                    approved@company.com
+                  </button>
                 </p>
                 <p className="text-sm text-green-800">
-                  <strong>Password:</strong> <code className="bg-green-100 px-1 rounded text-xs">password123</code>
+                  <strong>Password:</strong>{" "}
+                  <code className="bg-green-100 px-1 rounded text-xs">
+                    password123
+                  </code>
                 </p>
               </div>
             </div>
@@ -325,18 +361,30 @@ export default function CompanyLogin() {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center mb-2">
                 <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                <h4 className="font-medium text-blue-900">🔵 Pending Approval</h4>
+                <h4 className="font-medium text-blue-900">
+                  🔵 Pending Approval
+                </h4>
               </div>
-              <p className="text-xs text-blue-700 mb-3">Limited access, awaiting BPP review</p>
+              <p className="text-xs text-blue-700 mb-3">
+                Limited access, awaiting BPP review
+              </p>
               <div className="space-y-1">
                 <p className="text-sm text-blue-800">
-                  <strong>Email:</strong> <button
-                    onClick={() => fillTestAccount("pending@company.com", "password123")}
+                  <strong>Email:</strong>{" "}
+                  <button
+                    onClick={() =>
+                      fillTestAccount("pending@company.com", "password123")
+                    }
                     className="bg-blue-100 px-1 rounded text-xs hover:bg-blue-200 cursor-pointer transition-colors"
-                  >pending@company.com</button>
+                  >
+                    pending@company.com
+                  </button>
                 </p>
                 <p className="text-sm text-blue-800">
-                  <strong>Password:</strong> <code className="bg-blue-100 px-1 rounded text-xs">password123</code>
+                  <strong>Password:</strong>{" "}
+                  <code className="bg-blue-100 px-1 rounded text-xs">
+                    password123
+                  </code>
                 </p>
               </div>
             </div>
@@ -345,18 +393,30 @@ export default function CompanyLogin() {
             <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
               <div className="flex items-center mb-2">
                 <div className="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
-                <h4 className="font-medium text-orange-900">🟠 Suspended Account</h4>
+                <h4 className="font-medium text-orange-900">
+                  🟠 Suspended Account
+                </h4>
               </div>
-              <p className="text-xs text-orange-700 mb-3">Suspended due to expired documents</p>
+              <p className="text-xs text-orange-700 mb-3">
+                Suspended due to expired documents
+              </p>
               <div className="space-y-1">
                 <p className="text-sm text-orange-800">
-                  <strong>Email:</strong> <button
-                    onClick={() => fillTestAccount("suspended@company.com", "password123")}
+                  <strong>Email:</strong>{" "}
+                  <button
+                    onClick={() =>
+                      fillTestAccount("suspended@company.com", "password123")
+                    }
                     className="bg-orange-100 px-1 rounded text-xs hover:bg-orange-200 cursor-pointer transition-colors"
-                  >suspended@company.com</button>
+                  >
+                    suspended@company.com
+                  </button>
                 </p>
                 <p className="text-sm text-orange-800">
-                  <strong>Password:</strong> <code className="bg-orange-100 px-1 rounded text-xs">password123</code>
+                  <strong>Password:</strong>{" "}
+                  <code className="bg-orange-100 px-1 rounded text-xs">
+                    password123
+                  </code>
                 </p>
               </div>
             </div>
@@ -365,18 +425,30 @@ export default function CompanyLogin() {
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
               <div className="flex items-center mb-2">
                 <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                <h4 className="font-medium text-red-900">🔴 Blacklisted Account</h4>
+                <h4 className="font-medium text-red-900">
+                  🔴 Blacklisted Account
+                </h4>
               </div>
-              <p className="text-xs text-red-700 mb-3">Banned from all procurement activities</p>
+              <p className="text-xs text-red-700 mb-3">
+                Banned from all procurement activities
+              </p>
               <div className="space-y-1">
                 <p className="text-sm text-red-800">
-                  <strong>Email:</strong> <button
-                    onClick={() => fillTestAccount("blacklisted@company.com", "password123")}
+                  <strong>Email:</strong>{" "}
+                  <button
+                    onClick={() =>
+                      fillTestAccount("blacklisted@company.com", "password123")
+                    }
                     className="bg-red-100 px-1 rounded text-xs hover:bg-red-200 cursor-pointer transition-colors"
-                  >blacklisted@company.com</button>
+                  >
+                    blacklisted@company.com
+                  </button>
                 </p>
                 <p className="text-sm text-red-800">
-                  <strong>Password:</strong> <code className="bg-red-100 px-1 rounded text-xs">password123</code>
+                  <strong>Password:</strong>{" "}
+                  <code className="bg-red-100 px-1 rounded text-xs">
+                    password123
+                  </code>
                 </p>
               </div>
             </div>
@@ -384,7 +456,8 @@ export default function CompanyLogin() {
 
           <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3">
             <p className="text-xs text-gray-600 text-center">
-              💡 <strong>Quick Login Tip:</strong> Click on any email above to auto-fill the login form
+              💡 <strong>Quick Login Tip:</strong> Click on any email above to
+              auto-fill the login form
             </p>
           </div>
         </div>

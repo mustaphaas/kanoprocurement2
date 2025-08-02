@@ -46,7 +46,7 @@ import {
   History,
   Shield,
   Gavel,
-  Archive
+  Archive,
 } from "lucide-react";
 
 type CompanyStatus = "Pending" | "Approved" | "Suspended" | "Blacklisted";
@@ -116,11 +116,13 @@ interface Contract {
 }
 
 export default function CompanyDashboard() {
-  const [activeSection, setActiveSection] = useState<ActiveSection>("dashboard");
+  const [activeSection, setActiveSection] =
+    useState<ActiveSection>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [showExpressInterestModal, setShowExpressInterestModal] = useState(false);
+  const [showExpressInterestModal, setShowExpressInterestModal] =
+    useState(false);
   const [showSubmitBidModal, setShowSubmitBidModal] = useState(false);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const navigate = useNavigate();
@@ -129,9 +131,9 @@ export default function CompanyDashboard() {
   // Mock company data - Check for expired documents and auto-suspend
   const hasExpiredDocuments = () => {
     const expiredDocs = [
-      { name: "Professional License", expiry: "2024-01-15" }
+      { name: "Professional License", expiry: "2024-01-15" },
     ];
-    return expiredDocs.some(doc => new Date(doc.expiry) < new Date());
+    return expiredDocs.some((doc) => new Date(doc.expiry) < new Date());
   };
 
   const getCompanyStatus = (): CompanyStatus => {
@@ -165,7 +167,7 @@ export default function CompanyDashboard() {
         bidsExpressedInterest: 0, // Pending companies can't express interest yet
         activeBids: 0,
         notActiveBids: 0,
-        totalContractValue: "₦0"
+        totalContractValue: "₦0",
       },
       "suspended@company.com": {
         name: "Omega Engineering Services",
@@ -174,7 +176,7 @@ export default function CompanyDashboard() {
         bidsExpressedInterest: 15, // Had expressed interest before suspension
         activeBids: 0, // No active bids due to suspension
         notActiveBids: 8,
-        totalContractValue: "₦750M"
+        totalContractValue: "₦750M",
       },
       "blacklisted@company.com": {
         name: "Restricted Corp Ltd",
@@ -183,7 +185,7 @@ export default function CompanyDashboard() {
         bidsExpressedInterest: 0,
         activeBids: 0,
         notActiveBids: 0,
-        totalContractValue: "₦0"
+        totalContractValue: "₦0",
       },
       "approved@company.com": {
         name: "Premier Construction Company",
@@ -192,31 +194,35 @@ export default function CompanyDashboard() {
         bidsExpressedInterest: 25,
         activeBids: 10,
         notActiveBids: 15,
-        totalContractValue: "₦2.3B"
-      }
+        totalContractValue: "₦2.3B",
+      },
     };
 
-    const details = companyDetails[userEmail as keyof typeof companyDetails] || {
+    const details = companyDetails[
+      userEmail as keyof typeof companyDetails
+    ] || {
       name: "Northern Construction Ltd",
       email: "contact@northernconstruction.com",
       totalAdverts: 150,
       bidsExpressedInterest: 25,
       activeBids: 10,
       notActiveBids: 15,
-      totalContractValue: "₦2.3B"
+      totalContractValue: "₦2.3B",
     };
 
     return {
       ...details,
       status,
-      suspensionReason: status === "Suspended" ?
-        (userEmail === "suspended@company.com" ?
-          "Professional License expired on January 15, 2024" :
-          "Professional License expired on January 15, 2024") :
-        undefined,
-      blacklistReason: status === "Blacklisted" ?
-        "Violation of procurement guidelines and contract terms" :
-        undefined
+      suspensionReason:
+        status === "Suspended"
+          ? userEmail === "suspended@company.com"
+            ? "Professional License expired on January 15, 2024"
+            : "Professional License expired on January 15, 2024"
+          : undefined,
+      blacklistReason:
+        status === "Blacklisted"
+          ? "Violation of procurement guidelines and contract terms"
+          : undefined,
     };
   };
 
@@ -229,32 +235,35 @@ export default function CompanyDashboard() {
       title: "New Addendum",
       message: "New Addendum issued for Hospital Equipment Supply tender.",
       date: "2024-01-22",
-      read: false
+      read: false,
     },
     {
       id: "2",
       type: "warning",
       title: "Bid Under Evaluation",
-      message: "Your bid for Road Construction Project is currently under evaluation.",
+      message:
+        "Your bid for Road Construction Project is currently under evaluation.",
       date: "2024-01-21",
-      read: false
+      read: false,
     },
     {
       id: "3",
       type: "success",
       title: "Contract Awarded",
-      message: "Congratulations! You have been awarded the contract for ICT Infrastructure Upgrade.",
+      message:
+        "Congratulations! You have been awarded the contract for ICT Infrastructure Upgrade.",
       date: "2024-01-20",
-      read: true
+      read: true,
     },
     {
       id: "4",
       type: "warning",
       title: "Document Expiry Alert",
-      message: "Important: Your Tax Clearance Certificate expires on 2024-03-15. Please upload an updated copy to avoid automatic suspension.",
+      message:
+        "Important: Your Tax Clearance Certificate expires on 2024-03-15. Please upload an updated copy to avoid automatic suspension.",
       date: "2024-01-19",
-      read: false
-    }
+      read: false,
+    },
   ]);
 
   const [tenders, setTenders] = useState<Tender[]>([
@@ -270,7 +279,7 @@ export default function CompanyDashboard() {
       hasExpressedInterest: true,
       hasBid: false,
       unspscCode: "42181500",
-      procurementMethod: "Open Tendering"
+      procurementMethod: "Open Tendering",
     },
     {
       id: "KS-2024-016",
@@ -284,7 +293,7 @@ export default function CompanyDashboard() {
       hasExpressedInterest: false,
       hasBid: false,
       unspscCode: "72141100",
-      procurementMethod: "Open Tendering"
+      procurementMethod: "Open Tendering",
     },
     {
       id: "KS-2024-012",
@@ -298,8 +307,8 @@ export default function CompanyDashboard() {
       hasExpressedInterest: true,
       hasBid: true,
       unspscCode: "72141200",
-      procurementMethod: "Selective Tendering"
-    }
+      procurementMethod: "Selective Tendering",
+    },
   ]);
 
   const [contracts, setContracts] = useState<Contract[]>([
@@ -310,7 +319,7 @@ export default function CompanyDashboard() {
       contractValue: "₦1.1B",
       awardDate: "2024-01-20",
       status: "Active",
-      progress: 35
+      progress: 35,
     },
     {
       id: "CON-2023-045",
@@ -319,8 +328,8 @@ export default function CompanyDashboard() {
       contractValue: "₦650M",
       awardDate: "2023-08-15",
       status: "Completed",
-      progress: 100
-    }
+      progress: 100,
+    },
   ]);
 
   const recommendedTenders = [
@@ -328,14 +337,14 @@ export default function CompanyDashboard() {
       id: "KS-2024-017",
       title: "Network Infrastructure Upgrade",
       ministry: "Ministry of Science and Technology",
-      deadline: "2024-03-10"
+      deadline: "2024-03-10",
     },
     {
       id: "KS-2024-018",
-      title: "Fiber Optic Cable Installation", 
+      title: "Fiber Optic Cable Installation",
       ministry: "Ministry of Communications",
-      deadline: "2024-03-20"
-    }
+      deadline: "2024-03-20",
+    },
   ];
 
   const handleLogout = () => {
@@ -357,7 +366,9 @@ export default function CompanyDashboard() {
       return;
     }
     if (!tender.hasExpressedInterest) {
-      alert("You must express interest in this tender before submitting a bid.");
+      alert(
+        "You must express interest in this tender before submitting a bid.",
+      );
       return;
     }
     setSelectedTender(tender);
@@ -368,23 +379,26 @@ export default function CompanyDashboard() {
     if (!selectedTender) return;
 
     // Update the tender to show interest has been expressed
-    setTenders(prevTenders =>
-      prevTenders.map(tender =>
+    setTenders((prevTenders) =>
+      prevTenders.map((tender) =>
         tender.id === selectedTender.id
           ? { ...tender, hasExpressedInterest: true }
-          : tender
-      )
+          : tender,
+      ),
     );
 
     // Update company stats
-    setNotifications(prev => [{
-      id: Date.now().toString(),
-      type: "success",
-      title: "Interest Expressed",
-      message: `You have successfully expressed interest in ${selectedTender.title}`,
-      date: new Date().toISOString().split('T')[0],
-      read: false
-    }, ...prev]);
+    setNotifications((prev) => [
+      {
+        id: Date.now().toString(),
+        type: "success",
+        title: "Interest Expressed",
+        message: `You have successfully expressed interest in ${selectedTender.title}`,
+        date: new Date().toISOString().split("T")[0],
+        read: false,
+      },
+      ...prev,
+    ]);
 
     setShowExpressInterestModal(false);
     setSelectedTender(null);
@@ -394,23 +408,24 @@ export default function CompanyDashboard() {
     if (!selectedTender) return;
 
     // Update the tender to show bid has been submitted
-    setTenders(prevTenders =>
-      prevTenders.map(tender =>
-        tender.id === selectedTender.id
-          ? { ...tender, hasBid: true }
-          : tender
-      )
+    setTenders((prevTenders) =>
+      prevTenders.map((tender) =>
+        tender.id === selectedTender.id ? { ...tender, hasBid: true } : tender,
+      ),
     );
 
     // Update company stats and add notification
-    setNotifications(prev => [{
-      id: Date.now().toString(),
-      type: "success",
-      title: "Bid Submitted",
-      message: `Your bid for ${selectedTender.title} has been successfully submitted and is under evaluation`,
-      date: new Date().toISOString().split('T')[0],
-      read: false
-    }, ...prev]);
+    setNotifications((prev) => [
+      {
+        id: Date.now().toString(),
+        type: "success",
+        title: "Bid Submitted",
+        message: `Your bid for ${selectedTender.title} has been successfully submitted and is under evaluation`,
+        date: new Date().toISOString().split("T")[0],
+        read: false,
+      },
+      ...prev,
+    ]);
 
     setShowSubmitBidModal(false);
     setSelectedTender(null);
@@ -425,9 +440,10 @@ export default function CompanyDashboard() {
               <Clock className="h-5 w-5 text-blue-400" />
               <div className="ml-3">
                 <p className="text-sm text-blue-700">
-                  <strong>Account Pending Approval:</strong> Your company registration is under review by the
-                  Bureau of Public Procurement. You will be notified once your account is approved.
-                  Estimated processing time: 5-7 business days.
+                  <strong>Account Pending Approval:</strong> Your company
+                  registration is under review by the Bureau of Public
+                  Procurement. You will be notified once your account is
+                  approved. Estimated processing time: 5-7 business days.
                 </p>
               </div>
             </div>
@@ -440,9 +456,13 @@ export default function CompanyDashboard() {
               <AlertTriangle className="h-5 w-5 text-orange-400" />
               <div className="ml-3">
                 <p className="text-sm text-orange-700">
-                  <strong>Account Suspended:</strong> Your account is suspended due to expired documents.
-                  {companyData.suspensionReason && <span>Reason: {companyData.suspensionReason}. </span>}
-                  Please update your documents in 'My Documents' to regain full access.
+                  <strong>Account Suspended:</strong> Your account is suspended
+                  due to expired documents.
+                  {companyData.suspensionReason && (
+                    <span>Reason: {companyData.suspensionReason}. </span>
+                  )}
+                  Please update your documents in 'My Documents' to regain full
+                  access.
                 </p>
               </div>
             </div>
@@ -455,9 +475,11 @@ export default function CompanyDashboard() {
               <Ban className="h-5 w-5 text-red-400" />
               <div className="ml-3">
                 <p className="text-sm text-red-700">
-                  <strong>Account Blacklisted:</strong> Your company has been blacklisted from participating in
-                  Kano State Government procurements due to {companyData.blacklistReason || "policy violations"}.
-                  Please contact the BPP for more information.
+                  <strong>Account Blacklisted:</strong> Your company has been
+                  blacklisted from participating in Kano State Government
+                  procurements due to{" "}
+                  {companyData.blacklistReason || "policy violations"}. Please
+                  contact the BPP for more information.
                 </p>
               </div>
             </div>
@@ -475,19 +497,34 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             {/* Welcome Message */}
             <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome, {companyData.name}!</h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                Welcome, {companyData.name}!
+              </h1>
               <div className="flex items-center space-x-2">
                 <span className="text-gray-600">Account Status:</span>
-                <span className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
-                  companyData.status === "Approved" ? "bg-green-100 text-green-800" :
-                  companyData.status === "Pending" ? "bg-blue-100 text-blue-800" :
-                  companyData.status === "Suspended" ? "bg-orange-100 text-orange-800" :
-                  "bg-red-100 text-red-800"
-                }`}>
-                  {companyData.status === "Approved" && <CheckCircle className="h-4 w-4 mr-1" />}
-                  {companyData.status === "Pending" && <Clock className="h-4 w-4 mr-1" />}
-                  {companyData.status === "Suspended" && <AlertTriangle className="h-4 w-4 mr-1" />}
-                  {companyData.status === "Blacklisted" && <Ban className="h-4 w-4 mr-1" />}
+                <span
+                  className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
+                    companyData.status === "Approved"
+                      ? "bg-green-100 text-green-800"
+                      : companyData.status === "Pending"
+                        ? "bg-blue-100 text-blue-800"
+                        : companyData.status === "Suspended"
+                          ? "bg-orange-100 text-orange-800"
+                          : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {companyData.status === "Approved" && (
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                  )}
+                  {companyData.status === "Pending" && (
+                    <Clock className="h-4 w-4 mr-1" />
+                  )}
+                  {companyData.status === "Suspended" && (
+                    <AlertTriangle className="h-4 w-4 mr-1" />
+                  )}
+                  {companyData.status === "Blacklisted" && (
+                    <Ban className="h-4 w-4 mr-1" />
+                  )}
                   {companyData.status}
                 </span>
               </div>
@@ -502,16 +539,21 @@ export default function CompanyDashboard() {
                 <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4">
                   <Clock className="h-8 w-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Account Under Review</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                  Account Under Review
+                </h3>
                 <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                  Your company registration is currently being reviewed by the Bureau of Public Procurement.
-                  During this review period, you have limited access to the portal. Once approved, you will
+                  Your company registration is currently being reviewed by the
+                  Bureau of Public Procurement. During this review period, you
+                  have limited access to the portal. Once approved, you will
                   have full access to all tender opportunities and features.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                   <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-medium text-gray-900 mb-3">What You Can Do Now:</h4>
+                    <h4 className="font-medium text-gray-900 mb-3">
+                      What You Can Do Now:
+                    </h4>
                     <ul className="text-sm text-gray-600 space-y-2">
                       <li className="flex items-start">
                         <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
@@ -533,7 +575,9 @@ export default function CompanyDashboard() {
                   </div>
 
                   <div className="bg-red-50 rounded-lg p-6">
-                    <h4 className="font-medium text-gray-900 mb-3">Restricted Until Approval:</h4>
+                    <h4 className="font-medium text-gray-900 mb-3">
+                      Restricted Until Approval:
+                    </h4>
                     <ul className="text-sm text-gray-600 space-y-2">
                       <li className="flex items-start">
                         <X className="h-4 w-4 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
@@ -556,20 +600,26 @@ export default function CompanyDashboard() {
                 </div>
 
                 <div className="mt-8">
-                  <h4 className="font-medium text-gray-900 mb-4">Review Timeline</h4>
+                  <h4 className="font-medium text-gray-900 mb-4">
+                    Review Timeline
+                  </h4>
                   <div className="flex items-center justify-center space-x-4 text-sm">
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
                         <span className="text-blue-600 font-medium">1</span>
                       </div>
-                      <span className="text-gray-600">Application Submitted</span>
+                      <span className="text-gray-600">
+                        Application Submitted
+                      </span>
                     </div>
                     <ChevronRight className="h-4 w-4 text-gray-400" />
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-2">
                         <span className="text-white font-medium">2</span>
                       </div>
-                      <span className="text-blue-600 font-medium">Under Review</span>
+                      <span className="text-blue-600 font-medium">
+                        Under Review
+                      </span>
                     </div>
                     <ChevronRight className="h-4 w-4 text-gray-400" />
                     <div className="flex items-center">
@@ -605,9 +655,15 @@ export default function CompanyDashboard() {
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total Adverts</p>
-                    <p className="text-3xl font-bold text-blue-600">{companyData.totalAdverts}</p>
-                    <p className="text-sm text-gray-500">Active tenders available</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Total Adverts
+                    </p>
+                    <p className="text-3xl font-bold text-blue-600">
+                      {companyData.totalAdverts}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Active tenders available
+                    </p>
                   </div>
                   <FileText className="h-8 w-8 text-blue-600" />
                 </div>
@@ -616,9 +672,15 @@ export default function CompanyDashboard() {
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Bids Expressed Interest</p>
-                    <p className="text-3xl font-bold text-green-600">{companyData.bidsExpressedInterest}</p>
-                    <p className="text-sm text-gray-500">Tenders you're interested in</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Bids Expressed Interest
+                    </p>
+                    <p className="text-3xl font-bold text-green-600">
+                      {companyData.bidsExpressedInterest}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Tenders you're interested in
+                    </p>
                   </div>
                   <TrendingUp className="h-8 w-8 text-green-600" />
                 </div>
@@ -627,8 +689,12 @@ export default function CompanyDashboard() {
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Active Bids</p>
-                    <p className="text-3xl font-bold text-orange-600">{companyData.activeBids}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Active Bids
+                    </p>
+                    <p className="text-3xl font-bold text-orange-600">
+                      {companyData.activeBids}
+                    </p>
                     <p className="text-sm text-gray-500">Under evaluation</p>
                   </div>
                   <Clock className="h-8 w-8 text-orange-600" />
@@ -638,8 +704,12 @@ export default function CompanyDashboard() {
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Not Active Bids</p>
-                    <p className="text-3xl font-bold text-gray-600">{companyData.notActiveBids}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Not Active Bids
+                    </p>
+                    <p className="text-3xl font-bold text-gray-600">
+                      {companyData.notActiveBids}
+                    </p>
                     <p className="text-sm text-gray-500">Closed/Completed</p>
                   </div>
                   <FileCheck className="h-8 w-8 text-gray-600" />
@@ -650,22 +720,36 @@ export default function CompanyDashboard() {
             {/* Notifications */}
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Notifications & Alerts</h2>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Notifications & Alerts
+                </h2>
               </div>
               <div className="p-6">
                 <div className="space-y-4 max-h-64 overflow-y-auto">
                   {notifications.map((notification) => (
-                    <div key={notification.id} className={`p-4 rounded-lg border-l-4 ${
-                      notification.type === "success" ? "bg-green-50 border-green-400" :
-                      notification.type === "warning" ? "bg-orange-50 border-orange-400" :
-                      notification.type === "error" ? "bg-red-50 border-red-400" :
-                      "bg-blue-50 border-blue-400"
-                    } ${!notification.read ? "font-medium" : ""}`}>
+                    <div
+                      key={notification.id}
+                      className={`p-4 rounded-lg border-l-4 ${
+                        notification.type === "success"
+                          ? "bg-green-50 border-green-400"
+                          : notification.type === "warning"
+                            ? "bg-orange-50 border-orange-400"
+                            : notification.type === "error"
+                              ? "bg-red-50 border-red-400"
+                              : "bg-blue-50 border-blue-400"
+                      } ${!notification.read ? "font-medium" : ""}`}
+                    >
                       <div className="flex items-start">
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900">{notification.title}</p>
-                          <p className="text-sm text-gray-700 mt-1">{notification.message}</p>
-                          <p className="text-xs text-gray-500 mt-2">{new Date(notification.date).toLocaleDateString()}</p>
+                          <p className="font-medium text-gray-900">
+                            {notification.title}
+                          </p>
+                          <p className="text-sm text-gray-700 mt-1">
+                            {notification.message}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-2">
+                            {new Date(notification.date).toLocaleDateString()}
+                          </p>
                         </div>
                         {!notification.read && (
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
@@ -686,8 +770,12 @@ export default function CompanyDashboard() {
                 <div className="flex items-center space-x-3">
                   <Search className="h-6 w-6 text-blue-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Browse Latest Tenders</h3>
-                    <p className="text-sm text-gray-600">View all available opportunities</p>
+                    <h3 className="font-medium text-gray-900">
+                      Browse Latest Tenders
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      View all available opportunities
+                    </p>
                   </div>
                 </div>
               </button>
@@ -699,8 +787,12 @@ export default function CompanyDashboard() {
                 <div className="flex items-center space-x-3">
                   <Edit className="h-6 w-6 text-green-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Update Company Profile</h3>
-                    <p className="text-sm text-gray-600">Manage your company information</p>
+                    <h3 className="font-medium text-gray-900">
+                      Update Company Profile
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Manage your company information
+                    </p>
                   </div>
                 </div>
               </button>
@@ -712,8 +804,12 @@ export default function CompanyDashboard() {
                 <div className="flex items-center space-x-3">
                   <Award className="h-6 w-6 text-purple-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">View My Awarded Contracts</h3>
-                    <p className="text-sm text-gray-600">Track contract performance</p>
+                    <h3 className="font-medium text-gray-900">
+                      View My Awarded Contracts
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Track contract performance
+                    </p>
                   </div>
                 </div>
               </button>
@@ -726,15 +822,25 @@ export default function CompanyDashboard() {
                   <Target className="h-5 w-5 text-purple-600 mr-2" />
                   Personalized Tender Recommendations
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">Based on your profile, you might be interested in:</p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Based on your profile, you might be interested in:
+                </p>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
                   {recommendedTenders.map((tender) => (
-                    <div key={tender.id} className="flex items-center justify-between p-4 bg-purple-50 rounded-lg">
+                    <div
+                      key={tender.id}
+                      className="flex items-center justify-between p-4 bg-purple-50 rounded-lg"
+                    >
                       <div>
-                        <h3 className="font-medium text-gray-900">{tender.title}</h3>
-                        <p className="text-sm text-gray-600">{tender.ministry} • Deadline: {new Date(tender.deadline).toLocaleDateString()}</p>
+                        <h3 className="font-medium text-gray-900">
+                          {tender.title}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {tender.ministry} • Deadline:{" "}
+                          {new Date(tender.deadline).toLocaleDateString()}
+                        </p>
                       </div>
                       <button className="flex items-center px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm">
                         <Eye className="h-4 w-4 mr-1" />
@@ -750,8 +856,12 @@ export default function CompanyDashboard() {
             <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-medium text-gray-900">Help us improve KanoProc</h3>
-                  <p className="text-sm text-gray-600 mt-1">Share your experience to help us serve you better</p>
+                  <h3 className="font-medium text-gray-900">
+                    Help us improve KanoProc
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Share your experience to help us serve you better
+                  </p>
                 </div>
                 <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
                   <MessageSquare className="h-4 w-4 mr-2" />
@@ -766,9 +876,11 @@ export default function CompanyDashboard() {
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-gray-900">Tender Advertisements</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Tender Advertisements
+              </h1>
               <div className="flex items-center space-x-3">
-                <button 
+                <button
                   onClick={() => setFilterOpen(!filterOpen)}
                   className="flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
                 >
@@ -835,18 +947,28 @@ export default function CompanyDashboard() {
             {/* Tender List */}
             <div className="space-y-4">
               {tenders.map((tender) => (
-                <div key={tender.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                <div
+                  key={tender.id}
+                  className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow"
+                >
                   <div className="p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
-                          <span className="text-sm font-medium text-gray-500">{tender.id}</span>
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            tender.status === "Open" ? "bg-green-100 text-green-800" :
-                            tender.status === "Closed" ? "bg-gray-100 text-gray-800" :
-                            tender.status === "Awarded" ? "bg-blue-100 text-blue-800" :
-                            "bg-red-100 text-red-800"
-                          }`}>
+                          <span className="text-sm font-medium text-gray-500">
+                            {tender.id}
+                          </span>
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              tender.status === "Open"
+                                ? "bg-green-100 text-green-800"
+                                : tender.status === "Closed"
+                                  ? "bg-gray-100 text-gray-800"
+                                  : tender.status === "Awarded"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-red-100 text-red-800"
+                            }`}
+                          >
                             {tender.status}
                           </span>
                           {tender.hasExpressedInterest && (
@@ -862,7 +984,9 @@ export default function CompanyDashboard() {
                             </span>
                           )}
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">{tender.title}</h3>
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                          {tender.title}
+                        </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
                           <div className="flex items-center">
                             <Building2 className="h-4 w-4 mr-1" />
@@ -874,7 +998,8 @@ export default function CompanyDashboard() {
                           </div>
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-1" />
-                            Deadline: {new Date(tender.deadline).toLocaleDateString()}
+                            Deadline:{" "}
+                            {new Date(tender.deadline).toLocaleDateString()}
                           </div>
                           <div className="flex items-center">
                             <MapPin className="h-4 w-4 mr-1" />
@@ -883,7 +1008,8 @@ export default function CompanyDashboard() {
                         </div>
                         {tender.unspscCode && (
                           <div className="mt-2 text-sm text-gray-600">
-                            <span className="font-medium">UNSPSC Code:</span> {tender.unspscCode}
+                            <span className="font-medium">UNSPSC Code:</span>{" "}
+                            {tender.unspscCode}
                           </div>
                         )}
                       </div>
@@ -892,27 +1018,28 @@ export default function CompanyDashboard() {
                           <Eye className="h-4 w-4 mr-1" />
                           View Details
                         </button>
-                        {companyData.status === "Approved" && tender.status === "Open" && (
-                          <>
-                            {!tender.hasExpressedInterest ? (
-                              <button
-                                onClick={() => handleExpressInterest(tender)}
-                                className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
-                              >
-                                <Plus className="h-4 w-4 mr-1" />
-                                Express Interest
-                              </button>
-                            ) : !tender.hasBid ? (
-                              <button
-                                onClick={() => handleSubmitBid(tender)}
-                                className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
-                              >
-                                <Send className="h-4 w-4 mr-1" />
-                                Submit Bid
-                              </button>
-                            ) : null}
-                          </>
-                        )}
+                        {companyData.status === "Approved" &&
+                          tender.status === "Open" && (
+                            <>
+                              {!tender.hasExpressedInterest ? (
+                                <button
+                                  onClick={() => handleExpressInterest(tender)}
+                                  className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                                >
+                                  <Plus className="h-4 w-4 mr-1" />
+                                  Express Interest
+                                </button>
+                              ) : !tender.hasBid ? (
+                                <button
+                                  onClick={() => handleSubmitBid(tender)}
+                                  className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
+                                >
+                                  <Send className="h-4 w-4 mr-1" />
+                                  Submit Bid
+                                </button>
+                              ) : null}
+                            </>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -927,8 +1054,15 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Contracts Awarded</h1>
-                <p className="text-gray-600">Total Contract Value: <span className="font-semibold text-green-600">{companyData.totalContractValue}</span></p>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Contracts Awarded
+                </h1>
+                <p className="text-gray-600">
+                  Total Contract Value:{" "}
+                  <span className="font-semibold text-green-600">
+                    {companyData.totalContractValue}
+                  </span>
+                </p>
               </div>
               <div className="flex items-center space-x-3">
                 <button className="flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
@@ -943,12 +1077,24 @@ export default function CompanyDashboard() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project Title</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Awarding Ministry</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Value</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Award Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Project Title
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Awarding Ministry
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Contract Value
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Award Date
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -956,8 +1102,12 @@ export default function CompanyDashboard() {
                       <tr key={contract.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{contract.projectTitle}</div>
-                            <div className="text-sm text-gray-500">{contract.id}</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {contract.projectTitle}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {contract.id}
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -971,20 +1121,28 @@ export default function CompanyDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              contract.status === "Active" ? "bg-green-100 text-green-800" :
-                              contract.status === "Completed" ? "bg-blue-100 text-blue-800" :
-                              "bg-red-100 text-red-800"
-                            }`}>
+                            <span
+                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                contract.status === "Active"
+                                  ? "bg-green-100 text-green-800"
+                                  : contract.status === "Completed"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-red-100 text-red-800"
+                              }`}
+                            >
                               {contract.status}
                             </span>
                             {contract.progress !== undefined && (
-                              <span className="ml-2 text-sm text-gray-600">{contract.progress}%</span>
+                              <span className="ml-2 text-sm text-gray-600">
+                                {contract.progress}%
+                              </span>
                             )}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="text-blue-600 hover:text-blue-900">View Details</button>
+                          <button className="text-blue-600 hover:text-blue-900">
+                            View Details
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -1000,8 +1158,12 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Purchased Bids</h2>
-                <p className="text-sm text-gray-600 mt-1">Tender documents you have purchased</p>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Purchased Bids
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Tender documents you have purchased
+                </p>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
@@ -1013,7 +1175,7 @@ export default function CompanyDashboard() {
                       amount: "₦5,000",
                       status: "Active",
                       deadline: "2024-02-15",
-                      category: "Infrastructure"
+                      category: "Infrastructure",
                     },
                     {
                       id: "TB002",
@@ -1022,7 +1184,7 @@ export default function CompanyDashboard() {
                       amount: "₦3,000",
                       status: "Submitted",
                       deadline: "2024-02-10",
-                      category: "Healthcare"
+                      category: "Healthcare",
                     },
                     {
                       id: "TB003",
@@ -1031,38 +1193,63 @@ export default function CompanyDashboard() {
                       amount: "₦4,500",
                       status: "Closed",
                       deadline: "2024-01-30",
-                      category: "Education"
-                    }
+                      category: "Education",
+                    },
                   ].map((bid) => (
-                    <div key={bid.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div
+                      key={bid.id}
+                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="font-medium text-gray-900">{bid.title}</h3>
-                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              bid.status === "Active" ? "bg-green-100 text-green-800" :
-                              bid.status === "Submitted" ? "bg-blue-100 text-blue-800" :
-                              "bg-gray-100 text-gray-800"
-                            }`}>
+                            <h3 className="font-medium text-gray-900">
+                              {bid.title}
+                            </h3>
+                            <span
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                bid.status === "Active"
+                                  ? "bg-green-100 text-green-800"
+                                  : bid.status === "Submitted"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
                               {bid.status}
                             </span>
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                             <div>
-                              <p className="font-medium text-gray-900">Tender ID</p>
+                              <p className="font-medium text-gray-900">
+                                Tender ID
+                              </p>
                               <p>{bid.id}</p>
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">Purchase Date</p>
-                              <p>{new Date(bid.purchaseDate).toLocaleDateString()}</p>
+                              <p className="font-medium text-gray-900">
+                                Purchase Date
+                              </p>
+                              <p>
+                                {new Date(
+                                  bid.purchaseDate,
+                                ).toLocaleDateString()}
+                              </p>
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">Amount Paid</p>
-                              <p className="text-green-600 font-medium">{bid.amount}</p>
+                              <p className="font-medium text-gray-900">
+                                Amount Paid
+                              </p>
+                              <p className="text-green-600 font-medium">
+                                {bid.amount}
+                              </p>
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">Deadline</p>
-                              <p>{new Date(bid.deadline).toLocaleDateString()}</p>
+                              <p className="font-medium text-gray-900">
+                                Deadline
+                              </p>
+                              <p>
+                                {new Date(bid.deadline).toLocaleDateString()}
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -1090,21 +1277,26 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Awarded Bids</h2>
-                <p className="text-sm text-gray-600 mt-1">Contracts you have won and their status</p>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Awarded Bids
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Contracts you have won and their status
+                </p>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
                   {[
                     {
                       id: "AW001",
-                      title: "Supply of Office Furniture to Government Secretariat",
+                      title:
+                        "Supply of Office Furniture to Government Secretariat",
                       awardDate: "2024-01-20",
                       contractValue: "₦15,500,000",
                       status: "Contract Signed",
                       progress: 65,
                       completionDate: "2024-03-20",
-                      category: "Supply"
+                      category: "Supply",
                     },
                     {
                       id: "AW002",
@@ -1114,46 +1306,75 @@ export default function CompanyDashboard() {
                       status: "In Progress",
                       progress: 40,
                       completionDate: "2024-06-15",
-                      category: "Construction"
-                    }
+                      category: "Construction",
+                    },
                   ].map((award) => (
-                    <div key={award.id} className="border rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div
+                      key={award.id}
+                      className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+                    >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="font-medium text-gray-900">{award.title}</h3>
-                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              award.status === "Contract Signed" ? "bg-green-100 text-green-800" :
-                              award.status === "In Progress" ? "bg-blue-100 text-blue-800" :
-                              "bg-yellow-100 text-yellow-800"
-                            }`}>
+                            <h3 className="font-medium text-gray-900">
+                              {award.title}
+                            </h3>
+                            <span
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                award.status === "Contract Signed"
+                                  ? "bg-green-100 text-green-800"
+                                  : award.status === "In Progress"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-yellow-100 text-yellow-800"
+                              }`}
+                            >
                               <Award className="h-3 w-3 mr-1" />
                               {award.status}
                             </span>
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600">
                             <div>
-                              <p className="font-medium text-gray-900">Contract ID</p>
+                              <p className="font-medium text-gray-900">
+                                Contract ID
+                              </p>
                               <p>{award.id}</p>
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">Award Date</p>
-                              <p>{new Date(award.awardDate).toLocaleDateString()}</p>
+                              <p className="font-medium text-gray-900">
+                                Award Date
+                              </p>
+                              <p>
+                                {new Date(award.awardDate).toLocaleDateString()}
+                              </p>
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">Contract Value</p>
-                              <p className="text-green-600 font-medium">{award.contractValue}</p>
+                              <p className="font-medium text-gray-900">
+                                Contract Value
+                              </p>
+                              <p className="text-green-600 font-medium">
+                                {award.contractValue}
+                              </p>
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">Expected Completion</p>
-                              <p>{new Date(award.completionDate).toLocaleDateString()}</p>
+                              <p className="font-medium text-gray-900">
+                                Expected Completion
+                              </p>
+                              <p>
+                                {new Date(
+                                  award.completionDate,
+                                ).toLocaleDateString()}
+                              </p>
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">Category</p>
+                              <p className="font-medium text-gray-900">
+                                Category
+                              </p>
                               <p>{award.category}</p>
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">Progress</p>
+                              <p className="font-medium text-gray-900">
+                                Progress
+                              </p>
                               <div className="flex items-center space-x-2">
                                 <div className="flex-1 bg-gray-200 rounded-full h-2">
                                   <div
@@ -1161,7 +1382,9 @@ export default function CompanyDashboard() {
                                     style={{ width: `${award.progress}%` }}
                                   ></div>
                                 </div>
-                                <span className="text-sm font-medium">{award.progress}%</span>
+                                <span className="text-sm font-medium">
+                                  {award.progress}%
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -1194,18 +1417,26 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Company Profile</h2>
-                <p className="text-sm text-gray-600 mt-1">Manage your company information and settings</p>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Company Profile
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Manage your company information and settings
+                </p>
               </div>
               <div className="p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Company Information */}
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">Company Information</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        Company Information
+                      </h3>
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">Company Name</label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Company Name
+                          </label>
                           <input
                             type="text"
                             value={companyData.name}
@@ -1214,7 +1445,9 @@ export default function CompanyDashboard() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">Registration Number</label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Registration Number
+                          </label>
                           <input
                             type="text"
                             value="RC-1234567"
@@ -1223,7 +1456,9 @@ export default function CompanyDashboard() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">Business Type</label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Business Type
+                          </label>
                           <input
                             type="text"
                             value="Limited Liability Company"
@@ -1232,7 +1467,9 @@ export default function CompanyDashboard() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">Industry</label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Industry
+                          </label>
                           <input
                             type="text"
                             value="Construction & Engineering"
@@ -1244,10 +1481,14 @@ export default function CompanyDashboard() {
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">Contact Information</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        Contact Information
+                      </h3>
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">Email Address</label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Email Address
+                          </label>
                           <input
                             type="email"
                             value="contact@democompany.com"
@@ -1255,7 +1496,9 @@ export default function CompanyDashboard() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Phone Number
+                          </label>
                           <input
                             type="tel"
                             value="+234 803 123 4567"
@@ -1263,7 +1506,9 @@ export default function CompanyDashboard() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">Address</label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Address
+                          </label>
                           <textarea
                             rows={3}
                             value="123 Business District, Kano State, Nigeria"
@@ -1277,20 +1522,37 @@ export default function CompanyDashboard() {
                   {/* Company Status & Statistics */}
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">Account Status</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        Account Status
+                      </h3>
                       <div className="bg-gray-50 rounded-lg p-4">
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm font-medium text-gray-700">Current Status</span>
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
-                            companyData.status === "Approved" ? "bg-green-100 text-green-800" :
-                            companyData.status === "Pending" ? "bg-blue-100 text-blue-800" :
-                            companyData.status === "Suspended" ? "bg-orange-100 text-orange-800" :
-                            "bg-red-100 text-red-800"
-                          }`}>
-                            {companyData.status === "Approved" && <CheckCircle className="h-4 w-4 mr-1" />}
-                            {companyData.status === "Pending" && <Clock className="h-4 w-4 mr-1" />}
-                            {companyData.status === "Suspended" && <AlertTriangle className="h-4 w-4 mr-1" />}
-                            {companyData.status === "Blacklisted" && <Ban className="h-4 w-4 mr-1" />}
+                          <span className="text-sm font-medium text-gray-700">
+                            Current Status
+                          </span>
+                          <span
+                            className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
+                              companyData.status === "Approved"
+                                ? "bg-green-100 text-green-800"
+                                : companyData.status === "Pending"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : companyData.status === "Suspended"
+                                    ? "bg-orange-100 text-orange-800"
+                                    : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {companyData.status === "Approved" && (
+                              <CheckCircle className="h-4 w-4 mr-1" />
+                            )}
+                            {companyData.status === "Pending" && (
+                              <Clock className="h-4 w-4 mr-1" />
+                            )}
+                            {companyData.status === "Suspended" && (
+                              <AlertTriangle className="h-4 w-4 mr-1" />
+                            )}
+                            {companyData.status === "Blacklisted" && (
+                              <Ban className="h-4 w-4 mr-1" />
+                            )}
                             {companyData.status}
                           </span>
                         </div>
@@ -1302,44 +1564,85 @@ export default function CompanyDashboard() {
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">Performance Statistics</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        Performance Statistics
+                      </h3>
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Bids Submitted</span>
+                          <span className="text-sm text-gray-600">
+                            Bids Submitted
+                          </span>
                           <span className="font-medium">24</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Contracts Won</span>
+                          <span className="text-sm text-gray-600">
+                            Contracts Won
+                          </span>
                           <span className="font-medium text-green-600">8</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Success Rate</span>
+                          <span className="text-sm text-gray-600">
+                            Success Rate
+                          </span>
                           <span className="font-medium">33.3%</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Total Contract Value</span>
-                          <span className="font-medium text-green-600">₦240,500,000</span>
+                          <span className="text-sm text-gray-600">
+                            Total Contract Value
+                          </span>
+                          <span className="font-medium text-green-600">
+                            ₦240,500,000
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">Compliance Status</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        Compliance Status
+                      </h3>
                       <div className="space-y-3">
                         {[
-                          { name: "Tax Clearance Certificate", status: "Valid", expiry: "2024-12-31" },
-                          { name: "Business Registration", status: "Valid", expiry: "2025-03-15" },
-                          { name: "Professional License", status: "Expired", expiry: "2024-01-15" },
-                          { name: "Insurance Certificate", status: "Valid", expiry: "2024-11-20" }
+                          {
+                            name: "Tax Clearance Certificate",
+                            status: "Valid",
+                            expiry: "2024-12-31",
+                          },
+                          {
+                            name: "Business Registration",
+                            status: "Valid",
+                            expiry: "2025-03-15",
+                          },
+                          {
+                            name: "Professional License",
+                            status: "Expired",
+                            expiry: "2024-01-15",
+                          },
+                          {
+                            name: "Insurance Certificate",
+                            status: "Valid",
+                            expiry: "2024-11-20",
+                          },
                         ].map((cert) => (
-                          <div key={cert.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div
+                            key={cert.name}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                          >
                             <div>
-                              <p className="text-sm font-medium text-gray-900">{cert.name}</p>
-                              <p className="text-xs text-gray-500">Expires: {cert.expiry}</p>
+                              <p className="text-sm font-medium text-gray-900">
+                                {cert.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                Expires: {cert.expiry}
+                              </p>
                             </div>
-                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              cert.status === "Valid" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                            }`}>
+                            <span
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                cert.status === "Valid"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
                               {cert.status}
                             </span>
                           </div>
@@ -1370,8 +1673,12 @@ export default function CompanyDashboard() {
               <div className="px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">My Documents</h2>
-                    <p className="text-sm text-gray-600 mt-1">Manage your company documents and certificates</p>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      My Documents
+                    </h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Manage your company documents and certificates
+                    </p>
                   </div>
                   <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
                     <Plus className="h-4 w-4 mr-1" />
@@ -1388,7 +1695,7 @@ export default function CompanyDashboard() {
                       size: "2.4 MB",
                       uploadDate: "2024-01-15",
                       status: "Verified",
-                      expiry: "2024-12-31"
+                      expiry: "2024-12-31",
                     },
                     {
                       name: "CAC Certificate",
@@ -1396,7 +1703,7 @@ export default function CompanyDashboard() {
                       size: "1.8 MB",
                       uploadDate: "2024-01-10",
                       status: "Verified",
-                      expiry: "2025-03-15"
+                      expiry: "2025-03-15",
                     },
                     {
                       name: "Professional License",
@@ -1404,7 +1711,7 @@ export default function CompanyDashboard() {
                       size: "3.1 MB",
                       uploadDate: "2023-12-20",
                       status: "Expired",
-                      expiry: "2024-01-15"
+                      expiry: "2024-01-15",
                     },
                     {
                       name: "Insurance Certificate",
@@ -1412,7 +1719,7 @@ export default function CompanyDashboard() {
                       size: "2.7 MB",
                       uploadDate: "2023-11-20",
                       status: "Verified",
-                      expiry: "2024-11-20"
+                      expiry: "2024-11-20",
                     },
                     {
                       name: "Company Profile",
@@ -1420,7 +1727,7 @@ export default function CompanyDashboard() {
                       size: "5.2 MB",
                       uploadDate: "2024-01-08",
                       status: "Under Review",
-                      expiry: "N/A"
+                      expiry: "N/A",
                     },
                     {
                       name: "Financial Statement 2023",
@@ -1428,25 +1735,36 @@ export default function CompanyDashboard() {
                       size: "4.6 MB",
                       uploadDate: "2024-01-05",
                       status: "Verified",
-                      expiry: "N/A"
-                    }
+                      expiry: "N/A",
+                    },
                   ].map((doc) => (
-                    <div key={doc.name} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div
+                      key={doc.name}
+                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                             <FileText className="h-5 w-5 text-red-600" />
                           </div>
                           <div>
-                            <h3 className="font-medium text-gray-900 text-sm">{doc.name}</h3>
-                            <p className="text-xs text-gray-500">{doc.type} • {doc.size}</p>
+                            <h3 className="font-medium text-gray-900 text-sm">
+                              {doc.name}
+                            </h3>
+                            <p className="text-xs text-gray-500">
+                              {doc.type} • {doc.size}
+                            </p>
                           </div>
                         </div>
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          doc.status === "Verified" ? "bg-green-100 text-green-800" :
-                          doc.status === "Under Review" ? "bg-yellow-100 text-yellow-800" :
-                          "bg-red-100 text-red-800"
-                        }`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            doc.status === "Verified"
+                              ? "bg-green-100 text-green-800"
+                              : doc.status === "Under Review"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-red-100 text-red-800"
+                          }`}
+                        >
                           {doc.status}
                         </span>
                       </div>
@@ -1454,11 +1772,20 @@ export default function CompanyDashboard() {
                       <div className="space-y-2 text-xs text-gray-600">
                         <div className="flex justify-between">
                           <span>Uploaded:</span>
-                          <span>{new Date(doc.uploadDate).toLocaleDateString()}</span>
+                          <span>
+                            {new Date(doc.uploadDate).toLocaleDateString()}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Expires:</span>
-                          <span className={doc.expiry !== "N/A" && new Date(doc.expiry) < new Date() ? "text-red-600" : ""}>
+                          <span
+                            className={
+                              doc.expiry !== "N/A" &&
+                              new Date(doc.expiry) < new Date()
+                                ? "text-red-600"
+                                : ""
+                            }
+                          >
                             {doc.expiry}
                           </span>
                         </div>
@@ -1486,7 +1813,9 @@ export default function CompanyDashboard() {
                 <div className="mt-8 border-2 border-dashed border-gray-300 rounded-lg p-6">
                   <div className="text-center">
                     <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">Upload new document</h3>
+                    <h3 className="mt-2 text-sm font-medium text-gray-900">
+                      Upload new document
+                    </h3>
                     <p className="mt-1 text-sm text-gray-500">
                       Drag and drop files here, or click to browse
                     </p>
@@ -1511,19 +1840,27 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Detailed Compliance Overview</h2>
-                <p className="text-sm text-gray-600 mt-1">Comprehensive compliance status and requirements</p>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Detailed Compliance Overview
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Comprehensive compliance status and requirements
+                </p>
               </div>
               <div className="p-6">
                 {/* Compliance Summary */}
                 <div className="mb-8">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Compliance Summary</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">
+                    Compliance Summary
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="bg-green-50 rounded-lg p-4 border border-green-200">
                       <div className="flex items-center">
                         <CheckCircle className="h-8 w-8 text-green-600" />
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-green-900">Compliant</p>
+                          <p className="text-sm font-medium text-green-900">
+                            Compliant
+                          </p>
                           <p className="text-2xl font-bold text-green-600">6</p>
                         </div>
                       </div>
@@ -1532,8 +1869,12 @@ export default function CompanyDashboard() {
                       <div className="flex items-center">
                         <AlertTriangle className="h-8 w-8 text-yellow-600" />
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-yellow-900">Expiring Soon</p>
-                          <p className="text-2xl font-bold text-yellow-600">2</p>
+                          <p className="text-sm font-medium text-yellow-900">
+                            Expiring Soon
+                          </p>
+                          <p className="text-2xl font-bold text-yellow-600">
+                            2
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1541,7 +1882,9 @@ export default function CompanyDashboard() {
                       <div className="flex items-center">
                         <AlertCircle className="h-8 w-8 text-red-600" />
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-red-900">Non-Compliant</p>
+                          <p className="text-sm font-medium text-red-900">
+                            Non-Compliant
+                          </p>
                           <p className="text-2xl font-bold text-red-600">1</p>
                         </div>
                       </div>
@@ -1550,8 +1893,12 @@ export default function CompanyDashboard() {
                       <div className="flex items-center">
                         <Shield className="h-8 w-8 text-gray-600" />
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">Overall Score</p>
-                          <p className="text-2xl font-bold text-gray-600">78%</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            Overall Score
+                          </p>
+                          <p className="text-2xl font-bold text-gray-600">
+                            78%
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1560,7 +1907,9 @@ export default function CompanyDashboard() {
 
                 {/* Detailed Requirements */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-medium text-gray-900">Compliance Requirements</h3>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Compliance Requirements
+                  </h3>
 
                   {/* Legal & Registration Requirements */}
                   <div className="bg-gray-50 rounded-lg p-6">
@@ -1573,20 +1922,22 @@ export default function CompanyDashboard() {
                         {
                           name: "Certificate of Incorporation (CAC)",
                           status: "Compliant",
-                          description: "Valid registration with Corporate Affairs Commission",
+                          description:
+                            "Valid registration with Corporate Affairs Commission",
                           lastUpdated: "2024-01-15",
                           expiry: "2025-03-15",
                           documents: ["CAC_Certificate.pdf"],
-                          priority: "High"
+                          priority: "High",
                         },
                         {
                           name: "Tax Identification Number (TIN)",
                           status: "Compliant",
-                          description: "Valid Tax Identification Number from FIRS",
+                          description:
+                            "Valid Tax Identification Number from FIRS",
                           lastUpdated: "2024-01-10",
                           expiry: "N/A",
                           documents: ["TIN_Certificate.pdf"],
-                          priority: "High"
+                          priority: "High",
                         },
                         {
                           name: "Value Added Tax (VAT) Registration",
@@ -1595,41 +1946,64 @@ export default function CompanyDashboard() {
                           lastUpdated: "2023-12-20",
                           expiry: "N/A",
                           documents: ["VAT_Certificate.pdf"],
-                          priority: "Medium"
-                        }
+                          priority: "Medium",
+                        },
                       ].map((req) => (
-                        <div key={req.name} className="bg-white rounded-lg border p-4">
+                        <div
+                          key={req.name}
+                          className="bg-white rounded-lg border p-4"
+                        >
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center space-x-3 mb-2">
-                                <h5 className="font-medium text-gray-900">{req.name}</h5>
-                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  req.status === "Compliant" ? "bg-green-100 text-green-800" :
-                                  req.status === "Expiring Soon" ? "bg-yellow-100 text-yellow-800" :
-                                  "bg-red-100 text-red-800"
-                                }`}>
+                                <h5 className="font-medium text-gray-900">
+                                  {req.name}
+                                </h5>
+                                <span
+                                  className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    req.status === "Compliant"
+                                      ? "bg-green-100 text-green-800"
+                                      : req.status === "Expiring Soon"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-red-100 text-red-800"
+                                  }`}
+                                >
                                   {req.status}
                                 </span>
-                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  req.priority === "High" ? "bg-red-100 text-red-800" :
-                                  req.priority === "Medium" ? "bg-yellow-100 text-yellow-800" :
-                                  "bg-green-100 text-green-800"
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    req.priority === "High"
+                                      ? "bg-red-100 text-red-800"
+                                      : req.priority === "Medium"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-green-100 text-green-800"
+                                  }`}
+                                >
                                   {req.priority} Priority
                                 </span>
                               </div>
-                              <p className="text-sm text-gray-600 mb-3">{req.description}</p>
+                              <p className="text-sm text-gray-600 mb-3">
+                                {req.description}
+                              </p>
                               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs text-gray-500">
                                 <div>
-                                  <span className="font-medium">Last Updated:</span>
-                                  <p>{new Date(req.lastUpdated).toLocaleDateString()}</p>
+                                  <span className="font-medium">
+                                    Last Updated:
+                                  </span>
+                                  <p>
+                                    {new Date(
+                                      req.lastUpdated,
+                                    ).toLocaleDateString()}
+                                  </p>
                                 </div>
                                 <div>
                                   <span className="font-medium">Expires:</span>
                                   <p>{req.expiry}</p>
                                 </div>
                                 <div>
-                                  <span className="font-medium">Documents:</span>
+                                  <span className="font-medium">
+                                    Documents:
+                                  </span>
                                   <p>{req.documents.length} file(s)</p>
                                 </div>
                               </div>
@@ -1661,63 +2035,100 @@ export default function CompanyDashboard() {
                         {
                           name: "Tax Clearance Certificate",
                           status: "Compliant",
-                          description: "Valid tax clearance from relevant tax authorities",
+                          description:
+                            "Valid tax clearance from relevant tax authorities",
                           lastUpdated: "2024-01-20",
                           expiry: "2024-12-31",
                           documents: ["Tax_Clearance_2024.pdf"],
-                          priority: "High"
+                          priority: "High",
                         },
                         {
                           name: "Audited Financial Statements",
                           status: "Compliant",
-                          description: "Audited financial statements for the last 3 years",
+                          description:
+                            "Audited financial statements for the last 3 years",
                           lastUpdated: "2024-01-18",
                           expiry: "2024-12-31",
-                          documents: ["Audited_Statements_2023.pdf", "Audited_Statements_2022.pdf"],
-                          priority: "High"
+                          documents: [
+                            "Audited_Statements_2023.pdf",
+                            "Audited_Statements_2022.pdf",
+                          ],
+                          priority: "High",
                         },
                         {
                           name: "Bank Reference Letter",
                           status: "Expiring Soon",
-                          description: "Bank reference letter not older than 6 months",
+                          description:
+                            "Bank reference letter not older than 6 months",
                           lastUpdated: "2023-08-15",
                           expiry: "2024-02-15",
                           documents: ["Bank_Reference.pdf"],
-                          priority: "Medium"
-                        }
+                          priority: "Medium",
+                        },
                       ].map((req) => (
-                        <div key={req.name} className="bg-white rounded-lg border p-4">
+                        <div
+                          key={req.name}
+                          className="bg-white rounded-lg border p-4"
+                        >
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center space-x-3 mb-2">
-                                <h5 className="font-medium text-gray-900">{req.name}</h5>
-                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  req.status === "Compliant" ? "bg-green-100 text-green-800" :
-                                  req.status === "Expiring Soon" ? "bg-yellow-100 text-yellow-800" :
-                                  "bg-red-100 text-red-800"
-                                }`}>
+                                <h5 className="font-medium text-gray-900">
+                                  {req.name}
+                                </h5>
+                                <span
+                                  className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    req.status === "Compliant"
+                                      ? "bg-green-100 text-green-800"
+                                      : req.status === "Expiring Soon"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-red-100 text-red-800"
+                                  }`}
+                                >
                                   {req.status}
                                 </span>
-                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  req.priority === "High" ? "bg-red-100 text-red-800" :
-                                  req.priority === "Medium" ? "bg-yellow-100 text-yellow-800" :
-                                  "bg-green-100 text-green-800"
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    req.priority === "High"
+                                      ? "bg-red-100 text-red-800"
+                                      : req.priority === "Medium"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-green-100 text-green-800"
+                                  }`}
+                                >
                                   {req.priority} Priority
                                 </span>
                               </div>
-                              <p className="text-sm text-gray-600 mb-3">{req.description}</p>
+                              <p className="text-sm text-gray-600 mb-3">
+                                {req.description}
+                              </p>
                               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs text-gray-500">
                                 <div>
-                                  <span className="font-medium">Last Updated:</span>
-                                  <p>{new Date(req.lastUpdated).toLocaleDateString()}</p>
+                                  <span className="font-medium">
+                                    Last Updated:
+                                  </span>
+                                  <p>
+                                    {new Date(
+                                      req.lastUpdated,
+                                    ).toLocaleDateString()}
+                                  </p>
                                 </div>
                                 <div>
                                   <span className="font-medium">Expires:</span>
-                                  <p className={req.status === "Expiring Soon" ? "text-yellow-600 font-medium" : ""}>{req.expiry}</p>
+                                  <p
+                                    className={
+                                      req.status === "Expiring Soon"
+                                        ? "text-yellow-600 font-medium"
+                                        : ""
+                                    }
+                                  >
+                                    {req.expiry}
+                                  </p>
                                 </div>
                                 <div>
-                                  <span className="font-medium">Documents:</span>
+                                  <span className="font-medium">
+                                    Documents:
+                                  </span>
                                   <p>{req.documents.length} file(s)</p>
                                 </div>
                               </div>
@@ -1749,64 +2160,99 @@ export default function CompanyDashboard() {
                         {
                           name: "Professional License/Certification",
                           status: "Non-Compliant",
-                          description: "Valid professional license from relevant regulatory body",
+                          description:
+                            "Valid professional license from relevant regulatory body",
                           lastUpdated: "2023-12-15",
                           expiry: "2024-01-15",
                           documents: ["Professional_License.pdf"],
-                          priority: "High"
+                          priority: "High",
                         },
                         {
                           name: "Insurance Certificate",
                           status: "Expiring Soon",
-                          description: "Valid professional indemnity and public liability insurance",
+                          description:
+                            "Valid professional indemnity and public liability insurance",
                           lastUpdated: "2023-11-20",
                           expiry: "2024-02-20",
                           documents: ["Insurance_Certificate.pdf"],
-                          priority: "Medium"
+                          priority: "Medium",
                         },
                         {
                           name: "Quality Management Certification",
                           status: "Compliant",
-                          description: "ISO 9001 or equivalent quality management system certification",
+                          description:
+                            "ISO 9001 or equivalent quality management system certification",
                           lastUpdated: "2024-01-05",
                           expiry: "2025-01-05",
                           documents: ["ISO9001_Certificate.pdf"],
-                          priority: "Low"
-                        }
+                          priority: "Low",
+                        },
                       ].map((req) => (
-                        <div key={req.name} className="bg-white rounded-lg border p-4">
+                        <div
+                          key={req.name}
+                          className="bg-white rounded-lg border p-4"
+                        >
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center space-x-3 mb-2">
-                                <h5 className="font-medium text-gray-900">{req.name}</h5>
-                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  req.status === "Compliant" ? "bg-green-100 text-green-800" :
-                                  req.status === "Expiring Soon" ? "bg-yellow-100 text-yellow-800" :
-                                  "bg-red-100 text-red-800"
-                                }`}>
+                                <h5 className="font-medium text-gray-900">
+                                  {req.name}
+                                </h5>
+                                <span
+                                  className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    req.status === "Compliant"
+                                      ? "bg-green-100 text-green-800"
+                                      : req.status === "Expiring Soon"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-red-100 text-red-800"
+                                  }`}
+                                >
                                   {req.status}
                                 </span>
-                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  req.priority === "High" ? "bg-red-100 text-red-800" :
-                                  req.priority === "Medium" ? "bg-yellow-100 text-yellow-800" :
-                                  "bg-green-100 text-green-800"
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    req.priority === "High"
+                                      ? "bg-red-100 text-red-800"
+                                      : req.priority === "Medium"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-green-100 text-green-800"
+                                  }`}
+                                >
                                   {req.priority} Priority
                                 </span>
                               </div>
-                              <p className="text-sm text-gray-600 mb-3">{req.description}</p>
+                              <p className="text-sm text-gray-600 mb-3">
+                                {req.description}
+                              </p>
                               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs text-gray-500">
                                 <div>
-                                  <span className="font-medium">Last Updated:</span>
-                                  <p>{new Date(req.lastUpdated).toLocaleDateString()}</p>
+                                  <span className="font-medium">
+                                    Last Updated:
+                                  </span>
+                                  <p>
+                                    {new Date(
+                                      req.lastUpdated,
+                                    ).toLocaleDateString()}
+                                  </p>
                                 </div>
                                 <div>
                                   <span className="font-medium">Expires:</span>
-                                  <p className={req.status === "Non-Compliant" ? "text-red-600 font-medium" :
-                                                req.status === "Expiring Soon" ? "text-yellow-600 font-medium" : ""}>{req.expiry}</p>
+                                  <p
+                                    className={
+                                      req.status === "Non-Compliant"
+                                        ? "text-red-600 font-medium"
+                                        : req.status === "Expiring Soon"
+                                          ? "text-yellow-600 font-medium"
+                                          : ""
+                                    }
+                                  >
+                                    {req.expiry}
+                                  </p>
                                 </div>
                                 <div>
-                                  <span className="font-medium">Documents:</span>
+                                  <span className="font-medium">
+                                    Documents:
+                                  </span>
                                   <p>{req.documents.length} file(s)</p>
                                 </div>
                               </div>
@@ -1829,13 +2275,21 @@ export default function CompanyDashboard() {
 
                   {/* Compliance Actions */}
                   <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
-                    <h4 className="font-medium text-blue-900 mb-4">Recommended Actions</h4>
+                    <h4 className="font-medium text-blue-900 mb-4">
+                      Recommended Actions
+                    </h4>
                     <div className="space-y-3">
                       <div className="flex items-start space-x-3">
                         <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
                         <div>
-                          <p className="text-sm font-medium text-gray-900">Urgent: Professional License Expired</p>
-                          <p className="text-sm text-gray-600">Your professional license expired on January 15, 2024. Please renew immediately to maintain compliance.</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            Urgent: Professional License Expired
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Your professional license expired on January 15,
+                            2024. Please renew immediately to maintain
+                            compliance.
+                          </p>
                           <button className="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700">
                             <Upload className="h-3 w-3 mr-1" />
                             Upload Renewed License
@@ -1845,8 +2299,13 @@ export default function CompanyDashboard() {
                       <div className="flex items-start space-x-3">
                         <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                         <div>
-                          <p className="text-sm font-medium text-gray-900">Warning: Documents Expiring Soon</p>
-                          <p className="text-sm text-gray-600">2 documents will expire within the next 30 days. Schedule renewals to avoid compliance issues.</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            Warning: Documents Expiring Soon
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            2 documents will expire within the next 30 days.
+                            Schedule renewals to avoid compliance issues.
+                          </p>
                           <button className="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200">
                             <Calendar className="h-3 w-3 mr-1" />
                             Schedule Renewals
@@ -1866,28 +2325,49 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Submit New Clarification Request</h2>
-                <p className="text-sm text-gray-600 mt-1">Request clarification for any tender or contract requirements</p>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Submit New Clarification Request
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Request clarification for any tender or contract requirements
+                </p>
               </div>
               <div className="p-6">
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Tender Reference</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tender Reference
+                      </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                         <option value="">Select Active Tender</option>
-                        <option value="TB001">TB001 - Road Construction and Maintenance Services</option>
-                        <option value="TB002">TB002 - Supply of Medical Equipment to General Hospitals</option>
-                        <option value="TB003">TB003 - School Building Renovation Project</option>
-                        <option value="TB004">TB004 - ICT Infrastructure Development</option>
+                        <option value="TB001">
+                          TB001 - Road Construction and Maintenance Services
+                        </option>
+                        <option value="TB002">
+                          TB002 - Supply of Medical Equipment to General
+                          Hospitals
+                        </option>
+                        <option value="TB003">
+                          TB003 - School Building Renovation Project
+                        </option>
+                        <option value="TB004">
+                          TB004 - ICT Infrastructure Development
+                        </option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Category
+                      </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                         <option value="">Select Category</option>
-                        <option value="technical">Technical Specifications</option>
-                        <option value="financial">Financial Requirements</option>
+                        <option value="technical">
+                          Technical Specifications
+                        </option>
+                        <option value="financial">
+                          Financial Requirements
+                        </option>
                         <option value="legal">Legal/Compliance</option>
                         <option value="timeline">Timeline/Deadlines</option>
                         <option value="documentation">Documentation</option>
@@ -1897,7 +2377,9 @@ export default function CompanyDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Subject
+                    </label>
                     <input
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -1906,7 +2388,9 @@ export default function CompanyDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Question/Details</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Question/Details
+                    </label>
                     <textarea
                       rows={6}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -1915,11 +2399,15 @@ export default function CompanyDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Reference Documents (Optional)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Reference Documents (Optional)
+                    </label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
                       <div className="text-center">
                         <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">Upload supporting documents</h3>
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">
+                          Upload supporting documents
+                        </h3>
                         <p className="mt-1 text-sm text-gray-500">
                           PNG, JPG, PDF up to 10MB
                         </p>
@@ -1940,7 +2428,10 @@ export default function CompanyDashboard() {
                         id="urgent"
                         className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                       />
-                      <label htmlFor="urgent" className="ml-2 text-sm text-gray-700">
+                      <label
+                        htmlFor="urgent"
+                        className="ml-2 text-sm text-gray-700"
+                      >
                         Mark as urgent
                       </label>
                     </div>
@@ -1950,7 +2441,10 @@ export default function CompanyDashboard() {
                         id="emailCopy"
                         className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                       />
-                      <label htmlFor="emailCopy" className="ml-2 text-sm text-gray-700">
+                      <label
+                        htmlFor="emailCopy"
+                        className="ml-2 text-sm text-gray-700"
+                      >
                         Send copy to email
                       </label>
                     </div>
@@ -1978,8 +2472,12 @@ export default function CompanyDashboard() {
               <div className="px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">Clarification History</h2>
-                    <p className="text-sm text-gray-600 mt-1">Track all your submitted clarifications and responses</p>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Clarification History
+                    </h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Track all your submitted clarifications and responses
+                    </p>
                   </div>
                   <div className="flex items-center space-x-3">
                     <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
@@ -2004,14 +2502,16 @@ export default function CompanyDashboard() {
                   {[
                     {
                       id: "CLR001",
-                      tender: "TB001 - Road Construction and Maintenance Services",
+                      tender:
+                        "TB001 - Road Construction and Maintenance Services",
                       subject: "Technical specifications for asphalt grade",
                       category: "Technical Specifications",
                       status: "Responded",
                       submittedDate: "2024-01-25",
                       responseDate: "2024-01-26",
                       urgent: false,
-                      response: "The asphalt grade required is AC 20 as per Nigerian standard specifications. Please refer to section 3.2 of the technical document."
+                      response:
+                        "The asphalt grade required is AC 20 as per Nigerian standard specifications. Please refer to section 3.2 of the technical document.",
                     },
                     {
                       id: "CLR002",
@@ -2022,7 +2522,7 @@ export default function CompanyDashboard() {
                       submittedDate: "2024-01-27",
                       responseDate: null,
                       urgent: true,
-                      response: null
+                      response: null,
                     },
                     {
                       id: "CLR003",
@@ -2033,7 +2533,8 @@ export default function CompanyDashboard() {
                       submittedDate: "2024-01-24",
                       responseDate: "2024-01-25",
                       urgent: false,
-                      response: "Advance payment of 15% will be provided upon contract signing. Remaining payments as per schedule in contract terms."
+                      response:
+                        "Advance payment of 15% will be provided upon contract signing. Remaining payments as per schedule in contract terms.",
                     },
                     {
                       id: "CLR004",
@@ -2044,42 +2545,59 @@ export default function CompanyDashboard() {
                       submittedDate: "2024-01-22",
                       responseDate: "2024-01-23",
                       urgent: false,
-                      response: "Professional indemnity insurance of ₦50 million and public liability insurance of ₦100 million are required."
-                    }
+                      response:
+                        "Professional indemnity insurance of ₦50 million and public liability insurance of ₦100 million are required.",
+                    },
                   ].map((clarification) => (
-                    <div key={clarification.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div
+                      key={clarification.id}
+                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="font-medium text-gray-900">{clarification.subject}</h3>
+                            <h3 className="font-medium text-gray-900">
+                              {clarification.subject}
+                            </h3>
                             {clarification.urgent && (
                               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                 <AlertTriangle className="h-3 w-3 mr-1" />
                                 Urgent
                               </span>
                             )}
-                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              clarification.status === "Responded" ? "bg-green-100 text-green-800" :
-                              clarification.status === "Pending Response" ? "bg-yellow-100 text-yellow-800" :
-                              "bg-gray-100 text-gray-800"
-                            }`}>
+                            <span
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                clarification.status === "Responded"
+                                  ? "bg-green-100 text-green-800"
+                                  : clarification.status === "Pending Response"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
                               {clarification.status}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mb-2">{clarification.tender}</p>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {clarification.tender}
+                          </p>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-500">
                             <div>
-                              <span className="font-medium">Category:</span> {clarification.category}
+                              <span className="font-medium">Category:</span>{" "}
+                              {clarification.category}
                             </div>
                             <div>
-                              <span className="font-medium">Submitted:</span> {new Date(clarification.submittedDate).toLocaleDateString()}
+                              <span className="font-medium">Submitted:</span>{" "}
+                              {new Date(
+                                clarification.submittedDate,
+                              ).toLocaleDateString()}
                             </div>
                             <div>
-                              <span className="font-medium">Response:</span> {
-                                clarification.responseDate
-                                  ? new Date(clarification.responseDate).toLocaleDateString()
-                                  : "Pending"
-                              }
+                              <span className="font-medium">Response:</span>{" "}
+                              {clarification.responseDate
+                                ? new Date(
+                                    clarification.responseDate,
+                                  ).toLocaleDateString()
+                                : "Pending"}
                             </div>
                           </div>
                         </div>
@@ -2102,10 +2620,17 @@ export default function CompanyDashboard() {
                           <div className="flex items-start space-x-3">
                             <MessageSquare className="h-5 w-5 text-green-600 mt-0.5" />
                             <div>
-                              <h4 className="text-sm font-medium text-green-900">Official Response</h4>
-                              <p className="text-sm text-green-800 mt-1">{clarification.response}</p>
+                              <h4 className="text-sm font-medium text-green-900">
+                                Official Response
+                              </h4>
+                              <p className="text-sm text-green-800 mt-1">
+                                {clarification.response}
+                              </p>
                               <p className="text-xs text-green-600 mt-2">
-                                Responded on {new Date(clarification.responseDate!).toLocaleDateString()}
+                                Responded on{" "}
+                                {new Date(
+                                  clarification.responseDate!,
+                                ).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
@@ -2123,7 +2648,9 @@ export default function CompanyDashboard() {
                 <div className="flex items-center">
                   <MessageSquare className="h-8 w-8 text-blue-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Total Submitted</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Total Submitted
+                    </p>
                     <p className="text-2xl font-bold text-gray-900">24</p>
                   </div>
                 </div>
@@ -2132,7 +2659,9 @@ export default function CompanyDashboard() {
                 <div className="flex items-center">
                   <Clock className="h-8 w-8 text-yellow-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Pending Response</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Pending Response
+                    </p>
                     <p className="text-2xl font-bold text-gray-900">3</p>
                   </div>
                 </div>
@@ -2141,7 +2670,9 @@ export default function CompanyDashboard() {
                 <div className="flex items-center">
                   <CheckCircle className="h-8 w-8 text-green-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Responded</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Responded
+                    </p>
                     <p className="text-2xl font-bold text-gray-900">18</p>
                   </div>
                 </div>
@@ -2164,14 +2695,25 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900">Kano State ePortal</h2>
-                <p className="text-sm text-gray-600 mt-1">Comprehensive digital government services and resources portal</p>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Kano State ePortal
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Comprehensive digital government services and resources portal
+                </p>
               </div>
               <div className="p-6">
                 {/* Welcome Section */}
                 <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Welcome to Kano State Digital Services</h3>
-                  <p className="text-gray-700">Access a wide range of government services, information, and resources all in one place. Our ePortal makes it easier for companies and citizens to interact with government services efficiently.</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Welcome to Kano State Digital Services
+                  </h3>
+                  <p className="text-gray-700">
+                    Access a wide range of government services, information, and
+                    resources all in one place. Our ePortal makes it easier for
+                    companies and citizens to interact with government services
+                    efficiently.
+                  </p>
                 </div>
 
                 {/* Service Categories */}
@@ -2180,8 +2722,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                       <FileText className="h-6 w-6 text-blue-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Business Registration</h4>
-                    <p className="text-sm text-gray-600 mb-4">Register your business, obtain permits, and manage your business documentation online.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Business Registration
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Register your business, obtain permits, and manage your
+                      business documentation online.
+                    </p>
                     <button className="text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center">
                       Access Service <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2191,8 +2738,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                       <DollarSign className="h-6 w-6 text-green-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tax Services</h4>
-                    <p className="text-sm text-gray-600 mb-4">File tax returns, make payments, and access tax clearance certificates.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Tax Services
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      File tax returns, make payments, and access tax clearance
+                      certificates.
+                    </p>
                     <button className="text-green-600 text-sm font-medium hover:text-green-800 flex items-center">
                       Access Service <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2202,8 +2754,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
                       <Shield className="h-6 w-6 text-purple-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Licensing & Permits</h4>
-                    <p className="text-sm text-gray-600 mb-4">Apply for and renew various business licenses and permits online.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Licensing & Permits
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Apply for and renew various business licenses and permits
+                      online.
+                    </p>
                     <button className="text-purple-600 text-sm font-medium hover:text-purple-800 flex items-center">
                       Access Service <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2213,8 +2770,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
                       <Building2 className="h-6 w-6 text-orange-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Property Services</h4>
-                    <p className="text-sm text-gray-600 mb-4">Land registration, property tax, and real estate documentation services.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Property Services
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Land registration, property tax, and real estate
+                      documentation services.
+                    </p>
                     <button className="text-orange-600 text-sm font-medium hover:text-orange-800 flex items-center">
                       Access Service <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2224,8 +2786,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
                       <Users className="h-6 w-6 text-red-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Citizen Services</h4>
-                    <p className="text-sm text-gray-600 mb-4">Birth certificates, marriage certificates, and other vital records.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Citizen Services
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Birth certificates, marriage certificates, and other vital
+                      records.
+                    </p>
                     <button className="text-red-600 text-sm font-medium hover:text-red-800 flex items-center">
                       Access Service <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2235,8 +2802,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
                       <Globe className="h-6 w-6 text-indigo-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Digital Resources</h4>
-                    <p className="text-sm text-gray-600 mb-4">Access government publications, forms, and digital resources.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Digital Resources
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Access government publications, forms, and digital
+                      resources.
+                    </p>
                     <button className="text-indigo-600 text-sm font-medium hover:text-indigo-800 flex items-center">
                       Access Service <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2246,34 +2818,57 @@ export default function CompanyDashboard() {
                 {/* Recent Updates */}
                 <div className="bg-white border rounded-lg">
                   <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900">Recent Updates & Announcements</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Recent Updates & Announcements
+                    </h3>
                   </div>
                   <div className="p-6">
                     <div className="space-y-4">
                       <div className="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg">
                         <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                         <div>
-                          <h4 className="font-medium text-gray-900">New Online Tax Payment System</h4>
-                          <p className="text-sm text-gray-600 mt-1">Enhanced online tax payment system is now available with mobile money integration.</p>
-                          <p className="text-xs text-gray-500 mt-2">January 28, 2024</p>
+                          <h4 className="font-medium text-gray-900">
+                            New Online Tax Payment System
+                          </h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Enhanced online tax payment system is now available
+                            with mobile money integration.
+                          </p>
+                          <p className="text-xs text-gray-500 mt-2">
+                            January 28, 2024
+                          </p>
                         </div>
                       </div>
 
                       <div className="flex items-start space-x-4 p-4 bg-green-50 rounded-lg">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
                         <div>
-                          <h4 className="font-medium text-gray-900">Business Registration Process Simplified</h4>
-                          <p className="text-sm text-gray-600 mt-1">New streamlined business registration process reduces approval time to 3 business days.</p>
-                          <p className="text-xs text-gray-500 mt-2">January 25, 2024</p>
+                          <h4 className="font-medium text-gray-900">
+                            Business Registration Process Simplified
+                          </h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            New streamlined business registration process
+                            reduces approval time to 3 business days.
+                          </p>
+                          <p className="text-xs text-gray-500 mt-2">
+                            January 25, 2024
+                          </p>
                         </div>
                       </div>
 
                       <div className="flex items-start space-x-4 p-4 bg-orange-50 rounded-lg">
                         <AlertTriangle className="h-5 w-5 text-orange-600 mt-0.5" />
                         <div>
-                          <h4 className="font-medium text-gray-900">System Maintenance Notice</h4>
-                          <p className="text-sm text-gray-600 mt-1">Scheduled maintenance on February 1, 2024, from 12:00 AM to 4:00 AM.</p>
-                          <p className="text-xs text-gray-500 mt-2">January 22, 2024</p>
+                          <h4 className="font-medium text-gray-900">
+                            System Maintenance Notice
+                          </h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Scheduled maintenance on February 1, 2024, from
+                            12:00 AM to 4:00 AM.
+                          </p>
+                          <p className="text-xs text-gray-500 mt-2">
+                            January 22, 2024
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -2289,14 +2884,26 @@ export default function CompanyDashboard() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900">Open Contracting Data Portal</h2>
-                <p className="text-sm text-gray-600 mt-1">Transparent access to government procurement and contracting data</p>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Open Contracting Data Portal
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Transparent access to government procurement and contracting
+                  data
+                </p>
               </div>
               <div className="p-6">
                 {/* Overview Section */}
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Transparency in Government Contracting</h3>
-                  <p className="text-gray-700 mb-4">Access comprehensive data on government procurement processes, contract awards, and implementation progress. Our commitment to transparency ensures accountability and promotes fair competition.</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Transparency in Government Contracting
+                  </h3>
+                  <p className="text-gray-700 mb-4">
+                    Access comprehensive data on government procurement
+                    processes, contract awards, and implementation progress. Our
+                    commitment to transparency ensures accountability and
+                    promotes fair competition.
+                  </p>
                   <div className="flex items-center space-x-4">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                       <ExternalLink className="h-4 w-4 mr-1" />
@@ -2317,16 +2924,22 @@ export default function CompanyDashboard() {
                     </div>
                     <h4 className="text-2xl font-bold text-gray-900">1,247</h4>
                     <p className="text-sm text-gray-600">Total Contracts</p>
-                    <p className="text-xs text-green-600 mt-1">+15% this quarter</p>
+                    <p className="text-xs text-green-600 mt-1">
+                      +15% this quarter
+                    </p>
                   </div>
 
                   <div className="bg-white border rounded-lg p-6 text-center">
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <DollarSign className="h-6 w-6 text-green-600" />
                     </div>
-                    <h4 className="text-2xl font-bold text-gray-900">��89.2B</h4>
+                    <h4 className="text-2xl font-bold text-gray-900">
+                      ��89.2B
+                    </h4>
                     <p className="text-sm text-gray-600">Total Value</p>
-                    <p className="text-xs text-green-600 mt-1">+22% this year</p>
+                    <p className="text-xs text-green-600 mt-1">
+                      +22% this year
+                    </p>
                   </div>
 
                   <div className="bg-white border rounded-lg p-6 text-center">
@@ -2335,7 +2948,9 @@ export default function CompanyDashboard() {
                     </div>
                     <h4 className="text-2xl font-bold text-gray-900">847</h4>
                     <p className="text-sm text-gray-600">Active Contracts</p>
-                    <p className="text-xs text-blue-600 mt-1">68% completion rate</p>
+                    <p className="text-xs text-blue-600 mt-1">
+                      68% completion rate
+                    </p>
                   </div>
 
                   <div className="bg-white border rounded-lg p-6 text-center">
@@ -2343,8 +2958,12 @@ export default function CompanyDashboard() {
                       <Building2 className="h-6 w-6 text-orange-600" />
                     </div>
                     <h4 className="text-2xl font-bold text-gray-900">156</h4>
-                    <p className="text-sm text-gray-600">Registered Suppliers</p>
-                    <p className="text-xs text-green-600 mt-1">+8% this month</p>
+                    <p className="text-sm text-gray-600">
+                      Registered Suppliers
+                    </p>
+                    <p className="text-xs text-green-600 mt-1">
+                      +8% this month
+                    </p>
                   </div>
                 </div>
 
@@ -2354,8 +2973,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                       <BarChart3 className="h-6 w-6 text-blue-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Contract Analytics</h4>
-                    <p className="text-sm text-gray-600 mb-4">Interactive dashboards and analytics on procurement trends, spending patterns, and performance metrics.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Contract Analytics
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Interactive dashboards and analytics on procurement
+                      trends, spending patterns, and performance metrics.
+                    </p>
                     <button className="text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center">
                       View Analytics <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2365,8 +2989,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                       <Download className="h-6 w-6 text-green-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Data Downloads</h4>
-                    <p className="text-sm text-gray-600 mb-4">Download procurement data in various formats including CSV, JSON, and OCDS standard format.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Data Downloads
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Download procurement data in various formats including
+                      CSV, JSON, and OCDS standard format.
+                    </p>
                     <button className="text-green-600 text-sm font-medium hover:text-green-800 flex items-center">
                       Download Data <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2376,8 +3005,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
                       <Search className="h-6 w-6 text-purple-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Contract Search</h4>
-                    <p className="text-sm text-gray-600 mb-4">Advanced search tools to find specific contracts, suppliers, and procurement opportunities.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Contract Search
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Advanced search tools to find specific contracts,
+                      suppliers, and procurement opportunities.
+                    </p>
                     <button className="text-purple-600 text-sm font-medium hover:text-purple-800 flex items-center">
                       Search Contracts <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2387,10 +3021,16 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
                       <Globe className="h-6 w-6 text-orange-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">API Access</h4>
-                    <p className="text-sm text-gray-600 mb-4">Programmatic access to procurement data through our RESTful API endpoints.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      API Access
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Programmatic access to procurement data through our
+                      RESTful API endpoints.
+                    </p>
                     <button className="text-orange-600 text-sm font-medium hover:text-orange-800 flex items-center">
-                      API Documentation <ChevronRight className="h-4 w-4 ml-1" />
+                      API Documentation{" "}
+                      <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
                   </div>
 
@@ -2398,8 +3038,13 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
                       <AlertTriangle className="h-6 w-6 text-red-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Red Flag Analysis</h4>
-                    <p className="text-sm text-gray-600 mb-4">Automated detection of potential procurement irregularities and risk indicators.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Red Flag Analysis
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Automated detection of potential procurement
+                      irregularities and risk indicators.
+                    </p>
                     <button className="text-red-600 text-sm font-medium hover:text-red-800 flex items-center">
                       View Analysis <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
@@ -2409,10 +3054,16 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
                       <History className="h-6 w-6 text-indigo-600" />
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Historical Data</h4>
-                    <p className="text-sm text-gray-600 mb-4">Access to historical procurement records and trend analysis over time.</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Historical Data
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Access to historical procurement records and trend
+                      analysis over time.
+                    </p>
                     <button className="text-indigo-600 text-sm font-medium hover:text-indigo-800 flex items-center">
-                      Historical Records <ChevronRight className="h-4 w-4 ml-1" />
+                      Historical Records{" "}
+                      <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
                   </div>
                 </div>
@@ -2421,26 +3072,44 @@ export default function CompanyDashboard() {
                 <div className="bg-white border rounded-lg">
                   <div className="px-6 py-4 border-b border-gray-200">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-gray-900">Recent Contract Awards</h3>
-                      <button className="text-sm text-blue-600 hover:text-blue-800">View All Awards</button>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Recent Contract Awards
+                      </h3>
+                      <button className="text-sm text-blue-600 hover:text-blue-800">
+                        View All Awards
+                      </button>
                     </div>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Title</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Awarded To</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Award Date</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Contract Title
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Awarded To
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Value
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Award Date
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         <tr className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">Rural Road Construction - Phase 3</div>
-                            <div className="text-sm text-gray-500">Ministry of Works</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              Rural Road Construction - Phase 3
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              Ministry of Works
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Kano Construction Co. Ltd
@@ -2459,8 +3128,12 @@ export default function CompanyDashboard() {
                         </tr>
                         <tr className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">Medical Equipment Supply</div>
-                            <div className="text-sm text-gray-500">Ministry of Health</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              Medical Equipment Supply
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              Ministry of Health
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             MedTech Solutions Nigeria
@@ -2479,8 +3152,12 @@ export default function CompanyDashboard() {
                         </tr>
                         <tr className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">School Infrastructure Upgrade</div>
-                            <div className="text-sm text-gray-500">Ministry of Education</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              School Infrastructure Upgrade
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              Ministry of Education
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Northern Builders Ltd
@@ -2512,7 +3189,9 @@ export default function CompanyDashboard() {
             <div className="text-gray-400 mb-4">
               <Settings className="mx-auto h-12 w-12" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">{activeSection.replace("-", " ").toUpperCase()}</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {activeSection.replace("-", " ").toUpperCase()}
+            </h3>
             <p className="text-gray-600">This section is under development.</p>
           </div>
         );
@@ -2531,29 +3210,44 @@ export default function CompanyDashboard() {
                 <Building2 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-green-700">Kano State Government</h1>
-                <p className="text-xs text-gray-600">E-Tendering & Open Contracting Portal</p>
+                <h1 className="text-lg font-bold text-green-700">
+                  Kano State Government
+                </h1>
+                <p className="text-xs text-gray-600">
+                  E-Tendering & Open Contracting Portal
+                </p>
               </div>
             </div>
 
             {/* Top Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
-              <Link to="/" className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center">
+              <Link
+                to="/"
+                className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center"
+              >
                 <Home className="h-4 w-4 mr-1" />
                 Home
               </Link>
-              <Link to="#" className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center">
+              <Link
+                to="#"
+                className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center"
+              >
                 <Info className="h-4 w-4 mr-1" />
                 About Us
               </Link>
-              <Link to="#" className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center">
+              <Link
+                to="#"
+                className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center"
+              >
                 <HelpCircle className="h-4 w-4 mr-1" />
                 How it Works
               </Link>
               <button
                 onClick={() => setActiveSection("eportal")}
                 className={`text-sm font-medium flex items-center ${
-                  activeSection === "eportal" ? "text-green-700" : "text-gray-700 hover:text-green-700"
+                  activeSection === "eportal"
+                    ? "text-green-700"
+                    : "text-gray-700 hover:text-green-700"
                 }`}
               >
                 <Globe className="h-4 w-4 mr-1" />
@@ -2562,13 +3256,18 @@ export default function CompanyDashboard() {
               <button
                 onClick={() => setActiveSection("open-contracting-portal")}
                 className={`text-sm font-medium flex items-center ${
-                  activeSection === "open-contracting-portal" ? "text-green-700" : "text-gray-700 hover:text-green-700"
+                  activeSection === "open-contracting-portal"
+                    ? "text-green-700"
+                    : "text-gray-700 hover:text-green-700"
                 }`}
               >
                 <ExternalLink className="h-4 w-4 mr-1" />
                 Open Contracting Portal
               </button>
-              <Link to="#" className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center">
+              <Link
+                to="#"
+                className="text-sm font-medium text-gray-700 hover:text-green-700 flex items-center"
+              >
                 <Phone className="h-4 w-4 mr-1" />
                 Contact Us
               </Link>
@@ -2590,7 +3289,11 @@ export default function CompanyDashboard() {
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="lg:hidden p-2 text-gray-600"
               >
-                {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {sidebarOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
               </button>
             </div>
           </div>
@@ -2599,36 +3302,46 @@ export default function CompanyDashboard() {
 
       <div className="flex">
         {/* Sidebar */}
-        <div className={`${sidebarOpen ? 'w-64' : 'w-0'} overflow-hidden transition-all duration-300 bg-white border-r border-gray-200 h-screen sticky top-16`}>
+        <div
+          className={`${sidebarOpen ? "w-64" : "w-0"} overflow-hidden transition-all duration-300 bg-white border-r border-gray-200 h-screen sticky top-16`}
+        >
           <nav className="p-4 space-y-2">
             <div className="mb-4">
-              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Bid Activity</h2>
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Bid Activity
+              </h2>
             </div>
-            
+
             <button
               onClick={() => setActiveSection("tender-ads")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "tender-ads" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "tender-ads"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <FileText className="h-4 w-4 mr-3" />
               Tender Advertisements
             </button>
-            
+
             <button
               onClick={() => setActiveSection("purchased-bids")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "purchased-bids" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "purchased-bids"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Bookmark className="h-4 w-4 mr-3" />
               Purchased Bids
             </button>
-            
+
             <button
               onClick={() => setActiveSection("awarded-bids")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "awarded-bids" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "awarded-bids"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Award className="h-4 w-4 mr-3" />
@@ -2636,33 +3349,41 @@ export default function CompanyDashboard() {
             </button>
 
             <div className="pt-4 mb-4">
-              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Company Profile & Compliance</h2>
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Company Profile & Compliance
+              </h2>
             </div>
-            
+
             <button
               onClick={() => setActiveSection("my-profile")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "my-profile" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "my-profile"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Users className="h-4 w-4 mr-3" />
               My Profile
             </button>
-            
+
             <button
               onClick={() => setActiveSection("my-documents")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "my-documents" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "my-documents"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Upload className="h-4 w-4 mr-3" />
               My Documents
             </button>
-            
+
             <button
               onClick={() => setActiveSection("detailed-compliance")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "detailed-compliance" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "detailed-compliance"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Shield className="h-4 w-4 mr-3" />
@@ -2670,33 +3391,41 @@ export default function CompanyDashboard() {
             </button>
 
             <div className="pt-4 mb-4">
-              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Communication</h2>
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Communication
+              </h2>
             </div>
-            
+
             <button
               onClick={() => setActiveSection("new-clarifications")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "new-clarifications" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "new-clarifications"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Plus className="h-4 w-4 mr-3" />
               New Clarifications
             </button>
-            
+
             <button
               onClick={() => setActiveSection("existing-clarifications")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "existing-clarifications" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "existing-clarifications"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <History className="h-4 w-4 mr-3" />
               Existing Clarifications
             </button>
-            
+
             <button
               onClick={() => setActiveSection("messages")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "messages" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "messages"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Mail className="h-4 w-4 mr-3" />
@@ -2704,43 +3433,53 @@ export default function CompanyDashboard() {
             </button>
 
             <div className="pt-4 mb-4">
-              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Business</h2>
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Business
+              </h2>
             </div>
-            
+
             <button
               onClick={() => setActiveSection("transaction-history")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "transaction-history" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "transaction-history"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <CreditCard className="h-4 w-4 mr-3" />
               Transaction History
             </button>
-            
+
             <button
               onClick={() => setActiveSection("contracts-awarded")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "contracts-awarded" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "contracts-awarded"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <FileCheck className="h-4 w-4 mr-3" />
               Contracts Awarded
             </button>
-            
+
             <button
               onClick={() => setActiveSection("annual-report")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "annual-report" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "annual-report"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <BarChart3 className="h-4 w-4 mr-3" />
               Annual Report
             </button>
-            
+
             <button
               onClick={() => setActiveSection("grievance")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "grievance" ? "bg-green-100 text-green-700" : "text-gray-700 hover:bg-gray-100"
+                activeSection === "grievance"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Gavel className="h-4 w-4 mr-3" />
@@ -2750,9 +3489,7 @@ export default function CompanyDashboard() {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
-          {renderMainContent()}
-        </main>
+        <main className="flex-1 p-6">{renderMainContent()}</main>
       </div>
 
       {/* Express Interest Modal */}
@@ -2761,7 +3498,9 @@ export default function CompanyDashboard() {
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-gray-900">Express Interest</h3>
+                <h3 className="text-lg font-medium text-gray-900">
+                  Express Interest
+                </h3>
                 <button
                   onClick={() => setShowExpressInterestModal(false)}
                   className="text-gray-400 hover:text-gray-600"
@@ -2772,12 +3511,26 @@ export default function CompanyDashboard() {
 
               <div className="mb-6">
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                  <h4 className="font-medium text-blue-900 mb-2">{selectedTender.title}</h4>
+                  <h4 className="font-medium text-blue-900 mb-2">
+                    {selectedTender.title}
+                  </h4>
                   <div className="text-sm text-blue-800 space-y-1">
-                    <p><span className="font-medium">Ministry:</span> {selectedTender.ministry}</p>
-                    <p><span className="font-medium">Value:</span> {selectedTender.value}</p>
-                    <p><span className="font-medium">Deadline:</span> {new Date(selectedTender.deadline).toLocaleDateString()}</p>
-                    <p><span className="font-medium">Location:</span> {selectedTender.location}</p>
+                    <p>
+                      <span className="font-medium">Ministry:</span>{" "}
+                      {selectedTender.ministry}
+                    </p>
+                    <p>
+                      <span className="font-medium">Value:</span>{" "}
+                      {selectedTender.value}
+                    </p>
+                    <p>
+                      <span className="font-medium">Deadline:</span>{" "}
+                      {new Date(selectedTender.deadline).toLocaleDateString()}
+                    </p>
+                    <p>
+                      <span className="font-medium">Location:</span>{" "}
+                      {selectedTender.location}
+                    </p>
                   </div>
                 </div>
 
@@ -2786,7 +3539,12 @@ export default function CompanyDashboard() {
                     <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-2" />
                     <div className="text-sm text-yellow-800">
                       <p className="font-medium mb-1">Important Notice:</p>
-                      <p>By expressing interest, you acknowledge that you meet the basic requirements and intend to participate in this tender. This action will make you eligible to submit a bid.</p>
+                      <p>
+                        By expressing interest, you acknowledge that you meet
+                        the basic requirements and intend to participate in this
+                        tender. This action will make you eligible to submit a
+                        bid.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -2799,7 +3557,8 @@ export default function CompanyDashboard() {
                       required
                     />
                     <span className="ml-2 text-sm text-gray-700">
-                      I confirm that my company meets the basic eligibility requirements
+                      I confirm that my company meets the basic eligibility
+                      requirements
                     </span>
                   </label>
 
@@ -2852,7 +3611,9 @@ export default function CompanyDashboard() {
           <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
             <div className="mt-3">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-gray-900">Submit Bid</h3>
+                <h3 className="text-lg font-medium text-gray-900">
+                  Submit Bid
+                </h3>
                 <button
                   onClick={() => setShowSubmitBidModal(false)}
                   className="text-gray-400 hover:text-gray-600"
@@ -2863,22 +3624,38 @@ export default function CompanyDashboard() {
 
               <div className="mb-6 max-h-96 overflow-y-auto">
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                  <h4 className="font-medium text-green-900 mb-2">{selectedTender.title}</h4>
+                  <h4 className="font-medium text-green-900 mb-2">
+                    {selectedTender.title}
+                  </h4>
                   <div className="text-sm text-green-800 grid grid-cols-2 gap-4">
                     <div>
-                      <p><span className="font-medium">Tender ID:</span> {selectedTender.id}</p>
-                      <p><span className="font-medium">Ministry:</span> {selectedTender.ministry}</p>
+                      <p>
+                        <span className="font-medium">Tender ID:</span>{" "}
+                        {selectedTender.id}
+                      </p>
+                      <p>
+                        <span className="font-medium">Ministry:</span>{" "}
+                        {selectedTender.ministry}
+                      </p>
                     </div>
                     <div>
-                      <p><span className="font-medium">Value:</span> {selectedTender.value}</p>
-                      <p><span className="font-medium">Deadline:</span> {new Date(selectedTender.deadline).toLocaleDateString()}</p>
+                      <p>
+                        <span className="font-medium">Value:</span>{" "}
+                        {selectedTender.value}
+                      </p>
+                      <p>
+                        <span className="font-medium">Deadline:</span>{" "}
+                        {new Date(selectedTender.deadline).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Bid Amount (₦)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Bid Amount (₦)
+                    </label>
                     <input
                       type="text"
                       placeholder="Enter your bid amount"
@@ -2887,7 +3664,9 @@ export default function CompanyDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Project Timeline (Days)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Project Timeline (Days)
+                    </label>
                     <input
                       type="number"
                       placeholder="Enter completion timeline in days"
@@ -2896,7 +3675,9 @@ export default function CompanyDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Technical Proposal</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Technical Proposal
+                    </label>
                     <textarea
                       rows={4}
                       placeholder="Describe your technical approach and methodology"
@@ -2905,7 +3686,9 @@ export default function CompanyDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Financial Proposal</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Financial Proposal
+                    </label>
                     <textarea
                       rows={3}
                       placeholder="Provide breakdown of costs and payment terms"
@@ -2914,11 +3697,15 @@ export default function CompanyDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Supporting Documents</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Supporting Documents
+                    </label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                       <div className="text-center">
                         <Upload className="mx-auto h-8 w-8 text-gray-400" />
-                        <p className="mt-2 text-sm text-gray-600">Upload bid documents (PDF, DOC, DOCX)</p>
+                        <p className="mt-2 text-sm text-gray-600">
+                          Upload bid documents (PDF, DOC, DOCX)
+                        </p>
                         <button className="mt-2 inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200">
                           <Plus className="h-4 w-4 mr-1" />
                           Choose Files
@@ -2935,7 +3722,9 @@ export default function CompanyDashboard() {
                         <ul className="list-disc list-inside space-y-1">
                           <li>Ensure all required documents are uploaded</li>
                           <li>Review your bid carefully before submission</li>
-                          <li>Bids cannot be modified after submission deadline</li>
+                          <li>
+                            Bids cannot be modified after submission deadline
+                          </li>
                           <li>Late submissions will not be accepted</li>
                         </ul>
                       </div>
@@ -2950,7 +3739,8 @@ export default function CompanyDashboard() {
                         required
                       />
                       <span className="ml-2 text-sm text-gray-700">
-                        I confirm that all information provided is accurate and complete
+                        I confirm that all information provided is accurate and
+                        complete
                       </span>
                     </label>
 
@@ -2961,7 +3751,8 @@ export default function CompanyDashboard() {
                         required
                       />
                       <span className="ml-2 text-sm text-gray-700">
-                        I understand that this bid is legally binding upon acceptance
+                        I understand that this bid is legally binding upon
+                        acceptance
                       </span>
                     </label>
 
