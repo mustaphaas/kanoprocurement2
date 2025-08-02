@@ -124,11 +124,33 @@ export default function CompanyDashboard() {
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const navigate = useNavigate();
 
-  // Mock company data
+  // Mock company data - Check for expired documents and auto-suspend
+  const hasExpiredDocuments = () => {
+    const expiredDocs = [
+      { name: "Professional License", expiry: "2024-01-15" }
+    ];
+    return expiredDocs.some(doc => new Date(doc.expiry) < new Date());
+  };
+
+  const getCompanyStatus = (): CompanyStatus => {
+    // Simulate different scenarios - you can change this for testing
+    const scenarios = {
+      pending: false,      // Set true to test pending approval
+      hasExpired: hasExpiredDocuments(), // Auto-detect expired docs
+      blacklisted: false  // Set true to test blacklisted
+    };
+
+    if (scenarios.pending) return "Pending";
+    if (scenarios.blacklisted) return "Blacklisted";
+    if (scenarios.hasExpired) return "Suspended";
+    return "Approved";
+  };
+
   const companyData: CompanyData = {
     name: "Northern Construction Ltd",
     email: "contact@northernconstruction.com",
-    status: "Approved", // Can be "Approved", "Suspended", or "Blacklisted"
+    status: getCompanyStatus(),
+    suspensionReason: hasExpiredDocuments() ? "Professional License expired on January 15, 2024" : undefined,
     totalAdverts: 150,
     bidsExpressedInterest: 25,
     activeBids: 10,
