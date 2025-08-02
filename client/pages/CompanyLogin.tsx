@@ -330,7 +330,10 @@ export default function CompanyLogin() {
               <p className="text-xs text-blue-700 mb-3">Limited access, awaiting BPP review</p>
               <div className="space-y-1">
                 <p className="text-sm text-blue-800">
-                  <strong>Email:</strong> <code className="bg-blue-100 px-1 rounded text-xs">pending@company.com</code>
+                  <strong>Email:</strong> <button
+                    onClick={() => fillTestAccount("pending@company.com", "password123")}
+                    className="bg-blue-100 px-1 rounded text-xs hover:bg-blue-200 cursor-pointer transition-colors"
+                  >pending@company.com</button>
                 </p>
                 <p className="text-sm text-blue-800">
                   <strong>Password:</strong> <code className="bg-blue-100 px-1 rounded text-xs">password123</code>
