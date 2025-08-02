@@ -287,14 +287,89 @@ export default function CompanyLogin() {
         </div>
       </div>
 
-      {/* Demo Credentials */}
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-green-800 mb-2">Demo Credentials</h3>
-          <p className="text-sm text-green-700">
-            Email: <code className="bg-green-100 px-1 rounded">company@example.com</code><br />
-            Password: <code className="bg-green-100 px-1 rounded">password123</code>
+      {/* Test Accounts for Different Statuses */}
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-4 text-center">Test Company Accounts</h3>
+          <p className="text-sm text-blue-700 mb-4 text-center">
+            Login with these test accounts to experience different company statuses
           </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Approved Company */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center mb-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                <h4 className="font-medium text-green-900">✅ Approved Company</h4>
+              </div>
+              <p className="text-xs text-green-700 mb-3">Full access to all features</p>
+              <div className="space-y-1">
+                <p className="text-sm text-green-800">
+                  <strong>Email:</strong> <code className="bg-green-100 px-1 rounded text-xs">approved@company.com</code>
+                </p>
+                <p className="text-sm text-green-800">
+                  <strong>Password:</strong> <code className="bg-green-100 px-1 rounded text-xs">password123</code>
+                </p>
+              </div>
+            </div>
+
+            {/* Pending Company */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center mb-2">
+                <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                <h4 className="font-medium text-blue-900">🔵 Pending Approval</h4>
+              </div>
+              <p className="text-xs text-blue-700 mb-3">Limited access, awaiting BPP review</p>
+              <div className="space-y-1">
+                <p className="text-sm text-blue-800">
+                  <strong>Email:</strong> <code className="bg-blue-100 px-1 rounded text-xs">pending@company.com</code>
+                </p>
+                <p className="text-sm text-blue-800">
+                  <strong>Password:</strong> <code className="bg-blue-100 px-1 rounded text-xs">password123</code>
+                </p>
+              </div>
+            </div>
+
+            {/* Suspended Company */}
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+              <div className="flex items-center mb-2">
+                <div className="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
+                <h4 className="font-medium text-orange-900">🟠 Suspended Account</h4>
+              </div>
+              <p className="text-xs text-orange-700 mb-3">Suspended due to expired documents</p>
+              <div className="space-y-1">
+                <p className="text-sm text-orange-800">
+                  <strong>Email:</strong> <code className="bg-orange-100 px-1 rounded text-xs">suspended@company.com</code>
+                </p>
+                <p className="text-sm text-orange-800">
+                  <strong>Password:</strong> <code className="bg-orange-100 px-1 rounded text-xs">password123</code>
+                </p>
+              </div>
+            </div>
+
+            {/* Blacklisted Company */}
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-center mb-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                <h4 className="font-medium text-red-900">🔴 Blacklisted Account</h4>
+              </div>
+              <p className="text-xs text-red-700 mb-3">Banned from all procurement activities</p>
+              <div className="space-y-1">
+                <p className="text-sm text-red-800">
+                  <strong>Email:</strong> <code className="bg-red-100 px-1 rounded text-xs">blacklisted@company.com</code>
+                </p>
+                <p className="text-sm text-red-800">
+                  <strong>Password:</strong> <code className="bg-red-100 px-1 rounded text-xs">password123</code>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <p className="text-xs text-gray-600 text-center">
+              💡 <strong>Quick Login Tip:</strong> Click on any email above to auto-fill the login form
+            </p>
+          </div>
         </div>
       </div>
     </div>
