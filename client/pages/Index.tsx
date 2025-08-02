@@ -429,6 +429,171 @@ export default function Index() {
           </div>
         </section>
 
+        {/* Latest News & Announcements */}
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+                <Newspaper className="h-4 w-4 mr-2" />
+                Latest Updates
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                News & Announcements
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Stay informed with the latest procurement news, policy updates, and system enhancements
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Breaking News */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-500">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Zap className="h-6 w-6 text-red-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          BREAKING
+                        </span>
+                        <span className="text-sm text-gray-500">2 hours ago</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        New AI-Powered Fraud Detection System Launched
+                      </h3>
+                      <p className="text-gray-600 mb-4">
+                        Kano State introduces advanced AI technology to detect and prevent fraudulent activities in procurement processes, increasing security by 99.8%.
+                      </p>
+                      <button className="inline-flex items-center text-red-600 hover:text-red-700 font-medium text-sm">
+                        Read More <ArrowRight className="h-4 w-4 ml-1" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Award className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          ACHIEVEMENT
+                        </span>
+                        <span className="text-sm text-gray-500">1 day ago</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        KanoProc Wins National Digital Excellence Award
+                      </h3>
+                      <p className="text-gray-600 mb-4">
+                        The portal has been recognized for outstanding innovation in public procurement digitalization, setting standards for other states.
+                      </p>
+                      <button className="inline-flex items-center text-green-600 hover:text-green-700 font-medium text-sm">
+                        Read More <ArrowRight className="h-4 w-4 ml-1" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Lightbulb className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          UPDATE
+                        </span>
+                        <span className="text-sm text-gray-500">3 days ago</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Enhanced Mobile App Now Available
+                      </h3>
+                      <p className="text-gray-600 mb-4">
+                        New mobile application features real-time notifications, offline document access, and streamlined bidding process for contractors.
+                      </p>
+                      <button className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium text-sm">
+                        Read More <ArrowRight className="h-4 w-4 ml-1" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions & Updates */}
+              <div className="space-y-6">
+                {/* Quick Actions */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                  <div className="space-y-3">
+                    <button className="w-full flex items-center space-x-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                      <PlayCircle className="h-5 w-5 text-green-600" />
+                      <span className="text-green-800 font-medium">Watch Tutorial</span>
+                    </button>
+                    <button className="w-full flex items-center space-x-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                      <Download className="h-5 w-5 text-blue-600" />
+                      <span className="text-blue-800 font-medium">Download Guidelines</span>
+                    </button>
+                    <button className="w-full flex items-center space-x-3 p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                      <MessageSquare className="h-5 w-5 text-purple-600" />
+                      <span className="text-purple-800 font-medium">Contact Support</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* System Status */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">System Status</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Platform Status</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm font-medium text-green-600">Operational</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Server Uptime</span>
+                      <span className="text-sm font-medium text-gray-900">99.9%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Active Users</span>
+                      <span className="text-sm font-medium text-gray-900">1,247 online</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Response Time</span>
+                      <span className="text-sm font-medium text-gray-900">0.8s avg</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Upcoming Events */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Events</h3>
+                  <div className="space-y-4">
+                    <div className="border-l-4 border-yellow-400 pl-4">
+                      <p className="text-sm font-medium text-gray-900">Virtual Vendor Training</p>
+                      <p className="text-xs text-gray-600">Feb 15, 2024 • 10:00 AM</p>
+                    </div>
+                    <div className="border-l-4 border-blue-400 pl-4">
+                      <p className="text-sm font-medium text-gray-900">Pre-bid Conference</p>
+                      <p className="text-xs text-gray-600">Feb 20, 2024 • 2:00 PM</p>
+                    </div>
+                    <div className="border-l-4 border-green-400 pl-4">
+                      <p className="text-sm font-medium text-gray-900">System Maintenance</p>
+                      <p className="text-xs text-gray-600">Feb 25, 2024 • 12:00 AM</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Stats Section */}
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
