@@ -124,6 +124,7 @@ export default function CompanyDashboard() {
   const [showSubmitBidModal, setShowSubmitBidModal] = useState(false);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Mock company data - Check for expired documents and auto-suspend
   const hasExpiredDocuments = () => {
