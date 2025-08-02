@@ -350,7 +350,10 @@ export default function CompanyLogin() {
               <p className="text-xs text-orange-700 mb-3">Suspended due to expired documents</p>
               <div className="space-y-1">
                 <p className="text-sm text-orange-800">
-                  <strong>Email:</strong> <code className="bg-orange-100 px-1 rounded text-xs">suspended@company.com</code>
+                  <strong>Email:</strong> <button
+                    onClick={() => fillTestAccount("suspended@company.com", "password123")}
+                    className="bg-orange-100 px-1 rounded text-xs hover:bg-orange-200 cursor-pointer transition-colors"
+                  >suspended@company.com</button>
                 </p>
                 <p className="text-sm text-orange-800">
                   <strong>Password:</strong> <code className="bg-orange-100 px-1 rounded text-xs">password123</code>
