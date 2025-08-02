@@ -67,6 +67,8 @@ export default function CompanyRegistration() {
     otherDocuments: []
   });
 
+  const [documentExpiry, setDocumentExpiry] = useState<DocumentExpiry>({});
+  const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
