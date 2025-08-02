@@ -59,7 +59,9 @@ import {
   Bookmark,
   Copy,
   Trash2,
-  MoreHorizontal
+  MoreHorizontal,
+  Trash2,
+  Pause
 } from "lucide-react";
 
 type ActiveTab =
