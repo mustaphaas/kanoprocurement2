@@ -152,17 +152,75 @@ export default function CompanyDashboard() {
     return "Approved";
   };
 
-  const companyData: CompanyData = {
-    name: "Northern Construction Ltd",
-    email: "contact@northernconstruction.com",
-    status: getCompanyStatus(),
-    suspensionReason: hasExpiredDocuments() ? "Professional License expired on January 15, 2024" : undefined,
-    totalAdverts: 150,
-    bidsExpressedInterest: 25,
-    activeBids: 10,
-    notActiveBids: 15,
-    totalContractValue: "₦2.3B"
+  const getCompanyDetails = () => {
+    const userEmail = user?.email?.toLowerCase() || "";
+    const status = getCompanyStatus();
+
+    // Different company details based on test accounts
+    const companyDetails = {
+      "pending@company.com": {
+        name: "New Ventures Construction Ltd",
+        email: userEmail,
+        totalAdverts: 150,
+        bidsExpressedInterest: 0, // Pending companies can't express interest yet
+        activeBids: 0,
+        notActiveBids: 0,
+        totalContractValue: "₦0"
+      },
+      "suspended@company.com": {
+        name: "Omega Engineering Services",
+        email: userEmail,
+        totalAdverts: 150,
+        bidsExpressedInterest: 15, // Had expressed interest before suspension
+        activeBids: 0, // No active bids due to suspension
+        notActiveBids: 8,
+        totalContractValue: "₦750M"
+      },
+      "blacklisted@company.com": {
+        name: "Restricted Corp Ltd",
+        email: userEmail,
+        totalAdverts: 150,
+        bidsExpressedInterest: 0,
+        activeBids: 0,
+        notActiveBids: 0,
+        totalContractValue: "₦0"
+      },
+      "approved@company.com": {
+        name: "Premier Construction Company",
+        email: userEmail,
+        totalAdverts: 150,
+        bidsExpressedInterest: 25,
+        activeBids: 10,
+        notActiveBids: 15,
+        totalContractValue: "₦2.3B"
+      }
+    };
+
+    const details = companyDetails[userEmail as keyof typeof companyDetails] || {
+      name: "Northern Construction Ltd",
+      email: "contact@northernconstruction.com",
+      totalAdverts: 150,
+      bidsExpressedInterest: 25,
+      activeBids: 10,
+      notActiveBids: 15,
+      totalContractValue: "₦2.3B"
+    };
+
+    return {
+      ...details,
+      status,
+      suspensionReason: status === "Suspended" ?
+        (userEmail === "suspended@company.com" ?
+          "Professional License expired on January 15, 2024" :
+          "Professional License expired on January 15, 2024") :
+        undefined,
+      blacklistReason: status === "Blacklisted" ?
+        "Violation of procurement guidelines and contract terms" :
+        undefined
+    };
   };
+
+  const companyData: CompanyData = getCompanyDetails();
 
   const [notifications, setNotifications] = useState<Notification[]>([
     {
