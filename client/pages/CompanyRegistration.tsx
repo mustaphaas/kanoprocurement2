@@ -163,7 +163,195 @@ export default function CompanyRegistration() {
         ...prev,
         [fileType]: null
       }));
+      // Clear expiry date when file is removed
+      setDocumentExpiry(prev => ({
+        ...prev,
+        [fileType]: undefined
+      }));
+      setExtractionStatus(prev => ({
+        ...prev,
+        [fileType]: undefined
+      }));
     }
+  };
+
+  // Simulate OCR text extraction from document
+  const extractTextFromDocument = async (file: File): Promise<string> => {
+    // In a real implementation, this would use OCR services like:
+    // - Google Cloud Vision API
+    // - AWS Textract
+    // - Azure Computer Vision
+    // - Tesseract.js for client-side OCR
+
+    // Simulated extraction with common document patterns
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Mock extracted text based on file name patterns
+        const fileName = file.name.toLowerCase();
+
+        if (fileName.includes('tax') || fileName.includes('clearance')) {
+          resolve(`TAX CLEARANCE CERTIFICATE
+            This is to certify that SAMPLE COMPANY LIMITED
+            has fulfilled all tax obligations as at December 31, 2024
+            Valid until: 31/12/2025
+            Expiry Date: December 31, 2025
+            Nigeria Internal Revenue Service`);
+        } else if (fileName.includes('cac') || fileName.includes('incorporation')) {
+          resolve(`CERTIFICATE OF INCORPORATION
+            Company Name: SAMPLE COMPANY LIMITED
+            Registration Number: RC123456
+            Date of Incorporation: 15/01/2020
+            Valid Period: 5 Years
+            Expires: 15/01/2025
+            Corporate Affairs Commission`);
+        } else {
+          resolve(`BUSINESS DOCUMENT
+            Company: SAMPLE BUSINESS
+            Issue Date: 10/05/2023
+            Validity Period: 2 Years
+            Expiration: 10/05/2025
+            Valid until 10th May 2025`);
+        }
+      }, 2000 + Math.random() * 3000); // Simulate processing time
+    });
+  };
+
+  // Extract dates from text using regex patterns
+  const extractExpiryDate = (text: string): string | null => {
+    const datePatterns = [
+      // DD/MM/YYYY or DD-MM-YYYY
+      /(?:expir[ey]s?|valid\s+until|expir[ey]\s+date|expires?\s+on)\s*:?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/i,
+      // Month DD, YYYY
+      /(?:expir[ey]s?|valid\s+until|expir[ey]\s+date|expires?\s+on)\s*:?\s*([a-z]+\s+\d{1,2},?\s+\d{4})/i,
+      // DD Month YYYY
+      /(?:expir[ey]s?|valid\s+until|expir[ey]\s+date|expires?\s+on)\s*:?\s*(\d{1,2}(?:st|nd|rd|th)?\s+[a-z]+\s+\d{4})/i,
+      // YYYY-MM-DD
+      /(?:expir[ey]s?|valid\s+until|expir[ey]\s+date|expires?\s+on)\s*:?\s*(\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2})/i,
+    ];
+
+    for (const pattern of datePatterns) {
+      const match = text.match(pattern);
+      if (match) {
+        return match[1];
+      }
+    }
+
+    // Fallback: look for any date-like patterns
+    const fallbackPatterns = [
+      /\b(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})\b/g,
+      /\b([a-z]+\s+\d{1,2},?\s+\d{4})\b/gi,
+      /\b(\d{1,2}(?:st|nd|rd|th)?\s+[a-z]+\s+\d{4})\b/gi
+    ];
+
+    for (const pattern of fallbackPatterns) {
+      const matches = text.match(pattern);
+      if (matches && matches.length > 0) {
+        // Return the last date found (likely to be expiry)
+        return matches[matches.length - 1];
+      }
+    }
+
+    return null;
+  };
+
+  // Validate and format extracted date
+  const validateAndFormatDate = (dateString: string): string | null => {
+    try {
+      // Try to parse various date formats
+      let date: Date;
+
+      if (dateString.includes('/') || dateString.includes('-')) {
+        // Handle DD/MM/YYYY or MM/DD/YYYY formats
+        const parts = dateString.split(/[\/\-]/);
+        if (parts.length === 3) {
+          // Assume DD/MM/YYYY format for international compliance
+          date = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+        } else {
+          date = new Date(dateString);
+        }
+      } else {
+        // Handle text dates
+        date = new Date(dateString);
+      }
+
+      if (isNaN(date.getTime())) {
+        return null;
+      }
+
+      // Check if date is in the future (valid for a document)
+      const today = new Date();
+      if (date < today) {
+        return null; // Expired document
+      }
+
+      // Format as YYYY-MM-DD for HTML date input
+      return date.toISOString().split('T')[0];
+    } catch {
+      return null;
+    }
+  };
+
+  // Process document for expiry date extraction
+  const processDocumentForExpiry = async (file: File, fileType: keyof UploadedFiles) => {
+    if (fileType === 'otherDocuments') return;
+
+    setExtractionStatus(prev => ({
+      ...prev,
+      [fileType]: 'processing'
+    }));
+
+    try {
+      // Extract text from document
+      const extractedText = await extractTextFromDocument(file);
+
+      // Extract expiry date from text
+      const rawDate = extractExpiryDate(extractedText);
+
+      if (rawDate) {
+        const formattedDate = validateAndFormatDate(rawDate);
+
+        if (formattedDate) {
+          setDocumentExpiry(prev => ({
+            ...prev,
+            [fileType]: formattedDate
+          }));
+          setExtractionStatus(prev => ({
+            ...prev,
+            [fileType]: 'success'
+          }));
+        } else {
+          // Date found but invalid/expired
+          setExtractionStatus(prev => ({
+            ...prev,
+            [fileType]: 'failed'
+          }));
+        }
+      } else {
+        // No date pattern found
+        setExtractionStatus(prev => ({
+          ...prev,
+          [fileType]: 'failed'
+        }));
+      }
+    } catch (error) {
+      console.error('Error processing document:', error);
+      setExtractionStatus(prev => ({
+        ...prev,
+        [fileType]: 'failed'
+      }));
+    }
+  };
+
+  // Handle manual date input
+  const handleManualDateInput = (fileType: keyof UploadedFiles, date: string) => {
+    setDocumentExpiry(prev => ({
+      ...prev,
+      [fileType]: date
+    }));
+    setExtractionStatus(prev => ({
+      ...prev,
+      [fileType]: 'manual'
+    }));
   };
 
   const validateForm = (): boolean => {
