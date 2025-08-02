@@ -7,7 +7,12 @@ import {
   AlertCircle,
   ArrowLeft,
   FileText,
-  Shield
+  Shield,
+  Loader2,
+  Calendar,
+  CheckCircle2,
+  XCircle,
+  Edit3
 } from "lucide-react";
 
 interface FormData {
