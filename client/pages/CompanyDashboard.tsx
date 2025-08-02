@@ -354,6 +354,21 @@ export default function CompanyDashboard() {
 
   const getStatusAlert = () => {
     switch (companyData.status) {
+      case "Pending":
+        return (
+          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+            <div className="flex">
+              <Clock className="h-5 w-5 text-blue-400" />
+              <div className="ml-3">
+                <p className="text-sm text-blue-700">
+                  <strong>Account Pending Approval:</strong> Your company registration is under review by the
+                  Bureau of Public Procurement. You will be notified once your account is approved.
+                  Estimated processing time: 5-7 business days.
+                </p>
+              </div>
+            </div>
+          </div>
+        );
       case "Suspended":
         return (
           <div className="bg-orange-50 border-l-4 border-orange-400 p-4 mb-6">
@@ -361,7 +376,8 @@ export default function CompanyDashboard() {
               <AlertTriangle className="h-5 w-5 text-orange-400" />
               <div className="ml-3">
                 <p className="text-sm text-orange-700">
-                  <strong>Account Suspended:</strong> Your account is suspended due to expired certificates. 
+                  <strong>Account Suspended:</strong> Your account is suspended due to expired documents.
+                  {companyData.suspensionReason && <span>Reason: {companyData.suspensionReason}. </span>}
                   Please update your documents in 'My Documents' to regain full access.
                 </p>
               </div>
@@ -375,8 +391,8 @@ export default function CompanyDashboard() {
               <Ban className="h-5 w-5 text-red-400" />
               <div className="ml-3">
                 <p className="text-sm text-red-700">
-                  <strong>Account Blacklisted:</strong> Your company has been blacklisted from participating in 
-                  Kano State Government procurements due to {companyData.blacklistReason || "policy violations"}. 
+                  <strong>Account Blacklisted:</strong> Your company has been blacklisted from participating in
+                  Kano State Government procurements due to {companyData.blacklistReason || "policy violations"}.
                   Please contact the BPP for more information.
                 </p>
               </div>
