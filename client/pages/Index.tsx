@@ -32,7 +32,8 @@ import {
   MessageSquare,
   Phone,
   Mail,
-  BarChart3
+  BarChart3,
+  Send
 } from "lucide-react";
 
 interface FeaturedTender {
