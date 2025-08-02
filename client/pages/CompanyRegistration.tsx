@@ -31,6 +31,20 @@ interface UploadedFiles {
   otherDocuments: File[];
 }
 
+interface DocumentExpiry {
+  incorporation?: string;
+  taxClearance?: string;
+  companyProfile?: string;
+  cacForm?: string;
+}
+
+interface ExtractionStatus {
+  incorporation?: 'processing' | 'success' | 'failed' | 'manual';
+  taxClearance?: 'processing' | 'success' | 'failed' | 'manual';
+  companyProfile?: 'processing' | 'success' | 'failed' | 'manual';
+  cacForm?: 'processing' | 'success' | 'failed' | 'manual';
+}
+
 export default function CompanyRegistration() {
   const [formData, setFormData] = useState<FormData>({
     companyName: "",
