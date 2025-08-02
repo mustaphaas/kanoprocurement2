@@ -135,16 +135,20 @@ export default function CompanyDashboard() {
   };
 
   const getCompanyStatus = (): CompanyStatus => {
-    // Simulate different scenarios - you can change this for testing
-    const scenarios = {
-      pending: false,      // Set true to test pending approval
-      hasExpired: hasExpiredDocuments(), // Auto-detect expired docs
-      blacklisted: false  // Set true to test blacklisted
-    };
+    // Check user email to assign specific test account statuses
+    const userEmail = user?.email?.toLowerCase() || "";
 
-    if (scenarios.pending) return "Pending";
-    if (scenarios.blacklisted) return "Blacklisted";
-    if (scenarios.hasExpired) return "Suspended";
+    // Test account status mapping
+    if (userEmail === "pending@company.com") return "Pending";
+    if (userEmail === "suspended@company.com") return "Suspended";
+    if (userEmail === "blacklisted@company.com") return "Blacklisted";
+    if (userEmail === "approved@company.com") return "Approved";
+
+    // For other emails, check for expired documents
+    const hasExpired = hasExpiredDocuments();
+    if (hasExpired) return "Suspended";
+
+    // Default to Approved for other valid emails
     return "Approved";
   };
 
