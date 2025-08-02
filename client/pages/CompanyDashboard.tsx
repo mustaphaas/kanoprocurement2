@@ -48,7 +48,7 @@ import {
   Archive
 } from "lucide-react";
 
-type CompanyStatus = "Approved" | "Suspended" | "Blacklisted";
+type CompanyStatus = "Pending" | "Approved" | "Suspended" | "Blacklisted";
 type ActiveSection =
   | "dashboard"
   | "tender-ads"
