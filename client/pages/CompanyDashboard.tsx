@@ -416,10 +416,12 @@ export default function CompanyDashboard() {
                 <span className="text-gray-600">Account Status:</span>
                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
                   companyData.status === "Approved" ? "bg-green-100 text-green-800" :
+                  companyData.status === "Pending" ? "bg-blue-100 text-blue-800" :
                   companyData.status === "Suspended" ? "bg-orange-100 text-orange-800" :
                   "bg-red-100 text-red-800"
                 }`}>
                   {companyData.status === "Approved" && <CheckCircle className="h-4 w-4 mr-1" />}
+                  {companyData.status === "Pending" && <Clock className="h-4 w-4 mr-1" />}
                   {companyData.status === "Suspended" && <AlertTriangle className="h-4 w-4 mr-1" />}
                   {companyData.status === "Blacklisted" && <Ban className="h-4 w-4 mr-1" />}
                   {companyData.status}
@@ -2152,7 +2154,7 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <DollarSign className="h-6 w-6 text-green-600" />
                     </div>
-                    <h4 className="text-2xl font-bold text-gray-900">₦89.2B</h4>
+                    <h4 className="text-2xl font-bold text-gray-900">��89.2B</h4>
                     <p className="text-sm text-gray-600">Total Value</p>
                     <p className="text-xs text-green-600 mt-1">+22% this year</p>
                   </div>
