@@ -22,7 +22,17 @@ import {
   Download,
   X,
   Calendar,
-  AlertTriangle
+  AlertTriangle,
+  Zap,
+  Star,
+  Lightbulb,
+  Target,
+  Newspaper,
+  PlayCircle,
+  MessageSquare,
+  Phone,
+  Mail,
+  BarChart3
 } from "lucide-react";
 
 interface FeaturedTender {
