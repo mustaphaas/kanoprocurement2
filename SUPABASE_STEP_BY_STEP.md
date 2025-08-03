@@ -1,6 +1,7 @@
 # Supabase Integration - Complete Step-by-Step Guide for KanoProc
 
 ## ⏱️ Total Time: 45-60 minutes
+
 ## 🎯 Outcome: Full backend with database, auth, storage, and real-time features
 
 ---
@@ -8,12 +9,14 @@
 ## **STEP 1: Create Supabase Account & Project (5 minutes)**
 
 ### 1.1 Sign Up
+
 1. Go to https://supabase.com
 2. Click **"Start your project"**
 3. Sign up with GitHub (recommended) or email
 4. Verify your email if using email signup
 
 ### 1.2 Create New Project
+
 1. Click **"New Project"**
 2. Choose your organization (or create one)
 3. Fill in project details:
@@ -24,6 +27,7 @@
 5. Wait 2-3 minutes for setup to complete
 
 ### 1.3 Get Project Credentials
+
 1. Go to **Settings** → **API**
 2. Copy and save these values:
    - **Project URL**: `https://your-project-id.supabase.co`
@@ -34,6 +38,7 @@
 ## **STEP 2: Install Dependencies (2 minutes)**
 
 ### 2.1 Install Supabase Client
+
 ```bash
 # In your project root directory
 npm install @supabase/supabase-js
@@ -43,6 +48,7 @@ npm install @supabase/auth-ui-shared
 ```
 
 ### 2.2 Install Additional Utilities (Optional)
+
 ```bash
 npm install uuid @types/uuid
 ```
@@ -52,6 +58,7 @@ npm install uuid @types/uuid
 ## **STEP 3: Environment Configuration (3 minutes)**
 
 ### 3.1 Create Environment File
+
 Create `.env.local` in your project root:
 
 ```env
@@ -64,7 +71,9 @@ VITE_SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
 ### 3.2 Update .gitignore
+
 Make sure `.env.local` is in your `.gitignore`:
+
 ```gitignore
 # Environment files
 .env.local
@@ -76,19 +85,20 @@ Make sure `.env.local` is in your `.gitignore`:
 ## **STEP 4: Setup Supabase Client (5 minutes)**
 
 ### 4.1 Create Supabase Client
+
 Create `client/lib/supabase.ts`:
 
 ```typescript
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
+  throw new Error("Missing Supabase environment variables");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Database types (we'll expand this later)
 export interface Database {
@@ -96,71 +106,72 @@ export interface Database {
     Tables: {
       companies: {
         Row: {
-          id: string
-          company_name: string
-          email: string
-          status: 'pending' | 'approved' | 'suspended' | 'blacklisted'
-          created_at: string
-          updated_at: string
-        }
+          id: string;
+          company_name: string;
+          email: string;
+          status: "pending" | "approved" | "suspended" | "blacklisted";
+          created_at: string;
+          updated_at: string;
+        };
         Insert: {
-          id?: string
-          company_name: string
-          email: string
-          status?: 'pending' | 'approved' | 'suspended' | 'blacklisted'
-          created_at?: string
-          updated_at?: string
-        }
+          id?: string;
+          company_name: string;
+          email: string;
+          status?: "pending" | "approved" | "suspended" | "blacklisted";
+          created_at?: string;
+          updated_at?: string;
+        };
         Update: {
-          id?: string
-          company_name?: string
-          email?: string
-          status?: 'pending' | 'approved' | 'suspended' | 'blacklisted'
-          created_at?: string
-          updated_at?: string
-        }
-      }
+          id?: string;
+          company_name?: string;
+          email?: string;
+          status?: "pending" | "approved" | "suspended" | "blacklisted";
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       tenders: {
         Row: {
-          id: string
-          title: string
-          description: string
-          ministry: string
-          category: string
-          value: number
-          deadline: string
-          status: 'draft' | 'published' | 'closed' | 'awarded'
-          created_at: string
-        }
+          id: string;
+          title: string;
+          description: string;
+          ministry: string;
+          category: string;
+          value: number;
+          deadline: string;
+          status: "draft" | "published" | "closed" | "awarded";
+          created_at: string;
+        };
         Insert: {
-          id?: string
-          title: string
-          description?: string
-          ministry: string
-          category: string
-          value: number
-          deadline: string
-          status?: 'draft' | 'published' | 'closed' | 'awarded'
-          created_at?: string
-        }
+          id?: string;
+          title: string;
+          description?: string;
+          ministry: string;
+          category: string;
+          value: number;
+          deadline: string;
+          status?: "draft" | "published" | "closed" | "awarded";
+          created_at?: string;
+        };
         Update: {
-          id?: string
-          title?: string
-          description?: string
-          ministry?: string
-          category?: string
-          value?: number
-          deadline?: string
-          status?: 'draft' | 'published' | 'closed' | 'awarded'
-          created_at?: string
-        }
-      }
-    }
-  }
+          id?: string;
+          title?: string;
+          description?: string;
+          ministry?: string;
+          category?: string;
+          value?: number;
+          deadline?: string;
+          status?: "draft" | "published" | "closed" | "awarded";
+          created_at?: string;
+        };
+      };
+    };
+  };
 }
 ```
 
 ### 4.2 Create Authentication Context
+
 Create `client/contexts/SupabaseAuthContext.tsx`:
 
 ```typescript
@@ -269,11 +280,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 ## **STEP 5: Database Schema Setup (10 minutes)**
 
 ### 5.1 Access Supabase Dashboard
+
 1. Go to your Supabase project dashboard
 2. Click **"SQL Editor"** in the sidebar
 3. Click **"New query"**
 
 ### 5.2 Create Database Tables
+
 Copy and paste this SQL to create your tables:
 
 ```sql
@@ -375,6 +388,7 @@ create trigger handle_bids_updated_at before update on public.bids
 ```
 
 ### 5.3 Execute the Query
+
 1. Click **"Run"** button
 2. You should see "Success. No rows returned" message
 3. Go to **"Table Editor"** to verify tables were created
@@ -384,6 +398,7 @@ create trigger handle_bids_updated_at before update on public.bids
 ## **STEP 6: Row Level Security (RLS) Setup (5 minutes)**
 
 ### 6.1 Enable RLS and Create Policies
+
 Run this SQL to set up security:
 
 ```sql
@@ -411,8 +426,8 @@ create policy "Public can view published tenders" on public.tenders
 create policy "Admins can manage tenders" on public.tenders
   for all using (
     exists (
-      select 1 from auth.users 
-      where auth.uid() = id 
+      select 1 from auth.users
+      where auth.uid() = id
       and raw_user_meta_data->>'role' = 'admin'
     )
   );
@@ -421,8 +436,8 @@ create policy "Admins can manage tenders" on public.tenders
 create policy "Companies can view own bids" on public.bids
   for select using (
     exists (
-      select 1 from public.companies 
-      where companies.id = bids.company_id 
+      select 1 from public.companies
+      where companies.id = bids.company_id
       and auth.uid()::text = companies.id::text
     )
   );
@@ -430,8 +445,8 @@ create policy "Companies can view own bids" on public.bids
 create policy "Companies can insert own bids" on public.bids
   for insert with check (
     exists (
-      select 1 from public.companies 
-      where companies.id = bids.company_id 
+      select 1 from public.companies
+      where companies.id = bids.company_id
       and auth.uid()::text = companies.id::text
     )
   );
@@ -440,8 +455,8 @@ create policy "Companies can insert own bids" on public.bids
 create policy "Companies can manage own documents" on public.documents
   for all using (
     exists (
-      select 1 from public.companies 
-      where companies.id = documents.company_id 
+      select 1 from public.companies
+      where companies.id = documents.company_id
       and auth.uid()::text = companies.id::text
     )
   );
@@ -456,6 +471,7 @@ create policy "Users can view own audit logs" on public.audit_logs
 ## **STEP 7: Storage Setup (3 minutes)**
 
 ### 7.1 Create Storage Buckets
+
 1. Go to **Storage** in Supabase dashboard
 2. Click **"New bucket"**
 3. Create these buckets:
@@ -464,20 +480,21 @@ create policy "Users can view own audit logs" on public.audit_logs
    - Click **"Create bucket"**
 
 ### 7.2 Set Storage Policies
+
 Click on the `documents` bucket → **Policies** → **New policy**:
 
 ```sql
 -- Allow companies to upload their own documents
 create policy "Companies can upload own documents" on storage.objects
   for insert with check (
-    bucket_id = 'documents' 
+    bucket_id = 'documents'
     and auth.uid()::text = (storage.foldername(name))[1]
   );
 
 -- Allow companies to view their own documents
 create policy "Companies can view own documents" on storage.objects
   for select using (
-    bucket_id = 'documents' 
+    bucket_id = 'documents'
     and auth.uid()::text = (storage.foldername(name))[1]
   );
 ```
@@ -487,6 +504,7 @@ create policy "Companies can view own documents" on storage.objects
 ## **STEP 8: Update Your App.tsx (5 minutes)**
 
 ### 8.1 Wrap App with Auth Provider
+
 Update your `client/App.tsx`:
 
 ```typescript
@@ -514,6 +532,7 @@ export default App
 ## **STEP 9: Update Authentication Pages (10 minutes)**
 
 ### 9.1 Update Company Login
+
 Update your `client/pages/CompanyLogin.tsx`:
 
 ```typescript
@@ -527,7 +546,7 @@ export default function CompanyLogin() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  
+
   const { signIn } = useAuth()
   const navigate = useNavigate()
 
@@ -537,13 +556,13 @@ export default function CompanyLogin() {
     setError('')
 
     const { error } = await signIn(email, password)
-    
+
     if (error) {
       setError(error.message)
     } else {
       navigate('/company/dashboard')
     }
-    
+
     setLoading(false)
   }
 
@@ -578,89 +597,95 @@ export default function CompanyLogin() {
 ## **STEP 10: Create Data Hooks (5 minutes)**
 
 ### 10.1 Create Custom Hooks
+
 Create `client/hooks/useSupabaseData.ts`:
 
 ```typescript
-import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
-import { Database } from '../lib/supabase'
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
+import { Database } from "../lib/supabase";
 
-type Tables = Database['public']['Tables']
+type Tables = Database["public"]["Tables"];
 
 export function useTenders() {
-  const [tenders, setTenders] = useState<Tables['tenders']['Row'][]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [tenders, setTenders] = useState<Tables["tenders"]["Row"][]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchTenders() {
       try {
         const { data, error } = await supabase
-          .from('tenders')
-          .select('*')
-          .eq('status', 'published')
-          .order('created_at', { ascending: false })
+          .from("tenders")
+          .select("*")
+          .eq("status", "published")
+          .order("created_at", { ascending: false });
 
-        if (error) throw error
-        setTenders(data || [])
+        if (error) throw error;
+        setTenders(data || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred')
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchTenders()
+    fetchTenders();
 
     // Subscribe to real-time changes
     const subscription = supabase
-      .channel('tender_changes')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'tenders' },
+      .channel("tender_changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tenders" },
         () => {
-          fetchTenders() // Refresh when changes occur
-        }
+          fetchTenders(); // Refresh when changes occur
+        },
       )
-      .subscribe()
+      .subscribe();
 
     return () => {
-      subscription.unsubscribe()
-    }
-  }, [])
+      subscription.unsubscribe();
+    };
+  }, []);
 
-  return { tenders, loading, error }
+  return { tenders, loading, error };
 }
 
 export function useCompanyData() {
-  const [company, setCompany] = useState<Tables['companies']['Row'] | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [company, setCompany] = useState<Tables["companies"]["Row"] | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchCompany() {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
-        if (!user) throw new Error('Not authenticated')
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) throw new Error("Not authenticated");
 
         const { data, error } = await supabase
-          .from('companies')
-          .select('*')
-          .eq('id', user.id)
-          .single()
+          .from("companies")
+          .select("*")
+          .eq("id", user.id)
+          .single();
 
-        if (error) throw error
-        setCompany(data)
+        if (error) throw error;
+        setCompany(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred')
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchCompany()
-  }, [])
+    fetchCompany();
+  }, []);
 
-  return { company, loading, error }
+  return { company, loading, error };
 }
 ```
 
@@ -669,6 +694,7 @@ export function useCompanyData() {
 ## **STEP 11: Test Your Setup (5 minutes)**
 
 ### 11.1 Insert Test Data
+
 Go to Supabase **Table Editor** → **tenders** → **Insert** → **Insert row**:
 
 ```json
@@ -685,11 +711,13 @@ Go to Supabase **Table Editor** → **tenders** → **Insert** → **Insert row*
 ```
 
 ### 11.2 Test Authentication
+
 1. Try registering a new user
 2. Check if you can sign in
 3. Verify user appears in Supabase **Authentication** → **Users**
 
 ### 11.3 Test Real-time Updates
+
 1. Open your app in two browser tabs
 2. Update a tender in Supabase dashboard
 3. See if changes appear in both tabs
@@ -699,6 +727,7 @@ Go to Supabase **Table Editor** → **tenders** → **Insert** → **Insert row*
 ## **STEP 12: Deploy Environment Variables (2 minutes)**
 
 ### 12.1 Production Environment
+
 For production deployment, add these environment variables to your hosting platform:
 
 ```env
@@ -711,6 +740,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 ## **🎉 CONGRATULATIONS! You're Done!**
 
 ### **What You Now Have:**
+
 ✅ **PostgreSQL Database** with all your tables
 ✅ **Authentication System** with user management
 ✅ **File Storage** for document uploads
@@ -721,6 +751,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 ✅ **Auto-scaling** infrastructure
 
 ### **Next Steps:**
+
 1. **Update your existing components** to use Supabase data
 2. **Implement file upload** for documents
 3. **Add real-time notifications**
@@ -739,6 +770,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 **Solution**: Check RLS policies and user permissions
 
 ### **Getting Help:**
+
 - **Supabase Docs**: https://supabase.com/docs
 - **Discord Community**: https://discord.supabase.com
 - **GitHub Issues**: Post specific questions with code examples

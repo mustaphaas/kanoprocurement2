@@ -7,16 +7,21 @@ export interface ImmutableAuditEntry {
   readonly blockNumber: number;
   readonly timestamp: string;
   readonly nonce: number;
-  
+
   // User Context (Expanded)
   readonly userId: string;
   readonly userEmail: string;
-  readonly userRole: "admin" | "superuser" | "company" | "evaluator" | "approver";
+  readonly userRole:
+    | "admin"
+    | "superuser"
+    | "company"
+    | "evaluator"
+    | "approver";
   readonly userFullName: string;
   readonly userDepartment?: string;
   readonly userPosition?: string;
   readonly delegatedBy?: string; // If acting on behalf of someone
-  
+
   // Session & Security Context (Enhanced)
   readonly sessionId: string;
   readonly sessionDuration: number; // How long user has been active
@@ -36,7 +41,7 @@ export interface ImmutableAuditEntry {
     readonly isp?: string;
     readonly timezone: string;
   };
-  
+
   // Action Details (Comprehensive)
   readonly action: DetailedAuditAction;
   readonly resource: string;
@@ -44,32 +49,32 @@ export interface ImmutableAuditEntry {
   readonly resourcePath?: string; // Full path to resource
   readonly parentResource?: string;
   readonly affectedRecords: number; // How many records affected
-  
+
   // Data Changes (Detailed)
   readonly oldValues?: Record<string, any>;
   readonly newValues?: Record<string, any>;
   readonly dataDiff?: DataDifference[];
   readonly sensitiveFieldsChanged: string[]; // Track sensitive data changes
   readonly dataSize: number; // Size of data involved in bytes
-  
+
   // Business Context (New)
   readonly businessProcess: string; // e.g., "TENDER_EVALUATION", "COMPANY_APPROVAL"
   readonly workflowStage: string; // Current stage in process
   readonly approvalLevel?: number; // If part of approval workflow
   readonly compliance: ComplianceInfo;
   readonly riskAssessment: RiskAssessment;
-  
+
   // Technical Context (Enhanced)
   readonly metadata: EnhancedAuditMetadata;
   readonly systemState: SystemState;
   readonly performanceMetrics: PerformanceMetrics;
-  
+
   // Security & Integrity (Blockchain-like)
   readonly severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   readonly status: "SUCCESS" | "FAILURE" | "BLOCKED" | "PENDING" | "TIMEOUT";
   readonly errorDetails?: ErrorDetails;
   readonly securityFlags: SecurityFlag[];
-  
+
   // Immutability & Verification
   readonly previousHash: string;
   readonly merkleRoot: string;
@@ -77,13 +82,17 @@ export interface ImmutableAuditEntry {
   readonly signatureHash: string;
   readonly witnessNodes: string[]; // Multiple verification nodes
   readonly immutableProof: ImmutabilityProof;
-  
+
   // Legal & Compliance
   readonly legalCategory: LegalCategory;
   readonly retentionPeriod: number; // Years to retain
-  readonly dataClassification: "PUBLIC" | "INTERNAL" | "CONFIDENTIAL" | "RESTRICTED";
+  readonly dataClassification:
+    | "PUBLIC"
+    | "INTERNAL"
+    | "CONFIDENTIAL"
+    | "RESTRICTED";
   readonly regulatoryCompliance: string[]; // Which regulations apply
-  
+
   // Audit Trail Metadata
   readonly auditTrailId: string; // Links related events
   readonly correlationId: string;
@@ -147,12 +156,21 @@ export interface ErrorDetails {
   readonly errorCode: string;
   readonly errorMessage: string;
   readonly stackTrace?: string;
-  readonly errorCategory: "SYSTEM" | "USER" | "NETWORK" | "DATABASE" | "SECURITY";
+  readonly errorCategory:
+    | "SYSTEM"
+    | "USER"
+    | "NETWORK"
+    | "DATABASE"
+    | "SECURITY";
   readonly recoveryAction?: string;
 }
 
 export interface SecurityFlag {
-  readonly type: "SUSPICIOUS_ACTIVITY" | "POLICY_VIOLATION" | "ANOMALY_DETECTED" | "FRAUD_INDICATOR";
+  readonly type:
+    | "SUSPICIOUS_ACTIVITY"
+    | "POLICY_VIOLATION"
+    | "ANOMALY_DETECTED"
+    | "FRAUD_INDICATOR";
   readonly description: string;
   readonly confidence: number; // 0-100
   readonly automaticallyGenerated: boolean;
@@ -168,9 +186,18 @@ export interface ImmutabilityProof {
 }
 
 export interface LegalCategory {
-  readonly category: "FINANCIAL" | "OPERATIONAL" | "SECURITY" | "COMPLIANCE" | "ADMINISTRATIVE";
+  readonly category:
+    | "FINANCIAL"
+    | "OPERATIONAL"
+    | "SECURITY"
+    | "COMPLIANCE"
+    | "ADMINISTRATIVE";
   readonly legalWeight: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-  readonly evidentialValue: "INFORMATIONAL" | "SUPPORTIVE" | "PRIMARY" | "CONCLUSIVE";
+  readonly evidentialValue:
+    | "INFORMATIONAL"
+    | "SUPPORTIVE"
+    | "PRIMARY"
+    | "CONCLUSIVE";
   readonly admissible: boolean;
 }
 
@@ -212,7 +239,7 @@ export interface NetworkInfo {
   readonly torUsed: boolean;
 }
 
-export type DetailedAuditAction = 
+export type DetailedAuditAction =
   // Authentication & Session (Enhanced)
   | "USER_LOGIN_ATTEMPT"
   | "USER_LOGIN_SUCCESS"
@@ -231,7 +258,7 @@ export type DetailedAuditAction =
   | "ACCOUNT_LOCKED_ADMIN"
   | "ACCOUNT_UNLOCKED"
   | "SECURITY_QUESTION_FAILED"
-  
+
   // User & Company Management (Detailed)
   | "COMPANY_REGISTRATION_SUBMITTED"
   | "COMPANY_REGISTRATION_REVIEWED"
@@ -249,7 +276,7 @@ export type DetailedAuditAction =
   | "COMPANY_DOCUMENT_REJECTED"
   | "COMPANY_DOCUMENT_EXPIRED"
   | "COMPANY_STATUS_CHANGED"
-  
+
   // Tender Management (Comprehensive)
   | "TENDER_DRAFT_CREATED"
   | "TENDER_REVIEWED_LEGAL"
@@ -269,7 +296,7 @@ export type DetailedAuditAction =
   | "TENDER_DOCUMENT_DOWNLOADED"
   | "TENDER_CLARIFICATION_REQUESTED"
   | "TENDER_CLARIFICATION_RESPONDED"
-  
+
   // Bidding Process (Granular)
   | "BID_INTEREST_EXPRESSED"
   | "BID_DOCUMENT_PURCHASED"
@@ -285,7 +312,7 @@ export type DetailedAuditAction =
   | "BID_OPENED_PUBLIC"
   | "BID_OPENED_TECHNICAL"
   | "BID_OPENED_FINANCIAL"
-  
+
   // Evaluation Process (Detailed)
   | "EVALUATION_COMMITTEE_FORMED"
   | "EVALUATION_CRITERIA_DEFINED"
@@ -300,7 +327,7 @@ export type DetailedAuditAction =
   | "EVALUATION_DISPUTED"
   | "EVALUATION_REVIEWED_APPEAL"
   | "EVALUATION_FINAL_RANKING"
-  
+
   // Award & Contract (Complete)
   | "AWARD_RECOMMENDATION_SUBMITTED"
   | "AWARD_RECOMMENDATION_REVIEWED"
@@ -318,7 +345,7 @@ export type DetailedAuditAction =
   | "CONTRACT_AMENDED"
   | "CONTRACT_TERMINATED"
   | "CONTRACT_COMPLETED"
-  
+
   // Financial Operations (Detailed)
   | "PAYMENT_TENDER_FEE_INITIATED"
   | "PAYMENT_TENDER_FEE_COMPLETED"
@@ -339,7 +366,7 @@ export type DetailedAuditAction =
   | "PERFORMANCE_BOND_SUBMITTED"
   | "PERFORMANCE_BOND_VERIFIED"
   | "PERFORMANCE_BOND_CLAIMED"
-  
+
   // System Security (Comprehensive)
   | "UNAUTHORIZED_ACCESS_BLOCKED"
   | "PERMISSION_DENIED_RESOURCE"
@@ -357,7 +384,7 @@ export type DetailedAuditAction =
   | "SECURITY_SCAN_INITIATED"
   | "VULNERABILITY_DETECTED"
   | "SECURITY_PATCH_APPLIED"
-  
+
   // Data Operations (Granular)
   | "DATA_EXPORT_INITIATED"
   | "DATA_EXPORT_COMPLETED"
@@ -374,7 +401,7 @@ export type DetailedAuditAction =
   | "DATA_DELETED_RETENTION"
   | "DATABASE_MAINTENANCE_STARTED"
   | "DATABASE_MAINTENANCE_COMPLETED"
-  
+
   // Audit & Compliance (Self-referential)
   | "AUDIT_LOG_ACCESSED"
   | "AUDIT_SEARCH_PERFORMED"
@@ -397,7 +424,7 @@ class ImmutableAuditLogManager {
   private blockNumber: number = 0;
   private readonly secretKey: string;
   private readonly witnessNodes: string[] = ["node1", "node2", "node3"];
-  
+
   private constructor() {
     this.secretKey = this.generateSecretKey();
     this.initializeBlockchain();
@@ -417,7 +444,7 @@ class ImmutableAuditLogManager {
   private async initializeBlockchain(): Promise<void> {
     const genesisBlock = await this.createGenesisBlock();
     this.blockchain.push(genesisBlock);
-    
+
     await this.logImmutableActivity({
       action: "AUDIT_SYSTEM_INITIALIZED",
       resource: "IMMUTABLE_AUDIT_SYSTEM",
@@ -432,9 +459,9 @@ class ImmutableAuditLogManager {
         additionalContext: {
           message: "Immutable audit logging system initialized with blockchain",
           version: "3.0.0",
-          blockchainEnabled: true
-        }
-      }
+          blockchainEnabled: true,
+        },
+      },
     });
   }
 
@@ -443,9 +470,10 @@ class ImmutableAuditLogManager {
       blockNumber: 0,
       timestamp: new Date().toISOString(),
       data: "KANOPROC_GENESIS_BLOCK",
-      previousHash: "0000000000000000000000000000000000000000000000000000000000000000"
+      previousHash:
+        "0000000000000000000000000000000000000000000000000000000000000000",
     };
-    
+
     return await this.generateHash(JSON.stringify(genesisData));
   }
 
@@ -470,28 +498,42 @@ class ImmutableAuditLogManager {
     status?: "SUCCESS" | "FAILURE" | "BLOCKED" | "PENDING" | "TIMEOUT";
     errorDetails?: ErrorDetails;
   }): Promise<string> {
-    
     const now = new Date();
     const id = uuidv4();
     const blockNumber = ++this.blockNumber;
-    
+
     // Generate comprehensive data difference
-    const dataDiff = this.generateDataDifference(params.oldValues, params.newValues);
-    
+    const dataDiff = this.generateDataDifference(
+      params.oldValues,
+      params.newValues,
+    );
+
     // Assess compliance and risk
     const compliance = this.assessCompliance(params.action, params.userRole);
-    const riskAssessment = this.assessRisk(params.action, params.userRole, params.newValues);
-    
+    const riskAssessment = this.assessRisk(
+      params.action,
+      params.userRole,
+      params.newValues,
+    );
+
     // Get system state and performance metrics
     const systemState = await this.getSystemState();
     const performanceStart = performance.now();
-    
-    const entry: Omit<ImmutableAuditEntry, "previousHash" | "merkleRoot" | "dataHash" | "signatureHash" | "witnessNodes" | "immutableProof"> = {
+
+    const entry: Omit<
+      ImmutableAuditEntry,
+      | "previousHash"
+      | "merkleRoot"
+      | "dataHash"
+      | "signatureHash"
+      | "witnessNodes"
+      | "immutableProof"
+    > = {
       id,
       blockNumber,
       timestamp: now.toISOString(),
       nonce: this.generateNonce(),
-      
+
       // User context
       userId: params.userId,
       userEmail: params.userEmail,
@@ -500,7 +542,7 @@ class ImmutableAuditLogManager {
       userDepartment: params.userDepartment,
       userPosition: params.userPosition,
       delegatedBy: params.delegatedBy,
-      
+
       // Session & security
       sessionId: this.getSessionId(),
       sessionDuration: this.getSessionDuration(),
@@ -509,7 +551,7 @@ class ImmutableAuditLogManager {
       browserFingerprint: await this.generateBrowserFingerprint(),
       deviceId: await this.getDeviceId(),
       geolocation: await this.getEnhancedGeolocation(),
-      
+
       // Action details
       action: params.action,
       resource: params.resource,
@@ -517,21 +559,21 @@ class ImmutableAuditLogManager {
       resourcePath: this.getResourcePath(params.resource, params.resourceId),
       parentResource: this.getParentResource(params.resource),
       affectedRecords: this.countAffectedRecords(params.newValues),
-      
+
       // Data changes
       oldValues: params.oldValues,
       newValues: params.newValues,
       dataDiff,
       sensitiveFieldsChanged: this.identifySensitiveFields(dataDiff),
       dataSize: this.calculateDataSize(params.oldValues, params.newValues),
-      
+
       // Business context
       businessProcess: params.businessProcess,
       workflowStage: params.workflowStage,
       approvalLevel: params.approvalLevel,
       compliance,
       riskAssessment,
-      
+
       // Technical context
       metadata: {
         requestId: uuidv4(),
@@ -545,53 +587,58 @@ class ImmutableAuditLogManager {
         operatingSystem: this.getOperatingSystem(),
         browserInfo: this.getBrowserInfo(),
         networkInfo: await this.getNetworkInfo(),
-        ...params.metadata
+        ...params.metadata,
       },
       systemState,
       performanceMetrics: {
         responseTime: performance.now() - performanceStart,
-        dataTransferSize: this.calculateDataSize(params.oldValues, params.newValues),
+        dataTransferSize: this.calculateDataSize(
+          params.oldValues,
+          params.newValues,
+        ),
         cachingStatus: "MISS",
       },
-      
+
       // Security & status
       severity: params.severity || this.determineSeverity(params.action),
       status: params.status || "SUCCESS",
       errorDetails: params.errorDetails,
       securityFlags: this.generateSecurityFlags(params.action, riskAssessment),
-      
+
       // Legal & compliance
       legalCategory: this.determineLegalCategory(params.action),
       retentionPeriod: this.determineRetentionPeriod(params.action),
       dataClassification: this.classifyData(params.newValues),
       regulatoryCompliance: this.getApplicableRegulations(params.action),
-      
+
       // Audit trail
       auditTrailId: this.getAuditTrailId(params.businessProcess),
       correlationId: this.getCorrelationId(),
       causationId: this.getCausationId(),
       consequenceIds: [],
-      tags: this.generateTags(params.action, params.resource)
+      tags: this.generateTags(params.action, params.resource),
     };
 
     // Generate cryptographic proofs
     const previousHash = this.getLastBlockHash();
-    const dataHash = await this.generateHash(JSON.stringify({
-      ...entry,
-      previousHash
-    }));
-    
+    const dataHash = await this.generateHash(
+      JSON.stringify({
+        ...entry,
+        previousHash,
+      }),
+    );
+
     const merkleRoot = await this.calculateMerkleRoot([dataHash]);
     const signatureHash = await this.generateSignature(entry);
     const witnessSignatures = await this.generateWitnessSignatures(entry);
-    
+
     const immutableProof: ImmutabilityProof = {
       blockchainHash: await this.addToBlockchain(dataHash),
       timestampServer: await this.getTimestampServerProof(),
       digitalSignature: signatureHash,
       witnessSignatures,
       merkleProof: [merkleRoot],
-      verificationUrl: `https://verify.kanoproc.gov.ng/audit/${id}`
+      verificationUrl: `https://verify.kanoproc.gov.ng/audit/${id}`,
     };
 
     const finalEntry: ImmutableAuditEntry = {
@@ -601,19 +648,19 @@ class ImmutableAuditLogManager {
       dataHash,
       signatureHash,
       witnessNodes: this.witnessNodes,
-      immutableProof
+      immutableProof,
     };
 
     // Store immutably (cannot be modified)
     this.logs.set(id, Object.freeze(finalEntry));
-    
+
     // Persist to multiple secure locations
     await this.persistToMultipleLocations(finalEntry);
-    
+
     // Real-time security and compliance monitoring
     this.performSecurityAnalysis(finalEntry);
     this.checkComplianceViolations(finalEntry);
-    
+
     return id;
   }
 
@@ -621,143 +668,184 @@ class ImmutableAuditLogManager {
   public async verifyEntryIntegrity(entryId: string): Promise<boolean> {
     const entry = this.logs.get(entryId);
     if (!entry) return false;
-    
+
     // Verify hash chain
     const { dataHash, ...entryWithoutHash } = entry;
-    const recalculatedHash = await this.generateHash(JSON.stringify(entryWithoutHash));
-    
+    const recalculatedHash = await this.generateHash(
+      JSON.stringify(entryWithoutHash),
+    );
+
     if (entry.dataHash !== recalculatedHash) {
       console.error("🔴 HASH INTEGRITY VIOLATION:", entryId);
       return false;
     }
-    
+
     // Verify digital signature
     const expectedSignature = await this.generateSignature(entryWithoutHash);
     if (entry.signatureHash !== expectedSignature) {
       console.error("🔴 SIGNATURE VERIFICATION FAILED:", entryId);
       return false;
     }
-    
+
     // Verify witness signatures
     const witnessVerification = await this.verifyWitnessSignatures(entry);
     if (!witnessVerification) {
       console.error("🔴 WITNESS VERIFICATION FAILED:", entryId);
       return false;
     }
-    
+
     // Verify blockchain inclusion
     const blockchainVerification = await this.verifyBlockchainInclusion(entry);
     if (!blockchainVerification) {
       console.error("🔴 BLOCKCHAIN VERIFICATION FAILED:", entryId);
       return false;
     }
-    
+
     return true;
   }
 
   public async verifyCompleteLogIntegrity(): Promise<boolean> {
-    let previousHash = "0000000000000000000000000000000000000000000000000000000000000000";
-    
+    let previousHash =
+      "0000000000000000000000000000000000000000000000000000000000000000";
+
     for (const [id, entry] of this.logs) {
       if (entry.previousHash !== previousHash) {
         console.error("🔴 BLOCKCHAIN CONTINUITY VIOLATION:", id);
         return false;
       }
-      
+
       const isValid = await this.verifyEntryIntegrity(id);
       if (!isValid) {
         return false;
       }
-      
+
       previousHash = entry.dataHash;
     }
-    
+
     console.log("✅ COMPLETE LOG INTEGRITY VERIFIED");
     return true;
   }
 
   // Helper methods for enhanced functionality
-  private generateDataDifference(oldValues?: Record<string, any>, newValues?: Record<string, any>): DataDifference[] {
+  private generateDataDifference(
+    oldValues?: Record<string, any>,
+    newValues?: Record<string, any>,
+  ): DataDifference[] {
     if (!oldValues || !newValues) return [];
-    
+
     const differences: DataDifference[] = [];
-    const allKeys = new Set([...Object.keys(oldValues), ...Object.keys(newValues)]);
-    
+    const allKeys = new Set([
+      ...Object.keys(oldValues),
+      ...Object.keys(newValues),
+    ]);
+
     for (const key of allKeys) {
       const oldValue = oldValues[key];
       const newValue = newValues[key];
-      
+
       if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
         differences.push({
           field: key,
           oldValue,
           newValue,
           dataType: typeof newValue,
-          sensitivity: this.determineSensitivity(key, newValue)
+          sensitivity: this.determineSensitivity(key, newValue),
         });
       }
     }
-    
+
     return differences;
   }
 
-  private determineSensitivity(field: string, value: any): "PUBLIC" | "SENSITIVE" | "CONFIDENTIAL" {
-    const sensitiveFields = ["password", "ssn", "bankAccount", "creditCard", "apiKey", "token"];
-    const confidentialFields = ["salary", "bidAmount", "evaluationScore", "financialData"];
-    
-    if (sensitiveFields.some(sf => field.toLowerCase().includes(sf.toLowerCase()))) {
+  private determineSensitivity(
+    field: string,
+    value: any,
+  ): "PUBLIC" | "SENSITIVE" | "CONFIDENTIAL" {
+    const sensitiveFields = [
+      "password",
+      "ssn",
+      "bankAccount",
+      "creditCard",
+      "apiKey",
+      "token",
+    ];
+    const confidentialFields = [
+      "salary",
+      "bidAmount",
+      "evaluationScore",
+      "financialData",
+    ];
+
+    if (
+      sensitiveFields.some((sf) =>
+        field.toLowerCase().includes(sf.toLowerCase()),
+      )
+    ) {
       return "SENSITIVE";
     }
-    
-    if (confidentialFields.some(cf => field.toLowerCase().includes(cf.toLowerCase()))) {
+
+    if (
+      confidentialFields.some((cf) =>
+        field.toLowerCase().includes(cf.toLowerCase()),
+      )
+    ) {
       return "CONFIDENTIAL";
     }
-    
+
     return "PUBLIC";
   }
 
-  private assessCompliance(action: DetailedAuditAction, userRole: string): ComplianceInfo {
+  private assessCompliance(
+    action: DetailedAuditAction,
+    userRole: string,
+  ): ComplianceInfo {
     const regulations = this.getApplicableRegulations(action);
     let complianceScore = 100;
     const violations: ComplianceViolation[] = [];
-    
+
     // Check for potential violations
     if (action.includes("DATA_EXPORT") && userRole !== "admin") {
       violations.push({
         regulation: "Data Protection Act",
         violationType: "Unauthorized Data Export",
         severity: "MAJOR",
-        description: "Non-admin user attempting data export"
+        description: "Non-admin user attempting data export",
       });
       complianceScore -= 30;
     }
-    
+
     return {
       applicableRegulations: regulations,
       complianceScore,
       violations,
       approvalRequired: this.requiresApproval(action),
-      dataProtectionLevel: this.getDataProtectionLevel(action)
+      dataProtectionLevel: this.getDataProtectionLevel(action),
     };
   }
 
-  private assessRisk(action: DetailedAuditAction, userRole: string, data?: Record<string, any>): RiskAssessment {
+  private assessRisk(
+    action: DetailedAuditAction,
+    userRole: string,
+    data?: Record<string, any>,
+  ): RiskAssessment {
     let overallRisk = 0;
     const riskFactors: string[] = [];
-    
+
     // Calculate individual risk components
     const fraudRisk = this.calculateFraudRisk(action, userRole);
     const securityRisk = this.calculateSecurityRisk(action);
     const complianceRisk = this.calculateComplianceRisk(action);
     const financialRisk = this.calculateFinancialRisk(action, data);
-    
-    overallRisk = Math.round((fraudRisk + securityRisk + complianceRisk + financialRisk) / 4);
-    
+
+    overallRisk = Math.round(
+      (fraudRisk + securityRisk + complianceRisk + financialRisk) / 4,
+    );
+
     if (fraudRisk > 70) riskFactors.push("High fraud potential");
     if (securityRisk > 70) riskFactors.push("Security sensitive operation");
     if (complianceRisk > 70) riskFactors.push("Regulatory compliance risk");
     if (financialRisk > 70) riskFactors.push("Financial impact risk");
-    
+
     return {
       overallRiskScore: overallRisk,
       fraudRisk,
@@ -765,37 +853,40 @@ class ImmutableAuditLogManager {
       complianceRisk,
       financialRisk,
       riskFactors,
-      riskMitigations: this.suggestRiskMitigations(riskFactors)
+      riskMitigations: this.suggestRiskMitigations(riskFactors),
     };
   }
 
-  private generateSecurityFlags(action: DetailedAuditAction, riskAssessment: RiskAssessment): SecurityFlag[] {
+  private generateSecurityFlags(
+    action: DetailedAuditAction,
+    riskAssessment: RiskAssessment,
+  ): SecurityFlag[] {
     const flags: SecurityFlag[] = [];
-    
+
     if (riskAssessment.overallRiskScore > 80) {
       flags.push({
         type: "FRAUD_INDICATOR",
         description: "High-risk activity detected",
         confidence: 85,
-        automaticallyGenerated: true
+        automaticallyGenerated: true,
       });
     }
-    
+
     if (action.includes("UNAUTHORIZED") || action.includes("BLOCKED")) {
       flags.push({
         type: "SUSPICIOUS_ACTIVITY",
         description: "Potential security breach attempt",
         confidence: 95,
-        automaticallyGenerated: true
+        automaticallyGenerated: true,
       });
     }
-    
+
     return flags;
   }
 
   // Additional helper methods would continue here...
   // (Implementation of remaining methods for brevity)
-  
+
   private async generateHash(data: string): Promise<string> {
     const encoder = new TextEncoder();
     const dataBuffer = encoder.encode(data);
@@ -836,7 +927,7 @@ export const logSecureActivity = async (params: {
     role: "company" as const,
     fullName: "Current User",
     department: "Procurement",
-    position: "Vendor Representative"
+    position: "Vendor Representative",
   };
 
   return await immutableAuditLogger.logImmutableActivity({
@@ -846,6 +937,6 @@ export const logSecureActivity = async (params: {
     userRole: currentUser.role,
     userFullName: currentUser.fullName,
     userDepartment: currentUser.department,
-    userPosition: currentUser.position
+    userPosition: currentUser.position,
   });
 };
