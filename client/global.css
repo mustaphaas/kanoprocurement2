@@ -104,3 +104,45 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Print styles for No Objection Certificate */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print\:border-none {
+    border: none !important;
+  }
+
+  /* Hide everything except the certificate content when printing */
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area, .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* Ensure proper page breaks */
+  .certificate-page {
+    page-break-inside: avoid;
+    page-break-after: always;
+  }
+
+  .certificate-page:last-child {
+    page-break-after: avoid;
+  }
+}
