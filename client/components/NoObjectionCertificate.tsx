@@ -131,7 +131,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
         </div>
 
         {/* Certificate Preview */}
-        <div className="bg-white border-2 border-gray-200 p-8 max-w-4xl mx-auto print:shadow-none print:border-none">
+        <div className="certificate-preview certificate-page bg-white border-2 border-gray-200 p-8 max-w-4xl mx-auto print:shadow-none print:border-none">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
