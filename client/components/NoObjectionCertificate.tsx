@@ -81,7 +81,15 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
   };
 
   const handlePrint = () => {
-    window.print();
+    // Add print-area class to the certificate for better printing
+    const certificateElement = document.querySelector('.certificate-preview');
+    if (certificateElement) {
+      certificateElement.classList.add('print-area');
+      window.print();
+      certificateElement.classList.remove('print-area');
+    } else {
+      window.print();
+    }
   };
 
   const handleDownload = () => {
