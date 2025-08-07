@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import {
   Building2,
   Users,
@@ -5396,7 +5397,7 @@ The award letter has been:
                         company: "Sahel Engineering Services",
                         contact: "info@saheleng.com",
                         category: "Water Infrastructure",
-                        value: "₦45,000,000",
+                        value: "���45,000,000",
                         status: "Approved",
                         requestDate: "2024-01-27",
                         projectTitle: "Borehole Construction Project",
@@ -6651,7 +6652,7 @@ The award letter has been:
                       BuildRight Engineering (₦2.6B - Score: 76.5)
                     </option>
                     <option value="Kano Infrastructure Corp (₦2.1B - Score: 82.0)">
-                      Kano Infrastructure Corp (₦2.1B - Score: 82.0)
+                      Kano Infrastructure Corp (��2.1B - Score: 82.0)
                     </option>
                   </select>
                 </div>
