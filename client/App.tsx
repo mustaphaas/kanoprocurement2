@@ -51,6 +51,15 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route path="/ministry/login" element={<MinistryLogin />} />
+            <Route
+              path="/ministry/dashboard"
+              element={
+                <ProtectedRoute requiredRole="ministry">
+                  <MinistryDashboard />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/superuser/login" element={<SuperUserLogin />} />
             <Route
               path="/superuser/dashboard"
