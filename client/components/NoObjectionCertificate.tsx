@@ -204,8 +204,113 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
   };
 
   const handleDownload = () => {
-    // In a real app, this would generate a PDF
-    alert("Certificate downloaded successfully!");
+    // Generate PDF using browser's print functionality
+    const certificateElement = document.querySelector('.certificate-preview');
+    if (!certificateElement) {
+      alert("Certificate preview not found. Please generate a preview first.");
+      return;
+    }
+
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert("Popup blocked. Please allow popups and try again.");
+      return;
+    }
+
+    // Get the certificate HTML content
+    const certificateHTML = certificateElement.outerHTML;
+
+    // Create a complete HTML document for the print window
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>No Objection Certificate - ${formData.certificateNumber}</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background: white;
+              -webkit-print-color-adjust: exact;
+              color-adjust: exact;
+            }
+            .certificate-preview {
+              max-width: none !important;
+              margin: 0 !important;
+              border: none !important;
+              box-shadow: none !important;
+            }
+            @media print {
+              body { margin: 0; padding: 0; }
+              .certificate-preview { border: none !important; }
+            }
+            /* Copy relevant Tailwind classes */
+            .text-center { text-align: center; }
+            .mb-8 { margin-bottom: 2rem; }
+            .mb-6 { margin-bottom: 1.5rem; }
+            .mb-4 { margin-bottom: 1rem; }
+            .mb-3 { margin-bottom: 0.75rem; }
+            .mb-2 { margin-bottom: 0.5rem; }
+            .mb-1 { margin-bottom: 0.25rem; }
+            .mt-8 { margin-top: 2rem; }
+            .mt-2 { margin-top: 0.5rem; }
+            .pt-4 { padding-top: 1rem; }
+            .p-8 { padding: 2rem; }
+            .p-3 { padding: 0.75rem; }
+            .bg-white { background-color: white; }
+            .border-b { border-bottom-width: 1px; }
+            .border-t { border-top-width: 1px; }
+            .border-gray-400 { border-color: #9ca3af; }
+            .border-gray-300 { border-color: #d1d5db; }
+            .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+            .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+            .text-base { font-size: 1rem; line-height: 1.5rem; }
+            .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+            .text-xs { font-size: 0.75rem; line-height: 1rem; }
+            .font-bold { font-weight: 700; }
+            .font-semibold { font-weight: 600; }
+            .font-medium { font-weight: 500; }
+            .text-green-700 { color: #15803d; }
+            .text-gray-900 { color: #111827; }
+            .text-gray-800 { color: #1f2937; }
+            .text-gray-700 { color: #374151; }
+            .text-gray-600 { color: #4b5563; }
+            .flex { display: flex; }
+            .justify-center { justify-content: center; }
+            .justify-between { justify-content: space-between; }
+            .items-center { align-items: center; }
+            .items-end { align-items: flex-end; }
+            .space-y-3 > * + * { margin-top: 0.75rem; }
+            .space-y-1 > * + * { margin-top: 0.25rem; }
+            .w-64 { width: 16rem; }
+            .h-24 { height: 6rem; }
+            .h-8 { height: 2rem; }
+            .w-auto { width: auto; }
+            .list-disc { list-style-type: disc; }
+            .ml-6 { margin-left: 1.5rem; }
+            .leading-relaxed { line-height: 1.625; }
+            .text-right { text-align: right; }
+          </style>
+        </head>
+        <body>
+          ${certificateHTML}
+          <script>
+            window.onload = function() {
+              // Auto-trigger print dialog
+              window.print();
+              // Close window after printing (or canceling)
+              window.onafterprint = function() {
+                window.close();
+              };
+            };
+          </script>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
   };
 
   const handleSaveCertificate = () => {
