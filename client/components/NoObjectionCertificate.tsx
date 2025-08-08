@@ -64,6 +64,101 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
   });
 
   const [showPreview, setShowPreview] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "approved" | "pending">("all");
+
+  // Mock companies data
+  const companies: Company[] = [
+    {
+      id: "1",
+      name: "Northern Construction Ltd",
+      contactPerson: "Ahmad Mahmoud",
+      email: "ahmad@northernconstruction.com",
+      projectTitle: "Kano-Zaria Highway Extension",
+      projectValue: "₦850,000,000",
+      projectLocation: "Kano North LGA",
+      status: "approved",
+      certificateNumber: "KNS/MOP/PNO/2024/001",
+      dateApproved: "2024-01-28",
+      dateRequested: "2024-01-20",
+      procuringEntity: "Ministry of Works"
+    },
+    {
+      id: "2",
+      name: "Sahel Medical Supplies",
+      contactPerson: "Fatima Yusuf",
+      email: "fatima@sahelmedical.com",
+      projectTitle: "Hospital Equipment Supply",
+      projectValue: "₦250,000,000",
+      projectLocation: "Gwale LGA, Kano State",
+      status: "approved",
+      certificateNumber: "KNS/MOP/PNO/2024/002",
+      dateApproved: "2024-01-27",
+      dateRequested: "2024-01-18",
+      procuringEntity: "Ministry of Health"
+    },
+    {
+      id: "3",
+      name: "TechSolutions Nigeria",
+      contactPerson: "Ibrahim Hassan",
+      email: "ibrahim@techsolutions.ng",
+      projectTitle: "ICT Infrastructure Upgrade",
+      projectValue: "₦1,200,000,000",
+      projectLocation: "Kano State Secretariat",
+      status: "approved",
+      certificateNumber: "KNS/MOP/PNO/2024/003",
+      dateApproved: "2024-01-25",
+      dateRequested: "2024-01-15",
+      procuringEntity: "Ministry of Science and Technology"
+    },
+    {
+      id: "4",
+      name: "Kano Infrastructure Corp",
+      contactPerson: "Musa Abdullahi",
+      email: "info@kanoinfra.com",
+      projectTitle: "Water Treatment Plant Construction",
+      projectValue: "₦650,000,000",
+      projectLocation: "Ungogo LGA",
+      status: "pending",
+      dateRequested: "2024-01-30",
+      procuringEntity: "Ministry of Water Resources"
+    },
+    {
+      id: "5",
+      name: "Alpha Engineering Services",
+      contactPerson: "Aisha Mohammed",
+      email: "projects@alphaeng.ng",
+      projectTitle: "School Building Renovation",
+      projectValue: "₦180,000,000",
+      projectLocation: "Tarauni LGA",
+      status: "pending",
+      dateRequested: "2024-02-01",
+      procuringEntity: "Ministry of Education"
+    },
+    {
+      id: "6",
+      name: "Delta Construction Ltd",
+      contactPerson: "Yunusa Bello",
+      email: "contracts@deltaconstruction.ng",
+      projectTitle: "Rural Road Development",
+      projectValue: "₦420,000,000",
+      projectLocation: "Kura LGA",
+      status: "pending",
+      dateRequested: "2024-02-02",
+      procuringEntity: "Ministry of Works"
+    }
+  ];
+
+  const filteredCompanies = companies.filter(company => {
+    const matchesSearch = company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         company.projectTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         company.contactPerson.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || company.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const approvedCount = companies.filter(c => c.status === "approved").length;
+  const pendingCount = companies.filter(c => c.status === "pending").length;
 
   const handleInputChange = (field: keyof NoObjectionCertificateData, value: string) => {
     setFormData(prev => ({
