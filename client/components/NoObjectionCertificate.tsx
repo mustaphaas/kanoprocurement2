@@ -323,7 +323,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
   const handleViewCompanyCertificate = (company: Company) => {
     if (company.status === "approved") {
       // Pre-populate form data with company information
-      setFormData({
+      const newFormData = {
         certificateNumber: company.certificateNumber || `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`,
         dateIssued: company.dateApproved || new Date().toISOString().split('T')[0],
         projectTitle: company.projectTitle,
@@ -336,9 +336,17 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
         expectedDuration: "12 months", // Default duration
         commissionerName: "Comrade Nura Iro Ma'aji",
         commissionerTitle: "Commissioner",
-      });
+      };
+      setFormData(newFormData);
       setViewingCompany(company);
-      setShowPreview(true);
+
+      // Scroll to certificate preview section
+      setTimeout(() => {
+        const previewElement = document.querySelector('.certificate-preview');
+        if (previewElement) {
+          previewElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
     } else {
       alert(`Certificate not available. This company's application is currently ${company.status}.`);
     }
