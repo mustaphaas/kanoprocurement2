@@ -66,6 +66,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
   const [showPreview, setShowPreview] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "approved" | "pending">("all");
+  const [viewingCompany, setViewingCompany] = useState<Company | null>(null);
 
   // Mock companies data
   const companies: Company[] = [
