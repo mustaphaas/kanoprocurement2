@@ -888,7 +888,17 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
         {/* Certificate Preview Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Certificate Preview</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>Certificate Preview</CardTitle>
+              {viewingCompany && (
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-sm text-green-700 font-medium">
+                    Viewing: {viewingCompany.name}
+                  </span>
+                </div>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             {formData.projectTitle && formData.contractorVendor ? (
