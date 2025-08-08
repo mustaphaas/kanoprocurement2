@@ -875,6 +875,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                   commissionerName: "Comrade Nura Iro Ma'aji",
                   commissionerTitle: "Commissioner / DG",
                 });
+                setViewingCompany(null);
               }}>
                 Clear Form
               </Button>
