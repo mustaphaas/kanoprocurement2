@@ -59,7 +59,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
     contractAmount: "",
     contractAmountWords: "",
     expectedDuration: "",
-    commissionerName: "",
+    commissionerName: "Comrade Nura Iro Ma'aji",
     commissionerTitle: "Commissioner / DG",
   });
 
