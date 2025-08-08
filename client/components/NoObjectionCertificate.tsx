@@ -234,6 +234,8 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       });
       setViewingCompany(company);
       setShowPreview(true);
+    } else {
+      alert(`Certificate not available. This company's application is currently ${company.status}.`);
     }
   };
 
