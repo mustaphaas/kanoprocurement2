@@ -392,8 +392,8 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
           </div>
           <h1 style="font-size: 1.25rem; font-weight: 700; color: #15803d; margin-bottom: 0.25rem; margin-top: 0;">KANO STATE GOVERNMENT</h1>
           <h2 style="font-size: 1.125rem; font-weight: 600; color: #15803d; margin-bottom: 0.25rem; margin-top: 0;">Ministry of Procurement, Project Monitoring & Evaluation</h2>
-          <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.25rem; margin-top: 0;">Government House, Kano State, Nigeria</p>
-          <p style="font-size: 0.875rem; color: #4b5563; margin-top: 0;">Tel: [Insert Phone] Email: [Insert Email] Website: [Insert Website]</p>
+          <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.25rem; margin-top: 0;">21 Magaji Rumfa Road, Kano</p>
+          <p style="font-size: 0.875rem; color: #4b5563; margin-top: 0;">Tel: 08065455715 Email: info@procurement.kn.gov.ng Website: www.eprocurement.kn.gov.ng</p>
         </div>
 
         <!-- Certificate Title -->
