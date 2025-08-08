@@ -116,12 +116,53 @@ interface ProtectedRouteProps {
   requiredRole?: 'admin' | 'superuser' | 'company' | 'ministry';
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  requiredRole 
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  requiredRole
 }) => {
   const { user, userProfile, loading } = useAuth();
 
+  // Handle ministry authentication separately (uses localStorage)
+  if (requiredRole === 'ministry') {
+    const ministryUser = localStorage.getItem('ministryUser');
+    if (!ministryUser) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="max-w-md w-full space-y-8 p-8">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-900">Access Denied</h2>
+              <p className="mt-2 text-gray-600">Please sign in to access this page.</p>
+              <div className="mt-4 p-4 bg-orange-50 rounded-lg text-sm text-orange-700">
+                <p><strong>Ministry Demo Credentials:</strong></p>
+                <p>Username: <code>ministry</code> / Password: <code>ministry123</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    try {
+      const parsedUser = JSON.parse(ministryUser);
+      if (parsedUser.role !== 'ministry') {
+        throw new Error('Invalid ministry role');
+      }
+    } catch {
+      localStorage.removeItem('ministryUser');
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="max-w-md w-full space-y-8 p-8 text-center">
+            <h2 className="text-3xl font-bold text-gray-900">Session Invalid</h2>
+            <p className="text-gray-600">Please sign in again.</p>
+          </div>
+        </div>
+      );
+    }
+
+    return <>{children}</>;
+  }
+
+  // Handle regular auth context authentication
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -142,8 +183,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             <p className="mt-2 text-gray-600">Please sign in to access this page.</p>
             <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
               <p><strong>Demo Credentials:</strong></p>
-              <p>Admin: username <code>admin</code> / password <code>admin123</code></p>
-              <p>Super User: username <code>superuser</code> / password <code>superuser123</code></p>
+              <p>Admin: username <code>admin</code> / password <code>password</code></p>
+              <p>Super User: username <code>superuser</code> / password <code>admin123</code></p>
               <p>Company: any email@domain.com / any password</p>
             </div>
           </div>
