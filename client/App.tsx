@@ -11,11 +11,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AllTenders from "./pages/AllTenders";
 import CompanyRegistration from "./pages/CompanyRegistration";
-import CompanyLogin from "./pages/CompanyLogin";
+import Login from "./pages/Login";
 import CompanyDashboard from "./pages/CompanyDashboard";
-import AdminLogin from "./pages/AdminLogin";
-import SuperUserLogin from "./pages/SuperUserLogin";
-import MinistryLogin from "./pages/MinistryLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
@@ -33,7 +30,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/tenders" element={<AllTenders />} />
             <Route path="/register" element={<CompanyRegistration />} />
-            <Route path="/login" element={<CompanyLogin />} />
+            <Route path="/login" element={<Login />} />
             <Route
               path="/company/dashboard"
               element={
@@ -42,7 +39,6 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin/dashboard"
               element={
@@ -51,7 +47,6 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route path="/ministry/login" element={<MinistryLogin />} />
             <Route
               path="/ministry/dashboard"
               element={
@@ -60,7 +55,6 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route path="/superuser/login" element={<SuperUserLogin />} />
             <Route
               path="/superuser/dashboard"
               element={
