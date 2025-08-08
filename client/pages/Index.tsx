@@ -260,7 +260,11 @@ export default function Index() {
               </button>
               <Link to="/login" className="hidden sm:flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:text-green-700">
                 <LogIn className="h-4 w-4 mr-2" />
-                Login
+                Company Login
+              </Link>
+              <Link to="/ministry/login" className="hidden sm:flex items-center px-4 py-2 border border-green-600 rounded-md text-sm font-medium text-green-700 hover:bg-green-50">
+                <Building2 className="h-4 w-4 mr-2" />
+                Ministry Portal
               </Link>
               <Link to="/register" className="hidden sm:flex items-center px-4 py-2 bg-green-700 text-white rounded-md text-sm font-medium hover:bg-green-800">
                 <UserPlus className="h-4 w-4 mr-2" />
