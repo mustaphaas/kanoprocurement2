@@ -31,6 +31,10 @@ const App = () => (
             <Route path="/tenders" element={<AllTenders />} />
             <Route path="/register" element={<CompanyRegistration />} />
             <Route path="/login" element={<Login />} />
+            {/* Redirect old login routes to unified login */}
+            <Route path="/admin/login" element={<Navigate to="/login" replace />} />
+            <Route path="/superuser/login" element={<Navigate to="/login" replace />} />
+            <Route path="/ministry/login" element={<Navigate to="/login" replace />} />
             <Route
               path="/company/dashboard"
               element={
