@@ -260,9 +260,17 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
               <Download className="h-4 w-4 mr-2" />
               Download PDF
             </Button>
-            <Button onClick={handleSaveCertificate}>
-              Save Certificate
-            </Button>
+            {!viewingCompany && (
+              <Button onClick={handleSaveCertificate}>
+                Save Certificate
+              </Button>
+            )}
+            {viewingCompany && (
+              <Button variant="outline">
+                <Eye className="h-4 w-4 mr-2" />
+                Certificate Issued
+              </Button>
+            )}
           </div>
         </div>
 
