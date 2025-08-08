@@ -274,6 +274,28 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
           </div>
         </div>
 
+        {/* Certificate Information Banner */}
+        {viewingCompany && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-4xl mx-auto mb-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-blue-900">
+                  Viewing Certificate for {viewingCompany.name}
+                </h3>
+                <p className="text-sm text-blue-700">
+                  Certificate Number: {formData.certificateNumber} |
+                  Status: <span className="font-medium">Approved</span> |
+                  Issued: {viewingCompany.dateApproved ? new Date(viewingCompany.dateApproved).toLocaleDateString() : 'N/A'}
+                </p>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-6 w-6 text-green-600 mr-2" />
+                <span className="text-sm font-medium text-green-700">Certificate Active</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Certificate Preview */}
         <div className="certificate-preview certificate-page bg-white border-2 border-gray-200 p-8 max-w-4xl mx-auto print:shadow-none print:border-none">
           {/* Header */}
