@@ -387,7 +387,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
           <div className="flex justify-between items-end">
             <div className="w-64">
               <div className="border-b border-gray-400 mb-2 h-8"></div>
-              <p className="text-sm text-gray-700">({formData.commissionerName})</p>
+              <p className="text-sm text-gray-700">Comrade Nura Iro Ma'aji</p>
               <p className="text-sm text-gray-700">{formData.commissionerTitle}</p>
             </div>
             <div className="text-right">
