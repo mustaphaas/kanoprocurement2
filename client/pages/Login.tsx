@@ -14,7 +14,7 @@ import {
   Shield,
   Crown,
   Users,
-  Zap
+  Zap,
 } from "lucide-react";
 
 type UserType = "company" | "admin" | "superuser" | "ministry";
@@ -51,9 +51,9 @@ const userTypes: UserTypeConfig[] = [
     useEmail: true,
     demoCredentials: {
       identifier: "approved@company.com",
-      password: "password123"
+      password: "password123",
     },
-    navigation: "/company/dashboard"
+    navigation: "/company/dashboard",
   },
   {
     id: "admin",
@@ -65,9 +65,9 @@ const userTypes: UserTypeConfig[] = [
     useEmail: false,
     demoCredentials: {
       identifier: "admin",
-      password: "password"
+      password: "password",
     },
-    navigation: "/admin/dashboard"
+    navigation: "/admin/dashboard",
   },
   {
     id: "superuser",
@@ -79,9 +79,9 @@ const userTypes: UserTypeConfig[] = [
     useEmail: false,
     demoCredentials: {
       identifier: "superuser",
-      password: "admin123"
+      password: "admin123",
     },
-    navigation: "/superuser/dashboard"
+    navigation: "/superuser/dashboard",
   },
   {
     id: "ministry",
@@ -93,10 +93,10 @@ const userTypes: UserTypeConfig[] = [
     useEmail: false,
     demoCredentials: {
       identifier: "ministry",
-      password: "ministry123"
+      password: "ministry123",
     },
-    navigation: "/ministry/dashboard"
-  }
+    navigation: "/ministry/dashboard",
+  },
 ];
 
 export default function Login() {
@@ -104,7 +104,7 @@ export default function Login() {
   const [formData, setFormData] = useState<LoginData>({
     email: "",
     username: "",
-    password: ""
+    password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -112,20 +112,20 @@ export default function Login() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
 
-  const currentConfig = userTypes.find(type => type.id === selectedUserType)!;
+  const currentConfig = userTypes.find((type) => type.id === selectedUserType)!;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
@@ -164,27 +164,42 @@ export default function Login() {
       if (selectedUserType === "ministry") {
         // Handle ministry login separately since it uses different auth logic
         setTimeout(() => {
-          const identifier = currentConfig.useEmail ? formData.email! : formData.username!;
-          if (identifier === currentConfig.demoCredentials.identifier && formData.password === currentConfig.demoCredentials.password) {
-            localStorage.setItem("ministryUser", JSON.stringify({
-              username: identifier,
-              role: "ministry"
-            }));
+          const identifier = currentConfig.useEmail
+            ? formData.email!
+            : formData.username!;
+          if (
+            identifier === currentConfig.demoCredentials.identifier &&
+            formData.password === currentConfig.demoCredentials.password
+          ) {
+            localStorage.setItem(
+              "ministryUser",
+              JSON.stringify({
+                username: identifier,
+                role: "ministry",
+              }),
+            );
             navigate(currentConfig.navigation);
           } else {
-            setErrors({ general: `Invalid credentials. Use: ${currentConfig.demoCredentials.identifier} / ${currentConfig.demoCredentials.password}` });
+            setErrors({
+              general: `Invalid credentials. Use: ${currentConfig.demoCredentials.identifier} / ${currentConfig.demoCredentials.password}`,
+            });
           }
           setIsLoading(false);
         }, 1000);
       } else {
         // Handle other login types with auth context
-        const identifier = currentConfig.useEmail ? formData.email! : formData.username!;
+        const identifier = currentConfig.useEmail
+          ? formData.email!
+          : formData.username!;
         await signIn(identifier, formData.password);
         navigate(currentConfig.navigation);
       }
     } catch (error) {
       setErrors({
-        general: error instanceof Error ? error.message : "Login failed. Please try again."
+        general:
+          error instanceof Error
+            ? error.message
+            : "Login failed. Please try again.",
       });
     } finally {
       if (selectedUserType !== "ministry") {
@@ -250,14 +265,22 @@ export default function Login() {
                 }`}
               >
                 <div className="flex flex-col items-center space-y-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    selectedUserType === type.id ? type.iconBg : "bg-gray-100 text-gray-400"
-                  }`}>
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      selectedUserType === type.id
+                        ? type.iconBg
+                        : "bg-gray-100 text-gray-400"
+                    }`}
+                  >
                     {type.icon}
                   </div>
-                  <span className={`text-xs font-medium ${
-                    selectedUserType === type.id ? "text-gray-800" : "text-gray-600"
-                  }`}>
+                  <span
+                    className={`text-xs font-medium ${
+                      selectedUserType === type.id
+                        ? "text-gray-800"
+                        : "text-gray-600"
+                    }`}
+                  >
                     {type.title.replace(" Login", "")}
                   </span>
                 </div>
@@ -273,14 +296,22 @@ export default function Login() {
 
         <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border">
           {/* Selected User Type Header */}
-          <div className={`mb-6 p-4 rounded-lg bg-gradient-to-br ${currentConfig.bgGradient} border`}>
+          <div
+            className={`mb-6 p-4 rounded-lg bg-gradient-to-br ${currentConfig.bgGradient} border`}
+          >
             <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${currentConfig.iconBg}`}>
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${currentConfig.iconBg}`}
+              >
                 {currentConfig.icon}
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">{currentConfig.title}</h3>
-                <p className="text-xs text-gray-600">{currentConfig.subtitle}</p>
+                <h3 className="font-semibold text-gray-900">
+                  {currentConfig.title}
+                </h3>
+                <p className="text-xs text-gray-600">
+                  {currentConfig.subtitle}
+                </p>
               </div>
             </div>
           </div>
@@ -320,10 +351,16 @@ export default function Login() {
                   type={currentConfig.useEmail ? "email" : "text"}
                   autoComplete={currentConfig.useEmail ? "email" : "username"}
                   required
-                  value={currentConfig.useEmail ? formData.email || "" : formData.username || ""}
+                  value={
+                    currentConfig.useEmail
+                      ? formData.email || ""
+                      : formData.username || ""
+                  }
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                    errors[currentConfig.useEmail ? "email" : "username"] ? "border-red-500" : "border-gray-300"
+                    errors[currentConfig.useEmail ? "email" : "username"]
+                      ? "border-red-500"
+                      : "border-gray-300"
                   }`}
                   placeholder={`Enter your ${currentConfig.useEmail ? "email" : "username"}`}
                 />
@@ -337,7 +374,10 @@ export default function Login() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
@@ -388,13 +428,19 @@ export default function Login() {
                     type="checkbox"
                     className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                   />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                  <label
+                    htmlFor="remember-me"
+                    className="ml-2 block text-sm text-gray-900"
+                  >
                     Remember me
                   </label>
                 </div>
 
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-green-600 hover:text-green-500">
+                  <a
+                    href="#"
+                    className="font-medium text-green-600 hover:text-green-500"
+                  >
                     Forgot your password?
                   </a>
                 </div>
@@ -404,7 +450,10 @@ export default function Login() {
             {selectedUserType !== "company" && (
               <div className="flex items-center justify-end">
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-green-600 hover:text-green-500">
+                  <a
+                    href="#"
+                    className="font-medium text-green-600 hover:text-green-500"
+                  >
                     Forgot your password?
                   </a>
                 </div>
@@ -468,16 +517,27 @@ export default function Login() {
 
       {/* Demo Credentials */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className={`bg-gradient-to-br ${currentConfig.bgGradient} border border-gray-200 rounded-lg p-4`}>
+        <div
+          className={`bg-gradient-to-br ${currentConfig.bgGradient} border border-gray-200 rounded-lg p-4`}
+        >
           <div className="flex items-start">
             <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5 mr-2 flex-shrink-0" />
             <div>
-              <h4 className="text-sm font-medium text-gray-900">Demo Credentials</h4>
+              <h4 className="text-sm font-medium text-gray-900">
+                Demo Credentials
+              </h4>
               <div className="mt-2">
                 <p className="text-xs text-gray-700">
-                  <strong>{currentConfig.useEmail ? "Email" : "Username"}:</strong>{" "}
+                  <strong>
+                    {currentConfig.useEmail ? "Email" : "Username"}:
+                  </strong>{" "}
                   <button
-                    onClick={() => fillTestAccount(currentConfig.demoCredentials.identifier, currentConfig.demoCredentials.password)}
+                    onClick={() =>
+                      fillTestAccount(
+                        currentConfig.demoCredentials.identifier,
+                        currentConfig.demoCredentials.password,
+                      )
+                    }
                     className="bg-white px-2 py-1 rounded text-xs hover:bg-gray-50 cursor-pointer transition-colors border"
                   >
                     {currentConfig.demoCredentials.identifier}
@@ -491,7 +551,9 @@ export default function Login() {
                 </p>
               </div>
               <p className="text-xs text-gray-600 mt-2">
-                💡 <strong>Quick Login:</strong> Click the {currentConfig.useEmail ? "email" : "username"} above to auto-fill the form
+                💡 <strong>Quick Login:</strong> Click the{" "}
+                {currentConfig.useEmail ? "email" : "username"} above to
+                auto-fill the form
               </p>
             </div>
           </div>
@@ -505,7 +567,8 @@ export default function Login() {
               Test Company Accounts
             </h3>
             <p className="text-sm text-blue-700 mb-4 text-center">
-              Login with these test accounts to experience different company statuses
+              Login with these test accounts to experience different company
+              statuses
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -517,7 +580,7 @@ export default function Login() {
                   password: "password123",
                   bgColor: "bg-green-50 border-green-200",
                   textColor: "text-green-900",
-                  buttonBg: "bg-green-100 hover:bg-green-200"
+                  buttonBg: "bg-green-100 hover:bg-green-200",
                 },
                 {
                   status: "🔵 Pending Approval",
@@ -526,7 +589,7 @@ export default function Login() {
                   password: "password123",
                   bgColor: "bg-blue-50 border-blue-200",
                   textColor: "text-blue-900",
-                  buttonBg: "bg-blue-100 hover:bg-blue-200"
+                  buttonBg: "bg-blue-100 hover:bg-blue-200",
                 },
                 {
                   status: "🟠 Suspended Account",
@@ -535,7 +598,7 @@ export default function Login() {
                   password: "password123",
                   bgColor: "bg-orange-50 border-orange-200",
                   textColor: "text-orange-900",
-                  buttonBg: "bg-orange-100 hover:bg-orange-200"
+                  buttonBg: "bg-orange-100 hover:bg-orange-200",
                 },
                 {
                   status: "🔴 Blacklisted Account",
@@ -544,32 +607,45 @@ export default function Login() {
                   password: "password123",
                   bgColor: "bg-red-50 border-red-200",
                   textColor: "text-red-900",
-                  buttonBg: "bg-red-100 hover:bg-red-200"
-                }
+                  buttonBg: "bg-red-100 hover:bg-red-200",
+                },
               ].map((account, index) => (
-                <div key={index} className={`${account.bgColor} border rounded-lg p-4`}>
+                <div
+                  key={index}
+                  className={`${account.bgColor} border rounded-lg p-4`}
+                >
                   <div className="flex items-center mb-2">
                     <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
                     <h4 className={`font-medium ${account.textColor}`}>
                       {account.status}
                     </h4>
                   </div>
-                  <p className={`text-xs ${account.textColor.replace('900', '700')} mb-3`}>
+                  <p
+                    className={`text-xs ${account.textColor.replace("900", "700")} mb-3`}
+                  >
                     {account.description}
                   </p>
                   <div className="space-y-1">
-                    <p className={`text-sm ${account.textColor.replace('900', '800')}`}>
+                    <p
+                      className={`text-sm ${account.textColor.replace("900", "800")}`}
+                    >
                       <strong>Email:</strong>{" "}
                       <button
-                        onClick={() => fillTestAccount(account.email, account.password)}
+                        onClick={() =>
+                          fillTestAccount(account.email, account.password)
+                        }
                         className={`${account.buttonBg} px-1 rounded text-xs cursor-pointer transition-colors`}
                       >
                         {account.email}
                       </button>
                     </p>
-                    <p className={`text-sm ${account.textColor.replace('900', '800')}`}>
+                    <p
+                      className={`text-sm ${account.textColor.replace("900", "800")}`}
+                    >
                       <strong>Password:</strong>{" "}
-                      <code className={`${account.buttonBg.split(' ')[0]} px-1 rounded text-xs`}>
+                      <code
+                        className={`${account.buttonBg.split(" ")[0]} px-1 rounded text-xs`}
+                      >
                         {account.password}
                       </code>
                     </p>

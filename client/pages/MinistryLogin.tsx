@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Building2, User, Lock, Eye, EyeOff, ArrowLeft, AlertCircle } from "lucide-react";
+import {
+  Building2,
+  User,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  AlertCircle,
+} from "lucide-react";
 
 interface LoginData {
   username: string;
@@ -10,7 +18,7 @@ interface LoginData {
 export default function MinistryLogin() {
   const [formData, setFormData] = useState<LoginData>({
     username: "",
-    password: ""
+    password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -19,16 +27,16 @@ export default function MinistryLogin() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
@@ -58,20 +66,33 @@ export default function MinistryLogin() {
     try {
       // Simulate authentication
       setTimeout(() => {
-        if (formData.username === "ministry" && formData.password === "ministry123") {
+        if (
+          formData.username === "ministry" &&
+          formData.password === "ministry123"
+        ) {
           // Store ministry info in localStorage for demo
-          localStorage.setItem("ministryUser", JSON.stringify({
-            username: formData.username,
-            role: "ministry"
-          }));
+          localStorage.setItem(
+            "ministryUser",
+            JSON.stringify({
+              username: formData.username,
+              role: "ministry",
+            }),
+          );
           navigate("/ministry/dashboard");
         } else {
-          setErrors({ general: "Invalid credentials. Use: ministry / ministry123" });
+          setErrors({
+            general: "Invalid credentials. Use: ministry / ministry123",
+          });
         }
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      setErrors({ general: error instanceof Error ? error.message : "Login failed. Please try again." });
+      setErrors({
+        general:
+          error instanceof Error
+            ? error.message
+            : "Login failed. Please try again.",
+      });
       setIsLoading(false);
     }
   };
@@ -116,7 +137,10 @@ export default function MinistryLogin() {
             )}
 
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <div className="mt-1 relative">
@@ -132,7 +156,7 @@ export default function MinistryLogin() {
                   value={formData.username}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                    errors.username ? 'border-red-500' : 'border-gray-300'
+                    errors.username ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter your username"
                 />
@@ -146,7 +170,10 @@ export default function MinistryLogin() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
@@ -162,7 +189,7 @@ export default function MinistryLogin() {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                    errors.password ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter your password"
                 />
@@ -190,7 +217,10 @@ export default function MinistryLogin() {
 
             <div className="flex items-center justify-between">
               <div className="text-sm">
-                <a href="#" className="font-medium text-green-600 hover:text-green-500">
+                <a
+                  href="#"
+                  className="font-medium text-green-600 hover:text-green-500"
+                >
                   Forgot your password?
                 </a>
               </div>
@@ -220,7 +250,9 @@ export default function MinistryLogin() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Other access</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Other access
+                </span>
               </div>
             </div>
 
@@ -258,9 +290,12 @@ export default function MinistryLogin() {
           <div className="flex items-start">
             <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
             <div>
-              <h4 className="text-sm font-medium text-blue-900">Demo Credentials</h4>
+              <h4 className="text-sm font-medium text-blue-900">
+                Demo Credentials
+              </h4>
               <p className="text-xs text-blue-700 mt-1">
-                Username: ministry<br />
+                Username: ministry
+                <br />
                 Password: ministry123
               </p>
             </div>

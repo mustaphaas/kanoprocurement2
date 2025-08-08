@@ -11,7 +11,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FileText, Printer, Download, Calendar, Building2, CheckCircle, Clock, Eye, Search, Filter } from "lucide-react";
+import {
+  FileText,
+  Printer,
+  Download,
+  Calendar,
+  Building2,
+  CheckCircle,
+  Clock,
+  Eye,
+  Search,
+  Filter,
+} from "lucide-react";
 
 interface NoObjectionCertificateData {
   certificateNumber: string;
@@ -47,10 +58,12 @@ interface NoObjectionCertificateProps {
   onGenerateCertificate?: (data: NoObjectionCertificateData) => void;
 }
 
-export default function NoObjectionCertificate({ onGenerateCertificate }: NoObjectionCertificateProps) {
+export default function NoObjectionCertificate({
+  onGenerateCertificate,
+}: NoObjectionCertificateProps) {
   const [formData, setFormData] = useState<NoObjectionCertificateData>({
-    certificateNumber: `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`,
-    dateIssued: new Date().toISOString().split('T')[0],
+    certificateNumber: `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, "0")}`,
+    dateIssued: new Date().toISOString().split("T")[0],
     projectTitle: "",
     projectReferenceNumber: "",
     procuringEntity: "",
@@ -65,7 +78,9 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
 
   const [showPreview, setShowPreview] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "approved" | "pending">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "approved" | "pending"
+  >("all");
   const [viewingCompany, setViewingCompany] = useState<Company | null>(null);
 
   // Mock companies data
@@ -82,7 +97,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       certificateNumber: "KNS/MOP/PNO/2024/001",
       dateApproved: "2024-01-28",
       dateRequested: "2024-01-20",
-      procuringEntity: "Ministry of Works"
+      procuringEntity: "Ministry of Works",
     },
     {
       id: "2",
@@ -96,7 +111,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       certificateNumber: "KNS/MOP/PNO/2024/002",
       dateApproved: "2024-01-27",
       dateRequested: "2024-01-18",
-      procuringEntity: "Ministry of Health"
+      procuringEntity: "Ministry of Health",
     },
     {
       id: "3",
@@ -110,7 +125,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       certificateNumber: "KNS/MOP/PNO/2024/003",
       dateApproved: "2024-01-25",
       dateRequested: "2024-01-15",
-      procuringEntity: "Ministry of Science and Technology"
+      procuringEntity: "Ministry of Science and Technology",
     },
     {
       id: "4",
@@ -122,7 +137,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       projectLocation: "Ungogo LGA",
       status: "pending",
       dateRequested: "2024-01-30",
-      procuringEntity: "Ministry of Water Resources"
+      procuringEntity: "Ministry of Water Resources",
     },
     {
       id: "5",
@@ -134,7 +149,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       projectLocation: "Tarauni LGA",
       status: "pending",
       dateRequested: "2024-02-01",
-      procuringEntity: "Ministry of Education"
+      procuringEntity: "Ministry of Education",
     },
     {
       id: "6",
@@ -146,36 +161,41 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       projectLocation: "Kura LGA",
       status: "pending",
       dateRequested: "2024-02-02",
-      procuringEntity: "Ministry of Works"
-    }
+      procuringEntity: "Ministry of Works",
+    },
   ];
 
-  const filteredCompanies = companies.filter(company => {
-    const matchesSearch = company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         company.projectTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         company.contactPerson.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || company.status === statusFilter;
+  const filteredCompanies = companies.filter((company) => {
+    const matchesSearch =
+      company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      company.projectTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      company.contactPerson.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || company.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  const approvedCount = companies.filter(c => c.status === "approved").length;
-  const pendingCount = companies.filter(c => c.status === "pending").length;
+  const approvedCount = companies.filter((c) => c.status === "approved").length;
+  const pendingCount = companies.filter((c) => c.status === "pending").length;
 
-  const handleInputChange = (field: keyof NoObjectionCertificateData, value: string) => {
-    setFormData(prev => ({
+  const handleInputChange = (
+    field: keyof NoObjectionCertificateData,
+    value: string,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const numberToWords = (amount: string): string => {
-    const numAmount = parseFloat(amount.replace(/[₦,]/g, ''));
+    const numAmount = parseFloat(amount.replace(/[₦,]/g, ""));
     if (isNaN(numAmount)) return "";
-    
+
     // Simple conversion for demonstration - in real app, use a proper library
     const millions = Math.floor(numAmount / 1000000);
     const remainder = numAmount % 1000000;
-    
+
     if (millions > 0) {
       return `${millions} Million Naira`;
     }
@@ -183,8 +203,8 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
   };
 
   const handleAmountChange = (value: string) => {
-    handleInputChange('contractAmount', value);
-    handleInputChange('contractAmountWords', numberToWords(value));
+    handleInputChange("contractAmount", value);
+    handleInputChange("contractAmountWords", numberToWords(value));
   };
 
   const handleGeneratePreview = () => {
@@ -193,11 +213,11 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
 
   const handlePrint = () => {
     // Add print-area class to the certificate for better printing
-    const certificateElement = document.querySelector('.certificate-preview');
+    const certificateElement = document.querySelector(".certificate-preview");
     if (certificateElement) {
-      certificateElement.classList.add('print-area');
+      certificateElement.classList.add("print-area");
       window.print();
-      certificateElement.classList.remove('print-area');
+      certificateElement.classList.remove("print-area");
     } else {
       window.print();
     }
@@ -205,14 +225,14 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
 
   const handleDownload = () => {
     // Generate PDF using browser's print functionality
-    const certificateElement = document.querySelector('.certificate-preview');
+    const certificateElement = document.querySelector(".certificate-preview");
     if (!certificateElement) {
       alert("Certificate preview not found. Please generate a preview first.");
       return;
     }
 
     // Create a new window for printing
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (!printWindow) {
       alert("Popup blocked. Please allow popups and try again.");
       return;
@@ -324,10 +344,13 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
     if (company.status === "approved") {
       // Pre-populate form data with company information
       const newFormData = {
-        certificateNumber: company.certificateNumber || `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`,
-        dateIssued: company.dateApproved || new Date().toISOString().split('T')[0],
+        certificateNumber:
+          company.certificateNumber ||
+          `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, "0")}`,
+        dateIssued:
+          company.dateApproved || new Date().toISOString().split("T")[0],
         projectTitle: company.projectTitle,
-        projectReferenceNumber: `${company.procuringEntity.split(' ')[0].toUpperCase()}/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 99) + 1).padStart(2, '0')}`,
+        projectReferenceNumber: `${company.procuringEntity.split(" ")[0].toUpperCase()}/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 99) + 1).padStart(2, "0")}`,
         procuringEntity: company.procuringEntity,
         projectLocation: company.projectLocation,
         contractorVendor: company.name,
@@ -342,13 +365,18 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
 
       // Scroll to certificate preview section
       setTimeout(() => {
-        const previewElement = document.querySelector('.certificate-preview');
+        const previewElement = document.querySelector(".certificate-preview");
         if (previewElement) {
-          previewElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          previewElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         }
       }, 100);
     } else {
-      alert(`Certificate not available. This company's application is currently ${company.status}.`);
+      alert(
+        `Certificate not available. This company's application is currently ${company.status}.`,
+      );
     }
   };
 
@@ -356,10 +384,13 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
     if (company.status === "approved") {
       // Temporarily set form data for this company and trigger download
       const tempFormData = {
-        certificateNumber: company.certificateNumber || `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`,
-        dateIssued: company.dateApproved || new Date().toISOString().split('T')[0],
+        certificateNumber:
+          company.certificateNumber ||
+          `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, "0")}`,
+        dateIssued:
+          company.dateApproved || new Date().toISOString().split("T")[0],
         projectTitle: company.projectTitle,
-        projectReferenceNumber: `${company.procuringEntity.split(' ')[0].toUpperCase()}/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 99) + 1).padStart(2, '0')}`,
+        projectReferenceNumber: `${company.procuringEntity.split(" ")[0].toUpperCase()}/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 99) + 1).padStart(2, "0")}`,
         procuringEntity: company.procuringEntity,
         projectLocation: company.projectLocation,
         contractorVendor: company.name,
@@ -372,9 +403,14 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
 
       // Generate certificate HTML for download
       const certificateHTML = generateCertificateHTML(tempFormData);
-      downloadCertificateAsPDF(certificateHTML, `NOC_${company.certificateNumber || company.name.replace(/\s+/g, '_')}`);
+      downloadCertificateAsPDF(
+        certificateHTML,
+        `NOC_${company.certificateNumber || company.name.replace(/\s+/g, "_")}`,
+      );
     } else {
-      alert(`Cannot download certificate. This company's application is currently ${company.status}.`);
+      alert(
+        `Cannot download certificate. This company's application is currently ${company.status}.`,
+      );
     }
   };
 
@@ -401,7 +437,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
           <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 1rem; margin-top: 0;">NO OBJECTION CERTIFICATE</h3>
           <div style="display: flex; justify-content: space-between; font-size: 0.875rem; color: #374151; margin-bottom: 1rem;">
             <span>Certificate No: ${data.certificateNumber}</span>
-            <span>Date Issued: ${new Date(data.dateIssued).toLocaleDateString('en-GB')}</span>
+            <span>Date Issued: ${new Date(data.dateIssued).toLocaleDateString("en-GB")}</span>
           </div>
         </div>
 
@@ -451,7 +487,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
             <p style="font-size: 0.875rem; color: #374151; margin: 0;">${data.commissionerTitle}</p>
           </div>
           <div style="text-align: right;">
-            <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.5rem; margin-top: 0;">Date: ${new Date(data.dateIssued).toLocaleDateString('en-GB')}</p>
+            <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.5rem; margin-top: 0;">Date: ${new Date(data.dateIssued).toLocaleDateString("en-GB")}</p>
           </div>
         </div>
 
@@ -468,7 +504,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
 
   const downloadCertificateAsPDF = (htmlContent: string, filename: string) => {
     // Create a new window for printing/downloading
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (!printWindow) {
       alert("Popup blocked. Please allow popups and try again.");
       return;
@@ -510,14 +546,18 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
     printWindow.document.close();
   };
 
-
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">No Objection Certificate Management</h1>
-          <p className="text-gray-600">Manage and generate No Objection Certificates for procurement projects</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            No Objection Certificate Management
+          </h1>
+          <p className="text-gray-600">
+            Manage and generate No Objection Certificates for procurement
+            projects
+          </p>
         </div>
         <div className="flex items-center space-x-3">
           <Button variant="outline" onClick={handlePrint}>
@@ -538,8 +578,12 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-green-600" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">Approved Certificates</p>
-                <p className="text-2xl font-bold text-gray-900">{approvedCount}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Approved Certificates
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {approvedCount}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -549,8 +593,12 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
             <div className="flex items-center">
               <Clock className="h-8 w-8 text-yellow-600" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">Pending Approval</p>
-                <p className="text-2xl font-bold text-gray-900">{pendingCount}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Pending Approval
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {pendingCount}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -560,8 +608,12 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
             <div className="flex items-center">
               <Building2 className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">Total Companies</p>
-                <p className="text-2xl font-bold text-gray-900">{companies.length}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Companies
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {companies.length}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -572,7 +624,9 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Companies with No Objection Certificate Status</CardTitle>
+            <CardTitle>
+              Companies with No Objection Certificate Status
+            </CardTitle>
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -583,7 +637,12 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <Select value={statusFilter} onValueChange={(value: "all" | "approved" | "pending") => setStatusFilter(value)}>
+              <Select
+                value={statusFilter}
+                onValueChange={(value: "all" | "approved" | "pending") =>
+                  setStatusFilter(value)
+                }
+              >
                 <SelectTrigger className="w-40">
                   <SelectValue />
                 </SelectTrigger>
@@ -623,17 +682,31 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                   <tr key={company.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{company.name}</div>
-                        <div className="text-sm text-gray-500">{company.contactPerson}</div>
-                        <div className="text-sm text-gray-500">{company.email}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {company.name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {company.contactPerson}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {company.email}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{company.projectTitle}</div>
-                        <div className="text-sm text-gray-500">Value: {company.projectValue}</div>
-                        <div className="text-sm text-gray-500">Location: {company.projectLocation}</div>
-                        <div className="text-sm text-gray-500">Entity: {company.procuringEntity}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {company.projectTitle}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Value: {company.projectValue}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Location: {company.projectLocation}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Entity: {company.procuringEntity}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -642,16 +715,22 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                           company.status === "approved"
                             ? "bg-green-100 text-green-800"
                             : company.status === "pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {company.status === "approved" && <CheckCircle className="h-3 w-3 mr-1" />}
-                        {company.status === "pending" && <Clock className="h-3 w-3 mr-1" />}
-                        {company.status.charAt(0).toUpperCase() + company.status.slice(1)}
+                        {company.status === "approved" && (
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                        )}
+                        {company.status === "pending" && (
+                          <Clock className="h-3 w-3 mr-1" />
+                        )}
+                        {company.status.charAt(0).toUpperCase() +
+                          company.status.slice(1)}
                       </span>
                       <div className="text-xs text-gray-500 mt-1">
-                        Requested: {new Date(company.dateRequested).toLocaleDateString()}
+                        Requested:{" "}
+                        {new Date(company.dateRequested).toLocaleDateString()}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -661,7 +740,12 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                             {company.certificateNumber}
                           </div>
                           <div className="text-xs text-gray-500">
-                            Approved: {company.dateApproved ? new Date(company.dateApproved).toLocaleDateString() : ""}
+                            Approved:{" "}
+                            {company.dateApproved
+                              ? new Date(
+                                  company.dateApproved,
+                                ).toLocaleDateString()
+                              : ""}
                           </div>
                         </div>
                       ) : (
@@ -677,13 +761,17 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                         onClick={() => handleViewCompanyCertificate(company)}
                       >
                         <Eye className="h-3 w-3 mr-1" />
-                        {company.status === "approved" ? "View Certificate" : "View Details"}
+                        {company.status === "approved"
+                          ? "View Certificate"
+                          : "View Details"}
                       </Button>
                       {company.status === "approved" && (
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleDownloadCompanyCertificate(company)}
+                          onClick={() =>
+                            handleDownloadCompanyCertificate(company)
+                          }
                         >
                           <Download className="h-3 w-3 mr-1" />
                           Download
@@ -705,7 +793,9 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
           {filteredCompanies.length === 0 && (
             <div className="text-center py-12">
               <Building2 className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No companies found</h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                No companies found
+              </h3>
               <p className="mt-1 text-sm text-gray-500">
                 {searchTerm || statusFilter !== "all"
                   ? "Try adjusting your search or filter criteria."
@@ -733,7 +823,9 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                 <Input
                   id="certificateNumber"
                   value={formData.certificateNumber}
-                  onChange={(e) => handleInputChange('certificateNumber', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("certificateNumber", e.target.value)
+                  }
                 />
               </div>
               <div>
@@ -742,7 +834,9 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                   id="dateIssued"
                   type="date"
                   value={formData.dateIssued}
-                  onChange={(e) => handleInputChange('dateIssued', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("dateIssued", e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -752,35 +846,60 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
               <Input
                 id="projectTitle"
                 value={formData.projectTitle}
-                onChange={(e) => handleInputChange('projectTitle', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("projectTitle", e.target.value)
+                }
                 placeholder="e.g., Construction of a New District Hospital"
               />
             </div>
 
             <div>
-              <Label htmlFor="projectReferenceNumber">Project Reference Number</Label>
+              <Label htmlFor="projectReferenceNumber">
+                Project Reference Number
+              </Label>
               <Input
                 id="projectReferenceNumber"
                 value={formData.projectReferenceNumber}
-                onChange={(e) => handleInputChange('projectReferenceNumber', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("projectReferenceNumber", e.target.value)
+                }
                 placeholder="e.g., KNH/PROC/24/01"
               />
             </div>
 
             <div>
               <Label htmlFor="procuringEntity">Procuring Entity</Label>
-              <Select value={formData.procuringEntity} onValueChange={(value) => handleInputChange('procuringEntity', value)}>
+              <Select
+                value={formData.procuringEntity}
+                onValueChange={(value) =>
+                  handleInputChange("procuringEntity", value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select procuring entity" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Ministry of Health">Ministry of Health</SelectItem>
-                  <SelectItem value="Ministry of Education">Ministry of Education</SelectItem>
-                  <SelectItem value="Ministry of Works">Ministry of Works</SelectItem>
-                  <SelectItem value="Ministry of Agriculture">Ministry of Agriculture</SelectItem>
-                  <SelectItem value="Ministry of Water Resources">Ministry of Water Resources</SelectItem>
-                  <SelectItem value="Kano State Primary Healthcare Development Agency">Kano State Primary Healthcare Development Agency</SelectItem>
-                  <SelectItem value="Kano State Universal Basic Education Board">Kano State Universal Basic Education Board</SelectItem>
+                  <SelectItem value="Ministry of Health">
+                    Ministry of Health
+                  </SelectItem>
+                  <SelectItem value="Ministry of Education">
+                    Ministry of Education
+                  </SelectItem>
+                  <SelectItem value="Ministry of Works">
+                    Ministry of Works
+                  </SelectItem>
+                  <SelectItem value="Ministry of Agriculture">
+                    Ministry of Agriculture
+                  </SelectItem>
+                  <SelectItem value="Ministry of Water Resources">
+                    Ministry of Water Resources
+                  </SelectItem>
+                  <SelectItem value="Kano State Primary Healthcare Development Agency">
+                    Kano State Primary Healthcare Development Agency
+                  </SelectItem>
+                  <SelectItem value="Kano State Universal Basic Education Board">
+                    Kano State Universal Basic Education Board
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -790,7 +909,9 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
               <Input
                 id="projectLocation"
                 value={formData.projectLocation}
-                onChange={(e) => handleInputChange('projectLocation', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("projectLocation", e.target.value)
+                }
                 placeholder="e.g., Gwale LGA, Kano State"
               />
             </div>
@@ -800,7 +921,9 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
               <Input
                 id="contractorVendor"
                 value={formData.contractorVendor}
-                onChange={(e) => handleInputChange('contractorVendor', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("contractorVendor", e.target.value)
+                }
                 placeholder="e.g., Acme Builders Ltd."
               />
             </div>
@@ -816,11 +939,15 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
             </div>
 
             <div>
-              <Label htmlFor="contractAmountWords">Contract Amount (Words)</Label>
+              <Label htmlFor="contractAmountWords">
+                Contract Amount (Words)
+              </Label>
               <Input
                 id="contractAmountWords"
                 value={formData.contractAmountWords}
-                onChange={(e) => handleInputChange('contractAmountWords', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("contractAmountWords", e.target.value)
+                }
                 placeholder="e.g., Two Hundred and Fifty Million Naira"
               />
             </div>
@@ -830,7 +957,9 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
               <Input
                 id="expectedDuration"
                 value={formData.expectedDuration}
-                onChange={(e) => handleInputChange('expectedDuration', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("expectedDuration", e.target.value)
+                }
                 placeholder="e.g., 12 months"
               />
             </div>
@@ -840,46 +969,61 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
               <Input
                 id="commissionerName"
                 value={formData.commissionerName}
-                onChange={(e) => handleInputChange('commissionerName', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("commissionerName", e.target.value)
+                }
                 placeholder="Name of Hon. Commissioner or DG"
               />
             </div>
 
             <div>
               <Label htmlFor="commissionerTitle">Commissioner/DG Title</Label>
-              <Select value={formData.commissionerTitle} onValueChange={(value) => handleInputChange('commissionerTitle', value)}>
+              <Select
+                value={formData.commissionerTitle}
+                onValueChange={(value) =>
+                  handleInputChange("commissionerTitle", value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Commissioner">Commissioner</SelectItem>
                   <SelectItem value="DG">DG</SelectItem>
-                  <SelectItem value="Commissioner / DG">Commissioner / DG</SelectItem>
+                  <SelectItem value="Commissioner / DG">
+                    Commissioner / DG
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">
-              <Button variant="outline" onClick={() => {
-                setFormData({
-                  certificateNumber: `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`,
-                  dateIssued: new Date().toISOString().split('T')[0],
-                  projectTitle: "",
-                  projectReferenceNumber: "",
-                  procuringEntity: "",
-                  projectLocation: "",
-                  contractorVendor: "",
-                  contractAmount: "",
-                  contractAmountWords: "",
-                  expectedDuration: "",
-                  commissionerName: "Comrade Nura Iro Ma'aji",
-                  commissionerTitle: "Commissioner / DG",
-                });
-                setViewingCompany(null);
-              }}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setFormData({
+                    certificateNumber: `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, "0")}`,
+                    dateIssued: new Date().toISOString().split("T")[0],
+                    projectTitle: "",
+                    projectReferenceNumber: "",
+                    procuringEntity: "",
+                    projectLocation: "",
+                    contractorVendor: "",
+                    contractAmount: "",
+                    contractAmountWords: "",
+                    expectedDuration: "",
+                    commissionerName: "Comrade Nura Iro Ma'aji",
+                    commissionerTitle: "Commissioner / DG",
+                  });
+                  setViewingCompany(null);
+                }}
+              >
                 Clear Form
               </Button>
-              <Button onClick={handleSaveCertificate} disabled={!formData.projectTitle || !formData.contractorVendor}>
+              <Button
+                onClick={handleSaveCertificate}
+                disabled={!formData.projectTitle || !formData.contractorVendor}
+              >
                 Save Certificate
               </Button>
             </div>
@@ -903,7 +1047,10 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
           </CardHeader>
           <CardContent>
             {formData.projectTitle && formData.contractorVendor ? (
-              <div className="certificate-preview certificate-page bg-white border border-gray-200 p-6 max-w-full mx-auto print:shadow-none print:border-none" style={{ fontSize: '12px' }}>
+              <div
+                className="certificate-preview certificate-page bg-white border border-gray-200 p-6 max-w-full mx-auto print:shadow-none print:border-none"
+                style={{ fontSize: "12px" }}
+              >
                 {/* Header */}
                 <div className="text-center mb-6">
                   <div className="flex justify-center mb-3">
@@ -913,56 +1060,99 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                       className="h-16 w-auto"
                     />
                   </div>
-                  <h1 className="text-base font-bold text-green-700 mb-1">KANO STATE GOVERNMENT</h1>
-                  <h2 className="text-sm font-semibold text-green-700 mb-1">Ministry of Procurement, Project Monitoring & Evaluation</h2>
-                  <p className="text-xs text-gray-700 mb-1">21 Magaji Rumfa Road, Kano</p>
-                  <p className="text-xs text-gray-600">Tel: 08065455715 Email: info@procurement.kn.gov.ng Website: www.eprocurement.kn.gov.ng</p>
+                  <h1 className="text-base font-bold text-green-700 mb-1">
+                    KANO STATE GOVERNMENT
+                  </h1>
+                  <h2 className="text-sm font-semibold text-green-700 mb-1">
+                    Ministry of Procurement, Project Monitoring & Evaluation
+                  </h2>
+                  <p className="text-xs text-gray-700 mb-1">
+                    21 Magaji Rumfa Road, Kano
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    Tel: 08065455715 Email: info@procurement.kn.gov.ng Website:
+                    www.eprocurement.kn.gov.ng
+                  </p>
                 </div>
 
                 {/* Certificate Title */}
                 <div className="text-center mb-4">
-                  <h3 className="text-base font-bold text-gray-900 mb-3">NO OBJECTION CERTIFICATE</h3>
+                  <h3 className="text-base font-bold text-gray-900 mb-3">
+                    NO OBJECTION CERTIFICATE
+                  </h3>
                   <div className="flex justify-between text-xs text-gray-700 mb-3">
                     <span>Certificate No: {formData.certificateNumber}</span>
-                    <span>Date Issued: {new Date(formData.dateIssued).toLocaleDateString('en-GB')}</span>
+                    <span>
+                      Date Issued:{" "}
+                      {new Date(formData.dateIssued).toLocaleDateString(
+                        "en-GB",
+                      )}
+                    </span>
                   </div>
                 </div>
 
                 {/* Certificate Body */}
                 <div className="mb-4 text-xs text-gray-800 leading-relaxed">
                   <p className="mb-3">
-                    This is to certify that no objection is hereby granted by the Kano State
-                    Ministry of Procurement, Project Monitoring and Evaluation for procurement
-                    and award of the following project:
+                    This is to certify that no objection is hereby granted by
+                    the Kano State Ministry of Procurement, Project Monitoring
+                    and Evaluation for procurement and award of the following
+                    project:
                   </p>
 
                   <div className="space-y-2 mb-4">
-                    <div><span className="font-semibold">Project Title:</span> {formData.projectTitle}</div>
-                    <div><span className="font-semibold">Project Reference Number:</span> {formData.projectReferenceNumber}</div>
-                    <div><span className="font-semibold">Procuring Entity:</span> {formData.procuringEntity}</div>
-                    <div><span className="font-semibold">Project Location:</span> {formData.projectLocation}</div>
-                    <div><span className="font-semibold">Contractor/Vendor:</span> {formData.contractorVendor}</div>
-                    <div><span className="font-semibold">Contract Amount:</span> {formData.contractAmount} ({formData.contractAmountWords})</div>
-                    <div><span className="font-semibold">Expected Duration:</span> {formData.expectedDuration}</div>
+                    <div>
+                      <span className="font-semibold">Project Title:</span>{" "}
+                      {formData.projectTitle}
+                    </div>
+                    <div>
+                      <span className="font-semibold">
+                        Project Reference Number:
+                      </span>{" "}
+                      {formData.projectReferenceNumber}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Procuring Entity:</span>{" "}
+                      {formData.procuringEntity}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Project Location:</span>{" "}
+                      {formData.projectLocation}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Contractor/Vendor:</span>{" "}
+                      {formData.contractorVendor}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Contract Amount:</span>{" "}
+                      {formData.contractAmount} ({formData.contractAmountWords})
+                    </div>
+                    <div>
+                      <span className="font-semibold">Expected Duration:</span>{" "}
+                      {formData.expectedDuration}
+                    </div>
                   </div>
 
                   <div className="mb-4">
                     <h4 className="font-semibold mb-2">Justification</h4>
                     <p className="mb-2">
-                      The project has met all the relevant due process and procurement
-                      requirements including:
+                      The project has met all the relevant due process and
+                      procurement requirements including:
                     </p>
                     <ul className="list-disc ml-4 space-y-1">
                       <li>Budgetary provision</li>
                       <li>Technical and financial evaluations</li>
                       <li>Approval by the Tenders Board</li>
-                      <li>Compliance with the Public Procurement Law of Kano State</li>
+                      <li>
+                        Compliance with the Public Procurement Law of Kano State
+                      </li>
                     </ul>
                   </div>
 
                   <p className="mb-6">
-                    This certificate confirms that the Ministry has no objection to proceed
-                    with the procurement process and award of contract.
+                    This certificate confirms that the Ministry has no objection
+                    to proceed with the procurement process and award of
+                    contract.
                   </p>
                 </div>
 
@@ -970,32 +1160,43 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                 <div className="flex justify-between items-end">
                   <div className="w-48">
                     <div className="border-b border-gray-400 mb-1 h-6"></div>
-                    <p className="text-xs text-gray-700">Comrade Nura Iro Ma'aji</p>
-                    <p className="text-xs text-gray-700">{formData.commissionerTitle}</p>
+                    <p className="text-xs text-gray-700">
+                      Comrade Nura Iro Ma'aji
+                    </p>
+                    <p className="text-xs text-gray-700">
+                      {formData.commissionerTitle}
+                    </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-gray-700 mb-1">Date: {new Date(formData.dateIssued).toLocaleDateString('en-GB')}</p>
+                    <p className="text-xs text-gray-700 mb-1">
+                      Date:{" "}
+                      {new Date(formData.dateIssued).toLocaleDateString(
+                        "en-GB",
+                      )}
+                    </p>
                   </div>
                 </div>
 
                 {/* Footer */}
                 <div className="mt-6 pt-3 border-t border-gray-300">
                   <p className="text-xs text-gray-600">
-                    This certificate does not in itself constitute a contract award; It only serves as clearance to
-                    proceed to contract signing as per the State's procurement regulations.
+                    This certificate does not in itself constitute a contract
+                    award; It only serves as clearance to proceed to contract
+                    signing as per the State's procurement regulations.
                   </p>
                 </div>
               </div>
             ) : (
               <div className="text-center py-12 text-gray-500">
                 <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                <p>Fill in the required fields to see the certificate preview</p>
+                <p>
+                  Fill in the required fields to see the certificate preview
+                </p>
               </div>
             )}
           </CardContent>
         </Card>
       </div>
-
     </div>
   );
 }
