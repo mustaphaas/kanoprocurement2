@@ -344,6 +344,164 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
     }
   };
 
+  const handleDownloadCompanyCertificate = (company: Company) => {
+    if (company.status === "approved") {
+      // Temporarily set form data for this company and trigger download
+      const tempFormData = {
+        certificateNumber: company.certificateNumber || `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`,
+        dateIssued: company.dateApproved || new Date().toISOString().split('T')[0],
+        projectTitle: company.projectTitle,
+        projectReferenceNumber: `${company.procuringEntity.split(' ')[0].toUpperCase()}/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 99) + 1).padStart(2, '0')}`,
+        procuringEntity: company.procuringEntity,
+        projectLocation: company.projectLocation,
+        contractorVendor: company.name,
+        contractAmount: company.projectValue,
+        contractAmountWords: numberToWords(company.projectValue),
+        expectedDuration: "12 months",
+        commissionerName: "Comrade Nura Iro Ma'aji",
+        commissionerTitle: "Commissioner",
+      };
+
+      // Generate certificate HTML for download
+      const certificateHTML = generateCertificateHTML(tempFormData);
+      downloadCertificateAsPDF(certificateHTML, `NOC_${company.certificateNumber || company.name.replace(/\s+/g, '_')}`);
+    } else {
+      alert(`Cannot download certificate. This company's application is currently ${company.status}.`);
+    }
+  };
+
+  const generateCertificateHTML = (data: NoObjectionCertificateData) => {
+    return `
+      <div style="background: white; padding: 2rem; max-width: 800px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2F2d6560e774e84f88a03cfa15b949d449%2F4ff1f0f68b064883a635b3de138dfb31?format=webp&width=120"
+              alt="Kano State Coat of Arms"
+              style="height: 96px; width: auto;"
+            />
+          </div>
+          <h1 style="font-size: 1.25rem; font-weight: 700; color: #15803d; margin-bottom: 0.25rem; margin-top: 0;">KANO STATE GOVERNMENT</h1>
+          <h2 style="font-size: 1.125rem; font-weight: 600; color: #15803d; margin-bottom: 0.25rem; margin-top: 0;">Ministry of Procurement, Project Monitoring & Evaluation</h2>
+          <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.25rem; margin-top: 0;">Government House, Kano State, Nigeria</p>
+          <p style="font-size: 0.875rem; color: #4b5563; margin-top: 0;">Tel: [Insert Phone] Email: [Insert Email] Website: [Insert Website]</p>
+        </div>
+
+        <!-- Certificate Title -->
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 1rem; margin-top: 0;">NO OBJECTION CERTIFICATE</h3>
+          <div style="display: flex; justify-content: space-between; font-size: 0.875rem; color: #374151; margin-bottom: 1rem;">
+            <span>Certificate No: ${data.certificateNumber}</span>
+            <span>Date Issued: ${new Date(data.dateIssued).toLocaleDateString('en-GB')}</span>
+          </div>
+        </div>
+
+        <!-- Certificate Body -->
+        <div style="margin-bottom: 1.5rem; font-size: 0.875rem; color: #1f2937; line-height: 1.625;">
+          <p style="margin-bottom: 1rem; margin-top: 0;">
+            This is to certify that no objection is hereby granted by the Kano State
+            Ministry of Procurement, Project Monitoring and Evaluation for procurement
+            and award of the following project:
+          </p>
+
+          <div style="margin-bottom: 1.5rem;">
+            <div style="margin-bottom: 0.75rem;"><span style="font-weight: 600; display: inline-block; width: 200px;">Project Title:</span>${data.projectTitle}</div>
+            <div style="margin-bottom: 0.75rem;"><span style="font-weight: 600; display: inline-block; width: 200px;">Project Reference Number:</span>${data.projectReferenceNumber}</div>
+            <div style="margin-bottom: 0.75rem;"><span style="font-weight: 600; display: inline-block; width: 200px;">Procuring Entity:</span>${data.procuringEntity}</div>
+            <div style="margin-bottom: 0.75rem;"><span style="font-weight: 600; display: inline-block; width: 200px;">Project Location:</span>${data.projectLocation}</div>
+            <div style="margin-bottom: 0.75rem;"><span style="font-weight: 600; display: inline-block; width: 200px;">Contractor/Vendor:</span>${data.contractorVendor}</div>
+            <div style="margin-bottom: 0.75rem;"><span style="font-weight: 600; display: inline-block; width: 200px;">Contract Amount:</span>${data.contractAmount} (${data.contractAmountWords})</div>
+            <div style="margin-bottom: 0.75rem;"><span style="font-weight: 600; display: inline-block; width: 200px;">Expected Duration:</span>${data.expectedDuration}</div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <h4 style="font-weight: 600; margin-bottom: 0.75rem; margin-top: 0;">Justification</h4>
+            <p style="margin-bottom: 0.75rem; margin-top: 0;">
+              The project has met all the relevant due process and procurement
+              requirements including:
+            </p>
+            <ul style="list-style-type: disc; margin-left: 1.5rem; margin-top: 0; margin-bottom: 0;">
+              <li>Budgetary provision</li>
+              <li>Technical and financial evaluations</li>
+              <li>Approval by the Tenders Board</li>
+              <li>Compliance with the Public Procurement Law of Kano State</li>
+            </ul>
+          </div>
+
+          <p style="margin-bottom: 2rem; margin-top: 0;">
+            This certificate confirms that the Ministry has no objection to proceed
+            with the procurement process and award of contract.
+          </p>
+        </div>
+
+        <!-- Signature Section -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+          <div style="width: 256px;">
+            <div style="border-bottom: 1px solid #9ca3af; margin-bottom: 0.5rem; height: 2rem;"></div>
+            <p style="font-size: 0.875rem; color: #374151; margin: 0;">Comrade Nura Iro Ma'aji</p>
+            <p style="font-size: 0.875rem; color: #374151; margin: 0;">${data.commissionerTitle}</p>
+          </div>
+          <div style="text-align: right;">
+            <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.5rem; margin-top: 0;">Date: ${new Date(data.dateIssued).toLocaleDateString('en-GB')}</p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #d1d5db;">
+          <p style="font-size: 0.75rem; color: #4b5563; margin: 0;">
+            This certificate does not in itself constitute a contract award; It only serves as clearance to
+            proceed to contract signing as per the State's procurement regulations.
+          </p>
+        </div>
+      </div>
+    `;
+  };
+
+  const downloadCertificateAsPDF = (htmlContent: string, filename: string) => {
+    // Create a new window for printing/downloading
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert("Popup blocked. Please allow popups and try again.");
+      return;
+    }
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${filename}</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background: white;
+              -webkit-print-color-adjust: exact;
+              color-adjust: exact;
+            }
+            @media print {
+              body { margin: 0; padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          ${htmlContent}
+          <script>
+            window.onload = function() {
+              window.print();
+              window.onafterprint = function() {
+                window.close();
+              };
+            };
+          </script>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+  };
+
   if (showPreview) {
     return (
       <div className="space-y-6">
