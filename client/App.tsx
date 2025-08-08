@@ -15,8 +15,10 @@ import CompanyLogin from "./pages/CompanyLogin";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import SuperUserLogin from "./pages/SuperUserLogin";
+import MinistryLogin from "./pages/MinistryLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
+import MinistryDashboard from "./pages/MinistryDashboard";
 
 const queryClient = new QueryClient();
 
