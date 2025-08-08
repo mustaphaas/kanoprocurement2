@@ -244,9 +244,12 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
         <div className="flex items-center justify-between">
           <Button
             variant="outline"
-            onClick={() => setShowPreview(false)}
+            onClick={() => {
+              setShowPreview(false);
+              setViewingCompany(null);
+            }}
           >
-            ← Back to Form
+            ← Back to {viewingCompany ? 'Companies List' : 'Form'}
           </Button>
           <div className="flex items-center space-x-3">
             <Button variant="outline" onClick={handlePrint}>
