@@ -334,7 +334,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
         contractAmount: company.projectValue,
         contractAmountWords: numberToWords(company.projectValue),
         expectedDuration: "12 months", // Default duration
-        commissionerName: "Hon. Commissioner",
+        commissionerName: "Comrade Nura Iro Ma'aji",
         commissionerTitle: "Commissioner",
       });
       setViewingCompany(company);
