@@ -6,7 +6,7 @@ interface User {
 }
 
 interface UserProfile {
-  role: 'admin' | 'superuser' | 'company';
+  role: 'admin' | 'superuser' | 'company' | 'ministry';
   email: string;
   name: string;
   companyName?: string;
@@ -113,7 +113,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredRole?: 'admin' | 'superuser' | 'company';
+  requiredRole?: 'admin' | 'superuser' | 'company' | 'ministry';
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
