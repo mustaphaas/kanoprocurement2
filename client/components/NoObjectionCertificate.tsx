@@ -28,6 +28,21 @@ interface NoObjectionCertificateData {
   commissionerTitle: string;
 }
 
+interface Company {
+  id: string;
+  name: string;
+  contactPerson: string;
+  email: string;
+  projectTitle: string;
+  projectValue: string;
+  projectLocation: string;
+  status: "approved" | "pending" | "rejected";
+  certificateNumber?: string;
+  dateApproved?: string;
+  dateRequested: string;
+  procuringEntity: string;
+}
+
 interface NoObjectionCertificateProps {
   onGenerateCertificate?: (data: NoObjectionCertificateData) => void;
 }
