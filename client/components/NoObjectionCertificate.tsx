@@ -532,7 +532,11 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewCompanyCertificate(company)}
+                      >
                         <Eye className="h-3 w-3 mr-1" />
                         View
                       </Button>
