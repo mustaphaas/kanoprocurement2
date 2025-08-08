@@ -904,8 +904,8 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                   </div>
                   <h1 className="text-base font-bold text-green-700 mb-1">KANO STATE GOVERNMENT</h1>
                   <h2 className="text-sm font-semibold text-green-700 mb-1">Ministry of Procurement, Project Monitoring & Evaluation</h2>
-                  <p className="text-xs text-gray-700 mb-1">Government House, Kano State, Nigeria</p>
-                  <p className="text-xs text-gray-600">Tel: [Insert Phone] Email: [Insert Email] Website: [Insert Website]</p>
+                  <p className="text-xs text-gray-700 mb-1">21 Magaji Rumfa Road, Kano</p>
+                  <p className="text-xs text-gray-600">Tel: 08065455715 Email: info@procurement.kn.gov.ng Website: www.eprocurement.kn.gov.ng</p>
                 </div>
 
                 {/* Certificate Title */}
