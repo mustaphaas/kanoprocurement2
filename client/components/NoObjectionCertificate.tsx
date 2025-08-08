@@ -104,7 +104,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
       contactPerson: "Ibrahim Hassan",
       email: "ibrahim@techsolutions.ng",
       projectTitle: "ICT Infrastructure Upgrade",
-      projectValue: "���1,200,000,000",
+      projectValue: "₦1,200,000,000",
       projectLocation: "Kano State Secretariat",
       status: "approved",
       certificateNumber: "KNS/MOP/PNO/2024/003",
@@ -512,13 +512,13 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
           <p className="text-gray-600">Manage and generate No Objection Certificates for procurement projects</p>
         </div>
         <div className="flex items-center space-x-3">
-          <Button
-            variant="outline"
-            onClick={handleGeneratePreview}
-            disabled={!formData.projectTitle || !formData.contractorVendor}
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            Generate New Certificate
+          <Button variant="outline" onClick={handlePrint}>
+            <Printer className="h-4 w-4 mr-2" />
+            Print Certificate
+          </Button>
+          <Button variant="outline" onClick={handleDownload}>
+            <Download className="h-4 w-4 mr-2" />
+            Download PDF
           </Button>
         </div>
       </div>
