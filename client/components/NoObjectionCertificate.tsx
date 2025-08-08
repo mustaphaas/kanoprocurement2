@@ -303,14 +303,14 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              <img 
-                src="https://cdn.builder.io/api/v1/image/assets%2F2d6560e774e84f88a03cfa15b949d449%2Fd976824bf6e0486a8a140d0651057e81?format=webp&width=120" 
-                alt="Kano State Coat of Arms" 
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F2d6560e774e84f88a03cfa15b949d449%2F4ff1f0f68b064883a635b3de138dfb31?format=webp&width=120"
+                alt="Kano State Coat of Arms"
                 className="h-24 w-auto"
               />
             </div>
-            <h1 className="text-lg font-bold text-gray-900 mb-1">KANO STATE GOVERNMENT</h1>
-            <h2 className="text-base font-semibold text-gray-800 mb-1">Ministry of Procurement, Project Monitoring & Evaluation</h2>
+            <h1 className="text-xl font-bold text-green-700 mb-1">KANO STATE GOVERNMENT</h1>
+            <h2 className="text-lg font-semibold text-green-700 mb-1">Ministry of Procurement, Project Monitoring & Evaluation</h2>
             <p className="text-sm text-gray-700 mb-1">Government House, Kano State, Nigeria</p>
             <p className="text-sm text-gray-600">Tel: [Insert Phone] Email: [Insert Email] Website: [Insert Website]</p>
           </div>
