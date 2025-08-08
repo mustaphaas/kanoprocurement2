@@ -260,11 +260,7 @@ export default function Index() {
               </button>
               <Link to="/login" className="hidden sm:flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:text-green-700">
                 <LogIn className="h-4 w-4 mr-2" />
-                Company Login
-              </Link>
-              <Link to="/ministry/login" className="hidden sm:flex items-center px-4 py-2 border border-green-600 rounded-md text-sm font-medium text-green-700 hover:bg-green-50">
-                <Building2 className="h-4 w-4 mr-2" />
-                Ministry Portal
+                Login
               </Link>
               <Link to="/register" className="hidden sm:flex items-center px-4 py-2 bg-green-700 text-white rounded-md text-sm font-medium hover:bg-green-800">
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -298,11 +294,7 @@ export default function Index() {
                 <div className="pt-4 border-t space-y-2">
                   <Link to="/login" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-700 w-full">
                     <LogIn className="h-4 w-4" />
-                    <span>Company Login</span>
-                  </Link>
-                  <Link to="/ministry/login" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-green-700 hover:bg-green-50 border border-green-600 w-full">
-                    <Building2 className="h-4 w-4" />
-                    <span>Ministry Portal</span>
+                    <span>Login</span>
                   </Link>
                   <Link to="/register" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium bg-green-700 text-white hover:bg-green-800 w-full">
                     <UserPlus className="h-4 w-4" />
