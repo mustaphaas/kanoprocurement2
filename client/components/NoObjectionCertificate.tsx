@@ -215,6 +215,28 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
     alert("No Objection Certificate generated successfully!");
   };
 
+  const handleViewCompanyCertificate = (company: Company) => {
+    if (company.status === "approved") {
+      // Pre-populate form data with company information
+      setFormData({
+        certificateNumber: company.certificateNumber || `KNS/MOP/PNO/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`,
+        dateIssued: company.dateApproved || new Date().toISOString().split('T')[0],
+        projectTitle: company.projectTitle,
+        projectReferenceNumber: `${company.procuringEntity.split(' ')[0].toUpperCase()}/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 99) + 1).padStart(2, '0')}`,
+        procuringEntity: company.procuringEntity,
+        projectLocation: company.projectLocation,
+        contractorVendor: company.name,
+        contractAmount: company.projectValue,
+        contractAmountWords: numberToWords(company.projectValue),
+        expectedDuration: "12 months", // Default duration
+        commissionerName: "Hon. Commissioner",
+        commissionerTitle: "Commissioner",
+      });
+      setViewingCompany(company);
+      setShowPreview(true);
+    }
+  };
+
   if (showPreview) {
     return (
       <div className="space-y-6">
