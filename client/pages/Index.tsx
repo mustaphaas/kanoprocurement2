@@ -202,7 +202,7 @@ export default function Index() {
       id: "KS-2024-003",
       title: "Water Treatment Plant",
       description: "Construction of modern water treatment facility serving 200,000 residents",
-      value: "₦5.7B",
+      value: "���5.7B",
       deadline: "Mar 05, 2024",
       status: "Open",
       statusColor: "bg-green-100 text-green-800",
@@ -298,7 +298,11 @@ export default function Index() {
                 <div className="pt-4 border-t space-y-2">
                   <Link to="/login" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-700 w-full">
                     <LogIn className="h-4 w-4" />
-                    <span>Login</span>
+                    <span>Company Login</span>
+                  </Link>
+                  <Link to="/ministry/login" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-green-700 hover:bg-green-50 border border-green-600 w-full">
+                    <Building2 className="h-4 w-4" />
+                    <span>Ministry Portal</span>
                   </Link>
                   <Link to="/register" className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium bg-green-700 text-white hover:bg-green-800 w-full">
                     <UserPlus className="h-4 w-4" />
@@ -1991,7 +1995,7 @@ export default function Index() {
                           <li>• Suspension for poor performance or contract violations</li>
                           <li>• Debarment for fraudulent activities or corruption</li>
                           <li>• Appeals process for contested sanctions</li>
-                          <li>• Rehabilitation program for suspended vendors</li>
+                          <li>�� Rehabilitation program for suspended vendors</li>
                         </ul>
                       </div>
                     </div>
