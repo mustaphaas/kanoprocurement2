@@ -839,7 +839,11 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                         {company.status === "approved" ? "View Certificate" : "View Details"}
                       </Button>
                       {company.status === "approved" && (
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDownloadCompanyCertificate(company)}
+                        >
                           <Download className="h-3 w-3 mr-1" />
                           Download
                         </Button>
