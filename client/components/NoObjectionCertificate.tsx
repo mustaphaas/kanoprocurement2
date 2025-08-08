@@ -573,7 +573,7 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
                         onClick={() => handleViewCompanyCertificate(company)}
                       >
                         <Eye className="h-3 w-3 mr-1" />
-                        View
+                        {company.status === "approved" ? "View Certificate" : "View Details"}
                       </Button>
                       {company.status === "approved" && (
                         <Button variant="outline" size="sm">
