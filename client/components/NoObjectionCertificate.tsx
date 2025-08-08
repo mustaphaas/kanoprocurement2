@@ -351,10 +351,11 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Generate No Objection Certificate</h1>
-          <p className="text-gray-600">Create official No Objection Certificates for procurement projects</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">No Objection Certificate Management</h1>
+          <p className="text-gray-600">Manage and generate No Objection Certificates for procurement projects</p>
         </div>
         <div className="flex items-center space-x-3">
           <Button
@@ -363,10 +364,187 @@ export default function NoObjectionCertificate({ onGenerateCertificate }: NoObje
             disabled={!formData.projectTitle || !formData.contractorVendor}
           >
             <FileText className="h-4 w-4 mr-2" />
-            Generate Preview
+            Generate New Certificate
           </Button>
         </div>
       </div>
+
+      {/* Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Approved Certificates</p>
+                <p className="text-2xl font-bold text-gray-900">{approvedCount}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Clock className="h-8 w-8 text-yellow-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Pending Approval</p>
+                <p className="text-2xl font-bold text-gray-900">{pendingCount}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Building2 className="h-8 w-8 text-blue-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Total Companies</p>
+                <p className="text-2xl font-bold text-gray-900">{companies.length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Companies List */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Companies with No Objection Certificate Status</CardTitle>
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  placeholder="Search companies..."
+                  className="pl-10 w-64"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={(value: "all" | "approved" | "pending") => setStatusFilter(value)}>
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="approved">Approved</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Company Details
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Project Information
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Certificate Details
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredCompanies.map((company) => (
+                  <tr key={company.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{company.name}</div>
+                        <div className="text-sm text-gray-500">{company.contactPerson}</div>
+                        <div className="text-sm text-gray-500">{company.email}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{company.projectTitle}</div>
+                        <div className="text-sm text-gray-500">Value: {company.projectValue}</div>
+                        <div className="text-sm text-gray-500">Location: {company.projectLocation}</div>
+                        <div className="text-sm text-gray-500">Entity: {company.procuringEntity}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          company.status === "approved"
+                            ? "bg-green-100 text-green-800"
+                            : company.status === "pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {company.status === "approved" && <CheckCircle className="h-3 w-3 mr-1" />}
+                        {company.status === "pending" && <Clock className="h-3 w-3 mr-1" />}
+                        {company.status.charAt(0).toUpperCase() + company.status.slice(1)}
+                      </span>
+                      <div className="text-xs text-gray-500 mt-1">
+                        Requested: {new Date(company.dateRequested).toLocaleDateString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {company.status === "approved" ? (
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {company.certificateNumber}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            Approved: {company.dateApproved ? new Date(company.dateApproved).toLocaleDateString() : ""}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-500">
+                          Certificate not yet issued
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-3 w-3 mr-1" />
+                        View
+                      </Button>
+                      {company.status === "approved" && (
+                        <Button variant="outline" size="sm">
+                          <Download className="h-3 w-3 mr-1" />
+                          Download
+                        </Button>
+                      )}
+                      {company.status === "pending" && (
+                        <Button size="sm">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Approve
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {filteredCompanies.length === 0 && (
+            <div className="text-center py-12">
+              <Building2 className="mx-auto h-12 w-12 text-gray-400" />
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No companies found</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                {searchTerm || statusFilter !== "all"
+                  ? "Try adjusting your search or filter criteria."
+                  : "No companies have requested No Objection Certificates."}
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Form Section */}
