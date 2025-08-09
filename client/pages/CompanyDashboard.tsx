@@ -127,6 +127,17 @@ export default function CompanyDashboard() {
     useState(false);
   const [showSubmitBidModal, setShowSubmitBidModal] = useState(false);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
+  const [bidFormData, setBidFormData] = useState({
+    bidAmount: "",
+    timeline: "",
+    technicalProposal: "",
+    financialProposal: "",
+    documentsConfirmed: false,
+    accuracyConfirmed: false,
+    bindingConfirmed: false,
+    termsConfirmed: false
+  });
+  const [submitLoading, setSubmitLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
