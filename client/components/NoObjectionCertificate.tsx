@@ -1059,7 +1059,7 @@ export default function NoObjectionCertificate({
                       <div className="text-sm text-gray-900">{request.contractorName}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{request.projectValue}</div>
+                      <div className="text-sm font-medium text-gray-900">{formatCurrency(request.projectValue)}</div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCStatusColor(request.status)}`}>
