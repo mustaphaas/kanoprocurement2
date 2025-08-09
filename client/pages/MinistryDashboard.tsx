@@ -2259,6 +2259,11 @@ export default function MinistryDashboard() {
     setVendorCommunications(mockVendorCommunications);
     setScheduledPublications(mockScheduledPublications);
     setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
+
+    // Refresh bid counts for all tenders after initial load
+    setTimeout(() => {
+      refreshAllTenderBidCounts();
+    }, 100);
   }, []);
 
   // Function to load bids from localStorage for selected tender
