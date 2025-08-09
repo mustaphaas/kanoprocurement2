@@ -73,7 +73,7 @@ const App = () => (
               path="/superuser/dashboard"
               element={
                 <ProtectedRoute requiredRole="superuser">
-                  <SuperuserDashboard />
+                  <SuperUserDashboard />
                 </ProtectedRoute>
               }
             />
