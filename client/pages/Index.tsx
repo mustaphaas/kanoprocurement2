@@ -55,7 +55,7 @@ export default function Index() {
   const [showTenderDetails, setShowTenderDetails] = useState(false);
 
   // Comprehensive tender data
-  const recentTenders = [
+  const getDefaultRecentTenders = () => [
     {
       id: "KS-2024-001",
       title: "Construction of 50km Rural Roads in Kano North",
@@ -153,6 +153,27 @@ export default function Index() {
       ],
     },
   ];
+
+  const [recentTenders, setRecentTenders] = useState(getDefaultRecentTenders());
+
+  // Load recent tenders from localStorage
+  useEffect(() => {
+    const loadRecentTenders = () => {
+      const storedTenders = localStorage.getItem("recentTenders");
+      if (storedTenders) {
+        const parsedTenders = JSON.parse(storedTenders);
+        if (parsedTenders.length > 0) {
+          setRecentTenders(parsedTenders);
+        }
+      }
+    };
+
+    loadRecentTenders();
+
+    // Set up interval to refresh recent tenders every 30 seconds
+    const interval = setInterval(loadRecentTenders, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleViewTenderDetails = (tender: any) => {
     setSelectedTender(tender);
