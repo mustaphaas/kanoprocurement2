@@ -347,16 +347,21 @@ export default function SuperUserDashboard() {
   // MDA Management state
   const [mdas, setMDAs] = useState<MDA[]>([]);
   const [mdaAdmins, setMDAAdmins] = useState<MDAAdmin[]>([]);
+  const [mdaUsers, setMDAUsers] = useState<MDAUser[]>([]);
   const [showCreateMDAModal, setShowCreateMDAModal] = useState(false);
   const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
   const [showEditMDAModal, setShowEditMDAModal] = useState(false);
   const [showEditAdminModal, setShowEditAdminModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [selectedMDA, setSelectedMDA] = useState<MDA | null>(null);
   const [selectedMDAAdmin, setSelectedMDAAdmin] = useState<MDAAdmin | null>(null);
+  const [selectedMDAUser, setSelectedMDAUser] = useState<MDAUser | null>(null);
   const [mdaSearchTerm, setMDASearchTerm] = useState("");
   const [mdaFilterType, setMDAFilterType] = useState<'all' | 'ministry' | 'department' | 'agency'>('all');
   const [mdaFormMode, setMDAFormMode] = useState<'create' | 'edit'>('create');
   const [adminFormMode, setAdminFormMode] = useState<'create' | 'edit'>('create');
+  const [userFormMode, setUserFormMode] = useState<'create' | 'edit'>('create');
 
   const navigate = useNavigate();
 
