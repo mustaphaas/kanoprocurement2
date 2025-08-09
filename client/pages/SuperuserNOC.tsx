@@ -51,14 +51,18 @@ export default function SuperuserNOC() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [ministryFilter, setMinistryFilter] = useState<string>("all");
   const [urgencyFilter, setUrgencyFilter] = useState<string>("all");
-  const [selectedRequest, setSelectedRequest] = useState<NOCRequest | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<NOCRequest | null>(
+    null,
+  );
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [approvalComments, setApprovalComments] = useState("");
   const [rejectReason, setRejectReason] = useState("");
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectionModal, setShowRejectionModal] = useState(false);
-  const [actionType, setActionType] = useState<"approve" | "reject" | null>(null);
-  
+  const [actionType, setActionType] = useState<"approve" | "reject" | null>(
+    null,
+  );
+
   const navigate = useNavigate();
 
   // Mock data for all NOC requests from all ministries
@@ -82,17 +86,22 @@ export default function SuperuserNOC() {
           expectedDuration: "6 months",
           requestingMinistry: "Ministry of Health",
           ministryCode: "MOH",
-          projectDescription: "Supply of advanced medical equipment for 5 primary healthcare centers including X-ray machines, ultrasound equipment, and laboratory instruments.",
-          justification: "Critical equipment needed to improve healthcare delivery in rural areas of Kano State.",
+          projectDescription:
+            "Supply of advanced medical equipment for 5 primary healthcare centers including X-ray machines, ultrasound equipment, and laboratory instruments.",
+          justification:
+            "Critical equipment needed to improve healthcare delivery in rural areas of Kano State.",
           urgencyLevel: "High",
           category: "Medical Equipment",
           procuringEntity: "Kano State Primary Healthcare Development Agency",
           contactPerson: "Dr. Amina Hassan",
           contactEmail: "amina.hassan@health.kano.gov.ng",
-          attachments: ["equipment_specifications.pdf", "vendor_certificates.pdf"],
+          attachments: [
+            "equipment_specifications.pdf",
+            "vendor_certificates.pdf",
+          ],
         },
         {
-          id: "NOC-CENTRAL-002", 
+          id: "NOC-CENTRAL-002",
           projectTitle: "Kano-Kaduna Highway Rehabilitation",
           requestDate: "2024-02-14",
           status: "Pending",
@@ -101,33 +110,44 @@ export default function SuperuserNOC() {
           expectedDuration: "18 months",
           requestingMinistry: "Ministry of Works & Infrastructure",
           ministryCode: "MOWI",
-          projectDescription: "Complete rehabilitation of 85km highway section including road surface, drainage systems, and safety infrastructure.",
-          justification: "Critical transportation infrastructure to improve interstate commerce and reduce travel time.",
+          projectDescription:
+            "Complete rehabilitation of 85km highway section including road surface, drainage systems, and safety infrastructure.",
+          justification:
+            "Critical transportation infrastructure to improve interstate commerce and reduce travel time.",
           urgencyLevel: "Critical",
           category: "Road Construction",
           procuringEntity: "Kano State Road Maintenance Agency",
           contactPerson: "Eng. Ibrahim Mohammed",
           contactEmail: "ibrahim.mohammed@works.kano.gov.ng",
-          attachments: ["highway_survey.pdf", "environmental_impact.pdf", "contractor_profile.pdf"],
+          attachments: [
+            "highway_survey.pdf",
+            "environmental_impact.pdf",
+            "contractor_profile.pdf",
+          ],
         },
         {
           id: "NOC-CENTRAL-003",
           projectTitle: "Digital Learning Platform Development",
           requestDate: "2024-02-13",
-          status: "Pending", 
+          status: "Pending",
           projectValue: "₦1,800,000,000",
           contractorName: "EduTech Solutions Ltd",
           expectedDuration: "12 months",
           requestingMinistry: "Ministry of Education",
           ministryCode: "MOE",
-          projectDescription: "Development of comprehensive digital learning platform for secondary schools with interactive content and assessment tools.",
-          justification: "Essential for digital transformation of education sector and improved learning outcomes.",
+          projectDescription:
+            "Development of comprehensive digital learning platform for secondary schools with interactive content and assessment tools.",
+          justification:
+            "Essential for digital transformation of education sector and improved learning outcomes.",
           urgencyLevel: "Medium",
           category: "Educational Technology",
           procuringEntity: "Kano State Ministry of Education",
           contactPerson: "Prof. Aisha Garba",
           contactEmail: "aisha.garba@education.kano.gov.ng",
-          attachments: ["platform_specifications.pdf", "curriculum_mapping.pdf"],
+          attachments: [
+            "platform_specifications.pdf",
+            "curriculum_mapping.pdf",
+          ],
         },
         {
           id: "NOC-CENTRAL-004",
@@ -141,8 +161,10 @@ export default function SuperuserNOC() {
           certificateNumber: "KNS/SNOC/2024/001",
           requestingMinistry: "Ministry of Works & Infrastructure",
           ministryCode: "MOWI",
-          projectDescription: "Construction of 5 new bridges across major rivers in Kano State.",
-          justification: "Essential infrastructure to improve connectivity and economic development.",
+          projectDescription:
+            "Construction of 5 new bridges across major rivers in Kano State.",
+          justification:
+            "Essential infrastructure to improve connectivity and economic development.",
           urgencyLevel: "High",
           category: "Bridge Construction",
           procuringEntity: "Kano State Ministry of Works",
@@ -159,7 +181,8 @@ export default function SuperuserNOC() {
           expectedDuration: "12 months",
           requestingMinistry: "Ministry of Health",
           ministryCode: "MOH",
-          projectDescription: "Annual supply of essential medicines for state hospitals.",
+          projectDescription:
+            "Annual supply of essential medicines for state hospitals.",
           justification: "Continuous supply of medicines for patient care.",
           urgencyLevel: "Medium",
           category: "Pharmaceuticals",
@@ -168,7 +191,7 @@ export default function SuperuserNOC() {
           contactEmail: "fatima.yusuf@health.kano.gov.ng",
         },
       ];
-      
+
       setNOCRequests(mockNOCs);
       setFilteredRequests(mockNOCs);
       localStorage.setItem("centralNOCRequests", JSON.stringify(mockNOCs));
@@ -178,18 +201,27 @@ export default function SuperuserNOC() {
   // Filter NOC requests
   useEffect(() => {
     let filtered = nocRequests.filter((request) => {
-      const matchesSearch = 
+      const matchesSearch =
         request.projectTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        request.contractorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        request.requestingMinistry.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesStatus = statusFilter === "all" || request.status === statusFilter;
-      const matchesMinistry = ministryFilter === "all" || request.ministryCode === ministryFilter;
-      const matchesUrgency = urgencyFilter === "all" || request.urgencyLevel === urgencyFilter;
-      
-      return matchesSearch && matchesStatus && matchesMinistry && matchesUrgency;
+        request.contractorName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        request.requestingMinistry
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === "all" || request.status === statusFilter;
+      const matchesMinistry =
+        ministryFilter === "all" || request.ministryCode === ministryFilter;
+      const matchesUrgency =
+        urgencyFilter === "all" || request.urgencyLevel === urgencyFilter;
+
+      return (
+        matchesSearch && matchesStatus && matchesMinistry && matchesUrgency
+      );
     });
-    
+
     setFilteredRequests(filtered);
   }, [nocRequests, searchTerm, statusFilter, ministryFilter, urgencyFilter]);
 
@@ -218,26 +250,26 @@ export default function SuperuserNOC() {
   const submitApproval = () => {
     if (!selectedRequest) return;
 
-    const certificateNumber = `KNS/SNOC/${new Date().getFullYear()}/${String(nocRequests.filter(r => r.status === 'Approved').length + 1).padStart(3, '0')}`;
-    
-    const updatedRequests = nocRequests.map(request =>
+    const certificateNumber = `KNS/SNOC/${new Date().getFullYear()}/${String(nocRequests.filter((r) => r.status === "Approved").length + 1).padStart(3, "0")}`;
+
+    const updatedRequests = nocRequests.map((request) =>
       request.id === selectedRequest.id
         ? {
             ...request,
             status: "Approved" as const,
-            approvalDate: new Date().toISOString().split('T')[0],
+            approvalDate: new Date().toISOString().split("T")[0],
             certificateNumber,
-            approvalComments: approvalComments
+            approvalComments: approvalComments,
           }
-        : request
+        : request,
     );
 
     setNOCRequests(updatedRequests);
     localStorage.setItem("centralNOCRequests", JSON.stringify(updatedRequests));
-    
+
     // Update the ministry-specific NOC data
     updateMinistryNOCData(selectedRequest, "Approved", certificateNumber);
-    
+
     setShowApprovalModal(false);
     setApprovalComments("");
     setSelectedRequest(null);
@@ -247,45 +279,53 @@ export default function SuperuserNOC() {
   const submitRejection = () => {
     if (!selectedRequest) return;
 
-    const updatedRequests = nocRequests.map(request =>
+    const updatedRequests = nocRequests.map((request) =>
       request.id === selectedRequest.id
         ? {
             ...request,
             status: "Rejected" as const,
-            rejectionDate: new Date().toISOString().split('T')[0],
-            rejectionReason: rejectReason
+            rejectionDate: new Date().toISOString().split("T")[0],
+            rejectionReason: rejectReason,
           }
-        : request
+        : request,
     );
 
     setNOCRequests(updatedRequests);
     localStorage.setItem("centralNOCRequests", JSON.stringify(updatedRequests));
-    
+
     // Update the ministry-specific NOC data
     updateMinistryNOCData(selectedRequest, "Rejected");
-    
+
     setShowRejectionModal(false);
     setRejectReason("");
     setSelectedRequest(null);
     alert("NOC Request rejected.");
   };
 
-  const updateMinistryNOCData = (request: NOCRequest, status: "Approved" | "Rejected", certificateNumber?: string) => {
+  const updateMinistryNOCData = (
+    request: NOCRequest,
+    status: "Approved" | "Rejected",
+    certificateNumber?: string,
+  ) => {
     // Update the ministry-specific NOC requests in their localStorage
     const ministryNOCKey = `${request.ministryCode}_NOCRequests`;
     const ministryNOCs = localStorage.getItem(ministryNOCKey);
-    
+
     if (ministryNOCs) {
       const requests = JSON.parse(ministryNOCs);
-      const updatedRequests = requests.map((r: any) => 
-        r.id === request.id 
-          ? { 
-              ...r, 
-              status, 
-              approvalDate: status === "Approved" ? new Date().toISOString().split('T')[0] : undefined,
-              certificateNumber: status === "Approved" ? certificateNumber : undefined
+      const updatedRequests = requests.map((r: any) =>
+        r.id === request.id
+          ? {
+              ...r,
+              status,
+              approvalDate:
+                status === "Approved"
+                  ? new Date().toISOString().split("T")[0]
+                  : undefined,
+              certificateNumber:
+                status === "Approved" ? certificateNumber : undefined,
             }
-          : r
+          : r,
       );
       localStorage.setItem(ministryNOCKey, JSON.stringify(updatedRequests));
     }
@@ -293,33 +333,42 @@ export default function SuperuserNOC() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Approved": return "text-green-600 bg-green-100";
-      case "Rejected": return "text-red-600 bg-red-100";
-      case "Pending": return "text-yellow-600 bg-yellow-100";
-      default: return "text-gray-600 bg-gray-100";
+      case "Approved":
+        return "text-green-600 bg-green-100";
+      case "Rejected":
+        return "text-red-600 bg-red-100";
+      case "Pending":
+        return "text-yellow-600 bg-yellow-100";
+      default:
+        return "text-gray-600 bg-gray-100";
     }
   };
 
   const getUrgencyColor = (urgency: string) => {
     switch (urgency) {
-      case "Critical": return "text-red-600 bg-red-100";
-      case "High": return "text-orange-600 bg-orange-100";
-      case "Medium": return "text-yellow-600 bg-yellow-100";
-      case "Low": return "text-green-600 bg-green-100";
-      default: return "text-gray-600 bg-gray-100";
+      case "Critical":
+        return "text-red-600 bg-red-100";
+      case "High":
+        return "text-orange-600 bg-orange-100";
+      case "Medium":
+        return "text-yellow-600 bg-yellow-100";
+      case "Low":
+        return "text-green-600 bg-green-100";
+      default:
+        return "text-gray-600 bg-gray-100";
     }
   };
 
   const getMinistryStats = () => {
-    const mohRequests = nocRequests.filter(r => r.ministryCode === "MOH");
-    const mowiRequests = nocRequests.filter(r => r.ministryCode === "MOWI");
-    const moeRequests = nocRequests.filter(r => r.ministryCode === "MOE");
-    
+    const mohRequests = nocRequests.filter((r) => r.ministryCode === "MOH");
+    const mowiRequests = nocRequests.filter((r) => r.ministryCode === "MOWI");
+    const moeRequests = nocRequests.filter((r) => r.ministryCode === "MOE");
+
     return {
       total: nocRequests.length,
-      pending: nocRequests.filter(r => r.status === "Pending").length,
-      approved: nocRequests.filter(r => r.status === "Approved").length,
-      rejected: nocRequests.filter(r => r.status === "Rejected").length,
+      pending: nocRequests.filter((r) => r.status === "Pending").length,
+      approved: nocRequests.filter((r) => r.status === "Approved").length,
+      rejected: nocRequests.filter((r) => r.status === "Rejected").length,
       moh: mohRequests.length,
       mowi: mowiRequests.length,
       moe: moeRequests.length,
@@ -371,38 +420,48 @@ export default function SuperuserNOC() {
             <div className="flex items-center">
               <FileText className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">Total Requests</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Requests
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.total}
+                </p>
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <Clock className="h-8 w-8 text-yellow-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Pending</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.pending}
+                </p>
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-green-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Approved</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.approved}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.approved}
+                </p>
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <XCircle className="h-8 w-8 text-red-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Rejected</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.rejected}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.rejected}
+                </p>
               </div>
             </div>
           </div>
@@ -441,9 +500,11 @@ export default function SuperuserNOC() {
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm border mb-6">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">NOC Requests</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              NOC Requests
+            </h2>
           </div>
-          
+
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <div className="relative">
@@ -456,7 +517,7 @@ export default function SuperuserNOC() {
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
-              
+
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -467,7 +528,7 @@ export default function SuperuserNOC() {
                 <option value="Approved">Approved</option>
                 <option value="Rejected">Rejected</option>
               </select>
-              
+
               <select
                 value={ministryFilter}
                 onChange={(e) => setMinistryFilter(e.target.value)}
@@ -478,7 +539,7 @@ export default function SuperuserNOC() {
                 <option value="MOWI">Ministry of Works</option>
                 <option value="MOE">Ministry of Education</option>
               </select>
-              
+
               <select
                 value={urgencyFilter}
                 onChange={(e) => setUrgencyFilter(e.target.value)}
@@ -555,12 +616,16 @@ export default function SuperuserNOC() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getUrgencyColor(request.urgencyLevel)}`}>
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getUrgencyColor(request.urgencyLevel)}`}
+                        >
                           {request.urgencyLevel}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}>
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}
+                        >
                           {request.status}
                         </span>
                       </td>
@@ -604,7 +669,9 @@ export default function SuperuserNOC() {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-lg font-semibold text-gray-900">NOC Request Details</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                NOC Request Details
+              </h3>
               <button
                 onClick={() => setShowRequestModal(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -612,76 +679,126 @@ export default function SuperuserNOC() {
                 <XCircle className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="mt-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Request ID</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedRequest.id}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Request ID
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedRequest.id}
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Requesting Ministry</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedRequest.requestingMinistry}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Requesting Ministry
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedRequest.requestingMinistry}
+                  </p>
                 </div>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Project Title</label>
-                <p className="mt-1 text-sm text-gray-900">{selectedRequest.projectTitle}</p>
+                <label className="block text-sm font-medium text-gray-700">
+                  Project Title
+                </label>
+                <p className="mt-1 text-sm text-gray-900">
+                  {selectedRequest.projectTitle}
+                </p>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Project Description</label>
-                <p className="mt-1 text-sm text-gray-900">{selectedRequest.projectDescription}</p>
+                <label className="block text-sm font-medium text-gray-700">
+                  Project Description
+                </label>
+                <p className="mt-1 text-sm text-gray-900">
+                  {selectedRequest.projectDescription}
+                </p>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Justification</label>
-                <p className="mt-1 text-sm text-gray-900">{selectedRequest.justification}</p>
+                <label className="block text-sm font-medium text-gray-700">
+                  Justification
+                </label>
+                <p className="mt-1 text-sm text-gray-900">
+                  {selectedRequest.justification}
+                </p>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Project Value</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedRequest.projectValue}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Project Value
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedRequest.projectValue}
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Expected Duration</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedRequest.expectedDuration}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Expected Duration
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedRequest.expectedDuration}
+                  </p>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Contractor</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedRequest.contractorName}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Contractor
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedRequest.contractorName}
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Urgency Level</label>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getUrgencyColor(selectedRequest.urgencyLevel)}`}>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Urgency Level
+                  </label>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getUrgencyColor(selectedRequest.urgencyLevel)}`}
+                  >
                     {selectedRequest.urgencyLevel}
                   </span>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Contact Person</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedRequest.contactPerson}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Contact Person
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedRequest.contactPerson}
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Contact Email</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedRequest.contactEmail}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Contact Email
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedRequest.contactEmail}
+                  </p>
                 </div>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(selectedRequest.status)}`}>
+                <label className="block text-sm font-medium text-gray-700">
+                  Status
+                </label>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(selectedRequest.status)}`}
+                >
                   {selectedRequest.status}
                 </span>
                 {selectedRequest.certificateNumber && (
-                  <p className="mt-1 text-sm text-gray-600">Certificate: {selectedRequest.certificateNumber}</p>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Certificate: {selectedRequest.certificateNumber}
+                  </p>
                 )}
               </div>
             </div>
@@ -694,7 +811,9 @@ export default function SuperuserNOC() {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-lg font-semibold text-gray-900">Approve NOC Request</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Approve NOC Request
+              </h3>
               <button
                 onClick={() => setShowApprovalModal(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -702,12 +821,14 @@ export default function SuperuserNOC() {
                 <XCircle className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="mt-4">
               <p className="text-sm text-gray-600 mb-4">
-                You are about to approve the NOC request for "{selectedRequest.projectTitle}" from {selectedRequest.requestingMinistry}.
+                You are about to approve the NOC request for "
+                {selectedRequest.projectTitle}" from{" "}
+                {selectedRequest.requestingMinistry}.
               </p>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Approval Comments (Optional)
@@ -720,7 +841,7 @@ export default function SuperuserNOC() {
                   placeholder="Add any comments for this approval..."
                 />
               </div>
-              
+
               <div className="flex justify-end space-x-3">
                 <button
                   onClick={() => setShowApprovalModal(false)}
@@ -746,7 +867,9 @@ export default function SuperuserNOC() {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-lg font-semibold text-gray-900">Reject NOC Request</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Reject NOC Request
+              </h3>
               <button
                 onClick={() => setShowRejectionModal(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -754,12 +877,14 @@ export default function SuperuserNOC() {
                 <XCircle className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="mt-4">
               <p className="text-sm text-gray-600 mb-4">
-                You are about to reject the NOC request for "{selectedRequest.projectTitle}" from {selectedRequest.requestingMinistry}.
+                You are about to reject the NOC request for "
+                {selectedRequest.projectTitle}" from{" "}
+                {selectedRequest.requestingMinistry}.
               </p>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Reason for Rejection <span className="text-red-500">*</span>
@@ -773,7 +898,7 @@ export default function SuperuserNOC() {
                   required
                 />
               </div>
-              
+
               <div className="flex justify-end space-x-3">
                 <button
                   onClick={() => setShowRejectionModal(false)}

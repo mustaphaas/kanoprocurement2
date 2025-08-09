@@ -575,7 +575,7 @@ export default function MinistryDashboard() {
     const { ministryId } = getMinistryMockData();
 
     // Set appropriate workspace for ministry
-    if (ministryId === 'ministry2') {
+    if (ministryId === "ministry2") {
       setSelectedWorkspace("MOWI-2024-001");
       // Set Ministry of Works bidders
       setBidders([
@@ -650,7 +650,7 @@ export default function MinistryDashboard() {
           completionRate: 92.7,
         },
       ]);
-    } else if (ministryId === 'ministry3') {
+    } else if (ministryId === "ministry3") {
       setSelectedWorkspace("MOE-2024-001");
       // Set Ministry of Education bidders
       setBidders([
@@ -739,11 +739,15 @@ export default function MinistryDashboard() {
     if (!centralNOCs) return;
 
     const centralRequests = JSON.parse(centralNOCs);
-    const ministryRequests = centralRequests.filter((req: any) => req.ministryCode === ministry.code);
+    const ministryRequests = centralRequests.filter(
+      (req: any) => req.ministryCode === ministry.code,
+    );
 
     // Update local NOC requests with any status changes from central system
-    const updatedNOCs = nocRequests.map(localReq => {
-      const centralReq = ministryRequests.find((cr: any) => cr.id === localReq.id);
+    const updatedNOCs = nocRequests.map((localReq) => {
+      const centralReq = ministryRequests.find(
+        (cr: any) => cr.id === localReq.id,
+      );
       if (centralReq && centralReq.status !== localReq.status) {
         return {
           ...localReq,
@@ -756,22 +760,28 @@ export default function MinistryDashboard() {
     });
 
     // Add any new requests that might have been approved/rejected
-    const newApprovedRejected = ministryRequests.filter((cr: any) =>
-      (cr.status === "Approved" || cr.status === "Rejected") &&
-      !nocRequests.find(lr => lr.id === cr.id)
-    ).map((cr: any) => ({
-      id: cr.id,
-      projectTitle: cr.projectTitle,
-      requestDate: cr.requestDate,
-      status: cr.status,
-      projectValue: cr.projectValue,
-      contractorName: cr.contractorName,
-      expectedDuration: cr.expectedDuration,
-      approvalDate: cr.approvalDate,
-      certificateNumber: cr.certificateNumber,
-    }));
+    const newApprovedRejected = ministryRequests
+      .filter(
+        (cr: any) =>
+          (cr.status === "Approved" || cr.status === "Rejected") &&
+          !nocRequests.find((lr) => lr.id === cr.id),
+      )
+      .map((cr: any) => ({
+        id: cr.id,
+        projectTitle: cr.projectTitle,
+        requestDate: cr.requestDate,
+        status: cr.status,
+        projectValue: cr.projectValue,
+        contractorName: cr.contractorName,
+        expectedDuration: cr.expectedDuration,
+        approvalDate: cr.approvalDate,
+        certificateNumber: cr.certificateNumber,
+      }));
 
-    if (newApprovedRejected.length > 0 || updatedNOCs.some((noc, index) => noc !== nocRequests[index])) {
+    if (
+      newApprovedRejected.length > 0 ||
+      updatedNOCs.some((noc, index) => noc !== nocRequests[index])
+    ) {
       const finalNOCs = [...newApprovedRejected, ...updatedNOCs];
       setNOCRequests(finalNOCs);
 
@@ -1539,142 +1549,154 @@ export default function MinistryDashboard() {
       localStorage.setItem(ministryNOCKey, JSON.stringify(mockNOCRequests));
     }
 
-    const getMinistrySpecificEvaluationCommittees = (): EvaluationCommittee[] => {
-      switch (ministryId) {
-        case "ministry2": // Ministry of Works
-          return [
-            {
-              id: "EC-001",
-              name: "Infrastructure & Construction Evaluation Committee",
-              chairperson: "Eng. Ibrahim Mohammed",
-              secretary: "Eng. Fatima Abubakar",
-              specialization: ["Construction", "Infrastructure Development", "Engineering"],
-              activeEvaluations: ["MOWI-2024-001", "MOWI-2024-002"],
-              status: "Active",
-              members: [
-                {
-                  id: "MEM-001",
-                  name: "Eng. Ibrahim Mohammed",
-                  role: "Chairperson",
-                  department: "Construction Engineering",
-                  email: "ibrahim.mohammed@works.kano.gov.ng",
-                  phone: "+234 803 123 4567",
-                  expertise: ["Construction Management", "Quality Assurance"],
-                  availability: "Available",
-                },
-                {
-                  id: "MEM-002",
-                  name: "Eng. Fatima Abubakar",
-                  role: "Technical Expert",
-                  department: "Civil Engineering",
-                  email: "fatima.abubakar@works.kano.gov.ng",
-                  phone: "+234 805 987 6543",
-                  expertise: ["Civil Engineering", "Project Evaluation"],
-                  availability: "Available",
-                },
-                {
-                  id: "MEM-003",
-                  name: "Mal. Usman Kano",
-                  role: "Financial Analyst",
-                  department: "Finance & Procurement",
-                  email: "usman.kano@works.kano.gov.ng",
-                  phone: "+234 807 555 1234",
-                  expertise: ["Financial Analysis", "Cost Estimation"],
-                  availability: "Available",
-                },
-              ],
-            },
-          ];
-        case "ministry3": // Ministry of Education
-          return [
-            {
-              id: "EC-001",
-              name: "Educational Resources Evaluation Committee",
-              chairperson: "Prof. Aisha Garba",
-              secretary: "Dr. Zainab Ibrahim",
-              specialization: ["Educational Technology", "School Infrastructure", "Learning Resources"],
-              activeEvaluations: ["MOE-2024-001", "MOE-2024-002"],
-              status: "Active",
-              members: [
-                {
-                  id: "MEM-001",
-                  name: "Prof. Aisha Garba",
-                  role: "Chairperson",
-                  department: "Educational Planning",
-                  email: "aisha.garba@education.kano.gov.ng",
-                  phone: "+234 803 123 4567",
-                  expertise: ["Educational Technology", "Curriculum Development"],
-                  availability: "Available",
-                },
-                {
-                  id: "MEM-002",
-                  name: "Dr. Zainab Ibrahim",
-                  role: "Technical Expert",
-                  department: "Educational Resources",
-                  email: "zainab.ibrahim@education.kano.gov.ng",
-                  phone: "+234 805 987 6543",
-                  expertise: ["Educational Materials", "Quality Assessment"],
-                  availability: "Available",
-                },
-                {
-                  id: "MEM-003",
-                  name: "Mal. Bello Sani",
-                  role: "Financial Analyst",
-                  department: "Finance & Administration",
-                  email: "bello.sani@education.kano.gov.ng",
-                  phone: "+234 807 555 1234",
-                  expertise: ["Educational Finance", "Budget Analysis"],
-                  availability: "Busy",
-                },
-              ],
-            },
-          ];
-        default: // Ministry of Health
-          return [
-            {
-              id: "EC-001",
-              name: "Medical Equipment Evaluation Committee",
-              chairperson: "Dr. Amina Hassan",
-              secretary: "Eng. Musa Ibrahim",
-              specialization: ["Medical Equipment", "Healthcare Technology"],
-              activeEvaluations: ["MOH-2024-002"],
-              status: "Active",
-              members: [
-                {
-                  id: "MEM-001",
-                  name: "Dr. Amina Hassan",
-                  role: "Chairperson",
-                  department: "Medical Services",
-                  email: "amina.hassan@health.kano.gov.ng",
-                  phone: "+234 803 123 4567",
-                  expertise: ["Medical Equipment", "Quality Assurance"],
-                  availability: "Available",
-                },
-                {
-                  id: "MEM-002",
-                  name: "Eng. Musa Ibrahim",
-                  role: "Technical Expert",
-                  department: "Engineering Services",
-                  email: "musa.ibrahim@health.kano.gov.ng",
-                  phone: "+234 805 987 6543",
-                  expertise: ["Engineering", "Technical Evaluation"],
-                  availability: "Available",
-                },
-                {
-                  id: "MEM-003",
-                  name: "Mal. Fatima Yusuf",
-                  role: "Financial Analyst",
-                  department: "Finance",
-                  email: "fatima.yusuf@health.kano.gov.ng",
-                  phone: "+234 807 555 1234",
-                  expertise: ["Financial Analysis", "Cost Evaluation"],
-                  availability: "Busy",
-                },
-              ],
-            },
-          ];
-      }
-    };
+    const getMinistrySpecificEvaluationCommittees =
+      (): EvaluationCommittee[] => {
+        switch (ministryId) {
+          case "ministry2": // Ministry of Works
+            return [
+              {
+                id: "EC-001",
+                name: "Infrastructure & Construction Evaluation Committee",
+                chairperson: "Eng. Ibrahim Mohammed",
+                secretary: "Eng. Fatima Abubakar",
+                specialization: [
+                  "Construction",
+                  "Infrastructure Development",
+                  "Engineering",
+                ],
+                activeEvaluations: ["MOWI-2024-001", "MOWI-2024-002"],
+                status: "Active",
+                members: [
+                  {
+                    id: "MEM-001",
+                    name: "Eng. Ibrahim Mohammed",
+                    role: "Chairperson",
+                    department: "Construction Engineering",
+                    email: "ibrahim.mohammed@works.kano.gov.ng",
+                    phone: "+234 803 123 4567",
+                    expertise: ["Construction Management", "Quality Assurance"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-002",
+                    name: "Eng. Fatima Abubakar",
+                    role: "Technical Expert",
+                    department: "Civil Engineering",
+                    email: "fatima.abubakar@works.kano.gov.ng",
+                    phone: "+234 805 987 6543",
+                    expertise: ["Civil Engineering", "Project Evaluation"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-003",
+                    name: "Mal. Usman Kano",
+                    role: "Financial Analyst",
+                    department: "Finance & Procurement",
+                    email: "usman.kano@works.kano.gov.ng",
+                    phone: "+234 807 555 1234",
+                    expertise: ["Financial Analysis", "Cost Estimation"],
+                    availability: "Available",
+                  },
+                ],
+              },
+            ];
+          case "ministry3": // Ministry of Education
+            return [
+              {
+                id: "EC-001",
+                name: "Educational Resources Evaluation Committee",
+                chairperson: "Prof. Aisha Garba",
+                secretary: "Dr. Zainab Ibrahim",
+                specialization: [
+                  "Educational Technology",
+                  "School Infrastructure",
+                  "Learning Resources",
+                ],
+                activeEvaluations: ["MOE-2024-001", "MOE-2024-002"],
+                status: "Active",
+                members: [
+                  {
+                    id: "MEM-001",
+                    name: "Prof. Aisha Garba",
+                    role: "Chairperson",
+                    department: "Educational Planning",
+                    email: "aisha.garba@education.kano.gov.ng",
+                    phone: "+234 803 123 4567",
+                    expertise: [
+                      "Educational Technology",
+                      "Curriculum Development",
+                    ],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-002",
+                    name: "Dr. Zainab Ibrahim",
+                    role: "Technical Expert",
+                    department: "Educational Resources",
+                    email: "zainab.ibrahim@education.kano.gov.ng",
+                    phone: "+234 805 987 6543",
+                    expertise: ["Educational Materials", "Quality Assessment"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-003",
+                    name: "Mal. Bello Sani",
+                    role: "Financial Analyst",
+                    department: "Finance & Administration",
+                    email: "bello.sani@education.kano.gov.ng",
+                    phone: "+234 807 555 1234",
+                    expertise: ["Educational Finance", "Budget Analysis"],
+                    availability: "Busy",
+                  },
+                ],
+              },
+            ];
+          default: // Ministry of Health
+            return [
+              {
+                id: "EC-001",
+                name: "Medical Equipment Evaluation Committee",
+                chairperson: "Dr. Amina Hassan",
+                secretary: "Eng. Musa Ibrahim",
+                specialization: ["Medical Equipment", "Healthcare Technology"],
+                activeEvaluations: ["MOH-2024-002"],
+                status: "Active",
+                members: [
+                  {
+                    id: "MEM-001",
+                    name: "Dr. Amina Hassan",
+                    role: "Chairperson",
+                    department: "Medical Services",
+                    email: "amina.hassan@health.kano.gov.ng",
+                    phone: "+234 803 123 4567",
+                    expertise: ["Medical Equipment", "Quality Assurance"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-002",
+                    name: "Eng. Musa Ibrahim",
+                    role: "Technical Expert",
+                    department: "Engineering Services",
+                    email: "musa.ibrahim@health.kano.gov.ng",
+                    phone: "+234 805 987 6543",
+                    expertise: ["Engineering", "Technical Evaluation"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-003",
+                    name: "Mal. Fatima Yusuf",
+                    role: "Financial Analyst",
+                    department: "Finance",
+                    email: "fatima.yusuf@health.kano.gov.ng",
+                    phone: "+234 807 555 1234",
+                    expertise: ["Financial Analysis", "Cost Evaluation"],
+                    availability: "Busy",
+                  },
+                ],
+              },
+            ];
+        }
+      };
 
     const mockEvaluationCommittees = getMinistrySpecificEvaluationCommittees();
 
@@ -1692,7 +1714,8 @@ export default function MinistryDashboard() {
               financialScore: 87,
               complianceScore: 95,
               totalScore: 91,
-              comments: "Excellent engineering expertise and competitive pricing for highway project",
+              comments:
+                "Excellent engineering expertise and competitive pricing for highway project",
               recommendations: "Recommended for award",
               status: "Submitted",
               submissionDate: "2024-02-12",
@@ -1707,7 +1730,8 @@ export default function MinistryDashboard() {
               financialScore: 89,
               complianceScore: 92,
               totalScore: 91.3,
-              comments: "Specialized bridge construction experience with strong technical approach",
+              comments:
+                "Specialized bridge construction experience with strong technical approach",
               recommendations: "Recommended for award",
               status: "Submitted",
               submissionDate: "2024-02-15",
@@ -1725,7 +1749,8 @@ export default function MinistryDashboard() {
               financialScore: 92,
               complianceScore: 97,
               totalScore: 94.7,
-              comments: "Outstanding educational technology proposal with innovative learning solutions",
+              comments:
+                "Outstanding educational technology proposal with innovative learning solutions",
               recommendations: "Highly recommended for award",
               status: "Submitted",
               submissionDate: "2024-02-10",
@@ -1740,7 +1765,8 @@ export default function MinistryDashboard() {
               financialScore: 89,
               complianceScore: 94,
               totalScore: 91.3,
-              comments: "Quality furniture design with cost-effective solutions for schools",
+              comments:
+                "Quality furniture design with cost-effective solutions for schools",
               recommendations: "Recommended for award",
               status: "Submitted",
               submissionDate: "2024-02-12",
@@ -1769,89 +1795,90 @@ export default function MinistryDashboard() {
 
     const mockBidEvaluations = getMinistrySpecificBidEvaluations();
 
-    const getMinistrySpecificVendorCommunications = (): VendorCommunication[] => {
-      switch (ministryId) {
-        case "ministry2": // Ministry of Works
-          return [
-            {
-              id: "COMM-001",
-              vendorId: "VEND-001",
-              vendorName: "Kano Construction Ltd",
-              subject: "Amendment to Tender MOWI-2024-001",
-              message:
-                "Please note the amendment to construction timeline in tender MOWI-2024-001. Weather conditions extension approved.",
-              type: "Amendment",
-              channels: ["Email", "SMS"],
-              sentDate: "2024-02-10",
-              readStatus: true,
-              responseRequired: false,
-              priority: "Medium",
-            },
-            {
-              id: "COMM-002",
-              vendorId: "VEND-002",
-              vendorName: "Sahel Bridge Builders",
-              subject: "Clarification on Bridge Specifications",
-              message:
-                "Technical clarification regarding bridge foundation requirements for MOWI-2024-002.",
-              type: "Clarification",
-              channels: ["Email", "Portal"],
-              sentDate: "2024-02-12",
-              readStatus: false,
-              responseRequired: true,
-              priority: "High",
-            },
-          ];
-        case "ministry3": // Ministry of Education
-          return [
-            {
-              id: "COMM-001",
-              vendorId: "VEND-001",
-              vendorName: "EduTech Solutions Ltd",
-              subject: "Amendment to Tender MOE-2024-002",
-              message:
-                "Please note the amendment to digital platform specifications in tender MOE-2024-002",
-              type: "Amendment",
-              channels: ["Email", "SMS", "Portal"],
-              sentDate: "2024-02-08",
-              readStatus: true,
-              responseRequired: false,
-              priority: "Medium",
-            },
-            {
-              id: "COMM-002",
-              vendorId: "VEND-002",
-              vendorName: "Kano School Furniture Ltd",
-              subject: "Furniture Quality Standards Update",
-              message:
-                "Updated quality standards and safety requirements for school furniture have been published.",
-              type: "General",
-              channels: ["Email", "Portal"],
-              sentDate: "2024-02-11",
-              readStatus: true,
-              responseRequired: false,
-              priority: "Low",
-            },
-          ];
-        default: // Ministry of Health
-          return [
-            {
-              id: "COMM-001",
-              vendorId: "VEND-001",
-              vendorName: "PrimeCare Medical Ltd",
-              subject: "Amendment to Tender MOH-2024-001",
-              message:
-                "Please note the amendment to delivery timeline in tender MOH-2024-001",
-              type: "Amendment",
-              channels: ["Email", "SMS"],
-              sentDate: "2024-02-10",
-              readStatus: true,
-              responseRequired: false,
-              priority: "Medium",
-            },
-          ];
-      }
-    };
+    const getMinistrySpecificVendorCommunications =
+      (): VendorCommunication[] => {
+        switch (ministryId) {
+          case "ministry2": // Ministry of Works
+            return [
+              {
+                id: "COMM-001",
+                vendorId: "VEND-001",
+                vendorName: "Kano Construction Ltd",
+                subject: "Amendment to Tender MOWI-2024-001",
+                message:
+                  "Please note the amendment to construction timeline in tender MOWI-2024-001. Weather conditions extension approved.",
+                type: "Amendment",
+                channels: ["Email", "SMS"],
+                sentDate: "2024-02-10",
+                readStatus: true,
+                responseRequired: false,
+                priority: "Medium",
+              },
+              {
+                id: "COMM-002",
+                vendorId: "VEND-002",
+                vendorName: "Sahel Bridge Builders",
+                subject: "Clarification on Bridge Specifications",
+                message:
+                  "Technical clarification regarding bridge foundation requirements for MOWI-2024-002.",
+                type: "Clarification",
+                channels: ["Email", "Portal"],
+                sentDate: "2024-02-12",
+                readStatus: false,
+                responseRequired: true,
+                priority: "High",
+              },
+            ];
+          case "ministry3": // Ministry of Education
+            return [
+              {
+                id: "COMM-001",
+                vendorId: "VEND-001",
+                vendorName: "EduTech Solutions Ltd",
+                subject: "Amendment to Tender MOE-2024-002",
+                message:
+                  "Please note the amendment to digital platform specifications in tender MOE-2024-002",
+                type: "Amendment",
+                channels: ["Email", "SMS", "Portal"],
+                sentDate: "2024-02-08",
+                readStatus: true,
+                responseRequired: false,
+                priority: "Medium",
+              },
+              {
+                id: "COMM-002",
+                vendorId: "VEND-002",
+                vendorName: "Kano School Furniture Ltd",
+                subject: "Furniture Quality Standards Update",
+                message:
+                  "Updated quality standards and safety requirements for school furniture have been published.",
+                type: "General",
+                channels: ["Email", "Portal"],
+                sentDate: "2024-02-11",
+                readStatus: true,
+                responseRequired: false,
+                priority: "Low",
+              },
+            ];
+          default: // Ministry of Health
+            return [
+              {
+                id: "COMM-001",
+                vendorId: "VEND-001",
+                vendorName: "PrimeCare Medical Ltd",
+                subject: "Amendment to Tender MOH-2024-001",
+                message:
+                  "Please note the amendment to delivery timeline in tender MOH-2024-001",
+                type: "Amendment",
+                channels: ["Email", "SMS"],
+                sentDate: "2024-02-10",
+                readStatus: true,
+                responseRequired: false,
+                priority: "Medium",
+              },
+            ];
+        }
+      };
 
     const mockVendorCommunications = getMinistrySpecificVendorCommunications();
 
@@ -2347,7 +2374,10 @@ export default function MinistryDashboard() {
           status: "Qualified",
           submissionDate: "2024-02-15",
           experience: "12 years",
-          certifications: ["Digital Learning Certified", "Software Development"],
+          certifications: [
+            "Digital Learning Certified",
+            "Software Development",
+          ],
           previousProjects: 45,
           completionRate: 99.3,
         },
@@ -2734,7 +2764,9 @@ export default function MinistryDashboard() {
 
     // Add to centralized NOC requests
     const existingCentralNOCs = localStorage.getItem("centralNOCRequests");
-    const centralNOCs = existingCentralNOCs ? JSON.parse(existingCentralNOCs) : [];
+    const centralNOCs = existingCentralNOCs
+      ? JSON.parse(existingCentralNOCs)
+      : [];
     centralNOCs.unshift(centralNOCRequest);
     localStorage.setItem("centralNOCRequests", JSON.stringify(centralNOCs));
 
@@ -2754,7 +2786,9 @@ export default function MinistryDashboard() {
     // Also store in ministry-specific localStorage for persistence
     const ministryNOCKey = `${ministry.code}_NOCRequests`;
     const existingMinistryNOCs = localStorage.getItem(ministryNOCKey);
-    const ministryNOCs = existingMinistryNOCs ? JSON.parse(existingMinistryNOCs) : [];
+    const ministryNOCs = existingMinistryNOCs
+      ? JSON.parse(existingMinistryNOCs)
+      : [];
     ministryNOCs.unshift(ministryNOCRequest);
     localStorage.setItem(ministryNOCKey, JSON.stringify(ministryNOCs));
 
@@ -2773,7 +2807,9 @@ export default function MinistryDashboard() {
       contactEmail: "",
     });
     setShowNOCRequest(false);
-    alert("NOC Request submitted successfully! It will be reviewed by the superuser.");
+    alert(
+      "NOC Request submitted successfully! It will be reviewed by the superuser.",
+    );
   };
 
   // Helper functions for evaluation scoring
@@ -3615,8 +3651,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <p className="text-3xl font-bold text-blue-600">
                 {(() => {
                   const { ministryId } = getMinistryMockData();
-                  if (ministryId === 'ministry2') return 8;
-                  if (ministryId === 'ministry3') return 6;
+                  if (ministryId === "ministry2") return 8;
+                  if (ministryId === "ministry3") return 6;
                   return tenders.filter((t) => t.status === "Published").length;
                 })()}
               </p>
@@ -3634,9 +3670,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <p className="text-3xl font-bold text-green-600">
                 {(() => {
                   const { ministryId } = getMinistryMockData();
-                  if (ministryId === 'ministry2') return 4;
-                  if (ministryId === 'ministry3') return 3;
-                  return companies.filter((c) => c.status === "Approved").length;
+                  if (ministryId === "ministry2") return 4;
+                  if (ministryId === "ministry3") return 3;
+                  return companies.filter((c) => c.status === "Approved")
+                    .length;
                 })()}
               </p>
             </div>
@@ -3651,8 +3688,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <p className="text-3xl font-bold text-orange-600">
                 {(() => {
                   const { ministryId } = getMinistryMockData();
-                  if (ministryId === 'ministry2') return 5;
-                  if (ministryId === 'ministry3') return 4;
+                  if (ministryId === "ministry2") return 5;
+                  if (ministryId === "ministry3") return 4;
                   return nocRequests.length;
                 })()}
               </p>
@@ -3668,8 +3705,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <p className="text-3xl font-bold text-purple-600">
                 {(() => {
                   const { ministryId } = getMinistryMockData();
-                  if (ministryId === 'ministry2') return 42;
-                  if (ministryId === 'ministry3') return 35;
+                  if (ministryId === "ministry2") return 42;
+                  if (ministryId === "ministry3") return 35;
                   return tenders.reduce((sum, t) => sum + t.bidsReceived, 0);
                 })()}
               </p>
@@ -3728,9 +3765,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 <p className="text-2xl font-bold text-gray-900">
                   {(() => {
                     const { ministryId } = getMinistryMockData();
-                    if (ministryId === 'ministry2') return '₦43.2B';
-                    if (ministryId === 'ministry3') return '₦9.8B';
-                    return '₦2.7B';
+                    if (ministryId === "ministry2") return "₦43.2B";
+                    if (ministryId === "ministry3") return "₦9.8B";
+                    return "₦2.7B";
                   })()}
                 </p>
               </div>
@@ -10449,7 +10486,11 @@ Blockchain Timestamp: ${Date.now()}
                       onChange={(e) =>
                         setNewNOCRequest((prev) => ({
                           ...prev,
-                          urgencyLevel: e.target.value as "Low" | "Medium" | "High" | "Critical",
+                          urgencyLevel: e.target.value as
+                            | "Low"
+                            | "Medium"
+                            | "High"
+                            | "Critical",
                         }))
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
