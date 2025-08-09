@@ -2805,6 +2805,15 @@ export default function MinistryDashboard() {
     setBidders(newBidders);
   }, [selectedWorkspace]);
 
+  // Set up periodic refresh of bid counts
+  useEffect(() => {
+    const bidCountInterval = setInterval(() => {
+      refreshAllTenderBidCounts();
+    }, 10000); // Refresh every 10 seconds
+
+    return () => clearInterval(bidCountInterval);
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("ministryUser");
     navigate("/");
