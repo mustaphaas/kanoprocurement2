@@ -3571,7 +3571,7 @@ export default function CompanyDashboard() {
                     </p>
                     <p>
                       <span className="font-medium">Value:</span>{" "}
-                      {selectedTender.value}
+                      {formatCurrency(selectedTender.value)}
                     </p>
                     <p>
                       <span className="font-medium">Deadline:</span>{" "}
