@@ -1449,6 +1449,328 @@ export default function NoObjectionCertificate({
           </CardContent>
         </Card>
       </div>
+
+      {/* NOC Request Management Section */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center">
+              <FileCheck className="h-5 w-5 mr-2" />
+              NOC Request Management
+            </CardTitle>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Bell className="h-6 w-6 text-gray-400" />
+                <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {/* NOC Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white rounded-lg shadow-sm p-4 border">
+              <div className="flex items-center">
+                <FileText className="h-8 w-8 text-blue-600" />
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-600">Total Requests</p>
+                  <p className="text-2xl font-bold text-gray-900">{nocStats.total}</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm p-4 border">
+              <div className="flex items-center">
+                <Clock className="h-8 w-8 text-yellow-600" />
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-600">Pending</p>
+                  <p className="text-2xl font-bold text-gray-900">{nocStats.pending}</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm p-4 border">
+              <div className="flex items-center">
+                <CheckCircle className="h-8 w-8 text-green-600" />
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-600">Approved</p>
+                  <p className="text-2xl font-bold text-gray-900">{nocStats.approved}</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm p-4 border">
+              <div className="flex items-center">
+                <XCircle className="h-8 w-8 text-red-600" />
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-600">Rejected</p>
+                  <p className="text-2xl font-bold text-gray-900">{nocStats.rejected}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* NOC Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="relative">
+              <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search NOC requests..."
+                value={nocSearchTerm}
+                onChange={(e) => setNocSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+            <select
+              value={nocStatusFilter}
+              onChange={(e) => setNocStatusFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="all">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            <select
+              value={nocMinistryFilter}
+              onChange={(e) => setNocMinistryFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="all">All Ministries</option>
+              <option value="MOH">Ministry of Health</option>
+              <option value="MOWI">Ministry of Works</option>
+              <option value="MOE">Ministry of Education</option>
+            </select>
+            <select
+              value={nocUrgencyFilter}
+              onChange={(e) => setNocUrgencyFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="all">All Urgency</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+
+          {/* NOC Requests Table */}
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project Details</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ministry</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contractor</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Urgency</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredNOCRequests.map((request) => (
+                  <tr key={request.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{request.projectTitle}</div>
+                        <div className="text-sm text-gray-500">Duration: {request.expectedDuration}</div>
+                        <div className="text-sm text-gray-500">Requested: {request.requestDate}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900">{request.requestingMinistry}</div>
+                      <div className="text-sm text-gray-500">{request.ministryCode}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-900">{request.contractorName}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900">{request.projectValue}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCUrgencyColor(request.urgencyLevel)}`}>
+                        {request.urgencyLevel}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCStatusColor(request.status)}`}>
+                        {request.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleViewNOCRequest(request)}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        {request.status === "Pending" && (
+                          <>
+                            <button
+                              onClick={() => handleApproveNOCRequest(request)}
+                              className="text-green-600 hover:text-green-900"
+                            >
+                              <CheckCircle className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleRejectNOCRequest(request)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              <XCircle className="h-4 w-4" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* NOC Request Details Modal */}
+      {showNOCRequestModal && selectedNOCRequest && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="text-lg font-semibold text-gray-900">NOC Request Details</h3>
+              <button
+                onClick={() => setShowNOCRequestModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="mt-4 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Request ID</label>
+                  <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.id}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Requesting Ministry</label>
+                  <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.requestingMinistry}</p>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Project Title</label>
+                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.projectTitle}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Project Description</label>
+                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.projectDescription}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Status</label>
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCStatusColor(selectedNOCRequest.status)}`}>
+                  {selectedNOCRequest.status}
+                </span>
+                {selectedNOCRequest.certificateNumber && (
+                  <p className="mt-1 text-sm text-gray-600">Certificate: {selectedNOCRequest.certificateNumber}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* NOC Approval Modal */}
+      {showApprovalModal && selectedNOCRequest && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="text-lg font-semibold text-gray-900">Approve NOC Request</h3>
+              <button
+                onClick={() => setShowApprovalModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="mt-4">
+              <p className="text-sm text-gray-600 mb-4">
+                You are about to approve the NOC request for "{selectedNOCRequest.projectTitle}" from {selectedNOCRequest.requestingMinistry}.
+              </p>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Approval Comments (Optional)</label>
+                <textarea
+                  value={approvalComments}
+                  onChange={(e) => setApprovalComments(e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Add any comments for this approval..."
+                />
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowApprovalModal(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={submitNOCApproval}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center space-x-2"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  <span>Approve NOC</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* NOC Rejection Modal */}
+      {showRejectionModal && selectedNOCRequest && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="text-lg font-semibold text-gray-900">Reject NOC Request</h3>
+              <button
+                onClick={() => setShowRejectionModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="mt-4">
+              <p className="text-sm text-gray-600 mb-4">
+                You are about to reject the NOC request for "{selectedNOCRequest.projectTitle}" from {selectedNOCRequest.requestingMinistry}.
+              </p>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Reason for Rejection <span className="text-red-500">*</span></label>
+                <textarea
+                  value={rejectReason}
+                  onChange={(e) => setRejectReason(e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="Please provide a reason for rejecting this request..."
+                  required
+                />
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowRejectionModal(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={submitNOCRejection}
+                  disabled={!rejectReason.trim()}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 flex items-center space-x-2"
+                >
+                  <XCircle className="h-4 w-4" />
+                  <span>Reject NOC</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
