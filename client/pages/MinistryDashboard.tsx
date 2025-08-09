@@ -5278,11 +5278,6 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderTenders = () => {
-    // Refresh bid counts when accessing tenders view
-    React.useEffect(() => {
-      refreshAllTenderBidCounts();
-    }, [tenderSubView]);
-
     if (tenderSubView === "list") {
       return renderTenderList();
     } else if (tenderSubView === "create") {
