@@ -732,6 +732,61 @@ export default function MinistryDashboard() {
   }, []);
 
   // Mock data initialization
+  // Sync NOC requests with central system
+  const syncNOCUpdates = () => {
+    const { ministry } = getMinistryMockData();
+    const centralNOCs = localStorage.getItem("centralNOCRequests");
+    if (!centralNOCs) return;
+
+    const centralRequests = JSON.parse(centralNOCs);
+    const ministryRequests = centralRequests.filter((req: any) => req.ministryCode === ministry.code);
+
+    // Update local NOC requests with any status changes from central system
+    const updatedNOCs = nocRequests.map(localReq => {
+      const centralReq = ministryRequests.find((cr: any) => cr.id === localReq.id);
+      if (centralReq && centralReq.status !== localReq.status) {
+        return {
+          ...localReq,
+          status: centralReq.status,
+          approvalDate: centralReq.approvalDate,
+          certificateNumber: centralReq.certificateNumber,
+        };
+      }
+      return localReq;
+    });
+
+    // Add any new requests that might have been approved/rejected
+    const newApprovedRejected = ministryRequests.filter((cr: any) =>
+      (cr.status === "Approved" || cr.status === "Rejected") &&
+      !nocRequests.find(lr => lr.id === cr.id)
+    ).map((cr: any) => ({
+      id: cr.id,
+      projectTitle: cr.projectTitle,
+      requestDate: cr.requestDate,
+      status: cr.status,
+      projectValue: cr.projectValue,
+      contractorName: cr.contractorName,
+      expectedDuration: cr.expectedDuration,
+      approvalDate: cr.approvalDate,
+      certificateNumber: cr.certificateNumber,
+    }));
+
+    if (newApprovedRejected.length > 0 || updatedNOCs.some((noc, index) => noc !== nocRequests[index])) {
+      const finalNOCs = [...newApprovedRejected, ...updatedNOCs];
+      setNOCRequests(finalNOCs);
+
+      // Update localStorage
+      const ministryNOCKey = `${ministry.code}_NOCRequests`;
+      localStorage.setItem(ministryNOCKey, JSON.stringify(finalNOCs));
+    }
+  };
+
+  // Sync every 10 seconds (in real app, this would be event-driven or websocket-based)
+  useEffect(() => {
+    const interval = setInterval(syncNOCUpdates, 10000);
+    return () => clearInterval(interval);
+  }, [nocRequests]);
+
   useEffect(() => {
     const { ministryId, ministry } = getMinistryMockData();
 
