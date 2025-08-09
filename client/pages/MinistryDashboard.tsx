@@ -2666,10 +2666,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
   });
 
   const renderOverview = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Key Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -2683,7 +2683,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -2697,7 +2697,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">NOC Requests</p>
@@ -2709,7 +2709,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Bids</p>
@@ -2727,8 +2727,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Contract Overview
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <FileCheck className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
@@ -2741,7 +2741,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <Activity className="h-8 w-8 text-green-600" />
               <div className="ml-3">
@@ -2752,7 +2752,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-purple-600" />
               <div className="ml-3">
@@ -2763,7 +2763,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <DollarSign className="h-8 w-8 text-green-600" />
               <div className="ml-3">
@@ -2776,14 +2776,14 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">
               Recent Tenders
             </h2>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             <div className="space-y-4">
               {tenders.slice(0, 3).map((tender) => (
                 <div
@@ -2820,7 +2820,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">NOC Status</h2>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             <div className="space-y-4">
               {nocRequests.slice(0, 3).map((request) => (
                 <div
@@ -2857,7 +2857,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderCompanies = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           Company Approvals
@@ -2868,8 +2868,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <CheckCircle className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -2882,7 +2882,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-yellow-600" />
             <div className="ml-3">
@@ -2895,7 +2895,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Building2 className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -3021,7 +3021,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderTenderList = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3041,8 +3041,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Tender Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <FileText className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -3053,7 +3053,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Activity className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -3064,7 +3064,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-yellow-600" />
             <div className="ml-3">
@@ -3081,7 +3081,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Award className="h-8 w-8 text-purple-600" />
             <div className="ml-3">
@@ -3225,7 +3225,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderCreateTender = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3249,8 +3249,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
             Tender Information
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Tender Title *
@@ -3361,7 +3361,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderAITenderManagement = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3396,7 +3396,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* AI Assistant Panel */}
       {aiAssistantActive && (
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200 p-6">
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200 p-4">
           <div className="flex items-start space-x-4">
             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
               <Bot className="h-6 w-6 text-purple-600" />
@@ -3537,7 +3537,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             {scheduledPublications.length} scheduled
           </span>
         </div>
-        <div className="p-6">
+        <div className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {scheduledPublications.map((pub) => (
               <div
@@ -3609,7 +3609,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderBulkUpload = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3629,8 +3629,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Upload Templates */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
           <div className="flex items-center justify-between mb-4">
             <FileSpreadsheet className="h-8 w-8 text-green-600" />
             <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
@@ -3643,7 +3643,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             Download Template
           </button>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
           <div className="flex items-center justify-between mb-4">
             <FileText className="h-8 w-8 text-blue-600" />
             <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
@@ -3656,7 +3656,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             Download Template
           </button>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
           <div className="flex items-center justify-between mb-4">
             <BookOpen className="h-8 w-8 text-purple-600" />
             <Eye className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
@@ -3753,7 +3753,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderEvaluationManagement = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3780,8 +3780,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Committee Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Users2 className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -3797,7 +3797,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <CheckSquare className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -3810,7 +3810,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-orange-600" />
             <div className="ml-3">
@@ -3833,10 +3833,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
             Evaluation Committees
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {evaluationCommittees.map((committee) => (
-              <div key={committee.id} className="border rounded-lg p-6">
+              <div key={committee.id} className="border rounded-lg p-4">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="font-semibold text-gray-900">
@@ -4034,7 +4034,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
   const renderActualEvaluation = () => {
     return (
-      <div className="space-y-8">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -4077,7 +4077,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="p-4">
             {activeCommittee ? (
               <div className="bg-green-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-4">
@@ -4156,7 +4156,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
               </div>
             ) : (
-              <div className="text-center py-8">
+              <div className="text-center py-4">
                 <Users2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   No Evaluation Committee
@@ -4178,8 +4178,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         {/* Evaluation Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <FileText className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
@@ -4192,7 +4192,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-green-600" />
               <div className="ml-3">
@@ -4203,7 +4203,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <Award className="h-8 w-8 text-purple-600" />
               <div className="ml-3">
@@ -4214,7 +4214,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <TrendingUp className="h-8 w-8 text-orange-600" />
               <div className="ml-3">
@@ -4278,14 +4278,14 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
 
-          <div className="p-6">
-            <div className="space-y-6">
+          <div className="p-4">
+            <div className="space-y-3">
               {bidders.map((bidder, index) => {
                 const workflowStatus = getVendorWorkflowStatus(bidder.id);
                 const isEligible = isVendorEligibleForAward(bidder.id);
 
                 return (
-                  <div key={bidder.id} className="border rounded-lg p-6">
+                  <div key={bidder.id} className="border rounded-lg p-4">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-4">
                         <div
@@ -4337,7 +4337,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
 
                     {/* Evaluation Scoring */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {/* Financial Evaluation */}
                       <div className="bg-green-50 rounded-lg p-4">
                         <h4 className="font-medium text-green-900 mb-3">
@@ -4660,7 +4660,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
     );
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -4684,8 +4684,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         {/* Award Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <Award className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
@@ -4702,7 +4702,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-green-600" />
               <div className="ml-3">
@@ -4713,7 +4713,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <DollarSign className="h-8 w-8 text-purple-600" />
               <div className="ml-3">
@@ -4722,7 +4722,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <TrendingUp className="h-8 w-8 text-orange-600" />
               <div className="ml-3">
@@ -4764,12 +4764,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
 
-          <div className="p-6">
-            <div className="space-y-6">
+          <div className="p-4">
+            <div className="space-y-3">
               {tendersForAward.map((tender) => (
                 <div
                   key={tender.id}
-                  className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -5016,7 +5016,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </p>
             </div>
 
-            <div className="p-6">
+            <div className="p-4">
               <div className="space-y-4">
                 {tenders
                   .filter((t) => t.status === "Awarded")
@@ -5110,7 +5110,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Bidder Selection */}
-                <div className="space-y-6">
+                <div className="space-y-3">
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-4">
                       Select Winning Bidder
@@ -5291,7 +5291,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
 
                 {/* Award Details Form */}
-                <div className="space-y-6">
+                <div className="space-y-3">
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-4">
                       Award Details & Contract Terms
@@ -5534,7 +5534,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-3">
@@ -5672,7 +5672,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {/* Evaluation Summary */}
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h4 className="font-semibold text-gray-900 mb-3">
@@ -6032,7 +6032,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   };
 
   const renderContracts = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -6053,8 +6053,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Contract Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <FileCheck className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -6067,7 +6067,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Activity className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -6078,7 +6078,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <CheckCircle className="h-8 w-8 text-purple-600" />
             <div className="ml-3">
@@ -6089,7 +6089,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <DollarSign className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -6107,12 +6107,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
             Contract Portfolio
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-1 gap-4">
             {contracts.map((contract) => (
               <div
                 key={contract.id}
-                className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+                className="border rounded-lg p-4 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -6354,7 +6354,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-3">
                   Contract Information
@@ -6730,8 +6730,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             {/* Step 1: Contract Details */}
             {contractStep === 1 && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Related Tender ID *
@@ -6862,7 +6862,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             {/* Step 2: Terms & Conditions */}
             {contractStep === 2 && (
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-4">
                     Project Milestones
@@ -6984,7 +6984,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Payment Schedule
@@ -7064,8 +7064,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             {/* Step 3: Digital Features */}
             {contractStep === 3 && (
-              <div className="space-y-6">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
+              <div className="space-y-3">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <Shield className="h-5 w-5 text-blue-600 mr-2" />
                     Digital Security & Automation Features
@@ -7172,7 +7172,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white border border-gray-200 rounded-lg p-4">
                     <h5 className="font-medium text-gray-900 mb-2">
                       🛡️ Security Features
@@ -7201,7 +7201,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             {/* Step 4: Generate & Execute */}
             {contractStep === 4 && (
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Zap className="h-8 w-8 text-green-600" />
@@ -7216,7 +7216,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
 
                 {/* Contract Preview */}
-                <div className="bg-gray-50 rounded-lg p-6">
+                <div className="bg-gray-50 rounded-lg p-4">
                   <h5 className="font-medium text-gray-900 mb-4">
                     Contract Summary
                   </h5>
@@ -7271,7 +7271,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
                 {/* Generated Contract Display */}
                 {generatedContract && (
-                  <div className="bg-white border rounded-lg p-6">
+                  <div className="bg-white border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-4">
                       <h5 className="font-medium text-gray-900">
                         Generated Contract Document
@@ -7534,7 +7534,7 @@ Blockchain Timestamp: ${Date.now()}
   );
 
   const renderReports = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           Reports & Analytics
@@ -7545,8 +7545,8 @@ Blockchain Timestamp: ${Date.now()}
       </div>
 
       {/* Analytics Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
             <BarChart3 className="h-5 w-5 text-blue-600 mr-2" />
             Procurement by Category
@@ -7590,7 +7590,7 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
             <TrendingUp className="h-5 w-5 text-green-600 mr-2" />
             Performance Metrics
@@ -7639,8 +7639,8 @@ Blockchain Timestamp: ${Date.now()}
             Generate Reports
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               {
                 title: "Monthly Procurement Summary",
@@ -7694,7 +7694,7 @@ Blockchain Timestamp: ${Date.now()}
   );
 
   const renderNOCRequests = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -7714,8 +7714,8 @@ Blockchain Timestamp: ${Date.now()}
       </div>
 
       {/* NOC Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Send className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -7728,7 +7728,7 @@ Blockchain Timestamp: ${Date.now()}
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <CheckCircle className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -7739,7 +7739,7 @@ Blockchain Timestamp: ${Date.now()}
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-orange-600" />
             <div className="ml-3">
@@ -7850,7 +7850,7 @@ Blockchain Timestamp: ${Date.now()}
   );
 
   const renderUserManagement = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -7869,8 +7869,8 @@ Blockchain Timestamp: ${Date.now()}
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Users</p>
@@ -7881,7 +7881,7 @@ Blockchain Timestamp: ${Date.now()}
             <Users className="h-8 w-8 text-blue-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Active Users</p>
@@ -7892,7 +7892,7 @@ Blockchain Timestamp: ${Date.now()}
             <UserCheck className="h-8 w-8 text-green-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -7908,7 +7908,7 @@ Blockchain Timestamp: ${Date.now()}
             <Briefcase className="h-8 w-8 text-orange-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Accountants</p>
@@ -8173,7 +8173,7 @@ Blockchain Timestamp: ${Date.now()}
       )}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         {renderContent()}
       </main>
 
@@ -8214,7 +8214,7 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Committee Basic Info */}
                 <div className="space-y-4">
                   <h4 className="text-lg font-medium text-gray-900">
@@ -8460,7 +8460,7 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {/* Committee Status */}
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h4 className="font-semibold text-gray-900 mb-3">
@@ -8640,13 +8640,13 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Letter Preview */}
                 <div className="space-y-4">
                   <h4 className="text-lg font-semibold text-gray-900">
                     Letter Preview
                   </h4>
-                  <div className="border rounded-lg p-6 bg-gray-50 max-h-96 overflow-y-auto text-sm">
+                  <div className="border rounded-lg p-4 bg-gray-50 max-h-96 overflow-y-auto text-sm">
                     <div className="text-center border-b pb-4 mb-4">
                       <div className="w-16 h-16 mx-auto mb-2 bg-gray-200 rounded-full flex items-center justify-center">
                         <img
@@ -9068,7 +9068,7 @@ Blockchain Timestamp: ${Date.now()}
               </div>
 
               {/* Award Summary */}
-              <div className="bg-green-50 rounded-lg p-6 mb-6">
+              <div className="bg-green-50 rounded-lg p-4 mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-lg font-semibold text-green-900">
                     Award Summary
@@ -9100,7 +9100,7 @@ Blockchain Timestamp: ${Date.now()}
               </div>
 
               {/* Workflow Steps */}
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <h4 className="text-lg font-semibold text-gray-900">
                   Complete Post-Award Process
                 </h4>
