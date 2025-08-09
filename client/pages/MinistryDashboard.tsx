@@ -5866,7 +5866,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         <li>• Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
-                          • Previous contracts executed in the last 2 years
+                          �� Previous contracts executed in the last 2 years
                         </li>
                       </ul>
                     </div>
@@ -8662,9 +8662,9 @@ Blockchain Timestamp: ${Date.now()}
                         {ministryInfo.name.toUpperCase()}
                       </div>
                       <div className="text-xs text-gray-600">
-                        No [MinistryAddress], Kano State, Nigeria
+                        {ministryInfo.address}
                         <br />
-                        Tel: [PhoneNumber], Email: [EmailAddress]
+                        Tel: {ministryInfo.contactPhone}, Email: {ministryInfo.contactEmail}
                       </div>
                     </div>
 
