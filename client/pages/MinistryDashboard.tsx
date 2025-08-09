@@ -4042,14 +4042,25 @@ Penalty Clause: 0.5% per week for delayed completion`,
   ) => {
     return (
       <div className="w-full">
-        {/* Stepper circles and lines */}
-        <div className="relative flex items-center justify-between w-full mb-4">
-          {steps.map((stepData, index) => (
-            <div key={index} className="flex-1 flex items-center">
-              {/* Circle */}
-              <div className="relative z-10 flex flex-col items-center">
+        <div className="relative">
+          {/* Horizontal line spanning full width */}
+          <div className="absolute top-4 left-4 right-4 h-0.5 bg-gray-200 z-0"></div>
+
+          {/* Progress line that follows completion */}
+          <div
+            className="absolute top-4 left-4 h-0.5 bg-green-600 z-10 transition-all duration-300"
+            style={{
+              width: `calc(${(steps.filter(s => s.completed).length - 1) / Math.max(steps.length - 1, 1) * 100}% - 1rem)`
+            }}
+          ></div>
+
+          {/* Circles and labels */}
+          <div className="relative z-20 flex justify-between items-start">
+            {steps.map((stepData, index) => (
+              <div key={index} className="flex flex-col items-center">
+                {/* Circle */}
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${
                     stepData.completed
                       ? "bg-green-600 border-green-600 text-white"
                       : "bg-white border-gray-300 text-gray-400"
@@ -4061,42 +4072,34 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     <div className="w-2 h-2 rounded-full bg-current"></div>
                   )}
                 </div>
-                <div className="text-xs font-medium mt-2 text-center max-w-[80px]">
-                  {stepData.step}
-                </div>
-                {stepData.date && (
-                  <div className="text-xs text-gray-500 mt-1">
-                    {stepData.completed ? stepData.date : "Pending"}
-                  </div>
-                )}
-                {stepData.details && (
-                  <div className="text-xs text-gray-500 mt-1 text-center max-w-[80px]" title={stepData.details}>
-                    {stepData.details.length > 20 ? `${stepData.details.substring(0, 20)}...` : stepData.details}
-                  </div>
-                )}
-              </div>
 
-              {/* Connecting line (not for last item) */}
-              {index < steps.length - 1 && (
-                <div className="flex-1 h-0.5 mx-4 relative">
-                  <div className="absolute inset-0 bg-gray-200"></div>
-                  <div
-                    className={`absolute inset-0 transition-all duration-300 ${
-                      stepData.completed && steps[index + 1]?.completed
-                        ? "bg-green-600"
-                        : stepData.completed
-                        ? "bg-gradient-to-r from-green-600 to-gray-200"
-                        : "bg-gray-200"
-                    }`}
-                  ></div>
+                {/* Step label */}
+                <div className="mt-3 text-center max-w-[80px]">
+                  <div className={`text-xs font-medium ${
+                    stepData.completed ? "text-green-800" : "text-gray-600"
+                  }`}>
+                    {stepData.step}
+                  </div>
+
+                  {stepData.date && (
+                    <div className="text-xs text-gray-500 mt-1">
+                      {stepData.completed ? stepData.date : "Pending"}
+                    </div>
+                  )}
+
+                  {stepData.details && (
+                    <div className="text-xs text-gray-500 mt-1 text-center" title={stepData.details}>
+                      {stepData.details.length > 15 ? `${stepData.details.substring(0, 15)}...` : stepData.details}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Status indicator */}
-        <div className="text-center">
+        <div className="text-center mt-4">
           <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
             steps.every(s => s.completed)
               ? "bg-green-100 text-green-800"
