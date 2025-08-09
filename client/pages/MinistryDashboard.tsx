@@ -1024,7 +1024,7 @@ export default function MinistryDashboard() {
       {
         id: "CON-MOH-002",
         tenderId: "MOH-2024-002",
-        contractorName: "Sahel Medical Supplies",
+        contractorName: "Falcon Diagnostics Ltd",
         projectTitle: "Pharmaceutical Supply Contract",
         contractValue: "₦1,200,000,000",
         startDate: "2024-03-01",
