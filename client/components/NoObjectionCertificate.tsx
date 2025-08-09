@@ -125,6 +125,7 @@ export default function NoObjectionCertificate({
   const [rejectReason, setRejectReason] = useState("");
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectionModal, setShowRejectionModal] = useState(false);
+  const [viewingNOCRequest, setViewingNOCRequest] = useState<NOCRequest | null>(null);
   const [nocStats, setNocStats] = useState({
     total: 0,
     pending: 0,
