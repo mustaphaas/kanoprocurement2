@@ -6307,6 +6307,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     <button
                       onClick={() => {
                         setSelectedTenderForDetails(tender);
+                        // Load real bids for this tender
+                        const tenderBids = loadBidsForTender(tender.id);
+                        if (tenderBids.length > 0) {
+                          setBidders(tenderBids);
+                        }
                         setShowTenderDetailsModal(true);
                       }}
                       className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm"
@@ -7000,7 +7005,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ��� Evaluation Report - {selectedTenderForDetails.title}
+                  ����� Evaluation Report - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
