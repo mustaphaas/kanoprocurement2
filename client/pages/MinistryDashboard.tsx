@@ -2170,11 +2170,17 @@ export default function MinistryDashboard() {
   const loadBidsForTender = (tenderId: string) => {
     try {
       const storedBids = localStorage.getItem("tenderBids");
+      console.log("Loading bids for tender:", tenderId);
+      console.log("Stored bids:", storedBids);
+
       if (!storedBids) return [];
 
       const allBids = JSON.parse(storedBids);
+      console.log("All bids parsed:", allBids);
+
       // Filter bids for this specific tender
       const tenderBids = allBids.filter((bid: any) => bid.tenderId === tenderId);
+      console.log("Filtered bids for tender", tenderId, ":", tenderBids);
 
       // Convert to the format expected by the ministry dashboard
       return tenderBids.map((bid: any) => ({
@@ -7235,7 +7241,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       <ul className="text-sm text-blue-800 space-y-1">
                         <li>• Experience & Expertise</li>
                         <li>• Technical Approach</li>
-                        <li>�� Quality Standards</li>
+                        <li>���� Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
                           �� Previous contracts executed in the last 2 years
