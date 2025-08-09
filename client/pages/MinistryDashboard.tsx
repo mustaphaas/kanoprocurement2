@@ -2120,6 +2120,66 @@ export default function MinistryDashboard() {
       localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
     }
 
+    // Sync any ministry tenders that might be missing from featured/recent tenders
+    const syncTendersToPublicKeys = () => {
+      const ministryTenders = JSON.parse(localStorage.getItem("ministryTenders") || "[]");
+      const existingFeatured = JSON.parse(localStorage.getItem("featuredTenders") || "[]");
+      const existingRecent = JSON.parse(localStorage.getItem("recentTenders") || "[]");
+
+      ministryTenders.forEach((tender: any) => {
+        // Check if tender exists in featured tenders
+        if (!existingFeatured.find((ft: any) => ft.id === tender.id)) {
+          const featuredTender = {
+            id: tender.id,
+            title: tender.title,
+            description: tender.description,
+            value: tender.estimatedValue,
+            deadline: new Date(tender.closeDate).toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            }),
+            status: tender.status === "Published" ? "Open" : "Draft",
+            statusColor: tender.status === "Published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800",
+            category: tender.category,
+            ministry: tender.ministry,
+            createdAt: Date.now(),
+          };
+          existingFeatured.unshift(featuredTender);
+        }
+
+        // Check if tender exists in recent tenders
+        if (!existingRecent.find((rt: any) => rt.id === tender.id)) {
+          const recentTender = {
+            id: tender.id,
+            title: tender.title,
+            description: tender.description,
+            category: tender.category,
+            value: tender.estimatedValue,
+            deadline: new Date(tender.closeDate).toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            }),
+            location: "Kano State",
+            procuringEntity: tender.procuringEntity || tender.ministry,
+            status: tender.status === "Published" ? "Open" : "Draft",
+            publishDate: tender.publishDate,
+            closeDate: tender.closeDate,
+            createdAt: Date.now(),
+          };
+          existingRecent.unshift(recentTender);
+        }
+      });
+
+      // Save the updated arrays back to localStorage
+      localStorage.setItem("featuredTenders", JSON.stringify(existingFeatured.slice(0, 5)));
+      localStorage.setItem("recentTenders", JSON.stringify(existingRecent.slice(0, 10)));
+    };
+
+    // Run the sync function
+    syncTendersToPublicKeys();
+
     setContracts(mockContracts);
     setNOCRequests(mockNOCRequests);
     setEvaluationCommittees(mockEvaluationCommittees);
@@ -5400,7 +5460,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             }`}
           >
             {steps.every((s) => s.completed)
-              ? "✓ All Steps Completed"
+              ? "�� All Steps Completed"
               : `${steps.filter((s) => s.completed).length}/${steps.length} Steps Completed`}
           </div>
         </div>
