@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import MDAForm from "@/components/MDAForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
-import { MDA, MDAAdmin, CreateMDARequest, CreateMDAAdminRequest, MDASettings, MDAPermissions } from '@shared/api';
+import MDAUserForm from "@/components/MDAUserForm";
+import { MDA, MDAAdmin, MDAUser, CreateMDARequest, CreateMDAAdminRequest, CreateMDAUserRequest, MDASettings, MDAPermissions, MDAUserPermissions } from '@shared/api';
 import {
   Building2,
   Users,
