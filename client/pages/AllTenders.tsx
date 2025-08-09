@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   Building2,
   FileText,
@@ -46,7 +47,7 @@ export default function AllTenders() {
   const [showTenderDetails, setShowTenderDetails] = useState(false);
 
   // Comprehensive tender data
-  const allTenders: Tender[] = [
+  const getDefaultTenders = (): Tender[] => [
     {
       id: "KS-2024-001",
       title: "Construction of 50km Rural Roads in Kano North",
