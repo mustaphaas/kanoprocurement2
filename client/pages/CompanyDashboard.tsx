@@ -339,8 +339,8 @@ export default function CompanyDashboard() {
               recentTender.status === "Published"
                 ? "Open"
                 : "Closed",
-            hasExpressedInterest: false,
-            hasBid: false,
+            hasExpressedInterest: tenderStates[recentTender.id]?.hasExpressedInterest || false,
+            hasBid: tenderStates[recentTender.id]?.hasBid || false,
             unspscCode: "72141100", // Default UNSPSC code
             procurementMethod: "Open Tendering",
           }));
