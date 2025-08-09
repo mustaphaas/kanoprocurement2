@@ -2215,7 +2215,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-004",
           companyName: "Emirate Construction Co",
-          bidAmount: "₦15,600,000,000",
+          bidAmount: "���15,600,000,000",
           technicalScore: 82,
           financialScore: 80,
           totalScore: 81,
@@ -4337,6 +4337,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="text"
+                value={newTender.title}
+                onChange={(e) => setNewTender(prev => ({ ...prev, title: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Enter tender title"
               />
@@ -4345,15 +4347,22 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Category *
               </label>
-              <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+              <select
+                value={newTender.category}
+                onChange={(e) => setNewTender(prev => ({ ...prev, category: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
                 <option value="">Select category</option>
-                <option value="Medical Equipment">Medical Equipment</option>
-                <option value="Pharmaceuticals">Pharmaceuticals</option>
-                <option value="Laboratory Equipment">
-                  Laboratory Equipment
-                </option>
-                <option value="Medical Supplies">Medical Supplies</option>
-                <option value="Healthcare Services">Healthcare Services</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Education">Education</option>
+                <option value="Technology">Technology</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="Environment">Environment</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Water Resources">Water Resources</option>
+                <option value="Energy">Energy</option>
+                <option value="Social Services">Social Services</option>
               </select>
             </div>
             <div className="md:col-span-2">
@@ -4362,6 +4371,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <textarea
                 rows={4}
+                value={newTender.description}
+                onChange={(e) => setNewTender(prev => ({ ...prev, description: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Detailed description of the procurement requirement"
               />
@@ -4372,6 +4383,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="text"
+                value={newTender.estimatedValue}
+                onChange={(e) => setNewTender(prev => ({ ...prev, estimatedValue: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="₦0.00"
               />
