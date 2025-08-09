@@ -1389,22 +1389,33 @@ export default function MinistryDashboard() {
     }
 
     // Update tender status to Awarded
+    const updatedTender = {
+      ...selectedTenderForAward,
+      status: 'Awarded' as any,
+      awardedCompany: selectedBidder.companyName,
+      awardAmount: awardFormData.awardValue,
+      awardDate: new Date().toISOString().split('T')[0],
+      awardJustification: awardFormData.awardJustification
+    };
+
     setTenders(prev => prev.map(tender =>
-      tender.id === selectedTenderForAward.id
-        ? {
-            ...tender,
-            status: 'Awarded' as any,
-            awardedCompany: selectedBidder.companyName,
-            awardAmount: awardFormData.awardValue,
-            awardDate: new Date().toISOString().split('T')[0],
-            awardJustification: awardFormData.awardJustification
-          }
-        : tender
+      tender.id === selectedTenderForAward.id ? updatedTender : tender
     ));
 
-    // Close modal and reset form
+    // Store awarded tender data for post-award workflow
+    setAwardedTenderData({
+      tender: updatedTender,
+      selectedBidder,
+      unsuccessfulBidders: bidders.filter(b => b.id !== selectedBidder.id),
+      awardDetails: awardFormData
+    });
+
+    // Close award modal and show post-award workflow
     setShowAwardModal(false);
     setSelectedTenderForAward(null);
+    setShowPostAwardWorkflow(true);
+
+    // Reset form
     setAwardFormData({
       selectedBidder: "",
       awardValue: "",
@@ -1417,8 +1428,6 @@ export default function MinistryDashboard() {
       deliverySchedule: "",
       specialConditions: "",
     });
-
-    alert(`Tender successfully awarded to ${selectedBidder.companyName}!`);
   };
 
   // Committee management functions
