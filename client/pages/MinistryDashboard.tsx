@@ -1560,7 +1560,7 @@ export default function MinistryDashboard() {
       "MOH-2024-001": [
         {
           id: "BID-001",
-          companyName: "MedSupply Nigeria Ltd",
+          companyName: "PrimeCare Medical Ltd",
           bidAmount: "₦820,000,000",
           technicalScore: 92,
           financialScore: 88,
@@ -1574,7 +1574,7 @@ export default function MinistryDashboard() {
         },
         {
           id: "BID-002",
-          companyName: "Sahel Medical Supplies",
+          companyName: "Falcon Diagnostics Ltd",
           bidAmount: "₦850,000,000",
           technicalScore: 88,
           financialScore: 85,
@@ -1588,7 +1588,7 @@ export default function MinistryDashboard() {
         },
         {
           id: "BID-003",
-          companyName: "Northern Healthcare Solutions",
+          companyName: "Golden Gates Healthcare",
           bidAmount: "₦875,000,000",
           technicalScore: 85,
           financialScore: 82,
