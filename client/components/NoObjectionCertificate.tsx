@@ -77,7 +77,6 @@ interface NOCRequest {
   ministryCode: string;
   projectDescription?: string;
   justification?: string;
-  urgencyLevel: "Low" | "Medium" | "High" | "Critical";
   category: string;
   procuringEntity: string;
   contactPerson: string;
@@ -120,7 +119,6 @@ export default function NoObjectionCertificate({
   const [nocSearchTerm, setNocSearchTerm] = useState("");
   const [nocStatusFilter, setNocStatusFilter] = useState<string>("all");
   const [nocMinistryFilter, setNocMinistryFilter] = useState<string>("all");
-  const [nocUrgencyFilter, setNocUrgencyFilter] = useState<string>("all");
   const [selectedNOCRequest, setSelectedNOCRequest] = useState<NOCRequest | null>(null);
   const [showNOCRequestModal, setShowNOCRequestModal] = useState(false);
   const [approvalComments, setApprovalComments] = useState("");
@@ -313,13 +311,12 @@ export default function NoObjectionCertificate({
 
       const matchesStatus = nocStatusFilter === "all" || request.status === nocStatusFilter;
       const matchesMinistry = nocMinistryFilter === "all" || request.ministryCode === nocMinistryFilter;
-      const matchesUrgency = nocUrgencyFilter === "all" || request.urgencyLevel === nocUrgencyFilter;
 
-      return matchesSearch && matchesStatus && matchesMinistry && matchesUrgency;
+      return matchesSearch && matchesStatus && matchesMinistry;
     });
 
     setFilteredNOCRequests(filtered);
-  }, [nocRequests, nocSearchTerm, nocStatusFilter, nocMinistryFilter, nocUrgencyFilter]);
+  }, [nocRequests, nocSearchTerm, nocStatusFilter, nocMinistryFilter]);
 
   // Calculate NOC statistics
   useEffect(() => {
@@ -909,7 +906,7 @@ export default function NoObjectionCertificate({
           </div>
 
           {/* NOC Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="relative">
               <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -940,17 +937,6 @@ export default function NoObjectionCertificate({
               <option value="MOWI">Ministry of Works</option>
               <option value="MOE">Ministry of Education</option>
             </select>
-            <select
-              value={nocUrgencyFilter}
-              onChange={(e) => setNocUrgencyFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              <option value="all">All Urgency</option>
-              <option value="Critical">Critical</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </select>
           </div>
 
           {/* NOC Requests Table */}
@@ -962,7 +948,6 @@ export default function NoObjectionCertificate({
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ministry</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contractor</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Urgency</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
@@ -986,11 +971,6 @@ export default function NoObjectionCertificate({
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{request.projectValue}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCUrgencyColor(request.urgencyLevel)}`}>
-                        {request.urgencyLevel}
-                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCStatusColor(request.status)}`}>
