@@ -87,13 +87,13 @@ const userTypes: UserTypeConfig[] = [
   {
     id: "ministry",
     title: "Ministry Login",
-    subtitle: "Procurement Management Access",
+    subtitle: "Procurement Management Access • Multiple Ministries Available",
     icon: <Users className="h-6 w-6" />,
     bgGradient: "from-orange-50 to-orange-100",
     iconBg: "bg-orange-100 text-orange-600",
     useEmail: false,
     demoCredentials: {
-      identifier: "ministry",
+      identifier: "ministry/ministry2/ministry3",
       password: "ministry123",
     },
     navigation: "/ministry/dashboard",
