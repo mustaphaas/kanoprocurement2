@@ -4812,22 +4812,30 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                     <button
                       onClick={() => {
+                        console.log("View button clicked for tender:", tender);
                         setSelectedTenderForDetails(tender);
                         const tenderBids = loadBidsForTender(tender.id);
+                        console.log("Loaded bids:", tenderBids);
+
                         // If no real bids found, fall back to mock data based on tender ID
                         if (tenderBids.length === 0) {
+                          console.log("No real bids found, using mock data");
                           // Use workspace-specific mock data if available
                           const workspaceBidderData = getWorkspaceBidderData();
                           const workspaceBidders = workspaceBidderData[tender.id as keyof typeof workspaceBidderData];
                           if (workspaceBidders) {
+                            console.log("Using workspace-specific bidders:", workspaceBidders);
                             setBidders(workspaceBidders);
                           } else {
                             // Use default bidders for other tenders
+                            console.log("Using default bidders");
                             setBidders(bidders.slice(0, tender.bidsReceived || 0));
                           }
                         } else {
+                          console.log("Using real bids:", tenderBids);
                           setBidders(tenderBids);
                         }
+                        console.log("Setting modal to show");
                         setShowTenderDetailsModal(true);
                       }}
                       className="text-blue-600 hover:text-blue-900"
