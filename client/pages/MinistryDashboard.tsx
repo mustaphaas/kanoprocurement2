@@ -393,7 +393,12 @@ export default function MinistryDashboard() {
   const [vendorWorkflowStatuses, setVendorWorkflowStatuses] = useState<
     VendorWorkflowStatus[]
   >([]);
-  const [selectedWorkspace, setSelectedWorkspace] = useState("MOH-2024-001");
+  const [selectedWorkspace, setSelectedWorkspace] = useState(() => {
+    const { ministryId } = getMinistryMockData();
+    if (ministryId === 'ministry2') return "MOWI-2024-001"; // Ministry of Works
+    if (ministryId === 'ministry3') return "MOE-2024-001";  // Ministry of Education
+    return "MOH-2024-001"; // Ministry of Health (default)
+  });
   const [isEditingEvaluation, setIsEditingEvaluation] = useState(false);
   const [evaluationScores, setEvaluationScores] = useState<{
     [key: string]: any;
