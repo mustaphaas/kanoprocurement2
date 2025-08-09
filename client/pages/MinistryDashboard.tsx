@@ -1181,7 +1181,7 @@ export default function MinistryDashboard() {
               status: "Awarded" as any,
               publishDate: "2024-02-05",
               awardedCompany: "HealthTech Solutions Ltd",
-              awardAmount: "₦720,000,000",
+              awardAmount: "��720,000,000",
               awardDate: "2024-03-15",
               closeDate: "2024-03-15",
               bidsReceived: 5,
@@ -2099,7 +2099,10 @@ export default function MinistryDashboard() {
     ];
 
     setCompanies(mockCompanies);
-    setTenders(mockTenders);
+
+    // Only set tenders if they haven't been loaded yet (prevent reset on remount)
+    setTenders(prevTenders => prevTenders.length > 0 ? prevTenders : mockTenders);
+
     setContracts(mockContracts);
     setNOCRequests(mockNOCRequests);
     setEvaluationCommittees(mockEvaluationCommittees);
