@@ -73,7 +73,24 @@ const App = () => (
               path="/superuser/dashboard"
               element={
                 <ProtectedRoute requiredRole="superuser">
-                  <SuperUserDashboard />
+                  <SuperuserDashboard />
+                </ProtectedRoute>
+              }
+            />
+            {/* MDA Routes */}
+            <Route
+              path="/mda/:mdaId/dashboard"
+              element={
+                <ProtectedRoute requiredRole="mda_admin">
+                  <MDADashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mda/:mdaId/dashboard"
+              element={
+                <ProtectedRoute requiredRole="mda_user">
+                  <MDADashboard />
                 </ProtectedRoute>
               }
             />
