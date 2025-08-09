@@ -1682,7 +1682,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "���1,450,000,000",
+          bidAmount: "₦1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,
@@ -2778,7 +2778,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">
               Recent Tenders
             </h2>
@@ -2817,7 +2817,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">NOC Status</h2>
           </div>
           <div className="p-4">
@@ -2912,7 +2912,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Companies List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
               Registered Companies
@@ -2966,7 +2966,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredCompanies.map((company) => (
                 <tr key={company.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {company.companyName}
@@ -2976,7 +2976,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm text-gray-900">
                         {company.contactPerson}
@@ -2989,10 +2989,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                     {company.businessType}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         company.status === "Approved"
@@ -3005,7 +3005,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {company.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
                     <button className="text-blue-600 hover:text-blue-900">
                       <Eye className="h-4 w-4 inline mr-1" />
                       View Details
@@ -3096,7 +3096,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Tenders List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
               My Ministry's Tenders
@@ -3152,7 +3152,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredTenders.map((tender) => (
                 <tr key={tender.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-2">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {tender.title}
@@ -3163,7 +3163,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {tender.estimatedValue}
@@ -3177,7 +3177,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         tender.status === "Published"
@@ -3194,10 +3194,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {tender.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                     {tender.bidsReceived}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                     <button className="text-blue-600 hover:text-blue-900">
                       <Eye className="h-4 w-4 inline mr-1" />
                       View
@@ -3244,7 +3244,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             Tender Information
           </h2>
@@ -3528,7 +3528,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Scheduled Publications */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <div className="px-4 py-2 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <Timer className="h-5 w-5 text-blue-600 mr-2" />
             Scheduled Publications
@@ -3673,7 +3673,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Upload History */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <Clock className="h-5 w-5 text-gray-600 mr-2" />
             Upload History
@@ -3702,7 +3702,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               <tr className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-2 whitespace-nowrap">
                   <div>
                     <div className="text-sm font-medium text-gray-900">
                       Batch Upload #001
@@ -3715,7 +3715,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-2 whitespace-nowrap">
                   <div>
                     <div className="text-sm text-gray-900">
                       health_tenders_Q1.xlsx
@@ -3725,16 +3725,16 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-2 whitespace-nowrap">
                   <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                     Completed
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-2 whitespace-nowrap">
                   <div className="text-sm text-gray-900">12 successful</div>
                   <div className="text-sm text-red-600">3 failed</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                   <button className="text-blue-600 hover:text-blue-900">
                     <Eye className="h-4 w-4 inline mr-1" />
                     View Report
@@ -3827,7 +3827,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Evaluation Committees */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <Users2 className="h-5 w-5 text-purple-600 mr-2" />
             Evaluation Committees
@@ -4062,7 +4062,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
         {/* Committee Management Section */}
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 Evaluation Committee Management
@@ -4227,7 +4227,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
         {/* Active Evaluation */}
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 Bid Evaluation Workspace
@@ -4735,7 +4735,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
         {/* Tenders Ready for Award */}
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 Tenders Ready for Award
@@ -5006,7 +5006,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         {/* Awarded Tenders Section */}
         {tenders.filter((t) => t.status === "Awarded").length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border">
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-4 py-2 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
                 Awarded Tenders
@@ -5754,7 +5754,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                 isEligible ? "bg-green-50" : "bg-red-50"
                               }
                             >
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div
                                   className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
                                     index === 0
@@ -5769,7 +5769,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   {index + 1}
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div className="text-sm font-medium text-gray-900">
                                   {bidder.companyName}
                                 </div>
@@ -5777,10 +5777,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   {bidder.experience} experience
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                                 {bidder.bidAmount}
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div className="text-sm text-gray-900">
                                   {bidder.technicalScore}%
                                 </div>
@@ -5793,7 +5793,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   ></div>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div className="text-sm text-gray-900">
                                   {bidder.financialScore}%
                                 </div>
@@ -5806,7 +5806,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   ></div>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div className="text-sm font-bold text-gray-900">
                                   {bidder.totalScore}%
                                 </div>
@@ -5817,7 +5817,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   ></div>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <span
                                   className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                     isEligible
@@ -6102,7 +6102,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Contracts List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             Contract Portfolio
           </h2>
@@ -7257,7 +7257,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       )}
                       {contractFormData.blockchainVerification && (
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
-                          ⛓️ Blockchain Verified
+                          ⛓��� Blockchain Verified
                         </span>
                       )}
                       {contractFormData.autoExecution && (
@@ -7633,7 +7633,7 @@ Blockchain Timestamp: ${Date.now()}
 
       {/* Report Generation */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <Download className="h-5 w-5 text-purple-600 mr-2" />
             Generate Reports
@@ -7754,7 +7754,7 @@ Blockchain Timestamp: ${Date.now()}
 
       {/* NOC Requests List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             NOC Request History
           </h2>
@@ -7783,7 +7783,7 @@ Blockchain Timestamp: ${Date.now()}
             <tbody className="bg-white divide-y divide-gray-200">
               {nocRequests.map((request) => (
                 <tr key={request.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-2">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {request.projectTitle}
@@ -7795,12 +7795,12 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
                       {request.contractorName}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {request.projectValue}
@@ -7810,7 +7810,7 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         request.status === "Approved"
@@ -7828,7 +7828,7 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                     <button className="text-blue-600 hover:text-blue-900">
                       <Eye className="h-4 w-4 inline mr-1" />
                       View
@@ -7923,7 +7923,7 @@ Blockchain Timestamp: ${Date.now()}
 
       {/* Users List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             Ministry Users
           </h2>
@@ -7952,7 +7952,7 @@ Blockchain Timestamp: ${Date.now()}
             <tbody className="bg-white divide-y divide-gray-200">
               {mdaUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {user.userId}
@@ -7962,7 +7962,7 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-2">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {user.role.replace("_", " ").toUpperCase()}
@@ -7972,7 +7972,7 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-2">
                     <div className="text-xs space-y-1">
                       {user.permissions.canCreateTenders && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1">
@@ -7996,7 +7996,7 @@ Blockchain Timestamp: ${Date.now()}
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                         user.isActive
@@ -8007,7 +8007,7 @@ Blockchain Timestamp: ${Date.now()}
                       {user.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                     <button
                       onClick={() => handleEditUser(user)}
                       className="text-blue-600 hover:text-blue-900"
