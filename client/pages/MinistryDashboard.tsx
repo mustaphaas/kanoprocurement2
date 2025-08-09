@@ -3119,7 +3119,11 @@ export default function MinistryDashboard() {
           status: "Qualified",
           submissionDate: "2025-01-15",
           experience: "15 years",
-          certifications: ["ISO 9001", "Healthcare Facility Certification", "COREN Certified"],
+          certifications: [
+            "ISO 9001",
+            "Healthcare Facility Certification",
+            "COREN Certified",
+          ],
           previousProjects: 35,
           completionRate: 98.2,
         },
