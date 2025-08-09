@@ -1698,22 +1698,91 @@ export default function MinistryDashboard() {
 
     const mockBidEvaluations = getMinistrySpecificBidEvaluations();
 
-    const mockVendorCommunications: VendorCommunication[] = [
-      {
-        id: "COMM-001",
-        vendorId: "VEND-001",
-        vendorName: "PrimeCare Medical Ltd",
-        subject: "Amendment to Tender MOH-2024-001",
-        message:
-          "Please note the amendment to delivery timeline in tender MOH-2024-001",
-        type: "Amendment",
-        channels: ["Email", "SMS"],
-        sentDate: "2024-02-10",
-        readStatus: true,
-        responseRequired: false,
-        priority: "Medium",
-      },
-    ];
+    const getMinistrySpecificVendorCommunications = (): VendorCommunication[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "COMM-001",
+              vendorId: "VEND-001",
+              vendorName: "Kano Construction Ltd",
+              subject: "Amendment to Tender MOWI-2024-001",
+              message:
+                "Please note the amendment to construction timeline in tender MOWI-2024-001. Weather conditions extension approved.",
+              type: "Amendment",
+              channels: ["Email", "SMS"],
+              sentDate: "2024-02-10",
+              readStatus: true,
+              responseRequired: false,
+              priority: "Medium",
+            },
+            {
+              id: "COMM-002",
+              vendorId: "VEND-002",
+              vendorName: "Sahel Bridge Builders",
+              subject: "Clarification on Bridge Specifications",
+              message:
+                "Technical clarification regarding bridge foundation requirements for MOWI-2024-002.",
+              type: "Clarification",
+              channels: ["Email", "Portal"],
+              sentDate: "2024-02-12",
+              readStatus: false,
+              responseRequired: true,
+              priority: "High",
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "COMM-001",
+              vendorId: "VEND-001",
+              vendorName: "EduTech Solutions Ltd",
+              subject: "Amendment to Tender MOE-2024-002",
+              message:
+                "Please note the amendment to digital platform specifications in tender MOE-2024-002",
+              type: "Amendment",
+              channels: ["Email", "SMS", "Portal"],
+              sentDate: "2024-02-08",
+              readStatus: true,
+              responseRequired: false,
+              priority: "Medium",
+            },
+            {
+              id: "COMM-002",
+              vendorId: "VEND-002",
+              vendorName: "Kano School Furniture Ltd",
+              subject: "Furniture Quality Standards Update",
+              message:
+                "Updated quality standards and safety requirements for school furniture have been published.",
+              type: "General",
+              channels: ["Email", "Portal"],
+              sentDate: "2024-02-11",
+              readStatus: true,
+              responseRequired: false,
+              priority: "Low",
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "COMM-001",
+              vendorId: "VEND-001",
+              vendorName: "PrimeCare Medical Ltd",
+              subject: "Amendment to Tender MOH-2024-001",
+              message:
+                "Please note the amendment to delivery timeline in tender MOH-2024-001",
+              type: "Amendment",
+              channels: ["Email", "SMS"],
+              sentDate: "2024-02-10",
+              readStatus: true,
+              responseRequired: false,
+              priority: "Medium",
+            },
+          ];
+      }
+    };
+
+    const mockVendorCommunications = getMinistrySpecificVendorCommunications();
 
     const mockScheduledPublications: ScheduledPublication[] = [
       {
@@ -1997,7 +2066,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "Kano Construction Ltd",
-          bidAmount: "��14,800,000,000",
+          bidAmount: "₦14,800,000,000",
           technicalScore: 90,
           financialScore: 87,
           totalScore: 88.5,
@@ -4895,7 +4964,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             }`}
           >
             {steps.every((s) => s.completed)
-              ? "✓ All Steps Completed"
+              ? "��� All Steps Completed"
               : `${steps.filter((s) => s.completed).length}/${steps.length} Steps Completed`}
           </div>
         </div>
