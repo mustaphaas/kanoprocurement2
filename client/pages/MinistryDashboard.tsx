@@ -2726,6 +2726,83 @@ export default function MinistryDashboard() {
   };
 
   // NOC Request Functions
+  const handleViewNOCRequest = (request: NOCRequest) => {
+    setSelectedNOCRequest(request);
+    if (request.status === "Approved") {
+      setShowNOCCertificate(true);
+    } else {
+      setShowNOCRequestModal(true);
+    }
+  };
+
+  const handleDownloadCertificate = (request: NOCRequest) => {
+    if (request.status === "Approved" && request.certificateNumber) {
+      // Generate and download the certificate
+      const certificateHTML = generateCertificateHTML(request);
+      const blob = new Blob([certificateHTML], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `NOC_Certificate_${request.certificateNumber}.html`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  const generateCertificateHTML = (request: NOCRequest) => {
+    const { ministry } = getMinistryMockData();
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>No Objection Certificate - ${request.certificateNumber}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { width: 80px; height: 80px; margin: 0 auto; }
+        .content { max-width: 800px; margin: 0 auto; }
+        .field { margin: 10px 0; }
+        .signature { margin-top: 50px; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            <h1>KANO STATE GOVERNMENT</h1>
+            <h2>${ministry.name}</h2>
+            <h3>NO OBJECTION CERTIFICATE</h3>
+        </div>
+
+        <div class="field"><strong>Certificate Number:</strong> ${request.certificateNumber}</div>
+        <div class="field"><strong>Date Issued:</strong> ${request.approvalDate || new Date().toLocaleDateString()}</div>
+        <div class="field"><strong>Project Title:</strong> ${request.projectTitle}</div>
+        <div class="field"><strong>Contractor/Vendor:</strong> ${request.contractorName}</div>
+        <div class="field"><strong>Contract Amount:</strong> ${request.projectValue}</div>
+        <div class="field"><strong>Expected Duration:</strong> ${request.expectedDuration}</div>
+
+        <p style="margin-top: 30px;">
+            This is to certify that this Ministry has no objection to the award of the above-mentioned contract
+            subject to compliance with all relevant government regulations and guidelines.
+        </p>
+
+        <div class="signature">
+            <p><strong>Commissioner / DG</strong></p>
+            <p>${ministry.name}</p>
+            <p>Kano State Government</p>
+        </div>
+    </div>
+</body>
+</html>`;
+  };
+
+  const numberToWords = (amount: string): string => {
+    // Simple implementation for demo purposes
+    const numericAmount = parseFloat(amount.replace(/[^\d.]/g, ''));
+    return `${numericAmount.toLocaleString()} Naira only`;
+  };
+
   const handleSubmitNOCRequest = () => {
     if (
       !newNOCRequest.projectTitle ||
