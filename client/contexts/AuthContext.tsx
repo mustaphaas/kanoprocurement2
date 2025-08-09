@@ -99,15 +99,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 // HOC for protecting routes
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'company' | 'admin' | 'superuser' | 'mda_admin' | 'mda_user';
-  requiredMDAId?: string; // For MDA-specific routes
+  requiredRole?: 'company' | 'admin' | 'superuser';
   fallback?: React.ReactNode;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole,
-  requiredMDAId,
   fallback = <div>Access Denied</div>
 }) => {
   const { user, userProfile, loading } = useAuth();
@@ -126,13 +124,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return null;
   }
 
-  // Check role requirement
   if (requiredRole && userProfile.role !== requiredRole && userProfile.role !== 'superuser') {
-    return <>{fallback}</>;
-  }
-
-  // Check MDA access requirement
-  if (requiredMDAId && !authService.hasAccessToMDA(userProfile, requiredMDAId)) {
     return <>{fallback}</>;
   }
 
