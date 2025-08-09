@@ -3258,13 +3258,16 @@ export default function MinistryDashboard() {
     setShowFinalizeEvaluationModal(false);
 
     // Update tender status to 'Evaluated'
-    setTenders((prev) =>
-      prev.map((tender) =>
+    setTenders((prev) => {
+      const updatedTenders = prev.map((tender) =>
         tender.id === selectedWorkspace
           ? { ...tender, status: "Evaluated" as any }
           : tender,
-      ),
-    );
+      );
+      // Save to localStorage
+      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      return updatedTenders;
+    });
 
     alert("Evaluation finalized successfully! Tender is now ready for award.");
   };
@@ -7263,7 +7266,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         <li>�� Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
-                          �� Previous contracts executed in the last 2 years
+                          ���� Previous contracts executed in the last 2 years
                         </li>
                       </ul>
                     </div>
