@@ -2593,46 +2593,39 @@ export default function MinistryDashboard() {
                           Financial Evaluation (40%)
                         </h4>
                         <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">
-                              ✅ Bid Price Analysis
-                            </span>
-                            <span className="text-sm font-medium text-green-900">
-                              18/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">
-                              ✅ Bid Security
-                            </span>
-                            <span className="text-sm font-medium text-green-900">
-                              19/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">
-                              ✅ Financial Capability
-                            </span>
-                            <span className="text-sm font-medium text-green-900">
-                              17/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">
-                              ✅ Value for Money
-                            </span>
-                            <span className="text-sm font-medium text-green-900">
-                              16/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">
-                              ✅ Cost Breakdown
-                            </span>
-                            <span className="text-sm font-medium text-green-900">
-                              17/20
-                            </span>
-                          </div>
+                          {[
+                            { key: 'bidPriceAnalysis', label: 'Bid Price Analysis', defaultScore: 18 },
+                            { key: 'bidSecurity', label: 'Bid Security', defaultScore: 19 },
+                            { key: 'financialCapability', label: 'Financial Capability', defaultScore: 17 },
+                            { key: 'valueForMoney', label: 'Value for Money', defaultScore: 16 },
+                            { key: 'costBreakdown', label: 'Cost Breakdown', defaultScore: 17 }
+                          ].map(criterion => {
+                            const currentScore = getEvaluationScore(bidder.id, 'financial', criterion.key, criterion.defaultScore);
+                            return (
+                              <div key={criterion.key} className="flex justify-between items-center">
+                                <span className="text-sm text-green-800">
+                                  ✅ {criterion.label}
+                                </span>
+                                {isEditingEvaluation ? (
+                                  <div className="flex items-center space-x-2">
+                                    <input
+                                      type="number"
+                                      min="0"
+                                      max="20"
+                                      value={currentScore}
+                                      onChange={(e) => updateEvaluationScore(bidder.id, 'financial', criterion.key, parseInt(e.target.value) || 0)}
+                                      className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    />
+                                    <span className="text-sm text-green-800">/20</span>
+                                  </div>
+                                ) : (
+                                  <span className="text-sm font-medium text-green-900">
+                                    {currentScore}/20
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
                           <div className="border-t pt-2 mt-2">
                             <div className="flex justify-between items-center">
                               <span className="text-sm font-medium text-green-900">
@@ -2658,46 +2651,39 @@ export default function MinistryDashboard() {
                           Technical Evaluation (35%)
                         </h4>
                         <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              Experience & Expertise
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              16/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              Technical Approach
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              18/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              Quality Standards
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              17/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              Certifications
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              19/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              Previous Contracts (2yrs)
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              15/20
-                            </span>
-                          </div>
+                          {[
+                            { key: 'experienceExpertise', label: 'Experience & Expertise', defaultScore: 16 },
+                            { key: 'technicalApproach', label: 'Technical Approach', defaultScore: 18 },
+                            { key: 'qualityStandards', label: 'Quality Standards', defaultScore: 17 },
+                            { key: 'certifications', label: 'Certifications', defaultScore: 19 },
+                            { key: 'previousContracts', label: 'Previous Contracts (2yrs)', defaultScore: 15 }
+                          ].map(criterion => {
+                            const currentScore = getEvaluationScore(bidder.id, 'technical', criterion.key, criterion.defaultScore);
+                            return (
+                              <div key={criterion.key} className="flex justify-between items-center">
+                                <span className="text-sm text-blue-800">
+                                  {criterion.label}
+                                </span>
+                                {isEditingEvaluation ? (
+                                  <div className="flex items-center space-x-2">
+                                    <input
+                                      type="number"
+                                      min="0"
+                                      max="20"
+                                      value={currentScore}
+                                      onChange={(e) => updateEvaluationScore(bidder.id, 'technical', criterion.key, parseInt(e.target.value) || 0)}
+                                      className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <span className="text-sm text-blue-800">/20</span>
+                                  </div>
+                                ) : (
+                                  <span className="text-sm font-medium text-blue-900">
+                                    {currentScore}/20
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
                           <div className="border-t pt-2 mt-2">
                             <div className="flex justify-between items-center">
                               <span className="text-sm font-medium text-blue-900">
