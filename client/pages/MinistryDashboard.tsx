@@ -9263,6 +9263,340 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
       )}
+
+      {/* Company Profile Modal */}
+      {showCompanyProfile && selectedCompany && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-6xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Company Profile: {selectedCompany.companyName}
+                </h3>
+                <button
+                  onClick={() => setShowCompanyProfile(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Basic Information */}
+                <div className="lg:col-span-1">
+                  <div className="bg-white border rounded-lg p-6">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Company Name:</span>
+                        <p className="text-sm text-gray-900">{selectedCompany.companyName}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Business Type:</span>
+                        <p className="text-sm text-gray-900">{selectedCompany.businessType}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Address:</span>
+                        <p className="text-sm text-gray-900">{selectedCompany.address}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Contact Person:</span>
+                        <p className="text-sm text-gray-900">{selectedCompany.contactPerson}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Email:</span>
+                        <p className="text-sm text-gray-900">{selectedCompany.email}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Phone:</span>
+                        <p className="text-sm text-gray-900">{selectedCompany.phone}</p>
+                      </div>
+                      {selectedCompany.nin && (
+                        <div>
+                          <span className="text-sm font-medium text-gray-600">NIN:</span>
+                          <p className="text-sm text-gray-900">{selectedCompany.nin}</p>
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => handleEditProfile("basic")}
+                      className="mt-4 w-full px-3 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Edit Basic Info
+                    </button>
+                  </div>
+                </div>
+
+                {/* Main Content */}
+                <div className="lg:col-span-2">
+                  <div className="space-y-6">
+                    {/* Directors */}
+                    <div className="bg-white border rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold text-gray-900">Directors</h4>
+                        <button
+                          onClick={() => handleEditProfile("directors")}
+                          className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                        >
+                          Add/Edit Directors
+                        </button>
+                      </div>
+                      {selectedCompany.directors && selectedCompany.directors.length > 0 ? (
+                        <div className="space-y-3">
+                          {selectedCompany.directors.map((director) => (
+                            <div key={director.id} className="border-l-4 border-blue-500 pl-4">
+                              <p className="font-medium text-gray-900">{director.name}</p>
+                              <p className="text-sm text-gray-600">{director.position}</p>
+                              <p className="text-sm text-gray-600">{director.phone} | {director.email}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500">No directors information available</p>
+                      )}
+                    </div>
+
+                    {/* Key Personnel */}
+                    <div className="bg-white border rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold text-gray-900">Key Personnel Information</h4>
+                        <button
+                          onClick={() => handleEditProfile("personnel")}
+                          className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                        >
+                          Add/Edit Personnel
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-4">Qualifications and experience of company principals and key staff</p>
+                      {selectedCompany.keyPersonnel && selectedCompany.keyPersonnel.length > 0 ? (
+                        <div className="space-y-3">
+                          {selectedCompany.keyPersonnel.map((personnel) => (
+                            <div key={personnel.id} className="border-l-4 border-green-500 pl-4">
+                              <p className="font-medium text-gray-900">{personnel.name}</p>
+                              <p className="text-sm text-gray-600">{personnel.position}</p>
+                              <p className="text-sm text-gray-600">{personnel.yearsOfExperience} years experience</p>
+                              {personnel.qualifications.length > 0 && (
+                                <p className="text-sm text-gray-600">Qualifications: {personnel.qualifications.join(", ")}</p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500">No key personnel information available</p>
+                      )}
+                    </div>
+
+                    {/* Past Projects */}
+                    <div className="bg-white border rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold text-gray-900">Past Project Portfolio</h4>
+                        <button
+                          onClick={() => handleEditProfile("projects")}
+                          className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                        >
+                          Add/Edit Projects
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-4">Detailed descriptions of previously completed projects with references over 2 years</p>
+                      {selectedCompany.pastProjects && selectedCompany.pastProjects.length > 0 ? (
+                        <div className="space-y-3">
+                          {selectedCompany.pastProjects.map((project) => (
+                            <div key={project.id} className="border-l-4 border-purple-500 pl-4">
+                              <p className="font-medium text-gray-900">{project.projectName}</p>
+                              <p className="text-sm text-gray-600">{project.clientName} | {project.projectValue}</p>
+                              <p className="text-sm text-gray-600">{project.startDate} - {project.endDate}</p>
+                              <p className="text-sm text-gray-600">Reference: {project.referenceContact}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500">No past projects information available</p>
+                      )}
+                    </div>
+
+                    {/* Financial Information */}
+                    <div className="bg-white border rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold text-gray-900">Financial Information</h4>
+                        <button
+                          onClick={() => handleEditProfile("financial")}
+                          className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                        >
+                          Add/Edit Financial Info
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-4">Annual turnover, capital base, and financial capacity indicators</p>
+                      {selectedCompany.financialInfo ? (
+                        <div className="space-y-2">
+                          <p><span className="font-medium">Annual Turnover:</span> {selectedCompany.financialInfo.annualTurnover}</p>
+                          <p><span className="font-medium">Capital Base:</span> {selectedCompany.financialInfo.capitalBase}</p>
+                          <p><span className="font-medium">Financial Capacity Rating:</span> {selectedCompany.financialInfo.financialCapacityRating}</p>
+                          {selectedCompany.financialInfo.creditRating && (
+                            <p><span className="font-medium">Credit Rating:</span> {selectedCompany.financialInfo.creditRating}</p>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500">No financial information available</p>
+                      )}
+                    </div>
+
+                    {/* Equipment & Resources */}
+                    <div className="bg-white border rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold text-gray-900">Equipment and Resources</h4>
+                        <button
+                          onClick={() => handleEditProfile("equipment")}
+                          className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                        >
+                          Add/Edit Equipment
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-4">Inventory of major equipment, facilities, and technical capabilities</p>
+                      {selectedCompany.equipment && selectedCompany.equipment.length > 0 ? (
+                        <div className="space-y-3">
+                          {selectedCompany.equipment.map((equipment) => (
+                            <div key={equipment.id} className="border-l-4 border-orange-500 pl-4">
+                              <p className="font-medium text-gray-900">{equipment.equipmentName}</p>
+                              <p className="text-sm text-gray-600">{equipment.model} ({equipment.year})</p>
+                              <p className="text-sm text-gray-600">Condition: {equipment.condition} | {equipment.availability}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500">No equipment information available</p>
+                      )}
+                    </div>
+
+                    {/* Quality Certifications */}
+                    <div className="bg-white border rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold text-gray-900">Quality Certifications</h4>
+                        <button
+                          onClick={() => handleEditProfile("certifications")}
+                          className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                        >
+                          Add/Edit Certifications
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-4">ISO certifications, industry quality standards, and professional memberships</p>
+                      {selectedCompany.certifications && selectedCompany.certifications.length > 0 ? (
+                        <div className="space-y-3">
+                          {selectedCompany.certifications.map((cert) => (
+                            <div key={cert.id} className="border-l-4 border-yellow-500 pl-4">
+                              <p className="font-medium text-gray-900">{cert.certificationType}</p>
+                              <p className="text-sm text-gray-600">Issued by: {cert.issuingBody}</p>
+                              <p className="text-sm text-gray-600">Certificate No: {cert.certificateNumber}</p>
+                              <p className="text-sm text-gray-600">Valid until: {cert.expiryDate}</p>
+                              <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                                cert.status === 'Valid' ? 'bg-green-100 text-green-800' :
+                                cert.status === 'Expired' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {cert.status}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500">No certifications available</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Profile Edit Modal */}
+      {showEditProfile && selectedCompany && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Update Profile - {editingSection.charAt(0).toUpperCase() + editingSection.slice(1)}
+                </h3>
+                <button
+                  onClick={() => setShowEditProfile(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {editingSection === "basic" && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                      <input
+                        type="text"
+                        defaultValue={selectedCompany.companyName}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Business Type</label>
+                      <input
+                        type="text"
+                        defaultValue={selectedCompany.businessType}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                    <textarea
+                      defaultValue={selectedCompany.address}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                      <input
+                        type="tel"
+                        defaultValue={selectedCompany.phone}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">NIN</label>
+                      <input
+                        type="text"
+                        defaultValue={selectedCompany.nin || ""}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Enter National Identification Number"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowEditProfile(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    alert("Profile section updated successfully!");
+                    setShowEditProfile(false);
+                  }}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
