@@ -307,13 +307,19 @@ export default function AllTenders() {
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
+          // Apply currency formatting to fix any incorrectly formatted values
+          const formattedParsedTenders = parsedTenders.map((tender: Tender) => ({
+            ...tender,
+            value: formatCurrency(tender.value)
+          }));
+
           // Combine stored tenders with default ones, removing duplicates
           const defaultTenders = getDefaultTenders();
-          const allUniqueTenders = [...parsedTenders];
+          const allUniqueTenders = [...formattedParsedTenders];
 
           // Add default tenders that don't exist in stored tenders
           defaultTenders.forEach(defaultTender => {
-            if (!parsedTenders.find((t: Tender) => t.id === defaultTender.id)) {
+            if (!formattedParsedTenders.find((t: Tender) => t.id === defaultTender.id)) {
               allUniqueTenders.push(defaultTender);
             }
           });
