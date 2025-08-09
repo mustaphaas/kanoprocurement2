@@ -8659,7 +8659,7 @@ Blockchain Timestamp: ${Date.now()}
                         KANO STATE GOVERNMENT
                       </div>
                       <div className="font-bold text-green-700">
-                        MINISTRY OF HEALTH
+                        {ministryInfo.name.toUpperCase()}
                       </div>
                       <div className="text-xs text-gray-600">
                         No [MinistryAddress], Kano State, Nigeria
