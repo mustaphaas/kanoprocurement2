@@ -346,9 +346,14 @@ export default function SuperUserDashboard() {
   const [mdaAdmins, setMDAAdmins] = useState<MDAAdmin[]>([]);
   const [showCreateMDAModal, setShowCreateMDAModal] = useState(false);
   const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
+  const [showEditMDAModal, setShowEditMDAModal] = useState(false);
+  const [showEditAdminModal, setShowEditAdminModal] = useState(false);
   const [selectedMDA, setSelectedMDA] = useState<MDA | null>(null);
+  const [selectedMDAAdmin, setSelectedMDAAdmin] = useState<MDAAdmin | null>(null);
   const [mdaSearchTerm, setMDASearchTerm] = useState("");
   const [mdaFilterType, setMDAFilterType] = useState<'all' | 'ministry' | 'department' | 'agency'>('all');
+  const [mdaFormMode, setMDAFormMode] = useState<'create' | 'edit'>('create');
+  const [adminFormMode, setAdminFormMode] = useState<'create' | 'edit'>('create');
 
   const navigate = useNavigate();
 
@@ -1206,12 +1211,132 @@ The award letter has been:
 
   // MDA Management functions
   const handleCreateMDA = () => {
+    setMDAFormMode('create');
+    setSelectedMDA(null);
     setShowCreateMDAModal(true);
   };
 
-  const handleCreateMDAAdmin = (mda: MDA) => {
+  const handleEditMDA = (mda: MDA) => {
+    setMDAFormMode('edit');
     setSelectedMDA(mda);
+    setShowEditMDAModal(true);
+  };
+
+  const handleDeleteMDA = (mda: MDA) => {
+    if (window.confirm(`Are you sure you want to delete ${mda.name}? This action cannot be undone.`)) {
+      // Remove all administrators associated with this MDA
+      setMDAAdmins(prev => prev.filter(admin => admin.mdaId !== mda.id));
+
+      // Remove the MDA
+      setMDAs(prev => prev.filter(m => m.id !== mda.id));
+
+      alert(`${mda.name} has been deleted successfully!`);
+    }
+  };
+
+  const handleCreateMDAAdmin = (mda: MDA) => {
+    setAdminFormMode('create');
+    setSelectedMDA(mda);
+    setSelectedMDAAdmin(null);
     setShowCreateAdminModal(true);
+  };
+
+  const handleEditMDAAdmin = (admin: MDAAdmin) => {
+    setAdminFormMode('edit');
+    setSelectedMDAAdmin(admin);
+    setSelectedMDA(mdas.find(m => m.id === admin.mdaId) || null);
+    setShowEditAdminModal(true);
+  };
+
+  const handleDeleteMDAAdmin = (admin: MDAAdmin) => {
+    const adminMDA = mdas.find(m => m.id === admin.mdaId);
+    if (window.confirm(`Are you sure you want to remove this administrator from ${adminMDA?.name}?`)) {
+      setMDAAdmins(prev => prev.filter(a => a.id !== admin.id));
+      alert('Administrator has been removed successfully!');
+    }
+  };
+
+  const handleMDASubmit = async (data: CreateMDARequest) => {
+    try {
+      if (mdaFormMode === 'create') {
+        const newMDA: MDA = {
+          id: `mda-${Date.now()}`,
+          ...data,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          isActive: true
+        };
+        setMDAs(prev => [...prev, newMDA]);
+        alert('MDA created successfully!');
+      } else if (selectedMDA) {
+        const updatedMDA: MDA = {
+          ...selectedMDA,
+          ...data,
+          updatedAt: new Date()
+        };
+        setMDAs(prev => prev.map(m => m.id === selectedMDA.id ? updatedMDA : m));
+        alert('MDA updated successfully!');
+      }
+      setShowCreateMDAModal(false);
+      setShowEditMDAModal(false);
+      setSelectedMDA(null);
+    } catch (error) {
+      console.error('Error submitting MDA:', error);
+      alert('Error saving MDA. Please try again.');
+    }
+  };
+
+  const handleMDAAdminSubmit = async (data: CreateMDAAdminRequest) => {
+    try {
+      if (adminFormMode === 'create') {
+        const newAdmin: MDAAdmin = {
+          id: `admin-${Date.now()}`,
+          mdaId: data.mdaId,
+          userId: `user-${Date.now()}`,
+          role: data.role,
+          permissions: data.permissions,
+          assignedBy: 'superuser-001',
+          assignedAt: new Date(),
+          isActive: true
+        };
+        setMDAAdmins(prev => [...prev, newAdmin]);
+        alert('MDA Administrator created successfully!');
+      } else if (selectedMDAAdmin) {
+        const updatedAdmin: MDAAdmin = {
+          ...selectedMDAAdmin,
+          mdaId: data.mdaId,
+          role: data.role,
+          permissions: data.permissions
+        };
+        setMDAAdmins(prev => prev.map(a => a.id === selectedMDAAdmin.id ? updatedAdmin : a));
+        alert('MDA Administrator updated successfully!');
+      }
+      setShowCreateAdminModal(false);
+      setShowEditAdminModal(false);
+      setSelectedMDAAdmin(null);
+      setSelectedMDA(null);
+    } catch (error) {
+      console.error('Error submitting MDA Admin:', error);
+      alert('Error saving MDA Administrator. Please try again.');
+    }
+  };
+
+  const toggleMDAStatus = (mda: MDA) => {
+    setMDAs(prev => prev.map(m =>
+      m.id === mda.id
+        ? { ...m, isActive: !m.isActive, updatedAt: new Date() }
+        : m
+    ));
+    alert(`${mda.name} has been ${mda.isActive ? 'deactivated' : 'activated'}!`);
+  };
+
+  const toggleAdminStatus = (admin: MDAAdmin) => {
+    setMDAAdmins(prev => prev.map(a =>
+      a.id === admin.id
+        ? { ...a, isActive: !a.isActive }
+        : a
+    ));
+    alert(`Administrator has been ${admin.isActive ? 'deactivated' : 'activated'}!`);
   };
 
   const filteredMDAs = mdas.filter(mda => {
@@ -1371,13 +1496,25 @@ The award letter has been:
 
                 <div className="mt-6 flex justify-between items-center pt-4 border-t border-gray-200">
                   <div className="flex space-x-2">
-                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-md">
+                    <button
+                      onClick={() => toggleMDAStatus(mda)}
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
+                      title="Toggle Status"
+                    >
                       <Eye className="h-4 w-4" />
                     </button>
-                    <button className="p-2 text-green-600 hover:bg-green-50 rounded-md">
+                    <button
+                      onClick={() => handleEditMDA(mda)}
+                      className="p-2 text-green-600 hover:bg-green-50 rounded-md"
+                      title="Edit MDA"
+                    >
                       <Edit className="h-4 w-4" />
                     </button>
-                    <button className="p-2 text-red-600 hover:bg-red-50 rounded-md">
+                    <button
+                      onClick={() => handleDeleteMDA(mda)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-md"
+                      title="Delete MDA"
+                    >
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
@@ -1472,15 +1609,25 @@ The award letter has been:
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <button className="text-blue-600 hover:text-blue-900">
+                        <button
+                          onClick={() => toggleAdminStatus(admin)}
+                          className="text-blue-600 hover:text-blue-900"
+                          title="Toggle Status"
+                        >
                           <Eye className="h-4 w-4 inline mr-1" />
-                          View
+                          {admin.isActive ? 'Deactivate' : 'Activate'}
                         </button>
-                        <button className="text-green-600 hover:text-green-900">
+                        <button
+                          onClick={() => handleEditMDAAdmin(admin)}
+                          className="text-green-600 hover:text-green-900"
+                        >
                           <Edit className="h-4 w-4 inline mr-1" />
                           Edit
                         </button>
-                        <button className="text-red-600 hover:text-red-900">
+                        <button
+                          onClick={() => handleDeleteMDAAdmin(admin)}
+                          className="text-red-600 hover:text-red-900"
+                        >
                           <Trash2 className="h-4 w-4 inline mr-1" />
                           Remove
                         </button>
