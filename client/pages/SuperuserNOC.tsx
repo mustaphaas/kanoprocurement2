@@ -360,15 +360,18 @@ export default function SuperuserNOC() {
   };
 
   const getMinistryStats = () => {
+    // Use filteredRequests when ministry filter is applied, otherwise use all requests
+    const baseRequests = ministryFilter !== "all" ? filteredRequests : nocRequests;
+
     const mohRequests = nocRequests.filter((r) => r.ministryCode === "MOH");
     const mowiRequests = nocRequests.filter((r) => r.ministryCode === "MOWI");
     const moeRequests = nocRequests.filter((r) => r.ministryCode === "MOE");
 
     return {
-      total: nocRequests.length,
-      pending: nocRequests.filter((r) => r.status === "Pending").length,
-      approved: nocRequests.filter((r) => r.status === "Approved").length,
-      rejected: nocRequests.filter((r) => r.status === "Rejected").length,
+      total: baseRequests.length,
+      pending: baseRequests.filter((r) => r.status === "Pending").length,
+      approved: baseRequests.filter((r) => r.status === "Approved").length,
+      rejected: baseRequests.filter((r) => r.status === "Rejected").length,
       moh: mohRequests.length,
       mowi: mowiRequests.length,
       moe: moeRequests.length,
