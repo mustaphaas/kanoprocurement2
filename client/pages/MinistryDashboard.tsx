@@ -6736,7 +6736,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           htmlFor="digitalSignature"
                           className="text-sm font-medium text-gray-900 cursor-pointer"
                         >
-                          🔐 Advanced Digital Signatures
+                          ��� Advanced Digital Signatures
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
                           Multi-party digital signatures with PKI encryption,
@@ -7732,89 +7732,8 @@ Blockchain Timestamp: ${Date.now()}
               </div>
             </div>
 
-            {/* Main Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <button
-                onClick={() => setCurrentView("overview")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "overview"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <BarChart3 className="h-4 w-4" />
-                <span>Overview</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("companies")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "companies"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <Users className="h-4 w-4" />
-                <span>Companies</span>
-              </button>
-              <button
-                onClick={() => {
-                  setCurrentView("tenders");
-                  setTenderSubView("list");
-                }}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "tenders"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <FileText className="h-4 w-4" />
-                <span>Tenders</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("contracts")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "contracts"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <FileCheck className="h-4 w-4" />
-                <span>Contracts</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("users")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "users"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <Users className="h-4 w-4" />
-                <span>User Management</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("reports")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "reports"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <TrendingUp className="h-4 w-4" />
-                <span>Reports</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("noc")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "noc"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <Send className="h-4 w-4" />
-                <span>NOC Requests</span>
-              </button>
-            </nav>
+            {/* Empty space for better layout */}
+            <div className="flex-1"></div>
 
             <div className="flex items-center space-x-4">
               <Bell className="h-5 w-5 text-gray-600" />
@@ -7829,6 +7748,41 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
       </header>
+
+      {/* Main Navigation - Similar to Super User Dashboard */}
+      <nav className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-8 overflow-x-auto py-3">
+            {[
+              { key: "overview", label: "Overview", icon: BarChart3 },
+              { key: "companies", label: "Companies", icon: Building2 },
+              { key: "tenders", label: "Tenders", icon: FileText },
+              { key: "contracts", label: "Contracts", icon: FileCheck },
+              { key: "users", label: "User Management", icon: Users },
+              { key: "reports", label: "Reports", icon: TrendingUp },
+              { key: "noc", label: "NOC Requests", icon: Send },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => {
+                  setCurrentView(tab.key as CurrentView);
+                  if (tab.key === "tenders") {
+                    setTenderSubView("list");
+                  }
+                }}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
+                  currentView === tab.key
+                    ? "bg-green-50 text-green-600 border border-green-200"
+                    : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                }`}
+              >
+                <tab.icon className="h-4 w-4" />
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
 
       {/* Tender Sub-Navigation */}
       {currentView === "tenders" && (
