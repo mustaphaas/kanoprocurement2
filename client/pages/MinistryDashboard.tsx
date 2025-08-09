@@ -281,6 +281,11 @@ export default function MinistryDashboard() {
   const [tenderSubView, setTenderSubView] = useState<TenderSubView>("list");
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tenders, setTenders] = useState<Tender[]>([]);
+
+  // Debug tender changes
+  useEffect(() => {
+    console.log("Ministry Dashboard - Tenders state changed:", tenders.map(t => ({ id: t.id, title: t.title, status: t.status })));
+  }, [tenders]);
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -8666,7 +8671,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       )}
                       {contractFormData.blockchainVerification && (
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
-                          ⛓���� Blockchain Verified
+                          ⛓��� Blockchain Verified
                         </span>
                       )}
                       {contractFormData.autoExecution && (
