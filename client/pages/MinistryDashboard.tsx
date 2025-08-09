@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MDAUserForm from "@/components/MDAUserForm";
+import { formatCurrency } from "@/lib/utils";
 import {
   Building2,
   Users,
@@ -285,6 +286,16 @@ export default function MinistryDashboard() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showCreateTender, setShowCreateTender] = useState(false);
   const [showNOCRequest, setShowNOCRequest] = useState(false);
+  const [newTender, setNewTender] = useState({
+    title: "",
+    category: "",
+    description: "",
+    estimatedValue: "",
+    procurementMethod: "Open Tender",
+    publishDate: "",
+    closeDate: "",
+    contactEmail: "",
+  });
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [evaluationCommittees, setEvaluationCommittees] = useState<
     EvaluationCommittee[]
@@ -462,7 +473,7 @@ export default function MinistryDashboard() {
     {
       id: "BID-003",
       companyName: "Golden Gates Healthcare",
-      bidAmount: "₦875,000,000",
+      bidAmount: "���875,000,000",
       technicalScore: 85,
       financialScore: 82,
       totalScore: 83.5,
@@ -999,7 +1010,7 @@ export default function MinistryDashboard() {
               description:
                 "Construction of modern drainage system for Kano metropolis",
               category: "Infrastructure Development",
-              estimatedValue: "₦12,300,000,000",
+              estimatedValue: "���12,300,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1417,7 +1428,7 @@ export default function MinistryDashboard() {
               projectTitle: "Bridge Construction Project - Phase 2",
               requestDate: "2024-02-01",
               status: "Pending",
-              projectValue: "₦8,500,000,000",
+              projectValue: "���8,500,000,000",
               contractorName: "Sahel Bridge Builders",
               expectedDuration: "12 months",
             },
@@ -1448,7 +1459,7 @@ export default function MinistryDashboard() {
               projectTitle: "Heavy Equipment Procurement & Installation",
               requestDate: "2024-02-10",
               status: "Pending",
-              projectValue: "₦4,750,000,000",
+              projectValue: "���4,750,000,000",
               contractorName: "Federal Infrastructure Ltd",
               expectedDuration: "8 months",
             },
@@ -2722,6 +2733,123 @@ export default function MinistryDashboard() {
     alert(`User has been ${user.isActive ? "deactivated" : "activated"}!`);
   };
 
+  // Tender Creation Functions
+  const handleSubmitTender = (isDraft = false) => {
+    if (
+      !newTender.title ||
+      !newTender.category ||
+      !newTender.description ||
+      !newTender.estimatedValue ||
+      !newTender.closeDate
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const { ministry } = getMinistryMockData();
+    const tenderId = `${ministry.code}-${Date.now()}`;
+
+    const tender: Tender = {
+      id: tenderId,
+      title: newTender.title,
+      description: newTender.description,
+      category: newTender.category,
+      estimatedValue: formatCurrency(newTender.estimatedValue),
+      status: isDraft ? "Draft" : "Published",
+      publishDate:
+        newTender.publishDate || new Date().toISOString().split("T")[0],
+      closeDate: newTender.closeDate,
+      bidsReceived: 0,
+      ministry: ministry.name,
+      procuringEntity: ministry.name,
+    };
+
+    // Add to local tenders
+    setTenders((prev) => [tender, ...prev]);
+
+    // Store in localStorage for cross-page access
+    const existingTenders = localStorage.getItem("featuredTenders") || "[]";
+    const tendersList = JSON.parse(existingTenders);
+    const featuredTender = {
+      id: tender.id,
+      title: tender.title,
+      description: tender.description,
+      value: tender.estimatedValue, // Already formatted above
+      deadline: new Date(tender.closeDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      status: tender.status === "Published" ? "Open" : "Draft",
+      statusColor:
+        tender.status === "Published"
+          ? "bg-green-100 text-green-800"
+          : "bg-gray-100 text-gray-800",
+      category: tender.category,
+      ministry: ministry.name,
+      createdAt: Date.now(),
+    };
+
+    tendersList.unshift(featuredTender);
+    // Keep only the last 5 tenders
+    const latestTenders = tendersList.slice(0, 5);
+    localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
+
+    // Also store in recentTenders with more detailed information
+    const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
+    const recentTendersList = JSON.parse(existingRecentTenders);
+    const recentTender = {
+      id: tender.id,
+      title: tender.title,
+      category: tender.category,
+      value: tender.estimatedValue, // Already formatted above
+      deadline: tender.closeDate,
+      location: "Kano State",
+      views: 0,
+      status: tender.status === "Published" ? "Open" : "Draft",
+      description: tender.description,
+      publishDate: tender.publishDate || new Date().toISOString().split("T")[0],
+      closingDate: tender.closeDate,
+      tenderFee: formatCurrency(25000),
+      procuringEntity: ministry.name,
+      duration: "12 months",
+      eligibility: "Qualified contractors with relevant experience",
+      requirements: [
+        "Valid CAC certificate",
+        "Tax clearance for last 3 years",
+        "Professional license",
+        "Evidence of similar projects",
+        "Financial capacity documentation",
+      ],
+      technicalSpecs: [
+        "Project specifications as detailed in tender document",
+        "Quality standards must meet government requirements",
+        "Timeline adherence is mandatory",
+      ],
+      createdAt: Date.now(),
+    };
+
+    recentTendersList.unshift(recentTender);
+    // Keep only the last 10 recent tenders
+    const latestRecentTenders = recentTendersList.slice(0, 10);
+    localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+
+    // Reset form
+    setNewTender({
+      title: "",
+      category: "",
+      description: "",
+      estimatedValue: "",
+      procurementMethod: "Open Tender",
+      publishDate: "",
+      closeDate: "",
+      contactEmail: "",
+    });
+
+    setTenderSubView("list");
+    alert(`Tender ${isDraft ? "saved as draft" : "published"} successfully!`);
+  };
+
   // NOC Request Functions
   const handleSubmitNOCRequest = () => {
     if (
@@ -3802,7 +3930,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {tender.title}
                     </p>
                     <p className="text-xs text-gray-600">
-                      {tender.estimatedValue}
+                      {formatCurrency(tender.estimatedValue)}
                     </p>
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${
@@ -4263,6 +4391,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="text"
+                value={newTender.title}
+                onChange={(e) =>
+                  setNewTender((prev) => ({ ...prev, title: e.target.value }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Enter tender title"
               />
@@ -4271,15 +4403,27 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Category *
               </label>
-              <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+              <select
+                value={newTender.category}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
                 <option value="">Select category</option>
-                <option value="Medical Equipment">Medical Equipment</option>
-                <option value="Pharmaceuticals">Pharmaceuticals</option>
-                <option value="Laboratory Equipment">
-                  Laboratory Equipment
-                </option>
-                <option value="Medical Supplies">Medical Supplies</option>
-                <option value="Healthcare Services">Healthcare Services</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Education">Education</option>
+                <option value="Technology">Technology</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="Environment">Environment</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Water Resources">Water Resources</option>
+                <option value="Energy">Energy</option>
+                <option value="Social Services">Social Services</option>
               </select>
             </div>
             <div className="md:col-span-2">
@@ -4288,6 +4432,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <textarea
                 rows={4}
+                value={newTender.description}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Detailed description of the procurement requirement"
               />
@@ -4298,15 +4449,31 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="text"
+                value={newTender.estimatedValue}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    estimatedValue: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="₦0.00"
+                placeholder="Enter amount (e.g., 2500000 for ₦2.5M)"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Procurement Method
               </label>
-              <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+              <select
+                value={newTender.procurementMethod}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    procurementMethod: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
                 <option value="Open Tender">Open Tender</option>
                 <option value="Selective Tender">Selective Tender</option>
                 <option value="Direct Procurement">Direct Procurement</option>
@@ -4318,6 +4485,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="date"
+                value={newTender.publishDate}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    publishDate: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
@@ -4327,6 +4501,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="date"
+                value={newTender.closeDate}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    closeDate: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
@@ -4347,17 +4528,29 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="email"
+                value={newTender.contactEmail || ministryInfo.contactEmail}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    contactEmail: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                value={ministryInfo.contactEmail}
               />
             </div>
           </div>
 
           <div className="mt-3 flex justify-end space-x-3">
-            <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+            <button
+              onClick={() => handleSubmitTender(true)}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
               Save as Draft
             </button>
-            <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+            <button
+              onClick={() => handleSubmitTender(false)}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+            >
               Publish Tender
             </button>
           </div>
@@ -8676,7 +8869,7 @@ Blockchain Timestamp: ${Date.now()}
               },
               {
                 category: "Laboratory Equipment",
-                amount: "₦650M",
+                amount: "��650M",
                 percentage: 27,
               },
               {

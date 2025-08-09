@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
+import { formatCurrency } from "@/lib/utils";
 import {
   Building2,
   Home,
@@ -266,7 +267,8 @@ export default function CompanyDashboard() {
     },
   ]);
 
-  const [tenders, setTenders] = useState<Tender[]>([
+  // Default tenders for fallback
+  const getDefaultTenders = (): Tender[] => [
     {
       id: "KS-2024-015",
       title: "Supply of Medical Equipment",
@@ -309,7 +311,61 @@ export default function CompanyDashboard() {
       unspscCode: "72141200",
       procurementMethod: "Selective Tendering",
     },
-  ]);
+  ];
+
+  const [tenders, setTenders] = useState<Tender[]>(getDefaultTenders());
+
+  // Load tenders from localStorage (recent tenders created by ministries)
+  useEffect(() => {
+    const loadTenders = () => {
+      const storedTenders = localStorage.getItem("recentTenders");
+      if (storedTenders) {
+        const parsedTenders = JSON.parse(storedTenders);
+        if (parsedTenders.length > 0) {
+          // Convert recent tender format to company dashboard tender format
+          const formattedTenders = parsedTenders.map((recentTender: any) => ({
+            id: recentTender.id,
+            title: recentTender.title,
+            ministry: recentTender.procuringEntity || "Kano State Government",
+            category: recentTender.category,
+            value: formatCurrency(recentTender.value),
+            deadline: recentTender.deadline,
+            location: recentTender.location || "Kano State",
+            status:
+              recentTender.status === "Open" ||
+              recentTender.status === "Published"
+                ? "Open"
+                : "Closed",
+            hasExpressedInterest: false,
+            hasBid: false,
+            unspscCode: "72141100", // Default UNSPSC code
+            procurementMethod: "Open Tendering",
+          }));
+
+          // Combine with default tenders, avoid duplicates
+          const defaultTenders = getDefaultTenders();
+          const allTenders = [...formattedTenders];
+
+          // Add default tenders that don't exist in stored tenders
+          defaultTenders.forEach((defaultTender) => {
+            if (
+              !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
+            ) {
+              allTenders.push(defaultTender);
+            }
+          });
+
+          setTenders(allTenders);
+        }
+      }
+    };
+
+    loadTenders();
+
+    // Set up interval to refresh tenders every 30 seconds
+    const interval = setInterval(loadTenders, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const [contracts, setContracts] = useState<Contract[]>([
     {
@@ -994,7 +1050,7 @@ export default function CompanyDashboard() {
                           </div>
                           <div className="flex items-center">
                             <DollarSign className="h-4 w-4 mr-1" />
-                            {tender.value}
+                            {formatCurrency(tender.value)}
                           </div>
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-1" />
@@ -3521,7 +3577,7 @@ export default function CompanyDashboard() {
                     </p>
                     <p>
                       <span className="font-medium">Value:</span>{" "}
-                      {selectedTender.value}
+                      {formatCurrency(selectedTender.value)}
                     </p>
                     <p>
                       <span className="font-medium">Deadline:</span>{" "}
@@ -3641,7 +3697,7 @@ export default function CompanyDashboard() {
                     <div>
                       <p>
                         <span className="font-medium">Value:</span>{" "}
-                        {selectedTender.value}
+                        {formatCurrency(selectedTender.value)}
                       </p>
                       <p>
                         <span className="font-medium">Deadline:</span>{" "}
