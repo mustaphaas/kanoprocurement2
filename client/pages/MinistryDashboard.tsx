@@ -4189,6 +4189,82 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </div>
         </div>
 
+        {/* Awarded Tenders Section */}
+        {tenders.filter(t => t.status === 'Awarded').length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm border">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                Awarded Tenders
+              </h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Generate and download official award letters for awarded tenders
+              </p>
+            </div>
+
+            <div className="p-6">
+              <div className="space-y-4">
+                {tenders.filter(t => t.status === 'Awarded').map((tender) => (
+                  <div
+                    key={tender.id}
+                    className="border border-green-200 rounded-lg p-4 bg-green-50"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 mb-2">
+                          <h4 className="text-lg font-semibold text-gray-900">{tender.title}</h4>
+                          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                            Awarded
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <p className="text-gray-600">Tender ID</p>
+                            <p className="font-medium">{tender.id}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-600">Awarded Company</p>
+                            <p className="font-medium">{tender.awardedCompany || 'N/A'}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-600">Award Value</p>
+                            <p className="font-medium">{tender.awardAmount || tender.estimatedValue}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-600">Award Date</p>
+                            <p className="font-medium">{tender.awardDate || 'N/A'}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="ml-4 flex flex-col space-y-2">
+                        <button
+                          onClick={() => generateAwardLetter(tender)}
+                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          Generate Award Letter
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedTenderForDetails(tender);
+                            setShowTenderDetailsModal(true);
+                          }}
+                          className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Award Modal */}
         {showAwardModal && selectedTenderForAward && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
