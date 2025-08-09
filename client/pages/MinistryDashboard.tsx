@@ -2115,7 +2115,7 @@ export default function MinistryDashboard() {
     } else if (tenderSubView === "bulk-upload") {
       return renderBulkUpload();
     } else if (tenderSubView === "evaluation") {
-      return renderEvaluationManagement();
+      return renderActualEvaluation();
     } else if (tenderSubView === "award") {
       return renderTenderAward();
     }
@@ -2196,6 +2196,272 @@ export default function MinistryDashboard() {
               {details}
             </div>
           )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderActualEvaluation = () => {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              📊 Tender Evaluation Process
+            </h1>
+            <p className="text-gray-600">
+              Comprehensive evaluation of submitted bids with scoring and recommendations
+            </p>
+          </div>
+          <div className="flex space-x-3">
+            <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              <FileSpreadsheet className="h-4 w-4 mr-2" />
+              Export Evaluations
+            </button>
+            <button className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+              <CheckCircle className="h-4 w-4 mr-2" />
+              Finalize Evaluation
+            </button>
+          </div>
+        </div>
+
+        {/* Evaluation Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <FileText className="h-8 w-8 text-blue-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Total Submissions</p>
+                <p className="text-2xl font-bold text-gray-900">{bidders.length}</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Evaluated</p>
+                <p className="text-2xl font-bold text-gray-900">{bidders.length}</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <Award className="h-8 w-8 text-purple-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Qualified</p>
+                <p className="text-2xl font-bold text-gray-900">{bidders.filter(b => b.status === "Qualified").length}</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <TrendingUp className="h-8 w-8 text-orange-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Avg Score</p>
+                <p className="text-2xl font-bold text-gray-900">84.7%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Active Evaluation */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">Bid Evaluation Workspace</h2>
+              <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                <option value="MOH-2024-001">MOH-2024-001 - Hospital Equipment Supply</option>
+                <option value="MOH-2024-002">MOH-2024-002 - Pharmaceutical Supply</option>
+                <option value="MOH-2024-003">MOH-2024-003 - Laboratory Equipment</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <div className="space-y-6">
+              {bidders.map((bidder, index) => {
+                const workflowStatus = getVendorWorkflowStatus(bidder.id);
+                const isEligible = isVendorEligibleForAward(bidder.id);
+
+                return (
+                  <div key={bidder.id} className="border rounded-lg p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
+                          index === 0 ? "bg-yellow-500" :
+                          index === 1 ? "bg-gray-400" :
+                          index === 2 ? "bg-orange-400" : "bg-gray-300"
+                        }`}>
+                          {index + 1}
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">{bidder.companyName}</h3>
+                          <p className="text-sm text-gray-600">{bidder.experience} experience • {bidder.bidAmount}</p>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              isEligible ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                            }`}>
+                              {isEligible ? "Workflow Complete" : "Workflow Incomplete"}
+                            </span>
+                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                              {bidder.status}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-purple-600">{bidder.totalScore}%</div>
+                        <div className="text-sm text-gray-500">Overall Score</div>
+                      </div>
+                    </div>
+
+                    {/* Evaluation Scoring */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {/* Technical Evaluation */}
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h4 className="font-medium text-blue-900 mb-3">Technical Evaluation (40%)</h4>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">✅ Bid Price Analysis</span>
+                            <span className="text-sm font-medium text-blue-900">18/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">✅ Bid Security</span>
+                            <span className="text-sm font-medium text-blue-900">19/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">✅ Financial Capability</span>
+                            <span className="text-sm font-medium text-blue-900">17/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">✅ Value for Money</span>
+                            <span className="text-sm font-medium text-blue-900">16/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">✅ Cost Breakdown</span>
+                            <span className="text-sm font-medium text-blue-900">17/20</span>
+                          </div>
+                          <div className="border-t pt-2 mt-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-blue-900">Technical Score:</span>
+                              <span className="text-lg font-bold text-blue-900">{bidder.technicalScore}%</span>
+                            </div>
+                            <div className="w-full bg-blue-200 rounded-full h-2 mt-1">
+                              <div className="bg-blue-600 h-2 rounded-full" style={{width: `${bidder.technicalScore}%`}}></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Financial Evaluation */}
+                      <div className="bg-green-50 rounded-lg p-4">
+                        <h4 className="font-medium text-green-900 mb-3">Financial Evaluation (35%)</h4>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-green-800">Experience & Expertise</span>
+                            <span className="text-sm font-medium text-green-900">16/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-green-800">Technical Approach</span>
+                            <span className="text-sm font-medium text-green-900">18/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-green-800">Quality Standards</span>
+                            <span className="text-sm font-medium text-green-900">17/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-green-800">Certifications</span>
+                            <span className="text-sm font-medium text-green-900">19/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-green-800">Previous Contracts (2yrs)</span>
+                            <span className="text-sm font-medium text-green-900">15/20</span>
+                          </div>
+                          <div className="border-t pt-2 mt-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-green-900">Financial Score:</span>
+                              <span className="text-lg font-bold text-green-900">{bidder.financialScore}%</span>
+                            </div>
+                            <div className="w-full bg-green-200 rounded-full h-2 mt-1">
+                              <div className="bg-green-600 h-2 rounded-full" style={{width: `${bidder.financialScore}%`}}></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Compliance Evaluation */}
+                      <div className="bg-purple-50 rounded-lg p-4">
+                        <h4 className="font-medium text-purple-900 mb-3">Compliance (25%)</h4>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-purple-800">Document Completeness</span>
+                            <span className="text-sm font-medium text-purple-900">19/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-purple-800">Legal Requirements</span>
+                            <span className="text-sm font-medium text-purple-900">20/20</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-purple-800">Workflow Completion</span>
+                            <span className="text-sm font-medium text-purple-900">{isEligible ? "20/20" : "0/20"}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-purple-800">NOC Verification</span>
+                            <span className="text-sm font-medium text-purple-900">{workflowStatus?.nocIssued ? "20/20" : "0/20"}</span>
+                          </div>
+                          <div className="border-t pt-2 mt-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-purple-900">Compliance Score:</span>
+                              <span className="text-lg font-bold text-purple-900">{isEligible ? "95" : "70"}%</span>
+                            </div>
+                            <div className="w-full bg-purple-200 rounded-full h-2 mt-1">
+                              <div className="bg-purple-600 h-2 rounded-full" style={{width: `${isEligible ? 95 : 70}%`}}></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Evaluator Comments */}
+                    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                      <h5 className="font-medium text-gray-900 mb-2">Evaluator Comments & Recommendations</h5>
+                      <textarea
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        rows={3}
+                        placeholder="Add evaluation comments and recommendations..."
+                        defaultValue={index === 0 ? "Strong technical proposal with competitive pricing. Highly recommended for award." :
+                                    index === 1 ? "Good technical capability but higher pricing. Suitable alternative if primary choice fails." :
+                                    "Adequate proposal meeting minimum requirements. Consider for smaller scope projects."}
+                      />
+                      <div className="flex justify-between items-center mt-3">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-sm text-gray-600">Recommendation:</span>
+                          <select className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value={index === 0 ? "recommend" : index === 1 ? "consider" : "reserve"}>
+                              {index === 0 ? "Recommend for Award" : index === 1 ? "Consider as Alternative" : "Reserve List"}
+                            </option>
+                            <option value="recommend">Recommend for Award</option>
+                            <option value="consider">Consider as Alternative</option>
+                            <option value="reserve">Reserve List</option>
+                            <option value="reject">Reject</option>
+                          </select>
+                        </div>
+                        <div className="flex space-x-2">
+                          <button className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                            Save Evaluation
+                          </button>
+                          <button className="px-3 py-1 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm">
+                            Generate Report
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -2636,7 +2902,7 @@ export default function MinistryDashboard() {
                             <div className="mt-3 p-2 bg-red-100 border border-red-200 rounded-md">
                               <div className="text-xs text-red-700 font-medium">Required Steps Missing:</div>
                               <ul className="text-xs text-red-600 mt-1 space-y-1">
-                                {!workflowStatus?.registrationCompleted && <li>• Company Registration</li>}
+                                {!workflowStatus?.registrationCompleted && <li>��� Company Registration</li>}
                                 {!workflowStatus?.loginVerificationCompleted && <li>• Login & Verification</li>}
                                 {!workflowStatus?.biddingCompleted && <li>• Bidding Process</li>}
                                 {!workflowStatus?.evaluationCompleted && <li>• Tender Evaluation</li>}
@@ -3026,6 +3292,16 @@ export default function MinistryDashboard() {
                     <div className="bg-blue-50 p-4 rounded-lg">
                       <h5 className="font-medium text-blue-900 mb-2">Technical Evaluation (40%)</h5>
                       <ul className="text-sm text-blue-800 space-y-1">
+                        <li>✅ Bid Price Analysis</li>
+                        <li>✅ Bid Security</li>
+                        <li>✅ Evidence of financial capability</li>
+                        <li>✅ Value for money</li>
+                        <li>✅ Cost breakdown</li>
+                      </ul>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h5 className="font-medium text-green-900 mb-2">Financial Evaluation (35%)</h5>
+                      <ul className="text-sm text-green-800 space-y-1">
                         <li>• Experience & Expertise</li>
                         <li>• Technical Approach</li>
                         <li>• Quality Standards</li>
@@ -3033,21 +3309,13 @@ export default function MinistryDashboard() {
                         <li>• Previous contracts executed in the last 2 years</li>
                       </ul>
                     </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h5 className="font-medium text-green-900 mb-2">Financial Evaluation (35%)</h5>
-                      <ul className="text-sm text-green-800 space-y-1">
-                        <li>• Bid Price Analysis</li>
-                        <li>• Bid security, evidence of financial capability</li>
-                        <li>• Value for money and Cost breakdown</li>
-                      </ul>
-                    </div>
                     <div className="bg-purple-50 p-4 rounded-lg">
                       <h5 className="font-medium text-purple-900 mb-2">Compliance (25%)</h5>
                       <ul className="text-sm text-purple-800 space-y-1">
-                        <li>• Document Completeness</li>
-                        <li>• Legal Requirements</li>
-                        <li>��� Workflow Completion</li>
-                        <li>• NOC Verification</li>
+                        <li>Document Completeness</li>
+                        <li>Legal Requirements</li>
+                        <li>Workflow Completion</li>
+                        <li>NOC Verification</li>
                       </ul>
                     </div>
                   </div>
@@ -3076,7 +3344,7 @@ export default function MinistryDashboard() {
             <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-3xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ���� Download Bids - {selectedTenderForDetails.title}
+                  📥 Download Bids - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowDownloadModal(false)}
