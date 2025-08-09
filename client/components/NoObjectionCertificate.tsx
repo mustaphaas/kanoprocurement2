@@ -115,17 +115,22 @@ export default function NoObjectionCertificate({
 
   // NOC Request Management State
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
-  const [filteredNOCRequests, setFilteredNOCRequests] = useState<NOCRequest[]>([]);
+  const [filteredNOCRequests, setFilteredNOCRequests] = useState<NOCRequest[]>(
+    [],
+  );
   const [nocSearchTerm, setNocSearchTerm] = useState("");
   const [nocStatusFilter, setNocStatusFilter] = useState<string>("all");
   const [nocMinistryFilter, setNocMinistryFilter] = useState<string>("all");
-  const [selectedNOCRequest, setSelectedNOCRequest] = useState<NOCRequest | null>(null);
+  const [selectedNOCRequest, setSelectedNOCRequest] =
+    useState<NOCRequest | null>(null);
   const [showNOCRequestModal, setShowNOCRequestModal] = useState(false);
   const [approvalComments, setApprovalComments] = useState("");
   const [rejectReason, setRejectReason] = useState("");
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectionModal, setShowRejectionModal] = useState(false);
-  const [viewingNOCRequest, setViewingNOCRequest] = useState<NOCRequest | null>(null);
+  const [viewingNOCRequest, setViewingNOCRequest] = useState<NOCRequest | null>(
+    null,
+  );
   const [nocStats, setNocStats] = useState({
     total: 0,
     pending: 0,
@@ -260,13 +265,18 @@ export default function NoObjectionCertificate({
           expectedDuration: "6 months",
           requestingMinistry: "Ministry of Health",
           ministryCode: "MOH",
-          projectDescription: "Supply of advanced medical equipment for 5 primary healthcare centers including X-ray machines, ultrasound equipment, and laboratory instruments.",
-          justification: "Critical equipment needed to improve healthcare delivery in rural areas of Kano State.",
+          projectDescription:
+            "Supply of advanced medical equipment for 5 primary healthcare centers including X-ray machines, ultrasound equipment, and laboratory instruments.",
+          justification:
+            "Critical equipment needed to improve healthcare delivery in rural areas of Kano State.",
           category: "Medical Equipment",
           procuringEntity: "Kano State Primary Healthcare Development Agency",
           contactPerson: "Dr. Amina Hassan",
           contactEmail: "amina.hassan@health.kano.gov.ng",
-          attachments: ["equipment_specifications.pdf", "vendor_certificates.pdf"],
+          attachments: [
+            "equipment_specifications.pdf",
+            "vendor_certificates.pdf",
+          ],
         },
         {
           id: "NOC-CENTRAL-002",
@@ -278,8 +288,10 @@ export default function NoObjectionCertificate({
           expectedDuration: "18 months",
           requestingMinistry: "Ministry of Works & Infrastructure",
           ministryCode: "MOWI",
-          projectDescription: "Complete rehabilitation of 85km highway section including road surface, drainage systems, and safety infrastructure.",
-          justification: "Critical transportation infrastructure to improve interstate commerce and reduce travel time.",
+          projectDescription:
+            "Complete rehabilitation of 85km highway section including road surface, drainage systems, and safety infrastructure.",
+          justification:
+            "Critical transportation infrastructure to improve interstate commerce and reduce travel time.",
           category: "Road Construction",
           procuringEntity: "Kano State Road Maintenance Agency",
           contactPerson: "Eng. Ibrahim Mohammed",
@@ -297,8 +309,10 @@ export default function NoObjectionCertificate({
           certificateNumber: "KNS/SNOC/2024/001",
           requestingMinistry: "Ministry of Education",
           ministryCode: "MOE",
-          projectDescription: "Development of comprehensive digital learning platform for secondary schools with interactive content and assessment tools.",
-          justification: "Essential for digital transformation of education sector and improved learning outcomes.",
+          projectDescription:
+            "Development of comprehensive digital learning platform for secondary schools with interactive content and assessment tools.",
+          justification:
+            "Essential for digital transformation of education sector and improved learning outcomes.",
           category: "Educational Technology",
           procuringEntity: "Kano State Ministry of Education",
           contactPerson: "Prof. Aisha Garba",
@@ -339,12 +353,21 @@ export default function NoObjectionCertificate({
   useEffect(() => {
     let filtered = nocRequests.filter((request) => {
       const matchesSearch =
-        request.projectTitle.toLowerCase().includes(nocSearchTerm.toLowerCase()) ||
-        request.contractorName.toLowerCase().includes(nocSearchTerm.toLowerCase()) ||
-        request.requestingMinistry.toLowerCase().includes(nocSearchTerm.toLowerCase());
+        request.projectTitle
+          .toLowerCase()
+          .includes(nocSearchTerm.toLowerCase()) ||
+        request.contractorName
+          .toLowerCase()
+          .includes(nocSearchTerm.toLowerCase()) ||
+        request.requestingMinistry
+          .toLowerCase()
+          .includes(nocSearchTerm.toLowerCase());
 
-      const matchesStatus = nocStatusFilter === "all" || request.status === nocStatusFilter;
-      const matchesMinistry = nocMinistryFilter === "all" || request.ministryCode === nocMinistryFilter;
+      const matchesStatus =
+        nocStatusFilter === "all" || request.status === nocStatusFilter;
+      const matchesMinistry =
+        nocMinistryFilter === "all" ||
+        request.ministryCode === nocMinistryFilter;
 
       return matchesSearch && matchesStatus && matchesMinistry;
     });
@@ -531,7 +554,9 @@ export default function NoObjectionCertificate({
     alert("No Objection Certificate generated successfully!");
   };
 
-  const saveCertificateForMinistry = (certificateData: NoObjectionCertificateData) => {
+  const saveCertificateForMinistry = (
+    certificateData: NoObjectionCertificateData,
+  ) => {
     // Determine which ministry this certificate belongs to
     let ministryCode = "";
 
@@ -539,13 +564,13 @@ export default function NoObjectionCertificate({
       ministryCode = selectedNOCRequest.ministryCode;
     } else if (viewingCompany) {
       // Map company procuring entity to ministry code
-      const entityToMinistry: {[key: string]: string} = {
+      const entityToMinistry: { [key: string]: string } = {
         "Ministry of Health": "MOH",
         "Ministry of Works": "MOWI",
         "Ministry of Education": "MOE",
         "Kano State Primary Healthcare Development Agency": "MOH",
         "Kano State Ministry of Works": "MOWI",
-        "Kano State Ministry of Education": "MOE"
+        "Kano State Ministry of Education": "MOE",
       };
       ministryCode = entityToMinistry[viewingCompany.procuringEntity] || "MOH";
     }
@@ -554,7 +579,9 @@ export default function NoObjectionCertificate({
       // Store certificate in ministry-specific storage
       const ministryKey = `${ministryCode}_certificates`;
       const existingCertificates = localStorage.getItem(ministryKey);
-      const certificates = existingCertificates ? JSON.parse(existingCertificates) : [];
+      const certificates = existingCertificates
+        ? JSON.parse(existingCertificates)
+        : [];
 
       const certificateRecord = {
         id: certificateData.certificateNumber,
@@ -573,7 +600,10 @@ export default function NoObjectionCertificate({
       certificates.unshift(certificateRecord);
       localStorage.setItem(ministryKey, JSON.stringify(certificates));
 
-      console.log(`Certificate saved for ${ministryCode} ministry:`, certificateRecord);
+      console.log(
+        `Certificate saved for ${ministryCode} ministry:`,
+        certificateRecord,
+      );
     }
   };
 
@@ -744,8 +774,11 @@ export default function NoObjectionCertificate({
     if (request.status === "Approved") {
       // For approved requests, show the electronic certificate
       const certificateData = {
-        certificateNumber: request.certificateNumber || `KNS/SNOC/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, "0")}`,
-        dateIssued: request.approvalDate || new Date().toISOString().split("T")[0],
+        certificateNumber:
+          request.certificateNumber ||
+          `KNS/SNOC/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, "0")}`,
+        dateIssued:
+          request.approvalDate || new Date().toISOString().split("T")[0],
         projectTitle: request.projectTitle,
         projectReferenceNumber: `${request.ministryCode}/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 99) + 1).padStart(2, "0")}`,
         procuringEntity: request.procuringEntity,
@@ -899,7 +932,6 @@ export default function NoObjectionCertificate({
     }
   };
 
-
   const downloadCertificateAsPDF = (htmlContent: string, filename: string) => {
     // Create a new window for printing/downloading
     const printWindow = window.open("", "_blank");
@@ -992,7 +1024,9 @@ export default function NoObjectionCertificate({
               <button
                 onClick={() => {
                   const stored = localStorage.getItem("centralNOCRequests");
-                  alert(`Central NOCs in localStorage: ${stored ? JSON.parse(stored).length : 0} requests\n\nRaw data: ${stored}`);
+                  alert(
+                    `Central NOCs in localStorage: ${stored ? JSON.parse(stored).length : 0} requests\n\nRaw data: ${stored}`,
+                  );
                 }}
                 className="flex items-center space-x-1 px-3 py-1.5 text-sm text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors"
                 title="Debug localStorage"
@@ -1014,8 +1048,12 @@ export default function NoObjectionCertificate({
               <div className="flex items-center">
                 <FileText className="h-8 w-8 text-blue-600" />
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-600">Total Requests</p>
-                  <p className="text-2xl font-bold text-gray-900">{nocStats.total}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Requests
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {nocStats.total}
+                  </p>
                 </div>
               </div>
             </div>
@@ -1024,7 +1062,9 @@ export default function NoObjectionCertificate({
                 <Clock className="h-8 w-8 text-yellow-600" />
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-600">Pending</p>
-                  <p className="text-2xl font-bold text-gray-900">{nocStats.pending}</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {nocStats.pending}
+                  </p>
                 </div>
               </div>
             </div>
@@ -1033,7 +1073,9 @@ export default function NoObjectionCertificate({
                 <CheckCircle className="h-8 w-8 text-green-600" />
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-600">Approved</p>
-                  <p className="text-2xl font-bold text-gray-900">{nocStats.approved}</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {nocStats.approved}
+                  </p>
                 </div>
               </div>
             </div>
@@ -1042,7 +1084,9 @@ export default function NoObjectionCertificate({
                 <XCircle className="h-8 w-8 text-red-600" />
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-600">Rejected</p>
-                  <p className="text-2xl font-bold text-gray-900">{nocStats.rejected}</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {nocStats.rejected}
+                  </p>
                 </div>
               </div>
             </div>
@@ -1087,12 +1131,24 @@ export default function NoObjectionCertificate({
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project Details</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ministry</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contractor</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Project Details
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ministry
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Contractor
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Value
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -1100,23 +1156,39 @@ export default function NoObjectionCertificate({
                   <tr key={request.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{request.projectTitle}</div>
-                        <div className="text-sm text-gray-500">Duration: {request.expectedDuration}</div>
-                        <div className="text-sm text-gray-500">Requested: {request.requestDate}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {request.projectTitle}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Duration: {request.expectedDuration}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Requested: {request.requestDate}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{request.requestingMinistry}</div>
-                      <div className="text-sm text-gray-500">{request.ministryCode}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {request.requestingMinistry}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {request.ministryCode}
+                      </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">{request.contractorName}</div>
+                      <div className="text-sm text-gray-900">
+                        {request.contractorName}
+                      </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{formatCurrency(request.projectValue)}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {formatCurrency(request.projectValue)}
+                      </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCStatusColor(request.status)}`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCStatusColor(request.status)}`}
+                      >
                         {request.status}
                       </span>
                     </td>
@@ -1813,7 +1885,9 @@ export default function NoObjectionCertificate({
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-lg font-semibold text-gray-900">NOC Request Details</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                NOC Request Details
+              </h3>
               <button
                 onClick={() => setShowNOCRequestModal(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -1824,29 +1898,51 @@ export default function NoObjectionCertificate({
             <div className="mt-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Request ID</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.id}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Request ID
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedNOCRequest.id}
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Requesting Ministry</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.requestingMinistry}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Requesting Ministry
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedNOCRequest.requestingMinistry}
+                  </p>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Project Title</label>
-                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.projectTitle}</p>
+                <label className="block text-sm font-medium text-gray-700">
+                  Project Title
+                </label>
+                <p className="mt-1 text-sm text-gray-900">
+                  {selectedNOCRequest.projectTitle}
+                </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Project Description</label>
-                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.projectDescription}</p>
+                <label className="block text-sm font-medium text-gray-700">
+                  Project Description
+                </label>
+                <p className="mt-1 text-sm text-gray-900">
+                  {selectedNOCRequest.projectDescription}
+                </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCStatusColor(selectedNOCRequest.status)}`}>
+                <label className="block text-sm font-medium text-gray-700">
+                  Status
+                </label>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getNOCStatusColor(selectedNOCRequest.status)}`}
+                >
                   {selectedNOCRequest.status}
                 </span>
                 {selectedNOCRequest.certificateNumber && (
-                  <p className="mt-1 text-sm text-gray-600">Certificate: {selectedNOCRequest.certificateNumber}</p>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Certificate: {selectedNOCRequest.certificateNumber}
+                  </p>
                 )}
               </div>
             </div>
@@ -1859,7 +1955,9 @@ export default function NoObjectionCertificate({
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-lg font-semibold text-gray-900">Approve NOC Request</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Approve NOC Request
+              </h3>
               <button
                 onClick={() => setShowApprovalModal(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -1869,10 +1967,14 @@ export default function NoObjectionCertificate({
             </div>
             <div className="mt-4">
               <p className="text-sm text-gray-600 mb-4">
-                You are about to approve the NOC request for "{selectedNOCRequest.projectTitle}" from {selectedNOCRequest.requestingMinistry}.
+                You are about to approve the NOC request for "
+                {selectedNOCRequest.projectTitle}" from{" "}
+                {selectedNOCRequest.requestingMinistry}.
               </p>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Approval Comments (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Approval Comments (Optional)
+                </label>
                 <textarea
                   value={approvalComments}
                   onChange={(e) => setApprovalComments(e.target.value)}
@@ -1906,7 +2008,9 @@ export default function NoObjectionCertificate({
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-lg font-semibold text-gray-900">Reject NOC Request</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Reject NOC Request
+              </h3>
               <button
                 onClick={() => setShowRejectionModal(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -1916,10 +2020,14 @@ export default function NoObjectionCertificate({
             </div>
             <div className="mt-4">
               <p className="text-sm text-gray-600 mb-4">
-                You are about to reject the NOC request for "{selectedNOCRequest.projectTitle}" from {selectedNOCRequest.requestingMinistry}.
+                You are about to reject the NOC request for "
+                {selectedNOCRequest.projectTitle}" from{" "}
+                {selectedNOCRequest.requestingMinistry}.
               </p>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Reason for Rejection <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Reason for Rejection <span className="text-red-500">*</span>
+                </label>
                 <textarea
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value)}

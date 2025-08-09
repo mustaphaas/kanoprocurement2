@@ -2771,7 +2771,10 @@ export default function MinistryDashboard() {
     // Debug logging
     console.log("Ministry NOC Request Submitted:", centralNOCRequest);
     console.log("Total Central NOCs after submission:", centralNOCs.length);
-    console.log("Central NOCs in localStorage:", JSON.parse(localStorage.getItem("centralNOCRequests") || "[]"));
+    console.log(
+      "Central NOCs in localStorage:",
+      JSON.parse(localStorage.getItem("centralNOCRequests") || "[]"),
+    );
 
     // Create local ministry NOC record (showing as pending)
     const ministryNOCRequest: NOCRequest = {
