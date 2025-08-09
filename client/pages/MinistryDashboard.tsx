@@ -1329,6 +1329,88 @@ export default function MinistryDashboard() {
     alert(`Tender successfully awarded to ${selectedBidder.companyName}!`);
   };
 
+  // Committee management functions
+  const handleCreateCommittee = () => {
+    if (!committeeFormData.name || !committeeFormData.chairperson) {
+      alert('Please fill in committee name and chairperson.');
+      return;
+    }
+
+    const newCommittee = {
+      id: `EC-${Date.now()}`,
+      name: committeeFormData.name,
+      chairperson: committeeFormData.chairperson,
+      secretary: committeeFormData.secretary,
+      specialization: committeeFormData.specialization,
+      members: committeeFormData.members.filter(m => m.name.trim() !== ''),
+      createdDate: new Date().toISOString().split('T')[0],
+      status: 'Active'
+    };
+
+    setActiveCommittee(newCommittee);
+    setShowCreateCommitteeModal(false);
+    setCommitteeFormData({
+      name: "",
+      chairperson: "",
+      secretary: "",
+      specialization: "",
+      members: [{ name: "", department: "", role: "Member", email: "" }]
+    });
+
+    alert('Evaluation committee created successfully!');
+  };
+
+  const addCommitteeMember = () => {
+    setCommitteeFormData(prev => ({
+      ...prev,
+      members: [...prev.members, { name: "", department: "", role: "Member", email: "" }]
+    }));
+  };
+
+  const updateCommitteeMember = (index: number, field: string, value: string) => {
+    setCommitteeFormData(prev => ({
+      ...prev,
+      members: prev.members.map((member, i) =>
+        i === index ? { ...member, [field]: value } : member
+      )
+    }));
+  };
+
+  const removeCommitteeMember = (index: number) => {
+    if (committeeFormData.members.length > 1) {
+      setCommitteeFormData(prev => ({
+        ...prev,
+        members: prev.members.filter((_, i) => i !== index)
+      }));
+    }
+  };
+
+  const handleFinalizeEvaluation = () => {
+    if (!activeCommittee) {
+      alert('Please create an evaluation committee before finalizing the evaluation.');
+      return;
+    }
+
+    // Check if all eligible bidders have been evaluated
+    const eligibleBidders = bidders.filter(bidder => isVendorEligibleForAward(bidder.id));
+    if (eligibleBidders.length === 0) {
+      alert('No eligible bidders found. Ensure NOC is issued for at least one bidder.');
+      return;
+    }
+
+    setIsEvaluationFinalized(true);
+    setShowFinalizeEvaluationModal(false);
+
+    // Update tender status to 'Evaluated'
+    setTenders(prev => prev.map(tender =>
+      tender.id === selectedWorkspace
+        ? { ...tender, status: 'Evaluated' as any }
+        : tender
+    ));
+
+    alert('Evaluation finalized successfully! Tender is now ready for award.');
+  };
+
   const filteredCompanies = companies.filter((company) => {
     const matchesSearch =
       company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -4008,7 +4090,7 @@ export default function MinistryDashboard() {
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  📊 Evaluation Report - {selectedTenderForDetails.title}
+                  ��� Evaluation Report - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
@@ -5535,7 +5617,7 @@ export default function MinistryDashboard() {
                       ⚡ Automation Benefits
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• 90% faster processing</li>
+                      <li>��� 90% faster processing</li>
                       <li>• Reduced human errors</li>
                       <li>• Real-time notifications</li>
                       <li>• Automatic compliance checks</li>
