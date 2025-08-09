@@ -421,15 +421,15 @@ export default function NoObjectionCertificate({
         <div style="text-align: center; margin-bottom: 2rem;">
           <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F2d6560e774e84f88a03cfa15b949d449%2F4ff1f0f68b064883a635b3de138dfb31?format=webp&width=120"
+              src="https://cdn.builder.io/api/v1/image/assets%2Fd1a5b1519ca54cb289a03fc4edaa0574%2F89b66b72d15f4f81a5c1fa750ede7be7?format=webp&width=120"
               alt="Kano State Coat of Arms"
               style="height: 96px; width: auto;"
             />
           </div>
-          <h1 style="font-size: 1.25rem; font-weight: 700; color: #15803d; margin-bottom: 0.25rem; margin-top: 0;">KANO STATE GOVERNMENT</h1>
-          <h2 style="font-size: 1.125rem; font-weight: 600; color: #15803d; margin-bottom: 0.25rem; margin-top: 0;">Ministry of Procurement, Project Monitoring & Evaluation</h2>
-          <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.25rem; margin-top: 0;">21 Magaji Rumfa Road, Kano</p>
-          <p style="font-size: 0.875rem; color: #4b5563; margin-top: 0;">Tel: 08065455715 Email: info@procurement.kn.gov.ng Website: www.eprocurement.kn.gov.ng</p>
+          <h1 style="font-size: 1.375rem; font-weight: 700; color: #15803d; margin-bottom: 0.25rem; margin-top: 0;">KANO STATE GOVERNMENT</h1>
+          <h2 style="font-size: 1.25rem; font-weight: 600; color: #15803d; margin-bottom: 0.25rem; margin-top: 0;">MINISTRY OF HEALTH</h2>
+          <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.25rem; margin-top: 0;">Ministry of Health Complex, Kano State, Nigeria</p>
+          <p style="font-size: 0.875rem; color: #4b5563; margin-top: 0;">Tel: +234 64 123 4567, Email: info@health.kano.gov.ng</p>
         </div>
 
         <!-- Certificate Title -->
@@ -1055,23 +1055,22 @@ export default function NoObjectionCertificate({
                 <div className="text-center mb-6">
                   <div className="flex justify-center mb-3">
                     <img
-                      src="https://cdn.builder.io/api/v1/image/assets%2F2d6560e774e84f88a03cfa15b949d449%2F4ff1f0f68b064883a635b3de138dfb31?format=webp&width=120"
+                      src="https://cdn.builder.io/api/v1/image/assets%2Fd1a5b1519ca54cb289a03fc4edaa0574%2F89b66b72d15f4f81a5c1fa750ede7be7?format=webp&width=120"
                       alt="Kano State Coat of Arms"
                       className="h-16 w-auto"
                     />
                   </div>
-                  <h1 className="text-base font-bold text-green-700 mb-1">
+                  <h1 className="text-lg font-bold text-green-700 mb-1">
                     KANO STATE GOVERNMENT
                   </h1>
-                  <h2 className="text-sm font-semibold text-green-700 mb-1">
-                    Ministry of Procurement, Project Monitoring & Evaluation
+                  <h2 className="text-base font-semibold text-green-700 mb-1">
+                    MINISTRY OF HEALTH
                   </h2>
                   <p className="text-xs text-gray-700 mb-1">
-                    21 Magaji Rumfa Road, Kano
+                    Ministry of Health Complex, Kano State, Nigeria
                   </p>
                   <p className="text-xs text-gray-600">
-                    Tel: 08065455715 Email: info@procurement.kn.gov.ng Website:
-                    www.eprocurement.kn.gov.ng
+                    Tel: +234 64 123 4567, Email: info@health.kano.gov.ng
                   </p>
                 </div>
 
