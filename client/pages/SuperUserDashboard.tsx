@@ -3935,7 +3935,7 @@ The award letter has been:
                     >
                       <option value="">Select winning bidder</option>
                       <option value="1">
-                        Northern Construction Ltd (���2.3B - Score: 87.5)
+                        Northern Construction Ltd (�����2.3B - Score: 87.5)
                       </option>
                       <option value="2">
                         BuildRight Engineering (₦2.6B - Score: 76.5)
@@ -5783,6 +5783,11 @@ The award letter has been:
                 key: "no-objection-certificate",
                 label: "No Objection Certificate",
                 icon: FileCheck,
+              },
+              {
+                key: "mda-management",
+                label: "MDA Management",
+                icon: Building2,
               },
               { key: "settings", label: "Settings", icon: Settings },
               { key: "feedback", label: "Feedback", icon: MessageSquare },
