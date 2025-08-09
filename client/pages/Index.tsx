@@ -70,7 +70,7 @@ export default function Index() {
         "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
       closingDate: "2024-02-15",
-      tenderFee: "���25,000",
+      tenderFee: "�����25,000",
       procuringEntity: "Kano State Ministry of Works",
       duration: "18 months",
       eligibility: "Category C contractors with road construction experience",
@@ -410,9 +410,19 @@ export default function Index() {
         {/* Hero Section */}
         <section
           id="home"
-          className="bg-gradient-to-br from-green-50 via-white to-green-25 py-6 lg:py-12"
+          className="relative bg-gradient-to-br from-green-50 via-white to-green-25 py-6 lg:py-12"
+          style={{
+            backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2F036ab409075d4a65ae5179dd5647770a?format=webp&width=800')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Translucent overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-green-50/85 via-white/90 to-green-25/85"></div>
+          {/* Content wrapper */}
+          <div className="relative z-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
                 <div className="space-y-4">
@@ -548,6 +558,7 @@ export default function Index() {
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </section>
