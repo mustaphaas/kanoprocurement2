@@ -374,6 +374,8 @@ export default function MinistryDashboard() {
     VendorWorkflowStatus[]
   >([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState("MOH-2024-001");
+  const [isEditingEvaluation, setIsEditingEvaluation] = useState(false);
+  const [evaluationScores, setEvaluationScores] = useState<{[key: string]: any}>({});
   const [bidders, setBidders] = useState([
     {
       id: "BID-001",
