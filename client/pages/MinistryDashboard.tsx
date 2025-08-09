@@ -974,10 +974,10 @@ export default function MinistryDashboard() {
           return [
             {
               id: "KS-2024-015",
-              title: "Kano-Kaduna Highway Rehabilitation",
+              title: "Supply of Medical Equipment",
               description:
-                "Complete rehabilitation of 85km Kano-Kaduna highway section",
-              category: "Road Construction",
+                "Procurement of medical equipment for Kano State hospitals",
+              category: "Healthcare",
               estimatedValue: "₦15,200,000,000",
               status: "Evaluated",
               publishDate: "2024-01-15",
