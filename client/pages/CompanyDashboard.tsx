@@ -461,90 +461,56 @@ export default function CompanyDashboard() {
   };
 
   const confirmSubmitBid = () => {
-    if (!selectedTender || !user) return;
+    if (!selectedTender) return;
 
-    // Validate form
-    if (!bidFormData.bidAmount || !bidFormData.timeline || !bidFormData.technicalProposal ||
-        !bidFormData.accuracyConfirmed || !bidFormData.bindingConfirmed || !bidFormData.termsConfirmed) {
-      alert("Please fill in all required fields and confirm all checkboxes.");
-      return;
-    }
+    // Create simple bid data for localStorage
+    const bidData = {
+      id: `BID-${Date.now()}`,
+      tenderId: selectedTender.id,
+      tenderTitle: selectedTender.title,
+      companyName: companyData.name,
+      bidAmount: "₦850,000,000", // Mock amount for simplicity
+      status: 'Submitted',
+      submittedAt: new Date().toISOString(),
+      technicalScore: null,
+      financialScore: null,
+      totalScore: null
+    };
 
-    setSubmitLoading(true);
+    // Get existing bids from localStorage
+    const existingBids = localStorage.getItem("tenderBids") || "[]";
+    const bidsArray = JSON.parse(existingBids);
 
-    try {
-      // Create bid data for localStorage
-      const bidData = {
-        id: `BID-${Date.now()}`,
-        tenderId: selectedTender.id,
-        tenderTitle: selectedTender.title,
-        companyName: companyData.name,
-        companyUserId: user.userId,
-        bidAmount: bidFormData.bidAmount,
-        timeline: bidFormData.timeline,
-        technicalProposal: bidFormData.technicalProposal,
-        financialProposal: bidFormData.financialProposal,
-        status: 'Submitted',
-        submittedAt: new Date().toISOString(),
-        technicalScore: null,
-        financialScore: null,
-        totalScore: null,
-        experience: "5+ years", // Mock data for now
-        certifications: ["ISO 9001"], // Mock data for now
-        previousProjects: 15, // Mock data for now
-        completionRate: 95.0 // Mock data for now
-      };
+    // Add new bid
+    bidsArray.push(bidData);
 
-      // Get existing bids from localStorage
-      const existingBids = localStorage.getItem("tenderBids") || "[]";
-      const bidsArray = JSON.parse(existingBids);
+    // Store back to localStorage
+    localStorage.setItem("tenderBids", JSON.stringify(bidsArray));
 
-      // Add new bid
-      bidsArray.push(bidData);
+    // Update the tender to show bid has been submitted - IMPORTANT: maintain hasExpressedInterest
+    setTenders((prevTenders) =>
+      prevTenders.map((tender) =>
+        tender.id === selectedTender.id
+          ? { ...tender, hasBid: true, hasExpressedInterest: true }
+          : tender,
+      ),
+    );
 
-      // Store back to localStorage
-      localStorage.setItem("tenderBids", JSON.stringify(bidsArray));
+    // Update company stats and add notification
+    setNotifications((prev) => [
+      {
+        id: Date.now().toString(),
+        type: "success",
+        title: "Bid Submitted",
+        message: `Your bid for ${selectedTender.title} has been successfully submitted and is under evaluation`,
+        date: new Date().toISOString().split("T")[0],
+        read: false,
+      },
+      ...prev,
+    ]);
 
-      // Update the tender to show bid has been submitted
-      setTenders((prevTenders) =>
-        prevTenders.map((tender) =>
-          tender.id === selectedTender.id ? { ...tender, hasBid: true } : tender,
-        ),
-      );
-
-      // Update company stats and add notification
-      setNotifications((prev) => [
-        {
-          id: Date.now().toString(),
-          type: "success",
-          title: "Bid Submitted",
-          message: `Your bid for ${selectedTender.title} has been successfully submitted and is under evaluation`,
-          date: new Date().toISOString().split("T")[0],
-          read: false,
-        },
-        ...prev,
-      ]);
-
-      // Reset form
-      setBidFormData({
-        bidAmount: "",
-        timeline: "",
-        technicalProposal: "",
-        financialProposal: "",
-        documentsConfirmed: false,
-        accuracyConfirmed: false,
-        bindingConfirmed: false,
-        termsConfirmed: false
-      });
-
-      setShowSubmitBidModal(false);
-      setSelectedTender(null);
-    } catch (error) {
-      console.error('Error submitting bid:', error);
-      alert('Failed to submit bid. Please try again.');
-    } finally {
-      setSubmitLoading(false);
-    }
+    setShowSubmitBidModal(false);
+    setSelectedTender(null);
   };
 
   const getStatusAlert = () => {
