@@ -1010,7 +1010,7 @@ export default function MinistryDashboard() {
               description:
                 "Construction of modern drainage system for Kano metropolis",
               category: "Infrastructure Development",
-              estimatedValue: "₦12,300,000,000",
+              estimatedValue: "���12,300,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1428,7 +1428,7 @@ export default function MinistryDashboard() {
               projectTitle: "Bridge Construction Project - Phase 2",
               requestDate: "2024-02-01",
               status: "Pending",
-              projectValue: "₦8,500,000,000",
+              projectValue: "���8,500,000,000",
               contractorName: "Sahel Bridge Builders",
               expectedDuration: "12 months",
             },
@@ -1459,7 +1459,7 @@ export default function MinistryDashboard() {
               projectTitle: "Heavy Equipment Procurement & Installation",
               requestDate: "2024-02-10",
               status: "Pending",
-              projectValue: "₦4,750,000,000",
+              projectValue: "���4,750,000,000",
               contractorName: "Federal Infrastructure Ltd",
               expectedDuration: "8 months",
             },
@@ -2767,7 +2767,7 @@ export default function MinistryDashboard() {
       id: tender.id,
       title: tender.title,
       description: tender.description,
-      value: formatCurrency(tender.estimatedValue),
+      value: tender.estimatedValue, // Already formatted above
       deadline: new Date(tender.closeDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
       status: tender.status === "Published" ? "Open" : "Draft",
       statusColor: tender.status === "Published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800",
@@ -8818,7 +8818,7 @@ Blockchain Timestamp: ${Date.now()}
               },
               {
                 category: "Laboratory Equipment",
-                amount: "₦650M",
+                amount: "��650M",
                 percentage: 27,
               },
               {
