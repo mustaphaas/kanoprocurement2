@@ -2731,7 +2731,18 @@ export default function MinistryDashboard() {
 
                 <div className="mt-4 flex space-x-3">
                   <button
-                    onClick={() => setShowCreateCommitteeModal(true)}
+                    onClick={() => {
+                      setCommitteeFormData({
+                        name: activeCommittee.name,
+                        chairperson: activeCommittee.chairperson,
+                        secretary: activeCommittee.secretary || "",
+                        specialization: activeCommittee.specialization || "",
+                        members: activeCommittee.members.length > 0
+                          ? activeCommittee.members
+                          : [{ name: "", department: "", role: "Member", email: "" }]
+                      });
+                      setShowCreateCommitteeModal(true);
+                    }}
                     className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
                   >
                     <Edit className="h-4 w-4 mr-1 inline" />
