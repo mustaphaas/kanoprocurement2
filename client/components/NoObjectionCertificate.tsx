@@ -754,6 +754,35 @@ export default function NoObjectionCertificate({
     alert("NOC Request rejected.");
   };
 
+  const updateMinistryNOCData = (
+    request: NOCRequest,
+    status: "Approved" | "Rejected",
+    certificateNumber?: string,
+  ) => {
+    // Update the ministry-specific NOC requests in their localStorage
+    const ministryNOCKey = `${request.ministryCode}_NOCRequests`;
+    const ministryNOCs = localStorage.getItem(ministryNOCKey);
+
+    if (ministryNOCs) {
+      const requests = JSON.parse(ministryNOCs);
+      const updatedRequests = requests.map((r: any) =>
+        r.id === request.id
+          ? {
+              ...r,
+              status,
+              approvalDate:
+                status === "Approved"
+                  ? new Date().toISOString().split("T")[0]
+                  : undefined,
+              certificateNumber:
+                status === "Approved" ? certificateNumber : undefined,
+            }
+          : r,
+      );
+      localStorage.setItem(ministryNOCKey, JSON.stringify(updatedRequests));
+    }
+  };
+
   const getNOCStatusColor = (status: string) => {
     switch (status) {
       case "Approved":
