@@ -298,6 +298,38 @@ export default function AllTenders() {
     }
   ];
 
+  const [allTenders, setAllTenders] = useState<Tender[]>(getDefaultTenders());
+
+  // Load tenders from localStorage
+  useEffect(() => {
+    const loadAllTenders = () => {
+      const storedTenders = localStorage.getItem("recentTenders");
+      if (storedTenders) {
+        const parsedTenders = JSON.parse(storedTenders);
+        if (parsedTenders.length > 0) {
+          // Combine stored tenders with default ones, removing duplicates
+          const defaultTenders = getDefaultTenders();
+          const allUniqueTenders = [...parsedTenders];
+
+          // Add default tenders that don't exist in stored tenders
+          defaultTenders.forEach(defaultTender => {
+            if (!parsedTenders.find((t: Tender) => t.id === defaultTender.id)) {
+              allUniqueTenders.push(defaultTender);
+            }
+          });
+
+          setAllTenders(allUniqueTenders);
+        }
+      }
+    };
+
+    loadAllTenders();
+
+    // Set up interval to refresh tenders every 30 seconds
+    const interval = setInterval(loadAllTenders, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   const categories = ["all", "Infrastructure", "Healthcare", "Education", "Technology", "Agriculture", "Security", "Environment"];
   const statuses = ["all", "Open", "Closing Soon", "Closed"];
 
