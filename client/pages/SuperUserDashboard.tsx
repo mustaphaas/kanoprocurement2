@@ -7636,6 +7636,35 @@ The award letter has been:
           </div>
         </div>
       )}
+
+      {/* MDA Management Modals */}
+      <MDAForm
+        isOpen={showCreateMDAModal || showEditMDAModal}
+        onClose={() => {
+          setShowCreateMDAModal(false);
+          setShowEditMDAModal(false);
+          setSelectedMDA(null);
+        }}
+        onSubmit={handleMDASubmit}
+        mode={mdaFormMode}
+        initialData={selectedMDA}
+        parentMDAs={mdas.filter(m => m.type === 'ministry').map(m => ({ id: m.id, name: m.name, type: m.type }))}
+      />
+
+      <MDAAdminForm
+        isOpen={showCreateAdminModal || showEditAdminModal}
+        onClose={() => {
+          setShowCreateAdminModal(false);
+          setShowEditAdminModal(false);
+          setSelectedMDA(null);
+          setSelectedMDAAdmin(null);
+        }}
+        onSubmit={handleMDAAdminSubmit}
+        mdas={mdas}
+        selectedMDA={selectedMDA}
+        mode={adminFormMode}
+        initialData={selectedMDAAdmin}
+      />
     </div>
   );
 }
