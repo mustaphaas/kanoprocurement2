@@ -309,7 +309,7 @@ export default function MinistryDashboard() {
     contractorName: "",
     expectedDuration: "",
     projectDescription: "",
-    justification: ""
+    justification: "",
   });
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<BidEvaluation | null>(null);
@@ -1459,8 +1459,12 @@ export default function MinistryDashboard() {
   };
 
   const handleDeleteUser = (user: MDAUser) => {
-    if (window.confirm(`Are you sure you want to remove ${user.role} from ${user.department}?`)) {
-      setMDAUsers(prev => prev.filter(u => u.id !== user.id));
+    if (
+      window.confirm(
+        `Are you sure you want to remove ${user.role} from ${user.department}?`,
+      )
+    ) {
+      setMDAUsers((prev) => prev.filter((u) => u.id !== user.id));
       alert("User removed successfully!");
     }
   };
@@ -1479,7 +1483,7 @@ export default function MinistryDashboard() {
           assignedAt: new Date(),
           isActive: true,
         };
-        setMDAUsers(prev => [...prev, newUser]);
+        setMDAUsers((prev) => [...prev, newUser]);
         alert("User created successfully!");
       } else if (selectedUser) {
         const updatedUser: MDAUser = {
@@ -1488,7 +1492,9 @@ export default function MinistryDashboard() {
           department: data.department,
           permissions: data.permissions,
         };
-        setMDAUsers(prev => prev.map(u => u.id === selectedUser.id ? updatedUser : u));
+        setMDAUsers((prev) =>
+          prev.map((u) => (u.id === selectedUser.id ? updatedUser : u)),
+        );
         alert("User updated successfully!");
       }
       setShowCreateUserModal(false);
@@ -1501,15 +1507,19 @@ export default function MinistryDashboard() {
   };
 
   const toggleUserStatus = (user: MDAUser) => {
-    setMDAUsers(prev => prev.map(u =>
-      u.id === user.id ? { ...u, isActive: !u.isActive } : u
-    ));
+    setMDAUsers((prev) =>
+      prev.map((u) => (u.id === user.id ? { ...u, isActive: !u.isActive } : u)),
+    );
     alert(`User has been ${user.isActive ? "deactivated" : "activated"}!`);
   };
 
   // NOC Request Functions
   const handleSubmitNOCRequest = () => {
-    if (!newNOCRequest.projectTitle || !newNOCRequest.contractorName || !newNOCRequest.projectValue) {
+    if (
+      !newNOCRequest.projectTitle ||
+      !newNOCRequest.contractorName ||
+      !newNOCRequest.projectValue
+    ) {
       alert("Please fill in all required fields");
       return;
     }
@@ -1517,21 +1527,21 @@ export default function MinistryDashboard() {
     const nocRequest: NOCRequest = {
       id: `NOC-${Date.now()}`,
       projectTitle: newNOCRequest.projectTitle,
-      requestDate: new Date().toISOString().split('T')[0],
+      requestDate: new Date().toISOString().split("T")[0],
       status: "Pending",
       projectValue: newNOCRequest.projectValue,
       contractorName: newNOCRequest.contractorName,
       expectedDuration: newNOCRequest.expectedDuration,
     };
 
-    setNOCRequests(prev => [nocRequest, ...prev]);
+    setNOCRequests((prev) => [nocRequest, ...prev]);
     setNewNOCRequest({
       projectTitle: "",
       projectValue: "",
       contractorName: "",
       expectedDuration: "",
       projectDescription: "",
-      justification: ""
+      justification: "",
     });
     setShowNOCRequest(false);
     alert("NOC Request submitted successfully!");
@@ -2423,7 +2433,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Contract Statistics */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Contract Overview</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          Contract Overview
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-lg shadow-sm p-6 border">
             <div className="flex items-center">
@@ -7554,9 +7566,7 @@ Blockchain Timestamp: ${Date.now()}
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             User Management
           </h1>
-          <p className="text-gray-600">
-            Manage ministry users and their roles
-          </p>
+          <p className="text-gray-600">Manage ministry users and their roles</p>
         </div>
         <button
           onClick={handleCreateUser}
@@ -7585,7 +7595,7 @@ Blockchain Timestamp: ${Date.now()}
             <div>
               <p className="text-sm font-medium text-gray-600">Active Users</p>
               <p className="text-2xl font-bold text-gray-900">
-                {mdaUsers.filter(u => u.isActive).length}
+                {mdaUsers.filter((u) => u.isActive).length}
               </p>
             </div>
             <UserCheck className="h-8 w-8 text-green-600" />
@@ -7594,9 +7604,14 @@ Blockchain Timestamp: ${Date.now()}
         <div className="bg-white rounded-lg shadow-sm p-6 border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Procurement Officers</p>
+              <p className="text-sm font-medium text-gray-600">
+                Procurement Officers
+              </p>
               <p className="text-2xl font-bold text-gray-900">
-                {mdaUsers.filter(u => u.role === "procurement_officer").length}
+                {
+                  mdaUsers.filter((u) => u.role === "procurement_officer")
+                    .length
+                }
               </p>
             </div>
             <Briefcase className="h-8 w-8 text-orange-600" />
@@ -7607,7 +7622,7 @@ Blockchain Timestamp: ${Date.now()}
             <div>
               <p className="text-sm font-medium text-gray-600">Accountants</p>
               <p className="text-2xl font-bold text-gray-900">
-                {mdaUsers.filter(u => u.role === "accountant").length}
+                {mdaUsers.filter((u) => u.role === "accountant").length}
               </p>
             </div>
             <Calculator className="h-8 w-8 text-purple-600" />
@@ -7659,7 +7674,7 @@ Blockchain Timestamp: ${Date.now()}
                   <td className="px-6 py-4">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
-                        {user.role.replace('_', ' ').toUpperCase()}
+                        {user.role.replace("_", " ").toUpperCase()}
                       </div>
                       <div className="text-sm text-gray-500">
                         {user.department}
@@ -8980,7 +8995,12 @@ Blockchain Timestamp: ${Date.now()}
                   <input
                     type="text"
                     value={newNOCRequest.projectTitle}
-                    onChange={(e) => setNewNOCRequest(prev => ({...prev, projectTitle: e.target.value}))}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        projectTitle: e.target.value,
+                      }))
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Enter project title"
                   />
@@ -8994,7 +9014,12 @@ Blockchain Timestamp: ${Date.now()}
                     <input
                       type="text"
                       value={newNOCRequest.projectValue}
-                      onChange={(e) => setNewNOCRequest(prev => ({...prev, projectValue: e.target.value}))}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          projectValue: e.target.value,
+                        }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="e.g., ₦500,000,000"
                     />
@@ -9006,7 +9031,12 @@ Blockchain Timestamp: ${Date.now()}
                     <input
                       type="text"
                       value={newNOCRequest.expectedDuration}
-                      onChange={(e) => setNewNOCRequest(prev => ({...prev, expectedDuration: e.target.value}))}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          expectedDuration: e.target.value,
+                        }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="e.g., 12 months"
                     />
@@ -9020,7 +9050,12 @@ Blockchain Timestamp: ${Date.now()}
                   <input
                     type="text"
                     value={newNOCRequest.contractorName}
-                    onChange={(e) => setNewNOCRequest(prev => ({...prev, contractorName: e.target.value}))}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        contractorName: e.target.value,
+                      }))
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Enter contractor/vendor name"
                   />
@@ -9032,7 +9067,12 @@ Blockchain Timestamp: ${Date.now()}
                   </label>
                   <textarea
                     value={newNOCRequest.projectDescription}
-                    onChange={(e) => setNewNOCRequest(prev => ({...prev, projectDescription: e.target.value}))}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        projectDescription: e.target.value,
+                      }))
+                    }
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Brief description of the project"
@@ -9045,7 +9085,12 @@ Blockchain Timestamp: ${Date.now()}
                   </label>
                   <textarea
                     value={newNOCRequest.justification}
-                    onChange={(e) => setNewNOCRequest(prev => ({...prev, justification: e.target.value}))}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        justification: e.target.value,
+                      }))
+                    }
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Justification for NOC request"
