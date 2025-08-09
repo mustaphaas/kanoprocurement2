@@ -7502,6 +7502,201 @@ Blockchain Timestamp: ${Date.now()}
         </div>
       )}
 
+      {/* Award Letter Generation Modal */}
+      {showAwardLetterModal && awardLetterData && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-6xl max-w-6xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  📄 Generate Official Award Letter
+                </h3>
+                <button
+                  onClick={() => {
+                    setShowAwardLetterModal(false);
+                    setAwardLetterData(null);
+                    setSelectedTenderForLetter(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Letter Preview */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold text-gray-900">Letter Preview</h4>
+                  <div className="border rounded-lg p-6 bg-gray-50 max-h-96 overflow-y-auto text-sm">
+                    <div className="text-center border-b pb-4 mb-4">
+                      <div className="w-16 h-16 mx-auto mb-2 bg-gray-200 rounded-full flex items-center justify-center">
+                        <img
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fb1307220e8f44b74a0fd54f108089b3e%2F3954c90e53b64c33bfbc92f500570bbb?format=webp&width=800"
+                          alt="Kano State Logo"
+                          className="w-12 h-12 object-contain"
+                        />
+                      </div>
+                      <div className="font-bold text-green-700">KANO STATE GOVERNMENT</div>
+                      <div className="font-bold text-green-700">MINISTRY OF HEALTH</div>
+                      <div className="text-xs text-gray-600">
+                        No [MinistryAddress], Kano State, Nigeria<br/>
+                        Tel: [PhoneNumber], Email: [EmailAddress]
+                      </div>
+                    </div>
+
+                    <div className="text-right mb-4">
+                      <strong>Date:</strong> {awardLetterData.awardDate}<br/>
+                      <strong>Ref No:</strong> {awardLetterData.refNumber}
+                    </div>
+
+                    <div className="mb-4">
+                      <strong>TO:</strong> {awardLetterData.vendorName}<br/>
+                      {awardLetterData.vendorAddress.split('\n').map((line, i) => <div key={i}>{line}</div>)}
+                    </div>
+
+                    <div className="mb-4">
+                      <strong><u>SUBJECT: AWARD OF CONTRACT – {awardLetterData.tenderTitle}</u></strong>
+                    </div>
+
+                    <div className="mb-4 text-justify">
+                      Following the conclusion of the competitive procurement process conducted in accordance
+                      with the provisions of the Public Procurement Act 2007 and the Kano State Public
+                      Procurement Guidelines, we are pleased to inform you that <strong>{awardLetterData.vendorName}</strong>
+                      has been selected as the successful bidder for the above-mentioned project.
+                    </div>
+
+                    <div className="mb-4">
+                      <strong>Contract Details:</strong><br/><br/>
+                      <strong>Tender Reference:</strong> {awardLetterData.tenderRef}<br/>
+                      <strong>Project Title:</strong> {awardLetterData.tenderTitle}<br/>
+                      <strong>Contract Value:</strong> {awardLetterData.contractValue} ({awardLetterData.contractValueWords})<br/>
+                      <strong>Contract Duration:</strong> {awardLetterData.contractDuration} months<br/>
+                      <strong>Performance Bond:</strong> {awardLetterData.performanceBond}% of contract value<br/>
+                      <strong>Advance Payment:</strong> {awardLetterData.advancePayment}% upon guarantee submission<br/>
+                      <strong>Warranty Period:</strong> {awardLetterData.warrantyPeriod} months<br/>
+                      <strong>Delivery Schedule:</strong> {awardLetterData.deliveryScheduleSummary}
+                    </div>
+
+                    <div className="mb-4">
+                      <strong>You are required to:</strong><br/>
+                      1. Confirm acceptance within {awardLetterData.acceptanceDays} days<br/>
+                      2. Submit required performance bond and documentation<br/>
+                      3. Report to Procurement Department for contract signing
+                    </div>
+
+                    <div className="mt-8">
+                      Yours faithfully,<br/><br/>
+                      _____________________________<br/>
+                      {awardLetterData.ministerTitle}
+                    </div>
+
+                    <div className="mt-4 text-xs">
+                      <strong>Cc:</strong> Director, Procurement Department; Accountant General's Office; Project File
+                    </div>
+                  </div>
+                </div>
+
+                {/* Letter Details Form */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold text-gray-900">Letter Details</h4>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Contract Duration (months)</label>
+                      <input
+                        type="number"
+                        value={awardLetterData.contractDuration}
+                        onChange={(e) => setAwardLetterData(prev => ({...prev, contractDuration: e.target.value}))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Performance Bond (%)</label>
+                      <input
+                        type="number"
+                        value={awardLetterData.performanceBond}
+                        onChange={(e) => setAwardLetterData(prev => ({...prev, performanceBond: e.target.value}))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Advance Payment (%)</label>
+                      <input
+                        type="number"
+                        value={awardLetterData.advancePayment}
+                        onChange={(e) => setAwardLetterData(prev => ({...prev, advancePayment: e.target.value}))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Warranty Period (months)</label>
+                      <input
+                        type="number"
+                        value={awardLetterData.warrantyPeriod}
+                        onChange={(e) => setAwardLetterData(prev => ({...prev, warrantyPeriod: e.target.value}))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Acceptance Period (days)</label>
+                      <input
+                        type="number"
+                        value={awardLetterData.acceptanceDays}
+                        onChange={(e) => setAwardLetterData(prev => ({...prev, acceptanceDays: e.target.value}))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Schedule</label>
+                      <textarea
+                        value={awardLetterData.deliveryScheduleSummary}
+                        onChange={(e) => setAwardLetterData(prev => ({...prev, deliveryScheduleSummary: e.target.value}))}
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h5 className="font-medium text-blue-900 mb-2">Document Information</h5>
+                      <div className="text-sm text-blue-800 space-y-1">
+                        <div><strong>Reference:</strong> {awardLetterData.refNumber}</div>
+                        <div><strong>Tender:</strong> {awardLetterData.tenderRef}</div>
+                        <div><strong>Date:</strong> {awardLetterData.awardDate}</div>
+                        <div><strong>Recipient:</strong> {awardLetterData.vendorName}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t">
+                <button
+                  onClick={() => {
+                    setShowAwardLetterModal(false);
+                    setAwardLetterData(null);
+                    setSelectedTenderForLetter(null);
+                  }}
+                  className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={downloadAwardLetterPDF}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  <Download className="h-4 w-4 mr-2 inline" />
+                  Download PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Tender Selection Modal for Contract Creation */}
       {showTenderSelectionModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
