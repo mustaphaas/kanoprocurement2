@@ -10474,30 +10474,6 @@ Blockchain Timestamp: ${Date.now()}
                       placeholder="e.g., Medical Equipment, Construction"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Urgency Level *
-                    </label>
-                    <select
-                      value={newNOCRequest.urgencyLevel}
-                      onChange={(e) =>
-                        setNewNOCRequest((prev) => ({
-                          ...prev,
-                          urgencyLevel: e.target.value as
-                            | "Low"
-                            | "Medium"
-                            | "High"
-                            | "Critical",
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
-                      <option value="Critical">Critical</option>
-                    </select>
-                  </div>
                 </div>
 
                 <div>
