@@ -2726,7 +2726,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 Active Tenders
               </p>
               <p className="text-3xl font-bold text-blue-600">
-                {tenders.filter((t) => t.status === "Published").length}
+                {(() => {
+                  const { ministryId } = getMinistryMockData();
+                  if (ministryId === 'ministry2') return 8;
+                  if (ministryId === 'ministry3') return 6;
+                  return tenders.filter((t) => t.status === "Published").length;
+                })()}
               </p>
             </div>
             <FileText className="h-8 w-8 text-blue-600" />
@@ -7334,7 +7339,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• AES-256 encryption</li>
-                      <li>�� Multi-factor authentication</li>
+                      <li>���� Multi-factor authentication</li>
                       <li>• Audit trail logging</li>
                       <li>• IP geolocation tracking</li>
                     </ul>
