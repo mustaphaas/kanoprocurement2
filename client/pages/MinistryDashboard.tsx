@@ -3851,15 +3851,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
     const matchesStatus =
       statusFilter === "all" || tender.status === statusFilter;
 
-    console.log(`Tender ${tender.id} (${tender.title}): matches search=${matchesSearch}, matches status=${matchesStatus} (filter: ${statusFilter}, tender status: ${tender.status})`);
-
     return matchesSearch && matchesStatus;
   });
-
-  console.log("Total tenders:", tenders.length);
-  console.log("Filtered tenders:", filteredTenders.length);
-  console.log("Current status filter:", statusFilter);
-  console.log("Current search term:", searchTerm);
 
   const renderOverview = () => (
     <div className="space-y-4">
