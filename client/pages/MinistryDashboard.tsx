@@ -1682,6 +1682,69 @@ For detailed feedback, please contact our procurement office.`,
     alert('Post-award workflow completed successfully!');
   };
 
+  // Contract creation from awarded tender
+  const handleSelectAwardedTender = (tender: any) => {
+    setSelectedAwardedTender(tender);
+
+    // Auto-fill contract form with tender data
+    setContractFormData({
+      projectTitle: tender.title,
+      contractorName: tender.awardedCompany || '',
+      contractValue: tender.awardAmount || tender.estimatedValue,
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(Date.now() + (12 * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], // 12 months from now
+      description: tender.description || '',
+      deliverables: ['Project deliverable 1', 'Project deliverable 2'],
+      milestones: [
+        {
+          id: 1,
+          title: 'Project Initiation',
+          description: 'Project setup and planning phase',
+          dueDate: new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+          percentage: 25,
+          status: 'pending'
+        },
+        {
+          id: 2,
+          title: 'Implementation Phase',
+          description: 'Main project implementation',
+          dueDate: new Date(Date.now() + (6 * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+          percentage: 50,
+          status: 'pending'
+        },
+        {
+          id: 3,
+          title: 'Testing & Quality Assurance',
+          description: 'Testing and quality verification',
+          dueDate: new Date(Date.now() + (9 * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+          percentage: 15,
+          status: 'pending'
+        },
+        {
+          id: 4,
+          title: 'Project Completion',
+          description: 'Final delivery and handover',
+          dueDate: new Date(Date.now() + (12 * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+          percentage: 10,
+          status: 'pending'
+        }
+      ],
+      terms: `Standard terms and conditions as per Kano State procurement regulations.
+
+Performance Bond: 10% of contract value
+Warranty Period: 12 months
+Payment Terms: Monthly progress payments based on milestone completion
+Penalty Clause: 0.5% per week for delayed completion`,
+      digitalSignature: true,
+      blockchainVerification: false,
+      autoExecution: false
+    });
+
+    // Close selection modal and open contract modal
+    setShowTenderSelectionModal(false);
+    setShowContractModal(true);
+  };
+
   const filteredCompanies = companies.filter((company) => {
     const matchesSearch =
       company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
