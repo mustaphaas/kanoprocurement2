@@ -32,10 +32,6 @@ import {
   FileCheck,
   Award,
   Send,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
 } from "lucide-react";
 
 interface NoObjectionCertificateData {
