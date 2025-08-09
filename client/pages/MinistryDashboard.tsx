@@ -6337,6 +6337,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     <button
                       onClick={() => {
                         setSelectedTenderForDetails(tender);
+                        // Load real bids for this tender
+                        const tenderBids = loadBidsForTender(tender.id);
+                        if (tenderBids.length > 0) {
+                          setBidders(tenderBids);
+                        }
                         setShowDownloadModal(true);
                       }}
                       className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 text-sm"
