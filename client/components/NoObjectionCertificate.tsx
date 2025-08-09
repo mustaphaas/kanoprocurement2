@@ -1599,6 +1599,7 @@ export default function NoObjectionCertificate({
                     commissionerTitle: "Commissioner / DG",
                   });
                   setViewingCompany(null);
+                  setViewingNOCRequest(null);
                 }}
               >
                 Clear Form
