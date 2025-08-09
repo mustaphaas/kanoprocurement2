@@ -1328,39 +1328,145 @@ export default function MinistryDashboard() {
       },
     ];
 
-    const mockNOCRequests: NOCRequest[] = [
-      {
-        id: "NOC-MOH-001",
-        projectTitle: "Hospital Equipment Supply - Phase 1",
-        requestDate: "2024-01-25",
-        status: "Approved",
-        projectValue: "₦850,000,000",
-        contractorName: "PrimeCare Medical Ltd",
-        expectedDuration: "6 months",
-        approvalDate: "2024-01-28",
-        certificateNumber: "KNS/MOP/PNO/2024/001",
-      },
-      {
-        id: "NOC-MOH-002",
-        projectTitle: "Medical Laboratory Equipment Installation",
-        requestDate: "2024-02-01",
-        status: "Pending",
-        projectValue: "₦650,000,000",
-        contractorName: "Golden Gates Healthcare",
-        expectedDuration: "4 months",
-      },
-      {
-        id: "NOC-MOH-003",
-        projectTitle: "Pharmaceutical Supply Program",
-        requestDate: "2024-02-05",
-        status: "Approved",
-        projectValue: "₦1,200,000,000",
-        contractorName: "Falcon Diagnostics Ltd",
-        expectedDuration: "12 months",
-        approvalDate: "2024-02-08",
-        certificateNumber: "KNS/MOP/PNO/2024/002",
-      },
-    ];
+    const getMinistrySpecificNOCRequests = (): NOCRequest[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "NOC-MOWI-001",
+              projectTitle: "Kano-Kaduna Highway Rehabilitation - Phase 1",
+              requestDate: "2024-01-20",
+              status: "Approved",
+              projectValue: "₦15,200,000,000",
+              contractorName: "Kano Construction Ltd",
+              expectedDuration: "18 months",
+              approvalDate: "2024-01-25",
+              certificateNumber: "KNS/MOWI/PNO/2024/001",
+            },
+            {
+              id: "NOC-MOWI-002",
+              projectTitle: "Bridge Construction Project - Phase 2",
+              requestDate: "2024-02-01",
+              status: "Pending",
+              projectValue: "₦8,500,000,000",
+              contractorName: "Sahel Bridge Builders",
+              expectedDuration: "12 months",
+            },
+            {
+              id: "NOC-MOWI-003",
+              projectTitle: "Government Secretariat Renovation",
+              requestDate: "2024-02-05",
+              status: "Approved",
+              projectValue: "₦6,800,000,000",
+              contractorName: "Northern Roads Nigeria",
+              expectedDuration: "10 months",
+              approvalDate: "2024-02-10",
+              certificateNumber: "KNS/MOWI/PNO/2024/002",
+            },
+            {
+              id: "NOC-MOWI-004",
+              projectTitle: "Urban Drainage System Development",
+              requestDate: "2024-02-08",
+              status: "Approved",
+              projectValue: "₦12,300,000,000",
+              contractorName: "Emirate Construction Co",
+              expectedDuration: "15 months",
+              approvalDate: "2024-02-12",
+              certificateNumber: "KNS/MOWI/PNO/2024/003",
+            },
+            {
+              id: "NOC-MOWI-005",
+              projectTitle: "Heavy Equipment Procurement & Installation",
+              requestDate: "2024-02-10",
+              status: "Pending",
+              projectValue: "₦4,750,000,000",
+              contractorName: "Federal Infrastructure Ltd",
+              expectedDuration: "8 months",
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "NOC-MOE-001",
+              projectTitle: "School Furniture Supply Program - Phase 1",
+              requestDate: "2024-01-18",
+              status: "Approved",
+              projectValue: "₦2,100,000,000",
+              contractorName: "EduTech Solutions Ltd",
+              expectedDuration: "8 months",
+              approvalDate: "2024-01-22",
+              certificateNumber: "KNS/MOE/PNO/2024/001",
+            },
+            {
+              id: "NOC-MOE-002",
+              projectTitle: "Digital Learning Platform Development",
+              requestDate: "2024-01-25",
+              status: "Pending",
+              projectValue: "₦1,800,000,000",
+              contractorName: "Kano School Furniture Ltd",
+              expectedDuration: "12 months",
+            },
+            {
+              id: "NOC-MOE-003",
+              projectTitle: "Science Laboratory Equipment Installation",
+              requestDate: "2024-02-02",
+              status: "Approved",
+              projectValue: "₦3,200,000,000",
+              contractorName: "Northern Educational Supplies",
+              expectedDuration: "6 months",
+              approvalDate: "2024-02-06",
+              certificateNumber: "KNS/MOE/PNO/2024/002",
+            },
+            {
+              id: "NOC-MOE-004",
+              projectTitle: "Library Books and Resources Distribution",
+              requestDate: "2024-02-05",
+              status: "Approved",
+              projectValue: "₦1,650,000,000",
+              contractorName: "Academic Furniture Nigeria",
+              expectedDuration: "5 months",
+              approvalDate: "2024-02-08",
+              certificateNumber: "KNS/MOE/PNO/2024/003",
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "NOC-MOH-001",
+              projectTitle: "Hospital Equipment Supply - Phase 1",
+              requestDate: "2024-01-25",
+              status: "Approved",
+              projectValue: "₦850,000,000",
+              contractorName: "PrimeCare Medical Ltd",
+              expectedDuration: "6 months",
+              approvalDate: "2024-01-28",
+              certificateNumber: "KNS/MOP/PNO/2024/001",
+            },
+            {
+              id: "NOC-MOH-002",
+              projectTitle: "Medical Laboratory Equipment Installation",
+              requestDate: "2024-02-01",
+              status: "Pending",
+              projectValue: "₦650,000,000",
+              contractorName: "Golden Gates Healthcare",
+              expectedDuration: "4 months",
+            },
+            {
+              id: "NOC-MOH-003",
+              projectTitle: "Pharmaceutical Supply Program",
+              requestDate: "2024-02-05",
+              status: "Approved",
+              projectValue: "₦1,200,000,000",
+              contractorName: "Falcon Diagnostics Ltd",
+              expectedDuration: "12 months",
+              approvalDate: "2024-02-08",
+              certificateNumber: "KNS/MOP/PNO/2024/002",
+            },
+          ];
+      }
+    };
+
+    const mockNOCRequests = getMinistrySpecificNOCRequests();
 
     const mockEvaluationCommittees: EvaluationCommittee[] = [
       {
