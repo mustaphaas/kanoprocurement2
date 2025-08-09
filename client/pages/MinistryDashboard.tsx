@@ -592,7 +592,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "Kano Construction Ltd",
-          bidAmount: "���14,800,000,000",
+          bidAmount: "₦14,800,000,000",
           technicalScore: 90,
           financialScore: 87,
           totalScore: 88.5,
@@ -2179,6 +2179,14 @@ export default function MinistryDashboard() {
 
     // Run the sync function
     syncTendersToPublicKeys();
+
+    // Set up periodic refresh of bid counts every 10 seconds
+    const bidCountInterval = setInterval(() => {
+      refreshAllTenderBidCounts();
+    }, 10000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(bidCountInterval);
 
     setContracts(mockContracts);
     setNOCRequests(mockNOCRequests);
