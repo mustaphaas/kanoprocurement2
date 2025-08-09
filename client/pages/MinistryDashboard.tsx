@@ -378,9 +378,13 @@ export default function MinistryDashboard() {
   >([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState("MOH-2024-001");
   const [isEditingEvaluation, setIsEditingEvaluation] = useState(false);
-  const [evaluationScores, setEvaluationScores] = useState<{[key: string]: any}>({});
-  const [showCreateCommitteeModal, setShowCreateCommitteeModal] = useState(false);
-  const [showFinalizeEvaluationModal, setShowFinalizeEvaluationModal] = useState(false);
+  const [evaluationScores, setEvaluationScores] = useState<{
+    [key: string]: any;
+  }>({});
+  const [showCreateCommitteeModal, setShowCreateCommitteeModal] =
+    useState(false);
+  const [showFinalizeEvaluationModal, setShowFinalizeEvaluationModal] =
+    useState(false);
   const [activeCommittee, setActiveCommittee] = useState<any>(null);
   const [isEvaluationFinalized, setIsEvaluationFinalized] = useState(false);
   const [committeeFormData, setCommitteeFormData] = useState({
@@ -388,7 +392,7 @@ export default function MinistryDashboard() {
     chairperson: "",
     secretary: "",
     specialization: "",
-    members: [{ name: "", department: "", role: "Member", email: "" }]
+    members: [{ name: "", department: "", role: "Member", email: "" }],
   });
   const [showPostAwardWorkflow, setShowPostAwardWorkflow] = useState(false);
   const [awardedTenderData, setAwardedTenderData] = useState<any>(null);
@@ -396,12 +400,14 @@ export default function MinistryDashboard() {
     notifySuccessful: false,
     notifyUnsuccessful: false,
     publishOCDS: false,
-    createContract: false
+    createContract: false,
   });
-  const [showTenderSelectionModal, setShowTenderSelectionModal] = useState(false);
+  const [showTenderSelectionModal, setShowTenderSelectionModal] =
+    useState(false);
   const [selectedAwardedTender, setSelectedAwardedTender] = useState<any>(null);
   const [showAwardLetterModal, setShowAwardLetterModal] = useState(false);
-  const [selectedTenderForLetter, setSelectedTenderForLetter] = useState<any>(null);
+  const [selectedTenderForLetter, setSelectedTenderForLetter] =
+    useState<any>(null);
   const [awardLetterData, setAwardLetterData] = useState<any>(null);
   const [bidders, setBidders] = useState([
     {
@@ -585,7 +591,8 @@ export default function MinistryDashboard() {
       {
         id: "MOH-2024-005",
         title: "Medical Consumables Supply",
-        description: "Annual supply of medical consumables for all health centers",
+        description:
+          "Annual supply of medical consumables for all health centers",
         category: "Medical Supplies",
         estimatedValue: "₦750,000,000",
         status: "Awarded" as any,
@@ -936,7 +943,11 @@ export default function MinistryDashboard() {
         scheduledDate: "2024-02-22",
         scheduledTime: "10:30",
         distributionChannels: ["Website", "Email", "Newspaper"],
-        targetCategories: ["IT Services", "Software Development", "Healthcare Technology"],
+        targetCategories: [
+          "IT Services",
+          "Software Development",
+          "Healthcare Technology",
+        ],
         status: "Scheduled",
         createdBy: "IT Department",
         notes: "Critical digital transformation project - target tech vendors",
@@ -960,10 +971,15 @@ export default function MinistryDashboard() {
         scheduledDate: "2024-02-25",
         scheduledTime: "08:00",
         distributionChannels: ["Website", "Email", "SMS", "Newspaper", "Radio"],
-        targetCategories: ["Medical Supplies", "Emergency Services", "Pharmaceuticals"],
+        targetCategories: [
+          "Medical Supplies",
+          "Emergency Services",
+          "Pharmaceuticals",
+        ],
         status: "Scheduled",
         createdBy: "Emergency Response Team",
-        notes: "Urgent procurement for emergency preparedness - maximum visibility",
+        notes:
+          "Urgent procurement for emergency preparedness - maximum visibility",
       },
       {
         id: "SCHED-005",
@@ -972,7 +988,11 @@ export default function MinistryDashboard() {
         scheduledDate: "2024-02-28",
         scheduledTime: "11:00",
         distributionChannels: ["Website", "Email", "Tech Blogs"],
-        targetCategories: ["Software Development", "Telemedicine", "Healthcare Technology"],
+        targetCategories: [
+          "Software Development",
+          "Telemedicine",
+          "Healthcare Technology",
+        ],
         status: "Draft",
         createdBy: "Digital Health Initiative",
         notes: "Innovative telemedicine solution - targeting tech companies",
@@ -984,10 +1004,15 @@ export default function MinistryDashboard() {
         scheduledDate: "2024-02-18",
         scheduledTime: "13:30",
         distributionChannels: ["Website", "Email", "Environmental Journals"],
-        targetCategories: ["Waste Management", "Environmental Services", "Healthcare"],
+        targetCategories: [
+          "Waste Management",
+          "Environmental Services",
+          "Healthcare",
+        ],
         status: "Failed",
         createdBy: "Environmental Officer",
-        notes: "Publication failed due to technical issues - needs republishing",
+        notes:
+          "Publication failed due to technical issues - needs republishing",
       },
       {
         id: "SCHED-007",
@@ -996,10 +1021,15 @@ export default function MinistryDashboard() {
         scheduledDate: "2024-03-01",
         scheduledTime: "09:30",
         distributionChannels: ["Website", "Email", "SMS", "Trade Publications"],
-        targetCategories: ["Vehicle Procurement", "Healthcare Equipment", "Mobile Services"],
+        targetCategories: [
+          "Vehicle Procurement",
+          "Healthcare Equipment",
+          "Mobile Services",
+        ],
         status: "Scheduled",
         createdBy: "Rural Health Program",
-        notes: "Expanding healthcare access to rural areas - specialized vehicle requirements",
+        notes:
+          "Expanding healthcare access to rural areas - specialized vehicle requirements",
       },
       {
         id: "SCHED-008",
@@ -1008,10 +1038,15 @@ export default function MinistryDashboard() {
         scheduledDate: "2024-03-05",
         scheduledTime: "15:00",
         distributionChannels: ["Website", "Email", "Scientific Journals"],
-        targetCategories: ["Laboratory Management", "Software Development", "Healthcare IT"],
+        targetCategories: [
+          "Laboratory Management",
+          "Software Development",
+          "Healthcare IT",
+        ],
         status: "Scheduled",
         createdBy: "Laboratory Services",
-        notes: "Advanced LIMS for improved laboratory efficiency and data management",
+        notes:
+          "Advanced LIMS for improved laboratory efficiency and data management",
       },
     ];
 
@@ -1326,7 +1361,10 @@ export default function MinistryDashboard() {
       ],
     };
 
-    const newBidders = bidderDataByWorkspace[selectedWorkspace as keyof typeof bidderDataByWorkspace] || [];
+    const newBidders =
+      bidderDataByWorkspace[
+        selectedWorkspace as keyof typeof bidderDataByWorkspace
+      ] || [];
     setBidders(newBidders);
   }, [selectedWorkspace]);
 
@@ -1335,26 +1373,41 @@ export default function MinistryDashboard() {
   };
 
   // Helper functions for evaluation scoring
-  const updateEvaluationScore = (bidderId: string, category: string, criterion: string, score: number) => {
-    setEvaluationScores(prev => ({
+  const updateEvaluationScore = (
+    bidderId: string,
+    category: string,
+    criterion: string,
+    score: number,
+  ) => {
+    setEvaluationScores((prev) => ({
       ...prev,
       [bidderId]: {
         ...prev[bidderId],
         [category]: {
           ...prev[bidderId]?.[category],
-          [criterion]: score
-        }
-      }
+          [criterion]: score,
+        },
+      },
     }));
   };
 
-  const getEvaluationScore = (bidderId: string, category: string, criterion: string, defaultScore: number) => {
+  const getEvaluationScore = (
+    bidderId: string,
+    category: string,
+    criterion: string,
+    defaultScore: number,
+  ) => {
     return evaluationScores[bidderId]?.[category]?.[criterion] ?? defaultScore;
   };
 
-  const calculateCategoryScore = (bidderId: string, category: string, criteria: string[], defaultScores: number[]) => {
+  const calculateCategoryScore = (
+    bidderId: string,
+    category: string,
+    criteria: string[],
+    defaultScores: number[],
+  ) => {
     const scores = criteria.map((criterion, index) =>
-      getEvaluationScore(bidderId, category, criterion, defaultScores[index])
+      getEvaluationScore(bidderId, category, criterion, defaultScores[index]),
     );
     const total = scores.reduce((sum, score) => sum + score, 0);
     return Math.round((total / (criteria.length * 20)) * 100);
@@ -1362,63 +1415,95 @@ export default function MinistryDashboard() {
 
   const saveEvaluationScores = () => {
     // Here you would typically save to backend
-    console.log('Saving evaluation scores:', evaluationScores);
+    console.log("Saving evaluation scores:", evaluationScores);
     setIsEditingEvaluation(false);
     // Update bidders with new scores
-    setBidders(prev => prev.map(bidder => {
-      const financialCriteria = ['bidPriceAnalysis', 'bidSecurity', 'financialCapability', 'valueForMoney', 'costBreakdown'];
-      const technicalCriteria = ['experienceExpertise', 'technicalApproach', 'qualityStandards', 'certifications', 'previousContracts'];
+    setBidders((prev) =>
+      prev.map((bidder) => {
+        const financialCriteria = [
+          "bidPriceAnalysis",
+          "bidSecurity",
+          "financialCapability",
+          "valueForMoney",
+          "costBreakdown",
+        ];
+        const technicalCriteria = [
+          "experienceExpertise",
+          "technicalApproach",
+          "qualityStandards",
+          "certifications",
+          "previousContracts",
+        ];
 
-      const financialScore = calculateCategoryScore(bidder.id, 'financial', financialCriteria, [18, 19, 17, 16, 17]);
-      const technicalScore = calculateCategoryScore(bidder.id, 'technical', technicalCriteria, [16, 18, 17, 19, 15]);
-      const totalScore = Math.round((financialScore * 0.4) + (technicalScore * 0.35) + (25)); // 25% for compliance
+        const financialScore = calculateCategoryScore(
+          bidder.id,
+          "financial",
+          financialCriteria,
+          [18, 19, 17, 16, 17],
+        );
+        const technicalScore = calculateCategoryScore(
+          bidder.id,
+          "technical",
+          technicalCriteria,
+          [16, 18, 17, 19, 15],
+        );
+        const totalScore = Math.round(
+          financialScore * 0.4 + technicalScore * 0.35 + 25,
+        ); // 25% for compliance
 
-      return {
-        ...bidder,
-        financialScore,
-        technicalScore,
-        totalScore
-      };
-    }));
+        return {
+          ...bidder,
+          financialScore,
+          technicalScore,
+          totalScore,
+        };
+      }),
+    );
   };
 
   const handleAwardTender = () => {
     if (!selectedTenderForAward || !awardFormData.selectedBidder) {
-      alert('Please select a bidder to award the tender.');
+      alert("Please select a bidder to award the tender.");
       return;
     }
 
     if (!isVendorEligibleForAward(awardFormData.selectedBidder)) {
-      alert('Selected bidder is not eligible for award. NOC must be issued and all workflow steps must be completed.');
+      alert(
+        "Selected bidder is not eligible for award. NOC must be issued and all workflow steps must be completed.",
+      );
       return;
     }
 
-    const selectedBidder = bidders.find(b => b.id === awardFormData.selectedBidder);
+    const selectedBidder = bidders.find(
+      (b) => b.id === awardFormData.selectedBidder,
+    );
     if (!selectedBidder) {
-      alert('Selected bidder not found.');
+      alert("Selected bidder not found.");
       return;
     }
 
     // Update tender status to Awarded
     const updatedTender = {
       ...selectedTenderForAward,
-      status: 'Awarded' as any,
+      status: "Awarded" as any,
       awardedCompany: selectedBidder.companyName,
       awardAmount: awardFormData.awardValue,
-      awardDate: new Date().toISOString().split('T')[0],
-      awardJustification: awardFormData.awardJustification
+      awardDate: new Date().toISOString().split("T")[0],
+      awardJustification: awardFormData.awardJustification,
     };
 
-    setTenders(prev => prev.map(tender =>
-      tender.id === selectedTenderForAward.id ? updatedTender : tender
-    ));
+    setTenders((prev) =>
+      prev.map((tender) =>
+        tender.id === selectedTenderForAward.id ? updatedTender : tender,
+      ),
+    );
 
     // Store awarded tender data for post-award workflow
     setAwardedTenderData({
       tender: updatedTender,
       selectedBidder,
-      unsuccessfulBidders: bidders.filter(b => b.id !== selectedBidder.id),
-      awardDetails: awardFormData
+      unsuccessfulBidders: bidders.filter((b) => b.id !== selectedBidder.id),
+      awardDetails: awardFormData,
     });
 
     // Close award modal and show post-award workflow
@@ -1444,7 +1529,7 @@ export default function MinistryDashboard() {
   // Committee management functions
   const handleCreateCommittee = () => {
     if (!committeeFormData.name || !committeeFormData.chairperson) {
-      alert('Please fill in committee name and chairperson.');
+      alert("Please fill in committee name and chairperson.");
       return;
     }
 
@@ -1454,9 +1539,9 @@ export default function MinistryDashboard() {
       chairperson: committeeFormData.chairperson,
       secretary: committeeFormData.secretary,
       specialization: committeeFormData.specialization,
-      members: committeeFormData.members.filter(m => m.name.trim() !== ''),
-      createdDate: new Date().toISOString().split('T')[0],
-      status: 'Active'
+      members: committeeFormData.members.filter((m) => m.name.trim() !== ""),
+      createdDate: new Date().toISOString().split("T")[0],
+      status: "Active",
     };
 
     setActiveCommittee(newCommittee);
@@ -1466,47 +1551,60 @@ export default function MinistryDashboard() {
       chairperson: "",
       secretary: "",
       specialization: "",
-      members: [{ name: "", department: "", role: "Member", email: "" }]
+      members: [{ name: "", department: "", role: "Member", email: "" }],
     });
 
-    alert('Evaluation committee created successfully!');
+    alert("Evaluation committee created successfully!");
   };
 
   const addCommitteeMember = () => {
-    setCommitteeFormData(prev => ({
+    setCommitteeFormData((prev) => ({
       ...prev,
-      members: [...prev.members, { name: "", department: "", role: "Member", email: "" }]
+      members: [
+        ...prev.members,
+        { name: "", department: "", role: "Member", email: "" },
+      ],
     }));
   };
 
-  const updateCommitteeMember = (index: number, field: string, value: string) => {
-    setCommitteeFormData(prev => ({
+  const updateCommitteeMember = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    setCommitteeFormData((prev) => ({
       ...prev,
       members: prev.members.map((member, i) =>
-        i === index ? { ...member, [field]: value } : member
-      )
+        i === index ? { ...member, [field]: value } : member,
+      ),
     }));
   };
 
   const removeCommitteeMember = (index: number) => {
     if (committeeFormData.members.length > 1) {
-      setCommitteeFormData(prev => ({
+      setCommitteeFormData((prev) => ({
         ...prev,
-        members: prev.members.filter((_, i) => i !== index)
+        members: prev.members.filter((_, i) => i !== index),
       }));
     }
   };
 
   const handleFinalizeEvaluation = () => {
     if (!activeCommittee) {
-      alert('Please create an evaluation committee before finalizing the evaluation.');
+      alert(
+        "Please create an evaluation committee before finalizing the evaluation.",
+      );
       return;
     }
 
     // Check if all eligible bidders have been evaluated
-    const eligibleBidders = bidders.filter(bidder => isVendorEligibleForAward(bidder.id));
+    const eligibleBidders = bidders.filter((bidder) =>
+      isVendorEligibleForAward(bidder.id),
+    );
     if (eligibleBidders.length === 0) {
-      alert('No eligible bidders found. Ensure NOC is issued for at least one bidder.');
+      alert(
+        "No eligible bidders found. Ensure NOC is issued for at least one bidder.",
+      );
       return;
     }
 
@@ -1514,13 +1612,15 @@ export default function MinistryDashboard() {
     setShowFinalizeEvaluationModal(false);
 
     // Update tender status to 'Evaluated'
-    setTenders(prev => prev.map(tender =>
-      tender.id === selectedWorkspace
-        ? { ...tender, status: 'Evaluated' as any }
-        : tender
-    ));
+    setTenders((prev) =>
+      prev.map((tender) =>
+        tender.id === selectedWorkspace
+          ? { ...tender, status: "Evaluated" as any }
+          : tender,
+      ),
+    );
 
-    alert('Evaluation finalized successfully! Tender is now ready for award.');
+    alert("Evaluation finalized successfully! Tender is now ready for award.");
   };
 
   // Post-award workflow functions
@@ -1530,7 +1630,7 @@ export default function MinistryDashboard() {
     // Simulate notification to successful vendor
     const notification = {
       id: `NOTIF-${Date.now()}`,
-      type: 'success',
+      type: "success",
       recipientId: awardedTenderData.selectedBidder.id,
       recipientName: awardedTenderData.selectedBidder.companyName,
       subject: `Congratulations! Contract Awarded - ${awardedTenderData.tender.title}`,
@@ -1549,11 +1649,13 @@ Award Details:
 
 Please contact our procurement office for further details.`,
       timestamp: new Date().toISOString(),
-      status: 'sent'
+      status: "sent",
     };
 
-    setPostAwardSteps(prev => ({ ...prev, notifySuccessful: true }));
-    alert(`Success notification sent to ${awardedTenderData.selectedBidder.companyName}`);
+    setPostAwardSteps((prev) => ({ ...prev, notifySuccessful: true }));
+    alert(
+      `Success notification sent to ${awardedTenderData.selectedBidder.companyName}`,
+    );
   };
 
   const handleNotifyUnsuccessfulVendors = () => {
@@ -1563,7 +1665,7 @@ Please contact our procurement office for further details.`,
     awardedTenderData.unsuccessfulBidders.forEach((bidder: any) => {
       const notification = {
         id: `NOTIF-${Date.now()}-${bidder.id}`,
-        type: 'rejection',
+        type: "rejection",
         recipientId: bidder.id,
         recipientName: bidder.companyName,
         subject: `Tender Result - ${awardedTenderData.tender.title}`,
@@ -1580,12 +1682,14 @@ We encourage you to participate in future tender opportunities. Your proposal sh
 
 For detailed feedback, please contact our procurement office.`,
         timestamp: new Date().toISOString(),
-        status: 'sent'
+        status: "sent",
       };
     });
 
-    setPostAwardSteps(prev => ({ ...prev, notifyUnsuccessful: true }));
-    alert(`Rejection notifications sent to ${awardedTenderData.unsuccessfulBidders.length} unsuccessful vendors`);
+    setPostAwardSteps((prev) => ({ ...prev, notifyUnsuccessful: true }));
+    alert(
+      `Rejection notifications sent to ${awardedTenderData.unsuccessfulBidders.length} unsuccessful vendors`,
+    );
   };
 
   const handlePublishOCDS = () => {
@@ -1599,56 +1703,69 @@ For detailed feedback, please contact our procurement office.`,
         name: "Kano State Government",
         scheme: "NG-STATE",
         uid: "NG-KN",
-        uri: "https://kanostate.gov.ng"
+        uri: "https://kanostate.gov.ng",
       },
-      releases: [{
-        ocid: `ocds-kn-${awardedTenderData.tender.id}`,
-        id: `${awardedTenderData.tender.id}-award-${Date.now()}`,
-        date: new Date().toISOString(),
-        tag: ["award"],
-        initiationType: "tender",
-        parties: [
-          {
-            name: "Kano State Ministry of Health",
-            id: "MOH-KN",
-            roles: ["buyer"]
+      releases: [
+        {
+          ocid: `ocds-kn-${awardedTenderData.tender.id}`,
+          id: `${awardedTenderData.tender.id}-award-${Date.now()}`,
+          date: new Date().toISOString(),
+          tag: ["award"],
+          initiationType: "tender",
+          parties: [
+            {
+              name: "Kano State Ministry of Health",
+              id: "MOH-KN",
+              roles: ["buyer"],
+            },
+            {
+              name: awardedTenderData.selectedBidder.companyName,
+              id: awardedTenderData.selectedBidder.id,
+              roles: ["supplier"],
+            },
+          ],
+          tender: {
+            id: awardedTenderData.tender.id,
+            title: awardedTenderData.tender.title,
+            description: awardedTenderData.tender.description,
+            status: "complete",
+            value: {
+              amount: parseFloat(
+                awardedTenderData.awardDetails.awardValue.replace(/[₦,]/g, ""),
+              ),
+              currency: "NGN",
+            },
           },
-          {
-            name: awardedTenderData.selectedBidder.companyName,
-            id: awardedTenderData.selectedBidder.id,
-            roles: ["supplier"]
-          }
-        ],
-        tender: {
-          id: awardedTenderData.tender.id,
-          title: awardedTenderData.tender.title,
-          description: awardedTenderData.tender.description,
-          status: "complete",
-          value: {
-            amount: parseFloat(awardedTenderData.awardDetails.awardValue.replace(/[₦,]/g, '')),
-            currency: "NGN"
-          }
+          awards: [
+            {
+              id: `award-${awardedTenderData.tender.id}`,
+              title: `Award for ${awardedTenderData.tender.title}`,
+              description: awardedTenderData.awardDetails.awardJustification,
+              status: "active",
+              date: awardedTenderData.tender.awardDate,
+              value: {
+                amount: parseFloat(
+                  awardedTenderData.awardDetails.awardValue.replace(
+                    /[₦,]/g,
+                    "",
+                  ),
+                ),
+                currency: "NGN",
+              },
+              suppliers: [
+                {
+                  name: awardedTenderData.selectedBidder.companyName,
+                  id: awardedTenderData.selectedBidder.id,
+                },
+              ],
+            },
+          ],
         },
-        awards: [{
-          id: `award-${awardedTenderData.tender.id}`,
-          title: `Award for ${awardedTenderData.tender.title}`,
-          description: awardedTenderData.awardDetails.awardJustification,
-          status: "active",
-          date: awardedTenderData.tender.awardDate,
-          value: {
-            amount: parseFloat(awardedTenderData.awardDetails.awardValue.replace(/[₦,]/g, '')),
-            currency: "NGN"
-          },
-          suppliers: [{
-            name: awardedTenderData.selectedBidder.companyName,
-            id: awardedTenderData.selectedBidder.id
-          }]
-        }]
-      }]
+      ],
     };
 
-    setPostAwardSteps(prev => ({ ...prev, publishOCDS: true }));
-    alert('Award published successfully on OCDS transparency portal');
+    setPostAwardSteps((prev) => ({ ...prev, publishOCDS: true }));
+    alert("Award published successfully on OCDS transparency portal");
   };
 
   const handleCreateContract = () => {
@@ -1661,22 +1778,32 @@ For detailed feedback, please contact our procurement office.`,
       contractorName: awardedTenderData.selectedBidder.companyName,
       projectTitle: awardedTenderData.tender.title,
       contractValue: awardedTenderData.awardDetails.awardValue,
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date(Date.now() + (parseInt(awardedTenderData.awardDetails.contractDuration || '12') * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+      startDate: new Date().toISOString().split("T")[0],
+      endDate: new Date(
+        Date.now() +
+          parseInt(awardedTenderData.awardDetails.contractDuration || "12") *
+            30 *
+            24 *
+            60 *
+            60 *
+            1000,
+      )
+        .toISOString()
+        .split("T")[0],
       status: "Active",
       performanceBond: awardedTenderData.awardDetails.performanceBond,
       warrantyPeriod: awardedTenderData.awardDetails.warrantyPeriod,
       deliverySchedule: awardedTenderData.awardDetails.deliverySchedule,
       specialConditions: awardedTenderData.awardDetails.specialConditions,
-      createdDate: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
       milestones: [],
       payments: [],
-      disputes: []
+      disputes: [],
     };
 
     // Add to contracts (you would typically update the contracts state here)
-    setPostAwardSteps(prev => ({ ...prev, createContract: true }));
-    alert('Contract created successfully in contract management system');
+    setPostAwardSteps((prev) => ({ ...prev, createContract: true }));
+    alert("Contract created successfully in contract management system");
   };
 
   const completePostAwardWorkflow = () => {
@@ -1686,9 +1813,9 @@ For detailed feedback, please contact our procurement office.`,
       notifySuccessful: false,
       notifyUnsuccessful: false,
       publishOCDS: false,
-      createContract: false
+      createContract: false,
     });
-    alert('Post-award workflow completed successfully!');
+    alert("Post-award workflow completed successfully!");
   };
 
   // Contract creation from awarded tender
@@ -1698,45 +1825,55 @@ For detailed feedback, please contact our procurement office.`,
     // Auto-fill contract form with tender data
     setContractFormData({
       projectTitle: tender.title,
-      contractorName: tender.awardedCompany || '',
+      contractorName: tender.awardedCompany || "",
       contractValue: tender.awardAmount || tender.estimatedValue,
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date(Date.now() + (12 * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], // 12 months from now
-      description: tender.description || '',
-      deliverables: ['Project deliverable 1', 'Project deliverable 2'],
+      startDate: new Date().toISOString().split("T")[0],
+      endDate: new Date(Date.now() + 12 * 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0], // 12 months from now
+      description: tender.description || "",
+      deliverables: ["Project deliverable 1", "Project deliverable 2"],
       milestones: [
         {
           id: 1,
-          title: 'Project Initiation',
-          description: 'Project setup and planning phase',
-          dueDate: new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+          title: "Project Initiation",
+          description: "Project setup and planning phase",
+          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           percentage: 25,
-          status: 'pending'
+          status: "pending",
         },
         {
           id: 2,
-          title: 'Implementation Phase',
-          description: 'Main project implementation',
-          dueDate: new Date(Date.now() + (6 * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+          title: "Implementation Phase",
+          description: "Main project implementation",
+          dueDate: new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           percentage: 50,
-          status: 'pending'
+          status: "pending",
         },
         {
           id: 3,
-          title: 'Testing & Quality Assurance',
-          description: 'Testing and quality verification',
-          dueDate: new Date(Date.now() + (9 * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+          title: "Testing & Quality Assurance",
+          description: "Testing and quality verification",
+          dueDate: new Date(Date.now() + 9 * 30 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           percentage: 15,
-          status: 'pending'
+          status: "pending",
         },
         {
           id: 4,
-          title: 'Project Completion',
-          description: 'Final delivery and handover',
-          dueDate: new Date(Date.now() + (12 * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+          title: "Project Completion",
+          description: "Final delivery and handover",
+          dueDate: new Date(Date.now() + 12 * 30 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           percentage: 10,
-          status: 'pending'
-        }
+          status: "pending",
+        },
       ],
       terms: `Standard terms and conditions as per Kano State procurement regulations.
 
@@ -1746,7 +1883,7 @@ Payment Terms: Monthly progress payments based on milestone completion
 Penalty Clause: 0.5% per week for delayed completion`,
       digitalSignature: true,
       blockchainVerification: false,
-      autoExecution: false
+      autoExecution: false,
     });
 
     // Close selection modal and open contract modal
@@ -1757,32 +1894,40 @@ Penalty Clause: 0.5% per week for delayed completion`,
   // Award letter generation functions
   const generateAwardLetter = (tender: any) => {
     // Find the awarded bidder for this tender
-    const awardedBidder = bidders.find(b => b.companyName === tender.awardedCompany);
+    const awardedBidder = bidders.find(
+      (b) => b.companyName === tender.awardedCompany,
+    );
 
     if (!awardedBidder) {
-      alert('No awarded bidder found for this tender.');
+      alert("No awarded bidder found for this tender.");
       return;
     }
 
     // Generate award letter data
     const letterData = {
-      awardDate: new Date().toLocaleDateString('en-GB'),
+      awardDate: new Date().toLocaleDateString("en-GB"),
       tenderRef: tender.id,
       vendorName: tender.awardedCompany,
       vendorAddress: `${awardedBidder.companyName}\n[Company Address]\nKano State, Nigeria`,
       tenderTitle: tender.title,
       contractValue: tender.awardAmount || tender.estimatedValue,
-      contractValueWords: convertNumberToWords(parseFloat((tender.awardAmount || tender.estimatedValue).replace(/[₦,]/g, ''))),
-      contractDuration: '12', // Default or from award details
-      performanceBond: '10',
-      performanceBondDue: '14',
-      advancePayment: '20',
-      warrantyPeriod: '12',
-      deliveryScheduleSummary: 'As per contract specifications and project timeline',
-      acceptanceDays: '7',
+      contractValueWords: convertNumberToWords(
+        parseFloat(
+          (tender.awardAmount || tender.estimatedValue).replace(/[₦,]/g, ""),
+        ),
+      ),
+      contractDuration: "12", // Default or from award details
+      performanceBond: "10",
+      performanceBondDue: "14",
+      advancePayment: "20",
+      warrantyPeriod: "12",
+      deliveryScheduleSummary:
+        "As per contract specifications and project timeline",
+      acceptanceDays: "7",
       refNumber: `MOH/KP/E-Proc/${tender.id}`,
-      ministerName: 'Hon. Dr. Aminu Ibrahim Tsanyawa',
-      ministerTitle: 'Hon. Commissioner\nMinistry of Health\nKano State Government'
+      ministerName: "Hon. Dr. Aminu Ibrahim Tsanyawa",
+      ministerTitle:
+        "Hon. Commissioner\nMinistry of Health\nKano State Government",
     };
 
     setAwardLetterData(letterData);
@@ -1792,49 +1937,82 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
   const convertNumberToWords = (num: number): string => {
     // Simple number to words conversion for Nigerian Naira
-    const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
-    const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
-    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    const ones = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+    ];
+    const teens = [
+      "Ten",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
+    ];
+    const tens = [
+      "",
+      "",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
 
     const convertHundreds = (n: number): string => {
-      let result = '';
+      let result = "";
       if (n >= 100) {
-        result += ones[Math.floor(n / 100)] + ' Hundred ';
+        result += ones[Math.floor(n / 100)] + " Hundred ";
         n %= 100;
       }
       if (n >= 20) {
-        result += tens[Math.floor(n / 10)] + ' ';
+        result += tens[Math.floor(n / 10)] + " ";
         n %= 10;
       } else if (n >= 10) {
-        result += teens[n - 10] + ' ';
+        result += teens[n - 10] + " ";
         return result;
       }
       if (n > 0) {
-        result += ones[n] + ' ';
+        result += ones[n] + " ";
       }
       return result;
     };
 
-    if (num === 0) return 'Zero Naira Only';
+    if (num === 0) return "Zero Naira Only";
 
-    let result = '';
+    let result = "";
     if (num >= 1000000000) {
-      result += convertHundreds(Math.floor(num / 1000000000)) + 'Billion ';
+      result += convertHundreds(Math.floor(num / 1000000000)) + "Billion ";
       num %= 1000000000;
     }
     if (num >= 1000000) {
-      result += convertHundreds(Math.floor(num / 1000000)) + 'Million ';
+      result += convertHundreds(Math.floor(num / 1000000)) + "Million ";
       num %= 1000000;
     }
     if (num >= 1000) {
-      result += convertHundreds(Math.floor(num / 1000)) + 'Thousand ';
+      result += convertHundreds(Math.floor(num / 1000)) + "Thousand ";
       num %= 1000;
     }
     if (num > 0) {
       result += convertHundreds(num);
     }
 
-    return result.trim() + ' Naira Only';
+    return result.trim() + " Naira Only";
   };
 
   const downloadAwardLetterPDF = () => {
@@ -1937,7 +2115,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
         <div class="recipient">
           <strong>TO:</strong> ${awardLetterData.vendorName}<br>
-          ${awardLetterData.vendorAddress.replace(/\n/g, '<br>')}
+          ${awardLetterData.vendorAddress.replace(/\n/g, "<br>")}
         </div>
 
         <div class="subject">
@@ -1992,7 +2170,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
     `;
 
     // Create a new window and print
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(htmlContent);
       printWindow.document.close();
@@ -2743,28 +2921,36 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </button>
                 <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
                   <BarChart3 className="h-5 w-5 text-purple-600 mb-2" />
-                  <h4 className="font-medium text-gray-900">Analytics & Insights</h4>
+                  <h4 className="font-medium text-gray-900">
+                    Analytics & Insights
+                  </h4>
                   <p className="text-sm text-gray-600">
                     Performance metrics and trends
                   </p>
                 </button>
                 <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
                   <RefreshCw className="h-5 w-5 text-purple-600 mb-2" />
-                  <h4 className="font-medium text-gray-900">Auto-Republishing</h4>
+                  <h4 className="font-medium text-gray-900">
+                    Auto-Republishing
+                  </h4>
                   <p className="text-sm text-gray-600">
                     Automatic failed publication retry
                   </p>
                 </button>
                 <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
                   <Shield className="h-5 w-5 text-purple-600 mb-2" />
-                  <h4 className="font-medium text-gray-900">Compliance Check</h4>
+                  <h4 className="font-medium text-gray-900">
+                    Compliance Check
+                  </h4>
                   <p className="text-sm text-gray-600">
                     AI-powered regulatory compliance
                   </p>
                 </button>
                 <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
                   <Megaphone className="h-5 w-5 text-purple-600 mb-2" />
-                  <h4 className="font-medium text-gray-900">Channel Optimization</h4>
+                  <h4 className="font-medium text-gray-900">
+                    Channel Optimization
+                  </h4>
                   <p className="text-sm text-gray-600">
                     Smart distribution channel selection
                   </p>
@@ -2776,7 +2962,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 <div className="bg-white rounded-lg p-4 border border-purple-200">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-purple-600">Publications Optimized</p>
+                      <p className="text-sm text-purple-600">
+                        Publications Optimized
+                      </p>
                       <p className="text-2xl font-bold text-purple-900">24</p>
                     </div>
                     <Bot className="h-8 w-8 text-purple-400" />
@@ -2785,7 +2973,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 <div className="bg-white rounded-lg p-4 border border-purple-200">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-purple-600">Avg Response Rate</p>
+                      <p className="text-sm text-purple-600">
+                        Avg Response Rate
+                      </p>
                       <p className="text-2xl font-bold text-purple-900">78%</p>
                     </div>
                     <TrendingUp className="h-8 w-8 text-purple-400" />
@@ -2795,7 +2985,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-purple-600">Time Saved</p>
-                      <p className="text-2xl font-bold text-purple-900">16hrs</p>
+                      <p className="text-2xl font-bold text-purple-900">
+                        16hrs
+                      </p>
                     </div>
                     <Clock className="h-8 w-8 text-purple-400" />
                   </div>
@@ -3375,7 +3567,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {activeCommittee.name}
                     </h3>
                     <p className="text-green-700">
-                      Chairperson: {activeCommittee.chairperson} • Secretary: {activeCommittee.secretary}
+                      Chairperson: {activeCommittee.chairperson} • Secretary:{" "}
+                      {activeCommittee.secretary}
                     </p>
                   </div>
                   <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
@@ -3385,12 +3578,23 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {activeCommittee.members.map((member: any, index: number) => (
-                    <div key={index} className="bg-white rounded-lg p-3 border border-green-200">
-                      <div className="font-medium text-gray-900">{member.name}</div>
-                      <div className="text-sm text-gray-600">{member.department}</div>
-                      <div className="text-sm text-green-700">{member.role}</div>
+                    <div
+                      key={index}
+                      className="bg-white rounded-lg p-3 border border-green-200"
+                    >
+                      <div className="font-medium text-gray-900">
+                        {member.name}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {member.department}
+                      </div>
+                      <div className="text-sm text-green-700">
+                        {member.role}
+                      </div>
                       {member.email && (
-                        <div className="text-xs text-gray-500">{member.email}</div>
+                        <div className="text-xs text-gray-500">
+                          {member.email}
+                        </div>
                       )}
                     </div>
                   ))}
@@ -3404,9 +3608,17 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         chairperson: activeCommittee.chairperson,
                         secretary: activeCommittee.secretary || "",
                         specialization: activeCommittee.specialization || "",
-                        members: activeCommittee.members.length > 0
-                          ? activeCommittee.members
-                          : [{ name: "", department: "", role: "Member", email: "" }]
+                        members:
+                          activeCommittee.members.length > 0
+                            ? activeCommittee.members
+                            : [
+                                {
+                                  name: "",
+                                  department: "",
+                                  role: "Member",
+                                  email: "",
+                                },
+                              ],
                       });
                       setShowCreateCommitteeModal(true);
                     }}
@@ -3427,9 +3639,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
             ) : (
               <div className="text-center py-8">
                 <Users2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Evaluation Committee</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  No Evaluation Committee
+                </h3>
                 <p className="text-gray-600 mb-4">
-                  Create an evaluation committee to manage the tender evaluation process
+                  Create an evaluation committee to manage the tender evaluation
+                  process
                 </p>
                 <button
                   onClick={() => setShowCreateCommitteeModal(true)}
@@ -3611,15 +3826,43 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         </h4>
                         <div className="space-y-3">
                           {[
-                            { key: 'bidPriceAnalysis', label: 'Bid Price Analysis', defaultScore: 18 },
-                            { key: 'bidSecurity', label: 'Bid Security', defaultScore: 19 },
-                            { key: 'financialCapability', label: 'Financial Capability', defaultScore: 17 },
-                            { key: 'valueForMoney', label: 'Value for Money', defaultScore: 16 },
-                            { key: 'costBreakdown', label: 'Cost Breakdown', defaultScore: 17 }
-                          ].map(criterion => {
-                            const currentScore = getEvaluationScore(bidder.id, 'financial', criterion.key, criterion.defaultScore);
+                            {
+                              key: "bidPriceAnalysis",
+                              label: "Bid Price Analysis",
+                              defaultScore: 18,
+                            },
+                            {
+                              key: "bidSecurity",
+                              label: "Bid Security",
+                              defaultScore: 19,
+                            },
+                            {
+                              key: "financialCapability",
+                              label: "Financial Capability",
+                              defaultScore: 17,
+                            },
+                            {
+                              key: "valueForMoney",
+                              label: "Value for Money",
+                              defaultScore: 16,
+                            },
+                            {
+                              key: "costBreakdown",
+                              label: "Cost Breakdown",
+                              defaultScore: 17,
+                            },
+                          ].map((criterion) => {
+                            const currentScore = getEvaluationScore(
+                              bidder.id,
+                              "financial",
+                              criterion.key,
+                              criterion.defaultScore,
+                            );
                             return (
-                              <div key={criterion.key} className="flex justify-between items-center">
+                              <div
+                                key={criterion.key}
+                                className="flex justify-between items-center"
+                              >
                                 <span className="text-sm text-green-800">
                                   ✅ {criterion.label}
                                 </span>
@@ -3630,10 +3873,19 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                       min="0"
                                       max="20"
                                       value={currentScore}
-                                      onChange={(e) => updateEvaluationScore(bidder.id, 'financial', criterion.key, parseInt(e.target.value) || 0)}
+                                      onChange={(e) =>
+                                        updateEvaluationScore(
+                                          bidder.id,
+                                          "financial",
+                                          criterion.key,
+                                          parseInt(e.target.value) || 0,
+                                        )
+                                      }
                                       className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                                     />
-                                    <span className="text-sm text-green-800">/20</span>
+                                    <span className="text-sm text-green-800">
+                                      /20
+                                    </span>
                                   </div>
                                 ) : (
                                   <span className="text-sm font-medium text-green-900">
@@ -3669,15 +3921,43 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         </h4>
                         <div className="space-y-3">
                           {[
-                            { key: 'experienceExpertise', label: 'Experience & Expertise', defaultScore: 16 },
-                            { key: 'technicalApproach', label: 'Technical Approach', defaultScore: 18 },
-                            { key: 'qualityStandards', label: 'Quality Standards', defaultScore: 17 },
-                            { key: 'certifications', label: 'Certifications', defaultScore: 19 },
-                            { key: 'previousContracts', label: 'Previous Contracts (2yrs)', defaultScore: 15 }
-                          ].map(criterion => {
-                            const currentScore = getEvaluationScore(bidder.id, 'technical', criterion.key, criterion.defaultScore);
+                            {
+                              key: "experienceExpertise",
+                              label: "Experience & Expertise",
+                              defaultScore: 16,
+                            },
+                            {
+                              key: "technicalApproach",
+                              label: "Technical Approach",
+                              defaultScore: 18,
+                            },
+                            {
+                              key: "qualityStandards",
+                              label: "Quality Standards",
+                              defaultScore: 17,
+                            },
+                            {
+                              key: "certifications",
+                              label: "Certifications",
+                              defaultScore: 19,
+                            },
+                            {
+                              key: "previousContracts",
+                              label: "Previous Contracts (2yrs)",
+                              defaultScore: 15,
+                            },
+                          ].map((criterion) => {
+                            const currentScore = getEvaluationScore(
+                              bidder.id,
+                              "technical",
+                              criterion.key,
+                              criterion.defaultScore,
+                            );
                             return (
-                              <div key={criterion.key} className="flex justify-between items-center">
+                              <div
+                                key={criterion.key}
+                                className="flex justify-between items-center"
+                              >
                                 <span className="text-sm text-blue-800">
                                   {criterion.label}
                                 </span>
@@ -3688,10 +3968,19 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                       min="0"
                                       max="20"
                                       value={currentScore}
-                                      onChange={(e) => updateEvaluationScore(bidder.id, 'technical', criterion.key, parseInt(e.target.value) || 0)}
+                                      onChange={(e) =>
+                                        updateEvaluationScore(
+                                          bidder.id,
+                                          "technical",
+                                          criterion.key,
+                                          parseInt(e.target.value) || 0,
+                                        )
+                                      }
                                       className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <span className="text-sm text-blue-800">/20</span>
+                                    <span className="text-sm text-blue-800">
+                                      /20
+                                    </span>
                                   </div>
                                 ) : (
                                   <span className="text-sm font-medium text-blue-900">
@@ -4196,7 +4485,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         {/* Awarded Tenders Section */}
-        {tenders.filter(t => t.status === 'Awarded').length > 0 && (
+        {tenders.filter((t) => t.status === "Awarded").length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border">
             <div className="px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -4210,62 +4499,72 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             <div className="p-6">
               <div className="space-y-4">
-                {tenders.filter(t => t.status === 'Awarded').map((tender) => (
-                  <div
-                    key={tender.id}
-                    className="border border-green-200 rounded-lg p-4 bg-green-50"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h4 className="text-lg font-semibold text-gray-900">{tender.title}</h4>
-                          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                            Awarded
-                          </span>
+                {tenders
+                  .filter((t) => t.status === "Awarded")
+                  .map((tender) => (
+                    <div
+                      key={tender.id}
+                      className="border border-green-200 rounded-lg p-4 bg-green-50"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h4 className="text-lg font-semibold text-gray-900">
+                              {tender.title}
+                            </h4>
+                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                              Awarded
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+                            <div>
+                              <p className="text-gray-600">Tender ID</p>
+                              <p className="font-medium">{tender.id}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Awarded Company</p>
+                              <p className="font-medium">
+                                {tender.awardedCompany || "N/A"}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Award Value</p>
+                              <p className="font-medium">
+                                {tender.awardAmount || tender.estimatedValue}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Award Date</p>
+                              <p className="font-medium">
+                                {tender.awardDate || "N/A"}
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-                          <div>
-                            <p className="text-gray-600">Tender ID</p>
-                            <p className="font-medium">{tender.id}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600">Awarded Company</p>
-                            <p className="font-medium">{tender.awardedCompany || 'N/A'}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600">Award Value</p>
-                            <p className="font-medium">{tender.awardAmount || tender.estimatedValue}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600">Award Date</p>
-                            <p className="font-medium">{tender.awardDate || 'N/A'}</p>
-                          </div>
+                        <div className="ml-4 flex flex-col space-y-2">
+                          <button
+                            onClick={() => generateAwardLetter(tender)}
+                            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          >
+                            <FileText className="h-4 w-4 mr-2" />
+                            Generate Award Letter
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedTenderForDetails(tender);
+                              setShowTenderDetailsModal(true);
+                            }}
+                            className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </button>
                         </div>
-                      </div>
-
-                      <div className="ml-4 flex flex-col space-y-2">
-                        <button
-                          onClick={() => generateAwardLetter(tender)}
-                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                        >
-                          <FileText className="h-4 w-4 mr-2" />
-                          Generate Award Letter
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedTenderForDetails(tender);
-                            setShowTenderDetailsModal(true);
-                          }}
-                          className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>
@@ -7196,7 +7495,9 @@ Blockchain Timestamp: ${Date.now()}
             <div className="mt-3">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-gray-900">
-                  {activeCommittee ? 'Edit Evaluation Committee' : 'Create Evaluation Committee'}
+                  {activeCommittee
+                    ? "Edit Evaluation Committee"
+                    : "Create Evaluation Committee"}
                 </h3>
                 <button
                   onClick={() => {
@@ -7207,7 +7508,14 @@ Blockchain Timestamp: ${Date.now()}
                         chairperson: "",
                         secretary: "",
                         specialization: "",
-                        members: [{ name: "", department: "", role: "Member", email: "" }]
+                        members: [
+                          {
+                            name: "",
+                            department: "",
+                            role: "Member",
+                            email: "",
+                          },
+                        ],
                       });
                     }
                   }}
@@ -7220,7 +7528,9 @@ Blockchain Timestamp: ${Date.now()}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Committee Basic Info */}
                 <div className="space-y-4">
-                  <h4 className="text-lg font-medium text-gray-900">Committee Information</h4>
+                  <h4 className="text-lg font-medium text-gray-900">
+                    Committee Information
+                  </h4>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -7229,7 +7539,12 @@ Blockchain Timestamp: ${Date.now()}
                     <input
                       type="text"
                       value={committeeFormData.name}
-                      onChange={(e) => setCommitteeFormData(prev => ({...prev, name: e.target.value}))}
+                      onChange={(e) =>
+                        setCommitteeFormData((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                       placeholder="e.g., Medical Equipment Evaluation Committee"
                     />
@@ -7242,7 +7557,12 @@ Blockchain Timestamp: ${Date.now()}
                     <input
                       type="text"
                       value={committeeFormData.chairperson}
-                      onChange={(e) => setCommitteeFormData(prev => ({...prev, chairperson: e.target.value}))}
+                      onChange={(e) =>
+                        setCommitteeFormData((prev) => ({
+                          ...prev,
+                          chairperson: e.target.value,
+                        }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                       placeholder="e.g., Dr. Amina Hassan"
                     />
@@ -7255,7 +7575,12 @@ Blockchain Timestamp: ${Date.now()}
                     <input
                       type="text"
                       value={committeeFormData.secretary}
-                      onChange={(e) => setCommitteeFormData(prev => ({...prev, secretary: e.target.value}))}
+                      onChange={(e) =>
+                        setCommitteeFormData((prev) => ({
+                          ...prev,
+                          secretary: e.target.value,
+                        }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                       placeholder="e.g., Eng. Musa Ibrahim"
                     />
@@ -7268,7 +7593,12 @@ Blockchain Timestamp: ${Date.now()}
                     <input
                       type="text"
                       value={committeeFormData.specialization}
-                      onChange={(e) => setCommitteeFormData(prev => ({...prev, specialization: e.target.value}))}
+                      onChange={(e) =>
+                        setCommitteeFormData((prev) => ({
+                          ...prev,
+                          specialization: e.target.value,
+                        }))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                       placeholder="e.g., Medical Equipment, Healthcare Technology"
                     />
@@ -7278,7 +7608,9 @@ Blockchain Timestamp: ${Date.now()}
                 {/* Committee Members */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-lg font-medium text-gray-900">Committee Members</h4>
+                    <h4 className="text-lg font-medium text-gray-900">
+                      Committee Members
+                    </h4>
                     <button
                       type="button"
                       onClick={addCommitteeMember}
@@ -7291,9 +7623,14 @@ Blockchain Timestamp: ${Date.now()}
 
                   <div className="max-h-96 overflow-y-auto space-y-3">
                     {committeeFormData.members.map((member, index) => (
-                      <div key={index} className="border border-gray-200 rounded-lg p-4">
+                      <div
+                        key={index}
+                        className="border border-gray-200 rounded-lg p-4"
+                      >
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm font-medium text-gray-700">Member {index + 1}</span>
+                          <span className="text-sm font-medium text-gray-700">
+                            Member {index + 1}
+                          </span>
                           {committeeFormData.members.length > 1 && (
                             <button
                               type="button"
@@ -7309,33 +7646,65 @@ Blockchain Timestamp: ${Date.now()}
                           <input
                             type="text"
                             value={member.name}
-                            onChange={(e) => updateCommitteeMember(index, 'name', e.target.value)}
+                            onChange={(e) =>
+                              updateCommitteeMember(
+                                index,
+                                "name",
+                                e.target.value,
+                              )
+                            }
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                             placeholder="Member Name"
                           />
                           <input
                             type="text"
                             value={member.department}
-                            onChange={(e) => updateCommitteeMember(index, 'department', e.target.value)}
+                            onChange={(e) =>
+                              updateCommitteeMember(
+                                index,
+                                "department",
+                                e.target.value,
+                              )
+                            }
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                             placeholder="Department"
                           />
                           <div className="grid grid-cols-2 gap-2">
                             <select
                               value={member.role}
-                              onChange={(e) => updateCommitteeMember(index, 'role', e.target.value)}
+                              onChange={(e) =>
+                                updateCommitteeMember(
+                                  index,
+                                  "role",
+                                  e.target.value,
+                                )
+                              }
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                             >
                               <option value="Member">Member</option>
-                              <option value="Technical Expert">Technical Expert</option>
-                              <option value="Financial Analyst">Financial Analyst</option>
-                              <option value="Legal Advisor">Legal Advisor</option>
-                              <option value="Subject Matter Expert">Subject Matter Expert</option>
+                              <option value="Technical Expert">
+                                Technical Expert
+                              </option>
+                              <option value="Financial Analyst">
+                                Financial Analyst
+                              </option>
+                              <option value="Legal Advisor">
+                                Legal Advisor
+                              </option>
+                              <option value="Subject Matter Expert">
+                                Subject Matter Expert
+                              </option>
                             </select>
                             <input
                               type="email"
                               value={member.email}
-                              onChange={(e) => updateCommitteeMember(index, 'email', e.target.value)}
+                              onChange={(e) =>
+                                updateCommitteeMember(
+                                  index,
+                                  "email",
+                                  e.target.value,
+                                )
+                              }
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                               placeholder="Email (optional)"
                             />
@@ -7358,7 +7727,14 @@ Blockchain Timestamp: ${Date.now()}
                         chairperson: "",
                         secretary: "",
                         specialization: "",
-                        members: [{ name: "", department: "", role: "Member", email: "" }]
+                        members: [
+                          {
+                            name: "",
+                            department: "",
+                            role: "Member",
+                            email: "",
+                          },
+                        ],
                       });
                     }
                   }}
@@ -7370,7 +7746,7 @@ Blockchain Timestamp: ${Date.now()}
                   onClick={handleCreateCommittee}
                   className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
                 >
-                  {activeCommittee ? 'Update Committee' : 'Create Committee'}
+                  {activeCommittee ? "Update Committee" : "Create Committee"}
                 </button>
               </div>
             </div>
@@ -7398,39 +7774,60 @@ Blockchain Timestamp: ${Date.now()}
               <div className="space-y-6">
                 {/* Committee Status */}
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Committee Status</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    Committee Status
+                  </h4>
                   {activeCommittee ? (
                     <div className="flex items-center space-x-2">
                       <CheckCircle className="h-5 w-5 text-green-600" />
-                      <span className="text-green-800">Committee Active: {activeCommittee.name}</span>
+                      <span className="text-green-800">
+                        Committee Active: {activeCommittee.name}
+                      </span>
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
                       <AlertTriangle className="h-5 w-5 text-red-600" />
-                      <span className="text-red-800">No active committee assigned</span>
+                      <span className="text-red-800">
+                        No active committee assigned
+                      </span>
                     </div>
                   )}
                 </div>
 
                 {/* Evaluation Summary */}
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Evaluation Summary</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    Evaluation Summary
+                  </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <span className="text-sm text-gray-600">Total Bidders:</span>
+                      <span className="text-sm text-gray-600">
+                        Total Bidders:
+                      </span>
                       <span className="ml-2 font-medium">{bidders.length}</span>
                     </div>
                     <div>
-                      <span className="text-sm text-gray-600">Eligible Bidders:</span>
-                      <span className="ml-2 font-medium">{bidders.filter(b => isVendorEligibleForAward(b.id)).length}</span>
+                      <span className="text-sm text-gray-600">
+                        Eligible Bidders:
+                      </span>
+                      <span className="ml-2 font-medium">
+                        {
+                          bidders.filter((b) => isVendorEligibleForAward(b.id))
+                            .length
+                        }
+                      </span>
                     </div>
                     <div>
                       <span className="text-sm text-gray-600">Workspace:</span>
-                      <span className="ml-2 font-medium">{selectedWorkspace}</span>
+                      <span className="ml-2 font-medium">
+                        {selectedWorkspace}
+                      </span>
                     </div>
                     <div>
                       <span className="text-sm text-gray-600">Status:</span>
-                      <span className="ml-2 font-medium">{isEvaluationFinalized ? 'Finalized' : 'In Progress'}</span>
+                      <span className="ml-2 font-medium">
+                        {isEvaluationFinalized ? "Finalized" : "In Progress"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -7440,10 +7837,13 @@ Blockchain Timestamp: ${Date.now()}
                   <div className="flex items-start space-x-3">
                     <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                     <div>
-                      <h5 className="font-medium text-yellow-800">Important Notice</h5>
+                      <h5 className="font-medium text-yellow-800">
+                        Important Notice
+                      </h5>
                       <p className="text-sm text-yellow-700 mt-1">
-                        Finalizing the evaluation will lock all scores and make the tender ready for award.
-                        This action cannot be undone without creating a new evaluation process.
+                        Finalizing the evaluation will lock all scores and make
+                        the tender ready for award. This action cannot be undone
+                        without creating a new evaluation process.
                       </p>
                     </div>
                   </div>
@@ -7451,7 +7851,9 @@ Blockchain Timestamp: ${Date.now()}
 
                 {/* Finalization Requirements */}
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-gray-900">Finalization Requirements</h4>
+                  <h4 className="font-semibold text-gray-900">
+                    Finalization Requirements
+                  </h4>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
                       {activeCommittee ? (
@@ -7459,7 +7861,11 @@ Blockchain Timestamp: ${Date.now()}
                       ) : (
                         <X className="h-4 w-4 text-red-600" />
                       )}
-                      <span className={activeCommittee ? "text-green-800" : "text-red-800"}>
+                      <span
+                        className={
+                          activeCommittee ? "text-green-800" : "text-red-800"
+                        }
+                      >
                         Evaluation committee assigned
                       </span>
                     </div>
@@ -7469,17 +7875,29 @@ Blockchain Timestamp: ${Date.now()}
                       ) : (
                         <X className="h-4 w-4 text-red-600" />
                       )}
-                      <span className={bidders.length > 0 ? "text-green-800" : "text-red-800"}>
+                      <span
+                        className={
+                          bidders.length > 0 ? "text-green-800" : "text-red-800"
+                        }
+                      >
                         Bidders evaluated
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      {bidders.filter(b => isVendorEligibleForAward(b.id)).length > 0 ? (
+                      {bidders.filter((b) => isVendorEligibleForAward(b.id))
+                        .length > 0 ? (
                         <CheckCircle className="h-4 w-4 text-green-600" />
                       ) : (
                         <X className="h-4 w-4 text-red-600" />
                       )}
-                      <span className={bidders.filter(b => isVendorEligibleForAward(b.id)).length > 0 ? "text-green-800" : "text-red-800"}>
+                      <span
+                        className={
+                          bidders.filter((b) => isVendorEligibleForAward(b.id))
+                            .length > 0
+                            ? "text-green-800"
+                            : "text-red-800"
+                        }
+                      >
                         At least one eligible bidder (NOC issued)
                       </span>
                     </div>
@@ -7496,7 +7914,11 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
                 <button
                   onClick={handleFinalizeEvaluation}
-                  disabled={!activeCommittee || bidders.filter(b => isVendorEligibleForAward(b.id)).length === 0}
+                  disabled={
+                    !activeCommittee ||
+                    bidders.filter((b) => isVendorEligibleForAward(b.id))
+                      .length === 0
+                  }
                   className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <CheckCircle className="h-4 w-4 mr-2 inline" />
@@ -7532,7 +7954,9 @@ Blockchain Timestamp: ${Date.now()}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Letter Preview */}
                 <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-gray-900">Letter Preview</h4>
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    Letter Preview
+                  </h4>
                   <div className="border rounded-lg p-6 bg-gray-50 max-h-96 overflow-y-auto text-sm">
                     <div className="text-center border-b pb-4 mb-4">
                       <div className="w-16 h-16 mx-auto mb-2 bg-gray-200 rounded-full flex items-center justify-center">
@@ -7542,137 +7966,238 @@ Blockchain Timestamp: ${Date.now()}
                           className="w-12 h-12 object-contain"
                         />
                       </div>
-                      <div className="font-bold text-green-700">KANO STATE GOVERNMENT</div>
-                      <div className="font-bold text-green-700">MINISTRY OF HEALTH</div>
+                      <div className="font-bold text-green-700">
+                        KANO STATE GOVERNMENT
+                      </div>
+                      <div className="font-bold text-green-700">
+                        MINISTRY OF HEALTH
+                      </div>
                       <div className="text-xs text-gray-600">
-                        No [MinistryAddress], Kano State, Nigeria<br/>
+                        No [MinistryAddress], Kano State, Nigeria
+                        <br />
                         Tel: [PhoneNumber], Email: [EmailAddress]
                       </div>
                     </div>
 
                     <div className="text-right mb-4">
-                      <strong>Date:</strong> {awardLetterData.awardDate}<br/>
+                      <strong>Date:</strong> {awardLetterData.awardDate}
+                      <br />
                       <strong>Ref No:</strong> {awardLetterData.refNumber}
                     </div>
 
                     <div className="mb-4">
-                      <strong>TO:</strong> {awardLetterData.vendorName}<br/>
-                      {awardLetterData.vendorAddress.split('\n').map((line, i) => <div key={i}>{line}</div>)}
+                      <strong>TO:</strong> {awardLetterData.vendorName}
+                      <br />
+                      {awardLetterData.vendorAddress
+                        .split("\n")
+                        .map((line, i) => (
+                          <div key={i}>{line}</div>
+                        ))}
                     </div>
 
                     <div className="mb-4">
-                      <strong><u>SUBJECT: AWARD OF CONTRACT – {awardLetterData.tenderTitle}</u></strong>
+                      <strong>
+                        <u>
+                          SUBJECT: AWARD OF CONTRACT –{" "}
+                          {awardLetterData.tenderTitle}
+                        </u>
+                      </strong>
                     </div>
 
                     <div className="mb-4 text-justify">
-                      Following the conclusion of the competitive procurement process conducted in accordance
-                      with the provisions of the Public Procurement Act 2007 and the Kano State Public
-                      Procurement Guidelines, we are pleased to inform you that <strong>{awardLetterData.vendorName}</strong>
-                      has been selected as the successful bidder for the above-mentioned project.
+                      Following the conclusion of the competitive procurement
+                      process conducted in accordance with the provisions of the
+                      Public Procurement Act 2007 and the Kano State Public
+                      Procurement Guidelines, we are pleased to inform you that{" "}
+                      <strong>{awardLetterData.vendorName}</strong>
+                      has been selected as the successful bidder for the
+                      above-mentioned project.
                     </div>
 
                     <div className="mb-4">
-                      <strong>Contract Details:</strong><br/><br/>
-                      <strong>Tender Reference:</strong> {awardLetterData.tenderRef}<br/>
-                      <strong>Project Title:</strong> {awardLetterData.tenderTitle}<br/>
-                      <strong>Contract Value:</strong> {awardLetterData.contractValue} ({awardLetterData.contractValueWords})<br/>
-                      <strong>Contract Duration:</strong> {awardLetterData.contractDuration} months<br/>
-                      <strong>Performance Bond:</strong> {awardLetterData.performanceBond}% of contract value<br/>
-                      <strong>Advance Payment:</strong> {awardLetterData.advancePayment}% upon guarantee submission<br/>
-                      <strong>Warranty Period:</strong> {awardLetterData.warrantyPeriod} months<br/>
-                      <strong>Delivery Schedule:</strong> {awardLetterData.deliveryScheduleSummary}
+                      <strong>Contract Details:</strong>
+                      <br />
+                      <br />
+                      <strong>Tender Reference:</strong>{" "}
+                      {awardLetterData.tenderRef}
+                      <br />
+                      <strong>Project Title:</strong>{" "}
+                      {awardLetterData.tenderTitle}
+                      <br />
+                      <strong>Contract Value:</strong>{" "}
+                      {awardLetterData.contractValue} (
+                      {awardLetterData.contractValueWords})<br />
+                      <strong>Contract Duration:</strong>{" "}
+                      {awardLetterData.contractDuration} months
+                      <br />
+                      <strong>Performance Bond:</strong>{" "}
+                      {awardLetterData.performanceBond}% of contract value
+                      <br />
+                      <strong>Advance Payment:</strong>{" "}
+                      {awardLetterData.advancePayment}% upon guarantee
+                      submission
+                      <br />
+                      <strong>Warranty Period:</strong>{" "}
+                      {awardLetterData.warrantyPeriod} months
+                      <br />
+                      <strong>Delivery Schedule:</strong>{" "}
+                      {awardLetterData.deliveryScheduleSummary}
                     </div>
 
                     <div className="mb-4">
-                      <strong>You are required to:</strong><br/>
-                      1. Confirm acceptance within {awardLetterData.acceptanceDays} days<br/>
-                      2. Submit required performance bond and documentation<br/>
+                      <strong>You are required to:</strong>
+                      <br />
+                      1. Confirm acceptance within{" "}
+                      {awardLetterData.acceptanceDays} days
+                      <br />
+                      2. Submit required performance bond and documentation
+                      <br />
                       3. Report to Procurement Department for contract signing
                     </div>
 
                     <div className="mt-8">
-                      Yours faithfully,<br/><br/>
-                      _____________________________<br/>
+                      Yours faithfully,
+                      <br />
+                      <br />
+                      _____________________________
+                      <br />
                       {awardLetterData.ministerTitle}
                     </div>
 
                     <div className="mt-4 text-xs">
-                      <strong>Cc:</strong> Director, Procurement Department; Accountant General's Office; Project File
+                      <strong>Cc:</strong> Director, Procurement Department;
+                      Accountant General's Office; Project File
                     </div>
                   </div>
                 </div>
 
                 {/* Letter Details Form */}
                 <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-gray-900">Letter Details</h4>
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    Letter Details
+                  </h4>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Contract Duration (months)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Contract Duration (months)
+                      </label>
                       <input
                         type="number"
                         value={awardLetterData.contractDuration}
-                        onChange={(e) => setAwardLetterData(prev => ({...prev, contractDuration: e.target.value}))}
+                        onChange={(e) =>
+                          setAwardLetterData((prev) => ({
+                            ...prev,
+                            contractDuration: e.target.value,
+                          }))
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Performance Bond (%)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Performance Bond (%)
+                      </label>
                       <input
                         type="number"
                         value={awardLetterData.performanceBond}
-                        onChange={(e) => setAwardLetterData(prev => ({...prev, performanceBond: e.target.value}))}
+                        onChange={(e) =>
+                          setAwardLetterData((prev) => ({
+                            ...prev,
+                            performanceBond: e.target.value,
+                          }))
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Advance Payment (%)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Advance Payment (%)
+                      </label>
                       <input
                         type="number"
                         value={awardLetterData.advancePayment}
-                        onChange={(e) => setAwardLetterData(prev => ({...prev, advancePayment: e.target.value}))}
+                        onChange={(e) =>
+                          setAwardLetterData((prev) => ({
+                            ...prev,
+                            advancePayment: e.target.value,
+                          }))
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Warranty Period (months)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Warranty Period (months)
+                      </label>
                       <input
                         type="number"
                         value={awardLetterData.warrantyPeriod}
-                        onChange={(e) => setAwardLetterData(prev => ({...prev, warrantyPeriod: e.target.value}))}
+                        onChange={(e) =>
+                          setAwardLetterData((prev) => ({
+                            ...prev,
+                            warrantyPeriod: e.target.value,
+                          }))
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Acceptance Period (days)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Acceptance Period (days)
+                      </label>
                       <input
                         type="number"
                         value={awardLetterData.acceptanceDays}
-                        onChange={(e) => setAwardLetterData(prev => ({...prev, acceptanceDays: e.target.value}))}
+                        onChange={(e) =>
+                          setAwardLetterData((prev) => ({
+                            ...prev,
+                            acceptanceDays: e.target.value,
+                          }))
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Schedule</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Delivery Schedule
+                      </label>
                       <textarea
                         value={awardLetterData.deliveryScheduleSummary}
-                        onChange={(e) => setAwardLetterData(prev => ({...prev, deliveryScheduleSummary: e.target.value}))}
+                        onChange={(e) =>
+                          setAwardLetterData((prev) => ({
+                            ...prev,
+                            deliveryScheduleSummary: e.target.value,
+                          }))
+                        }
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
                     <div className="bg-blue-50 rounded-lg p-4">
-                      <h5 className="font-medium text-blue-900 mb-2">Document Information</h5>
+                      <h5 className="font-medium text-blue-900 mb-2">
+                        Document Information
+                      </h5>
                       <div className="text-sm text-blue-800 space-y-1">
-                        <div><strong>Reference:</strong> {awardLetterData.refNumber}</div>
-                        <div><strong>Tender:</strong> {awardLetterData.tenderRef}</div>
-                        <div><strong>Date:</strong> {awardLetterData.awardDate}</div>
-                        <div><strong>Recipient:</strong> {awardLetterData.vendorName}</div>
+                        <div>
+                          <strong>Reference:</strong>{" "}
+                          {awardLetterData.refNumber}
+                        </div>
+                        <div>
+                          <strong>Tender:</strong> {awardLetterData.tenderRef}
+                        </div>
+                        <div>
+                          <strong>Date:</strong> {awardLetterData.awardDate}
+                        </div>
+                        <div>
+                          <strong>Recipient:</strong>{" "}
+                          {awardLetterData.vendorName}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -7722,81 +8247,98 @@ Blockchain Timestamp: ${Date.now()}
 
               <div className="mb-6">
                 <p className="text-gray-600">
-                  Choose from awarded tenders to automatically create a contract with pre-filled information.
+                  Choose from awarded tenders to automatically create a contract
+                  with pre-filled information.
                 </p>
               </div>
 
               {/* Awarded Tenders List */}
               <div className="space-y-4 max-h-96 overflow-y-auto">
-                {tenders.filter(tender => tender.status === 'Awarded').length > 0 ? (
-                  tenders.filter(tender => tender.status === 'Awarded').map((tender) => (
-                    <div
-                      key={tender.id}
-                      className="border border-gray-200 rounded-lg p-4 hover:border-green-300 hover:bg-green-50 cursor-pointer transition-all"
-                      onClick={() => handleSelectAwardedTender(tender)}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h4 className="text-lg font-semibold text-gray-900">{tender.title}</h4>
-                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                              Awarded
-                            </span>
+                {tenders.filter((tender) => tender.status === "Awarded")
+                  .length > 0 ? (
+                  tenders
+                    .filter((tender) => tender.status === "Awarded")
+                    .map((tender) => (
+                      <div
+                        key={tender.id}
+                        className="border border-gray-200 rounded-lg p-4 hover:border-green-300 hover:bg-green-50 cursor-pointer transition-all"
+                        onClick={() => handleSelectAwardedTender(tender)}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h4 className="text-lg font-semibold text-gray-900">
+                                {tender.title}
+                              </h4>
+                              <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                                Awarded
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                              <div>
+                                <p className="text-gray-600">Tender ID</p>
+                                <p className="font-medium">{tender.id}</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-600">Awarded Company</p>
+                                <p className="font-medium">
+                                  {tender.awardedCompany || "N/A"}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-gray-600">Award Value</p>
+                                <p className="font-medium">
+                                  {tender.awardAmount || tender.estimatedValue}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-gray-600">Award Date</p>
+                                <p className="font-medium">
+                                  {tender.awardDate || "N/A"}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-gray-600">Category</p>
+                                <p className="font-medium">{tender.category}</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-600">Ministry</p>
+                                <p className="font-medium">{tender.ministry}</p>
+                              </div>
+                            </div>
+
+                            <div className="mt-3">
+                              <p className="text-gray-600 text-sm">
+                                Description
+                              </p>
+                              <p className="text-sm">{tender.description}</p>
+                            </div>
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                            <div>
-                              <p className="text-gray-600">Tender ID</p>
-                              <p className="font-medium">{tender.id}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-600">Awarded Company</p>
-                              <p className="font-medium">{tender.awardedCompany || 'N/A'}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-600">Award Value</p>
-                              <p className="font-medium">{tender.awardAmount || tender.estimatedValue}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-600">Award Date</p>
-                              <p className="font-medium">{tender.awardDate || 'N/A'}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-600">Category</p>
-                              <p className="font-medium">{tender.category}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-600">Ministry</p>
-                              <p className="font-medium">{tender.ministry}</p>
-                            </div>
+                          <div className="ml-4">
+                            <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                              Create Contract
+                            </button>
                           </div>
-
-                          <div className="mt-3">
-                            <p className="text-gray-600 text-sm">Description</p>
-                            <p className="text-sm">{tender.description}</p>
-                          </div>
-                        </div>
-
-                        <div className="ml-4">
-                          <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                            Create Contract
-                          </button>
                         </div>
                       </div>
-                    </div>
-                  ))
+                    ))
                 ) : (
                   <div className="text-center py-12">
                     <Award className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">No Awarded Tenders</h4>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      No Awarded Tenders
+                    </h4>
                     <p className="text-gray-600">
-                      No tenders have been awarded yet. Complete the tender evaluation and award process first.
+                      No tenders have been awarded yet. Complete the tender
+                      evaluation and award process first.
                     </p>
                     <button
                       onClick={() => {
                         setShowTenderSelectionModal(false);
                         // Navigate to award section
-                        setTenderSubView('award');
+                        setTenderSubView("award");
                       }}
                       className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     >
@@ -7839,7 +8381,9 @@ Blockchain Timestamp: ${Date.now()}
               {/* Award Summary */}
               <div className="bg-green-50 rounded-lg p-6 mb-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-lg font-semibold text-green-900">Award Summary</h4>
+                  <h4 className="text-lg font-semibold text-green-900">
+                    Award Summary
+                  </h4>
                   <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
                     Awarded
                   </span>
@@ -7847,25 +8391,35 @@ Blockchain Timestamp: ${Date.now()}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <p className="text-sm text-green-600">Winning Vendor</p>
-                    <p className="font-semibold text-green-900">{awardedTenderData.selectedBidder.companyName}</p>
+                    <p className="font-semibold text-green-900">
+                      {awardedTenderData.selectedBidder.companyName}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-green-600">Award Value</p>
-                    <p className="font-semibold text-green-900">{awardedTenderData.awardDetails.awardValue}</p>
+                    <p className="font-semibold text-green-900">
+                      {awardedTenderData.awardDetails.awardValue}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-green-600">Award Date</p>
-                    <p className="font-semibold text-green-900">{awardedTenderData.tender.awardDate}</p>
+                    <p className="font-semibold text-green-900">
+                      {awardedTenderData.tender.awardDate}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* Workflow Steps */}
               <div className="space-y-6">
-                <h4 className="text-lg font-semibold text-gray-900">Complete Post-Award Process</h4>
+                <h4 className="text-lg font-semibold text-gray-900">
+                  Complete Post-Award Process
+                </h4>
 
                 {/* Step 1: Notify Successful Vendor */}
-                <div className={`border rounded-lg p-4 ${postAwardSteps.notifySuccessful ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}>
+                <div
+                  className={`border rounded-lg p-4 ${postAwardSteps.notifySuccessful ? "border-green-300 bg-green-50" : "border-gray-200"}`}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       {postAwardSteps.notifySuccessful ? (
@@ -7874,8 +8428,13 @@ Blockchain Timestamp: ${Date.now()}
                         <div className="h-6 w-6 rounded-full border-2 border-gray-300"></div>
                       )}
                       <div>
-                        <h5 className="font-medium text-gray-900">1. Notify Successful Vendor</h5>
-                        <p className="text-sm text-gray-600">Send congratulations and next steps to {awardedTenderData.selectedBidder.companyName}</p>
+                        <h5 className="font-medium text-gray-900">
+                          1. Notify Successful Vendor
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          Send congratulations and next steps to{" "}
+                          {awardedTenderData.selectedBidder.companyName}
+                        </p>
                       </div>
                     </div>
                     <button
@@ -7883,13 +8442,17 @@ Blockchain Timestamp: ${Date.now()}
                       disabled={postAwardSteps.notifySuccessful}
                       className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {postAwardSteps.notifySuccessful ? 'Sent' : 'Send Notification'}
+                      {postAwardSteps.notifySuccessful
+                        ? "Sent"
+                        : "Send Notification"}
                     </button>
                   </div>
                 </div>
 
                 {/* Step 2: Notify Unsuccessful Vendors */}
-                <div className={`border rounded-lg p-4 ${postAwardSteps.notifyUnsuccessful ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}>
+                <div
+                  className={`border rounded-lg p-4 ${postAwardSteps.notifyUnsuccessful ? "border-green-300 bg-green-50" : "border-gray-200"}`}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       {postAwardSteps.notifyUnsuccessful ? (
@@ -7898,8 +8461,14 @@ Blockchain Timestamp: ${Date.now()}
                         <div className="h-6 w-6 rounded-full border-2 border-gray-300"></div>
                       )}
                       <div>
-                        <h5 className="font-medium text-gray-900">2. Notify Unsuccessful Vendors</h5>
-                        <p className="text-sm text-gray-600">Send polite rejection notices to {awardedTenderData.unsuccessfulBidders.length} unsuccessful vendors</p>
+                        <h5 className="font-medium text-gray-900">
+                          2. Notify Unsuccessful Vendors
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          Send polite rejection notices to{" "}
+                          {awardedTenderData.unsuccessfulBidders.length}{" "}
+                          unsuccessful vendors
+                        </p>
                       </div>
                     </div>
                     <button
@@ -7907,13 +8476,17 @@ Blockchain Timestamp: ${Date.now()}
                       disabled={postAwardSteps.notifyUnsuccessful}
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {postAwardSteps.notifyUnsuccessful ? 'Sent' : 'Send Notifications'}
+                      {postAwardSteps.notifyUnsuccessful
+                        ? "Sent"
+                        : "Send Notifications"}
                     </button>
                   </div>
                 </div>
 
                 {/* Step 3: Publish OCDS */}
-                <div className={`border rounded-lg p-4 ${postAwardSteps.publishOCDS ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}>
+                <div
+                  className={`border rounded-lg p-4 ${postAwardSteps.publishOCDS ? "border-green-300 bg-green-50" : "border-gray-200"}`}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       {postAwardSteps.publishOCDS ? (
@@ -7922,8 +8495,13 @@ Blockchain Timestamp: ${Date.now()}
                         <div className="h-6 w-6 rounded-full border-2 border-gray-300"></div>
                       )}
                       <div>
-                        <h5 className="font-medium text-gray-900">3. Publish on Transparency Portal (OCDS)</h5>
-                        <p className="text-sm text-gray-600">Publish award details on Open Contracting Data Standard portal</p>
+                        <h5 className="font-medium text-gray-900">
+                          3. Publish on Transparency Portal (OCDS)
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          Publish award details on Open Contracting Data
+                          Standard portal
+                        </p>
                       </div>
                     </div>
                     <button
@@ -7931,13 +8509,17 @@ Blockchain Timestamp: ${Date.now()}
                       disabled={postAwardSteps.publishOCDS}
                       className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {postAwardSteps.publishOCDS ? 'Published' : 'Publish to OCDS'}
+                      {postAwardSteps.publishOCDS
+                        ? "Published"
+                        : "Publish to OCDS"}
                     </button>
                   </div>
                 </div>
 
                 {/* Step 4: Create Contract */}
-                <div className={`border rounded-lg p-4 ${postAwardSteps.createContract ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}>
+                <div
+                  className={`border rounded-lg p-4 ${postAwardSteps.createContract ? "border-green-300 bg-green-50" : "border-gray-200"}`}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       {postAwardSteps.createContract ? (
@@ -7946,8 +8528,12 @@ Blockchain Timestamp: ${Date.now()}
                         <div className="h-6 w-6 rounded-full border-2 border-gray-300"></div>
                       )}
                       <div>
-                        <h5 className="font-medium text-gray-900">4. Create Contract</h5>
-                        <p className="text-sm text-gray-600">Generate contract entry in contract management system</p>
+                        <h5 className="font-medium text-gray-900">
+                          4. Create Contract
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          Generate contract entry in contract management system
+                        </p>
                       </div>
                     </div>
                     <button
@@ -7955,7 +8541,9 @@ Blockchain Timestamp: ${Date.now()}
                       disabled={postAwardSteps.createContract}
                       className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {postAwardSteps.createContract ? 'Created' : 'Create Contract'}
+                      {postAwardSteps.createContract
+                        ? "Created"
+                        : "Create Contract"}
                     </button>
                   </div>
                 </div>
@@ -7971,7 +8559,9 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
                 <button
                   onClick={completePostAwardWorkflow}
-                  disabled={!Object.values(postAwardSteps).every(step => step)}
+                  disabled={
+                    !Object.values(postAwardSteps).every((step) => step)
+                  }
                   className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Complete Workflow
