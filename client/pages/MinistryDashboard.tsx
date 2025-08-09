@@ -373,7 +373,8 @@ export default function MinistryDashboard() {
   const [vendorWorkflowStatuses, setVendorWorkflowStatuses] = useState<
     VendorWorkflowStatus[]
   >([]);
-  const [bidders] = useState([
+  const [selectedWorkspace, setSelectedWorkspace] = useState("MOH-2024-001");
+  const [bidders, setBidders] = useState([
     {
       id: "BID-001",
       companyName: "MedSupply Nigeria Ltd",
@@ -2289,7 +2290,11 @@ export default function MinistryDashboard() {
               <h2 className="text-lg font-semibold text-gray-900">
                 Bid Evaluation Workspace
               </h2>
-              <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+              <select
+                value={selectedWorkspace}
+                onChange={(e) => setSelectedWorkspace(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
                 <option value="MOH-2024-001">
                   MOH-2024-001 - Hospital Equipment Supply
                 </option>
