@@ -6231,7 +6231,7 @@ The award letter has been:
         );
 
       case "no-objection-certificate":
-        return <NOCManagement />;
+        return <NoObjectionCertificate />;
 
       case "mda-management":
         return renderMDAManagement();
