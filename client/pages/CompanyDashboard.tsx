@@ -358,6 +358,7 @@ export default function CompanyDashboard() {
             }
           });
 
+          console.log("Company Dashboard - Loaded tenders:", allTenders);
           setTenders(allTenders);
         }
       }
