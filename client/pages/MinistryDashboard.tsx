@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
+import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MDAUserForm from "@/components/MDAUserForm";
 import {
   Building2,
@@ -499,129 +500,434 @@ export default function MinistryDashboard() {
   ]);
   const navigate = useNavigate();
 
-  // Get ministry info from context/auth (mock for now)
-  const ministryInfo: MinistryInfo = {
-    name: "Ministry of Health",
-    code: "MOH",
-    contactEmail: "health@kanostate.gov.ng",
-    contactPhone: "08012345678",
-    address: "Kano State Secretariat, Kano",
+  // Get ministry info from localStorage
+  const getMinistryInfo = (): MinistryInfo => {
+    const ministryUser = localStorage.getItem("ministryUser");
+    if (!ministryUser) {
+      navigate("/login");
+      return {
+        name: "Ministry of Health",
+        code: "MOH",
+        contactEmail: "health@kanostate.gov.ng",
+        contactPhone: "08012345678",
+        address: "Kano State Secretariat, Kano",
+      };
+    }
+
+    try {
+      const userData = JSON.parse(ministryUser);
+      const ministry = getMinistryById(userData.ministryId);
+
+      if (ministry) {
+        return {
+          name: ministry.name,
+          code: ministry.code,
+          contactEmail: ministry.contactEmail,
+          contactPhone: ministry.contactPhone,
+          address: ministry.address,
+        };
+      }
+    } catch (error) {
+      console.error("Error parsing ministry user data:", error);
+    }
+
+    // Fallback to default
+    return {
+      name: "Ministry of Health",
+      code: "MOH",
+      contactEmail: "health@kanostate.gov.ng",
+      contactPhone: "08012345678",
+      address: "Kano State Secretariat, Kano",
+    };
+  };
+
+  const ministryInfo = getMinistryInfo();
+
+  // Get ministry-specific mock data
+  const getMinistryMockData = () => {
+    const ministryUser = localStorage.getItem("ministryUser");
+    let ministryId = "ministry"; // default
+
+    if (ministryUser) {
+      try {
+        const userData = JSON.parse(ministryUser);
+        ministryId = userData.ministryId || "ministry";
+      } catch (error) {
+        console.error("Error parsing ministry user data:", error);
+      }
+    }
+
+    const ministry = getMinistryById(ministryId);
+    if (!ministry) {
+      ministryId = "ministry"; // fallback
+    }
+
+    return { ministryId, ministry: ministry || getMinistryById("ministry")! };
   };
 
   // Mock data initialization
   useEffect(() => {
-    const mockCompanies: Company[] = [
-      {
-        id: "1",
-        companyName: "MedSupply Nigeria Ltd",
-        contactPerson: "Dr. Amina Hassan",
-        email: "amina@medsupply.ng",
-        phone: "+234 803 123 4567",
-        registrationDate: "2024-01-15",
-        status: "Approved",
-        businessType: "Medical Equipment Supply",
-        address: "123 Hospital Road, Kano",
-        lastActivity: "2024-02-01",
-      },
-      {
-        id: "2",
-        companyName: "Sahel Medical Supplies",
-        contactPerson: "Fatima Yusuf",
-        email: "fatima@sahelmedical.com",
-        phone: "+234 805 987 6543",
-        registrationDate: "2024-01-14",
-        status: "Pending",
-        businessType: "Pharmaceutical Supply",
-        address: "45 Medicine Street, Kano",
-        lastActivity: "2024-01-30",
-      },
-      {
-        id: "3",
-        companyName: "Northern Healthcare Solutions",
-        contactPerson: "Musa Ibrahim",
-        email: "musa@northernhealth.ng",
-        phone: "+234 807 555 1234",
-        registrationDate: "2024-01-13",
-        status: "Approved",
-        businessType: "Healthcare Technology",
-        address: "78 Tech Avenue, Kano",
-        lastActivity: "2024-02-02",
-      },
-    ];
+    const { ministryId, ministry } = getMinistryMockData();
 
-    const mockTenders: Tender[] = [
-      {
-        id: "MOH-2024-001",
-        title: "Hospital Equipment Supply",
-        description:
-          "Supply of medical equipment for 5 primary healthcare centers",
-        category: "Medical Equipment",
-        estimatedValue: "₦850,000,000",
-        status: "Evaluated",
-        publishDate: "2024-01-15",
-        closeDate: "2024-02-15",
-        bidsReceived: 5,
-        ministry: "Ministry of Health",
-        procuringEntity: "Kano State Primary Healthcare Development Agency",
-      },
-      {
-        id: "MOH-2024-002",
-        title: "Pharmaceutical Supply Contract",
-        description: "Annual supply of essential medicines for state hospitals",
-        category: "Pharmaceuticals",
-        estimatedValue: "₦1,200,000,000",
-        status: "Evaluated",
-        publishDate: "2024-01-20",
-        closeDate: "2024-03-01",
-        bidsReceived: 5,
-        ministry: "Ministry of Health",
-        procuringEntity: "Kano State Hospital Management Board",
-      },
-      {
-        id: "MOH-2024-003",
-        title: "Medical Laboratory Equipment",
-        description:
-          "Procurement of advanced laboratory equipment for diagnostic centers",
-        category: "Laboratory Equipment",
-        estimatedValue: "₦650,000,000",
-        status: "Closed",
-        publishDate: "2024-01-10",
-        closeDate: "2024-01-31",
-        bidsReceived: 5,
-        ministry: "Ministry of Health",
-        procuringEntity: "Kano State Ministry of Health",
-      },
-      {
-        id: "MOH-2024-004",
-        title: "IT Infrastructure Upgrade",
-        description: "Complete IT infrastructure upgrade for health facilities",
-        category: "Information Technology",
-        estimatedValue: "₦950,000,000",
-        status: "Evaluated",
-        publishDate: "2024-02-01",
-        closeDate: "2024-03-10",
-        bidsReceived: 5,
-        ministry: "Ministry of Health",
-        procuringEntity: "Kano State eHealth Department",
-      },
-      {
-        id: "MOH-2024-005",
-        title: "Medical Consumables Supply",
-        description:
-          "Annual supply of medical consumables for all health centers",
-        category: "Medical Supplies",
-        estimatedValue: "₦750,000,000",
-        status: "Awarded" as any,
-        publishDate: "2024-02-05",
-        awardedCompany: "HealthTech Solutions Ltd",
-        awardAmount: "₦720,000,000",
-        awardDate: "2024-03-15",
-        closeDate: "2024-03-15",
-        bidsReceived: 5,
-        ministry: "Ministry of Health",
-        procuringEntity: "Kano State Ministry of Health",
-      },
-    ];
+    const getMinistrySpecificCompanies = (): Company[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "1",
+              companyName: "Kano Construction Ltd",
+              contactPerson: "Eng. Ibrahim Mohammed",
+              email: "ibrahim@kanoconstruction.ng",
+              phone: "+234 803 123 4567",
+              registrationDate: "2024-01-15",
+              status: "Approved",
+              businessType: "Construction & Infrastructure",
+              address: "15 Industrial Area, Kano",
+              lastActivity: "2024-02-01",
+            },
+            {
+              id: "2",
+              companyName: "Sahel Bridge Builders",
+              contactPerson: "Mallam Usman Kano",
+              email: "usman@sahelbridge.com",
+              phone: "+234 805 987 6543",
+              registrationDate: "2024-01-14",
+              status: "Pending",
+              businessType: "Bridge Construction",
+              address: "22 Engineering Drive, Kano",
+              lastActivity: "2024-01-30",
+            },
+            {
+              id: "3",
+              companyName: "Northern Roads Nigeria",
+              contactPerson: "Fatima Abubakar",
+              email: "fatima@northernroads.ng",
+              phone: "+234 807 555 1234",
+              registrationDate: "2024-01-13",
+              status: "Approved",
+              businessType: "Road Construction",
+              address: "5 Highway Plaza, Kano",
+              lastActivity: "2024-02-02",
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "1",
+              companyName: "EduTech Solutions Ltd",
+              contactPerson: "Prof. Aisha Garba",
+              email: "aisha@edutech.ng",
+              phone: "+234 803 123 4567",
+              registrationDate: "2024-01-15",
+              status: "Approved",
+              businessType: "Educational Technology",
+              address: "10 Education Avenue, Kano",
+              lastActivity: "2024-02-01",
+            },
+            {
+              id: "2",
+              companyName: "Kano School Furniture Ltd",
+              contactPerson: "Malam Bello Sani",
+              email: "bello@schoolfurniture.com",
+              phone: "+234 805 987 6543",
+              registrationDate: "2024-01-14",
+              status: "Pending",
+              businessType: "School Furniture Supply",
+              address: "8 Furniture Street, Kano",
+              lastActivity: "2024-01-30",
+            },
+            {
+              id: "3",
+              companyName: "Northern Educational Supplies",
+              contactPerson: "Dr. Zainab Ibrahim",
+              email: "zainab@northedu.ng",
+              phone: "+234 807 555 1234",
+              registrationDate: "2024-01-13",
+              status: "Approved",
+              businessType: "Educational Materials",
+              address: "12 Learning Complex, Kano",
+              lastActivity: "2024-02-02",
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "1",
+              companyName: "MedSupply Nigeria Ltd",
+              contactPerson: "Dr. Amina Hassan",
+              email: "amina@medsupply.ng",
+              phone: "+234 803 123 4567",
+              registrationDate: "2024-01-15",
+              status: "Approved",
+              businessType: "Medical Equipment Supply",
+              address: "123 Hospital Road, Kano",
+              lastActivity: "2024-02-01",
+            },
+            {
+              id: "2",
+              companyName: "Sahel Medical Supplies",
+              contactPerson: "Fatima Yusuf",
+              email: "fatima@sahelmedical.com",
+              phone: "+234 805 987 6543",
+              registrationDate: "2024-01-14",
+              status: "Pending",
+              businessType: "Pharmaceutical Supply",
+              address: "45 Medicine Street, Kano",
+              lastActivity: "2024-01-30",
+            },
+            {
+              id: "3",
+              companyName: "Northern Healthcare Solutions",
+              contactPerson: "Musa Ibrahim",
+              email: "musa@northernhealth.ng",
+              phone: "+234 807 555 1234",
+              registrationDate: "2024-01-13",
+              status: "Approved",
+              businessType: "Healthcare Technology",
+              address: "78 Tech Avenue, Kano",
+              lastActivity: "2024-02-02",
+            },
+          ];
+      }
+    };
+
+    const mockCompanies = getMinistrySpecificCompanies();
+
+    const getMinistrySpecificTenders = (): Tender[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "MOWI-2024-001",
+              title: "Kano-Kaduna Highway Rehabilitation",
+              description:
+                "Complete rehabilitation of 85km Kano-Kaduna highway section",
+              category: "Road Construction",
+              estimatedValue: "₦15,200,000,000",
+              status: "Evaluated",
+              publishDate: "2024-01-15",
+              closeDate: "2024-02-15",
+              bidsReceived: 6,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Road Maintenance Agency",
+            },
+            {
+              id: "MOWI-2024-002",
+              title: "Construction of 5 New Bridges",
+              description:
+                "Construction of bridges across major rivers in Kano State",
+              category: "Bridge Construction",
+              estimatedValue: "₦8,500,000,000",
+              status: "Evaluated",
+              publishDate: "2024-01-20",
+              closeDate: "2024-03-01",
+              bidsReceived: 4,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Ministry of Works",
+            },
+            {
+              id: "MOWI-2024-003",
+              title: "Government Secretariat Renovation",
+              description:
+                "Complete renovation of the Kano State Government Secretariat",
+              category: "Building Construction",
+              estimatedValue: "₦6,800,000,000",
+              status: "Closed",
+              publishDate: "2024-01-10",
+              closeDate: "2024-01-31",
+              bidsReceived: 8,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Ministry of Works",
+            },
+            {
+              id: "MOWI-2024-004",
+              title: "Urban Drainage System",
+              description:
+                "Construction of modern drainage system for Kano metropolis",
+              category: "Infrastructure Development",
+              estimatedValue: "₦12,300,000,000",
+              status: "Evaluated",
+              publishDate: "2024-02-01",
+              closeDate: "2024-03-10",
+              bidsReceived: 5,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Urban Development Board",
+            },
+            {
+              id: "MOWI-2024-005",
+              title: "Heavy Equipment Procurement",
+              description:
+                "Procurement of construction equipment and machinery",
+              category: "Equipment Procurement",
+              estimatedValue: "₦4,750,000,000",
+              status: "Awarded" as any,
+              publishDate: "2024-02-05",
+              awardedCompany: "Heavy Machinery Solutions Ltd",
+              awardAmount: "₦4,200,000,000",
+              awardDate: "2024-03-15",
+              closeDate: "2024-03-15",
+              bidsReceived: 7,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Ministry of Works",
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "MOE-2024-001",
+              title: "School Furniture Supply Program",
+              description:
+                "Supply of desks, chairs, and classroom furniture for 200 schools",
+              category: "School Furniture",
+              estimatedValue: "₦2,100,000,000",
+              status: "Evaluated",
+              publishDate: "2024-01-15",
+              closeDate: "2024-02-15",
+              bidsReceived: 8,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Universal Basic Education Board",
+            },
+            {
+              id: "MOE-2024-002",
+              title: "Digital Learning Platform",
+              description:
+                "Development of digital learning platform for secondary schools",
+              category: "Educational Technology",
+              estimatedValue: "₦1,800,000,000",
+              status: "Evaluated",
+              publishDate: "2024-01-20",
+              closeDate: "2024-03-01",
+              bidsReceived: 5,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Ministry of Education",
+            },
+            {
+              id: "MOE-2024-003",
+              title: "Science Laboratory Equipment",
+              description:
+                "Supply of laboratory equipment for 50 secondary schools",
+              category: "Laboratory Equipment",
+              estimatedValue: "₦3,200,000,000",
+              status: "Closed",
+              publishDate: "2024-01-10",
+              closeDate: "2024-01-31",
+              bidsReceived: 6,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Secondary Education Board",
+            },
+            {
+              id: "MOE-2024-004",
+              title: "Library Books and Resources",
+              description:
+                "Procurement of textbooks and library resources for all levels",
+              category: "Educational Materials",
+              estimatedValue: "₦1,650,000,000",
+              status: "Evaluated",
+              publishDate: "2024-02-01",
+              closeDate: "2024-03-10",
+              bidsReceived: 7,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Education Resource Center",
+            },
+            {
+              id: "MOE-2024-005",
+              title: "Teacher Training Program",
+              description:
+                "Comprehensive teacher training and capacity building program",
+              category: "Training Services",
+              estimatedValue: "₦950,000,000",
+              status: "Awarded" as any,
+              publishDate: "2024-02-05",
+              awardedCompany: "Professional Development Institute",
+              awardAmount: "₦880,000,000",
+              awardDate: "2024-03-15",
+              closeDate: "2024-03-15",
+              bidsReceived: 4,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Ministry of Education",
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "MOH-2024-001",
+              title: "Hospital Equipment Supply",
+              description:
+                "Supply of medical equipment for 5 primary healthcare centers",
+              category: "Medical Equipment",
+              estimatedValue: "₦850,000,000",
+              status: "Evaluated",
+              publishDate: "2024-01-15",
+              closeDate: "2024-02-15",
+              bidsReceived: 5,
+              ministry: ministry.name,
+              procuringEntity:
+                "Kano State Primary Healthcare Development Agency",
+            },
+            {
+              id: "MOH-2024-002",
+              title: "Pharmaceutical Supply Contract",
+              description:
+                "Annual supply of essential medicines for state hospitals",
+              category: "Pharmaceuticals",
+              estimatedValue: "₦1,200,000,000",
+              status: "Evaluated",
+              publishDate: "2024-01-20",
+              closeDate: "2024-03-01",
+              bidsReceived: 5,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Hospital Management Board",
+            },
+            {
+              id: "MOH-2024-003",
+              title: "Medical Laboratory Equipment",
+              description:
+                "Procurement of advanced laboratory equipment for diagnostic centers",
+              category: "Laboratory Equipment",
+              estimatedValue: "₦650,000,000",
+              status: "Closed",
+              publishDate: "2024-01-10",
+              closeDate: "2024-01-31",
+              bidsReceived: 5,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Ministry of Health",
+            },
+            {
+              id: "MOH-2024-004",
+              title: "IT Infrastructure Upgrade",
+              description:
+                "Complete IT infrastructure upgrade for health facilities",
+              category: "Information Technology",
+              estimatedValue: "₦950,000,000",
+              status: "Evaluated",
+              publishDate: "2024-02-01",
+              closeDate: "2024-03-10",
+              bidsReceived: 5,
+              ministry: ministry.name,
+              procuringEntity: "Kano State eHealth Department",
+            },
+            {
+              id: "MOH-2024-005",
+              title: "Medical Consumables Supply",
+              description:
+                "Annual supply of medical consumables for all health centers",
+              category: "Medical Supplies",
+              estimatedValue: "₦750,000,000",
+              status: "Awarded" as any,
+              publishDate: "2024-02-05",
+              awardedCompany: "HealthTech Solutions Ltd",
+              awardAmount: "₦720,000,000",
+              awardDate: "2024-03-15",
+              closeDate: "2024-03-15",
+              bidsReceived: 5,
+              ministry: ministry.name,
+              procuringEntity: "Kano State Ministry of Health",
+            },
+          ];
+      }
+    };
+
+    const mockTenders = getMinistrySpecificTenders();
 
     const mockContracts: Contract[] = [
       {
@@ -1442,6 +1748,7 @@ export default function MinistryDashboard() {
   }, [selectedWorkspace]);
 
   const handleLogout = () => {
+    localStorage.removeItem("ministryUser");
     navigate("/");
   };
 
@@ -2101,8 +2408,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       acceptanceDays: "7",
       refNumber: `MOH/KP/E-Proc/${tender.id}`,
       ministerName: "Hon. Dr. Aminu Ibrahim Tsanyawa",
-      ministerTitle:
-        "Hon. Commissioner\nMinistry of Health\nKano State Government",
+      ministerTitle: `Hon. Commissioner\n${ministryInfo.name}\nKano State Government`,
     };
 
     setAwardLetterData(letterData);
@@ -2276,7 +2582,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <body>
         <div class="letterhead">
           <div class="logo"></div>
-          <div class="ministry-name">KANO STATE GOVERNMENT<br>MINISTRY OF HEALTH</div>
+          <div class="ministry-name">KANO STATE GOVERNMENT<br>${ministryInfo.name.toUpperCase()}</div>
           <div class="ministry-details">
             No [MinistryAddress], Kano State, Nigeria<br>
             Tel: [PhoneNumber], Email: [EmailAddress]
@@ -2375,10 +2681,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
   });
 
   const renderOverview = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Key Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -2392,7 +2698,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -2406,7 +2712,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">NOC Requests</p>
@@ -2418,7 +2724,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Bids</p>
@@ -2433,11 +2739,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Contract Statistics */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">
           Contract Overview
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <FileCheck className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
@@ -2450,7 +2756,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <Activity className="h-8 w-8 text-green-600" />
               <div className="ml-3">
@@ -2461,7 +2767,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-purple-600" />
               <div className="ml-3">
@@ -2472,7 +2778,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <DollarSign className="h-8 w-8 text-green-600" />
               <div className="ml-3">
@@ -2485,14 +2791,14 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">
               Recent Tenders
             </h2>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             <div className="space-y-4">
               {tenders.slice(0, 3).map((tender) => (
                 <div
@@ -2526,10 +2832,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">NOC Status</h2>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             <div className="space-y-4">
               {nocRequests.slice(0, 3).map((request) => (
                 <div
@@ -2566,7 +2872,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderCompanies = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           Company Approvals
@@ -2577,8 +2883,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <CheckCircle className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -2591,7 +2897,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-yellow-600" />
             <div className="ml-3">
@@ -2604,7 +2910,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Building2 className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -2621,7 +2927,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Companies List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
               Registered Companies
@@ -2675,7 +2981,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredCompanies.map((company) => (
                 <tr key={company.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {company.companyName}
@@ -2685,7 +2991,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm text-gray-900">
                         {company.contactPerson}
@@ -2698,10 +3004,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                     {company.businessType}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         company.status === "Approved"
@@ -2714,7 +3020,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {company.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
                     <button className="text-blue-600 hover:text-blue-900">
                       <Eye className="h-4 w-4 inline mr-1" />
                       View Details
@@ -2730,7 +3036,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderTenderList = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -2750,8 +3056,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Tender Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <FileText className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -2762,7 +3068,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Activity className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -2773,7 +3079,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-yellow-600" />
             <div className="ml-3">
@@ -2790,7 +3096,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Award className="h-8 w-8 text-purple-600" />
             <div className="ml-3">
@@ -2805,7 +3111,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Tenders List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
               My Ministry's Tenders
@@ -2861,7 +3167,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredTenders.map((tender) => (
                 <tr key={tender.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-2">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {tender.title}
@@ -2872,7 +3178,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {tender.estimatedValue}
@@ -2886,7 +3192,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         tender.status === "Published"
@@ -2903,10 +3209,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {tender.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                     {tender.bidsReceived}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                     <button className="text-blue-600 hover:text-blue-900">
                       <Eye className="h-4 w-4 inline mr-1" />
                       View
@@ -2934,7 +3240,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderCreateTender = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -2953,13 +3259,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             Tender Information
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Tender Title *
@@ -3056,7 +3362,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end space-x-3">
+          <div className="mt-3 flex justify-end space-x-3">
             <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
               Save as Draft
             </button>
@@ -3070,7 +3376,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderAITenderManagement = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3105,7 +3411,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* AI Assistant Panel */}
       {aiAssistantActive && (
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200 p-6">
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200 p-4">
           <div className="flex items-start space-x-4">
             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
               <Bot className="h-6 w-6 text-purple-600" />
@@ -3237,7 +3543,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Scheduled Publications */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <div className="px-4 py-2 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <Timer className="h-5 w-5 text-blue-600 mr-2" />
             Scheduled Publications
@@ -3246,7 +3552,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             {scheduledPublications.length} scheduled
           </span>
         </div>
-        <div className="p-6">
+        <div className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {scheduledPublications.map((pub) => (
               <div
@@ -3299,7 +3605,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     ))}
                   </div>
                 </div>
-                <div className="mt-4 flex space-x-2">
+                <div className="mt-3 flex space-x-2">
                   <button className="text-blue-600 hover:text-blue-900 text-sm">
                     <Edit className="h-4 w-4 inline mr-1" />
                     Edit
@@ -3318,7 +3624,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderBulkUpload = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3338,40 +3644,40 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Upload Templates */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <div className="flex items-center justify-between mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex items-center justify-between mb-3">
             <FileSpreadsheet className="h-8 w-8 text-green-600" />
             <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">Excel Template</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-3">
             Standard template for bulk tender upload
           </p>
           <button className="w-full bg-green-50 text-green-700 py-2 px-4 rounded-md hover:bg-green-100">
             Download Template
           </button>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex items-center justify-between mb-3">
             <FileText className="h-8 w-8 text-blue-600" />
             <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">CSV Template</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-3">
             Comma-separated values format
           </p>
           <button className="w-full bg-blue-50 text-blue-700 py-2 px-4 rounded-md hover:bg-blue-100">
             Download Template
           </button>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex items-center justify-between mb-3">
             <BookOpen className="h-8 w-8 text-purple-600" />
             <Eye className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">User Guide</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-3">
             Step-by-step upload instructions
           </p>
           <button className="w-full bg-purple-50 text-purple-700 py-2 px-4 rounded-md hover:bg-purple-100">
@@ -3382,7 +3688,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Upload History */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <Clock className="h-5 w-5 text-gray-600 mr-2" />
             Upload History
@@ -3411,7 +3717,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               <tr className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-2 whitespace-nowrap">
                   <div>
                     <div className="text-sm font-medium text-gray-900">
                       Batch Upload #001
@@ -3424,7 +3730,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-2 whitespace-nowrap">
                   <div>
                     <div className="text-sm text-gray-900">
                       health_tenders_Q1.xlsx
@@ -3434,16 +3740,16 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-2 whitespace-nowrap">
                   <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                     Completed
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-2 whitespace-nowrap">
                   <div className="text-sm text-gray-900">12 successful</div>
                   <div className="text-sm text-red-600">3 failed</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                   <button className="text-blue-600 hover:text-blue-900">
                     <Eye className="h-4 w-4 inline mr-1" />
                     View Report
@@ -3462,7 +3768,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderEvaluationManagement = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3489,8 +3795,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Committee Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Users2 className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -3506,7 +3812,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <CheckSquare className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -3519,7 +3825,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-orange-600" />
             <div className="ml-3">
@@ -3536,17 +3842,17 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Evaluation Committees */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <Users2 className="h-5 w-5 text-purple-600 mr-2" />
             Evaluation Committees
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {evaluationCommittees.map((committee) => (
-              <div key={committee.id} className="border rounded-lg p-6">
-                <div className="flex items-start justify-between mb-4">
+              <div key={committee.id} className="border rounded-lg p-4">
+                <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="font-semibold text-gray-900">
                       {committee.name}
@@ -3608,7 +3914,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 flex space-x-2">
+                <div className="mt-3 flex space-x-2">
                   <button className="text-blue-600 hover:text-blue-900 text-sm">
                     <Eye className="h-4 w-4 inline mr-1" />
                     View Details
@@ -3692,7 +3998,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   ) => {
     return (
       <div
-        className={`flex items-center space-x-3 p-3 rounded-lg border-2 ${
+        className={`flex flex-col items-center space-y-2 p-2 rounded-lg border-2 min-w-[140px] ${
           completed
             ? "border-green-200 bg-green-50"
             : "border-red-200 bg-red-50"
@@ -3709,33 +4015,129 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <X className="h-4 w-4" />
           )}
         </div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <span
-              className={`text-sm font-medium ${
-                completed ? "text-green-800" : "text-red-800"
-              }`}
-            >
-              {step}
-            </span>
-            <span
-              className={`text-xs px-2 py-1 rounded-full ${
-                completed
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
-            >
-              {completed ? "Completed" : "Incomplete"}
-            </span>
+        <div className="text-center">
+          <div
+            className={`text-xs font-medium ${
+              completed ? "text-green-800" : "text-red-800"
+            }`}
+          >
+            {step}
+          </div>
+          <div
+            className={`text-xs px-2 py-1 rounded-full mt-1 ${
+              completed
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {completed ? "✓" : "✗"}
           </div>
           {date && (
             <div className="text-xs text-gray-600 mt-1">
-              {completed ? `Completed: ${date}` : `Required for award`}
+              {completed ? date : "Pending"}
             </div>
           )}
           {details && (
-            <div className="text-xs text-gray-600 mt-1">{details}</div>
+            <div
+              className="text-xs text-gray-600 mt-1 truncate"
+              title={details}
+            >
+              {details.length > 15 ? `${details.substring(0, 15)}...` : details}
+            </div>
           )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderVendorWorkflowStepper = (
+    steps: Array<{
+      step: string;
+      completed: boolean;
+      date?: string;
+      details?: string;
+    }>,
+  ) => {
+    return (
+      <div className="w-full">
+        <div className="relative">
+          {/* Horizontal line spanning full width */}
+          <div className="absolute top-4 left-4 right-4 h-0.5 bg-gray-200 z-0"></div>
+
+          {/* Progress line that follows completion */}
+          <div
+            className="absolute top-4 left-4 h-0.5 bg-green-600 z-10 transition-all duration-300"
+            style={{
+              width: `calc(${((steps.filter((s) => s.completed).length - 1) / Math.max(steps.length - 1, 1)) * 100}% - 1rem)`,
+            }}
+          ></div>
+
+          {/* Circles and labels */}
+          <div className="relative z-20 flex justify-between items-start">
+            {steps.map((stepData, index) => (
+              <div key={index} className="flex flex-col items-center">
+                {/* Circle */}
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${
+                    stepData.completed
+                      ? "bg-green-600 border-green-600 text-white"
+                      : "bg-white border-gray-300 text-gray-400"
+                  }`}
+                >
+                  {stepData.completed ? (
+                    <CheckCircle className="h-4 w-4" />
+                  ) : (
+                    <div className="w-2 h-2 rounded-full bg-current"></div>
+                  )}
+                </div>
+
+                {/* Step label */}
+                <div className="mt-3 text-center max-w-[80px]">
+                  <div
+                    className={`text-xs font-medium ${
+                      stepData.completed ? "text-green-800" : "text-gray-600"
+                    }`}
+                  >
+                    {stepData.step}
+                  </div>
+
+                  {stepData.date && (
+                    <div className="text-xs text-gray-500 mt-1">
+                      {stepData.completed ? stepData.date : "Pending"}
+                    </div>
+                  )}
+
+                  {stepData.details && (
+                    <div
+                      className="text-xs text-gray-500 mt-1 text-center"
+                      title={stepData.details}
+                    >
+                      {stepData.details.length > 15
+                        ? `${stepData.details.substring(0, 15)}...`
+                        : stepData.details}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Status indicator */}
+        <div className="text-center mt-4">
+          <div
+            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+              steps.every((s) => s.completed)
+                ? "bg-green-100 text-green-800"
+                : steps.some((s) => s.completed)
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-gray-100 text-gray-800"
+            }`}
+          >
+            {steps.every((s) => s.completed)
+              ? "✓ All Steps Completed"
+              : `${steps.filter((s) => s.completed).length}/${steps.length} Steps Completed`}
+          </div>
         </div>
       </div>
     );
@@ -3743,7 +4145,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
   const renderActualEvaluation = () => {
     return (
-      <div className="space-y-8">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -3771,7 +4173,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
         {/* Committee Management Section */}
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 Evaluation Committee Management
@@ -3786,10 +4188,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="p-4">
             {activeCommittee ? (
               <div className="bg-green-50 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <h3 className="text-lg font-semibold text-green-900">
                       {activeCommittee.name}
@@ -3828,7 +4230,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   ))}
                 </div>
 
-                <div className="mt-4 flex space-x-3">
+                <div className="mt-3 flex space-x-3">
                   <button
                     onClick={() => {
                       setCommitteeFormData({
@@ -3865,12 +4267,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
               </div>
             ) : (
-              <div className="text-center py-8">
-                <Users2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <div className="text-center py-4">
+                <Users2 className="h-12 w-12 text-gray-400 mx-auto mb-3" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   No Evaluation Committee
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-3">
                   Create an evaluation committee to manage the tender evaluation
                   process
                 </p>
@@ -3887,8 +4289,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         {/* Evaluation Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <FileText className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
@@ -3901,7 +4303,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-green-600" />
               <div className="ml-3">
@@ -3912,7 +4314,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <Award className="h-8 w-8 text-purple-600" />
               <div className="ml-3">
@@ -3923,7 +4325,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <TrendingUp className="h-8 w-8 text-orange-600" />
               <div className="ml-3">
@@ -3936,7 +4338,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
         {/* Active Evaluation */}
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 Bid Evaluation Workspace
@@ -3987,15 +4389,15 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
 
-          <div className="p-6">
-            <div className="space-y-6">
+          <div className="p-4">
+            <div className="space-y-3">
               {bidders.map((bidder, index) => {
                 const workflowStatus = getVendorWorkflowStatus(bidder.id);
                 const isEligible = isVendorEligibleForAward(bidder.id);
 
                 return (
-                  <div key={bidder.id} className="border rounded-lg p-6">
-                    <div className="flex items-start justify-between mb-4">
+                  <div key={bidder.id} className="border rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center space-x-4">
                         <div
                           className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
@@ -4046,7 +4448,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
 
                     {/* Evaluation Scoring */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {/* Financial Evaluation */}
                       <div className="bg-green-50 rounded-lg p-4">
                         <h4 className="font-medium text-green-900 mb-3">
@@ -4369,7 +4771,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
     );
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -4393,8 +4795,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         {/* Award Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <Award className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
@@ -4411,7 +4813,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-green-600" />
               <div className="ml-3">
@@ -4422,7 +4824,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <DollarSign className="h-8 w-8 text-purple-600" />
               <div className="ml-3">
@@ -4431,7 +4833,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="bg-white rounded-lg shadow-sm p-4 border">
             <div className="flex items-center">
               <TrendingUp className="h-8 w-8 text-orange-600" />
               <div className="ml-3">
@@ -4444,7 +4846,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
         {/* Tenders Ready for Award */}
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 Tenders Ready for Award
@@ -4473,14 +4875,14 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
 
-          <div className="p-6">
-            <div className="space-y-6">
+          <div className="p-4">
+            <div className="space-y-3">
               {tendersForAward.map((tender) => (
                 <div
                   key={tender.id}
-                  className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -4594,46 +4996,55 @@ Penalty Clause: 0.5% per week for delayed completion`,
                             </div>
 
                             {/* Workflow Status Steps */}
-                            <div className="mt-4">
+                            <div className="mt-3">
                               <h5 className="text-xs font-medium text-gray-700 mb-2">
                                 Vendor Workflow Status:
                               </h5>
-                              <div className="grid grid-cols-1 gap-2">
-                                {renderVendorWorkflowStep(
-                                  "1. Company Registration",
-                                  workflowStatus?.registrationCompleted ||
-                                    false,
-                                  workflowStatus?.registrationDate,
-                                )}
-                                {renderVendorWorkflowStep(
-                                  "2. Login & Verification",
-                                  workflowStatus?.loginVerificationCompleted ||
-                                    false,
-                                  workflowStatus?.verificationDate,
-                                )}
-                                {renderVendorWorkflowStep(
-                                  "3. Bidding Process",
-                                  workflowStatus?.biddingCompleted || false,
-                                  workflowStatus?.bidSubmissionDate,
-                                )}
-                                {renderVendorWorkflowStep(
-                                  "4. Tender Evaluation",
-                                  workflowStatus?.evaluationCompleted || false,
-                                  workflowStatus?.evaluationDate,
-                                )}
-                                {renderVendorWorkflowStep(
-                                  "5. No Objection Certificate",
-                                  workflowStatus?.nocIssued || false,
-                                  workflowStatus?.nocIssuedDate,
-                                  workflowStatus?.nocCertificateNumber
-                                    ? `Certificate: ${workflowStatus.nocCertificateNumber}`
-                                    : undefined,
-                                )}
+                              <div className="w-full">
+                                {renderVendorWorkflowStepper([
+                                  {
+                                    step: "Company Registration",
+                                    completed:
+                                      workflowStatus?.registrationCompleted ||
+                                      false,
+                                    date: workflowStatus?.registrationDate,
+                                  },
+                                  {
+                                    step: "Login & Verification",
+                                    completed:
+                                      workflowStatus?.loginVerificationCompleted ||
+                                      false,
+                                    date: workflowStatus?.verificationDate,
+                                  },
+                                  {
+                                    step: "Bidding Process",
+                                    completed:
+                                      workflowStatus?.biddingCompleted || false,
+                                    date: workflowStatus?.bidSubmissionDate,
+                                  },
+                                  {
+                                    step: "Tender Evaluation",
+                                    completed:
+                                      workflowStatus?.evaluationCompleted ||
+                                      false,
+                                    date: workflowStatus?.evaluationDate,
+                                  },
+                                  {
+                                    step: "No Objection Certificate",
+                                    completed:
+                                      workflowStatus?.nocIssued || false,
+                                    date: workflowStatus?.nocIssuedDate,
+                                    details:
+                                      workflowStatus?.nocCertificateNumber
+                                        ? `Certificate: ${workflowStatus.nocCertificateNumber}`
+                                        : undefined,
+                                  },
+                                ])}
                               </div>
                             </div>
 
                             {/* Award Eligibility Summary */}
-                            <div className="mt-4 pt-3 border-t border-gray-200">
+                            <div className="mt-3 pt-3 border-t border-gray-200">
                               <div
                                 className={`p-3 rounded-md ${
                                   isEligible
@@ -4674,7 +5085,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </div>
 
                   {/* Quick Actions */}
-                  <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+                  <div className="mt-3 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
                     <button
                       onClick={() => {
                         setSelectedTenderForDetails(tender);
@@ -4715,7 +5126,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         {/* Awarded Tenders Section */}
         {tenders.filter((t) => t.status === "Awarded").length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border">
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-4 py-2 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
                 Awarded Tenders
@@ -4725,7 +5136,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </p>
             </div>
 
-            <div className="p-6">
+            <div className="p-4">
               <div className="space-y-4">
                 {tenders
                   .filter((t) => t.status === "Awarded")
@@ -4819,9 +5230,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Bidder Selection */}
-                <div className="space-y-6">
+                <div className="space-y-3">
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-3">
                       Select Winning Bidder
                     </h4>
                     <div className="space-y-3">
@@ -5000,9 +5411,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
 
                 {/* Award Details Form */}
-                <div className="space-y-6">
+                <div className="space-y-3">
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-3">
                       Award Details & Contract Terms
                     </h4>
                     <div className="space-y-4">
@@ -5150,7 +5561,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
 
               {/* Award Actions */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="mt-3 pt-6 border-t border-gray-200">
                 <div className="space-y-4 mb-6">
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <div className="flex items-start space-x-3">
@@ -5243,7 +5654,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-3">
@@ -5381,7 +5792,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {/* Evaluation Summary */}
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h4 className="font-semibold text-gray-900 mb-3">
@@ -5463,7 +5874,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                 isEligible ? "bg-green-50" : "bg-red-50"
                               }
                             >
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div
                                   className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
                                     index === 0
@@ -5478,7 +5889,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   {index + 1}
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div className="text-sm font-medium text-gray-900">
                                   {bidder.companyName}
                                 </div>
@@ -5486,10 +5897,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   {bidder.experience} experience
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                                 {bidder.bidAmount}
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div className="text-sm text-gray-900">
                                   {bidder.technicalScore}%
                                 </div>
@@ -5502,7 +5913,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   ></div>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div className="text-sm text-gray-900">
                                   {bidder.financialScore}%
                                 </div>
@@ -5515,7 +5926,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   ></div>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <div className="text-sm font-bold text-gray-900">
                                   {bidder.totalScore}%
                                 </div>
@@ -5526,7 +5937,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                   ></div>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-4 py-2 whitespace-nowrap">
                                 <span
                                   className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                     isEligible
@@ -5575,7 +5986,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         <li>• Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
-                          • Previous contracts executed in the last 2 years
+                          �� Previous contracts executed in the last 2 years
                         </li>
                       </ul>
                     </div>
@@ -5741,7 +6152,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   };
 
   const renderContracts = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -5762,8 +6173,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
       </div>
 
       {/* Contract Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <FileCheck className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -5776,7 +6187,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Activity className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -5787,7 +6198,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <CheckCircle className="h-8 w-8 text-purple-600" />
             <div className="ml-3">
@@ -5798,7 +6209,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <DollarSign className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -5811,19 +6222,19 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Contracts List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             Contract Portfolio
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-1 gap-4">
             {contracts.map((contract) => (
               <div
                 key={contract.id}
-                className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+                className="border rounded-lg p-4 hover:shadow-md transition-shadow"
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">
                       {contract.projectTitle}
@@ -5856,7 +6267,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
 
                 {/* Milestone Progress */}
-                <div className="mb-4">
+                <div className="mb-3">
                   <h4 className="font-medium text-gray-900 mb-3">
                     Milestone Progress
                   </h4>
@@ -5915,7 +6326,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
 
                 {/* Payment Status */}
-                <div className="mb-4">
+                <div className="mb-3">
                   <h4 className="font-medium text-gray-900 mb-3">
                     Payment Status
                   </h4>
@@ -5961,7 +6372,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
                 {/* Disputes */}
                 {contract.disputes && contract.disputes.length > 0 && (
-                  <div className="mb-4">
+                  <div className="mb-3">
                     <h4 className="font-medium text-gray-900 mb-3 flex items-center">
                       <AlertTriangle className="h-4 w-4 text-orange-600 mr-2" />
                       Active Disputes
@@ -6052,7 +6463,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       {showContractDetails && selectedContractForAction && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">
                 Contract Details - {selectedContractForAction.projectTitle}
               </h3>
@@ -6063,7 +6474,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-3">
                   Contract Information
@@ -6185,7 +6596,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       {showMilestoneModal && selectedMilestone && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">
                 Update Milestone - {selectedMilestone.title}
               </h3>
@@ -6264,7 +6675,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       {showPaymentModal && selectedPayment && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">
                 Process Payment - {selectedPayment.amount}
               </h3>
@@ -6390,7 +6801,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
 
             {/* Progress Steps */}
-            <div className="mb-8">
+            <div className="mb-3">
               <div className="flex items-center justify-between">
                 {[
                   { step: 1, title: "Contract Details", icon: FileText },
@@ -6439,8 +6850,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             {/* Step 1: Contract Details */}
             {contractStep === 1 && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Related Tender ID *
@@ -6571,9 +6982,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             {/* Step 2: Terms & Conditions */}
             {contractStep === 2 && (
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3">
                     Project Milestones
                   </h4>
                   <div className="space-y-4">
@@ -6693,7 +7104,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Payment Schedule
@@ -6773,9 +7184,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             {/* Step 3: Digital Features */}
             {contractStep === 3 && (
-              <div className="space-y-6">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <div className="space-y-3">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                     <Shield className="h-5 w-5 text-blue-600 mr-2" />
                     Digital Security & Automation Features
                   </h4>
@@ -6881,7 +7292,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white border border-gray-200 rounded-lg p-4">
                     <h5 className="font-medium text-gray-900 mb-2">
                       🛡️ Security Features
@@ -6910,9 +7321,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
             {/* Step 4: Generate & Execute */}
             {contractStep === 4 && (
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <Zap className="h-8 w-8 text-green-600" />
                   </div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">
@@ -6925,8 +7336,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
 
                 {/* Contract Preview */}
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h5 className="font-medium text-gray-900 mb-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h5 className="font-medium text-gray-900 mb-3">
                     Contract Summary
                   </h5>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -6954,7 +7365,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="mt-3 pt-4 border-t border-gray-200">
                     <h6 className="font-medium text-gray-900 mb-2">
                       Digital Features Enabled:
                     </h6>
@@ -6966,7 +7377,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       )}
                       {contractFormData.blockchainVerification && (
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
-                          ⛓️ Blockchain Verified
+                          ⛓��� Blockchain Verified
                         </span>
                       )}
                       {contractFormData.autoExecution && (
@@ -6980,8 +7391,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
                 {/* Generated Contract Display */}
                 {generatedContract && (
-                  <div className="bg-white border rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
+                  <div className="bg-white border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
                       <h5 className="font-medium text-gray-900">
                         Generated Contract Document
                       </h5>
@@ -7083,7 +7494,7 @@ Blockchain Timestamp: ${Date.now()}
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
+            <div className="flex justify-between mt-3 pt-6 border-t border-gray-200">
               <button
                 onClick={() =>
                   contractStep > 1 && setContractStep(contractStep - 1)
@@ -7140,7 +7551,7 @@ Blockchain Timestamp: ${Date.now()}
       {showDisputeModal && selectedContractForAction && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">
                 Dispute Resolution - {selectedContractForAction.projectTitle}
               </h3>
@@ -7243,7 +7654,7 @@ Blockchain Timestamp: ${Date.now()}
   );
 
   const renderReports = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           Reports & Analytics
@@ -7254,9 +7665,9 @@ Blockchain Timestamp: ${Date.now()}
       </div>
 
       {/* Analytics Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <BarChart3 className="h-5 w-5 text-blue-600 mr-2" />
             Procurement by Category
           </h3>
@@ -7299,8 +7710,8 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <TrendingUp className="h-5 w-5 text-green-600 mr-2" />
             Performance Metrics
           </h3>
@@ -7342,14 +7753,14 @@ Blockchain Timestamp: ${Date.now()}
 
       {/* Report Generation */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <Download className="h-5 w-5 text-purple-600 mr-2" />
             Generate Reports
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               {
                 title: "Monthly Procurement Summary",
@@ -7403,7 +7814,7 @@ Blockchain Timestamp: ${Date.now()}
   );
 
   const renderNOCRequests = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -7423,8 +7834,8 @@ Blockchain Timestamp: ${Date.now()}
       </div>
 
       {/* NOC Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Send className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
@@ -7437,7 +7848,7 @@ Blockchain Timestamp: ${Date.now()}
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <CheckCircle className="h-8 w-8 text-green-600" />
             <div className="ml-3">
@@ -7448,7 +7859,7 @@ Blockchain Timestamp: ${Date.now()}
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-orange-600" />
             <div className="ml-3">
@@ -7463,7 +7874,7 @@ Blockchain Timestamp: ${Date.now()}
 
       {/* NOC Requests List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             NOC Request History
           </h2>
@@ -7492,7 +7903,7 @@ Blockchain Timestamp: ${Date.now()}
             <tbody className="bg-white divide-y divide-gray-200">
               {nocRequests.map((request) => (
                 <tr key={request.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-2">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {request.projectTitle}
@@ -7504,12 +7915,12 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
                       {request.contractorName}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {request.projectValue}
@@ -7519,7 +7930,7 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         request.status === "Approved"
@@ -7537,7 +7948,7 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                     <button className="text-blue-600 hover:text-blue-900">
                       <Eye className="h-4 w-4 inline mr-1" />
                       View
@@ -7559,7 +7970,7 @@ Blockchain Timestamp: ${Date.now()}
   );
 
   const renderUserManagement = () => (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -7578,8 +7989,8 @@ Blockchain Timestamp: ${Date.now()}
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Users</p>
@@ -7590,7 +8001,7 @@ Blockchain Timestamp: ${Date.now()}
             <Users className="h-8 w-8 text-blue-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Active Users</p>
@@ -7601,7 +8012,7 @@ Blockchain Timestamp: ${Date.now()}
             <UserCheck className="h-8 w-8 text-green-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -7617,7 +8028,7 @@ Blockchain Timestamp: ${Date.now()}
             <Briefcase className="h-8 w-8 text-orange-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 border">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Accountants</p>
@@ -7632,7 +8043,7 @@ Blockchain Timestamp: ${Date.now()}
 
       {/* Users List */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             Ministry Users
           </h2>
@@ -7661,7 +8072,7 @@ Blockchain Timestamp: ${Date.now()}
             <tbody className="bg-white divide-y divide-gray-200">
               {mdaUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {user.userId}
@@ -7671,7 +8082,7 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-2">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {user.role.replace("_", " ").toUpperCase()}
@@ -7681,7 +8092,7 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-2">
                     <div className="text-xs space-y-1">
                       {user.permissions.canCreateTenders && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1">
@@ -7705,7 +8116,7 @@ Blockchain Timestamp: ${Date.now()}
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                         user.isActive
@@ -7716,7 +8127,7 @@ Blockchain Timestamp: ${Date.now()}
                       {user.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
                     <button
                       onClick={() => handleEditUser(user)}
                       className="text-blue-600 hover:text-blue-900"
@@ -7882,7 +8293,7 @@ Blockchain Timestamp: ${Date.now()}
       )}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         {renderContent()}
       </main>
 
@@ -7923,7 +8334,7 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Committee Basic Info */}
                 <div className="space-y-4">
                   <h4 className="text-lg font-medium text-gray-900">
@@ -8169,7 +8580,7 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {/* Committee Status */}
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h4 className="font-semibold text-gray-900 mb-3">
@@ -8349,14 +8760,14 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Letter Preview */}
                 <div className="space-y-4">
                   <h4 className="text-lg font-semibold text-gray-900">
                     Letter Preview
                   </h4>
-                  <div className="border rounded-lg p-6 bg-gray-50 max-h-96 overflow-y-auto text-sm">
-                    <div className="text-center border-b pb-4 mb-4">
+                  <div className="border rounded-lg p-4 bg-gray-50 max-h-96 overflow-y-auto text-sm">
+                    <div className="text-center border-b pb-4 mb-3">
                       <div className="w-16 h-16 mx-auto mb-2 bg-gray-200 rounded-full flex items-center justify-center">
                         <img
                           src="https://cdn.builder.io/api/v1/image/assets%2Fb1307220e8f44b74a0fd54f108089b3e%2F3954c90e53b64c33bfbc92f500570bbb?format=webp&width=800"
@@ -8368,22 +8779,23 @@ Blockchain Timestamp: ${Date.now()}
                         KANO STATE GOVERNMENT
                       </div>
                       <div className="font-bold text-green-700">
-                        MINISTRY OF HEALTH
+                        {ministryInfo.name.toUpperCase()}
                       </div>
                       <div className="text-xs text-gray-600">
-                        No [MinistryAddress], Kano State, Nigeria
+                        {ministryInfo.address}
                         <br />
-                        Tel: [PhoneNumber], Email: [EmailAddress]
+                        Tel: {ministryInfo.contactPhone}, Email:{" "}
+                        {ministryInfo.contactEmail}
                       </div>
                     </div>
 
-                    <div className="text-right mb-4">
+                    <div className="text-right mb-3">
                       <strong>Date:</strong> {awardLetterData.awardDate}
                       <br />
                       <strong>Ref No:</strong> {awardLetterData.refNumber}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <strong>TO:</strong> {awardLetterData.vendorName}
                       <br />
                       {awardLetterData.vendorAddress
@@ -8393,7 +8805,7 @@ Blockchain Timestamp: ${Date.now()}
                         ))}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <strong>
                         <u>
                           SUBJECT: AWARD OF CONTRACT –{" "}
@@ -8402,7 +8814,7 @@ Blockchain Timestamp: ${Date.now()}
                       </strong>
                     </div>
 
-                    <div className="mb-4 text-justify">
+                    <div className="mb-3 text-justify">
                       Following the conclusion of the competitive procurement
                       process conducted in accordance with the provisions of the
                       Public Procurement Act 2007 and the Kano State Public
@@ -8412,7 +8824,7 @@ Blockchain Timestamp: ${Date.now()}
                       above-mentioned project.
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <strong>Contract Details:</strong>
                       <br />
                       <br />
@@ -8442,7 +8854,7 @@ Blockchain Timestamp: ${Date.now()}
                       {awardLetterData.deliveryScheduleSummary}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <strong>You are required to:</strong>
                       <br />
                       1. Confirm acceptance within{" "}
@@ -8453,7 +8865,7 @@ Blockchain Timestamp: ${Date.now()}
                       3. Report to Procurement Department for contract signing
                     </div>
 
-                    <div className="mt-8">
+                    <div className="mt-3">
                       Yours faithfully,
                       <br />
                       <br />
@@ -8462,7 +8874,7 @@ Blockchain Timestamp: ${Date.now()}
                       {awardLetterData.ministerTitle}
                     </div>
 
-                    <div className="mt-4 text-xs">
+                    <div className="mt-3 text-xs">
                       <strong>Cc:</strong> Director, Procurement Department;
                       Accountant General's Office; Project File
                     </div>
@@ -8724,7 +9136,7 @@ Blockchain Timestamp: ${Date.now()}
                     ))
                 ) : (
                   <div className="text-center py-12">
-                    <Award className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <Award className="h-12 w-12 text-gray-400 mx-auto mb-3" />
                     <h4 className="text-lg font-semibold text-gray-900 mb-2">
                       No Awarded Tenders
                     </h4>
@@ -8738,7 +9150,7 @@ Blockchain Timestamp: ${Date.now()}
                         // Navigate to award section
                         setTenderSubView("award");
                       }}
-                      className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     >
                       Go to Award Tenders
                     </button>
@@ -8777,8 +9189,8 @@ Blockchain Timestamp: ${Date.now()}
               </div>
 
               {/* Award Summary */}
-              <div className="bg-green-50 rounded-lg p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-green-50 rounded-lg p-4 mb-6">
+                <div className="flex items-center justify-between mb-3">
                   <h4 className="text-lg font-semibold text-green-900">
                     Award Summary
                   </h4>
@@ -8809,7 +9221,7 @@ Blockchain Timestamp: ${Date.now()}
               </div>
 
               {/* Workflow Steps */}
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <h4 className="text-lg font-semibold text-gray-900">
                   Complete Post-Award Process
                 </h4>

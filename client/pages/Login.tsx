@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
+import { getMinistryByCredentials } from "@shared/ministries";
 import {
   Building2,
   User,
@@ -86,13 +87,13 @@ const userTypes: UserTypeConfig[] = [
   {
     id: "ministry",
     title: "Ministry Login",
-    subtitle: "Procurement Management Access",
+    subtitle: "Procurement Management Access • Multiple Ministries Available",
     icon: <Users className="h-6 w-6" />,
     bgGradient: "from-orange-50 to-orange-100",
     iconBg: "bg-orange-100 text-orange-600",
     useEmail: false,
     demoCredentials: {
-      identifier: "ministry",
+      identifier: "ministry/ministry2/ministry3",
       password: "ministry123",
     },
     navigation: "/ministry/dashboard",
@@ -162,26 +163,32 @@ export default function Login() {
 
     try {
       if (selectedUserType === "ministry") {
-        // Handle ministry login separately since it uses different auth logic
+        // Handle ministry login with dynamic ministry system
         setTimeout(() => {
           const identifier = currentConfig.useEmail
             ? formData.email!
             : formData.username!;
-          if (
-            identifier === currentConfig.demoCredentials.identifier &&
-            formData.password === currentConfig.demoCredentials.password
-          ) {
+
+          const ministry = getMinistryByCredentials(
+            identifier,
+            formData.password,
+          );
+
+          if (ministry) {
             localStorage.setItem(
               "ministryUser",
               JSON.stringify({
                 username: identifier,
                 role: "ministry",
+                ministryId: ministry.id,
+                ministryName: ministry.name,
+                ministryCode: ministry.code,
               }),
             );
             navigate(currentConfig.navigation);
           } else {
             setErrors({
-              general: `Invalid credentials. Use: ${currentConfig.demoCredentials.identifier} / ${currentConfig.demoCredentials.password}`,
+              general: `Invalid credentials. Available accounts: ministry, ministry2, ministry3 (all with password: ministry123)`,
             });
           }
           setIsLoading(false);
@@ -527,28 +534,63 @@ export default function Login() {
                 Demo Credentials
               </h4>
               <div className="mt-2">
-                <p className="text-xs text-gray-700">
-                  <strong>
-                    {currentConfig.useEmail ? "Email" : "Username"}:
-                  </strong>{" "}
-                  <button
-                    onClick={() =>
-                      fillTestAccount(
-                        currentConfig.demoCredentials.identifier,
-                        currentConfig.demoCredentials.password,
-                      )
-                    }
-                    className="bg-white px-2 py-1 rounded text-xs hover:bg-gray-50 cursor-pointer transition-colors border"
-                  >
-                    {currentConfig.demoCredentials.identifier}
-                  </button>
-                </p>
-                <p className="text-xs text-gray-700 mt-1">
-                  <strong>Password:</strong>{" "}
-                  <code className="bg-white px-2 py-1 rounded text-xs border">
-                    {currentConfig.demoCredentials.password}
-                  </code>
-                </p>
+                {selectedUserType === "ministry" ? (
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-700 font-medium">
+                      Available Ministry Accounts:
+                    </p>
+                    {[
+                      { username: "ministry", name: "Ministry of Health" },
+                      { username: "ministry2", name: "Ministry of Works" },
+                      { username: "ministry3", name: "Ministry of Education" },
+                    ].map((ministry) => (
+                      <div
+                        key={ministry.username}
+                        className="bg-white p-2 rounded border"
+                      >
+                        <p className="text-xs text-gray-700">
+                          <strong>{ministry.name}:</strong>{" "}
+                          <button
+                            onClick={() =>
+                              fillTestAccount(ministry.username, "ministry123")
+                            }
+                            className="bg-gray-50 px-2 py-1 rounded text-xs hover:bg-gray-100 cursor-pointer transition-colors border mx-1"
+                          >
+                            {ministry.username}
+                          </button>
+                          <span className="text-gray-500">/ ministry123</span>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs text-gray-700">
+                      <strong>
+                        {currentConfig.useEmail ? "Email" : "Username"}:
+                      </strong>{" "}
+                      <button
+                        onClick={() =>
+                          fillTestAccount(
+                            currentConfig.demoCredentials.identifier.split(
+                              "/",
+                            )[0],
+                            currentConfig.demoCredentials.password,
+                          )
+                        }
+                        className="bg-white px-2 py-1 rounded text-xs hover:bg-gray-50 cursor-pointer transition-colors border"
+                      >
+                        {currentConfig.demoCredentials.identifier.split("/")[0]}
+                      </button>
+                    </p>
+                    <p className="text-xs text-gray-700 mt-1">
+                      <strong>Password:</strong>{" "}
+                      <code className="bg-white px-2 py-1 rounded text-xs border">
+                        {currentConfig.demoCredentials.password}
+                      </code>
+                    </p>
+                  </>
+                )}
               </div>
               <p className="text-xs text-gray-600 mt-2">
                 💡 <strong>Quick Login:</strong> Click the{" "}
