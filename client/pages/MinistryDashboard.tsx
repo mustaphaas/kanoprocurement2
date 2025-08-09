@@ -395,6 +395,8 @@ export default function MinistryDashboard() {
     publishOCDS: false,
     createContract: false
   });
+  const [showTenderSelectionModal, setShowTenderSelectionModal] = useState(false);
+  const [selectedAwardedTender, setSelectedAwardedTender] = useState<any>(null);
   const [bidders, setBidders] = useState([
     {
       id: "BID-001",
@@ -726,7 +728,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-004",
             milestoneId: "MIL-005",
-            amount: "₦300,000,000",
+            amount: "���300,000,000",
             requestDate: "2024-06-25",
             status: "Approved",
             invoiceNumber: "INV-2024-004",
