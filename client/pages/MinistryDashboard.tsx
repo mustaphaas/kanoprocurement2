@@ -3030,15 +3030,15 @@ export default function MinistryDashboard() {
                         <li>• Technical Approach</li>
                         <li>• Quality Standards</li>
                         <li>• Certifications</li>
+                        <li>• Previous contracts executed in the last 2 years</li>
                       </ul>
                     </div>
                     <div className="bg-green-50 p-4 rounded-lg">
                       <h5 className="font-medium text-green-900 mb-2">Financial Evaluation (35%)</h5>
                       <ul className="text-sm text-green-800 space-y-1">
                         <li>• Bid Price Analysis</li>
-                        <li>• Cost Breakdown</li>
-                        <li>• Value for Money</li>
-                        <li>• Payment Terms</li>
+                        <li>• Bid security, evidence of financial capability</li>
+                        <li>• Value for money and Cost breakdown</li>
                       </ul>
                     </div>
                     <div className="bg-purple-50 p-4 rounded-lg">
@@ -3046,7 +3046,7 @@ export default function MinistryDashboard() {
                       <ul className="text-sm text-purple-800 space-y-1">
                         <li>• Document Completeness</li>
                         <li>• Legal Requirements</li>
-                        <li>• Workflow Completion</li>
+                        <li>��� Workflow Completion</li>
                         <li>• NOC Verification</li>
                       </ul>
                     </div>
@@ -3076,7 +3076,7 @@ export default function MinistryDashboard() {
             <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-3xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  📥 Download Bids - {selectedTenderForDetails.title}
+                  ���� Download Bids - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowDownloadModal(false)}
