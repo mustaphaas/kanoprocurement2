@@ -819,6 +819,19 @@ export default function NoObjectionCertificate({
     }
   };
 
+  const formatCurrency = (amount: string) => {
+    // Remove any existing formatting
+    const cleanAmount = amount.replace(/[₦,]/g, "");
+    const numAmount = parseFloat(cleanAmount);
+
+    if (isNaN(numAmount)) {
+      return amount; // Return original if not a valid number
+    }
+
+    // Format with commas and naira sign
+    return `₦${numAmount.toLocaleString()}`;
+  };
+
   const getNOCStatusColor = (status: string) => {
     switch (status) {
       case "Approved":
