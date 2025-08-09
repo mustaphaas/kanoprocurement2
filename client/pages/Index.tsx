@@ -415,7 +415,7 @@ export default function Index() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                     Official Government Portal
                   </span>
@@ -2005,7 +2005,7 @@ export default function Index() {
                             For the most recent three (3) years
                           </li>
                           <li>
-                            •{" "}
+                            ��{" "}
                             <strong>
                               Professional and Technical Qualifications:
                             </strong>{" "}
