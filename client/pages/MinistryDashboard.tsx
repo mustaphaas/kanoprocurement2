@@ -1527,7 +1527,6 @@ export default function MinistryDashboard() {
     };
 
     // Load ministry-specific NOC requests from localStorage or use mock data
-    const { ministry } = getMinistryMockData();
     const ministryNOCKey = `${ministry.code}_NOCRequests`;
     const storedMinistryNOCs = localStorage.getItem(ministryNOCKey);
 
