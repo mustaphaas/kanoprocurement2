@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
+import { getMinistryByCredentials } from "@shared/ministries";
 import {
   Building2,
   User,
