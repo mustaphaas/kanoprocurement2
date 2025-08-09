@@ -7162,6 +7162,135 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
               </div>
 
+              {/* Participating Companies Section */}
+              {bidders.length > 0 && (
+                <div className="mt-6">
+                  <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                    <Building2 className="h-5 w-5 mr-2 text-blue-600" />
+                    Companies That Participated in This Tender
+                  </h4>
+                  <div className="bg-gray-50 rounded-lg overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-100">
+                          <tr>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Company
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Bid Amount
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Technical Score
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Financial Score
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Total Score
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Status
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Submission Date
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {bidders.map((bidder) => (
+                            <tr key={bidder.id} className="hover:bg-gray-50">
+                              <td className="px-4 py-3">
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900">
+                                    {bidder.companyName}
+                                  </div>
+                                  <div className="text-sm text-gray-500">
+                                    {bidder.experience} experience
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {bidder.bidAmount}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">
+                                  {bidder.technicalScore}/100
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">
+                                  {bidder.financialScore}/100
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {bidder.totalScore}/100
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span
+                                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                    bidder.status === "Qualified"
+                                      ? "bg-green-100 text-green-800"
+                                      : bidder.status === "Under Review"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {bidder.status}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                {new Date(bidder.submissionDate).toLocaleDateString()}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Summary Stats */}
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">
+                          {bidders.length}
+                        </div>
+                        <div className="text-sm text-gray-600">Total Participants</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-green-600">
+                          {bidders.filter((b) => b.status === "Qualified").length}
+                        </div>
+                        <div className="text-sm text-gray-600">Qualified</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-purple-600">
+                          {bidders.length > 0 ? Math.round(bidders.reduce((sum, b) => sum + b.totalScore, 0) / bidders.length) : 0}
+                        </div>
+                        <div className="text-sm text-gray-600">Avg Score</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-orange-600">
+                          {bidders.length > 0 ? bidders.sort((a, b) => b.totalScore - a.totalScore)[0].companyName.split(' ')[0] : 'N/A'}
+                        </div>
+                        <div className="text-sm text-gray-600">Top Bidder</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="mt-6 flex justify-end space-x-3">
                 <button
                   onClick={() => setShowTenderDetailsModal(false)}
