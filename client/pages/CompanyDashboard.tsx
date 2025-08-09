@@ -274,7 +274,7 @@ export default function CompanyDashboard() {
       title: "Supply of Medical Equipment",
       ministry: "Ministry of Health",
       category: "Healthcare",
-      value: "��850M",
+      value: "₦850M",
       deadline: "2024-02-28",
       location: "Kano Municipal",
       status: "Open",
@@ -3864,10 +3864,9 @@ export default function CompanyDashboard() {
                 </button>
                 <button
                   onClick={confirmSubmitBid}
-                  disabled={submitLoading}
-                  className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
                 >
-                  {submitLoading ? "Submitting..." : "Submit Bid"}
+                  Submit Bid
                 </button>
               </div>
             </div>
