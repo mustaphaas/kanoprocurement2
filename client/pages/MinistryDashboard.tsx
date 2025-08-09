@@ -2393,7 +2393,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       refNumber: `MOH/KP/E-Proc/${tender.id}`,
       ministerName: "Hon. Dr. Aminu Ibrahim Tsanyawa",
       ministerTitle:
-        "Hon. Commissioner\nMinistry of Health\nKano State Government",
+        `Hon. Commissioner\n${ministryInfo.name}\nKano State Government`,
     };
 
     setAwardLetterData(letterData);
