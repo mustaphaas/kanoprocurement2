@@ -163,26 +163,29 @@ export default function Login() {
 
     try {
       if (selectedUserType === "ministry") {
-        // Handle ministry login separately since it uses different auth logic
+        // Handle ministry login with dynamic ministry system
         setTimeout(() => {
           const identifier = currentConfig.useEmail
             ? formData.email!
             : formData.username!;
-          if (
-            identifier === currentConfig.demoCredentials.identifier &&
-            formData.password === currentConfig.demoCredentials.password
-          ) {
+
+          const ministry = getMinistryByCredentials(identifier, formData.password);
+
+          if (ministry) {
             localStorage.setItem(
               "ministryUser",
               JSON.stringify({
                 username: identifier,
                 role: "ministry",
+                ministryId: ministry.id,
+                ministryName: ministry.name,
+                ministryCode: ministry.code,
               }),
             );
             navigate(currentConfig.navigation);
           } else {
             setErrors({
-              general: `Invalid credentials. Use: ${currentConfig.demoCredentials.identifier} / ${currentConfig.demoCredentials.password}`,
+              general: `Invalid credentials. Available accounts: ministry, ministry2, ministry3 (all with password: ministry123)`,
             });
           }
           setIsLoading(false);
