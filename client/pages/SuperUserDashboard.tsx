@@ -6778,6 +6778,16 @@ The award letter has been:
                 <span>{tab.label}</span>
               </button>
             ))}
+
+            {/* Special link to NOC Management Dashboard */}
+            <Link
+              to="/superuser/noc"
+              className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors text-gray-600 hover:text-blue-600 hover:bg-blue-50 border-l-2 border-green-500"
+            >
+              <Send className="h-4 w-4" />
+              <span>NOC Management</span>
+              <ExternalLink className="h-3 w-3" />
+            </Link>
           </div>
         </div>
       </nav>
@@ -7244,7 +7254,7 @@ The award letter has been:
                   >
                     <option value="">Select winning bidder</option>
                     <option value="Northern Construction Ltd (₦2.3B - Score: 87.5)">
-                      Northern Construction Ltd (₦2.3B - Score: 87.5)
+                      Northern Construction Ltd (��2.3B - Score: 87.5)
                     </option>
                     <option value="BuildRight Engineering (₦2.6B - Score: 76.5)">
                       BuildRight Engineering (₦2.6B - Score: 76.5)
