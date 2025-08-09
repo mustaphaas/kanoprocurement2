@@ -7108,6 +7108,169 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
       )}
+
+      {/* Post-Award Workflow Modal */}
+      {showPostAwardWorkflow && awardedTenderData && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-5xl max-w-5xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  🎉 Post-Award Workflow - {awardedTenderData.tender.title}
+                </h3>
+                <button
+                  onClick={() => setShowPostAwardWorkflow(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Award Summary */}
+              <div className="bg-green-50 rounded-lg p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-semibold text-green-900">Award Summary</h4>
+                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                    Awarded
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-sm text-green-600">Winning Vendor</p>
+                    <p className="font-semibold text-green-900">{awardedTenderData.selectedBidder.companyName}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-green-600">Award Value</p>
+                    <p className="font-semibold text-green-900">{awardedTenderData.awardDetails.awardValue}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-green-600">Award Date</p>
+                    <p className="font-semibold text-green-900">{awardedTenderData.tender.awardDate}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Workflow Steps */}
+              <div className="space-y-6">
+                <h4 className="text-lg font-semibold text-gray-900">Complete Post-Award Process</h4>
+
+                {/* Step 1: Notify Successful Vendor */}
+                <div className={`border rounded-lg p-4 ${postAwardSteps.notifySuccessful ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      {postAwardSteps.notifySuccessful ? (
+                        <CheckCircle className="h-6 w-6 text-green-600" />
+                      ) : (
+                        <div className="h-6 w-6 rounded-full border-2 border-gray-300"></div>
+                      )}
+                      <div>
+                        <h5 className="font-medium text-gray-900">1. Notify Successful Vendor</h5>
+                        <p className="text-sm text-gray-600">Send congratulations and next steps to {awardedTenderData.selectedBidder.companyName}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleNotifySuccessfulVendor}
+                      disabled={postAwardSteps.notifySuccessful}
+                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {postAwardSteps.notifySuccessful ? 'Sent' : 'Send Notification'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Step 2: Notify Unsuccessful Vendors */}
+                <div className={`border rounded-lg p-4 ${postAwardSteps.notifyUnsuccessful ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      {postAwardSteps.notifyUnsuccessful ? (
+                        <CheckCircle className="h-6 w-6 text-green-600" />
+                      ) : (
+                        <div className="h-6 w-6 rounded-full border-2 border-gray-300"></div>
+                      )}
+                      <div>
+                        <h5 className="font-medium text-gray-900">2. Notify Unsuccessful Vendors</h5>
+                        <p className="text-sm text-gray-600">Send polite rejection notices to {awardedTenderData.unsuccessfulBidders.length} unsuccessful vendors</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleNotifyUnsuccessfulVendors}
+                      disabled={postAwardSteps.notifyUnsuccessful}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {postAwardSteps.notifyUnsuccessful ? 'Sent' : 'Send Notifications'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Step 3: Publish OCDS */}
+                <div className={`border rounded-lg p-4 ${postAwardSteps.publishOCDS ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      {postAwardSteps.publishOCDS ? (
+                        <CheckCircle className="h-6 w-6 text-green-600" />
+                      ) : (
+                        <div className="h-6 w-6 rounded-full border-2 border-gray-300"></div>
+                      )}
+                      <div>
+                        <h5 className="font-medium text-gray-900">3. Publish on Transparency Portal (OCDS)</h5>
+                        <p className="text-sm text-gray-600">Publish award details on Open Contracting Data Standard portal</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handlePublishOCDS}
+                      disabled={postAwardSteps.publishOCDS}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {postAwardSteps.publishOCDS ? 'Published' : 'Publish to OCDS'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Step 4: Create Contract */}
+                <div className={`border rounded-lg p-4 ${postAwardSteps.createContract ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      {postAwardSteps.createContract ? (
+                        <CheckCircle className="h-6 w-6 text-green-600" />
+                      ) : (
+                        <div className="h-6 w-6 rounded-full border-2 border-gray-300"></div>
+                      )}
+                      <div>
+                        <h5 className="font-medium text-gray-900">4. Create Contract</h5>
+                        <p className="text-sm text-gray-600">Generate contract entry in contract management system</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleCreateContract}
+                      disabled={postAwardSteps.createContract}
+                      className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {postAwardSteps.createContract ? 'Created' : 'Create Contract'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-between pt-6 mt-6 border-t">
+                <button
+                  onClick={() => setShowPostAwardWorkflow(false)}
+                  className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Continue Later
+                </button>
+                <button
+                  onClick={completePostAwardWorkflow}
+                  disabled={!Object.values(postAwardSteps).every(step => step)}
+                  className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Complete Workflow
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
