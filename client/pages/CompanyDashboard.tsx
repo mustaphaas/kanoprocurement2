@@ -319,6 +319,10 @@ export default function CompanyDashboard() {
   useEffect(() => {
     const loadTenders = () => {
       const storedTenders = localStorage.getItem("recentTenders");
+      const storedTenderStates =
+        localStorage.getItem("companyTenderStates") || "{}";
+      const tenderStates = JSON.parse(storedTenderStates);
+
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
@@ -336,8 +340,9 @@ export default function CompanyDashboard() {
               recentTender.status === "Published"
                 ? "Open"
                 : "Closed",
-            hasExpressedInterest: false,
-            hasBid: false,
+            hasExpressedInterest:
+              tenderStates[recentTender.id]?.hasExpressedInterest || false,
+            hasBid: tenderStates[recentTender.id]?.hasBid || false,
             unspscCode: "72141100", // Default UNSPSC code
             procurementMethod: "Open Tendering",
           }));
@@ -443,6 +448,16 @@ export default function CompanyDashboard() {
       ),
     );
 
+    // Persist tender state to localStorage
+    const storedTenderStates =
+      localStorage.getItem("companyTenderStates") || "{}";
+    const tenderStates = JSON.parse(storedTenderStates);
+    tenderStates[selectedTender.id] = {
+      ...tenderStates[selectedTender.id],
+      hasExpressedInterest: true,
+    };
+    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
+
     // Update company stats
     setNotifications((prev) => [
       {
@@ -463,12 +478,49 @@ export default function CompanyDashboard() {
   const confirmSubmitBid = () => {
     if (!selectedTender) return;
 
-    // Update the tender to show bid has been submitted
+    // Create simple bid data for localStorage
+    const bidData = {
+      id: `BID-${Date.now()}`,
+      tenderId: selectedTender.id,
+      tenderTitle: selectedTender.title,
+      companyName: companyData.name,
+      bidAmount: "₦850,000,000", // Mock amount for simplicity
+      status: "Submitted",
+      submittedAt: new Date().toISOString(),
+      technicalScore: null,
+      financialScore: null,
+      totalScore: null,
+    };
+
+    // Get existing bids from localStorage
+    const existingBids = localStorage.getItem("tenderBids") || "[]";
+    const bidsArray = JSON.parse(existingBids);
+
+    // Add new bid
+    bidsArray.push(bidData);
+
+    // Store back to localStorage
+    localStorage.setItem("tenderBids", JSON.stringify(bidsArray));
+
+    // Update the tender to show bid has been submitted - IMPORTANT: maintain hasExpressedInterest
     setTenders((prevTenders) =>
       prevTenders.map((tender) =>
-        tender.id === selectedTender.id ? { ...tender, hasBid: true } : tender,
+        tender.id === selectedTender.id
+          ? { ...tender, hasBid: true, hasExpressedInterest: true }
+          : tender,
       ),
     );
+
+    // Persist tender state to localStorage
+    const storedTenderStates =
+      localStorage.getItem("companyTenderStates") || "{}";
+    const tenderStates = JSON.parse(storedTenderStates);
+    tenderStates[selectedTender.id] = {
+      ...tenderStates[selectedTender.id],
+      hasExpressedInterest: true,
+      hasBid: true,
+    };
+    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
 
     // Update company stats and add notification
     setNotifications((prev) => [
@@ -3219,7 +3271,7 @@ export default function CompanyDashboard() {
                             Northern Builders Ltd
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            ₦950M
+                            ��950M
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Jan 25, 2024

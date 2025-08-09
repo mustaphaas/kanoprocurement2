@@ -963,16 +963,16 @@ export default function MinistryDashboard() {
         case "ministry2": // Ministry of Works
           return [
             {
-              id: "MOWI-2024-001",
-              title: "Kano-Kaduna Highway Rehabilitation",
+              id: "KS-2024-015",
+              title: "Supply of Medical Equipment",
               description:
-                "Complete rehabilitation of 85km Kano-Kaduna highway section",
-              category: "Road Construction",
-              estimatedValue: "₦15,200,000,000",
-              status: "Evaluated",
+                "Procurement of medical equipment for Kano State hospitals",
+              category: "Healthcare",
+              estimatedValue: "₦850,000,000",
+              status: "Published",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
-              bidsReceived: 6,
+              bidsReceived: getBidCountForTender("KS-2024-015"),
               ministry: ministry.name,
               procuringEntity: "Kano State Road Maintenance Agency",
             },
@@ -2099,7 +2099,102 @@ export default function MinistryDashboard() {
     ];
 
     setCompanies(mockCompanies);
-    setTenders(mockTenders);
+
+    // Load tenders from localStorage if available, otherwise use mock data
+    const storedTenders = localStorage.getItem("ministryTenders");
+
+    if (storedTenders) {
+      const parsedTenders = JSON.parse(storedTenders);
+      // Merge with mock tenders to ensure we have both created and default tenders
+      const allTenders = [...parsedTenders];
+      // Add mock tenders that don't already exist (prevent duplicates by ID)
+      mockTenders.forEach((mockTender) => {
+        if (!allTenders.find((t) => t.id === mockTender.id)) {
+          allTenders.push(mockTender);
+        }
+      });
+      setTenders(allTenders);
+    } else {
+      setTenders(mockTenders);
+      // Save initial mock tenders to localStorage
+      localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
+    }
+
+    // Sync any ministry tenders that might be missing from featured/recent tenders
+    const syncTendersToPublicKeys = () => {
+      const ministryTenders = JSON.parse(
+        localStorage.getItem("ministryTenders") || "[]",
+      );
+      const existingFeatured = JSON.parse(
+        localStorage.getItem("featuredTenders") || "[]",
+      );
+      const existingRecent = JSON.parse(
+        localStorage.getItem("recentTenders") || "[]",
+      );
+
+      ministryTenders.forEach((tender: any) => {
+        // Check if tender exists in featured tenders
+        if (!existingFeatured.find((ft: any) => ft.id === tender.id)) {
+          const featuredTender = {
+            id: tender.id,
+            title: tender.title,
+            description: tender.description,
+            value: tender.estimatedValue,
+            deadline: new Date(tender.closeDate).toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            }),
+            status: tender.status === "Published" ? "Open" : "Draft",
+            statusColor:
+              tender.status === "Published"
+                ? "bg-green-100 text-green-800"
+                : "bg-gray-100 text-gray-800",
+            category: tender.category,
+            ministry: tender.ministry,
+            createdAt: Date.now(),
+          };
+          existingFeatured.unshift(featuredTender);
+        }
+
+        // Check if tender exists in recent tenders
+        if (!existingRecent.find((rt: any) => rt.id === tender.id)) {
+          const recentTender = {
+            id: tender.id,
+            title: tender.title,
+            description: tender.description,
+            category: tender.category,
+            value: tender.estimatedValue,
+            deadline: new Date(tender.closeDate).toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            }),
+            location: "Kano State",
+            procuringEntity: tender.procuringEntity || tender.ministry,
+            status: tender.status === "Published" ? "Open" : "Draft",
+            publishDate: tender.publishDate,
+            closeDate: tender.closeDate,
+            createdAt: Date.now(),
+          };
+          existingRecent.unshift(recentTender);
+        }
+      });
+
+      // Save the updated arrays back to localStorage
+      localStorage.setItem(
+        "featuredTenders",
+        JSON.stringify(existingFeatured.slice(0, 5)),
+      );
+      localStorage.setItem(
+        "recentTenders",
+        JSON.stringify(existingRecent.slice(0, 10)),
+      );
+    };
+
+    // Run the sync function
+    syncTendersToPublicKeys();
+
     setContracts(mockContracts);
     setNOCRequests(mockNOCRequests);
     setEvaluationCommittees(mockEvaluationCommittees);
@@ -2165,6 +2260,73 @@ export default function MinistryDashboard() {
     setScheduledPublications(mockScheduledPublications);
     setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
   }, []);
+
+  // Function to load bids from localStorage for selected tender
+  const loadBidsForTender = (tenderId: string) => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return [];
+
+      const allBids = JSON.parse(storedBids);
+
+      // Filter bids for this specific tender
+      const tenderBids = allBids.filter(
+        (bid: any) => bid.tenderId === tenderId,
+      );
+
+      // Convert to the format expected by the ministry dashboard
+      return tenderBids.map((bid: any) => ({
+        id: bid.id,
+        companyName: bid.companyName,
+        bidAmount: bid.bidAmount,
+        technicalScore:
+          bid.technicalScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
+        financialScore:
+          bid.financialScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
+        totalScore: bid.totalScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
+        status: "Qualified",
+        submissionDate: new Date(bid.submittedAt).toISOString().split("T")[0],
+        experience: bid.experience || "5+ years",
+        certifications: bid.certifications || ["ISO 9001"],
+        previousProjects: bid.previousProjects || 15,
+        completionRate: bid.completionRate || 95.0,
+        timeline: bid.timeline,
+        technicalProposal: bid.technicalProposal,
+        financialProposal: bid.financialProposal,
+      }));
+    } catch (error) {
+      console.error("Error loading bids from localStorage:", error);
+      return [];
+    }
+  };
+
+  // Function to get real bid count for a tender
+  const getBidCountForTender = (tenderId: string) => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return 0;
+
+      const allBids = JSON.parse(storedBids);
+      const matchingBids = allBids.filter(
+        (bid: any) => bid.tenderId === tenderId,
+      );
+
+      return matchingBids.length;
+    } catch (error) {
+      console.error("Error getting bid count:", error);
+      return 0;
+    }
+  };
+
+  // Function to refresh bid counts for all tenders
+  const refreshAllTenderBidCounts = () => {
+    setTenders((prev) =>
+      prev.map((tender) => ({
+        ...tender,
+        bidsReceived: getBidCountForTender(tender.id),
+      })),
+    );
+  };
 
   // Update bidders when workspace changes
   useEffect(() => {
@@ -2611,7 +2773,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "₦1,450,000,000",
+          bidAmount: "�����1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,
@@ -2659,6 +2821,22 @@ export default function MinistryDashboard() {
       ] || [];
     setBidders(newBidders);
   }, [selectedWorkspace]);
+
+  // Set up periodic refresh of bid counts
+  useEffect(() => {
+    const bidCountInterval = setInterval(() => {
+      refreshAllTenderBidCounts();
+    }, 10000); // Refresh every 10 seconds
+
+    return () => clearInterval(bidCountInterval);
+  }, []);
+
+  // Refresh bid counts when tender sub-view changes
+  useEffect(() => {
+    if (tenderSubView === "list") {
+      refreshAllTenderBidCounts();
+    }
+  }, [tenderSubView]);
 
   const handleLogout = () => {
     localStorage.removeItem("ministryUser");
@@ -2759,13 +2937,18 @@ export default function MinistryDashboard() {
       publishDate:
         newTender.publishDate || new Date().toISOString().split("T")[0],
       closeDate: newTender.closeDate,
-      bidsReceived: 0,
+      bidsReceived: getBidCountForTender(tenderId),
       ministry: ministry.name,
       procuringEntity: ministry.name,
     };
 
     // Add to local tenders
-    setTenders((prev) => [tender, ...prev]);
+    setTenders((prev) => {
+      const updatedTenders = [tender, ...prev];
+      // Save to localStorage for ministry dashboard persistence
+      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      return updatedTenders;
+    });
 
     // Store in localStorage for cross-page access
     const existingTenders = localStorage.getItem("featuredTenders") || "[]";
@@ -3065,11 +3248,14 @@ export default function MinistryDashboard() {
       awardJustification: awardFormData.awardJustification,
     };
 
-    setTenders((prev) =>
-      prev.map((tender) =>
+    setTenders((prev) => {
+      const updatedTenders = prev.map((tender) =>
         tender.id === selectedTenderForAward.id ? updatedTender : tender,
-      ),
-    );
+      );
+      // Save to localStorage
+      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      return updatedTenders;
+    });
 
     // Store awarded tender data for post-award workflow
     setAwardedTenderData({
@@ -3185,13 +3371,16 @@ export default function MinistryDashboard() {
     setShowFinalizeEvaluationModal(false);
 
     // Update tender status to 'Evaluated'
-    setTenders((prev) =>
-      prev.map((tender) =>
+    setTenders((prev) => {
+      const updatedTenders = prev.map((tender) =>
         tender.id === selectedWorkspace
           ? { ...tender, status: "Evaluated" as any }
           : tender,
-      ),
-    );
+      );
+      // Save to localStorage
+      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      return updatedTenders;
+    });
 
     alert("Evaluation finalized successfully! Tender is now ready for award.");
   };
@@ -3768,6 +3957,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       tender.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === "all" || tender.status === statusFilter;
+
     return matchesSearch && matchesStatus;
   });
 
@@ -6273,6 +6463,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     <button
                       onClick={() => {
                         setSelectedTenderForDetails(tender);
+                        // Load real bids for this tender
+                        const tenderBids = loadBidsForTender(tender.id);
+                        if (tenderBids.length > 0) {
+                          setBidders(tenderBids);
+                        }
                         setShowTenderDetailsModal(true);
                       }}
                       className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm"
@@ -6283,6 +6478,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     <button
                       onClick={() => {
                         setSelectedTenderForDetails(tender);
+                        // Load real bids for this tender
+                        const tenderBids = loadBidsForTender(tender.id);
+                        if (tenderBids.length > 0) {
+                          setBidders(tenderBids);
+                        }
                         setShowEvaluationReportModal(true);
                       }}
                       className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 text-sm"
@@ -6293,6 +6493,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     <button
                       onClick={() => {
                         setSelectedTenderForDetails(tender);
+                        // Load real bids for this tender
+                        const tenderBids = loadBidsForTender(tender.id);
+                        if (tenderBids.length > 0) {
+                          setBidders(tenderBids);
+                        }
                         setShowDownloadModal(true);
                       }}
                       className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 text-sm"
@@ -6377,6 +6582,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           <button
                             onClick={() => {
                               setSelectedTenderForDetails(tender);
+                              // Load real bids for this tender
+                              const tenderBids = loadBidsForTender(tender.id);
+                              if (tenderBids.length > 0) {
+                                setBidders(tenderBids);
+                              }
                               setShowTenderDetailsModal(true);
                             }}
                             className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
@@ -6966,7 +7176,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ��� Evaluation Report - {selectedTenderForDetails.title}
+                  ����� Evaluation Report - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
@@ -7165,12 +7375,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         Technical Evaluation (35%)
                       </h5>
                       <ul className="text-sm text-blue-800 space-y-1">
-                        <li>• Experience & Expertise</li>
+                        <li>�� Experience & Expertise</li>
                         <li>• Technical Approach</li>
                         <li>�� Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
-                          �� Previous contracts executed in the last 2 years
+                          ���� Previous contracts executed in the last 2 years
                         </li>
                       </ul>
                     </div>
@@ -7340,7 +7550,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            📄 Contract Management
+            ��� Contract Management
           </h1>
           <p className="text-gray-600">
             Comprehensive contract lifecycle management with digital signatures
@@ -7970,7 +8180,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">
-                🔐 Digital Contract Generation & Execution
+                ���� Digital Contract Generation & Execution
               </h3>
               <button
                 onClick={() => {
