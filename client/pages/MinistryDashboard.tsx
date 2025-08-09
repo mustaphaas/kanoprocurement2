@@ -2762,7 +2762,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div>
               <p className="text-sm font-medium text-gray-600">NOC Requests</p>
               <p className="text-3xl font-bold text-orange-600">
-                {nocRequests.length}
+                {(() => {
+                  const { ministryId } = getMinistryMockData();
+                  if (ministryId === 'ministry2') return 5;
+                  if (ministryId === 'ministry3') return 4;
+                  return nocRequests.length;
+                })()}
               </p>
             </div>
             <FileCheck className="h-8 w-8 text-orange-600" />
@@ -5444,7 +5449,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                     <li>• No Objection Certificate</li>
                                   )}
                                   {workflowStatus?.finalApprovalStatus !==
-                                    "approved" && <li>��� Final Approval</li>}
+                                    "approved" && <li>• Final Approval</li>}
                                 </ul>
                               </div>
                             )}
