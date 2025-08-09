@@ -307,6 +307,10 @@ export default function MinistryDashboard() {
   const [selectedContractForAction, setSelectedContractForAction] = useState<Contract | null>(null);
   const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [showEvaluationReportModal, setShowEvaluationReportModal] = useState(false);
+  const [showTenderDetailsModal, setShowTenderDetailsModal] = useState(false);
+  const [selectedTenderForDetails, setSelectedTenderForDetails] = useState<Tender | null>(null);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [contractFormData, setContractFormData] = useState({
     tenderId: "",
     contractorName: "",
@@ -2233,7 +2237,7 @@ export default function MinistryDashboard() {
                   Ready for Award
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {tendersForAward.length}
+                  {bidders.filter(bidder => isVendorEligibleForAward(bidder.id)).length}
                 </p>
               </div>
             </div>
@@ -2465,15 +2469,33 @@ export default function MinistryDashboard() {
 
                   {/* Quick Actions */}
                   <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
-                    <button className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm">
+                    <button
+                      onClick={() => {
+                        setSelectedTenderForDetails(tender);
+                        setShowTenderDetailsModal(true);
+                      }}
+                      className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm"
+                    >
                       <Eye className="h-3 w-3 mr-1" />
                       View Details
                     </button>
-                    <button className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 text-sm">
+                    <button
+                      onClick={() => {
+                        setSelectedTenderForDetails(tender);
+                        setShowEvaluationReportModal(true);
+                      }}
+                      className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 text-sm"
+                    >
                       <CheckSquare className="h-3 w-3 mr-1" />
                       Evaluation Report
                     </button>
-                    <button className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 text-sm">
+                    <button
+                      onClick={() => {
+                        setSelectedTenderForDetails(tender);
+                        setShowDownloadModal(true);
+                      }}
+                      className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 text-sm"
+                    >
                       <Download className="h-3 w-3 mr-1" />
                       Download Bids
                     </button>
@@ -2799,6 +2821,353 @@ export default function MinistryDashboard() {
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tender Details Modal */}
+        {showTenderDetailsModal && selectedTenderForDetails && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  📋 Tender Details - {selectedTenderForDetails.title}
+                </h3>
+                <button
+                  onClick={() => setShowTenderDetailsModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Basic Information</h4>
+                    <div className="space-y-2 text-sm">
+                      <p><strong>Tender ID:</strong> {selectedTenderForDetails.id}</p>
+                      <p><strong>Title:</strong> {selectedTenderForDetails.title}</p>
+                      <p><strong>Category:</strong> {selectedTenderForDetails.category}</p>
+                      <p><strong>Estimated Value:</strong> {selectedTenderForDetails.estimatedValue}</p>
+                      <p><strong>Status:</strong>
+                        <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                          selectedTenderForDetails.status === "Evaluated" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"
+                        }`}>
+                          {selectedTenderForDetails.status}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Timeline</h4>
+                    <div className="space-y-2 text-sm">
+                      <p><strong>Published:</strong> {selectedTenderForDetails.publishDate ? new Date(selectedTenderForDetails.publishDate).toLocaleDateString() : 'Not published'}</p>
+                      <p><strong>Closing Date:</strong> {new Date(selectedTenderForDetails.closeDate).toLocaleDateString()}</p>
+                      <p><strong>Ministry:</strong> {selectedTenderForDetails.ministry}</p>
+                      <p><strong>Procuring Entity:</strong> {selectedTenderForDetails.procuringEntity}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Bidding Statistics</h4>
+                    <div className="space-y-2 text-sm">
+                      <p><strong>Total Bids Received:</strong> {selectedTenderForDetails.bidsReceived}</p>
+                      <p><strong>Eligible Vendors:</strong> {bidders.filter(bidder => isVendorEligibleForAward(bidder.id)).length}</p>
+                      <p><strong>Evaluation Status:</strong>
+                        <span className="ml-2 px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                          Completed
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Description</h4>
+                    <p className="text-sm text-gray-600">
+                      {selectedTenderForDetails.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowTenderDetailsModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Close
+                </button>
+                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                  <Download className="h-4 w-4 mr-2 inline" />
+                  Export Details
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Evaluation Report Modal */}
+        {showEvaluationReportModal && selectedTenderForDetails && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  📊 Evaluation Report - {selectedTenderForDetails.title}
+                </h3>
+                <button
+                  onClick={() => setShowEvaluationReportModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Evaluation Summary */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Evaluation Summary</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">{selectedTenderForDetails.bidsReceived}</div>
+                      <div className="text-gray-600">Total Bids</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">{bidders.filter(b => b.status === "Qualified").length}</div>
+                      <div className="text-gray-600">Qualified</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-600">{bidders.filter(bidder => isVendorEligibleForAward(bidder.id)).length}</div>
+                      <div className="text-gray-600">Eligible for Award</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-orange-600">87.3%</div>
+                      <div className="text-gray-600">Avg Score</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Detailed Vendor Evaluations */}
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">Vendor Evaluation Details</h4>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bid Amount</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technical Score</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Financial Score</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Score</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Workflow Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {bidders.map((bidder, index) => {
+                          const isEligible = isVendorEligibleForAward(bidder.id);
+                          return (
+                            <tr key={bidder.id} className={isEligible ? "bg-green-50" : "bg-red-50"}>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
+                                  index === 0 ? "bg-yellow-500" :
+                                  index === 1 ? "bg-gray-400" :
+                                  index === 2 ? "bg-orange-400" : "bg-gray-300"
+                                }`}>
+                                  {index + 1}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm font-medium text-gray-900">{bidder.companyName}</div>
+                                <div className="text-xs text-gray-500">{bidder.experience} experience</div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{bidder.bidAmount}</td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">{bidder.technicalScore}%</div>
+                                <div className="w-20 bg-gray-200 rounded-full h-2">
+                                  <div className="bg-blue-600 h-2 rounded-full" style={{width: `${bidder.technicalScore}%`}}></div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">{bidder.financialScore}%</div>
+                                <div className="w-20 bg-gray-200 rounded-full h-2">
+                                  <div className="bg-green-600 h-2 rounded-full" style={{width: `${bidder.financialScore}%`}}></div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm font-bold text-gray-900">{bidder.totalScore}%</div>
+                                <div className="w-20 bg-gray-200 rounded-full h-2">
+                                  <div className="bg-purple-600 h-2 rounded-full" style={{width: `${bidder.totalScore}%`}}></div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                  isEligible ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                }`}>
+                                  {isEligible ? "✅ Eligible" : "❌ Not Eligible"}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Evaluation Criteria */}
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">Evaluation Criteria</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h5 className="font-medium text-blue-900 mb-2">Technical Evaluation (40%)</h5>
+                      <ul className="text-sm text-blue-800 space-y-1">
+                        <li>• Experience & Expertise</li>
+                        <li>• Technical Approach</li>
+                        <li>• Quality Standards</li>
+                        <li>• Certifications</li>
+                      </ul>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h5 className="font-medium text-green-900 mb-2">Financial Evaluation (35%)</h5>
+                      <ul className="text-sm text-green-800 space-y-1">
+                        <li>• Bid Price Analysis</li>
+                        <li>• Cost Breakdown</li>
+                        <li>• Value for Money</li>
+                        <li>• Payment Terms</li>
+                      </ul>
+                    </div>
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <h5 className="font-medium text-purple-900 mb-2">Compliance (25%)</h5>
+                      <ul className="text-sm text-purple-800 space-y-1">
+                        <li>• Document Completeness</li>
+                        <li>• Legal Requirements</li>
+                        <li>• Workflow Completion</li>
+                        <li>• NOC Verification</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowEvaluationReportModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Close
+                </button>
+                <button className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                  <Download className="h-4 w-4 mr-2 inline" />
+                  Download Report
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Download Bids Modal */}
+        {showDownloadModal && selectedTenderForDetails && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-3xl shadow-lg rounded-md bg-white">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  📥 Download Bids - {selectedTenderForDetails.title}
+                </h3>
+                <button
+                  onClick={() => setShowDownloadModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <Download className="h-5 w-5 text-blue-600 mt-0.5" />
+                    <div>
+                      <h4 className="text-sm font-medium text-blue-800">Available Downloads</h4>
+                      <p className="text-sm text-blue-700 mt-1">
+                        Select the bid documents you want to download. All files are encrypted and password protected.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-gray-900">Individual Bid Documents</h4>
+                  {bidders.map((bidder, index) => (
+                    <div key={bidder.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold ${
+                            index === 0 ? "bg-yellow-500" :
+                            index === 1 ? "bg-gray-400" :
+                            index === 2 ? "bg-orange-400" : "bg-gray-300"
+                          }`}>
+                            {index + 1}
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-gray-900">{bidder.companyName}</h5>
+                            <p className="text-sm text-gray-600">Bid Amount: {bidder.bidAmount} • Score: {bidder.totalScore}%</p>
+                          </div>
+                        </div>
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                          isVendorEligibleForAward(bidder.id) ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                        }`}>
+                          {isVendorEligibleForAward(bidder.id) ? "Eligible" : "Not Eligible"}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <button className="flex items-center justify-center px-3 py-2 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm">
+                          <FileText className="h-4 w-4 mr-2" />
+                          Technical Proposal
+                        </button>
+                        <button className="flex items-center justify-center px-3 py-2 bg-green-100 text-green-800 rounded-md hover:bg-green-200 text-sm">
+                          <DollarSign className="h-4 w-4 mr-2" />
+                          Financial Proposal
+                        </button>
+                        <button className="flex items-center justify-center px-3 py-2 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 text-sm">
+                          <FileCheck className="h-4 w-4 mr-2" />
+                          Compliance Docs
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t pt-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Bulk Download Options</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <button className="flex items-center justify-center px-4 py-3 bg-indigo-100 text-indigo-800 rounded-md hover:bg-indigo-200">
+                      <Package className="h-5 w-5 mr-2" />
+                      Download All Bids (ZIP)
+                    </button>
+                    <button className="flex items-center justify-center px-4 py-3 bg-orange-100 text-orange-800 rounded-md hover:bg-orange-200">
+                      <Star className="h-5 w-5 mr-2" />
+                      Download Eligible Only
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowDownloadModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                  <Download className="h-4 w-4 mr-2 inline" />
+                  Generate Download Links
+                </button>
               </div>
             </div>
           </div>
