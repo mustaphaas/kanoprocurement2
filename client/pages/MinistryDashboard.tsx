@@ -634,7 +634,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-004",
           companyName: "Emirate Construction Co",
-          bidAmount: "₦15,600,000,000",
+          bidAmount: "��15,600,000,000",
           technicalScore: 82,
           financialScore: 80,
           totalScore: 81,
@@ -2301,6 +2301,14 @@ export default function MinistryDashboard() {
       console.error('Error getting bid count:', error);
       return 0;
     }
+  };
+
+  // Function to refresh bid counts for all tenders
+  const refreshAllTenderBidCounts = () => {
+    setTenders(prev => prev.map(tender => ({
+      ...tender,
+      bidsReceived: getBidCountForTender(tender.id)
+    })));
   };
 
   // Update bidders when workspace changes
@@ -7509,7 +7517,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            ��� Contract Management
+            ����� Contract Management
           </h1>
           <p className="text-gray-600">
             Comprehensive contract lifecycle management with digital signatures
