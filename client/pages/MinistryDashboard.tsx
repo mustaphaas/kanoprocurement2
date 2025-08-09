@@ -2575,7 +2575,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-017",
           companyName: "Learning Tech Systems",
-          bidAmount: "₦1,850,000,000",
+          bidAmount: "��1,850,000,000",
           technicalScore: 89,
           financialScore: 87,
           totalScore: 88,
@@ -10083,8 +10083,12 @@ Blockchain Timestamp: ${Date.now()}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-green-700 rounded-lg flex items-center justify-center">
-                <Building2 className="h-6 w-6 text-white" />
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2Fe2b03698f65d43d792efcb7e22009c33?format=webp&width=800"
+                  alt="Kano State Government Logo"
+                  className="h-10 w-10 rounded-lg object-cover"
+                />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-green-700">
