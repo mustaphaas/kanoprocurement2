@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { formatCurrency } from "@/lib/utils";
 import {
   Building2,
   FileText,
