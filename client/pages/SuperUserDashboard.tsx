@@ -340,6 +340,16 @@ export default function SuperUserDashboard() {
     mainProcurementCategory: "",
     additionalProcurementCategories: [],
   });
+
+  // MDA Management state
+  const [mdas, setMDAs] = useState<MDA[]>([]);
+  const [mdaAdmins, setMDAAdmins] = useState<MDAAdmin[]>([]);
+  const [showCreateMDAModal, setShowCreateMDAModal] = useState(false);
+  const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
+  const [selectedMDA, setSelectedMDA] = useState<MDA | null>(null);
+  const [mdaSearchTerm, setMDASearchTerm] = useState("");
+  const [mdaFilterType, setMDAFilterType] = useState<'all' | 'ministry' | 'department' | 'agency'>('all');
+
   const navigate = useNavigate();
 
   const dashboardStats: DashboardStats = {
