@@ -2166,6 +2166,40 @@ export default function MinistryDashboard() {
     setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
   }, []);
 
+  // Function to load bids from localStorage for selected tender
+  const loadBidsForTender = (tenderId: string) => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return [];
+
+      const allBids = JSON.parse(storedBids);
+      // Filter bids for this specific tender
+      const tenderBids = allBids.filter((bid: any) => bid.tenderId === tenderId);
+
+      // Convert to the format expected by the ministry dashboard
+      return tenderBids.map((bid: any) => ({
+        id: bid.id,
+        companyName: bid.companyName,
+        bidAmount: bid.bidAmount,
+        technicalScore: bid.technicalScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
+        financialScore: bid.financialScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
+        totalScore: bid.totalScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
+        status: "Qualified",
+        submissionDate: new Date(bid.submittedAt).toISOString().split('T')[0],
+        experience: bid.experience || "5+ years",
+        certifications: bid.certifications || ["ISO 9001"],
+        previousProjects: bid.previousProjects || 15,
+        completionRate: bid.completionRate || 95.0,
+        timeline: bid.timeline,
+        technicalProposal: bid.technicalProposal,
+        financialProposal: bid.financialProposal
+      }));
+    } catch (error) {
+      console.error('Error loading bids from localStorage:', error);
+      return [];
+    }
+  };
+
   // Update bidders when workspace changes
   useEffect(() => {
     const bidderDataByWorkspace = {
