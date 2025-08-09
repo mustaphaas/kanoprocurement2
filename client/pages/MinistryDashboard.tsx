@@ -281,11 +281,6 @@ export default function MinistryDashboard() {
   const [tenderSubView, setTenderSubView] = useState<TenderSubView>("list");
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tenders, setTenders] = useState<Tender[]>([]);
-
-  // Debug tender changes
-  useEffect(() => {
-    console.log("Ministry Dashboard - Tenders state changed:", tenders.map(t => ({ id: t.id, title: t.title, status: t.status })));
-  }, [tenders]);
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
