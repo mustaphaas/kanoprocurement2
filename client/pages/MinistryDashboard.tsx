@@ -311,7 +311,6 @@ export default function MinistryDashboard() {
     expectedDuration: "",
     projectDescription: "",
     justification: "",
-    urgencyLevel: "Medium" as "Low" | "Medium" | "High" | "Critical",
     category: "",
     procuringEntity: "",
     contactPerson: "",
@@ -2754,7 +2753,6 @@ export default function MinistryDashboard() {
       ministryCode: ministry.code,
       projectDescription: newNOCRequest.projectDescription,
       justification: newNOCRequest.justification,
-      urgencyLevel: newNOCRequest.urgencyLevel,
       category: newNOCRequest.category,
       procuringEntity: newNOCRequest.procuringEntity,
       contactPerson: newNOCRequest.contactPerson,
@@ -2769,6 +2767,14 @@ export default function MinistryDashboard() {
       : [];
     centralNOCs.unshift(centralNOCRequest);
     localStorage.setItem("centralNOCRequests", JSON.stringify(centralNOCs));
+
+    // Debug logging
+    console.log("Ministry NOC Request Submitted:", centralNOCRequest);
+    console.log("Total Central NOCs after submission:", centralNOCs.length);
+    console.log(
+      "Central NOCs in localStorage:",
+      JSON.parse(localStorage.getItem("centralNOCRequests") || "[]"),
+    );
 
     // Create local ministry NOC record (showing as pending)
     const ministryNOCRequest: NOCRequest = {
@@ -2800,7 +2806,6 @@ export default function MinistryDashboard() {
       expectedDuration: "",
       projectDescription: "",
       justification: "",
-      urgencyLevel: "Medium",
       category: "",
       procuringEntity: "",
       contactPerson: "",
@@ -6969,7 +6974,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       <ul className="text-sm text-blue-800 space-y-1">
                         <li>• Experience & Expertise</li>
                         <li>• Technical Approach</li>
-                        <li>• Quality Standards</li>
+                        <li>�� Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
                           �� Previous contracts executed in the last 2 years
@@ -10476,30 +10481,6 @@ Blockchain Timestamp: ${Date.now()}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="e.g., Medical Equipment, Construction"
                     />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Urgency Level *
-                    </label>
-                    <select
-                      value={newNOCRequest.urgencyLevel}
-                      onChange={(e) =>
-                        setNewNOCRequest((prev) => ({
-                          ...prev,
-                          urgencyLevel: e.target.value as
-                            | "Low"
-                            | "Medium"
-                            | "High"
-                            | "Critical",
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
-                      <option value="Critical">Critical</option>
-                    </select>
                   </div>
                 </div>
 

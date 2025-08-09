@@ -6779,15 +6779,18 @@ The award letter has been:
               </button>
             ))}
 
-            {/* Special link to NOC Management Dashboard */}
-            <Link
-              to="/superuser/noc"
-              className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors text-gray-600 hover:text-blue-600 hover:bg-blue-50 border-l-2 border-green-500"
+            {/* Quick access to NOC Management Tab */}
+            <button
+              onClick={() => setActiveTab("no-objection-certificate")}
+              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
+                activeTab === "no-objection-certificate"
+                  ? "text-blue-600 bg-blue-50 border-l-2 border-blue-500"
+                  : "text-gray-600 hover:text-blue-600 hover:bg-blue-50 border-l-2 border-green-500"
+              }`}
             >
               <Send className="h-4 w-4" />
               <span>NOC Management</span>
-              <ExternalLink className="h-3 w-3" />
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
