@@ -922,7 +922,7 @@ export default function MinistryDashboard() {
               description:
                 "Complete IT infrastructure upgrade for health facilities",
               category: "Information Technology",
-              estimatedValue: "���950,000,000",
+              estimatedValue: "₦950,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1174,7 +1174,7 @@ export default function MinistryDashboard() {
         requestDate: "2024-01-25",
         status: "Approved",
         projectValue: "₦850,000,000",
-        contractorName: "MedSupply Nigeria Ltd",
+        contractorName: "PrimeCare Medical Ltd",
         expectedDuration: "6 months",
         approvalDate: "2024-01-28",
         certificateNumber: "KNS/MOP/PNO/2024/001",
@@ -1185,8 +1185,19 @@ export default function MinistryDashboard() {
         requestDate: "2024-02-01",
         status: "Pending",
         projectValue: "₦650,000,000",
-        contractorName: "Northern Healthcare Solutions",
+        contractorName: "Golden Gates Healthcare",
         expectedDuration: "4 months",
+      },
+      {
+        id: "NOC-MOH-003",
+        projectTitle: "Pharmaceutical Supply Program",
+        requestDate: "2024-02-05",
+        status: "Approved",
+        projectValue: "₦1,200,000,000",
+        contractorName: "Falcon Diagnostics Ltd",
+        expectedDuration: "12 months",
+        approvalDate: "2024-02-08",
+        certificateNumber: "KNS/MOP/PNO/2024/002",
       },
     ];
 
