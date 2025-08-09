@@ -16,11 +16,8 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName?: string;
-  role: 'company' | 'admin' | 'superuser' | 'mda_admin' | 'mda_user';
+  role: 'company' | 'admin' | 'superuser';
   companyId?: string;
-  mdaId?: string; // For MDA users and admins
-  mdaRole?: string; // Specific role within MDA (e.g., 'mda_super_admin', 'procurement_officer', etc.)
-  department?: string; // For MDA users
   createdAt: Date;
   lastLoginAt: Date;
   emailVerified: boolean;
