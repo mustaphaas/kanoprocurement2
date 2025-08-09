@@ -2143,7 +2143,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-006",
           companyName: "Sahel Bridge Builders",
-          bidAmount: "₦8,200,000,000",
+          bidAmount: "��8,200,000,000",
           technicalScore: 93,
           financialScore: 89,
           totalScore: 91,
@@ -2632,14 +2632,49 @@ export default function MinistryDashboard() {
     if (
       !newNOCRequest.projectTitle ||
       !newNOCRequest.contractorName ||
-      !newNOCRequest.projectValue
+      !newNOCRequest.projectValue ||
+      !newNOCRequest.category ||
+      !newNOCRequest.procuringEntity ||
+      !newNOCRequest.contactPerson ||
+      !newNOCRequest.contactEmail
     ) {
       alert("Please fill in all required fields");
       return;
     }
 
-    const nocRequest: NOCRequest = {
-      id: `NOC-${Date.now()}`,
+    const { ministryId, ministry } = getMinistryMockData();
+    const requestId = `NOC-CENTRAL-${Date.now()}`;
+
+    // Create centralized NOC request
+    const centralNOCRequest = {
+      id: requestId,
+      projectTitle: newNOCRequest.projectTitle,
+      requestDate: new Date().toISOString().split("T")[0],
+      status: "Pending" as const,
+      projectValue: newNOCRequest.projectValue,
+      contractorName: newNOCRequest.contractorName,
+      expectedDuration: newNOCRequest.expectedDuration,
+      requestingMinistry: ministry.name,
+      ministryCode: ministry.code,
+      projectDescription: newNOCRequest.projectDescription,
+      justification: newNOCRequest.justification,
+      urgencyLevel: newNOCRequest.urgencyLevel,
+      category: newNOCRequest.category,
+      procuringEntity: newNOCRequest.procuringEntity,
+      contactPerson: newNOCRequest.contactPerson,
+      contactEmail: newNOCRequest.contactEmail,
+      attachments: [],
+    };
+
+    // Add to centralized NOC requests
+    const existingCentralNOCs = localStorage.getItem("centralNOCRequests");
+    const centralNOCs = existingCentralNOCs ? JSON.parse(existingCentralNOCs) : [];
+    centralNOCs.unshift(centralNOCRequest);
+    localStorage.setItem("centralNOCRequests", JSON.stringify(centralNOCs));
+
+    // Create local ministry NOC record (showing as pending)
+    const ministryNOCRequest: NOCRequest = {
+      id: requestId,
       projectTitle: newNOCRequest.projectTitle,
       requestDate: new Date().toISOString().split("T")[0],
       status: "Pending",
@@ -2648,7 +2683,16 @@ export default function MinistryDashboard() {
       expectedDuration: newNOCRequest.expectedDuration,
     };
 
-    setNOCRequests((prev) => [nocRequest, ...prev]);
+    setNOCRequests((prev) => [ministryNOCRequest, ...prev]);
+
+    // Also store in ministry-specific localStorage for persistence
+    const ministryNOCKey = `${ministry.code}_NOCRequests`;
+    const existingMinistryNOCs = localStorage.getItem(ministryNOCKey);
+    const ministryNOCs = existingMinistryNOCs ? JSON.parse(existingMinistryNOCs) : [];
+    ministryNOCs.unshift(ministryNOCRequest);
+    localStorage.setItem(ministryNOCKey, JSON.stringify(ministryNOCs));
+
+    // Reset form
     setNewNOCRequest({
       projectTitle: "",
       projectValue: "",
@@ -2656,9 +2700,14 @@ export default function MinistryDashboard() {
       expectedDuration: "",
       projectDescription: "",
       justification: "",
+      urgencyLevel: "Medium",
+      category: "",
+      procuringEntity: "",
+      contactPerson: "",
+      contactEmail: "",
     });
     setShowNOCRequest(false);
-    alert("NOC Request submitted successfully!");
+    alert("NOC Request submitted successfully! It will be reviewed by the superuser.");
   };
 
   // Helper functions for evaluation scoring
