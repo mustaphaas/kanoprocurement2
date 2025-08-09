@@ -359,7 +359,18 @@ export default function SuperuserNOC() {
     }
   };
 
-  const getMinistryStats = () => {
+  const [stats, setStats] = useState({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+    moh: 0,
+    mowi: 0,
+    moe: 0,
+  });
+
+  // Calculate statistics whenever data or filters change
+  useEffect(() => {
     // For the main stats (Total, Pending, Approved, Rejected), use filteredRequests
     // to reflect the current filter state
     const baseRequests = filteredRequests;
@@ -369,7 +380,7 @@ export default function SuperuserNOC() {
     const mowiRequests = nocRequests.filter((r) => r.ministryCode === "MOWI");
     const moeRequests = nocRequests.filter((r) => r.ministryCode === "MOE");
 
-    return {
+    setStats({
       total: baseRequests.length,
       pending: baseRequests.filter((r) => r.status === "Pending").length,
       approved: baseRequests.filter((r) => r.status === "Approved").length,
@@ -377,10 +388,8 @@ export default function SuperuserNOC() {
       moh: mohRequests.length,
       mowi: mowiRequests.length,
       moe: moeRequests.length,
-    };
-  };
-
-  const stats = getMinistryStats();
+    });
+  }, [filteredRequests, nocRequests]);
 
   return (
     <div className="min-h-screen bg-gray-50">
