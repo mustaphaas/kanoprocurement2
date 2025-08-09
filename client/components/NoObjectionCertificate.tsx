@@ -305,6 +305,21 @@ export default function NoObjectionCertificate({
     }
   }, []);
 
+  // Add visibility change listener to refresh data when tab becomes active
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadNOCRequests();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   // Filter NOC requests
   useEffect(() => {
     let filtered = nocRequests.filter((request) => {
