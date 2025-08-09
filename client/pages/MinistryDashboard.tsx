@@ -922,7 +922,7 @@ export default function MinistryDashboard() {
               description:
                 "Complete IT infrastructure upgrade for health facilities",
               category: "Information Technology",
-              estimatedValue: "��950,000,000",
+              estimatedValue: "₦950,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1267,7 +1267,7 @@ export default function MinistryDashboard() {
       {
         id: "COMM-001",
         vendorId: "VEND-001",
-        vendorName: "MedSupply Nigeria Ltd",
+        vendorName: "PrimeCare Medical Ltd",
         subject: "Amendment to Tender MOH-2024-001",
         message:
           "Please note the amendment to delivery timeline in tender MOH-2024-001",
