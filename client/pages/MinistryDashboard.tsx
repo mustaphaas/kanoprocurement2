@@ -389,6 +389,34 @@ export default function MinistryDashboard() {
       previousProjects: 28,
       completionRate: 94.2,
     },
+    {
+      id: "BID-004",
+      companyName: "Apex Medical Equipment Ltd",
+      bidAmount: "₦890,000,000",
+      technicalScore: 82,
+      financialScore: 79,
+      totalScore: 80.5,
+      status: "Qualified",
+      submissionDate: "2024-02-07",
+      experience: "8 years",
+      certifications: ["ISO 9001", "CE Certified"],
+      previousProjects: 22,
+      completionRate: 92.3,
+    },
+    {
+      id: "BID-005",
+      companyName: "Unity Health Systems",
+      bidAmount: "₦910,000,000",
+      technicalScore: 80,
+      financialScore: 76,
+      totalScore: 78,
+      status: "Qualified",
+      submissionDate: "2024-02-06",
+      experience: "6 years",
+      certifications: ["ISO 9001", "WHO Approved"],
+      previousProjects: 18,
+      completionRate: 89.7,
+    },
   ]);
   const navigate = useNavigate();
 
@@ -864,6 +892,34 @@ export default function MinistryDashboard() {
         evaluationDate: "2024-02-10",
         nocIssuedDate: "2024-02-12",
         nocCertificateNumber: "NOC-003-2024",
+      },
+      {
+        companyId: "BID-004",
+        companyName: "Apex Medical Equipment Ltd",
+        registrationCompleted: true,
+        loginVerificationCompleted: true,
+        biddingCompleted: true,
+        evaluationCompleted: true,
+        nocIssued: false,
+        finalApprovalStatus: "pending",
+        registrationDate: "2024-01-12",
+        verificationDate: "2024-01-13",
+        bidSubmissionDate: "2024-02-07",
+        evaluationDate: "2024-02-09",
+      },
+      {
+        companyId: "BID-005",
+        companyName: "Unity Health Systems",
+        registrationCompleted: true,
+        loginVerificationCompleted: true,
+        biddingCompleted: true,
+        evaluationCompleted: true,
+        nocIssued: false,
+        finalApprovalStatus: "pending",
+        registrationDate: "2024-01-11",
+        verificationDate: "2024-01-12",
+        bidSubmissionDate: "2024-02-06",
+        evaluationDate: "2024-02-08",
       },
     ];
 
@@ -2295,7 +2351,7 @@ export default function MinistryDashboard() {
                   <div>
                     <h4 className="font-medium text-gray-900 mb-3">Top Qualified Bidders & Workflow Status</h4>
                     <div className="space-y-4">
-                      {bidders.slice(0, 3).map((bidder, index) => {
+                      {bidders.slice(0, 5).map((bidder, index) => {
                         const workflowStatus = getVendorWorkflowStatus(bidder.id);
                         const isEligible = isVendorEligibleForAward(bidder.id);
 
