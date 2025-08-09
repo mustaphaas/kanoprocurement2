@@ -1,9 +1,24 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
+import MDAForm from "@/components/MDAForm";
+import MDAAdminForm from "@/components/MDAAdminForm";
+import MDAUserForm from "@/components/MDAUserForm";
+import {
+  MDA,
+  MDAAdmin,
+  MDAUser,
+  CreateMDARequest,
+  CreateMDAAdminRequest,
+  CreateMDAUserRequest,
+  MDASettings,
+  MDAPermissions,
+  MDAUserPermissions,
+} from "@shared/api";
 import {
   Building2,
   Users,
+  User,
   CheckCircle,
   XCircle,
   Eye,
@@ -80,7 +95,8 @@ type ActiveTab =
   | "audit-logs"
   | "settings"
   | "feedback"
-  | "no-objection-certificate";
+  | "no-objection-certificate"
+  | "mda-management";
 
 interface DashboardStats {
   newRegistrationsPending: number;
@@ -338,6 +354,32 @@ export default function SuperUserDashboard() {
     mainProcurementCategory: "",
     additionalProcurementCategories: [],
   });
+
+  // MDA Management state
+  const [mdas, setMDAs] = useState<MDA[]>([]);
+  const [mdaAdmins, setMDAAdmins] = useState<MDAAdmin[]>([]);
+  const [mdaUsers, setMDAUsers] = useState<MDAUser[]>([]);
+  const [showCreateMDAModal, setShowCreateMDAModal] = useState(false);
+  const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [showEditMDAModal, setShowEditMDAModal] = useState(false);
+  const [showEditAdminModal, setShowEditAdminModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [selectedMDA, setSelectedMDA] = useState<MDA | null>(null);
+  const [selectedMDAAdmin, setSelectedMDAAdmin] = useState<MDAAdmin | null>(
+    null,
+  );
+  const [selectedMDAUser, setSelectedMDAUser] = useState<MDAUser | null>(null);
+  const [mdaSearchTerm, setMDASearchTerm] = useState("");
+  const [mdaFilterType, setMDAFilterType] = useState<
+    "all" | "ministry" | "department" | "agency"
+  >("all");
+  const [mdaFormMode, setMDAFormMode] = useState<"create" | "edit">("create");
+  const [adminFormMode, setAdminFormMode] = useState<"create" | "edit">(
+    "create",
+  );
+  const [userFormMode, setUserFormMode] = useState<"create" | "edit">("create");
+
   const navigate = useNavigate();
 
   const dashboardStats: DashboardStats = {
@@ -615,12 +657,194 @@ export default function SuperUserDashboard() {
       },
     ];
 
+    // Mock MDA data
+    const mockMDAs: MDA[] = [
+      {
+        id: "mda-001",
+        name: "Ministry of Health",
+        type: "ministry",
+        description: "Responsible for healthcare policy and administration",
+        contactEmail: "info@health.kano.gov.ng",
+        contactPhone: "+234 64 123 4567",
+        address: "Health Ministry Complex, Kano",
+        headOfMDA: "Dr. Amina Kano",
+        createdAt: new Date("2024-01-01"),
+        updatedAt: new Date("2024-01-15"),
+        isActive: true,
+        settings: {
+          procurementThresholds: {
+            level1: 5000000,
+            level2: 25000000,
+            level3: 100000000,
+          },
+          allowedCategories: [
+            "Medical Equipment",
+            "Pharmaceuticals",
+            "Healthcare Services",
+          ],
+          customWorkflows: true,
+          budgetYear: "2024",
+          totalBudget: 5000000000,
+        },
+      },
+      {
+        id: "mda-002",
+        name: "Ministry of Education",
+        type: "ministry",
+        description: "Manages education policy and school administration",
+        contactEmail: "info@education.kano.gov.ng",
+        contactPhone: "+234 64 123 4568",
+        address: "Education Ministry, Kano",
+        headOfMDA: "Prof. Muhammad Usman",
+        createdAt: new Date("2024-01-01"),
+        updatedAt: new Date("2024-01-15"),
+        isActive: true,
+        settings: {
+          procurementThresholds: {
+            level1: 5000000,
+            level2: 25000000,
+            level3: 100000000,
+          },
+          allowedCategories: [
+            "Educational Materials",
+            "School Infrastructure",
+            "ICT Equipment",
+          ],
+          customWorkflows: false,
+          budgetYear: "2024",
+          totalBudget: 8000000000,
+        },
+      },
+      {
+        id: "mda-003",
+        name: "Kano State Urban Development Board",
+        type: "agency",
+        description: "Urban planning and development coordination",
+        contactEmail: "info@ksudb.kano.gov.ng",
+        contactPhone: "+234 64 123 4569",
+        address: "KSUDB Complex, Kano",
+        headOfMDA: "Engr. Fatima Aliyu",
+        createdAt: new Date("2024-01-05"),
+        updatedAt: new Date("2024-01-20"),
+        isActive: true,
+        settings: {
+          procurementThresholds: {
+            level1: 3000000,
+            level2: 15000000,
+            level3: 50000000,
+          },
+          allowedCategories: [
+            "Construction",
+            "Urban Planning",
+            "Infrastructure",
+          ],
+          customWorkflows: true,
+          budgetYear: "2024",
+          totalBudget: 3000000000,
+        },
+      },
+    ];
+
+    const mockMDAAdmins: MDAAdmin[] = [
+      {
+        id: "admin-001",
+        mdaId: "mda-001",
+        userId: "user-001",
+        role: "mda_super_admin",
+        permissions: {
+          canCreateUsers: true,
+          canManageTenders: true,
+          canApproveContracts: true,
+          canViewReports: true,
+          canManageSettings: true,
+          maxApprovalAmount: 50000000,
+        },
+        assignedBy: "superuser-001",
+        assignedAt: new Date("2024-01-02"),
+        isActive: true,
+      },
+      {
+        id: "admin-002",
+        mdaId: "mda-002",
+        userId: "user-002",
+        role: "mda_admin",
+        permissions: {
+          canCreateUsers: true,
+          canManageTenders: true,
+          canApproveContracts: false,
+          canViewReports: true,
+          canManageSettings: false,
+          maxApprovalAmount: 10000000,
+        },
+        assignedBy: "superuser-001",
+        assignedAt: new Date("2024-01-03"),
+        isActive: true,
+      },
+    ];
+
+    const mockMDAUsers: MDAUser[] = [
+      {
+        id: "mdauser-001",
+        mdaId: "mda-001",
+        userId: "usr-001",
+        role: "procurement_officer",
+        department: "Procurement Department",
+        permissions: {
+          canCreateTenders: true,
+          canEvaluateBids: true,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          accessLevel: "write",
+        },
+        assignedBy: "admin-001",
+        assignedAt: new Date("2024-01-05"),
+        isActive: true,
+      },
+      {
+        id: "mdauser-002",
+        mdaId: "mda-001",
+        userId: "usr-002",
+        role: "evaluator",
+        department: "Technical Evaluation",
+        permissions: {
+          canCreateTenders: false,
+          canEvaluateBids: true,
+          canViewFinancials: false,
+          canGenerateReports: true,
+          accessLevel: "read",
+        },
+        assignedBy: "admin-001",
+        assignedAt: new Date("2024-01-06"),
+        isActive: true,
+      },
+      {
+        id: "mdauser-003",
+        mdaId: "mda-002",
+        userId: "usr-003",
+        role: "accountant",
+        department: "Finance Department",
+        permissions: {
+          canCreateTenders: false,
+          canEvaluateBids: false,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          accessLevel: "read",
+        },
+        assignedBy: "admin-002",
+        assignedAt: new Date("2024-01-07"),
+        isActive: true,
+      },
+    ];
+
     setCompanies(mockCompanies);
     setAuditLogs(mockAuditLogs);
     setAIRecommendations(mockAIRecommendations);
     setTenders(mockTenders);
     setTenderEvaluations(mockTenderEvaluations);
     setVendorPerformances(mockVendorPerformances);
+    setMDAs(mockMDAs);
+    setMDAAdmins(mockMDAAdmins);
+    setMDAUsers(mockMDAUsers);
   }, []);
 
   const handleLogout = () => {
@@ -890,7 +1114,7 @@ The award letter has been:
 ✅ Digitally signed with government certificate
 ✅ Sent via secure email
 ✅ Logged in blockchain for integrity
-✅ Copied to procurement records`);
+��� Copied to procurement records`);
 
     setShowAwardLetterModal(false);
     setSelectedAwardTender(null);
@@ -1075,6 +1299,753 @@ The award letter has been:
     setSelectedCompany(null);
     setBlacklistReason("");
     alert("Company has been blacklisted successfully!");
+  };
+
+  // MDA Management functions
+  const handleCreateMDA = () => {
+    setMDAFormMode("create");
+    setSelectedMDA(null);
+    setShowCreateMDAModal(true);
+  };
+
+  const handleEditMDA = (mda: MDA) => {
+    setMDAFormMode("edit");
+    setSelectedMDA(mda);
+    setShowEditMDAModal(true);
+  };
+
+  const handleDeleteMDA = (mda: MDA) => {
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${mda.name}? This action cannot be undone.`,
+      )
+    ) {
+      // Remove all administrators associated with this MDA
+      setMDAAdmins((prev) => prev.filter((admin) => admin.mdaId !== mda.id));
+
+      // Remove the MDA
+      setMDAs((prev) => prev.filter((m) => m.id !== mda.id));
+
+      alert(`${mda.name} has been deleted successfully!`);
+    }
+  };
+
+  const handleCreateMDAAdmin = (mda: MDA) => {
+    setAdminFormMode("create");
+    setSelectedMDA(mda);
+    setSelectedMDAAdmin(null);
+    setShowCreateAdminModal(true);
+  };
+
+  const handleEditMDAAdmin = (admin: MDAAdmin) => {
+    setAdminFormMode("edit");
+    setSelectedMDAAdmin(admin);
+    setSelectedMDA(mdas.find((m) => m.id === admin.mdaId) || null);
+    setShowEditAdminModal(true);
+  };
+
+  const handleDeleteMDAAdmin = (admin: MDAAdmin) => {
+    const adminMDA = mdas.find((m) => m.id === admin.mdaId);
+    if (
+      window.confirm(
+        `Are you sure you want to remove this administrator from ${adminMDA?.name}?`,
+      )
+    ) {
+      setMDAAdmins((prev) => prev.filter((a) => a.id !== admin.id));
+      alert("Administrator has been removed successfully!");
+    }
+  };
+
+  const handleMDASubmit = async (data: CreateMDARequest) => {
+    try {
+      if (mdaFormMode === "create") {
+        const newMDA: MDA = {
+          id: `mda-${Date.now()}`,
+          ...data,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          isActive: true,
+        };
+        setMDAs((prev) => [...prev, newMDA]);
+        alert("MDA created successfully!");
+      } else if (selectedMDA) {
+        const updatedMDA: MDA = {
+          ...selectedMDA,
+          ...data,
+          updatedAt: new Date(),
+        };
+        setMDAs((prev) =>
+          prev.map((m) => (m.id === selectedMDA.id ? updatedMDA : m)),
+        );
+        alert("MDA updated successfully!");
+      }
+      setShowCreateMDAModal(false);
+      setShowEditMDAModal(false);
+      setSelectedMDA(null);
+    } catch (error) {
+      console.error("Error submitting MDA:", error);
+      alert("Error saving MDA. Please try again.");
+    }
+  };
+
+  const handleMDAAdminSubmit = async (data: CreateMDAAdminRequest) => {
+    try {
+      if (adminFormMode === "create") {
+        const newAdmin: MDAAdmin = {
+          id: `admin-${Date.now()}`,
+          mdaId: data.mdaId,
+          userId: `user-${Date.now()}`,
+          role: data.role,
+          permissions: data.permissions,
+          assignedBy: "superuser-001",
+          assignedAt: new Date(),
+          isActive: true,
+        };
+        setMDAAdmins((prev) => [...prev, newAdmin]);
+        alert("MDA Administrator created successfully!");
+      } else if (selectedMDAAdmin) {
+        const updatedAdmin: MDAAdmin = {
+          ...selectedMDAAdmin,
+          mdaId: data.mdaId,
+          role: data.role,
+          permissions: data.permissions,
+        };
+        setMDAAdmins((prev) =>
+          prev.map((a) => (a.id === selectedMDAAdmin.id ? updatedAdmin : a)),
+        );
+        alert("MDA Administrator updated successfully!");
+      }
+      setShowCreateAdminModal(false);
+      setShowEditAdminModal(false);
+      setSelectedMDAAdmin(null);
+      setSelectedMDA(null);
+    } catch (error) {
+      console.error("Error submitting MDA Admin:", error);
+      alert("Error saving MDA Administrator. Please try again.");
+    }
+  };
+
+  const toggleMDAStatus = (mda: MDA) => {
+    setMDAs((prev) =>
+      prev.map((m) =>
+        m.id === mda.id
+          ? { ...m, isActive: !m.isActive, updatedAt: new Date() }
+          : m,
+      ),
+    );
+    alert(
+      `${mda.name} has been ${mda.isActive ? "deactivated" : "activated"}!`,
+    );
+  };
+
+  const toggleAdminStatus = (admin: MDAAdmin) => {
+    setMDAAdmins((prev) =>
+      prev.map((a) =>
+        a.id === admin.id ? { ...a, isActive: !a.isActive } : a,
+      ),
+    );
+    alert(
+      `Administrator has been ${admin.isActive ? "deactivated" : "activated"}!`,
+    );
+  };
+
+  const handleCreateMDAUser = (mda: MDA) => {
+    setUserFormMode("create");
+    setSelectedMDA(mda);
+    setSelectedMDAUser(null);
+    setShowCreateUserModal(true);
+  };
+
+  const handleEditMDAUser = (user: MDAUser) => {
+    setUserFormMode("edit");
+    setSelectedMDAUser(user);
+    setSelectedMDA(mdas.find((m) => m.id === user.mdaId) || null);
+    setShowEditUserModal(true);
+  };
+
+  const handleDeleteMDAUser = (user: MDAUser) => {
+    const userMDA = mdas.find((m) => m.id === user.mdaId);
+    if (
+      window.confirm(
+        `Are you sure you want to remove this user from ${userMDA?.name}?`,
+      )
+    ) {
+      setMDAUsers((prev) => prev.filter((u) => u.id !== user.id));
+      alert("User has been removed successfully!");
+    }
+  };
+
+  const handleMDAUserSubmit = async (data: CreateMDAUserRequest) => {
+    try {
+      if (userFormMode === "create") {
+        const newUser: MDAUser = {
+          id: `user-${Date.now()}`,
+          mdaId: data.mdaId,
+          userId: `usr-${Date.now()}`,
+          role: data.role,
+          department: data.department,
+          permissions: data.permissions,
+          assignedBy: "admin-001",
+          assignedAt: new Date(),
+          isActive: true,
+        };
+        setMDAUsers((prev) => [...prev, newUser]);
+        alert("MDA User created successfully!");
+      } else if (selectedMDAUser) {
+        const updatedUser: MDAUser = {
+          ...selectedMDAUser,
+          mdaId: data.mdaId,
+          role: data.role,
+          department: data.department,
+          permissions: data.permissions,
+        };
+        setMDAUsers((prev) =>
+          prev.map((u) => (u.id === selectedMDAUser.id ? updatedUser : u)),
+        );
+        alert("MDA User updated successfully!");
+      }
+      setShowCreateUserModal(false);
+      setShowEditUserModal(false);
+      setSelectedMDAUser(null);
+      setSelectedMDA(null);
+    } catch (error) {
+      console.error("Error submitting MDA User:", error);
+      alert("Error saving MDA User. Please try again.");
+    }
+  };
+
+  const toggleUserStatus = (user: MDAUser) => {
+    setMDAUsers((prev) =>
+      prev.map((u) => (u.id === user.id ? { ...u, isActive: !u.isActive } : u)),
+    );
+    alert(`User has been ${user.isActive ? "deactivated" : "activated"}!`);
+  };
+
+  const filteredMDAs = mdas.filter((mda) => {
+    const matchesSearch =
+      mda.name.toLowerCase().includes(mdaSearchTerm.toLowerCase()) ||
+      mda.description.toLowerCase().includes(mdaSearchTerm.toLowerCase());
+    const matchesType = mdaFilterType === "all" || mda.type === mdaFilterType;
+    return matchesSearch && matchesType;
+  });
+
+  const renderMDAManagement = () => {
+    return (
+      <div className="space-y-8">
+        {/* MDA Management Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              MDA Management
+            </h1>
+            <p className="text-gray-600">
+              Create and manage Ministries, Departments, and Agencies
+            </p>
+          </div>
+          <button
+            onClick={handleCreateMDA}
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Create MDA
+          </button>
+        </div>
+
+        {/* MDA Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total MDAs</p>
+                <p className="text-3xl font-bold text-blue-600">
+                  {mdas.length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Active Admins
+                </p>
+                <p className="text-3xl font-bold text-green-600">
+                  {mdaAdmins.filter((a) => a.isActive).length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <Users className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Budget
+                </p>
+                <p className="text-3xl font-bold text-purple-600">
+                  ₦
+                  {(
+                    mdas.reduce(
+                      (sum, mda) => sum + mda.settings.totalBudget,
+                      0,
+                    ) / 1000000000
+                  ).toFixed(1)}
+                  B
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <DollarSign className="h-6 w-6 text-purple-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  System Efficiency
+                </p>
+                <p className="text-3xl font-bold text-orange-600">92.5%</p>
+              </div>
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <BarChart3 className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* MDA Filters */}
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search MDAs..."
+                  value={mdaSearchTerm}
+                  onChange={(e) => setMDASearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+            <div className="sm:w-40">
+              <select
+                value={mdaFilterType}
+                onChange={(e) => setMDAFilterType(e.target.value as any)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All Types</option>
+                <option value="ministry">Ministries</option>
+                <option value="department">Departments</option>
+                <option value="agency">Agencies</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* MDA Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredMDAs.map((mda) => (
+            <div
+              key={mda.id}
+              className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow"
+            >
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div
+                      className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                        mda.type === "ministry"
+                          ? "bg-blue-100"
+                          : mda.type === "department"
+                            ? "bg-green-100"
+                            : "bg-purple-100"
+                      }`}
+                    >
+                      <Building2
+                        className={`h-6 w-6 ${
+                          mda.type === "ministry"
+                            ? "text-blue-600"
+                            : mda.type === "department"
+                              ? "text-green-600"
+                              : "text-purple-600"
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <span
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          mda.type === "ministry"
+                            ? "bg-blue-100 text-blue-800"
+                            : mda.type === "department"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-purple-100 text-purple-800"
+                        }`}
+                      >
+                        {mda.type.charAt(0).toUpperCase() + mda.type.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      mda.isActive
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {mda.isActive ? "Active" : "Inactive"}
+                  </span>
+                </div>
+
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {mda.name}
+                </h3>
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                  {mda.description}
+                </p>
+
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Head of MDA:</span>
+                    <span className="font-medium">{mda.headOfMDA}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Budget:</span>
+                    <span className="font-medium">
+                      ₦{(mda.settings.totalBudget / 1000000000).toFixed(1)}B
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-between items-center pt-4 border-t border-gray-200">
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => toggleMDAStatus(mda)}
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
+                      title="Toggle Status"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleEditMDA(mda)}
+                      className="p-2 text-green-600 hover:bg-green-50 rounded-md"
+                      title="Edit MDA"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteMDA(mda)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-md"
+                      title="Delete MDA"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleCreateMDAAdmin(mda)}
+                      className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full hover:bg-blue-200"
+                    >
+                      Add Admin
+                    </button>
+                    <button
+                      onClick={() => handleCreateMDAUser(mda)}
+                      className="text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full hover:bg-green-200"
+                    >
+                      Add User
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {filteredMDAs.length === 0 && (
+          <div className="text-center py-12">
+            <Building2 className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">
+              No MDAs found
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              {mdaSearchTerm || mdaFilterType !== "all"
+                ? "Try adjusting your search or filter criteria."
+                : "Start by creating your first MDA."}
+            </p>
+          </div>
+        )}
+
+        {/* MDA Admins Table */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              MDA Administrators
+            </h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Administrator
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    MDA
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Max Approval
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {mdaAdmins.map((admin) => {
+                  const adminMDA = mdas.find((m) => m.id === admin.mdaId);
+                  return (
+                    <tr key={admin.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                            <Users className="h-5 w-5 text-gray-600" />
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">
+                              Admin User
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {admin.userId}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {adminMDA?.name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {adminMDA?.type}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            admin.role === "mda_super_admin"
+                              ? "bg-purple-100 text-purple-800"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
+                          {admin.role === "mda_super_admin"
+                            ? "Super Admin"
+                            : "Admin"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ₦
+                        {(
+                          admin.permissions.maxApprovalAmount / 1000000
+                        ).toFixed(0)}
+                        M
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            admin.isActive
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {admin.isActive ? "Active" : "Inactive"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button
+                          onClick={() => toggleAdminStatus(admin)}
+                          className="text-blue-600 hover:text-blue-900"
+                          title="Toggle Status"
+                        >
+                          <Eye className="h-4 w-4 inline mr-1" />
+                          {admin.isActive ? "Deactivate" : "Activate"}
+                        </button>
+                        <button
+                          onClick={() => handleEditMDAAdmin(admin)}
+                          className="text-green-600 hover:text-green-900"
+                        >
+                          <Edit className="h-4 w-4 inline mr-1" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteMDAAdmin(admin)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <Trash2 className="h-4 w-4 inline mr-1" />
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* MDA Users Table */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">MDA Users</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    User
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    MDA
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Department
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Access Level
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {mdaUsers.map((user) => {
+                  const userMDA = mdas.find((m) => m.id === user.mdaId);
+                  return (
+                    <tr key={user.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                            <User className="h-5 w-5 text-gray-600" />
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">
+                              MDA User
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {user.userId}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {userMDA?.name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {userMDA?.type}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {user.department}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            user.role === "procurement_officer"
+                              ? "bg-blue-100 text-blue-800"
+                              : user.role === "evaluator"
+                                ? "bg-green-100 text-green-800"
+                                : user.role === "accountant"
+                                  ? "bg-purple-100 text-purple-800"
+                                  : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {user.role
+                            .replace("_", " ")
+                            .replace(/\b\w/g, (l) => l.toUpperCase())}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            user.permissions.accessLevel === "write"
+                              ? "bg-red-100 text-red-800"
+                              : user.permissions.accessLevel === "admin"
+                                ? "bg-purple-100 text-purple-800"
+                                : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {user.permissions.accessLevel === "write"
+                            ? "Read & Write"
+                            : user.permissions.accessLevel === "admin"
+                              ? "Admin"
+                              : "Read Only"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            user.isActive
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {user.isActive ? "Active" : "Inactive"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button
+                          onClick={() => toggleUserStatus(user)}
+                          className="text-blue-600 hover:text-blue-900"
+                          title="Toggle Status"
+                        >
+                          <Eye className="h-4 w-4 inline mr-1" />
+                          {user.isActive ? "Deactivate" : "Activate"}
+                        </button>
+                        <button
+                          onClick={() => handleEditMDAUser(user)}
+                          className="text-green-600 hover:text-green-900"
+                        >
+                          <Edit className="h-4 w-4 inline mr-1" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteMDAUser(user)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <Trash2 className="h-4 w-4 inline mr-1" />
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderDashboardContent = () => {
@@ -3934,7 +4905,7 @@ The award letter has been:
                     >
                       <option value="">Select winning bidder</option>
                       <option value="1">
-                        Northern Construction Ltd (���2.3B - Score: 87.5)
+                        Northern Construction Ltd (�����2.3B - Score: 87.5)
                       </option>
                       <option value="2">
                         BuildRight Engineering (₦2.6B - Score: 76.5)
@@ -5262,6 +6233,9 @@ The award letter has been:
       case "no-objection-certificate":
         return <NoObjectionCertificate />;
 
+      case "mda-management":
+        return renderMDAManagement();
+
       case "settings":
         return (
           <div className="space-y-8">
@@ -5782,6 +6756,11 @@ The award letter has been:
                 key: "no-objection-certificate",
                 label: "No Objection Certificate",
                 icon: FileCheck,
+              },
+              {
+                key: "mda-management",
+                label: "MDA Management",
+                icon: Building2,
               },
               { key: "settings", label: "Settings", icon: Settings },
               { key: "feedback", label: "Feedback", icon: MessageSquare },
@@ -7059,6 +8038,53 @@ The award letter has been:
             </div>
           </div>
         </div>
+      )}
+
+      {/* MDA Management Modals */}
+      <MDAForm
+        isOpen={showCreateMDAModal || showEditMDAModal}
+        onClose={() => {
+          setShowCreateMDAModal(false);
+          setShowEditMDAModal(false);
+          setSelectedMDA(null);
+        }}
+        onSubmit={handleMDASubmit}
+        mode={mdaFormMode}
+        initialData={selectedMDA}
+        parentMDAs={mdas
+          .filter((m) => m.type === "ministry")
+          .map((m) => ({ id: m.id, name: m.name, type: m.type }))}
+      />
+
+      <MDAAdminForm
+        isOpen={showCreateAdminModal || showEditAdminModal}
+        onClose={() => {
+          setShowCreateAdminModal(false);
+          setShowEditAdminModal(false);
+          setSelectedMDA(null);
+          setSelectedMDAAdmin(null);
+        }}
+        onSubmit={handleMDAAdminSubmit}
+        mdas={mdas}
+        selectedMDA={selectedMDA}
+        mode={adminFormMode}
+        initialData={selectedMDAAdmin}
+      />
+
+      {selectedMDA && (
+        <MDAUserForm
+          isOpen={showCreateUserModal || showEditUserModal}
+          onClose={() => {
+            setShowCreateUserModal(false);
+            setShowEditUserModal(false);
+            setSelectedMDA(null);
+            setSelectedMDAUser(null);
+          }}
+          onSubmit={handleMDAUserSubmit}
+          mda={selectedMDA}
+          mode={userFormMode}
+          initialData={selectedMDAUser}
+        />
       )}
     </div>
   );

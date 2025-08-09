@@ -1,0 +1,195 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    function getUserMDAId() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.mdaId;
+    }
+    
+    function isSuperuser() {
+      return isAuthenticated() && getUserRole() == 'superuser';
+    }
+    
+    function isMDAAdmin() {
+      return isAuthenticated() && getUserRole() == 'mda_admin';
+    }
+    
+    function isMDAUser() {
+      return isAuthenticated() && getUserRole() == 'mda_user';
+    }
+    
+    function hasAccessToMDA(mdaId) {
+      return isSuperuser() || 
+             (isMDAAdmin() && getUserMDAId() == mdaId) ||
+             (isMDAUser() && getUserMDAId() == mdaId);
+    }
+
+    // Users collection - extend existing rules
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (
+        // Users can read their own profile
+        request.auth.uid == userId ||
+        // Superusers can read all profiles
+        isSuperuser() ||
+        // MDA admins can read users in their MDA
+        (isMDAAdmin() && resource.data.mdaId == getUserMDAId())
+      );
+      
+      allow write: if isAuthenticated() && (
+        // Users can update their own profile (limited fields)
+        (request.auth.uid == userId && 
+         onlyUpdating(['displayName', 'lastLoginAt'])) ||
+        // Superusers can create/update any user
+        isSuperuser() ||
+        // MDA admins can create users in their MDA
+        (isMDAAdmin() && request.resource.data.mdaId == getUserMDAId())
+      );
+    }
+
+    // MDAs collection
+    match /mdas/{mdaId} {
+      allow read: if isAuthenticated() && (
+        // Superusers can read all MDAs
+        isSuperuser() ||
+        // MDA admins and users can read their own MDA
+        hasAccessToMDA(mdaId)
+      );
+      
+      allow create: if isSuperuser();
+      
+      allow update: if isAuthenticated() && (
+        // Superusers can update any MDA
+        isSuperuser() ||
+        // MDA super admins can update their own MDA settings
+        (isMDAAdmin() && 
+         getUserMDAId() == mdaId &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.mdaRole == 'mda_super_admin')
+      );
+      
+      allow delete: if isSuperuser();
+    }
+
+    // MDA Admins collection
+    match /mda_admins/{adminId} {
+      allow read: if isAuthenticated() && (
+        // Superusers can read all MDA admins
+        isSuperuser() ||
+        // MDA admins can read other admins in their MDA
+        (isMDAAdmin() && resource.data.mdaId == getUserMDAId()) ||
+        // Users can read their own admin record
+        resource.data.userId == request.auth.uid
+      );
+      
+      allow create: if isSuperuser();
+      
+      allow update: if isAuthenticated() && (
+        // Superusers can update any MDA admin
+        isSuperuser() ||
+        // MDA super admins can update other admins in their MDA
+        (isMDAAdmin() && 
+         resource.data.mdaId == getUserMDAId() &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.mdaRole == 'mda_super_admin')
+      );
+      
+      allow delete: if isSuperuser();
+    }
+
+    // MDA Users collection
+    match /mda_users/{userId} {
+      allow read: if isAuthenticated() && (
+        // Superusers can read all MDA users
+        isSuperuser() ||
+        // MDA admins can read users in their MDA
+        (isMDAAdmin() && resource.data.mdaId == getUserMDAId()) ||
+        // Users can read their own record
+        resource.data.userId == request.auth.uid
+      );
+      
+      allow create: if isAuthenticated() && (
+        // Superusers can create users in any MDA
+        isSuperuser() ||
+        // MDA admins can create users in their MDA
+        (isMDAAdmin() && request.resource.data.mdaId == getUserMDAId())
+      );
+      
+      allow update: if isAuthenticated() && (
+        // Superusers can update any MDA user
+        isSuperuser() ||
+        // MDA admins can update users in their MDA
+        (isMDAAdmin() && resource.data.mdaId == getUserMDAId())
+      );
+      
+      allow delete: if isAuthenticated() && (
+        // Superusers can delete any MDA user
+        isSuperuser() ||
+        // MDA admins can delete users in their MDA
+        (isMDAAdmin() && resource.data.mdaId == getUserMDAId())
+      );
+    }
+
+    // Tenders collection
+    match /tenders/{tenderId} {
+      allow read: if isAuthenticated() && (
+        // Superusers can read all tenders
+        isSuperuser() ||
+        // MDA users can read tenders in their MDA
+        hasAccessToMDA(resource.data.mdaId) ||
+        // Public tenders can be read by companies
+        (getUserRole() == 'company' && resource.data.status == 'published')
+      );
+      
+      allow create: if isAuthenticated() && (
+        // Superusers can create tenders in any MDA
+        isSuperuser() ||
+        // MDA admins and specific users can create tenders in their MDA
+        (hasAccessToMDA(request.resource.data.mdaId) && 
+         (isMDAAdmin() || 
+          (isMDAUser() && 
+           get(/databases/$(database)/documents/mda_users/$(request.auth.uid)).data.permissions.canCreateTenders == true)))
+      );
+      
+      allow update: if isAuthenticated() && (
+        // Superusers can update any tender
+        isSuperuser() ||
+        // MDA admins can update tenders in their MDA
+        (isMDAAdmin() && hasAccessToMDA(resource.data.mdaId)) ||
+        // Tender creator can update their own tender
+        resource.data.createdBy == request.auth.uid
+      );
+      
+      allow delete: if isAuthenticated() && (
+        // Superusers can delete any tender
+        isSuperuser() ||
+        // MDA admins can delete tenders in their MDA
+        (isMDAAdmin() && hasAccessToMDA(resource.data.mdaId))
+      );
+    }
+
+    // Audit logs - extend existing rules
+    match /audit_logs/{logId} {
+      allow read: if isAuthenticated() && (
+        // Superusers can read all audit logs
+        isSuperuser() ||
+        // MDA admins can read logs related to their MDA
+        (isMDAAdmin() && resource.data.entityId == getUserMDAId())
+      );
+      
+      allow create: if isAuthenticated();
+      // Audit logs should never be updated or deleted
+    }
+
+    // Helper function to check if only specific fields are being updated
+    function onlyUpdating(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+  }
+}
