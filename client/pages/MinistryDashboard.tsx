@@ -2290,11 +2290,6 @@ export default function MinistryDashboard() {
       const allBids = JSON.parse(storedBids);
       const matchingBids = allBids.filter((bid: any) => bid.tenderId === tenderId);
 
-      // Debug logging to see what's happening
-      console.log(`Getting bid count for tender ${tenderId}:`);
-      console.log('All bids:', allBids);
-      console.log('Matching bids:', matchingBids);
-      console.log('Count:', matchingBids.length);
 
       return matchingBids.length;
     } catch (error) {
