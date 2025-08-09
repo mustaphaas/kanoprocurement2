@@ -267,7 +267,8 @@ export default function CompanyDashboard() {
     },
   ]);
 
-  const [tenders, setTenders] = useState<Tender[]>([
+  // Default tenders for fallback
+  const getDefaultTenders = (): Tender[] => [
     {
       id: "KS-2024-015",
       title: "Supply of Medical Equipment",
@@ -310,7 +311,9 @@ export default function CompanyDashboard() {
       unspscCode: "72141200",
       procurementMethod: "Selective Tendering",
     },
-  ]);
+  ];
+
+  const [tenders, setTenders] = useState<Tender[]>(getDefaultTenders());
 
   const [contracts, setContracts] = useState<Contract[]>([
     {
