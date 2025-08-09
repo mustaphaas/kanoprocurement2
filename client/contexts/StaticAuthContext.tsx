@@ -144,12 +144,20 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               </p>
               <div className="mt-4 p-4 bg-orange-50 rounded-lg text-sm text-orange-700">
                 <p>
-                  <strong>Ministry Demo Credentials (Password: ministry123):</strong>
+                  <strong>
+                    Ministry Demo Credentials (Password: ministry123):
+                  </strong>
                 </p>
                 <div className="space-y-1 mt-2">
-                  <p>Ministry of Health: <code>ministry</code></p>
-                  <p>Ministry of Works: <code>ministry2</code></p>
-                  <p>Ministry of Education: <code>ministry3</code></p>
+                  <p>
+                    Ministry of Health: <code>ministry</code>
+                  </p>
+                  <p>
+                    Ministry of Works: <code>ministry2</code>
+                  </p>
+                  <p>
+                    Ministry of Education: <code>ministry3</code>
+                  </p>
                 </div>
               </div>
             </div>

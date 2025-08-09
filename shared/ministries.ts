@@ -31,7 +31,8 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
     },
     primaryColor: "#16a34a",
     secondaryColor: "#dcfce7",
-    description: "Responsible for healthcare policy, medical services, and public health administration in Kano State",
+    description:
+      "Responsible for healthcare policy, medical services, and public health administration in Kano State",
     departments: [
       "Medical Services",
       "Public Health",
@@ -40,7 +41,7 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
       "Primary Healthcare",
       "Epidemiology",
       "Health Information Systems",
-      "Maternal and Child Health"
+      "Maternal and Child Health",
     ],
     specializations: [
       "Medical Equipment",
@@ -50,8 +51,8 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
       "Medical Supplies",
       "Healthcare Infrastructure",
       "Telemedicine",
-      "Public Health Programs"
-    ]
+      "Public Health Programs",
+    ],
   },
   ministry2: {
     id: "ministry2",
@@ -66,7 +67,8 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
     },
     primaryColor: "#ea580c",
     secondaryColor: "#fed7aa",
-    description: "Responsible for infrastructure development, road construction, and public works projects in Kano State",
+    description:
+      "Responsible for infrastructure development, road construction, and public works projects in Kano State",
     departments: [
       "Road Construction",
       "Bridge Engineering",
@@ -75,7 +77,7 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
       "Project Management",
       "Quality Control",
       "Maintenance Services",
-      "Environmental Compliance"
+      "Environmental Compliance",
     ],
     specializations: [
       "Road Construction",
@@ -85,8 +87,8 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
       "Construction Equipment",
       "Infrastructure Development",
       "Urban Planning",
-      "Environmental Engineering"
-    ]
+      "Environmental Engineering",
+    ],
   },
   ministry3: {
     id: "ministry3",
@@ -101,7 +103,8 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
     },
     primaryColor: "#2563eb",
     secondaryColor: "#dbeafe",
-    description: "Responsible for education policy, school administration, and educational development in Kano State",
+    description:
+      "Responsible for education policy, school administration, and educational development in Kano State",
     departments: [
       "Basic Education",
       "Secondary Education",
@@ -110,7 +113,7 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
       "Special Education",
       "Education Planning",
       "Curriculum Development",
-      "Teacher Training"
+      "Teacher Training",
     ],
     specializations: [
       "Educational Technology",
@@ -120,14 +123,20 @@ export const MINISTRIES: Record<string, MinistryConfig> = {
       "Library Resources",
       "Sports Equipment",
       "IT Infrastructure",
-      "Educational Software"
-    ]
-  }
+      "Educational Software",
+    ],
+  },
 };
 
-export const getMinistryByCredentials = (username: string, password: string): MinistryConfig | null => {
+export const getMinistryByCredentials = (
+  username: string,
+  password: string,
+): MinistryConfig | null => {
   for (const ministry of Object.values(MINISTRIES)) {
-    if (ministry.credentials.username === username && ministry.credentials.password === password) {
+    if (
+      ministry.credentials.username === username &&
+      ministry.credentials.password === password
+    ) {
       return ministry;
     }
   }

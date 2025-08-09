@@ -700,7 +700,8 @@ export default function MinistryDashboard() {
             {
               id: "MOWI-2024-001",
               title: "Kano-Kaduna Highway Rehabilitation",
-              description: "Complete rehabilitation of 85km Kano-Kaduna highway section",
+              description:
+                "Complete rehabilitation of 85km Kano-Kaduna highway section",
               category: "Road Construction",
               estimatedValue: "₦15,200,000,000",
               status: "Evaluated",
@@ -713,7 +714,8 @@ export default function MinistryDashboard() {
             {
               id: "MOWI-2024-002",
               title: "Construction of 5 New Bridges",
-              description: "Construction of bridges across major rivers in Kano State",
+              description:
+                "Construction of bridges across major rivers in Kano State",
               category: "Bridge Construction",
               estimatedValue: "₦8,500,000,000",
               status: "Evaluated",
@@ -726,7 +728,8 @@ export default function MinistryDashboard() {
             {
               id: "MOWI-2024-003",
               title: "Government Secretariat Renovation",
-              description: "Complete renovation of the Kano State Government Secretariat",
+              description:
+                "Complete renovation of the Kano State Government Secretariat",
               category: "Building Construction",
               estimatedValue: "₦6,800,000,000",
               status: "Closed",
@@ -739,7 +742,8 @@ export default function MinistryDashboard() {
             {
               id: "MOWI-2024-004",
               title: "Urban Drainage System",
-              description: "Construction of modern drainage system for Kano metropolis",
+              description:
+                "Construction of modern drainage system for Kano metropolis",
               category: "Infrastructure Development",
               estimatedValue: "₦12,300,000,000",
               status: "Evaluated",
@@ -752,7 +756,8 @@ export default function MinistryDashboard() {
             {
               id: "MOWI-2024-005",
               title: "Heavy Equipment Procurement",
-              description: "Procurement of construction equipment and machinery",
+              description:
+                "Procurement of construction equipment and machinery",
               category: "Equipment Procurement",
               estimatedValue: "₦4,750,000,000",
               status: "Awarded" as any,
@@ -771,7 +776,8 @@ export default function MinistryDashboard() {
             {
               id: "MOE-2024-001",
               title: "School Furniture Supply Program",
-              description: "Supply of desks, chairs, and classroom furniture for 200 schools",
+              description:
+                "Supply of desks, chairs, and classroom furniture for 200 schools",
               category: "School Furniture",
               estimatedValue: "₦2,100,000,000",
               status: "Evaluated",
@@ -784,7 +790,8 @@ export default function MinistryDashboard() {
             {
               id: "MOE-2024-002",
               title: "Digital Learning Platform",
-              description: "Development of digital learning platform for secondary schools",
+              description:
+                "Development of digital learning platform for secondary schools",
               category: "Educational Technology",
               estimatedValue: "₦1,800,000,000",
               status: "Evaluated",
@@ -797,7 +804,8 @@ export default function MinistryDashboard() {
             {
               id: "MOE-2024-003",
               title: "Science Laboratory Equipment",
-              description: "Supply of laboratory equipment for 50 secondary schools",
+              description:
+                "Supply of laboratory equipment for 50 secondary schools",
               category: "Laboratory Equipment",
               estimatedValue: "₦3,200,000,000",
               status: "Closed",
@@ -810,7 +818,8 @@ export default function MinistryDashboard() {
             {
               id: "MOE-2024-004",
               title: "Library Books and Resources",
-              description: "Procurement of textbooks and library resources for all levels",
+              description:
+                "Procurement of textbooks and library resources for all levels",
               category: "Educational Materials",
               estimatedValue: "₦1,650,000,000",
               status: "Evaluated",
@@ -823,7 +832,8 @@ export default function MinistryDashboard() {
             {
               id: "MOE-2024-005",
               title: "Teacher Training Program",
-              description: "Comprehensive teacher training and capacity building program",
+              description:
+                "Comprehensive teacher training and capacity building program",
               category: "Training Services",
               estimatedValue: "₦950,000,000",
               status: "Awarded" as any,
@@ -842,7 +852,8 @@ export default function MinistryDashboard() {
             {
               id: "MOH-2024-001",
               title: "Hospital Equipment Supply",
-              description: "Supply of medical equipment for 5 primary healthcare centers",
+              description:
+                "Supply of medical equipment for 5 primary healthcare centers",
               category: "Medical Equipment",
               estimatedValue: "₦850,000,000",
               status: "Evaluated",
@@ -850,12 +861,14 @@ export default function MinistryDashboard() {
               closeDate: "2024-02-15",
               bidsReceived: 5,
               ministry: ministry.name,
-              procuringEntity: "Kano State Primary Healthcare Development Agency",
+              procuringEntity:
+                "Kano State Primary Healthcare Development Agency",
             },
             {
               id: "MOH-2024-002",
               title: "Pharmaceutical Supply Contract",
-              description: "Annual supply of essential medicines for state hospitals",
+              description:
+                "Annual supply of essential medicines for state hospitals",
               category: "Pharmaceuticals",
               estimatedValue: "₦1,200,000,000",
               status: "Evaluated",
@@ -868,7 +881,8 @@ export default function MinistryDashboard() {
             {
               id: "MOH-2024-003",
               title: "Medical Laboratory Equipment",
-              description: "Procurement of advanced laboratory equipment for diagnostic centers",
+              description:
+                "Procurement of advanced laboratory equipment for diagnostic centers",
               category: "Laboratory Equipment",
               estimatedValue: "₦650,000,000",
               status: "Closed",
@@ -881,7 +895,8 @@ export default function MinistryDashboard() {
             {
               id: "MOH-2024-004",
               title: "IT Infrastructure Upgrade",
-              description: "Complete IT infrastructure upgrade for health facilities",
+              description:
+                "Complete IT infrastructure upgrade for health facilities",
               category: "Information Technology",
               estimatedValue: "₦950,000,000",
               status: "Evaluated",
@@ -894,7 +909,8 @@ export default function MinistryDashboard() {
             {
               id: "MOH-2024-005",
               title: "Medical Consumables Supply",
-              description: "Annual supply of medical consumables for all health centers",
+              description:
+                "Annual supply of medical consumables for all health centers",
               category: "Medical Supplies",
               estimatedValue: "₦750,000,000",
               status: "Awarded" as any,
@@ -2392,8 +2408,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       acceptanceDays: "7",
       refNumber: `MOH/KP/E-Proc/${tender.id}`,
       ministerName: "Hon. Dr. Aminu Ibrahim Tsanyawa",
-      ministerTitle:
-        `Hon. Commissioner\n${ministryInfo.name}\nKano State Government`,
+      ministerTitle: `Hon. Commissioner\n${ministryInfo.name}\nKano State Government`,
     };
 
     setAwardLetterData(letterData);
@@ -4023,7 +4038,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           )}
           {details && (
-            <div className="text-xs text-gray-600 mt-1 truncate" title={details}>
+            <div
+              className="text-xs text-gray-600 mt-1 truncate"
+              title={details}
+            >
               {details.length > 15 ? `${details.substring(0, 15)}...` : details}
             </div>
           )}
@@ -4038,7 +4056,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       completed: boolean;
       date?: string;
       details?: string;
-    }>
+    }>,
   ) => {
     return (
       <div className="w-full">
@@ -4050,7 +4068,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           <div
             className="absolute top-4 left-4 h-0.5 bg-green-600 z-10 transition-all duration-300"
             style={{
-              width: `calc(${(steps.filter(s => s.completed).length - 1) / Math.max(steps.length - 1, 1) * 100}% - 1rem)`
+              width: `calc(${((steps.filter((s) => s.completed).length - 1) / Math.max(steps.length - 1, 1)) * 100}% - 1rem)`,
             }}
           ></div>
 
@@ -4075,9 +4093,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
                 {/* Step label */}
                 <div className="mt-3 text-center max-w-[80px]">
-                  <div className={`text-xs font-medium ${
-                    stepData.completed ? "text-green-800" : "text-gray-600"
-                  }`}>
+                  <div
+                    className={`text-xs font-medium ${
+                      stepData.completed ? "text-green-800" : "text-gray-600"
+                    }`}
+                  >
                     {stepData.step}
                   </div>
 
@@ -4088,8 +4108,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   )}
 
                   {stepData.details && (
-                    <div className="text-xs text-gray-500 mt-1 text-center" title={stepData.details}>
-                      {stepData.details.length > 15 ? `${stepData.details.substring(0, 15)}...` : stepData.details}
+                    <div
+                      className="text-xs text-gray-500 mt-1 text-center"
+                      title={stepData.details}
+                    >
+                      {stepData.details.length > 15
+                        ? `${stepData.details.substring(0, 15)}...`
+                        : stepData.details}
                     </div>
                   )}
                 </div>
@@ -4100,17 +4125,18 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
         {/* Status indicator */}
         <div className="text-center mt-4">
-          <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-            steps.every(s => s.completed)
-              ? "bg-green-100 text-green-800"
-              : steps.some(s => s.completed)
-              ? "bg-yellow-100 text-yellow-800"
-              : "bg-gray-100 text-gray-800"
-          }`}>
-            {steps.every(s => s.completed)
+          <div
+            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+              steps.every((s) => s.completed)
+                ? "bg-green-100 text-green-800"
+                : steps.some((s) => s.completed)
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-gray-100 text-gray-800"
+            }`}
+          >
+            {steps.every((s) => s.completed)
               ? "✓ All Steps Completed"
-              : `${steps.filter(s => s.completed).length}/${steps.length} Steps Completed`
-            }
+              : `${steps.filter((s) => s.completed).length}/${steps.length} Steps Completed`}
           </div>
         </div>
       </div>
@@ -4978,31 +5004,40 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                 {renderVendorWorkflowStepper([
                                   {
                                     step: "Company Registration",
-                                    completed: workflowStatus?.registrationCompleted || false,
+                                    completed:
+                                      workflowStatus?.registrationCompleted ||
+                                      false,
                                     date: workflowStatus?.registrationDate,
                                   },
                                   {
                                     step: "Login & Verification",
-                                    completed: workflowStatus?.loginVerificationCompleted || false,
+                                    completed:
+                                      workflowStatus?.loginVerificationCompleted ||
+                                      false,
                                     date: workflowStatus?.verificationDate,
                                   },
                                   {
                                     step: "Bidding Process",
-                                    completed: workflowStatus?.biddingCompleted || false,
+                                    completed:
+                                      workflowStatus?.biddingCompleted || false,
                                     date: workflowStatus?.bidSubmissionDate,
                                   },
                                   {
                                     step: "Tender Evaluation",
-                                    completed: workflowStatus?.evaluationCompleted || false,
+                                    completed:
+                                      workflowStatus?.evaluationCompleted ||
+                                      false,
                                     date: workflowStatus?.evaluationDate,
                                   },
                                   {
                                     step: "No Objection Certificate",
-                                    completed: workflowStatus?.nocIssued || false,
+                                    completed:
+                                      workflowStatus?.nocIssued || false,
                                     date: workflowStatus?.nocIssuedDate,
-                                    details: workflowStatus?.nocCertificateNumber
-                                      ? `Certificate: ${workflowStatus.nocCertificateNumber}`
-                                      : undefined,
+                                    details:
+                                      workflowStatus?.nocCertificateNumber
+                                        ? `Certificate: ${workflowStatus.nocCertificateNumber}`
+                                        : undefined,
                                   },
                                 ])}
                               </div>
@@ -8749,7 +8784,8 @@ Blockchain Timestamp: ${Date.now()}
                       <div className="text-xs text-gray-600">
                         {ministryInfo.address}
                         <br />
-                        Tel: {ministryInfo.contactPhone}, Email: {ministryInfo.contactEmail}
+                        Tel: {ministryInfo.contactPhone}, Email:{" "}
+                        {ministryInfo.contactEmail}
                       </div>
                     </div>
 
