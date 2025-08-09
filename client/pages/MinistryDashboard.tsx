@@ -4817,7 +4817,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         // If no real bids found, fall back to mock data based on tender ID
                         if (tenderBids.length === 0) {
                           // Use workspace-specific mock data if available
-                          const workspaceBidders = bidderDataByWorkspace[tender.id];
+                          const workspaceBidderData = getWorkspaceBidderData();
+                          const workspaceBidders = workspaceBidderData[tender.id as keyof typeof workspaceBidderData];
                           if (workspaceBidders) {
                             setBidders(workspaceBidders);
                           } else {
