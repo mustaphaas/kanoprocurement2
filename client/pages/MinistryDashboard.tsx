@@ -106,6 +106,9 @@ interface Tender {
   bidsReceived: number;
   ministry: string;
   procuringEntity: string;
+  awardedCompany?: string;
+  awardAmount?: string;
+  awardDate?: string;
 }
 
 interface NOCRequest {
