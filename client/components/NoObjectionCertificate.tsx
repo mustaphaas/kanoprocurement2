@@ -719,6 +719,9 @@ export default function NoObjectionCertificate({
     setNOCRequests(updatedRequests);
     localStorage.setItem("centralNOCRequests", JSON.stringify(updatedRequests));
 
+    // Update the ministry-specific NOC data
+    updateMinistryNOCData(selectedNOCRequest, "Approved", certificateNumber);
+
     setShowApprovalModal(false);
     setApprovalComments("");
     setSelectedNOCRequest(null);
