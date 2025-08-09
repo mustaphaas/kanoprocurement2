@@ -318,10 +318,19 @@ export default function NoObjectionCertificate({
       }
     };
 
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "centralNOCRequests") {
+        console.log("localStorage centralNOCRequests changed, reloading...");
+        loadNOCRequests();
+      }
+    };
+
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
