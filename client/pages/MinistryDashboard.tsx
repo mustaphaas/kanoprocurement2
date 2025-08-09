@@ -922,7 +922,7 @@ export default function MinistryDashboard() {
               description:
                 "Complete IT infrastructure upgrade for health facilities",
               category: "Information Technology",
-              estimatedValue: "₦950,000,000",
+              estimatedValue: "��950,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1250,7 +1250,7 @@ export default function MinistryDashboard() {
         id: "EVAL-001",
         tenderId: "MOH-2024-002",
         companyId: "COMP-001",
-        companyName: "Sahel Medical Supplies",
+        companyName: "Falcon Diagnostics Ltd",
         evaluatorId: "MEM-001",
         technicalScore: 85,
         financialScore: 90,
