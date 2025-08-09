@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MDAUserForm from "@/components/MDAUserForm";
+import { formatCurrency } from "@/lib/utils";
 import {
   Building2,
   Users,
