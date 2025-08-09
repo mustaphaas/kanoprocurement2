@@ -119,6 +119,26 @@ export default function NoObjectionCertificate({
   >("all");
   const [viewingCompany, setViewingCompany] = useState<Company | null>(null);
 
+  // NOC Request Management State
+  const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
+  const [filteredNOCRequests, setFilteredNOCRequests] = useState<NOCRequest[]>([]);
+  const [nocSearchTerm, setNocSearchTerm] = useState("");
+  const [nocStatusFilter, setNocStatusFilter] = useState<string>("all");
+  const [nocMinistryFilter, setNocMinistryFilter] = useState<string>("all");
+  const [nocUrgencyFilter, setNocUrgencyFilter] = useState<string>("all");
+  const [selectedNOCRequest, setSelectedNOCRequest] = useState<NOCRequest | null>(null);
+  const [showNOCRequestModal, setShowNOCRequestModal] = useState(false);
+  const [approvalComments, setApprovalComments] = useState("");
+  const [rejectReason, setRejectReason] = useState("");
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [showRejectionModal, setShowRejectionModal] = useState(false);
+  const [nocStats, setNocStats] = useState({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+  });
+
   // Mock companies data
   const companies: Company[] = [
     {
