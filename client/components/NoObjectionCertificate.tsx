@@ -234,6 +234,109 @@ export default function NoObjectionCertificate({
   const approvedCount = companies.filter((c) => c.status === "approved").length;
   const pendingCount = companies.filter((c) => c.status === "pending").length;
 
+  // Load NOC requests from central storage
+  useEffect(() => {
+    const storedNOCs = localStorage.getItem("centralNOCRequests");
+    if (storedNOCs) {
+      const requests = JSON.parse(storedNOCs);
+      setNOCRequests(requests);
+      setFilteredNOCRequests(requests);
+    } else {
+      // Initialize with some mock NOC request data
+      const mockNOCs: NOCRequest[] = [
+        {
+          id: "NOC-CENTRAL-001",
+          projectTitle: "Hospital Equipment Supply - Phase 1",
+          requestDate: "2024-02-15",
+          status: "Pending",
+          projectValue: "₦850,000,000",
+          contractorName: "PrimeCare Medical Ltd",
+          expectedDuration: "6 months",
+          requestingMinistry: "Ministry of Health",
+          ministryCode: "MOH",
+          projectDescription: "Supply of advanced medical equipment for 5 primary healthcare centers including X-ray machines, ultrasound equipment, and laboratory instruments.",
+          justification: "Critical equipment needed to improve healthcare delivery in rural areas of Kano State.",
+          urgencyLevel: "High",
+          category: "Medical Equipment",
+          procuringEntity: "Kano State Primary Healthcare Development Agency",
+          contactPerson: "Dr. Amina Hassan",
+          contactEmail: "amina.hassan@health.kano.gov.ng",
+          attachments: ["equipment_specifications.pdf", "vendor_certificates.pdf"],
+        },
+        {
+          id: "NOC-CENTRAL-002",
+          projectTitle: "Kano-Kaduna Highway Rehabilitation",
+          requestDate: "2024-02-14",
+          status: "Pending",
+          projectValue: "₦15,200,000,000",
+          contractorName: "Kano Construction Ltd",
+          expectedDuration: "18 months",
+          requestingMinistry: "Ministry of Works & Infrastructure",
+          ministryCode: "MOWI",
+          projectDescription: "Complete rehabilitation of 85km highway section including road surface, drainage systems, and safety infrastructure.",
+          justification: "Critical transportation infrastructure to improve interstate commerce and reduce travel time.",
+          urgencyLevel: "Critical",
+          category: "Road Construction",
+          procuringEntity: "Kano State Road Maintenance Agency",
+          contactPerson: "Eng. Ibrahim Mohammed",
+          contactEmail: "ibrahim.mohammed@works.kano.gov.ng",
+        },
+        {
+          id: "NOC-CENTRAL-003",
+          projectTitle: "Digital Learning Platform Development",
+          requestDate: "2024-02-13",
+          status: "Approved",
+          projectValue: "₦1,800,000,000",
+          contractorName: "EduTech Solutions Ltd",
+          expectedDuration: "12 months",
+          approvalDate: "2024-02-16",
+          certificateNumber: "KNS/SNOC/2024/001",
+          requestingMinistry: "Ministry of Education",
+          ministryCode: "MOE",
+          projectDescription: "Development of comprehensive digital learning platform for secondary schools with interactive content and assessment tools.",
+          justification: "Essential for digital transformation of education sector and improved learning outcomes.",
+          urgencyLevel: "Medium",
+          category: "Educational Technology",
+          procuringEntity: "Kano State Ministry of Education",
+          contactPerson: "Prof. Aisha Garba",
+          contactEmail: "aisha.garba@education.kano.gov.ng",
+        },
+      ];
+      setNOCRequests(mockNOCs);
+      setFilteredNOCRequests(mockNOCs);
+      localStorage.setItem("centralNOCRequests", JSON.stringify(mockNOCs));
+    }
+  }, []);
+
+  // Filter NOC requests
+  useEffect(() => {
+    let filtered = nocRequests.filter((request) => {
+      const matchesSearch =
+        request.projectTitle.toLowerCase().includes(nocSearchTerm.toLowerCase()) ||
+        request.contractorName.toLowerCase().includes(nocSearchTerm.toLowerCase()) ||
+        request.requestingMinistry.toLowerCase().includes(nocSearchTerm.toLowerCase());
+
+      const matchesStatus = nocStatusFilter === "all" || request.status === nocStatusFilter;
+      const matchesMinistry = nocMinistryFilter === "all" || request.ministryCode === nocMinistryFilter;
+      const matchesUrgency = nocUrgencyFilter === "all" || request.urgencyLevel === nocUrgencyFilter;
+
+      return matchesSearch && matchesStatus && matchesMinistry && matchesUrgency;
+    });
+
+    setFilteredNOCRequests(filtered);
+  }, [nocRequests, nocSearchTerm, nocStatusFilter, nocMinistryFilter, nocUrgencyFilter]);
+
+  // Calculate NOC statistics
+  useEffect(() => {
+    const baseRequests = filteredNOCRequests;
+    setNocStats({
+      total: baseRequests.length,
+      pending: baseRequests.filter((r) => r.status === "Pending").length,
+      approved: baseRequests.filter((r) => r.status === "Approved").length,
+      rejected: baseRequests.filter((r) => r.status === "Rejected").length,
+    });
+  }, [filteredNOCRequests]);
+
   const handleInputChange = (
     field: keyof NoObjectionCertificateData,
     value: string,
