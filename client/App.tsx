@@ -14,7 +14,8 @@ import CompanyRegistration from "./pages/CompanyRegistration";
 import Login from "./pages/Login";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-import SuperUserDashboard from "./pages/SuperUserDashboard";
+import SuperuserDashboard from "./pages/SuperuserDashboard";
+import MDADashboard from "./pages/MDADashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
 
 const queryClient = new QueryClient();
