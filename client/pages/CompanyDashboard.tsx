@@ -331,7 +331,11 @@ export default function CompanyDashboard() {
             value: formatCurrency(recentTender.value),
             deadline: recentTender.deadline,
             location: recentTender.location || "Kano State",
-            status: (recentTender.status === "Open" || recentTender.status === "Published") ? "Open" : "Closed",
+            status:
+              recentTender.status === "Open" ||
+              recentTender.status === "Published"
+                ? "Open"
+                : "Closed",
             hasExpressedInterest: false,
             hasBid: false,
             unspscCode: "72141100", // Default UNSPSC code
@@ -343,8 +347,10 @@ export default function CompanyDashboard() {
           const allTenders = [...formattedTenders];
 
           // Add default tenders that don't exist in stored tenders
-          defaultTenders.forEach(defaultTender => {
-            if (!formattedTenders.find((t: Tender) => t.id === defaultTender.id)) {
+          defaultTenders.forEach((defaultTender) => {
+            if (
+              !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
+            ) {
               allTenders.push(defaultTender);
             }
           });
