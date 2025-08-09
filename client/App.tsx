@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
+import SuperuserNOC from "./pages/SuperuserNOC";
 import MinistryDashboard from "./pages/MinistryDashboard";
 
 const queryClient = new QueryClient();
