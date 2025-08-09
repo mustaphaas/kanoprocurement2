@@ -1044,7 +1044,7 @@ export default function CompanyDashboard() {
                           </div>
                           <div className="flex items-center">
                             <DollarSign className="h-4 w-4 mr-1" />
-                            {tender.value}
+                            {formatCurrency(tender.value)}
                           </div>
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-1" />
