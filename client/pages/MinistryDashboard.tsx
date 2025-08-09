@@ -95,6 +95,80 @@ interface Company {
   businessType: string;
   address: string;
   lastActivity: string;
+  nin?: string;
+  directors?: Director[];
+  keyPersonnel?: KeyPersonnel[];
+  pastProjects?: PastProject[];
+  financialInfo?: FinancialInfo;
+  equipment?: Equipment[];
+  certifications?: Certification[];
+}
+
+interface Director {
+  id: string;
+  name: string;
+  position: string;
+  phone: string;
+  email: string;
+  nin: string;
+  qualifications: string[];
+  experience: string;
+}
+
+interface KeyPersonnel {
+  id: string;
+  name: string;
+  position: string;
+  qualifications: string[];
+  experience: string;
+  yearsOfExperience: number;
+  previousCompanies: string[];
+}
+
+interface PastProject {
+  id: string;
+  projectName: string;
+  description: string;
+  clientName: string;
+  clientContact: string;
+  projectValue: string;
+  startDate: string;
+  endDate: string;
+  status: "Completed" | "Ongoing" | "Terminated";
+  referenceContact: string;
+  projectType: string;
+}
+
+interface FinancialInfo {
+  annualTurnover: string;
+  capitalBase: string;
+  creditRating?: string;
+  bankReferences: string[];
+  taxClearance: string;
+  auditedAccounts: string[];
+  financialCapacityRating: "A" | "B" | "C" | "D";
+}
+
+interface Equipment {
+  id: string;
+  equipmentName: string;
+  model: string;
+  year: string;
+  condition: "Excellent" | "Good" | "Fair" | "Poor";
+  availability: "Available" | "In Use" | "Under Maintenance";
+  specifications: string;
+  location: string;
+}
+
+interface Certification {
+  id: string;
+  certificationType: string;
+  issuingBody: string;
+  certificateNumber: string;
+  issueDate: string;
+  expiryDate: string;
+  status: "Valid" | "Expired" | "Pending Renewal";
+  documentUrl?: string;
 }
 
 interface Tender {
