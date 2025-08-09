@@ -567,44 +567,131 @@ export default function MinistryDashboard() {
 
   // Mock data initialization
   useEffect(() => {
-    const mockCompanies: Company[] = [
-      {
-        id: "1",
-        companyName: "MedSupply Nigeria Ltd",
-        contactPerson: "Dr. Amina Hassan",
-        email: "amina@medsupply.ng",
-        phone: "+234 803 123 4567",
-        registrationDate: "2024-01-15",
-        status: "Approved",
-        businessType: "Medical Equipment Supply",
-        address: "123 Hospital Road, Kano",
-        lastActivity: "2024-02-01",
-      },
-      {
-        id: "2",
-        companyName: "Sahel Medical Supplies",
-        contactPerson: "Fatima Yusuf",
-        email: "fatima@sahelmedical.com",
-        phone: "+234 805 987 6543",
-        registrationDate: "2024-01-14",
-        status: "Pending",
-        businessType: "Pharmaceutical Supply",
-        address: "45 Medicine Street, Kano",
-        lastActivity: "2024-01-30",
-      },
-      {
-        id: "3",
-        companyName: "Northern Healthcare Solutions",
-        contactPerson: "Musa Ibrahim",
-        email: "musa@northernhealth.ng",
-        phone: "+234 807 555 1234",
-        registrationDate: "2024-01-13",
-        status: "Approved",
-        businessType: "Healthcare Technology",
-        address: "78 Tech Avenue, Kano",
-        lastActivity: "2024-02-02",
-      },
-    ];
+    const { ministryId, ministry } = getMinistryMockData();
+
+    const getMinistrySpecificCompanies = (): Company[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "1",
+              companyName: "Kano Construction Ltd",
+              contactPerson: "Eng. Ibrahim Mohammed",
+              email: "ibrahim@kanoconstruction.ng",
+              phone: "+234 803 123 4567",
+              registrationDate: "2024-01-15",
+              status: "Approved",
+              businessType: "Construction & Infrastructure",
+              address: "15 Industrial Area, Kano",
+              lastActivity: "2024-02-01",
+            },
+            {
+              id: "2",
+              companyName: "Sahel Bridge Builders",
+              contactPerson: "Mallam Usman Kano",
+              email: "usman@sahelbridge.com",
+              phone: "+234 805 987 6543",
+              registrationDate: "2024-01-14",
+              status: "Pending",
+              businessType: "Bridge Construction",
+              address: "22 Engineering Drive, Kano",
+              lastActivity: "2024-01-30",
+            },
+            {
+              id: "3",
+              companyName: "Northern Roads Nigeria",
+              contactPerson: "Fatima Abubakar",
+              email: "fatima@northernroads.ng",
+              phone: "+234 807 555 1234",
+              registrationDate: "2024-01-13",
+              status: "Approved",
+              businessType: "Road Construction",
+              address: "5 Highway Plaza, Kano",
+              lastActivity: "2024-02-02",
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "1",
+              companyName: "EduTech Solutions Ltd",
+              contactPerson: "Prof. Aisha Garba",
+              email: "aisha@edutech.ng",
+              phone: "+234 803 123 4567",
+              registrationDate: "2024-01-15",
+              status: "Approved",
+              businessType: "Educational Technology",
+              address: "10 Education Avenue, Kano",
+              lastActivity: "2024-02-01",
+            },
+            {
+              id: "2",
+              companyName: "Kano School Furniture Ltd",
+              contactPerson: "Malam Bello Sani",
+              email: "bello@schoolfurniture.com",
+              phone: "+234 805 987 6543",
+              registrationDate: "2024-01-14",
+              status: "Pending",
+              businessType: "School Furniture Supply",
+              address: "8 Furniture Street, Kano",
+              lastActivity: "2024-01-30",
+            },
+            {
+              id: "3",
+              companyName: "Northern Educational Supplies",
+              contactPerson: "Dr. Zainab Ibrahim",
+              email: "zainab@northedu.ng",
+              phone: "+234 807 555 1234",
+              registrationDate: "2024-01-13",
+              status: "Approved",
+              businessType: "Educational Materials",
+              address: "12 Learning Complex, Kano",
+              lastActivity: "2024-02-02",
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "1",
+              companyName: "MedSupply Nigeria Ltd",
+              contactPerson: "Dr. Amina Hassan",
+              email: "amina@medsupply.ng",
+              phone: "+234 803 123 4567",
+              registrationDate: "2024-01-15",
+              status: "Approved",
+              businessType: "Medical Equipment Supply",
+              address: "123 Hospital Road, Kano",
+              lastActivity: "2024-02-01",
+            },
+            {
+              id: "2",
+              companyName: "Sahel Medical Supplies",
+              contactPerson: "Fatima Yusuf",
+              email: "fatima@sahelmedical.com",
+              phone: "+234 805 987 6543",
+              registrationDate: "2024-01-14",
+              status: "Pending",
+              businessType: "Pharmaceutical Supply",
+              address: "45 Medicine Street, Kano",
+              lastActivity: "2024-01-30",
+            },
+            {
+              id: "3",
+              companyName: "Northern Healthcare Solutions",
+              contactPerson: "Musa Ibrahim",
+              email: "musa@northernhealth.ng",
+              phone: "+234 807 555 1234",
+              registrationDate: "2024-01-13",
+              status: "Approved",
+              businessType: "Healthcare Technology",
+              address: "78 Tech Avenue, Kano",
+              lastActivity: "2024-02-02",
+            },
+          ];
+      }
+    };
+
+    const mockCompanies = getMinistrySpecificCompanies();
 
     const mockTenders: Tender[] = [
       {
