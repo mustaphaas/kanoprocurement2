@@ -257,10 +257,63 @@ class AuthService {
     return profile?.role === 'company';
   }
 
+  // Check if user is MDA admin
+  isMDAAdmin(profile: UserProfile | null): boolean {
+    return profile?.role === 'mda_admin';
+  }
+
+  // Check if user is MDA user
+  isMDAUser(profile: UserProfile | null): boolean {
+    return profile?.role === 'mda_user';
+  }
+
+  // Check if user has access to specific MDA
+  hasAccessToMDA(profile: UserProfile | null, mdaId: string): boolean {
+    if (!profile) return false;
+
+    // Superuser has access to all MDAs
+    if (profile.role === 'superuser') return true;
+
+    // MDA admin/user must belong to the specific MDA
+    if ((profile.role === 'mda_admin' || profile.role === 'mda_user') && profile.mdaId === mdaId) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // Check if user can manage MDA settings
+  canManageMDASettings(profile: UserProfile | null): boolean {
+    if (!profile) return false;
+
+    // Superuser can manage all MDA settings
+    if (profile.role === 'superuser') return true;
+
+    // Only MDA super admins can manage their MDA settings
+    if (profile.role === 'mda_admin' && profile.mdaRole === 'mda_super_admin') {
+      return true;
+    }
+
+    return false;
+  }
+
+  // Check if user can create users in their MDA
+  canCreateMDAUsers(profile: UserProfile | null): boolean {
+    if (!profile) return false;
+
+    // Superuser can create users in any MDA
+    if (profile.role === 'superuser') return true;
+
+    // MDA admins can create users in their MDA
+    if (profile.role === 'mda_admin') return true;
+
+    return false;
+  }
+
   // Get user role-based redirect path
   getRoleBasedRedirect(profile: UserProfile | null): string {
     if (!profile) return '/login';
-    
+
     switch (profile.role) {
       case 'company':
         return '/company/dashboard';
@@ -268,9 +321,132 @@ class AuthService {
         return '/admin/dashboard';
       case 'superuser':
         return '/superuser/dashboard';
+      case 'mda_admin':
+        return `/mda/${profile.mdaId}/dashboard`;
+      case 'mda_user':
+        return `/mda/${profile.mdaId}/dashboard`;
       default:
         return '/';
     }
+  }
+
+  // Get user permissions based on role and MDA role
+  getUserPermissions(profile: UserProfile | null): {
+    canCreateTenders: boolean;
+    canEvaluateBids: boolean;
+    canViewFinancials: boolean;
+    canGenerateReports: boolean;
+    canManageUsers: boolean;
+    canManageSettings: boolean;
+    maxApprovalAmount: number;
+  } {
+    if (!profile) {
+      return {
+        canCreateTenders: false,
+        canEvaluateBids: false,
+        canViewFinancials: false,
+        canGenerateReports: false,
+        canManageUsers: false,
+        canManageSettings: false,
+        maxApprovalAmount: 0
+      };
+    }
+
+    // Superuser has all permissions
+    if (profile.role === 'superuser') {
+      return {
+        canCreateTenders: true,
+        canEvaluateBids: true,
+        canViewFinancials: true,
+        canGenerateReports: true,
+        canManageUsers: true,
+        canManageSettings: true,
+        maxApprovalAmount: Number.MAX_SAFE_INTEGER
+      };
+    }
+
+    // MDA Admin permissions based on their specific role
+    if (profile.role === 'mda_admin') {
+      if (profile.mdaRole === 'mda_super_admin') {
+        return {
+          canCreateTenders: true,
+          canEvaluateBids: true,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          canManageUsers: true,
+          canManageSettings: true,
+          maxApprovalAmount: 100000000 // 100M
+        };
+      } else {
+        return {
+          canCreateTenders: true,
+          canEvaluateBids: true,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          canManageUsers: true,
+          canManageSettings: false,
+          maxApprovalAmount: 25000000 // 25M
+        };
+      }
+    }
+
+    // MDA User permissions based on their specific role
+    if (profile.role === 'mda_user') {
+      switch (profile.mdaRole) {
+        case 'procurement_officer':
+          return {
+            canCreateTenders: true,
+            canEvaluateBids: true,
+            canViewFinancials: true,
+            canGenerateReports: true,
+            canManageUsers: false,
+            canManageSettings: false,
+            maxApprovalAmount: 5000000 // 5M
+          };
+        case 'evaluator':
+          return {
+            canCreateTenders: false,
+            canEvaluateBids: true,
+            canViewFinancials: false,
+            canGenerateReports: true,
+            canManageUsers: false,
+            canManageSettings: false,
+            maxApprovalAmount: 0
+          };
+        case 'accountant':
+          return {
+            canCreateTenders: false,
+            canEvaluateBids: false,
+            canViewFinancials: true,
+            canGenerateReports: true,
+            canManageUsers: false,
+            canManageSettings: false,
+            maxApprovalAmount: 0
+          };
+        case 'viewer':
+        default:
+          return {
+            canCreateTenders: false,
+            canEvaluateBids: false,
+            canViewFinancials: false,
+            canGenerateReports: true,
+            canManageUsers: false,
+            canManageSettings: false,
+            maxApprovalAmount: 0
+          };
+      }
+    }
+
+    // Default company and admin roles
+    return {
+      canCreateTenders: false,
+      canEvaluateBids: false,
+      canViewFinancials: false,
+      canGenerateReports: false,
+      canManageUsers: false,
+      canManageSettings: false,
+      maxApprovalAmount: 0
+    };
   }
 }
 
