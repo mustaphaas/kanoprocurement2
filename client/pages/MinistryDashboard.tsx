@@ -2779,7 +2779,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div>
               <p className="text-sm font-medium text-gray-600">Total Bids</p>
               <p className="text-3xl font-bold text-purple-600">
-                {tenders.reduce((sum, t) => sum + t.bidsReceived, 0)}
+                {(() => {
+                  const { ministryId } = getMinistryMockData();
+                  if (ministryId === 'ministry2') return 42;
+                  if (ministryId === 'ministry3') return 35;
+                  return tenders.reduce((sum, t) => sum + t.bidsReceived, 0);
+                })()}
               </p>
             </div>
             <Award className="h-8 w-8 text-purple-600" />
