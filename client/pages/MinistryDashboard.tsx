@@ -1110,6 +1110,54 @@ export default function MinistryDashboard() {
     navigate("/");
   };
 
+  // Helper functions for evaluation scoring
+  const updateEvaluationScore = (bidderId: string, category: string, criterion: string, score: number) => {
+    setEvaluationScores(prev => ({
+      ...prev,
+      [bidderId]: {
+        ...prev[bidderId],
+        [category]: {
+          ...prev[bidderId]?.[category],
+          [criterion]: score
+        }
+      }
+    }));
+  };
+
+  const getEvaluationScore = (bidderId: string, category: string, criterion: string, defaultScore: number) => {
+    return evaluationScores[bidderId]?.[category]?.[criterion] ?? defaultScore;
+  };
+
+  const calculateCategoryScore = (bidderId: string, category: string, criteria: string[], defaultScores: number[]) => {
+    const scores = criteria.map((criterion, index) =>
+      getEvaluationScore(bidderId, category, criterion, defaultScores[index])
+    );
+    const total = scores.reduce((sum, score) => sum + score, 0);
+    return Math.round((total / (criteria.length * 20)) * 100);
+  };
+
+  const saveEvaluationScores = () => {
+    // Here you would typically save to backend
+    console.log('Saving evaluation scores:', evaluationScores);
+    setIsEditingEvaluation(false);
+    // Update bidders with new scores
+    setBidders(prev => prev.map(bidder => {
+      const financialCriteria = ['bidPriceAnalysis', 'bidSecurity', 'financialCapability', 'valueForMoney', 'costBreakdown'];
+      const technicalCriteria = ['experienceExpertise', 'technicalApproach', 'qualityStandards', 'certifications', 'previousContracts'];
+
+      const financialScore = calculateCategoryScore(bidder.id, 'financial', financialCriteria, [18, 19, 17, 16, 17]);
+      const technicalScore = calculateCategoryScore(bidder.id, 'technical', technicalCriteria, [16, 18, 17, 19, 15]);
+      const totalScore = Math.round((financialScore * 0.4) + (technicalScore * 0.35) + (25)); // 25% for compliance
+
+      return {
+        ...bidder,
+        financialScore,
+        technicalScore,
+        totalScore
+      };
+    }));
+  };
+
   const filteredCompanies = companies.filter((company) => {
     const matchesSearch =
       company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
