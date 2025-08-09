@@ -393,12 +393,7 @@ export default function MinistryDashboard() {
   const [vendorWorkflowStatuses, setVendorWorkflowStatuses] = useState<
     VendorWorkflowStatus[]
   >([]);
-  const [selectedWorkspace, setSelectedWorkspace] = useState(() => {
-    const { ministryId } = getMinistryMockData();
-    if (ministryId === 'ministry2') return "MOWI-2024-001"; // Ministry of Works
-    if (ministryId === 'ministry3') return "MOE-2024-001";  // Ministry of Education
-    return "MOH-2024-001"; // Ministry of Health (default)
-  });
+  const [selectedWorkspace, setSelectedWorkspace] = useState("MOH-2024-001");
   const [isEditingEvaluation, setIsEditingEvaluation] = useState(false);
   const [evaluationScores, setEvaluationScores] = useState<{
     [key: string]: any;
@@ -3710,7 +3705,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            ���� AI-Powered Advanced Tender Management
+            🤖 AI-Powered Advanced Tender Management
           </h1>
           <p className="text-gray-600">
             Leverage AI assistance for intelligent tender creation,
