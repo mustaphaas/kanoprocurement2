@@ -7916,6 +7916,22 @@ The award letter has been:
         mode={adminFormMode}
         initialData={selectedMDAAdmin}
       />
+
+      {selectedMDA && (
+        <MDAUserForm
+          isOpen={showCreateUserModal || showEditUserModal}
+          onClose={() => {
+            setShowCreateUserModal(false);
+            setShowEditUserModal(false);
+            setSelectedMDA(null);
+            setSelectedMDAUser(null);
+          }}
+          onSubmit={handleMDAUserSubmit}
+          mda={selectedMDA}
+          mode={userFormMode}
+          initialData={selectedMDAUser}
+        />
+      )}
     </div>
   );
 }
