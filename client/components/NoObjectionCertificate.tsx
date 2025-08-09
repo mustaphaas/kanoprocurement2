@@ -897,6 +897,14 @@ export default function NoObjectionCertificate({
               NOC Request Management
             </CardTitle>
             <div className="flex items-center space-x-4">
+              <button
+                onClick={loadNOCRequests}
+                className="flex items-center space-x-1 px-3 py-1.5 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                title="Refresh NOC Requests"
+              >
+                <RefreshCw className="h-4 w-4" />
+                <span>Refresh</span>
+              </button>
               <div className="relative">
                 <Bell className="h-6 w-6 text-gray-400" />
                 <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
