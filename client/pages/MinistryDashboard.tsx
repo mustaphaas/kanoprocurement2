@@ -4889,7 +4889,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                               <h5 className="text-xs font-medium text-gray-700 mb-2">
                                 Vendor Workflow Status:
                               </h5>
-                              <div className="grid grid-cols-1 gap-2">
+                              <div className="flex flex-wrap gap-2">
                                 {renderVendorWorkflowStep(
                                   "1. Company Registration",
                                   workflowStatus?.registrationCompleted ||
