@@ -2567,7 +2567,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <body>
         <div class="letterhead">
           <div class="logo"></div>
-          <div class="ministry-name">KANO STATE GOVERNMENT<br>MINISTRY OF HEALTH</div>
+          <div class="ministry-name">KANO STATE GOVERNMENT<br>${ministryInfo.name.toUpperCase()}</div>
           <div class="ministry-details">
             No [MinistryAddress], Kano State, Nigeria<br>
             Tel: [PhoneNumber], Email: [EmailAddress]
