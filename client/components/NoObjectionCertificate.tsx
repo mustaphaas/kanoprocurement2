@@ -521,7 +521,59 @@ export default function NoObjectionCertificate({
     if (onGenerateCertificate) {
       onGenerateCertificate(formData);
     }
+
+    // Save certificate for ministry download if it's from an approved NOC request
+    if (viewingCompany || selectedNOCRequest) {
+      saveCertificateForMinistry(formData);
+    }
+
     alert("No Objection Certificate generated successfully!");
+  };
+
+  const saveCertificateForMinistry = (certificateData: NoObjectionCertificateData) => {
+    // Determine which ministry this certificate belongs to
+    let ministryCode = "";
+
+    if (selectedNOCRequest) {
+      ministryCode = selectedNOCRequest.ministryCode;
+    } else if (viewingCompany) {
+      // Map company procuring entity to ministry code
+      const entityToMinistry: {[key: string]: string} = {
+        "Ministry of Health": "MOH",
+        "Ministry of Works": "MOWI",
+        "Ministry of Education": "MOE",
+        "Kano State Primary Healthcare Development Agency": "MOH",
+        "Kano State Ministry of Works": "MOWI",
+        "Kano State Ministry of Education": "MOE"
+      };
+      ministryCode = entityToMinistry[viewingCompany.procuringEntity] || "MOH";
+    }
+
+    if (ministryCode) {
+      // Store certificate in ministry-specific storage
+      const ministryKey = `${ministryCode}_certificates`;
+      const existingCertificates = localStorage.getItem(ministryKey);
+      const certificates = existingCertificates ? JSON.parse(existingCertificates) : [];
+
+      const certificateRecord = {
+        id: certificateData.certificateNumber,
+        certificateNumber: certificateData.certificateNumber,
+        projectTitle: certificateData.projectTitle,
+        contractorVendor: certificateData.contractorVendor,
+        contractAmount: certificateData.contractAmount,
+        dateIssued: certificateData.dateIssued,
+        procuringEntity: certificateData.procuringEntity,
+        projectLocation: certificateData.projectLocation,
+        savedDate: new Date().toISOString().split("T")[0],
+        certificateData: certificateData, // Store full certificate data for regeneration
+      };
+
+      // Add to beginning of array (most recent first)
+      certificates.unshift(certificateRecord);
+      localStorage.setItem(ministryKey, JSON.stringify(certificates));
+
+      console.log(`Certificate saved for ${ministryCode} ministry:`, certificateRecord);
+    }
   };
 
   const handleViewCompanyCertificate = (company: Company) => {
