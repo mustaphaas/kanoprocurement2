@@ -7603,6 +7603,27 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
               )}
 
+              {/* Show message when no bidders */}
+              {bidders.length === 0 && (
+                <div className="mt-6">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+                    <div className="text-yellow-600 mb-2">
+                      <Users className="h-12 w-12 mx-auto" />
+                    </div>
+                    <h3 className="text-lg font-medium text-yellow-800 mb-2">
+                      No Companies Found
+                    </h3>
+                    <p className="text-yellow-700">
+                      Either no companies have submitted bids for this tender yet, or the bidding period hasn't opened.
+                    </p>
+                    <div className="mt-4 text-sm text-yellow-600">
+                      <p><strong>Tender Status:</strong> {selectedTenderForDetails.status}</p>
+                      <p><strong>Bid Count:</strong> {selectedTenderForDetails.bidsReceived}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="mt-6 flex justify-end space-x-3">
                 <button
                   onClick={() => setShowTenderDetailsModal(false)}
