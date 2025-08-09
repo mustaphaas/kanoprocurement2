@@ -1471,7 +1471,19 @@ export default function MinistryDashboard() {
       }
     };
 
-    const mockNOCRequests = getMinistrySpecificNOCRequests();
+    // Load ministry-specific NOC requests from localStorage or use mock data
+    const { ministry } = getMinistryMockData();
+    const ministryNOCKey = `${ministry.code}_NOCRequests`;
+    const storedMinistryNOCs = localStorage.getItem(ministryNOCKey);
+
+    let mockNOCRequests;
+    if (storedMinistryNOCs) {
+      mockNOCRequests = JSON.parse(storedMinistryNOCs);
+    } else {
+      // Initialize with ministry-specific mock data and store it
+      mockNOCRequests = getMinistrySpecificNOCRequests();
+      localStorage.setItem(ministryNOCKey, JSON.stringify(mockNOCRequests));
+    }
 
     const getMinistrySpecificEvaluationCommittees = (): EvaluationCommittee[] => {
       switch (ministryId) {
@@ -2143,7 +2155,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-006",
           companyName: "Sahel Bridge Builders",
-          bidAmount: "��8,200,000,000",
+          bidAmount: "₦8,200,000,000",
           technicalScore: 93,
           financialScore: 89,
           totalScore: 91,
