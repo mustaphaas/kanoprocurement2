@@ -1150,6 +1150,63 @@ export default function MinistryDashboard() {
     setContracts(mockContracts);
     setNOCRequests(mockNOCRequests);
     setEvaluationCommittees(mockEvaluationCommittees);
+
+    // Mock MDA Users
+    const mockMDAUsers: MDAUser[] = [
+      {
+        id: "mdauser-001",
+        mdaId: "mda-001",
+        userId: "usr-001",
+        role: "procurement_officer",
+        department: "Procurement Department",
+        permissions: {
+          canCreateTenders: true,
+          canEvaluateBids: true,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          accessLevel: "write",
+        },
+        assignedBy: "admin-001",
+        assignedAt: new Date("2024-01-05"),
+        isActive: true,
+      },
+      {
+        id: "mdauser-002",
+        mdaId: "mda-001",
+        userId: "usr-002",
+        role: "accountant",
+        department: "Finance Department",
+        permissions: {
+          canCreateTenders: false,
+          canEvaluateBids: false,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          accessLevel: "read",
+        },
+        assignedBy: "admin-001",
+        assignedAt: new Date("2024-01-06"),
+        isActive: true,
+      },
+      {
+        id: "mdauser-003",
+        mdaId: "mda-001",
+        userId: "usr-003",
+        role: "evaluator",
+        department: "Technical Evaluation",
+        permissions: {
+          canCreateTenders: false,
+          canEvaluateBids: true,
+          canViewFinancials: false,
+          canGenerateReports: true,
+          accessLevel: "read",
+        },
+        assignedBy: "admin-001",
+        assignedAt: new Date("2024-01-07"),
+        isActive: true,
+      },
+    ];
+
+    setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
     setVendorCommunications(mockVendorCommunications);
     setScheduledPublications(mockScheduledPublications);
