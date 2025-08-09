@@ -972,7 +972,7 @@ export default function MinistryDashboard() {
               status: "Evaluated",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
-              bidsReceived: getBidCountForTender("KS-2024-001"),
+              bidsReceived: getBidCountForTender("KS-2024-015"),
               ministry: ministry.name,
               procuringEntity: "Kano State Road Maintenance Agency",
             },
@@ -2665,7 +2665,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "���1,450,000,000",
+          bidAmount: "�����1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,
@@ -7239,9 +7239,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         Technical Evaluation (35%)
                       </h5>
                       <ul className="text-sm text-blue-800 space-y-1">
-                        <li>• Experience & Expertise</li>
+                        <li>�� Experience & Expertise</li>
                         <li>• Technical Approach</li>
-                        <li>���� Quality Standards</li>
+                        <li>�� Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
                           �� Previous contracts executed in the last 2 years
@@ -8044,7 +8044,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">
-                🔐 Digital Contract Generation & Execution
+                ���� Digital Contract Generation & Execution
               </h3>
               <button
                 onClick={() => {
