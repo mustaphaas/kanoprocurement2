@@ -4522,7 +4522,15 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     {tender.bidsReceived}
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900">
+                    <button
+                      onClick={() => {
+                        setSelectedTenderForDetails(tender);
+                        const tenderBids = loadBidsForTender(tender.id);
+                        setBidders(tenderBids);
+                        setShowTenderDetailsModal(true);
+                      }}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
                       <Eye className="h-4 w-4 inline mr-1" />
                       View
                     </button>
