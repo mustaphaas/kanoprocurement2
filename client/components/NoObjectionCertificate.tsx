@@ -661,6 +661,99 @@ export default function NoObjectionCertificate({
     `;
   };
 
+  // NOC Request Management Handlers
+  const handleViewNOCRequest = (request: NOCRequest) => {
+    setSelectedNOCRequest(request);
+    setShowNOCRequestModal(true);
+  };
+
+  const handleApproveNOCRequest = (request: NOCRequest) => {
+    setSelectedNOCRequest(request);
+    setShowApprovalModal(true);
+  };
+
+  const handleRejectNOCRequest = (request: NOCRequest) => {
+    setSelectedNOCRequest(request);
+    setShowRejectionModal(true);
+  };
+
+  const submitNOCApproval = () => {
+    if (!selectedNOCRequest) return;
+
+    const certificateNumber = `KNS/SNOC/${new Date().getFullYear()}/${String(nocRequests.filter((r) => r.status === "Approved").length + 1).padStart(3, "0")}`;
+
+    const updatedRequests = nocRequests.map((request) =>
+      request.id === selectedNOCRequest.id
+        ? {
+            ...request,
+            status: "Approved" as const,
+            approvalDate: new Date().toISOString().split("T")[0],
+            certificateNumber,
+            approvalComments: approvalComments,
+          }
+        : request,
+    );
+
+    setNOCRequests(updatedRequests);
+    localStorage.setItem("centralNOCRequests", JSON.stringify(updatedRequests));
+
+    setShowApprovalModal(false);
+    setApprovalComments("");
+    setSelectedNOCRequest(null);
+    alert("NOC Request approved successfully!");
+  };
+
+  const submitNOCRejection = () => {
+    if (!selectedNOCRequest) return;
+
+    const updatedRequests = nocRequests.map((request) =>
+      request.id === selectedNOCRequest.id
+        ? {
+            ...request,
+            status: "Rejected" as const,
+            rejectionDate: new Date().toISOString().split("T")[0],
+            rejectionReason: rejectReason,
+          }
+        : request,
+    );
+
+    setNOCRequests(updatedRequests);
+    localStorage.setItem("centralNOCRequests", JSON.stringify(updatedRequests));
+
+    setShowRejectionModal(false);
+    setRejectReason("");
+    setSelectedNOCRequest(null);
+    alert("NOC Request rejected.");
+  };
+
+  const getNOCStatusColor = (status: string) => {
+    switch (status) {
+      case "Approved":
+        return "text-green-600 bg-green-100";
+      case "Rejected":
+        return "text-red-600 bg-red-100";
+      case "Pending":
+        return "text-yellow-600 bg-yellow-100";
+      default:
+        return "text-gray-600 bg-gray-100";
+    }
+  };
+
+  const getNOCUrgencyColor = (urgency: string) => {
+    switch (urgency) {
+      case "Critical":
+        return "text-red-600 bg-red-100";
+      case "High":
+        return "text-orange-600 bg-orange-100";
+      case "Medium":
+        return "text-yellow-600 bg-yellow-100";
+      case "Low":
+        return "text-green-600 bg-green-100";
+      default:
+        return "text-gray-600 bg-gray-100";
+    }
+  };
+
   const downloadCertificateAsPDF = (htmlContent: string, filename: string) => {
     // Create a new window for printing/downloading
     const printWindow = window.open("", "_blank");
