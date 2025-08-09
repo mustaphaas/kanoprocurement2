@@ -1615,6 +1615,66 @@ export default function MinistryDashboard() {
     alert("NOC Request submitted successfully!");
   };
 
+  // Company Profile Management Functions
+  const handleViewCompanyProfile = (company: Company) => {
+    setSelectedCompany(company);
+    setShowCompanyProfile(true);
+  };
+
+  const handleEditProfile = (section: string) => {
+    setEditingSection(section);
+    setShowEditProfile(true);
+  };
+
+  const handleUpdateCompanyProfile = (updatedData: Partial<Company>) => {
+    if (!selectedCompany) return;
+
+    const updatedCompany = { ...selectedCompany, ...updatedData };
+    setCompanies(prev =>
+      prev.map(company =>
+        company.id === selectedCompany.id ? updatedCompany : company
+      )
+    );
+    setSelectedCompany(updatedCompany);
+    setShowEditProfile(false);
+    alert("Profile updated successfully!");
+  };
+
+  const addDirector = (director: Omit<Director, 'id'>) => {
+    if (!selectedCompany) return;
+    const newDirector = { ...director, id: Date.now().toString() };
+    const updatedDirectors = [...(selectedCompany.directors || []), newDirector];
+    handleUpdateCompanyProfile({ directors: updatedDirectors });
+  };
+
+  const addKeyPersonnel = (personnel: Omit<KeyPersonnel, 'id'>) => {
+    if (!selectedCompany) return;
+    const newPersonnel = { ...personnel, id: Date.now().toString() };
+    const updatedPersonnel = [...(selectedCompany.keyPersonnel || []), newPersonnel];
+    handleUpdateCompanyProfile({ keyPersonnel: updatedPersonnel });
+  };
+
+  const addPastProject = (project: Omit<PastProject, 'id'>) => {
+    if (!selectedCompany) return;
+    const newProject = { ...project, id: Date.now().toString() };
+    const updatedProjects = [...(selectedCompany.pastProjects || []), newProject];
+    handleUpdateCompanyProfile({ pastProjects: updatedProjects });
+  };
+
+  const addEquipment = (equipment: Omit<Equipment, 'id'>) => {
+    if (!selectedCompany) return;
+    const newEquipment = { ...equipment, id: Date.now().toString() };
+    const updatedEquipment = [...(selectedCompany.equipment || []), newEquipment];
+    handleUpdateCompanyProfile({ equipment: updatedEquipment });
+  };
+
+  const addCertification = (certification: Omit<Certification, 'id'>) => {
+    if (!selectedCompany) return;
+    const newCertification = { ...certification, id: Date.now().toString() };
+    const updatedCertifications = [...(selectedCompany.certifications || []), newCertification];
+    handleUpdateCompanyProfile({ certifications: updatedCertifications });
+  };
+
   // Helper functions for evaluation scoring
   const updateEvaluationScore = (
     bidderId: string,
