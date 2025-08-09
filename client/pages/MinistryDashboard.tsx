@@ -10681,6 +10681,202 @@ Blockchain Timestamp: ${Date.now()}
         </div>
       )}
 
+      {/* NOC Request Details Modal */}
+      {showNOCRequestModal && selectedNOCRequest && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="flex items-start justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">
+                NOC Request Details
+              </h3>
+              <button
+                onClick={() => setShowNOCRequestModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Request ID</label>
+                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.id}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Project Title</label>
+                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.projectTitle}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Contractor Name</label>
+                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.contractorName}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Project Value</label>
+                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.projectValue}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Expected Duration</label>
+                <p className="mt-1 text-sm text-gray-900">{selectedNOCRequest.expectedDuration}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Request Date</label>
+                <p className="mt-1 text-sm text-gray-900">
+                  {new Date(selectedNOCRequest.requestDate).toLocaleDateString()}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Status</label>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    selectedNOCRequest.status === "Approved"
+                      ? "bg-green-100 text-green-800"
+                      : selectedNOCRequest.status === "Pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {selectedNOCRequest.status}
+                </span>
+                {selectedNOCRequest.certificateNumber && (
+                  <p className="mt-1 text-sm text-gray-600">
+                    Certificate: {selectedNOCRequest.certificateNumber}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setShowNOCRequestModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* NOC Certificate Modal */}
+      {showNOCCertificate && selectedNOCRequest && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                No Objection Certificate
+              </h3>
+              <button
+                onClick={() => setShowNOCCertificate(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="certificate-preview border border-gray-300 rounded-lg p-8 bg-white print-area">
+              <div className="text-center mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">KANO STATE GOVERNMENT</h1>
+                <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                  {(() => {
+                    const { ministry } = getMinistryMockData();
+                    return ministry.name;
+                  })()}
+                </h2>
+                <h3 className="text-lg font-medium text-gray-700 mb-6">NO OBJECTION CERTIFICATE</h3>
+                <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                  <CheckCircle className="h-10 w-10 text-green-600" />
+                </div>
+              </div>
+
+              <div className="space-y-4 text-sm">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <span className="font-semibold">Certificate Number:</span>
+                    <p>{selectedNOCRequest.certificateNumber}</p>
+                  </div>
+                  <div>
+                    <span className="font-semibold">Date Issued:</span>
+                    <p>{selectedNOCRequest.approvalDate || new Date().toLocaleDateString()}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="font-semibold">Project Title:</span>
+                  <p>{selectedNOCRequest.projectTitle}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <span className="font-semibold">Contractor/Vendor:</span>
+                    <p>{selectedNOCRequest.contractorName}</p>
+                  </div>
+                  <div>
+                    <span className="font-semibold">Contract Amount:</span>
+                    <p>{selectedNOCRequest.projectValue}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="font-semibold">Expected Duration:</span>
+                  <p>{selectedNOCRequest.expectedDuration}</p>
+                </div>
+              </div>
+
+              <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  This is to certify that this Ministry has no objection to the award of the above-mentioned contract
+                  subject to compliance with all relevant government regulations and guidelines.
+                </p>
+              </div>
+
+              <div className="mt-8 text-right">
+                <div className="inline-block">
+                  <p className="font-semibold text-sm">Commissioner / DG</p>
+                  <p className="text-sm text-gray-600">
+                    {(() => {
+                      const { ministry } = getMinistryMockData();
+                      return ministry.name;
+                    })()}
+                  </p>
+                  <p className="text-sm text-gray-600">Kano State Government</p>
+                  <div className="mt-2 w-32 border-b border-gray-400"></div>
+                  <p className="text-xs text-gray-500 mt-1">Signature & Official Seal</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-between">
+              <button
+                onClick={() => setShowNOCCertificate(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <div className="space-x-3">
+                <button
+                  onClick={() => window.print()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Print Certificate
+                </button>
+                <button
+                  onClick={() => handleDownloadCertificate(selectedNOCRequest)}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
+                  Download Certificate
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Create User Modal */}
       {showCreateUserModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
