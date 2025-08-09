@@ -319,7 +319,8 @@ export default function CompanyDashboard() {
   useEffect(() => {
     const loadTenders = () => {
       const storedTenders = localStorage.getItem("recentTenders");
-      const storedTenderStates = localStorage.getItem("companyTenderStates") || "{}";
+      const storedTenderStates =
+        localStorage.getItem("companyTenderStates") || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
 
       if (storedTenders) {
@@ -339,7 +340,8 @@ export default function CompanyDashboard() {
               recentTender.status === "Published"
                 ? "Open"
                 : "Closed",
-            hasExpressedInterest: tenderStates[recentTender.id]?.hasExpressedInterest || false,
+            hasExpressedInterest:
+              tenderStates[recentTender.id]?.hasExpressedInterest || false,
             hasBid: tenderStates[recentTender.id]?.hasBid || false,
             unspscCode: "72141100", // Default UNSPSC code
             procurementMethod: "Open Tendering",
@@ -447,11 +449,12 @@ export default function CompanyDashboard() {
     );
 
     // Persist tender state to localStorage
-    const storedTenderStates = localStorage.getItem("companyTenderStates") || "{}";
+    const storedTenderStates =
+      localStorage.getItem("companyTenderStates") || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
-      hasExpressedInterest: true
+      hasExpressedInterest: true,
     };
     localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
 
@@ -482,11 +485,11 @@ export default function CompanyDashboard() {
       tenderTitle: selectedTender.title,
       companyName: companyData.name,
       bidAmount: "₦850,000,000", // Mock amount for simplicity
-      status: 'Submitted',
+      status: "Submitted",
       submittedAt: new Date().toISOString(),
       technicalScore: null,
       financialScore: null,
-      totalScore: null
+      totalScore: null,
     };
 
     // Get existing bids from localStorage
@@ -509,12 +512,13 @@ export default function CompanyDashboard() {
     );
 
     // Persist tender state to localStorage
-    const storedTenderStates = localStorage.getItem("companyTenderStates") || "{}";
+    const storedTenderStates =
+      localStorage.getItem("companyTenderStates") || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
       hasExpressedInterest: true,
-      hasBid: true
+      hasBid: true,
     };
     localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
 

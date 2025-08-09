@@ -2108,8 +2108,8 @@ export default function MinistryDashboard() {
       // Merge with mock tenders to ensure we have both created and default tenders
       const allTenders = [...parsedTenders];
       // Add mock tenders that don't already exist (prevent duplicates by ID)
-      mockTenders.forEach(mockTender => {
-        if (!allTenders.find(t => t.id === mockTender.id)) {
+      mockTenders.forEach((mockTender) => {
+        if (!allTenders.find((t) => t.id === mockTender.id)) {
           allTenders.push(mockTender);
         }
       });
@@ -2122,9 +2122,15 @@ export default function MinistryDashboard() {
 
     // Sync any ministry tenders that might be missing from featured/recent tenders
     const syncTendersToPublicKeys = () => {
-      const ministryTenders = JSON.parse(localStorage.getItem("ministryTenders") || "[]");
-      const existingFeatured = JSON.parse(localStorage.getItem("featuredTenders") || "[]");
-      const existingRecent = JSON.parse(localStorage.getItem("recentTenders") || "[]");
+      const ministryTenders = JSON.parse(
+        localStorage.getItem("ministryTenders") || "[]",
+      );
+      const existingFeatured = JSON.parse(
+        localStorage.getItem("featuredTenders") || "[]",
+      );
+      const existingRecent = JSON.parse(
+        localStorage.getItem("recentTenders") || "[]",
+      );
 
       ministryTenders.forEach((tender: any) => {
         // Check if tender exists in featured tenders
@@ -2140,7 +2146,10 @@ export default function MinistryDashboard() {
               year: "numeric",
             }),
             status: tender.status === "Published" ? "Open" : "Draft",
-            statusColor: tender.status === "Published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800",
+            statusColor:
+              tender.status === "Published"
+                ? "bg-green-100 text-green-800"
+                : "bg-gray-100 text-gray-800",
             category: tender.category,
             ministry: tender.ministry,
             createdAt: Date.now(),
@@ -2173,8 +2182,14 @@ export default function MinistryDashboard() {
       });
 
       // Save the updated arrays back to localStorage
-      localStorage.setItem("featuredTenders", JSON.stringify(existingFeatured.slice(0, 5)));
-      localStorage.setItem("recentTenders", JSON.stringify(existingRecent.slice(0, 10)));
+      localStorage.setItem(
+        "featuredTenders",
+        JSON.stringify(existingFeatured.slice(0, 5)),
+      );
+      localStorage.setItem(
+        "recentTenders",
+        JSON.stringify(existingRecent.slice(0, 10)),
+      );
     };
 
     // Run the sync function
@@ -2255,28 +2270,32 @@ export default function MinistryDashboard() {
       const allBids = JSON.parse(storedBids);
 
       // Filter bids for this specific tender
-      const tenderBids = allBids.filter((bid: any) => bid.tenderId === tenderId);
+      const tenderBids = allBids.filter(
+        (bid: any) => bid.tenderId === tenderId,
+      );
 
       // Convert to the format expected by the ministry dashboard
       return tenderBids.map((bid: any) => ({
         id: bid.id,
         companyName: bid.companyName,
         bidAmount: bid.bidAmount,
-        technicalScore: bid.technicalScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
-        financialScore: bid.financialScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
+        technicalScore:
+          bid.technicalScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
+        financialScore:
+          bid.financialScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
         totalScore: bid.totalScore || Math.floor(Math.random() * 20) + 80, // Mock score if not evaluated
         status: "Qualified",
-        submissionDate: new Date(bid.submittedAt).toISOString().split('T')[0],
+        submissionDate: new Date(bid.submittedAt).toISOString().split("T")[0],
         experience: bid.experience || "5+ years",
         certifications: bid.certifications || ["ISO 9001"],
         previousProjects: bid.previousProjects || 15,
         completionRate: bid.completionRate || 95.0,
         timeline: bid.timeline,
         technicalProposal: bid.technicalProposal,
-        financialProposal: bid.financialProposal
+        financialProposal: bid.financialProposal,
       }));
     } catch (error) {
-      console.error('Error loading bids from localStorage:', error);
+      console.error("Error loading bids from localStorage:", error);
       return [];
     }
   };
@@ -2288,22 +2307,25 @@ export default function MinistryDashboard() {
       if (!storedBids) return 0;
 
       const allBids = JSON.parse(storedBids);
-      const matchingBids = allBids.filter((bid: any) => bid.tenderId === tenderId);
-
+      const matchingBids = allBids.filter(
+        (bid: any) => bid.tenderId === tenderId,
+      );
 
       return matchingBids.length;
     } catch (error) {
-      console.error('Error getting bid count:', error);
+      console.error("Error getting bid count:", error);
       return 0;
     }
   };
 
   // Function to refresh bid counts for all tenders
   const refreshAllTenderBidCounts = () => {
-    setTenders(prev => prev.map(tender => ({
-      ...tender,
-      bidsReceived: getBidCountForTender(tender.id)
-    })));
+    setTenders((prev) =>
+      prev.map((tender) => ({
+        ...tender,
+        bidsReceived: getBidCountForTender(tender.id),
+      })),
+    );
   };
 
   // Update bidders when workspace changes
