@@ -2896,7 +2896,7 @@ export default function MinistryDashboard() {
       publishDate:
         newTender.publishDate || new Date().toISOString().split("T")[0],
       closeDate: newTender.closeDate,
-      bidsReceived: 0,
+      bidsReceived: getBidCountForTender(tenderId),
       ministry: ministry.name,
       procuringEntity: ministry.name,
     };
