@@ -1184,6 +1184,56 @@ export default function MinistryDashboard() {
     }));
   };
 
+  const handleAwardTender = () => {
+    if (!selectedTenderForAward || !awardFormData.selectedBidder) {
+      alert('Please select a bidder to award the tender.');
+      return;
+    }
+
+    if (!isVendorEligibleForAward(awardFormData.selectedBidder)) {
+      alert('Selected bidder is not eligible for award. NOC must be issued and all workflow steps must be completed.');
+      return;
+    }
+
+    const selectedBidder = bidders.find(b => b.id === awardFormData.selectedBidder);
+    if (!selectedBidder) {
+      alert('Selected bidder not found.');
+      return;
+    }
+
+    // Update tender status to Awarded
+    setTenders(prev => prev.map(tender =>
+      tender.id === selectedTenderForAward.id
+        ? {
+            ...tender,
+            status: 'Awarded' as any,
+            awardedCompany: selectedBidder.companyName,
+            awardAmount: awardFormData.awardValue,
+            awardDate: new Date().toISOString().split('T')[0],
+            awardJustification: awardFormData.awardJustification
+          }
+        : tender
+    ));
+
+    // Close modal and reset form
+    setShowAwardModal(false);
+    setSelectedTenderForAward(null);
+    setAwardFormData({
+      selectedBidder: "",
+      awardValue: "",
+      awardJustification: "",
+      contractDuration: "",
+      performanceBond: "",
+      advancePayment: "",
+      liquidatedDamages: "",
+      warrantyPeriod: "",
+      deliverySchedule: "",
+      specialConditions: "",
+    });
+
+    alert(`Tender successfully awarded to ${selectedBidder.companyName}!`);
+  };
+
   const filteredCompanies = companies.filter((company) => {
     const matchesSearch =
       company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
