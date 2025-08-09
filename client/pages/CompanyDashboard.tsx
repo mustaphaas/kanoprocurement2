@@ -3855,6 +3855,8 @@ export default function CompanyDashboard() {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
+                        checked={bidFormData.accuracyConfirmed}
+                        onChange={(e) => setBidFormData(prev => ({ ...prev, accuracyConfirmed: e.target.checked }))}
                         className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         required
                       />
