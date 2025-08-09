@@ -1702,6 +1702,1077 @@ export default function MinistryDashboard() {
           </div>
         );
 
+      case "advanced-tender-mgmt":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                  🤖 AI-Powered Advanced Tender Management
+                </h1>
+                <p className="text-gray-600">
+                  Leverage AI assistance for intelligent tender creation, categorization, and management
+                </p>
+              </div>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setAiAssistantActive(!aiAssistantActive)}
+                  className={`inline-flex items-center px-4 py-2 rounded-md ${
+                    aiAssistantActive
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  } hover:bg-purple-700`}
+                >
+                  <Bot className="h-4 w-4 mr-2" />
+                  AI Assistant {aiAssistantActive ? "ON" : "OFF"}
+                </button>
+                <button
+                  onClick={() => setShowScheduleModal(true)}
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  <Timer className="h-4 w-4 mr-2" />
+                  Schedule Publication
+                </button>
+              </div>
+            </div>
+
+            {/* AI Assistant Panel */}
+            {aiAssistantActive && (
+              <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200 p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                    <Bot className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-purple-900 mb-2">AI Tender Assistant</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+                        <Zap className="h-5 w-5 text-purple-600 mb-2" />
+                        <h4 className="font-medium text-gray-900">Smart Categorization</h4>
+                        <p className="text-sm text-gray-600">AI-powered tender category suggestion</p>
+                      </button>
+                      <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+                        <Target className="h-5 w-5 text-purple-600 mb-2" />
+                        <h4 className="font-medium text-gray-900">Requirements Analysis</h4>
+                        <p className="text-sm text-gray-600">Analyze and optimize tender requirements</p>
+                      </button>
+                      <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+                        <Users2 className="h-5 w-5 text-purple-600 mb-2" />
+                        <h4 className="font-medium text-gray-900">Vendor Matching</h4>
+                        <p className="text-sm text-gray-600">Intelligent vendor recommendation</p>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Scheduled Publications */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Timer className="h-5 w-5 text-blue-600 mr-2" />
+                  Scheduled Publications
+                </h2>
+                <span className="text-sm text-gray-500">{scheduledPublications.length} scheduled</span>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {scheduledPublications.map((pub) => (
+                    <div key={pub.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-3">
+                        <h3 className="font-medium text-gray-900 line-clamp-2">{pub.tenderTitle}</h3>
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          pub.status === "Scheduled" ? "bg-blue-100 text-blue-800" :
+                          pub.status === "Published" ? "bg-green-100 text-green-800" :
+                          pub.status === "Failed" ? "bg-red-100 text-red-800" :
+                          "bg-gray-100 text-gray-800"
+                        }`}>
+                          {pub.status}
+                        </span>
+                      </div>
+                      <div className="space-y-2 text-sm text-gray-600">
+                        <p><Calendar className="h-4 w-4 inline mr-1" />{pub.scheduledDate} at {pub.scheduledTime}</p>
+                        <div className="flex flex-wrap gap-1">
+                          {pub.distributionChannels.map((channel) => (
+                            <span key={channel} className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+                              {channel === "Website" && <Globe className="h-3 w-3 mr-1" />}
+                              {channel === "Email" && <Mail className="h-3 w-3 mr-1" />}
+                              {channel === "SMS" && <Smartphone className="h-3 w-3 mr-1" />}
+                              {channel === "Newspaper" && <BookOpen className="h-3 w-3 mr-1" />}
+                              {channel}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mt-4 flex space-x-2">
+                        <button className="text-blue-600 hover:text-blue-900 text-sm">
+                          <Edit className="h-4 w-4 inline mr-1" />Edit
+                        </button>
+                        <button className="text-red-600 hover:text-red-900 text-sm">
+                          <StopCircle className="h-4 w-4 inline mr-1" />Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Amendment Tracking */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <RefreshCw className="h-5 w-5 text-orange-600 mr-2" />
+                  Amendment Tracking & Notifications
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-4">Recent Amendments</h3>
+                    <div className="space-y-3">
+                      <div className="border rounded-lg p-4">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-medium text-gray-900">MOH-2024-001</h4>
+                            <p className="text-sm text-gray-600">Delivery timeline extended by 2 weeks</p>
+                            <p className="text-xs text-gray-500">2 hours ago</p>
+                          </div>
+                          <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs">
+                            Amendment 1
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-4">Notification Status</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                        <span className="text-sm text-gray-700">Email Notifications</span>
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                        <span className="text-sm text-gray-700">SMS Alerts</span>
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                        <span className="text-sm text-gray-700">Portal Updates</span>
+                        <CheckCircle className="h-5 w-5 text-blue-600" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "bulk-tender-upload":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                  📊 Bulk Tender Upload & Management
+                </h1>
+                <p className="text-gray-600">
+                  Efficiently upload and manage multiple tenders simultaneously
+                </p>
+              </div>
+              <button
+                onClick={() => setShowBulkUploadModal(true)}
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Start Bulk Upload
+              </button>
+            </div>
+
+            {/* Upload Templates */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <FileSpreadsheet className="h-8 w-8 text-green-600" />
+                  <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Excel Template</h3>
+                <p className="text-sm text-gray-600 mb-4">Standard template for bulk tender upload</p>
+                <button className="w-full bg-green-50 text-green-700 py-2 px-4 rounded-md hover:bg-green-100">
+                  Download Template
+                </button>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <FileText className="h-8 w-8 text-blue-600" />
+                  <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">CSV Template</h3>
+                <p className="text-sm text-gray-600 mb-4">Comma-separated values format</p>
+                <button className="w-full bg-blue-50 text-blue-700 py-2 px-4 rounded-md hover:bg-blue-100">
+                  Download Template
+                </button>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <BookOpen className="h-8 w-8 text-purple-600" />
+                  <Eye className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">User Guide</h3>
+                <p className="text-sm text-gray-600 mb-4">Step-by-step upload instructions</p>
+                <button className="w-full bg-purple-50 text-purple-700 py-2 px-4 rounded-md hover:bg-purple-100">
+                  View Guide
+                </button>
+              </div>
+            </div>
+
+            {/* Upload History */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Clock className="h-5 w-5 text-gray-600 mr-2" />
+                  Upload History
+                </h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Upload Details
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        File Info
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Results
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    <tr className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">Batch Upload #001</div>
+                          <div className="text-sm text-gray-500">February 15, 2024 at 2:30 PM</div>
+                          <div className="text-sm text-gray-500">By: Ministry Admin</div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div>
+                          <div className="text-sm text-gray-900">health_tenders_Q1.xlsx</div>
+                          <div className="text-sm text-gray-500">248 KB • 15 records</div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                          Completed
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">12 successful</div>
+                        <div className="text-sm text-red-600">3 failed</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button className="text-blue-600 hover:text-blue-900">
+                          <Eye className="h-4 w-4 inline mr-1" />View Report
+                        </button>
+                        <button className="text-green-600 hover:text-green-900">
+                          <Download className="h-4 w-4 inline mr-1" />Download
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Processing Status */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Activity className="h-5 w-5 text-blue-600 mr-2" />
+                  Processing Queue
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="text-center py-8">
+                  <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No active uploads</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    All bulk uploads have been processed successfully.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "evaluation-management":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                  ⚖️ Evaluation Process Management
+                </h1>
+                <p className="text-gray-600">
+                  Comprehensive tools for managing evaluation committees and bid assessments
+                </p>
+              </div>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowEvaluationModal(true)}
+                  className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                >
+                  <Users2 className="h-4 w-4 mr-2" />
+                  Create Committee
+                </button>
+                <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                  <FileSpreadsheet className="h-4 w-4 mr-2" />
+                  Generate Report
+                </button>
+              </div>
+            </div>
+
+            {/* Committee Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Users2 className="h-8 w-8 text-blue-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Active Committees</p>
+                    <p className="text-2xl font-bold text-gray-900">{evaluationCommittees.filter(c => c.status === "Active").length}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <CheckSquare className="h-8 w-8 text-green-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Completed Evaluations</p>
+                    <p className="text-2xl font-bold text-gray-900">{bidEvaluations.filter(e => e.status === "Final").length}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Clock className="h-8 w-8 text-orange-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Pending Reviews</p>
+                    <p className="text-2xl font-bold text-gray-900">{bidEvaluations.filter(e => e.status === "Submitted").length}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Evaluation Committees */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Users2 className="h-5 w-5 text-purple-600 mr-2" />
+                  Evaluation Committees
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {evaluationCommittees.map((committee) => (
+                    <div key={committee.id} className="border rounded-lg p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{committee.name}</h3>
+                          <p className="text-sm text-gray-600">Chair: {committee.chairperson}</p>
+                        </div>
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          committee.status === "Active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+                        }`}>
+                          {committee.status}
+                        </span>
+                      </div>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">Specialization:</p>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {committee.specialization.map((spec) => (
+                              <span key={spec} className="inline-flex px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                                {spec}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">Members ({committee.members.length}):</p>
+                          <div className="mt-2 space-y-1">
+                            {committee.members.slice(0, 3).map((member) => (
+                              <div key={member.id} className="flex items-center justify-between text-sm">
+                                <span className="text-gray-900">{member.name}</span>
+                                <span className={`px-2 py-1 rounded-full text-xs ${
+                                  member.availability === "Available" ? "bg-green-100 text-green-800" :
+                                  member.availability === "Busy" ? "bg-orange-100 text-orange-800" :
+                                  "bg-red-100 text-red-800"
+                                }`}>
+                                  {member.availability}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex space-x-2 pt-3 border-t border-gray-200">
+                          <button className="text-blue-600 hover:text-blue-900 text-sm">
+                            <Eye className="h-4 w-4 inline mr-1" />View Details
+                          </button>
+                          <button className="text-green-600 hover:text-green-900 text-sm">
+                            <Edit className="h-4 w-4 inline mr-1" />Edit
+                          </button>
+                          <button className="text-purple-600 hover:text-purple-900 text-sm">
+                            <Send className="h-4 w-4 inline mr-1" />Assign Tender
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Evaluation Pipeline */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Clipboard className="h-5 w-5 text-blue-600 mr-2" />
+                  Evaluation Pipeline
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h3 className="font-medium text-yellow-800 mb-2">Awaiting Assignment</h3>
+                    <p className="text-2xl font-bold text-yellow-900">2</p>
+                    <p className="text-sm text-yellow-700">Tenders ready for evaluation</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="font-medium text-blue-800 mb-2">In Progress</h3>
+                    <p className="text-2xl font-bold text-blue-900">1</p>
+                    <p className="text-sm text-blue-700">Active evaluations</p>
+                  </div>
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h3 className="font-medium text-purple-800 mb-2">Under Review</h3>
+                    <p className="text-2xl font-bold text-purple-900">1</p>
+                    <p className="text-sm text-purple-700">Awaiting final review</p>
+                  </div>
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 className="font-medium text-green-800 mb-2">Completed</h3>
+                    <p className="text-2xl font-bold text-green-900">3</p>
+                    <p className="text-sm text-green-700">Ready for award</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Document Distribution */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <FileText className="h-5 w-5 text-green-600 mr-2" />
+                  Secure Document Distribution
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-4">Distribution Status</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                        <span className="text-sm text-gray-700">MOH-2024-002 Bid Documents</span>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                          <span className="text-xs text-green-600">Distributed</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                        <span className="text-sm text-gray-700">Technical Specifications</span>
+                        <div className="flex items-center space-x-2">
+                          <Clock className="h-4 w-4 text-blue-600" />
+                          <span className="text-xs text-blue-600">Pending</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-4">Security Features</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <Shield className="h-4 w-4 text-green-600" />
+                        <span>End-to-end encryption</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <FileCheck className="h-4 w-4 text-green-600" />
+                        <span>Digital signatures</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <Eye className="h-4 w-4 text-green-600" />
+                        <span>Access tracking</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <Timer className="h-4 w-4 text-green-600" />
+                        <span>Time-limited access</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "contract-management":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                  📋 Contract Management & Monitoring
+                </h1>
+                <p className="text-gray-600">
+                  Comprehensive contract lifecycle management with digital execution and performance tracking
+                </p>
+              </div>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowContractModal(true)}
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Generate Contract
+                </button>
+                <button className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Reports
+                </button>
+              </div>
+            </div>
+
+            {/* Contract Overview Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <FileCheck className="h-8 w-8 text-blue-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Active Contracts</p>
+                    <p className="text-2xl font-bold text-gray-900">{contracts.filter(c => c.status === "Active").length}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <DollarSign className="h-8 w-8 text-green-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Total Contract Value</p>
+                    <p className="text-2xl font-bold text-gray-900">₦2.3B</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Target className="h-8 w-8 text-purple-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Avg Performance</p>
+                    <p className="text-2xl font-bold text-gray-900">85%</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <AlertCircle className="h-8 w-8 text-orange-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Pending Payments</p>
+                    <p className="text-2xl font-bold text-gray-900">2</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Active Contracts */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <FileCheck className="h-5 w-5 text-blue-600 mr-2" />
+                  Active Contracts
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="space-y-6">
+                  {contracts.map((contract) => (
+                    <div key={contract.id} className="border rounded-lg p-6 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{contract.projectTitle}</h3>
+                          <p className="text-sm text-gray-600">{contract.id} • {contract.contractorName}</p>
+                          <p className="text-sm text-green-600 font-medium">{contract.contractValue}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${
+                            contract.status === "Active" ? "bg-green-100 text-green-800" :
+                            contract.status === "Completed" ? "bg-blue-100 text-blue-800" :
+                            contract.status === "Suspended" ? "bg-orange-100 text-orange-800" :
+                            "bg-gray-100 text-gray-800"
+                          }`}>
+                            {contract.status}
+                          </span>
+                          <div className="mt-2 text-sm text-gray-500">
+                            Performance: {contract.performanceScore}%
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Milestone Progress */}
+                      <div className="mb-4">
+                        <h4 className="font-medium text-gray-900 mb-3">Milestone Progress</h4>
+                        <div className="space-y-2">
+                          {contract.milestones.map((milestone, index) => (
+                            <div key={milestone.id} className="flex items-center space-x-3">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
+                                milestone.status === "Completed" ? "bg-green-100 text-green-800" :
+                                milestone.status === "In Progress" ? "bg-blue-100 text-blue-800" :
+                                milestone.status === "Overdue" ? "bg-red-100 text-red-800" :
+                                "bg-gray-100 text-gray-600"
+                              }`}>
+                                {index + 1}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm font-medium text-gray-900">{milestone.title}</span>
+                                  <span className="text-xs text-gray-500">{milestone.paymentPercentage}%</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-gray-600">Target: {milestone.targetDate}</span>
+                                  <span className={`text-xs px-2 py-1 rounded-full ${
+                                    milestone.verificationStatus === "Verified" ? "bg-green-100 text-green-700" :
+                                    milestone.verificationStatus === "Under Review" ? "bg-yellow-100 text-yellow-700" :
+                                    milestone.verificationStatus === "Rejected" ? "bg-red-100 text-red-700" :
+                                    "bg-gray-100 text-gray-600"
+                                  }`}>
+                                    {milestone.verificationStatus}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Payment Status */}
+                      <div className="mb-4">
+                        <h4 className="font-medium text-gray-900 mb-3">Payment Status</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {contract.payments.map((payment) => (
+                            <div key={payment.id} className={`p-3 rounded-lg border ${
+                              payment.status === "Paid" ? "bg-green-50 border-green-200" :
+                              payment.status === "Approved" ? "bg-blue-50 border-blue-200" :
+                              payment.status === "Pending" ? "bg-yellow-50 border-yellow-200" :
+                              "bg-red-50 border-red-200"
+                            }`}>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-900">{payment.amount}</span>
+                                <span className={`text-xs px-2 py-1 rounded-full ${
+                                  payment.status === "Paid" ? "bg-green-100 text-green-800" :
+                                  payment.status === "Approved" ? "bg-blue-100 text-blue-800" :
+                                  payment.status === "Pending" ? "bg-yellow-100 text-yellow-800" :
+                                  "bg-red-100 text-red-800"
+                                }`}>
+                                  {payment.status}
+                                </span>
+                              </div>
+                              <p className="text-xs text-gray-600 mt-1">{payment.invoiceNumber}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
+                        <button className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm">
+                          <Eye className="h-3 w-3 mr-1" />
+                          View Details
+                        </button>
+                        <button className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-md hover:bg-green-200 text-sm">
+                          <CheckSquare className="h-3 w-3 mr-1" />
+                          Update Milestone
+                        </button>
+                        <button className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 text-sm">
+                          <CreditCard className="h-3 w-3 mr-1" />
+                          Process Payment
+                        </button>
+                        <button className="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-800 rounded-md hover:bg-orange-200 text-sm">
+                          <MessageSquare className="h-3 w-3 mr-1" />
+                          Dispute Resolution
+                        </button>
+                        <button className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 text-sm">
+                          <Download className="h-3 w-3 mr-1" />
+                          Export Contract
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Digital Signature & Security */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Shield className="h-5 w-5 text-green-600 mr-2" />
+                  Digital Contract Security
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-4">Digital Signatures</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                        <span className="text-sm text-gray-700">Contract CON-MOH-001</span>
+                        <div className="flex items-center space-x-2">
+                          <Shield className="h-4 w-4 text-green-600" />
+                          <span className="text-xs text-green-600">Verified</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                        <span className="text-sm text-gray-700">Amendment #1</span>
+                        <div className="flex items-center space-x-2">
+                          <Clock className="h-4 w-4 text-blue-600" />
+                          <span className="text-xs text-blue-600">Pending</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-4">Blockchain Integration</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span>Contract hash stored on blockchain</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span>Immutable audit trail</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span>Tamper-proof documentation</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "vendor-communication":
+        return (
+          <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                  💬 Vendor Communication Hub
+                </h1>
+                <p className="text-gray-600">
+                  Multi-channel communication system for vendor notifications and interactions
+                </p>
+              </div>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowVendorCommModal(true)}
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Communication
+                </button>
+                <button className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                  <Megaphone className="h-4 w-4 mr-2" />
+                  Broadcast Alert
+                </button>
+              </div>
+            </div>
+
+            {/* Communication Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Mail className="h-8 w-8 text-blue-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Emails Sent</p>
+                    <p className="text-2xl font-bold text-gray-900">1,247</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Smartphone className="h-8 w-8 text-green-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">SMS Alerts</p>
+                    <p className="text-2xl font-bold text-gray-900">856</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Globe className="h-8 w-8 text-purple-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Portal Notifications</p>
+                    <p className="text-2xl font-bold text-gray-900">2,134</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <div className="flex items-center">
+                  <Eye className="h-8 w-8 text-orange-600" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-600">Read Rate</p>
+                    <p className="text-2xl font-bold text-gray-900">94%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Communication Channels */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <Mail className="h-6 w-6 text-blue-600 mr-2" />
+                    <h3 className="font-semibold text-gray-900">Email Communications</h3>
+                  </div>
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Delivery Rate</span>
+                    <span className="font-medium text-gray-900">99.2%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Open Rate</span>
+                    <span className="font-medium text-gray-900">87.5%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Click Rate</span>
+                    <span className="font-medium text-gray-900">23.8%</span>
+                  </div>
+                </div>
+                <button className="w-full mt-4 bg-blue-50 text-blue-700 py-2 px-4 rounded-md hover:bg-blue-100">
+                  View Email Analytics
+                </button>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <Smartphone className="h-6 w-6 text-green-600 mr-2" />
+                    <h3 className="font-semibold text-gray-900">SMS Notifications</h3>
+                  </div>
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Delivery Rate</span>
+                    <span className="font-medium text-gray-900">98.7%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Response Rate</span>
+                    <span className="font-medium text-gray-900">12.3%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Opt-out Rate</span>
+                    <span className="font-medium text-gray-900">0.8%</span>
+                  </div>
+                </div>
+                <button className="w-full mt-4 bg-green-50 text-green-700 py-2 px-4 rounded-md hover:bg-green-100">
+                  Manage SMS Settings
+                </button>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <Globe className="h-6 w-6 text-purple-600 mr-2" />
+                    <h3 className="font-semibold text-gray-900">Portal Alerts</h3>
+                  </div>
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Active Users</span>
+                    <span className="font-medium text-gray-900">1,456</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Daily Visits</span>
+                    <span className="font-medium text-gray-900">2,847</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Engagement</span>
+                    <span className="font-medium text-gray-900">76.4%</span>
+                  </div>
+                </div>
+                <button className="w-full mt-4 bg-purple-50 text-purple-700 py-2 px-4 rounded-md hover:bg-purple-100">
+                  Portal Dashboard
+                </button>
+              </div>
+            </div>
+
+            {/* Recent Communications */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <MessageSquare className="h-5 w-5 text-blue-600 mr-2" />
+                  Recent Communications
+                </h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Communication Details
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Recipients
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Channels
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {vendorCommunications.map((comm) => (
+                      <tr key={comm.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">{comm.subject}</div>
+                            <div className="text-sm text-gray-500">{comm.type}</div>
+                            <div className="text-sm text-gray-500">{comm.sentDate}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{comm.vendorName}</div>
+                          <div className="text-sm text-gray-500">{comm.vendorId}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex space-x-1">
+                            {comm.channels.map((channel) => (
+                              <span key={channel} className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+                                {channel === "Email" && <Mail className="h-3 w-3 mr-1" />}
+                                {channel === "SMS" && <Smartphone className="h-3 w-3 mr-1" />}
+                                {channel === "Portal" && <Globe className="h-3 w-3 mr-1" />}
+                                {channel}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center space-x-2">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              comm.readStatus ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                            }`}>
+                              {comm.readStatus ? "Read" : "Unread"}
+                            </span>
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              comm.priority === "Urgent" ? "bg-red-100 text-red-800" :
+                              comm.priority === "High" ? "bg-orange-100 text-orange-800" :
+                              comm.priority === "Medium" ? "bg-blue-100 text-blue-800" :
+                              "bg-gray-100 text-gray-800"
+                            }`}>
+                              {comm.priority}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                          <button className="text-blue-600 hover:text-blue-900">
+                            <Eye className="h-4 w-4 inline mr-1" />View
+                          </button>
+                          <button className="text-green-600 hover:text-green-900">
+                            <MessageSquare className="h-4 w-4 inline mr-1" />Reply
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Category-Based Targeting */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Target className="h-5 w-5 text-purple-600 mr-2" />
+                  Intelligent Category-Based Targeting
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-4">Vendor Categories</h3>
+                    <div className="space-y-2">
+                      {["Medical Equipment", "Pharmaceuticals", "Construction", "ICT Services", "Consultancy"].map((category) => (
+                        <div key={category} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <span className="text-sm text-gray-700">{category}</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs text-gray-500">156 vendors</span>
+                            <button className="text-blue-600 hover:text-blue-900 text-xs">
+                              <Send className="h-3 w-3 inline mr-1" />Target
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-4">Automated Follow-ups</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                        <span className="text-sm text-gray-700">Tender Submission Reminders</span>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                          <span className="text-xs text-green-600">Active</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                        <span className="text-sm text-gray-700">Document Update Alerts</span>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                          <span className="text-xs text-green-600">Active</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                        <span className="text-sm text-gray-700">Award Notifications</span>
+                        <div className="flex items-center space-x-2">
+                          <Clock className="h-4 w-4 text-yellow-600" />
+                          <span className="text-xs text-yellow-600">Scheduled</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return <div>Content for {activeTab}</div>;
     }
