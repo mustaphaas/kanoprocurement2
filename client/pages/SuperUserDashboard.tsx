@@ -5263,6 +5263,9 @@ The award letter has been:
       case "no-objection-certificate":
         return <NoObjectionCertificate />;
 
+      case "mda-management":
+        return renderMDAManagement();
+
       case "settings":
         return (
           <div className="space-y-8">
