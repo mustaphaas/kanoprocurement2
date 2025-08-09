@@ -5170,7 +5170,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  📋 Tender Details - {selectedTenderForDetails.title}
+                  ��� Tender Details - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowTenderDetailsModal(false)}
@@ -7708,6 +7708,8 @@ Blockchain Timestamp: ${Date.now()}
       return renderReports();
     } else if (currentView === "noc") {
       return renderNOCRequests();
+    } else if (currentView === "users") {
+      return renderUserManagement();
     }
     return null;
   };
