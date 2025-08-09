@@ -227,14 +227,21 @@ export default function NoObjectionCertificate({
   const approvedCount = companies.filter((c) => c.status === "approved").length;
   const pendingCount = companies.filter((c) => c.status === "pending").length;
 
-  // Load NOC requests from central storage
-  useEffect(() => {
+  // Function to load NOC requests from central storage
+  const loadNOCRequests = () => {
     const storedNOCs = localStorage.getItem("centralNOCRequests");
     if (storedNOCs) {
       const requests = JSON.parse(storedNOCs);
       setNOCRequests(requests);
       setFilteredNOCRequests(requests);
-    } else {
+      return;
+    }
+  };
+
+  // Load NOC requests from central storage
+  useEffect(() => {
+    loadNOCRequests();
+    if (!localStorage.getItem("centralNOCRequests")) {
       // Initialize with some mock NOC request data
       const mockNOCs: NOCRequest[] = [
         {
