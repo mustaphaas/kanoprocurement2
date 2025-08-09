@@ -274,7 +274,7 @@ export default function CompanyDashboard() {
       title: "Supply of Medical Equipment",
       ministry: "Ministry of Health",
       category: "Healthcare",
-      value: "₦850M",
+      value: "��850M",
       deadline: "2024-02-28",
       location: "Kano Municipal",
       status: "Open",
@@ -3817,8 +3817,6 @@ export default function CompanyDashboard() {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        checked={bidFormData.accuracyConfirmed}
-                        onChange={(e) => setBidFormData(prev => ({ ...prev, accuracyConfirmed: e.target.checked }))}
                         className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         required
                       />
@@ -3831,8 +3829,6 @@ export default function CompanyDashboard() {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        checked={bidFormData.bindingConfirmed}
-                        onChange={(e) => setBidFormData(prev => ({ ...prev, bindingConfirmed: e.target.checked }))}
                         className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         required
                       />
@@ -3845,8 +3841,6 @@ export default function CompanyDashboard() {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        checked={bidFormData.termsConfirmed}
-                        onChange={(e) => setBidFormData(prev => ({ ...prev, termsConfirmed: e.target.checked }))}
                         className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         required
                       />
