@@ -2745,7 +2745,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 Approved Companies
               </p>
               <p className="text-3xl font-bold text-green-600">
-                {companies.filter((c) => c.status === "Approved").length}
+                {(() => {
+                  const { ministryId } = getMinistryMockData();
+                  if (ministryId === 'ministry2') return 4;
+                  if (ministryId === 'ministry3') return 3;
+                  return companies.filter((c) => c.status === "Approved").length;
+                })()}
               </p>
             </div>
             <UserCheck className="h-8 w-8 text-green-600" />
@@ -5439,7 +5444,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                     <li>• No Objection Certificate</li>
                                   )}
                                   {workflowStatus?.finalApprovalStatus !==
-                                    "approved" && <li>• Final Approval</li>}
+                                    "approved" && <li>��� Final Approval</li>}
                                 </ul>
                               </div>
                             )}
@@ -7339,7 +7344,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• AES-256 encryption</li>
-                      <li>���� Multi-factor authentication</li>
+                      <li>�� Multi-factor authentication</li>
                       <li>• Audit trail logging</li>
                       <li>• IP geolocation tracking</li>
                     </ul>
