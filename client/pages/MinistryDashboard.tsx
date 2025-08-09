@@ -1086,7 +1086,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of textbooks and library resources for all levels",
               category: "Educational Materials",
-              estimatedValue: "₦1,650,000,000",
+              estimatedValue: "��1,650,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -2181,17 +2181,12 @@ export default function MinistryDashboard() {
   const loadBidsForTender = (tenderId: string) => {
     try {
       const storedBids = localStorage.getItem("tenderBids");
-      console.log("Loading bids for tender:", tenderId);
-      console.log("Stored bids:", storedBids);
-
       if (!storedBids) return [];
 
       const allBids = JSON.parse(storedBids);
-      console.log("All bids parsed:", allBids);
 
       // Filter bids for this specific tender
       const tenderBids = allBids.filter((bid: any) => bid.tenderId === tenderId);
-      console.log("Filtered bids for tender", tenderId, ":", tenderBids);
 
       // Convert to the format expected by the ministry dashboard
       return tenderBids.map((bid: any) => ({
