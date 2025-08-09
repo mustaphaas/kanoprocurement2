@@ -387,6 +387,14 @@ export default function MinistryDashboard() {
     specialization: "",
     members: [{ name: "", department: "", role: "Member", email: "" }]
   });
+  const [showPostAwardWorkflow, setShowPostAwardWorkflow] = useState(false);
+  const [awardedTenderData, setAwardedTenderData] = useState<any>(null);
+  const [postAwardSteps, setPostAwardSteps] = useState({
+    notifySuccessful: false,
+    notifyUnsuccessful: false,
+    publishOCDS: false,
+    createContract: false
+  });
   const [bidders, setBidders] = useState([
     {
       id: "BID-001",
