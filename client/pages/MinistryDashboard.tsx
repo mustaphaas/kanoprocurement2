@@ -311,6 +311,11 @@ export default function MinistryDashboard() {
     expectedDuration: "",
     projectDescription: "",
     justification: "",
+    urgencyLevel: "Medium" as "Low" | "Medium" | "High" | "Critical",
+    category: "",
+    procuringEntity: "",
+    contactPerson: "",
+    contactEmail: "",
   });
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<BidEvaluation | null>(null);
@@ -4964,7 +4969,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             }`}
           >
             {steps.every((s) => s.completed)
-              ? "��� All Steps Completed"
+              ? "✓ All Steps Completed"
               : `${steps.filter((s) => s.completed).length}/${steps.length} Steps Completed`}
           </div>
         </div>
