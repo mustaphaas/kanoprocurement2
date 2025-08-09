@@ -147,7 +147,17 @@ export const useRole = () => {
     isCompany: userProfile?.role === 'company',
     isAdmin: userProfile?.role === 'admin' || userProfile?.role === 'superuser',
     isSuperUser: userProfile?.role === 'superuser',
-    role: userProfile?.role
+    isMDAAdmin: userProfile?.role === 'mda_admin',
+    isMDAUser: userProfile?.role === 'mda_user',
+    isMDASuperAdmin: userProfile?.role === 'mda_admin' && userProfile?.mdaRole === 'mda_super_admin',
+    role: userProfile?.role,
+    mdaRole: userProfile?.mdaRole,
+    mdaId: userProfile?.mdaId,
+    department: userProfile?.department,
+    permissions: authService.getUserPermissions(userProfile),
+    hasAccessToMDA: (mdaId: string) => authService.hasAccessToMDA(userProfile, mdaId),
+    canManageMDASettings: () => authService.canManageMDASettings(userProfile),
+    canCreateMDAUsers: () => authService.canCreateMDAUsers(userProfile)
   };
 };
 
