@@ -472,31 +472,75 @@ export default function CompanyDashboard() {
     setSelectedTender(null);
   };
 
-  const confirmSubmitBid = () => {
-    if (!selectedTender) return;
+  const confirmSubmitBid = async () => {
+    if (!selectedTender || !user) return;
 
-    // Update the tender to show bid has been submitted
-    setTenders((prevTenders) =>
-      prevTenders.map((tender) =>
-        tender.id === selectedTender.id ? { ...tender, hasBid: true } : tender,
-      ),
-    );
+    // Validate form
+    if (!bidFormData.bidAmount || !bidFormData.timeline || !bidFormData.technicalProposal ||
+        !bidFormData.accuracyConfirmed || !bidFormData.bindingConfirmed || !bidFormData.termsConfirmed) {
+      alert("Please fill in all required fields and confirm all checkboxes.");
+      return;
+    }
 
-    // Update company stats and add notification
-    setNotifications((prev) => [
-      {
-        id: Date.now().toString(),
-        type: "success",
-        title: "Bid Submitted",
-        message: `Your bid for ${selectedTender.title} has been successfully submitted and is under evaluation`,
-        date: new Date().toISOString().split("T")[0],
-        read: false,
-      },
-      ...prev,
-    ]);
+    setSubmitLoading(true);
 
-    setShowSubmitBidModal(false);
-    setSelectedTender(null);
+    try {
+      // Create bid data for Firestore
+      const bidData: Omit<TenderBid, 'id'> = {
+        tenderId: selectedTender.id,
+        companyId: companyData.name, // Using company name as ID for now
+        companyUserId: user.userId,
+        companyName: companyData.name,
+        bidAmount: bidFormData.bidAmount,
+        status: 'Submitted',
+        documents: [], // TODO: Implement file upload
+        comments: `Timeline: ${bidFormData.timeline} days\n\nTechnical Proposal:\n${bidFormData.technicalProposal}\n\nFinancial Proposal:\n${bidFormData.financialProposal}`,
+        submittedAt: new Date() as any // Will be overridden by serverTimestamp
+      };
+
+      // Submit bid to Firestore
+      await bidService.create(bidData);
+
+      // Update the tender to show bid has been submitted
+      setTenders((prevTenders) =>
+        prevTenders.map((tender) =>
+          tender.id === selectedTender.id ? { ...tender, hasBid: true } : tender,
+        ),
+      );
+
+      // Update company stats and add notification
+      setNotifications((prev) => [
+        {
+          id: Date.now().toString(),
+          type: "success",
+          title: "Bid Submitted",
+          message: `Your bid for ${selectedTender.title} has been successfully submitted and is under evaluation`,
+          date: new Date().toISOString().split("T")[0],
+          read: false,
+        },
+        ...prev,
+      ]);
+
+      // Reset form
+      setBidFormData({
+        bidAmount: "",
+        timeline: "",
+        technicalProposal: "",
+        financialProposal: "",
+        documentsConfirmed: false,
+        accuracyConfirmed: false,
+        bindingConfirmed: false,
+        termsConfirmed: false
+      });
+
+      setShowSubmitBidModal(false);
+      setSelectedTender(null);
+    } catch (error) {
+      console.error('Error submitting bid:', error);
+      alert('Failed to submit bid. Please try again.');
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   const getStatusAlert = () => {
