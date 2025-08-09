@@ -1748,6 +1748,255 @@ Penalty Clause: 0.5% per week for delayed completion`,
     setShowContractModal(true);
   };
 
+  // Award letter generation functions
+  const generateAwardLetter = (tender: any) => {
+    // Find the awarded bidder for this tender
+    const awardedBidder = bidders.find(b => b.companyName === tender.awardedCompany);
+
+    if (!awardedBidder) {
+      alert('No awarded bidder found for this tender.');
+      return;
+    }
+
+    // Generate award letter data
+    const letterData = {
+      awardDate: new Date().toLocaleDateString('en-GB'),
+      tenderRef: tender.id,
+      vendorName: tender.awardedCompany,
+      vendorAddress: `${awardedBidder.companyName}\n[Company Address]\nKano State, Nigeria`,
+      tenderTitle: tender.title,
+      contractValue: tender.awardAmount || tender.estimatedValue,
+      contractValueWords: convertNumberToWords(parseFloat((tender.awardAmount || tender.estimatedValue).replace(/[₦,]/g, ''))),
+      contractDuration: '12', // Default or from award details
+      performanceBond: '10',
+      performanceBondDue: '14',
+      advancePayment: '20',
+      warrantyPeriod: '12',
+      deliveryScheduleSummary: 'As per contract specifications and project timeline',
+      acceptanceDays: '7',
+      refNumber: `MOH/KP/E-Proc/${tender.id}`,
+      ministerName: 'Hon. Dr. Aminu Ibrahim Tsanyawa',
+      ministerTitle: 'Hon. Commissioner\nMinistry of Health\nKano State Government'
+    };
+
+    setAwardLetterData(letterData);
+    setSelectedTenderForLetter(tender);
+    setShowAwardLetterModal(true);
+  };
+
+  const convertNumberToWords = (num: number): string => {
+    // Simple number to words conversion for Nigerian Naira
+    const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+    const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+    const convertHundreds = (n: number): string => {
+      let result = '';
+      if (n >= 100) {
+        result += ones[Math.floor(n / 100)] + ' Hundred ';
+        n %= 100;
+      }
+      if (n >= 20) {
+        result += tens[Math.floor(n / 10)] + ' ';
+        n %= 10;
+      } else if (n >= 10) {
+        result += teens[n - 10] + ' ';
+        return result;
+      }
+      if (n > 0) {
+        result += ones[n] + ' ';
+      }
+      return result;
+    };
+
+    if (num === 0) return 'Zero Naira Only';
+
+    let result = '';
+    if (num >= 1000000000) {
+      result += convertHundreds(Math.floor(num / 1000000000)) + 'Billion ';
+      num %= 1000000000;
+    }
+    if (num >= 1000000) {
+      result += convertHundreds(Math.floor(num / 1000000)) + 'Million ';
+      num %= 1000000;
+    }
+    if (num >= 1000) {
+      result += convertHundreds(Math.floor(num / 1000)) + 'Thousand ';
+      num %= 1000;
+    }
+    if (num > 0) {
+      result += convertHundreds(num);
+    }
+
+    return result.trim() + ' Naira Only';
+  };
+
+  const downloadAwardLetterPDF = () => {
+    if (!awardLetterData) return;
+
+    // Create HTML content for the award letter
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Award Letter - ${awardLetterData.tenderRef}</title>
+        <style>
+          body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            color: #000;
+            background: white;
+          }
+          .letterhead {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #15803d;
+            padding-bottom: 20px;
+          }
+          .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            background: url('https://cdn.builder.io/api/v1/image/assets%2Fb1307220e8f44b74a0fd54f108089b3e%2F3954c90e53b64c33bfbc92f500570bbb?format=webp&width=800') center/contain no-repeat;
+          }
+          .ministry-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #15803d;
+            margin-bottom: 5px;
+          }
+          .ministry-details {
+            font-size: 12px;
+            color: #666;
+          }
+          .date-ref {
+            text-align: right;
+            margin: 20px 0;
+            font-size: 14px;
+          }
+          .recipient {
+            margin: 20px 0;
+            font-size: 14px;
+          }
+          .subject {
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 20px 0;
+            font-size: 14px;
+          }
+          .content {
+            font-size: 14px;
+            text-align: justify;
+            margin: 20px 0;
+          }
+          .contract-details {
+            margin: 20px 0;
+            font-size: 14px;
+          }
+          .requirements {
+            margin: 20px 0;
+            font-size: 14px;
+          }
+          .signature {
+            margin-top: 40px;
+            font-size: 14px;
+          }
+          .cc {
+            margin-top: 30px;
+            font-size: 12px;
+          }
+          @media print {
+            body { margin: 0; padding: 20px; }
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="letterhead">
+          <div class="logo"></div>
+          <div class="ministry-name">KANO STATE GOVERNMENT<br>MINISTRY OF HEALTH</div>
+          <div class="ministry-details">
+            No [MinistryAddress], Kano State, Nigeria<br>
+            Tel: [PhoneNumber], Email: [EmailAddress]
+          </div>
+        </div>
+
+        <div class="date-ref">
+          <strong>Date:</strong> ${awardLetterData.awardDate}<br>
+          <strong>Ref No:</strong> ${awardLetterData.refNumber}
+        </div>
+
+        <div class="recipient">
+          <strong>TO:</strong> ${awardLetterData.vendorName}<br>
+          ${awardLetterData.vendorAddress.replace(/\n/g, '<br>')}
+        </div>
+
+        <div class="subject">
+          <strong>SUBJECT: AWARD OF CONTRACT – ${awardLetterData.tenderTitle}</strong>
+        </div>
+
+        <div class="content">
+          Following the conclusion of the competitive procurement process conducted in accordance
+          with the provisions of the Public Procurement Act 2007 and the Kano State Public
+          Procurement Guidelines, we are pleased to inform you that <strong>${awardLetterData.vendorName}</strong>
+          has been selected as the successful bidder for the above-mentioned project.
+        </div>
+
+        <div class="contract-details">
+          <strong>Contract Details:</strong><br><br>
+          <strong>Tender Reference:</strong> ${awardLetterData.tenderRef}<br>
+          <strong>Project Title:</strong> ${awardLetterData.tenderTitle}<br>
+          <strong>Contract Value:</strong> ${awardLetterData.contractValue} (${awardLetterData.contractValueWords})<br>
+          <strong>Contract Duration:</strong> ${awardLetterData.contractDuration} months<br>
+          <strong>Performance Bond:</strong> ${awardLetterData.performanceBond}% of contract value to be submitted within ${awardLetterData.performanceBondDue} days of receipt of this letter.<br>
+          <strong>Advance Payment:</strong> ${awardLetterData.advancePayment}% upon submission of an acceptable advance payment guarantee from a reputable bank.<br>
+          <strong>Warranty Period:</strong> ${awardLetterData.warrantyPeriod} months from the date of final acceptance.<br>
+          <strong>Delivery Schedule:</strong> ${awardLetterData.deliveryScheduleSummary}
+        </div>
+
+        <div class="requirements">
+          <strong>You are required to:</strong><br><br>
+          1. Confirm acceptance of this award within ${awardLetterData.acceptanceDays} days of receipt of this letter.<br>
+          2. Submit the required performance bond and any other documentation specified in the tender conditions.<br>
+          3. Report to the Procurement Department, Ministry of Health, Kano State to finalize contract signing.<br><br>
+
+          Failure to comply with the above requirements within the stipulated timeframe may result
+          in the withdrawal of this award and award of the contract to the next most responsive bidder.<br><br>
+
+          We look forward to your cooperation and timely execution of this project in line with the agreed terms.
+        </div>
+
+        <div class="signature">
+          Yours faithfully,<br><br><br>
+          _____________________________<br>
+          ${awardLetterData.ministerTitle}
+        </div>
+
+        <div class="cc">
+          <strong>Cc:</strong><br>
+          Director, Procurement Department<br>
+          Accountant General's Office<br>
+          Project File
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Create a new window and print
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+      }, 500);
+    }
+  };
+
   const filteredCompanies = companies.filter((company) => {
     const matchesSearch =
       company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
