@@ -3106,7 +3106,7 @@ export default function MinistryDashboard() {
           previousProjects: 18,
           completionRate: 89.7,
         },
-      ]
+      ],
     };
   };
 
@@ -4819,7 +4819,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         if (tenderBids.length === 0) {
                           // Use workspace-specific mock data if available
                           const workspaceBidderData = getWorkspaceBidderData();
-                          const workspaceBidders = workspaceBidderData[tender.id as keyof typeof workspaceBidderData];
+                          const workspaceBidders =
+                            workspaceBidderData[
+                              tender.id as keyof typeof workspaceBidderData
+                            ];
                           if (workspaceBidders) {
                             setBidders(workspaceBidders);
                           } else {
@@ -7549,7 +7552,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                 </span>
                               </td>
                               <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                                {new Date(bidder.submissionDate).toLocaleDateString()}
+                                {new Date(
+                                  bidder.submissionDate,
+                                ).toLocaleDateString()}
                               </td>
                             </tr>
                           ))}
@@ -7565,13 +7570,18 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         <div className="text-lg font-bold text-blue-600">
                           {bidders.length}
                         </div>
-                        <div className="text-sm text-gray-600">Total Participants</div>
+                        <div className="text-sm text-gray-600">
+                          Total Participants
+                        </div>
                       </div>
                     </div>
                     <div className="bg-white rounded-lg p-3 border border-gray-200">
                       <div className="text-center">
                         <div className="text-lg font-bold text-green-600">
-                          {bidders.filter((b) => b.status === "Qualified").length}
+                          {
+                            bidders.filter((b) => b.status === "Qualified")
+                              .length
+                          }
                         </div>
                         <div className="text-sm text-gray-600">Qualified</div>
                       </div>
@@ -7579,7 +7589,14 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     <div className="bg-white rounded-lg p-3 border border-gray-200">
                       <div className="text-center">
                         <div className="text-lg font-bold text-purple-600">
-                          {bidders.length > 0 ? Math.round(bidders.reduce((sum, b) => sum + b.totalScore, 0) / bidders.length) : 0}
+                          {bidders.length > 0
+                            ? Math.round(
+                                bidders.reduce(
+                                  (sum, b) => sum + b.totalScore,
+                                  0,
+                                ) / bidders.length,
+                              )
+                            : 0}
                         </div>
                         <div className="text-sm text-gray-600">Avg Score</div>
                       </div>
@@ -7587,7 +7604,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     <div className="bg-white rounded-lg p-3 border border-gray-200">
                       <div className="text-center">
                         <div className="text-lg font-bold text-orange-600">
-                          {bidders.length > 0 ? bidders.sort((a, b) => b.totalScore - a.totalScore)[0].companyName.split(' ')[0] : 'N/A'}
+                          {bidders.length > 0
+                            ? bidders
+                                .sort((a, b) => b.totalScore - a.totalScore)[0]
+                                .companyName.split(" ")[0]
+                            : "N/A"}
                         </div>
                         <div className="text-sm text-gray-600">Top Bidder</div>
                       </div>
@@ -7607,11 +7628,18 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       No Companies Found
                     </h3>
                     <p className="text-yellow-700">
-                      Either no companies have submitted bids for this tender yet, or the bidding period hasn't opened.
+                      Either no companies have submitted bids for this tender
+                      yet, or the bidding period hasn't opened.
                     </p>
                     <div className="mt-4 text-sm text-yellow-600">
-                      <p><strong>Tender Status:</strong> {selectedTenderForDetails.status}</p>
-                      <p><strong>Bid Count:</strong> {selectedTenderForDetails.bidsReceived}</p>
+                      <p>
+                        <strong>Tender Status:</strong>{" "}
+                        {selectedTenderForDetails.status}
+                      </p>
+                      <p>
+                        <strong>Bid Count:</strong>{" "}
+                        {selectedTenderForDetails.bidsReceived}
+                      </p>
                     </div>
                   </div>
                 </div>
