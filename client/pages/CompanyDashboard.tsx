@@ -489,9 +489,6 @@ export default function CompanyDashboard() {
       totalScore: null
     };
 
-    console.log("Company Dashboard - Submitting bid for tender:", selectedTender.id);
-    console.log("Bid data:", bidData);
-
     // Get existing bids from localStorage
     const existingBids = localStorage.getItem("tenderBids") || "[]";
     const bidsArray = JSON.parse(existingBids);
