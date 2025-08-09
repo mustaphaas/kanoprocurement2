@@ -2215,7 +2215,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-004",
           companyName: "Emirate Construction Co",
-          bidAmount: "���15,600,000,000",
+          bidAmount: "₦15,600,000,000",
           technicalScore: 82,
           financialScore: 80,
           totalScore: 81,
@@ -4393,7 +4393,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Procurement Method
               </label>
-              <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+              <select
+                value={newTender.procurementMethod}
+                onChange={(e) => setNewTender(prev => ({ ...prev, procurementMethod: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
                 <option value="Open Tender">Open Tender</option>
                 <option value="Selective Tender">Selective Tender</option>
                 <option value="Direct Procurement">Direct Procurement</option>
@@ -4405,6 +4409,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="date"
+                value={newTender.publishDate}
+                onChange={(e) => setNewTender(prev => ({ ...prev, publishDate: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
@@ -4414,6 +4420,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="date"
+                value={newTender.closeDate}
+                onChange={(e) => setNewTender(prev => ({ ...prev, closeDate: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
@@ -4434,17 +4442,24 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <input
                 type="email"
+                value={newTender.contactEmail || ministryInfo.contactEmail}
+                onChange={(e) => setNewTender(prev => ({ ...prev, contactEmail: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                value={ministryInfo.contactEmail}
               />
             </div>
           </div>
 
           <div className="mt-3 flex justify-end space-x-3">
-            <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+            <button
+              onClick={() => handleSubmitTender(true)}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
               Save as Draft
             </button>
-            <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+            <button
+              onClick={() => handleSubmitTender(false)}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+            >
               Publish Tender
             </button>
           </div>
