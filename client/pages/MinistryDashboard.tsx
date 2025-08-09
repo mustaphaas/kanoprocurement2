@@ -922,7 +922,7 @@ export default function MinistryDashboard() {
               description:
                 "Complete IT infrastructure upgrade for health facilities",
               category: "Information Technology",
-              estimatedValue: "₦950,000,000",
+              estimatedValue: "���950,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1101,7 +1101,7 @@ export default function MinistryDashboard() {
       {
         id: "CON-MOH-003",
         tenderId: "MOH-2024-003",
-        contractorName: "Northern Healthcare Solutions",
+        contractorName: "Golden Gates Healthcare",
         projectTitle: "Medical Laboratory Equipment",
         contractValue: "₦650,000,000",
         startDate: "2024-02-15",
