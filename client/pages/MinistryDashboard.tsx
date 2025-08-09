@@ -1512,6 +1512,174 @@ export default function MinistryDashboard() {
     alert('Evaluation finalized successfully! Tender is now ready for award.');
   };
 
+  // Post-award workflow functions
+  const handleNotifySuccessfulVendor = () => {
+    if (!awardedTenderData) return;
+
+    // Simulate notification to successful vendor
+    const notification = {
+      id: `NOTIF-${Date.now()}`,
+      type: 'success',
+      recipientId: awardedTenderData.selectedBidder.id,
+      recipientName: awardedTenderData.selectedBidder.companyName,
+      subject: `Congratulations! Contract Awarded - ${awardedTenderData.tender.title}`,
+      message: `We are pleased to inform you that your company has been selected for the contract "${awardedTenderData.tender.title}".
+
+Next Steps:
+1. Contract signing scheduled within 7 days
+2. Performance bond submission required
+3. Project onboarding meeting will be scheduled
+4. Compliance documentation review
+
+Award Details:
+- Contract Value: ${awardedTenderData.awardDetails.awardValue}
+- Project Duration: ${awardedTenderData.awardDetails.contractDuration} months
+- Performance Bond: ${awardedTenderData.awardDetails.performanceBond}%
+
+Please contact our procurement office for further details.`,
+      timestamp: new Date().toISOString(),
+      status: 'sent'
+    };
+
+    setPostAwardSteps(prev => ({ ...prev, notifySuccessful: true }));
+    alert(`Success notification sent to ${awardedTenderData.selectedBidder.companyName}`);
+  };
+
+  const handleNotifyUnsuccessfulVendors = () => {
+    if (!awardedTenderData) return;
+
+    // Simulate notifications to unsuccessful vendors
+    awardedTenderData.unsuccessfulBidders.forEach((bidder: any) => {
+      const notification = {
+        id: `NOTIF-${Date.now()}-${bidder.id}`,
+        type: 'rejection',
+        recipientId: bidder.id,
+        recipientName: bidder.companyName,
+        subject: `Tender Result - ${awardedTenderData.tender.title}`,
+        message: `Thank you for your participation in the tender "${awardedTenderData.tender.title}".
+
+After careful evaluation by our committee, we regret to inform you that your proposal was not selected for this project.
+
+Feedback Summary:
+- Technical Score: ${bidder.technicalScore}%
+- Financial Score: ${bidder.financialScore}%
+- Overall Score: ${bidder.totalScore}%
+
+We encourage you to participate in future tender opportunities. Your proposal showed merit and we appreciate your interest in working with the Kano State Government.
+
+For detailed feedback, please contact our procurement office.`,
+        timestamp: new Date().toISOString(),
+        status: 'sent'
+      };
+    });
+
+    setPostAwardSteps(prev => ({ ...prev, notifyUnsuccessful: true }));
+    alert(`Rejection notifications sent to ${awardedTenderData.unsuccessfulBidders.length} unsuccessful vendors`);
+  };
+
+  const handlePublishOCDS = () => {
+    if (!awardedTenderData) return;
+
+    // Simulate OCDS publication
+    const ocdsData = {
+      version: "1.1",
+      publishedDate: new Date().toISOString(),
+      publisher: {
+        name: "Kano State Government",
+        scheme: "NG-STATE",
+        uid: "NG-KN",
+        uri: "https://kanostate.gov.ng"
+      },
+      releases: [{
+        ocid: `ocds-kn-${awardedTenderData.tender.id}`,
+        id: `${awardedTenderData.tender.id}-award-${Date.now()}`,
+        date: new Date().toISOString(),
+        tag: ["award"],
+        initiationType: "tender",
+        parties: [
+          {
+            name: "Kano State Ministry of Health",
+            id: "MOH-KN",
+            roles: ["buyer"]
+          },
+          {
+            name: awardedTenderData.selectedBidder.companyName,
+            id: awardedTenderData.selectedBidder.id,
+            roles: ["supplier"]
+          }
+        ],
+        tender: {
+          id: awardedTenderData.tender.id,
+          title: awardedTenderData.tender.title,
+          description: awardedTenderData.tender.description,
+          status: "complete",
+          value: {
+            amount: parseFloat(awardedTenderData.awardDetails.awardValue.replace(/[₦,]/g, '')),
+            currency: "NGN"
+          }
+        },
+        awards: [{
+          id: `award-${awardedTenderData.tender.id}`,
+          title: `Award for ${awardedTenderData.tender.title}`,
+          description: awardedTenderData.awardDetails.awardJustification,
+          status: "active",
+          date: awardedTenderData.tender.awardDate,
+          value: {
+            amount: parseFloat(awardedTenderData.awardDetails.awardValue.replace(/[₦,]/g, '')),
+            currency: "NGN"
+          },
+          suppliers: [{
+            name: awardedTenderData.selectedBidder.companyName,
+            id: awardedTenderData.selectedBidder.id
+          }]
+        }]
+      }]
+    };
+
+    setPostAwardSteps(prev => ({ ...prev, publishOCDS: true }));
+    alert('Award published successfully on OCDS transparency portal');
+  };
+
+  const handleCreateContract = () => {
+    if (!awardedTenderData) return;
+
+    // Create contract entry
+    const newContract = {
+      id: `CON-${awardedTenderData.tender.id}`,
+      tenderId: awardedTenderData.tender.id,
+      contractorName: awardedTenderData.selectedBidder.companyName,
+      projectTitle: awardedTenderData.tender.title,
+      contractValue: awardedTenderData.awardDetails.awardValue,
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(Date.now() + (parseInt(awardedTenderData.awardDetails.contractDuration || '12') * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+      status: "Active",
+      performanceBond: awardedTenderData.awardDetails.performanceBond,
+      warrantyPeriod: awardedTenderData.awardDetails.warrantyPeriod,
+      deliverySchedule: awardedTenderData.awardDetails.deliverySchedule,
+      specialConditions: awardedTenderData.awardDetails.specialConditions,
+      createdDate: new Date().toISOString().split('T')[0],
+      milestones: [],
+      payments: [],
+      disputes: []
+    };
+
+    // Add to contracts (you would typically update the contracts state here)
+    setPostAwardSteps(prev => ({ ...prev, createContract: true }));
+    alert('Contract created successfully in contract management system');
+  };
+
+  const completePostAwardWorkflow = () => {
+    setShowPostAwardWorkflow(false);
+    setAwardedTenderData(null);
+    setPostAwardSteps({
+      notifySuccessful: false,
+      notifyUnsuccessful: false,
+      publishOCDS: false,
+      createContract: false
+    });
+    alert('Post-award workflow completed successfully!');
+  };
+
   const filteredCompanies = companies.filter((company) => {
     const matchesSearch =
       company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -5807,7 +5975,7 @@ export default function MinistryDashboard() {
                       <li>��� 90% faster processing</li>
                       <li>• Reduced human errors</li>
                       <li>• Real-time notifications</li>
-                      <li>• Automatic compliance checks</li>
+                      <li>��� Automatic compliance checks</li>
                     </ul>
                   </div>
                 </div>
