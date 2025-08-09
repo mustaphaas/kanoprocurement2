@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
+import MDAUserForm from "@/components/MDAUserForm";
 import {
   Building2,
   Users,
@@ -71,7 +73,8 @@ type CurrentView =
   | "tenders"
   | "contracts"
   | "reports"
-  | "noc";
+  | "noc"
+  | "users";
 
 type TenderSubView =
   | "list"
@@ -295,6 +298,19 @@ export default function MinistryDashboard() {
   const [selectedContract, setSelectedContract] = useState<Contract | null>(
     null,
   );
+  const [mdaUsers, setMDAUsers] = useState<MDAUser[]>([]);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<MDAUser | null>(null);
+  const [userFormMode, setUserFormMode] = useState<"create" | "edit">("create");
+  const [newNOCRequest, setNewNOCRequest] = useState({
+    projectTitle: "",
+    projectValue: "",
+    contractorName: "",
+    expectedDuration: "",
+    projectDescription: "",
+    justification: "",
+  });
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<BidEvaluation | null>(null);
   const [showContractModal, setShowContractModal] = useState(false);
@@ -1134,6 +1150,63 @@ export default function MinistryDashboard() {
     setContracts(mockContracts);
     setNOCRequests(mockNOCRequests);
     setEvaluationCommittees(mockEvaluationCommittees);
+
+    // Mock MDA Users
+    const mockMDAUsers: MDAUser[] = [
+      {
+        id: "mdauser-001",
+        mdaId: "mda-001",
+        userId: "usr-001",
+        role: "procurement_officer",
+        department: "Procurement Department",
+        permissions: {
+          canCreateTenders: true,
+          canEvaluateBids: true,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          accessLevel: "write",
+        },
+        assignedBy: "admin-001",
+        assignedAt: new Date("2024-01-05"),
+        isActive: true,
+      },
+      {
+        id: "mdauser-002",
+        mdaId: "mda-001",
+        userId: "usr-002",
+        role: "accountant",
+        department: "Finance Department",
+        permissions: {
+          canCreateTenders: false,
+          canEvaluateBids: false,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          accessLevel: "read",
+        },
+        assignedBy: "admin-001",
+        assignedAt: new Date("2024-01-06"),
+        isActive: true,
+      },
+      {
+        id: "mdauser-003",
+        mdaId: "mda-001",
+        userId: "usr-003",
+        role: "evaluator",
+        department: "Technical Evaluation",
+        permissions: {
+          canCreateTenders: false,
+          canEvaluateBids: true,
+          canViewFinancials: false,
+          canGenerateReports: true,
+          accessLevel: "read",
+        },
+        assignedBy: "admin-001",
+        assignedAt: new Date("2024-01-07"),
+        isActive: true,
+      },
+    ];
+
+    setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
     setVendorCommunications(mockVendorCommunications);
     setScheduledPublications(mockScheduledPublications);
@@ -1370,6 +1443,108 @@ export default function MinistryDashboard() {
 
   const handleLogout = () => {
     navigate("/");
+  };
+
+  // User Management Functions
+  const handleCreateUser = () => {
+    setUserFormMode("create");
+    setSelectedUser(null);
+    setShowCreateUserModal(true);
+  };
+
+  const handleEditUser = (user: MDAUser) => {
+    setUserFormMode("edit");
+    setSelectedUser(user);
+    setShowEditUserModal(true);
+  };
+
+  const handleDeleteUser = (user: MDAUser) => {
+    if (
+      window.confirm(
+        `Are you sure you want to remove ${user.role} from ${user.department}?`,
+      )
+    ) {
+      setMDAUsers((prev) => prev.filter((u) => u.id !== user.id));
+      alert("User removed successfully!");
+    }
+  };
+
+  const handleUserSubmit = async (data: CreateMDAUserRequest) => {
+    try {
+      if (userFormMode === "create") {
+        const newUser: MDAUser = {
+          id: `user-${Date.now()}`,
+          mdaId: "mda-001", // Current ministry MDA ID
+          userId: `usr-${Date.now()}`,
+          role: data.role,
+          department: data.department,
+          permissions: data.permissions,
+          assignedBy: "admin-001",
+          assignedAt: new Date(),
+          isActive: true,
+        };
+        setMDAUsers((prev) => [...prev, newUser]);
+        alert("User created successfully!");
+      } else if (selectedUser) {
+        const updatedUser: MDAUser = {
+          ...selectedUser,
+          role: data.role,
+          department: data.department,
+          permissions: data.permissions,
+        };
+        setMDAUsers((prev) =>
+          prev.map((u) => (u.id === selectedUser.id ? updatedUser : u)),
+        );
+        alert("User updated successfully!");
+      }
+      setShowCreateUserModal(false);
+      setShowEditUserModal(false);
+      setSelectedUser(null);
+    } catch (error) {
+      console.error("Error submitting user:", error);
+      alert("Error saving user. Please try again.");
+    }
+  };
+
+  const toggleUserStatus = (user: MDAUser) => {
+    setMDAUsers((prev) =>
+      prev.map((u) => (u.id === user.id ? { ...u, isActive: !u.isActive } : u)),
+    );
+    alert(`User has been ${user.isActive ? "deactivated" : "activated"}!`);
+  };
+
+  // NOC Request Functions
+  const handleSubmitNOCRequest = () => {
+    if (
+      !newNOCRequest.projectTitle ||
+      !newNOCRequest.contractorName ||
+      !newNOCRequest.projectValue
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const nocRequest: NOCRequest = {
+      id: `NOC-${Date.now()}`,
+      projectTitle: newNOCRequest.projectTitle,
+      requestDate: new Date().toISOString().split("T")[0],
+      status: "Pending",
+      projectValue: newNOCRequest.projectValue,
+      contractorName: newNOCRequest.contractorName,
+      expectedDuration: newNOCRequest.expectedDuration,
+    };
+
+    setNOCRequests((prev) => [nocRequest, ...prev]);
+    setNewNOCRequest({
+      projectTitle: "",
+      projectValue: "",
+      contractorName: "",
+      expectedDuration: "",
+      projectDescription: "",
+      justification: "",
+    });
+    setShowNOCRequest(false);
+    alert("NOC Request submitted successfully!");
   };
 
   // Helper functions for evaluation scoring
@@ -2252,6 +2427,59 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </p>
             </div>
             <Award className="h-8 w-8 text-purple-600" />
+          </div>
+        </div>
+      </div>
+
+      {/* Contract Statistics */}
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          Contract Overview
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <FileCheck className="h-8 w-8 text-blue-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">
+                  Total Contracts
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {contracts.length}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <Activity className="h-8 w-8 text-green-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Active</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {contracts.filter((c) => c.status === "Active").length}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <CheckCircle className="h-8 w-8 text-purple-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Completed</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {contracts.filter((c) => c.status === "Completed").length}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <DollarSign className="h-8 w-8 text-green-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Total Value</p>
+                <p className="text-2xl font-bold text-gray-900">₦2.7B</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -5005,7 +5233,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  📋 Tender Details - {selectedTenderForDetails.title}
+                  ��� Tender Details - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowTenderDetailsModal(false)}
@@ -6571,7 +6799,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           htmlFor="digitalSignature"
                           className="text-sm font-medium text-gray-900 cursor-pointer"
                         >
-                          🔐 Advanced Digital Signatures
+                          ��� Advanced Digital Signatures
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
                           Multi-party digital signatures with PKI encryption,
@@ -7330,6 +7558,209 @@ Blockchain Timestamp: ${Date.now()}
     </div>
   );
 
+  const renderUserManagement = () => (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            User Management
+          </h1>
+          <p className="text-gray-600">Manage ministry users and their roles</p>
+        </div>
+        <button
+          onClick={handleCreateUser}
+          className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add New User
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Users</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {mdaUsers.length}
+              </p>
+            </div>
+            <Users className="h-8 w-8 text-blue-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Active Users</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {mdaUsers.filter((u) => u.isActive).length}
+              </p>
+            </div>
+            <UserCheck className="h-8 w-8 text-green-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">
+                Procurement Officers
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {
+                  mdaUsers.filter((u) => u.role === "procurement_officer")
+                    .length
+                }
+              </p>
+            </div>
+            <Briefcase className="h-8 w-8 text-orange-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Accountants</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {mdaUsers.filter((u) => u.role === "accountant").length}
+              </p>
+            </div>
+            <Calculator className="h-8 w-8 text-purple-600" />
+          </div>
+        </div>
+      </div>
+
+      {/* Users List */}
+      <div className="bg-white rounded-lg shadow-sm border">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Ministry Users
+          </h2>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User Details
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Role & Department
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Permissions
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {mdaUsers.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {user.userId}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Added: {new Date(user.assignedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {user.role.replace("_", " ").toUpperCase()}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {user.department}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-xs space-y-1">
+                      {user.permissions.canCreateTenders && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1">
+                          Create Tenders
+                        </span>
+                      )}
+                      {user.permissions.canEvaluateBids && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 mr-1">
+                          Evaluate Bids
+                        </span>
+                      )}
+                      {user.permissions.canViewFinancials && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 mr-1">
+                          View Financials
+                        </span>
+                      )}
+                      {user.permissions.canGenerateReports && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mr-1">
+                          Generate Reports
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        user.isActive
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {user.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                    <button
+                      onClick={() => handleEditUser(user)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => toggleUserStatus(user)}
+                      className={`${
+                        user.isActive
+                          ? "text-red-600 hover:text-red-900"
+                          : "text-green-600 hover:text-green-900"
+                      }`}
+                    >
+                      {user.isActive ? "Deactivate" : "Activate"}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteUser(user)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {mdaUsers.length === 0 && (
+          <div className="text-center py-12">
+            <Users className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">
+              No users found
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Start by adding your first ministry user.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   const renderContent = () => {
     if (currentView === "overview") {
       return renderOverview();
@@ -7343,6 +7774,8 @@ Blockchain Timestamp: ${Date.now()}
       return renderReports();
     } else if (currentView === "noc") {
       return renderNOCRequests();
+    } else if (currentView === "users") {
+      return renderUserManagement();
     }
     return null;
   };
@@ -7365,78 +7798,8 @@ Blockchain Timestamp: ${Date.now()}
               </div>
             </div>
 
-            {/* Main Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <button
-                onClick={() => setCurrentView("overview")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "overview"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <BarChart3 className="h-4 w-4" />
-                <span>Overview</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("companies")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "companies"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <Users className="h-4 w-4" />
-                <span>Companies</span>
-              </button>
-              <button
-                onClick={() => {
-                  setCurrentView("tenders");
-                  setTenderSubView("list");
-                }}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "tenders"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <FileText className="h-4 w-4" />
-                <span>Tenders</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("contracts")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "contracts"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <FileCheck className="h-4 w-4" />
-                <span>Contracts</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("reports")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "reports"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <TrendingUp className="h-4 w-4" />
-                <span>Reports</span>
-              </button>
-              <button
-                onClick={() => setCurrentView("noc")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  currentView === "noc"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <Send className="h-4 w-4" />
-                <span>NOC Requests</span>
-              </button>
-            </nav>
+            {/* Empty space for better layout */}
+            <div className="flex-1"></div>
 
             <div className="flex items-center space-x-4">
               <Bell className="h-5 w-5 text-gray-600" />
@@ -7451,6 +7814,41 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
       </header>
+
+      {/* Main Navigation - Similar to Super User Dashboard */}
+      <nav className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-8 overflow-x-auto py-3">
+            {[
+              { key: "overview", label: "Overview", icon: BarChart3 },
+              { key: "companies", label: "Companies", icon: Building2 },
+              { key: "tenders", label: "Tenders", icon: FileText },
+              { key: "contracts", label: "Contracts", icon: FileCheck },
+              { key: "users", label: "User Management", icon: Users },
+              { key: "reports", label: "Reports", icon: TrendingUp },
+              { key: "noc", label: "NOC Requests", icon: Send },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => {
+                  setCurrentView(tab.key as CurrentView);
+                  if (tab.key === "tenders") {
+                    setTenderSubView("list");
+                  }
+                }}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
+                  currentView === tab.key
+                    ? "bg-green-50 text-green-600 border border-green-200"
+                    : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                }`}
+              >
+                <tab.icon className="h-4 w-4" />
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
 
       {/* Tender Sub-Navigation */}
       {currentView === "tenders" && (
@@ -8568,6 +8966,192 @@ Blockchain Timestamp: ${Date.now()}
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* NOC Request Modal */}
+      {showNOCRequest && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  New NOC Request
+                </h3>
+                <button
+                  onClick={() => setShowNOCRequest(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={newNOCRequest.projectTitle}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        projectTitle: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter project title"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Project Value *
+                    </label>
+                    <input
+                      type="text"
+                      value={newNOCRequest.projectValue}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          projectValue: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="e.g., ₦500,000,000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Expected Duration
+                    </label>
+                    <input
+                      type="text"
+                      value={newNOCRequest.expectedDuration}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          expectedDuration: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="e.g., 12 months"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Contractor Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={newNOCRequest.contractorName}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        contractorName: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter contractor/vendor name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Description
+                  </label>
+                  <textarea
+                    value={newNOCRequest.projectDescription}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        projectDescription: e.target.value,
+                      }))
+                    }
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Brief description of the project"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Justification
+                  </label>
+                  <textarea
+                    value={newNOCRequest.justification}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        justification: e.target.value,
+                      }))
+                    }
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Justification for NOC request"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowNOCRequest(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSubmitNOCRequest}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
+                  Submit Request
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create User Modal */}
+      {showCreateUserModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <MDAUserForm
+              mode="create"
+              mdaId="mda-001"
+              onSubmit={handleUserSubmit}
+              onCancel={() => setShowCreateUserModal(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditUserModal && selectedUser && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <MDAUserForm
+              mode="edit"
+              mdaId={selectedUser.mdaId}
+              initialData={{
+                email: selectedUser.userId,
+                displayName: selectedUser.userId,
+                role: selectedUser.role,
+                department: selectedUser.department,
+                permissions: selectedUser.permissions,
+                mdaId: selectedUser.mdaId,
+              }}
+              onSubmit={handleUserSubmit}
+              onCancel={() => {
+                setShowEditUserModal(false);
+                setSelectedUser(null);
+              }}
+            />
           </div>
         </div>
       )}
