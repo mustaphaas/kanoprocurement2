@@ -81,3 +81,32 @@ export interface CreateMDAAdminRequest {
   role: 'mda_admin' | 'mda_super_admin';
   permissions: MDAPermissions;
 }
+
+export interface MDAUser {
+  id: string;
+  mdaId: string;
+  userId: string;
+  role: 'procurement_officer' | 'evaluator' | 'accountant' | 'viewer';
+  department: string;
+  permissions: MDAUserPermissions;
+  assignedBy: string;
+  assignedAt: Date;
+  isActive: boolean;
+}
+
+export interface MDAUserPermissions {
+  canCreateTenders: boolean;
+  canEvaluateBids: boolean;
+  canViewFinancials: boolean;
+  canGenerateReports: boolean;
+  accessLevel: 'read' | 'write' | 'admin';
+}
+
+export interface CreateMDAUserRequest {
+  mdaId: string;
+  email: string;
+  displayName: string;
+  role: 'procurement_officer' | 'evaluator' | 'accountant' | 'viewer';
+  department: string;
+  permissions: MDAUserPermissions;
+}
