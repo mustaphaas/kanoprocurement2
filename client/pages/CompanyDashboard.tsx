@@ -3771,6 +3771,8 @@ export default function CompanyDashboard() {
                     <input
                       type="text"
                       placeholder="Enter your bid amount"
+                      value={bidFormData.bidAmount}
+                      onChange={(e) => setBidFormData(prev => ({ ...prev, bidAmount: e.target.value }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -3782,6 +3784,8 @@ export default function CompanyDashboard() {
                     <input
                       type="number"
                       placeholder="Enter completion timeline in days"
+                      value={bidFormData.timeline}
+                      onChange={(e) => setBidFormData(prev => ({ ...prev, timeline: e.target.value }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -3793,6 +3797,8 @@ export default function CompanyDashboard() {
                     <textarea
                       rows={4}
                       placeholder="Describe your technical approach and methodology"
+                      value={bidFormData.technicalProposal}
+                      onChange={(e) => setBidFormData(prev => ({ ...prev, technicalProposal: e.target.value }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -3804,6 +3810,8 @@ export default function CompanyDashboard() {
                     <textarea
                       rows={3}
                       placeholder="Provide breakdown of costs and payment terms"
+                      value={bidFormData.financialProposal}
+                      onChange={(e) => setBidFormData(prev => ({ ...prev, financialProposal: e.target.value }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
