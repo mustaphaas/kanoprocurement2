@@ -1410,7 +1410,7 @@ export default function MinistryDashboard() {
     const mockVendorWorkflowStatuses: VendorWorkflowStatus[] = [
       {
         companyId: "BID-001",
-        companyName: "MedSupply Nigeria Ltd",
+        companyName: "PrimeCare Medical Ltd",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1426,7 +1426,7 @@ export default function MinistryDashboard() {
       },
       {
         companyId: "BID-002",
-        companyName: "Sahel Medical Supplies",
+        companyName: "Falcon Diagnostics Ltd",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1442,7 +1442,7 @@ export default function MinistryDashboard() {
       },
       {
         companyId: "BID-003",
-        companyName: "Northern Healthcare Solutions",
+        companyName: "Golden Gates Healthcare",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1458,7 +1458,7 @@ export default function MinistryDashboard() {
       },
       {
         companyId: "BID-004",
-        companyName: "Apex Medical Equipment Ltd",
+        companyName: "Royal Medical Solutions",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1472,7 +1472,7 @@ export default function MinistryDashboard() {
       },
       {
         companyId: "BID-005",
-        companyName: "Unity Health Systems",
+        companyName: "Zenith Health Technologies",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
