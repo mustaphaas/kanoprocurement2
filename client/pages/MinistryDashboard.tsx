@@ -1607,23 +1607,96 @@ export default function MinistryDashboard() {
 
     const mockEvaluationCommittees = getMinistrySpecificEvaluationCommittees();
 
-    const mockBidEvaluations: BidEvaluation[] = [
-      {
-        id: "EVAL-001",
-        tenderId: "MOH-2024-002",
-        companyId: "COMP-001",
-        companyName: "Falcon Diagnostics Ltd",
-        evaluatorId: "MEM-001",
-        technicalScore: 85,
-        financialScore: 90,
-        complianceScore: 95,
-        totalScore: 90,
-        comments: "Excellent technical proposal with competitive pricing",
-        recommendations: "Recommended for award",
-        status: "Submitted",
-        submissionDate: "2024-02-15",
-      },
-    ];
+    const getMinistrySpecificBidEvaluations = (): BidEvaluation[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "EVAL-001",
+              tenderId: "MOWI-2024-001",
+              companyId: "COMP-001",
+              companyName: "Kano Construction Ltd",
+              evaluatorId: "MEM-001",
+              technicalScore: 90,
+              financialScore: 87,
+              complianceScore: 95,
+              totalScore: 91,
+              comments: "Excellent engineering expertise and competitive pricing for highway project",
+              recommendations: "Recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-12",
+            },
+            {
+              id: "EVAL-002",
+              tenderId: "MOWI-2024-002",
+              companyId: "COMP-002",
+              companyName: "Sahel Bridge Builders",
+              evaluatorId: "MEM-002",
+              technicalScore: 93,
+              financialScore: 89,
+              complianceScore: 92,
+              totalScore: 91.3,
+              comments: "Specialized bridge construction experience with strong technical approach",
+              recommendations: "Recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-15",
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "EVAL-001",
+              tenderId: "MOE-2024-001",
+              companyId: "COMP-001",
+              companyName: "EduTech Solutions Ltd",
+              evaluatorId: "MEM-001",
+              technicalScore: 95,
+              financialScore: 92,
+              complianceScore: 97,
+              totalScore: 94.7,
+              comments: "Outstanding educational technology proposal with innovative learning solutions",
+              recommendations: "Highly recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-10",
+            },
+            {
+              id: "EVAL-002",
+              tenderId: "MOE-2024-002",
+              companyId: "COMP-002",
+              companyName: "Kano School Furniture Ltd",
+              evaluatorId: "MEM-002",
+              technicalScore: 91,
+              financialScore: 89,
+              complianceScore: 94,
+              totalScore: 91.3,
+              comments: "Quality furniture design with cost-effective solutions for schools",
+              recommendations: "Recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-12",
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "EVAL-001",
+              tenderId: "MOH-2024-002",
+              companyId: "COMP-001",
+              companyName: "Falcon Diagnostics Ltd",
+              evaluatorId: "MEM-001",
+              technicalScore: 85,
+              financialScore: 90,
+              complianceScore: 95,
+              totalScore: 90,
+              comments: "Excellent technical proposal with competitive pricing",
+              recommendations: "Recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-15",
+            },
+          ];
+      }
+    };
+
+    const mockBidEvaluations = getMinistrySpecificBidEvaluations();
 
     const mockVendorCommunications: VendorCommunication[] = [
       {
@@ -1924,7 +1997,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "Kano Construction Ltd",
-          bidAmount: "₦14,800,000,000",
+          bidAmount: "��14,800,000,000",
           technicalScore: 90,
           financialScore: 87,
           totalScore: 88.5,
