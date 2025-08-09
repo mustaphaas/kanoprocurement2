@@ -1017,7 +1017,7 @@ The award letter has been:
 ✅ Digitally signed with government certificate
 ✅ Sent via secure email
 ✅ Logged in blockchain for integrity
-✅ Copied to procurement records`);
+��� Copied to procurement records`);
 
     setShowAwardLetterModal(false);
     setSelectedAwardTender(null);
@@ -1202,6 +1202,298 @@ The award letter has been:
     setSelectedCompany(null);
     setBlacklistReason("");
     alert("Company has been blacklisted successfully!");
+  };
+
+  // MDA Management functions
+  const handleCreateMDA = () => {
+    setShowCreateMDAModal(true);
+  };
+
+  const handleCreateMDAAdmin = (mda: MDA) => {
+    setSelectedMDA(mda);
+    setShowCreateAdminModal(true);
+  };
+
+  const filteredMDAs = mdas.filter(mda => {
+    const matchesSearch = mda.name.toLowerCase().includes(mdaSearchTerm.toLowerCase()) ||
+                         mda.description.toLowerCase().includes(mdaSearchTerm.toLowerCase());
+    const matchesType = mdaFilterType === 'all' || mda.type === mdaFilterType;
+    return matchesSearch && matchesType;
+  });
+
+  const renderMDAManagement = () => {
+    return (
+      <div className="space-y-8">
+        {/* MDA Management Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">MDA Management</h1>
+            <p className="text-gray-600">Create and manage Ministries, Departments, and Agencies</p>
+          </div>
+          <button
+            onClick={handleCreateMDA}
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Create MDA
+          </button>
+        </div>
+
+        {/* MDA Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total MDAs</p>
+                <p className="text-3xl font-bold text-blue-600">{mdas.length}</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Active Admins</p>
+                <p className="text-3xl font-bold text-green-600">{mdaAdmins.filter(a => a.isActive).length}</p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <Users className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Budget</p>
+                <p className="text-3xl font-bold text-purple-600">₦{(mdas.reduce((sum, mda) => sum + mda.settings.totalBudget, 0) / 1000000000).toFixed(1)}B</p>
+              </div>
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <DollarSign className="h-6 w-6 text-purple-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">System Efficiency</p>
+                <p className="text-3xl font-bold text-orange-600">92.5%</p>
+              </div>
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <BarChart3 className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* MDA Filters */}
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search MDAs..."
+                  value={mdaSearchTerm}
+                  onChange={(e) => setMDASearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+            <div className="sm:w-40">
+              <select
+                value={mdaFilterType}
+                onChange={(e) => setMDAFilterType(e.target.value as any)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All Types</option>
+                <option value="ministry">Ministries</option>
+                <option value="department">Departments</option>
+                <option value="agency">Agencies</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* MDA Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredMDAs.map((mda) => (
+            <div key={mda.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                      mda.type === 'ministry' ? 'bg-blue-100' :
+                      mda.type === 'department' ? 'bg-green-100' :
+                      'bg-purple-100'
+                    }`}>
+                      <Building2 className={`h-6 w-6 ${
+                        mda.type === 'ministry' ? 'text-blue-600' :
+                        mda.type === 'department' ? 'text-green-600' :
+                        'text-purple-600'
+                      }`} />
+                    </div>
+                    <div>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        mda.type === 'ministry' ? 'bg-blue-100 text-blue-800' :
+                        mda.type === 'department' ? 'bg-green-100 text-green-800' :
+                        'bg-purple-100 text-purple-800'
+                      }`}>
+                        {mda.type.charAt(0).toUpperCase() + mda.type.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    mda.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
+                    {mda.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                </div>
+
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{mda.name}</h3>
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2">{mda.description}</p>
+
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Head of MDA:</span>
+                    <span className="font-medium">{mda.headOfMDA}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Budget:</span>
+                    <span className="font-medium">₦{(mda.settings.totalBudget / 1000000000).toFixed(1)}B</span>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-between items-center pt-4 border-t border-gray-200">
+                  <div className="flex space-x-2">
+                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-md">
+                      <Eye className="h-4 w-4" />
+                    </button>
+                    <button className="p-2 text-green-600 hover:bg-green-50 rounded-md">
+                      <Edit className="h-4 w-4" />
+                    </button>
+                    <button className="p-2 text-red-600 hover:bg-red-50 rounded-md">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => handleCreateMDAAdmin(mda)}
+                    className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full hover:bg-blue-200"
+                  >
+                    Add Admin
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {filteredMDAs.length === 0 && (
+          <div className="text-center py-12">
+            <Building2 className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No MDAs found</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              {mdaSearchTerm || mdaFilterType !== 'all'
+                ? "Try adjusting your search or filter criteria."
+                : "Start by creating your first MDA."}
+            </p>
+          </div>
+        )}
+
+        {/* MDA Admins Table */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">MDA Administrators</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Administrator
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    MDA
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Max Approval
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {mdaAdmins.map((admin) => {
+                  const adminMDA = mdas.find(m => m.id === admin.mdaId);
+                  return (
+                    <tr key={admin.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                            <Users className="h-5 w-5 text-gray-600" />
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">Admin User</div>
+                            <div className="text-sm text-gray-500">{admin.userId}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{adminMDA?.name}</div>
+                        <div className="text-sm text-gray-500">{adminMDA?.type}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          admin.role === 'mda_super_admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {admin.role === 'mda_super_admin' ? 'Super Admin' : 'Admin'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ₦{(admin.permissions.maxApprovalAmount / 1000000).toFixed(0)}M
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          admin.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {admin.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button className="text-blue-600 hover:text-blue-900">
+                          <Eye className="h-4 w-4 inline mr-1" />
+                          View
+                        </button>
+                        <button className="text-green-600 hover:text-green-900">
+                          <Edit className="h-4 w-4 inline mr-1" />
+                          Edit
+                        </button>
+                        <button className="text-red-600 hover:text-red-900">
+                          <Trash2 className="h-4 w-4 inline mr-1" />
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderDashboardContent = () => {
