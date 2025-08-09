@@ -963,7 +963,7 @@ export default function MinistryDashboard() {
         case "ministry2": // Ministry of Works
           return [
             {
-              id: "MOWI-2024-001",
+              id: "KS-2024-015",
               title: "Kano-Kaduna Highway Rehabilitation",
               description:
                 "Complete rehabilitation of 85km Kano-Kaduna highway section",
