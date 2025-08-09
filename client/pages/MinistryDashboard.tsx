@@ -311,6 +311,11 @@ export default function MinistryDashboard() {
     expectedDuration: "",
     projectDescription: "",
     justification: "",
+    urgencyLevel: "Medium" as "Low" | "Medium" | "High" | "Critical",
+    category: "",
+    procuringEntity: "",
+    contactPerson: "",
+    contactEmail: "",
   });
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<BidEvaluation | null>(null);
@@ -429,7 +434,7 @@ export default function MinistryDashboard() {
   const [bidders, setBidders] = useState([
     {
       id: "BID-001",
-      companyName: "MedSupply Nigeria Ltd",
+      companyName: "PrimeCare Medical Ltd",
       bidAmount: "₦820,000,000",
       technicalScore: 92,
       financialScore: 88,
@@ -443,7 +448,7 @@ export default function MinistryDashboard() {
     },
     {
       id: "BID-002",
-      companyName: "Sahel Medical Supplies",
+      companyName: "Falcon Diagnostics Ltd",
       bidAmount: "₦850,000,000",
       technicalScore: 88,
       financialScore: 85,
@@ -457,7 +462,7 @@ export default function MinistryDashboard() {
     },
     {
       id: "BID-003",
-      companyName: "Northern Healthcare Solutions",
+      companyName: "Golden Gates Healthcare",
       bidAmount: "₦875,000,000",
       technicalScore: 85,
       financialScore: 82,
@@ -471,7 +476,7 @@ export default function MinistryDashboard() {
     },
     {
       id: "BID-004",
-      companyName: "Apex Medical Equipment Ltd",
+      companyName: "Royal Medical Solutions",
       bidAmount: "₦890,000,000",
       technicalScore: 82,
       financialScore: 79,
@@ -485,7 +490,7 @@ export default function MinistryDashboard() {
     },
     {
       id: "BID-005",
-      companyName: "Unity Health Systems",
+      companyName: "Zenith Health Technologies",
       bidAmount: "₦910,000,000",
       technicalScore: 80,
       financialScore: 76,
@@ -565,7 +570,233 @@ export default function MinistryDashboard() {
     return { ministryId, ministry: ministry || getMinistryById("ministry")! };
   };
 
+  // Set ministry-specific bidders and workspace
+  useEffect(() => {
+    const { ministryId } = getMinistryMockData();
+
+    // Set appropriate workspace for ministry
+    if (ministryId === "ministry2") {
+      setSelectedWorkspace("MOWI-2024-001");
+      // Set Ministry of Works bidders
+      setBidders([
+        {
+          id: "BID-001",
+          companyName: "Kano Construction Ltd",
+          bidAmount: "₦14,800,000,000",
+          technicalScore: 90,
+          financialScore: 87,
+          totalScore: 88.5,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "20 years",
+          certifications: ["ISO 9001", "COREN Certified", "NIQS Registered"],
+          previousProjects: 62,
+          completionRate: 97.8,
+        },
+        {
+          id: "BID-002",
+          companyName: "Sahel Bridge Builders",
+          bidAmount: "₦15,100,000,000",
+          technicalScore: 88,
+          financialScore: 85,
+          totalScore: 86.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "18 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 45,
+          completionRate: 96.2,
+        },
+        {
+          id: "BID-003",
+          companyName: "Northern Roads Nigeria",
+          bidAmount: "₦15,400,000,000",
+          technicalScore: 85,
+          financialScore: 83,
+          totalScore: 84,
+          status: "Qualified",
+          submissionDate: "2024-02-08",
+          experience: "15 years",
+          certifications: ["ISO 9001", "NBRRI Certified"],
+          previousProjects: 38,
+          completionRate: 95.5,
+        },
+        {
+          id: "BID-004",
+          companyName: "Emirate Construction Co",
+          bidAmount: "₦15,600,000,000",
+          technicalScore: 82,
+          financialScore: 80,
+          totalScore: 81,
+          status: "Qualified",
+          submissionDate: "2024-02-07",
+          experience: "12 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 29,
+          completionRate: 94.1,
+        },
+        {
+          id: "BID-005",
+          companyName: "Federal Infrastructure Ltd",
+          bidAmount: "₦15,800,000,000",
+          technicalScore: 80,
+          financialScore: 78,
+          totalScore: 79,
+          status: "Qualified",
+          submissionDate: "2024-02-06",
+          experience: "10 years",
+          certifications: ["ISO 9001", "NIQS Registered"],
+          previousProjects: 22,
+          completionRate: 92.7,
+        },
+      ]);
+    } else if (ministryId === "ministry3") {
+      setSelectedWorkspace("MOE-2024-001");
+      // Set Ministry of Education bidders
+      setBidders([
+        {
+          id: "BID-001",
+          companyName: "EduTech Solutions Ltd",
+          bidAmount: "₦2,000,000,000",
+          technicalScore: 95,
+          financialScore: 92,
+          totalScore: 93.5,
+          status: "Qualified",
+          submissionDate: "2024-02-12",
+          experience: "12 years",
+          certifications: ["ISO 9001", "Educational Technology Certified"],
+          previousProjects: 89,
+          completionRate: 99.1,
+        },
+        {
+          id: "BID-002",
+          companyName: "Kano School Furniture Ltd",
+          bidAmount: "₦2,050,000,000",
+          technicalScore: 91,
+          financialScore: 89,
+          totalScore: 90,
+          status: "Qualified",
+          submissionDate: "2024-02-11",
+          experience: "15 years",
+          certifications: ["ISO 9001", "Furniture Quality Certified"],
+          previousProjects: 156,
+          completionRate: 98.7,
+        },
+        {
+          id: "BID-003",
+          companyName: "Northern Educational Supplies",
+          bidAmount: "₦2,100,000,000",
+          technicalScore: 88,
+          financialScore: 86,
+          totalScore: 87,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "10 years",
+          certifications: ["ISO 9001", "Educational Materials Certified"],
+          previousProjects: 67,
+          completionRate: 97.3,
+        },
+        {
+          id: "BID-004",
+          companyName: "Academic Furniture Nigeria",
+          bidAmount: "₦2,150,000,000",
+          technicalScore: 85,
+          financialScore: 84,
+          totalScore: 84.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "8 years",
+          certifications: ["ISO 9001", "School Equipment Certified"],
+          previousProjects: 43,
+          completionRate: 95.8,
+        },
+        {
+          id: "BID-005",
+          companyName: "Learning Resources Ltd",
+          bidAmount: "₦2,200,000,000",
+          technicalScore: 82,
+          financialScore: 81,
+          totalScore: 81.5,
+          status: "Under Review",
+          submissionDate: "2024-02-08",
+          experience: "6 years",
+          certifications: ["ISO 9001", "Educational Supplies Certified"],
+          previousProjects: 29,
+          completionRate: 94.2,
+        },
+      ]);
+    } else {
+      setSelectedWorkspace("MOH-2024-001");
+      // Keep Ministry of Health bidders (already set as default)
+    }
+  }, []);
+
   // Mock data initialization
+  // Sync NOC requests with central system
+  const syncNOCUpdates = () => {
+    const { ministry } = getMinistryMockData();
+    const centralNOCs = localStorage.getItem("centralNOCRequests");
+    if (!centralNOCs) return;
+
+    const centralRequests = JSON.parse(centralNOCs);
+    const ministryRequests = centralRequests.filter(
+      (req: any) => req.ministryCode === ministry.code,
+    );
+
+    // Update local NOC requests with any status changes from central system
+    const updatedNOCs = nocRequests.map((localReq) => {
+      const centralReq = ministryRequests.find(
+        (cr: any) => cr.id === localReq.id,
+      );
+      if (centralReq && centralReq.status !== localReq.status) {
+        return {
+          ...localReq,
+          status: centralReq.status,
+          approvalDate: centralReq.approvalDate,
+          certificateNumber: centralReq.certificateNumber,
+        };
+      }
+      return localReq;
+    });
+
+    // Add any new requests that might have been approved/rejected
+    const newApprovedRejected = ministryRequests
+      .filter(
+        (cr: any) =>
+          (cr.status === "Approved" || cr.status === "Rejected") &&
+          !nocRequests.find((lr) => lr.id === cr.id),
+      )
+      .map((cr: any) => ({
+        id: cr.id,
+        projectTitle: cr.projectTitle,
+        requestDate: cr.requestDate,
+        status: cr.status,
+        projectValue: cr.projectValue,
+        contractorName: cr.contractorName,
+        expectedDuration: cr.expectedDuration,
+        approvalDate: cr.approvalDate,
+        certificateNumber: cr.certificateNumber,
+      }));
+
+    if (
+      newApprovedRejected.length > 0 ||
+      updatedNOCs.some((noc, index) => noc !== nocRequests[index])
+    ) {
+      const finalNOCs = [...newApprovedRejected, ...updatedNOCs];
+      setNOCRequests(finalNOCs);
+
+      // Update localStorage
+      const ministryNOCKey = `${ministry.code}_NOCRequests`;
+      localStorage.setItem(ministryNOCKey, JSON.stringify(finalNOCs));
+    }
+  };
+
+  // Sync every 10 seconds (in real app, this would be event-driven or websocket-based)
+  useEffect(() => {
+    const interval = setInterval(syncNOCUpdates, 10000);
+    return () => clearInterval(interval);
+  }, [nocRequests]);
+
   useEffect(() => {
     const { ministryId, ministry } = getMinistryMockData();
 
@@ -653,9 +884,9 @@ export default function MinistryDashboard() {
           return [
             {
               id: "1",
-              companyName: "MedSupply Nigeria Ltd",
+              companyName: "PrimeCare Medical Ltd",
               contactPerson: "Dr. Amina Hassan",
-              email: "amina@medsupply.ng",
+              email: "amina@primecare.ng",
               phone: "+234 803 123 4567",
               registrationDate: "2024-01-15",
               status: "Approved",
@@ -665,9 +896,9 @@ export default function MinistryDashboard() {
             },
             {
               id: "2",
-              companyName: "Sahel Medical Supplies",
-              contactPerson: "Fatima Yusuf",
-              email: "fatima@sahelmedical.com",
+              companyName: "Falcon Diagnostics Ltd",
+              contactPerson: "Dr. Fatima Yusuf",
+              email: "fatima@falcondiag.com",
               phone: "+234 805 987 6543",
               registrationDate: "2024-01-14",
               status: "Pending",
@@ -677,15 +908,39 @@ export default function MinistryDashboard() {
             },
             {
               id: "3",
-              companyName: "Northern Healthcare Solutions",
-              contactPerson: "Musa Ibrahim",
-              email: "musa@northernhealth.ng",
+              companyName: "Golden Gates Healthcare",
+              contactPerson: "Eng. Musa Ibrahim",
+              email: "musa@goldengates.ng",
               phone: "+234 807 555 1234",
               registrationDate: "2024-01-13",
               status: "Approved",
               businessType: "Healthcare Technology",
               address: "78 Tech Avenue, Kano",
               lastActivity: "2024-02-02",
+            },
+            {
+              id: "4",
+              companyName: "Royal Medical Solutions",
+              contactPerson: "Dr. Khadija Aliyu",
+              email: "khadija@royalmed.ng",
+              phone: "+234 814 567 8901",
+              registrationDate: "2024-01-12",
+              status: "Approved",
+              businessType: "Medical Supplies",
+              address: "92 Health Plaza, Kano",
+              lastActivity: "2024-02-03",
+            },
+            {
+              id: "5",
+              companyName: "Zenith Health Technologies",
+              contactPerson: "Mal. Ahmad Tijjani",
+              email: "ahmad@zenithhealth.ng",
+              phone: "+234 809 234 5678",
+              registrationDate: "2024-01-11",
+              status: "Pending",
+              businessType: "Health IT Solutions",
+              address: "15 Innovation Drive, Kano",
+              lastActivity: "2024-01-29",
             },
           ];
       }
@@ -933,7 +1188,7 @@ export default function MinistryDashboard() {
       {
         id: "CON-MOH-001",
         tenderId: "MOH-2024-001",
-        contractorName: "MedSupply Nigeria Ltd",
+        contractorName: "PrimeCare Medical Ltd",
         projectTitle: "Hospital Equipment Supply",
         contractValue: "₦850,000,000",
         startDate: "2024-02-01",
@@ -1000,7 +1255,7 @@ export default function MinistryDashboard() {
       {
         id: "CON-MOH-002",
         tenderId: "MOH-2024-002",
-        contractorName: "Sahel Medical Supplies",
+        contractorName: "Falcon Diagnostics Ltd",
         projectTitle: "Pharmaceutical Supply Contract",
         contractValue: "₦1,200,000,000",
         startDate: "2024-03-01",
@@ -1077,7 +1332,7 @@ export default function MinistryDashboard() {
       {
         id: "CON-MOH-003",
         tenderId: "MOH-2024-003",
-        contractorName: "Northern Healthcare Solutions",
+        contractorName: "Golden Gates Healthcare",
         projectTitle: "Medical Laboratory Equipment",
         contractValue: "₦650,000,000",
         startDate: "2024-02-15",
@@ -1143,107 +1398,489 @@ export default function MinistryDashboard() {
       },
     ];
 
-    const mockNOCRequests: NOCRequest[] = [
-      {
-        id: "NOC-MOH-001",
-        projectTitle: "Hospital Equipment Supply - Phase 1",
-        requestDate: "2024-01-25",
-        status: "Approved",
-        projectValue: "₦850,000,000",
-        contractorName: "MedSupply Nigeria Ltd",
-        expectedDuration: "6 months",
-        approvalDate: "2024-01-28",
-        certificateNumber: "KNS/MOP/PNO/2024/001",
-      },
-      {
-        id: "NOC-MOH-002",
-        projectTitle: "Medical Laboratory Equipment Installation",
-        requestDate: "2024-02-01",
-        status: "Pending",
-        projectValue: "₦650,000,000",
-        contractorName: "Northern Healthcare Solutions",
-        expectedDuration: "4 months",
-      },
-    ];
+    const getMinistrySpecificNOCRequests = (): NOCRequest[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "NOC-MOWI-001",
+              projectTitle: "Kano-Kaduna Highway Rehabilitation - Phase 1",
+              requestDate: "2024-01-20",
+              status: "Approved",
+              projectValue: "₦15,200,000,000",
+              contractorName: "Kano Construction Ltd",
+              expectedDuration: "18 months",
+              approvalDate: "2024-01-25",
+              certificateNumber: "KNS/MOWI/PNO/2024/001",
+            },
+            {
+              id: "NOC-MOWI-002",
+              projectTitle: "Bridge Construction Project - Phase 2",
+              requestDate: "2024-02-01",
+              status: "Pending",
+              projectValue: "₦8,500,000,000",
+              contractorName: "Sahel Bridge Builders",
+              expectedDuration: "12 months",
+            },
+            {
+              id: "NOC-MOWI-003",
+              projectTitle: "Government Secretariat Renovation",
+              requestDate: "2024-02-05",
+              status: "Approved",
+              projectValue: "₦6,800,000,000",
+              contractorName: "Northern Roads Nigeria",
+              expectedDuration: "10 months",
+              approvalDate: "2024-02-10",
+              certificateNumber: "KNS/MOWI/PNO/2024/002",
+            },
+            {
+              id: "NOC-MOWI-004",
+              projectTitle: "Urban Drainage System Development",
+              requestDate: "2024-02-08",
+              status: "Approved",
+              projectValue: "₦12,300,000,000",
+              contractorName: "Emirate Construction Co",
+              expectedDuration: "15 months",
+              approvalDate: "2024-02-12",
+              certificateNumber: "KNS/MOWI/PNO/2024/003",
+            },
+            {
+              id: "NOC-MOWI-005",
+              projectTitle: "Heavy Equipment Procurement & Installation",
+              requestDate: "2024-02-10",
+              status: "Pending",
+              projectValue: "₦4,750,000,000",
+              contractorName: "Federal Infrastructure Ltd",
+              expectedDuration: "8 months",
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "NOC-MOE-001",
+              projectTitle: "School Furniture Supply Program - Phase 1",
+              requestDate: "2024-01-18",
+              status: "Approved",
+              projectValue: "₦2,100,000,000",
+              contractorName: "EduTech Solutions Ltd",
+              expectedDuration: "8 months",
+              approvalDate: "2024-01-22",
+              certificateNumber: "KNS/MOE/PNO/2024/001",
+            },
+            {
+              id: "NOC-MOE-002",
+              projectTitle: "Digital Learning Platform Development",
+              requestDate: "2024-01-25",
+              status: "Pending",
+              projectValue: "₦1,800,000,000",
+              contractorName: "Kano School Furniture Ltd",
+              expectedDuration: "12 months",
+            },
+            {
+              id: "NOC-MOE-003",
+              projectTitle: "Science Laboratory Equipment Installation",
+              requestDate: "2024-02-02",
+              status: "Approved",
+              projectValue: "₦3,200,000,000",
+              contractorName: "Northern Educational Supplies",
+              expectedDuration: "6 months",
+              approvalDate: "2024-02-06",
+              certificateNumber: "KNS/MOE/PNO/2024/002",
+            },
+            {
+              id: "NOC-MOE-004",
+              projectTitle: "Library Books and Resources Distribution",
+              requestDate: "2024-02-05",
+              status: "Approved",
+              projectValue: "₦1,650,000,000",
+              contractorName: "Academic Furniture Nigeria",
+              expectedDuration: "5 months",
+              approvalDate: "2024-02-08",
+              certificateNumber: "KNS/MOE/PNO/2024/003",
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "NOC-MOH-001",
+              projectTitle: "Hospital Equipment Supply - Phase 1",
+              requestDate: "2024-01-25",
+              status: "Approved",
+              projectValue: "₦850,000,000",
+              contractorName: "PrimeCare Medical Ltd",
+              expectedDuration: "6 months",
+              approvalDate: "2024-01-28",
+              certificateNumber: "KNS/MOP/PNO/2024/001",
+            },
+            {
+              id: "NOC-MOH-002",
+              projectTitle: "Medical Laboratory Equipment Installation",
+              requestDate: "2024-02-01",
+              status: "Pending",
+              projectValue: "₦650,000,000",
+              contractorName: "Golden Gates Healthcare",
+              expectedDuration: "4 months",
+            },
+            {
+              id: "NOC-MOH-003",
+              projectTitle: "Pharmaceutical Supply Program",
+              requestDate: "2024-02-05",
+              status: "Approved",
+              projectValue: "₦1,200,000,000",
+              contractorName: "Falcon Diagnostics Ltd",
+              expectedDuration: "12 months",
+              approvalDate: "2024-02-08",
+              certificateNumber: "KNS/MOP/PNO/2024/002",
+            },
+          ];
+      }
+    };
 
-    const mockEvaluationCommittees: EvaluationCommittee[] = [
-      {
-        id: "EC-001",
-        name: "Medical Equipment Evaluation Committee",
-        chairperson: "Dr. Amina Hassan",
-        secretary: "Eng. Musa Ibrahim",
-        specialization: ["Medical Equipment", "Healthcare Technology"],
-        activeEvaluations: ["MOH-2024-002"],
-        status: "Active",
-        members: [
-          {
-            id: "MEM-001",
-            name: "Dr. Amina Hassan",
-            role: "Chairperson",
-            department: "Medical Services",
-            email: "amina.hassan@health.kano.gov.ng",
-            phone: "+234 803 123 4567",
-            expertise: ["Medical Equipment", "Quality Assurance"],
-            availability: "Available",
-          },
-          {
-            id: "MEM-002",
-            name: "Eng. Musa Ibrahim",
-            role: "Technical Expert",
-            department: "Engineering Services",
-            email: "musa.ibrahim@health.kano.gov.ng",
-            phone: "+234 805 987 6543",
-            expertise: ["Engineering", "Technical Evaluation"],
-            availability: "Available",
-          },
-          {
-            id: "MEM-003",
-            name: "Mal. Fatima Yusuf",
-            role: "Financial Analyst",
-            department: "Finance",
-            email: "fatima.yusuf@health.kano.gov.ng",
-            phone: "+234 807 555 1234",
-            expertise: ["Financial Analysis", "Cost Evaluation"],
-            availability: "Busy",
-          },
-        ],
-      },
-    ];
+    // Load ministry-specific NOC requests from localStorage or use mock data
+    const ministryNOCKey = `${ministry.code}_NOCRequests`;
+    const storedMinistryNOCs = localStorage.getItem(ministryNOCKey);
 
-    const mockBidEvaluations: BidEvaluation[] = [
-      {
-        id: "EVAL-001",
-        tenderId: "MOH-2024-002",
-        companyId: "COMP-001",
-        companyName: "Sahel Medical Supplies",
-        evaluatorId: "MEM-001",
-        technicalScore: 85,
-        financialScore: 90,
-        complianceScore: 95,
-        totalScore: 90,
-        comments: "Excellent technical proposal with competitive pricing",
-        recommendations: "Recommended for award",
-        status: "Submitted",
-        submissionDate: "2024-02-15",
-      },
-    ];
+    let mockNOCRequests;
+    if (storedMinistryNOCs) {
+      mockNOCRequests = JSON.parse(storedMinistryNOCs);
+    } else {
+      // Initialize with ministry-specific mock data and store it
+      mockNOCRequests = getMinistrySpecificNOCRequests();
+      localStorage.setItem(ministryNOCKey, JSON.stringify(mockNOCRequests));
+    }
 
-    const mockVendorCommunications: VendorCommunication[] = [
-      {
-        id: "COMM-001",
-        vendorId: "VEND-001",
-        vendorName: "MedSupply Nigeria Ltd",
-        subject: "Amendment to Tender MOH-2024-001",
-        message:
-          "Please note the amendment to delivery timeline in tender MOH-2024-001",
-        type: "Amendment",
-        channels: ["Email", "SMS"],
-        sentDate: "2024-02-10",
-        readStatus: true,
-        responseRequired: false,
-        priority: "Medium",
-      },
-    ];
+    const getMinistrySpecificEvaluationCommittees =
+      (): EvaluationCommittee[] => {
+        switch (ministryId) {
+          case "ministry2": // Ministry of Works
+            return [
+              {
+                id: "EC-001",
+                name: "Infrastructure & Construction Evaluation Committee",
+                chairperson: "Eng. Ibrahim Mohammed",
+                secretary: "Eng. Fatima Abubakar",
+                specialization: [
+                  "Construction",
+                  "Infrastructure Development",
+                  "Engineering",
+                ],
+                activeEvaluations: ["MOWI-2024-001", "MOWI-2024-002"],
+                status: "Active",
+                members: [
+                  {
+                    id: "MEM-001",
+                    name: "Eng. Ibrahim Mohammed",
+                    role: "Chairperson",
+                    department: "Construction Engineering",
+                    email: "ibrahim.mohammed@works.kano.gov.ng",
+                    phone: "+234 803 123 4567",
+                    expertise: ["Construction Management", "Quality Assurance"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-002",
+                    name: "Eng. Fatima Abubakar",
+                    role: "Technical Expert",
+                    department: "Civil Engineering",
+                    email: "fatima.abubakar@works.kano.gov.ng",
+                    phone: "+234 805 987 6543",
+                    expertise: ["Civil Engineering", "Project Evaluation"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-003",
+                    name: "Mal. Usman Kano",
+                    role: "Financial Analyst",
+                    department: "Finance & Procurement",
+                    email: "usman.kano@works.kano.gov.ng",
+                    phone: "+234 807 555 1234",
+                    expertise: ["Financial Analysis", "Cost Estimation"],
+                    availability: "Available",
+                  },
+                ],
+              },
+            ];
+          case "ministry3": // Ministry of Education
+            return [
+              {
+                id: "EC-001",
+                name: "Educational Resources Evaluation Committee",
+                chairperson: "Prof. Aisha Garba",
+                secretary: "Dr. Zainab Ibrahim",
+                specialization: [
+                  "Educational Technology",
+                  "School Infrastructure",
+                  "Learning Resources",
+                ],
+                activeEvaluations: ["MOE-2024-001", "MOE-2024-002"],
+                status: "Active",
+                members: [
+                  {
+                    id: "MEM-001",
+                    name: "Prof. Aisha Garba",
+                    role: "Chairperson",
+                    department: "Educational Planning",
+                    email: "aisha.garba@education.kano.gov.ng",
+                    phone: "+234 803 123 4567",
+                    expertise: [
+                      "Educational Technology",
+                      "Curriculum Development",
+                    ],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-002",
+                    name: "Dr. Zainab Ibrahim",
+                    role: "Technical Expert",
+                    department: "Educational Resources",
+                    email: "zainab.ibrahim@education.kano.gov.ng",
+                    phone: "+234 805 987 6543",
+                    expertise: ["Educational Materials", "Quality Assessment"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-003",
+                    name: "Mal. Bello Sani",
+                    role: "Financial Analyst",
+                    department: "Finance & Administration",
+                    email: "bello.sani@education.kano.gov.ng",
+                    phone: "+234 807 555 1234",
+                    expertise: ["Educational Finance", "Budget Analysis"],
+                    availability: "Busy",
+                  },
+                ],
+              },
+            ];
+          default: // Ministry of Health
+            return [
+              {
+                id: "EC-001",
+                name: "Medical Equipment Evaluation Committee",
+                chairperson: "Dr. Amina Hassan",
+                secretary: "Eng. Musa Ibrahim",
+                specialization: ["Medical Equipment", "Healthcare Technology"],
+                activeEvaluations: ["MOH-2024-002"],
+                status: "Active",
+                members: [
+                  {
+                    id: "MEM-001",
+                    name: "Dr. Amina Hassan",
+                    role: "Chairperson",
+                    department: "Medical Services",
+                    email: "amina.hassan@health.kano.gov.ng",
+                    phone: "+234 803 123 4567",
+                    expertise: ["Medical Equipment", "Quality Assurance"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-002",
+                    name: "Eng. Musa Ibrahim",
+                    role: "Technical Expert",
+                    department: "Engineering Services",
+                    email: "musa.ibrahim@health.kano.gov.ng",
+                    phone: "+234 805 987 6543",
+                    expertise: ["Engineering", "Technical Evaluation"],
+                    availability: "Available",
+                  },
+                  {
+                    id: "MEM-003",
+                    name: "Mal. Fatima Yusuf",
+                    role: "Financial Analyst",
+                    department: "Finance",
+                    email: "fatima.yusuf@health.kano.gov.ng",
+                    phone: "+234 807 555 1234",
+                    expertise: ["Financial Analysis", "Cost Evaluation"],
+                    availability: "Busy",
+                  },
+                ],
+              },
+            ];
+        }
+      };
+
+    const mockEvaluationCommittees = getMinistrySpecificEvaluationCommittees();
+
+    const getMinistrySpecificBidEvaluations = (): BidEvaluation[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "EVAL-001",
+              tenderId: "MOWI-2024-001",
+              companyId: "COMP-001",
+              companyName: "Kano Construction Ltd",
+              evaluatorId: "MEM-001",
+              technicalScore: 90,
+              financialScore: 87,
+              complianceScore: 95,
+              totalScore: 91,
+              comments:
+                "Excellent engineering expertise and competitive pricing for highway project",
+              recommendations: "Recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-12",
+            },
+            {
+              id: "EVAL-002",
+              tenderId: "MOWI-2024-002",
+              companyId: "COMP-002",
+              companyName: "Sahel Bridge Builders",
+              evaluatorId: "MEM-002",
+              technicalScore: 93,
+              financialScore: 89,
+              complianceScore: 92,
+              totalScore: 91.3,
+              comments:
+                "Specialized bridge construction experience with strong technical approach",
+              recommendations: "Recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-15",
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "EVAL-001",
+              tenderId: "MOE-2024-001",
+              companyId: "COMP-001",
+              companyName: "EduTech Solutions Ltd",
+              evaluatorId: "MEM-001",
+              technicalScore: 95,
+              financialScore: 92,
+              complianceScore: 97,
+              totalScore: 94.7,
+              comments:
+                "Outstanding educational technology proposal with innovative learning solutions",
+              recommendations: "Highly recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-10",
+            },
+            {
+              id: "EVAL-002",
+              tenderId: "MOE-2024-002",
+              companyId: "COMP-002",
+              companyName: "Kano School Furniture Ltd",
+              evaluatorId: "MEM-002",
+              technicalScore: 91,
+              financialScore: 89,
+              complianceScore: 94,
+              totalScore: 91.3,
+              comments:
+                "Quality furniture design with cost-effective solutions for schools",
+              recommendations: "Recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-12",
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "EVAL-001",
+              tenderId: "MOH-2024-002",
+              companyId: "COMP-001",
+              companyName: "Falcon Diagnostics Ltd",
+              evaluatorId: "MEM-001",
+              technicalScore: 85,
+              financialScore: 90,
+              complianceScore: 95,
+              totalScore: 90,
+              comments: "Excellent technical proposal with competitive pricing",
+              recommendations: "Recommended for award",
+              status: "Submitted",
+              submissionDate: "2024-02-15",
+            },
+          ];
+      }
+    };
+
+    const mockBidEvaluations = getMinistrySpecificBidEvaluations();
+
+    const getMinistrySpecificVendorCommunications =
+      (): VendorCommunication[] => {
+        switch (ministryId) {
+          case "ministry2": // Ministry of Works
+            return [
+              {
+                id: "COMM-001",
+                vendorId: "VEND-001",
+                vendorName: "Kano Construction Ltd",
+                subject: "Amendment to Tender MOWI-2024-001",
+                message:
+                  "Please note the amendment to construction timeline in tender MOWI-2024-001. Weather conditions extension approved.",
+                type: "Amendment",
+                channels: ["Email", "SMS"],
+                sentDate: "2024-02-10",
+                readStatus: true,
+                responseRequired: false,
+                priority: "Medium",
+              },
+              {
+                id: "COMM-002",
+                vendorId: "VEND-002",
+                vendorName: "Sahel Bridge Builders",
+                subject: "Clarification on Bridge Specifications",
+                message:
+                  "Technical clarification regarding bridge foundation requirements for MOWI-2024-002.",
+                type: "Clarification",
+                channels: ["Email", "Portal"],
+                sentDate: "2024-02-12",
+                readStatus: false,
+                responseRequired: true,
+                priority: "High",
+              },
+            ];
+          case "ministry3": // Ministry of Education
+            return [
+              {
+                id: "COMM-001",
+                vendorId: "VEND-001",
+                vendorName: "EduTech Solutions Ltd",
+                subject: "Amendment to Tender MOE-2024-002",
+                message:
+                  "Please note the amendment to digital platform specifications in tender MOE-2024-002",
+                type: "Amendment",
+                channels: ["Email", "SMS", "Portal"],
+                sentDate: "2024-02-08",
+                readStatus: true,
+                responseRequired: false,
+                priority: "Medium",
+              },
+              {
+                id: "COMM-002",
+                vendorId: "VEND-002",
+                vendorName: "Kano School Furniture Ltd",
+                subject: "Furniture Quality Standards Update",
+                message:
+                  "Updated quality standards and safety requirements for school furniture have been published.",
+                type: "General",
+                channels: ["Email", "Portal"],
+                sentDate: "2024-02-11",
+                readStatus: true,
+                responseRequired: false,
+                priority: "Low",
+              },
+            ];
+          default: // Ministry of Health
+            return [
+              {
+                id: "COMM-001",
+                vendorId: "VEND-001",
+                vendorName: "PrimeCare Medical Ltd",
+                subject: "Amendment to Tender MOH-2024-001",
+                message:
+                  "Please note the amendment to delivery timeline in tender MOH-2024-001",
+                type: "Amendment",
+                channels: ["Email", "SMS"],
+                sentDate: "2024-02-10",
+                readStatus: true,
+                responseRequired: false,
+                priority: "Medium",
+              },
+            ];
+        }
+      };
+
+    const mockVendorCommunications = getMinistrySpecificVendorCommunications();
 
     const mockScheduledPublications: ScheduledPublication[] = [
       {
@@ -1375,7 +2012,7 @@ export default function MinistryDashboard() {
     const mockVendorWorkflowStatuses: VendorWorkflowStatus[] = [
       {
         companyId: "BID-001",
-        companyName: "MedSupply Nigeria Ltd",
+        companyName: "PrimeCare Medical Ltd",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1391,7 +2028,7 @@ export default function MinistryDashboard() {
       },
       {
         companyId: "BID-002",
-        companyName: "Sahel Medical Supplies",
+        companyName: "Falcon Diagnostics Ltd",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1407,7 +2044,7 @@ export default function MinistryDashboard() {
       },
       {
         companyId: "BID-003",
-        companyName: "Northern Healthcare Solutions",
+        companyName: "Golden Gates Healthcare",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1423,7 +2060,7 @@ export default function MinistryDashboard() {
       },
       {
         companyId: "BID-004",
-        companyName: "Apex Medical Equipment Ltd",
+        companyName: "Royal Medical Solutions",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1437,7 +2074,7 @@ export default function MinistryDashboard() {
       },
       {
         companyId: "BID-005",
-        companyName: "Unity Health Systems",
+        companyName: "Zenith Health Technologies",
         registrationCompleted: true,
         loginVerificationCompleted: true,
         biddingCompleted: true,
@@ -1522,10 +2159,276 @@ export default function MinistryDashboard() {
   // Update bidders when workspace changes
   useEffect(() => {
     const bidderDataByWorkspace = {
+      // Ministry of Works Infrastructure tenders
+      "MOWI-2024-001": [
+        {
+          id: "BID-001",
+          companyName: "Kano Construction Ltd",
+          bidAmount: "₦14,800,000,000",
+          technicalScore: 90,
+          financialScore: 87,
+          totalScore: 88.5,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "20 years",
+          certifications: ["ISO 9001", "COREN Certified", "NIQS Registered"],
+          previousProjects: 62,
+          completionRate: 97.8,
+        },
+        {
+          id: "BID-002",
+          companyName: "Sahel Bridge Builders",
+          bidAmount: "₦15,100,000,000",
+          technicalScore: 88,
+          financialScore: 85,
+          totalScore: 86.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "18 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 45,
+          completionRate: 96.2,
+        },
+        {
+          id: "BID-003",
+          companyName: "Northern Roads Nigeria",
+          bidAmount: "₦15,400,000,000",
+          technicalScore: 85,
+          financialScore: 83,
+          totalScore: 84,
+          status: "Qualified",
+          submissionDate: "2024-02-08",
+          experience: "15 years",
+          certifications: ["ISO 9001", "NBRRI Certified"],
+          previousProjects: 38,
+          completionRate: 95.5,
+        },
+        {
+          id: "BID-004",
+          companyName: "Emirate Construction Co",
+          bidAmount: "₦15,600,000,000",
+          technicalScore: 82,
+          financialScore: 80,
+          totalScore: 81,
+          status: "Qualified",
+          submissionDate: "2024-02-07",
+          experience: "12 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 29,
+          completionRate: 94.1,
+        },
+        {
+          id: "BID-005",
+          companyName: "Federal Infrastructure Ltd",
+          bidAmount: "₦15,800,000,000",
+          technicalScore: 80,
+          financialScore: 78,
+          totalScore: 79,
+          status: "Qualified",
+          submissionDate: "2024-02-06",
+          experience: "10 years",
+          certifications: ["ISO 9001", "NIQS Registered"],
+          previousProjects: 22,
+          completionRate: 92.7,
+        },
+      ],
+      "MOWI-2024-002": [
+        {
+          id: "BID-006",
+          companyName: "Sahel Bridge Builders",
+          bidAmount: "₦8,200,000,000",
+          technicalScore: 93,
+          financialScore: 89,
+          totalScore: 91,
+          status: "Qualified",
+          submissionDate: "2024-02-15",
+          experience: "18 years",
+          certifications: ["Bridge Construction Certified", "COREN Certified"],
+          previousProjects: 28,
+          completionRate: 98.1,
+        },
+        {
+          id: "BID-007",
+          companyName: "Northern Roads Nigeria",
+          bidAmount: "₦8,400,000,000",
+          technicalScore: 90,
+          financialScore: 86,
+          totalScore: 88,
+          status: "Qualified",
+          submissionDate: "2024-02-14",
+          experience: "15 years",
+          certifications: ["ISO 9001", "Bridge Engineering Certified"],
+          previousProjects: 22,
+          completionRate: 96.8,
+        },
+        {
+          id: "BID-008",
+          companyName: "Kano Construction Ltd",
+          bidAmount: "₦8,600,000,000",
+          technicalScore: 87,
+          financialScore: 84,
+          totalScore: 85.5,
+          status: "Qualified",
+          submissionDate: "2024-02-13",
+          experience: "20 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 35,
+          completionRate: 95.2,
+        },
+        {
+          id: "BID-009",
+          companyName: "Emirate Construction Co",
+          bidAmount: "₦8,800,000,000",
+          technicalScore: 84,
+          financialScore: 81,
+          totalScore: 82.5,
+          status: "Under Review",
+          submissionDate: "2024-02-12",
+          experience: "12 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 18,
+          completionRate: 93.4,
+        },
+      ],
+      // Ministry of Education tenders
+      "MOE-2024-001": [
+        {
+          id: "BID-010",
+          companyName: "EduTech Solutions Ltd",
+          bidAmount: "₦2,000,000,000",
+          technicalScore: 95,
+          financialScore: 92,
+          totalScore: 93.5,
+          status: "Qualified",
+          submissionDate: "2024-02-12",
+          experience: "12 years",
+          certifications: ["ISO 9001", "Educational Technology Certified"],
+          previousProjects: 89,
+          completionRate: 99.1,
+        },
+        {
+          id: "BID-011",
+          companyName: "Kano School Furniture Ltd",
+          bidAmount: "₦2,050,000,000",
+          technicalScore: 91,
+          financialScore: 89,
+          totalScore: 90,
+          status: "Qualified",
+          submissionDate: "2024-02-11",
+          experience: "15 years",
+          certifications: ["ISO 9001", "Furniture Quality Certified"],
+          previousProjects: 156,
+          completionRate: 98.7,
+        },
+        {
+          id: "BID-012",
+          companyName: "Northern Educational Supplies",
+          bidAmount: "₦2,100,000,000",
+          technicalScore: 88,
+          financialScore: 86,
+          totalScore: 87,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "10 years",
+          certifications: ["ISO 9001", "Educational Materials Certified"],
+          previousProjects: 67,
+          completionRate: 97.3,
+        },
+        {
+          id: "BID-013",
+          companyName: "Academic Furniture Nigeria",
+          bidAmount: "₦2,150,000,000",
+          technicalScore: 85,
+          financialScore: 84,
+          totalScore: 84.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "8 years",
+          certifications: ["ISO 9001", "School Equipment Certified"],
+          previousProjects: 43,
+          completionRate: 95.8,
+        },
+        {
+          id: "BID-014",
+          companyName: "Learning Resources Ltd",
+          bidAmount: "₦2,200,000,000",
+          technicalScore: 82,
+          financialScore: 81,
+          totalScore: 81.5,
+          status: "Under Review",
+          submissionDate: "2024-02-08",
+          experience: "6 years",
+          certifications: ["ISO 9001", "Educational Supplies Certified"],
+          previousProjects: 29,
+          completionRate: 94.2,
+        },
+      ],
+      "MOE-2024-002": [
+        {
+          id: "BID-015",
+          companyName: "EduTech Solutions Ltd",
+          bidAmount: "₦1,750,000,000",
+          technicalScore: 96,
+          financialScore: 93,
+          totalScore: 94.5,
+          status: "Qualified",
+          submissionDate: "2024-02-15",
+          experience: "12 years",
+          certifications: [
+            "Digital Learning Certified",
+            "Software Development",
+          ],
+          previousProjects: 45,
+          completionRate: 99.3,
+        },
+        {
+          id: "BID-016",
+          companyName: "Digital Education Nigeria",
+          bidAmount: "₦1,800,000,000",
+          technicalScore: 92,
+          financialScore: 90,
+          totalScore: 91,
+          status: "Qualified",
+          submissionDate: "2024-02-14",
+          experience: "9 years",
+          certifications: ["Educational Technology", "ISO 27001"],
+          previousProjects: 32,
+          completionRate: 98.1,
+        },
+        {
+          id: "BID-017",
+          companyName: "Learning Tech Systems",
+          bidAmount: "₦1,850,000,000",
+          technicalScore: 89,
+          financialScore: 87,
+          totalScore: 88,
+          status: "Qualified",
+          submissionDate: "2024-02-13",
+          experience: "7 years",
+          certifications: ["Educational Software", "ISO 9001"],
+          previousProjects: 24,
+          completionRate: 96.7,
+        },
+        {
+          id: "BID-018",
+          companyName: "Smart School Solutions",
+          bidAmount: "₦1,900,000,000",
+          technicalScore: 86,
+          financialScore: 85,
+          totalScore: 85.5,
+          status: "Under Review",
+          submissionDate: "2024-02-12",
+          experience: "5 years",
+          certifications: ["Digital Platform Certified", "ISO 9001"],
+          previousProjects: 18,
+          completionRate: 95.2,
+        },
+      ],
+      // Ministry of Health tenders
       "MOH-2024-001": [
         {
           id: "BID-001",
-          companyName: "MedSupply Nigeria Ltd",
+          companyName: "PrimeCare Medical Ltd",
           bidAmount: "₦820,000,000",
           technicalScore: 92,
           financialScore: 88,
@@ -1539,7 +2442,7 @@ export default function MinistryDashboard() {
         },
         {
           id: "BID-002",
-          companyName: "Sahel Medical Supplies",
+          companyName: "Falcon Diagnostics Ltd",
           bidAmount: "₦850,000,000",
           technicalScore: 88,
           financialScore: 85,
@@ -1553,7 +2456,7 @@ export default function MinistryDashboard() {
         },
         {
           id: "BID-003",
-          companyName: "Northern Healthcare Solutions",
+          companyName: "Golden Gates Healthcare",
           bidAmount: "₦875,000,000",
           technicalScore: 85,
           financialScore: 82,
@@ -1567,7 +2470,7 @@ export default function MinistryDashboard() {
         },
         {
           id: "BID-004",
-          companyName: "Apex Medical Equipment Ltd",
+          companyName: "Royal Medical Solutions",
           bidAmount: "₦890,000,000",
           technicalScore: 82,
           financialScore: 79,
@@ -1581,7 +2484,7 @@ export default function MinistryDashboard() {
         },
         {
           id: "BID-005",
-          companyName: "Unity Health Systems",
+          companyName: "Zenith Health Technologies",
           bidAmount: "₦910,000,000",
           technicalScore: 80,
           financialScore: 76,
@@ -1825,14 +2728,51 @@ export default function MinistryDashboard() {
     if (
       !newNOCRequest.projectTitle ||
       !newNOCRequest.contractorName ||
-      !newNOCRequest.projectValue
+      !newNOCRequest.projectValue ||
+      !newNOCRequest.category ||
+      !newNOCRequest.procuringEntity ||
+      !newNOCRequest.contactPerson ||
+      !newNOCRequest.contactEmail
     ) {
       alert("Please fill in all required fields");
       return;
     }
 
-    const nocRequest: NOCRequest = {
-      id: `NOC-${Date.now()}`,
+    const { ministryId, ministry } = getMinistryMockData();
+    const requestId = `NOC-CENTRAL-${Date.now()}`;
+
+    // Create centralized NOC request
+    const centralNOCRequest = {
+      id: requestId,
+      projectTitle: newNOCRequest.projectTitle,
+      requestDate: new Date().toISOString().split("T")[0],
+      status: "Pending" as const,
+      projectValue: newNOCRequest.projectValue,
+      contractorName: newNOCRequest.contractorName,
+      expectedDuration: newNOCRequest.expectedDuration,
+      requestingMinistry: ministry.name,
+      ministryCode: ministry.code,
+      projectDescription: newNOCRequest.projectDescription,
+      justification: newNOCRequest.justification,
+      urgencyLevel: newNOCRequest.urgencyLevel,
+      category: newNOCRequest.category,
+      procuringEntity: newNOCRequest.procuringEntity,
+      contactPerson: newNOCRequest.contactPerson,
+      contactEmail: newNOCRequest.contactEmail,
+      attachments: [],
+    };
+
+    // Add to centralized NOC requests
+    const existingCentralNOCs = localStorage.getItem("centralNOCRequests");
+    const centralNOCs = existingCentralNOCs
+      ? JSON.parse(existingCentralNOCs)
+      : [];
+    centralNOCs.unshift(centralNOCRequest);
+    localStorage.setItem("centralNOCRequests", JSON.stringify(centralNOCs));
+
+    // Create local ministry NOC record (showing as pending)
+    const ministryNOCRequest: NOCRequest = {
+      id: requestId,
       projectTitle: newNOCRequest.projectTitle,
       requestDate: new Date().toISOString().split("T")[0],
       status: "Pending",
@@ -1841,7 +2781,18 @@ export default function MinistryDashboard() {
       expectedDuration: newNOCRequest.expectedDuration,
     };
 
-    setNOCRequests((prev) => [nocRequest, ...prev]);
+    setNOCRequests((prev) => [ministryNOCRequest, ...prev]);
+
+    // Also store in ministry-specific localStorage for persistence
+    const ministryNOCKey = `${ministry.code}_NOCRequests`;
+    const existingMinistryNOCs = localStorage.getItem(ministryNOCKey);
+    const ministryNOCs = existingMinistryNOCs
+      ? JSON.parse(existingMinistryNOCs)
+      : [];
+    ministryNOCs.unshift(ministryNOCRequest);
+    localStorage.setItem(ministryNOCKey, JSON.stringify(ministryNOCs));
+
+    // Reset form
     setNewNOCRequest({
       projectTitle: "",
       projectValue: "",
@@ -1849,9 +2800,16 @@ export default function MinistryDashboard() {
       expectedDuration: "",
       projectDescription: "",
       justification: "",
+      urgencyLevel: "Medium",
+      category: "",
+      procuringEntity: "",
+      contactPerson: "",
+      contactEmail: "",
     });
     setShowNOCRequest(false);
-    alert("NOC Request submitted successfully!");
+    alert(
+      "NOC Request submitted successfully! It will be reviewed by the superuser.",
+    );
   };
 
   // Helper functions for evaluation scoring
@@ -2691,7 +3649,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 Active Tenders
               </p>
               <p className="text-3xl font-bold text-blue-600">
-                {tenders.filter((t) => t.status === "Published").length}
+                {(() => {
+                  const { ministryId } = getMinistryMockData();
+                  if (ministryId === "ministry2") return 8;
+                  if (ministryId === "ministry3") return 6;
+                  return tenders.filter((t) => t.status === "Published").length;
+                })()}
               </p>
             </div>
             <FileText className="h-8 w-8 text-blue-600" />
@@ -2705,7 +3668,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 Approved Companies
               </p>
               <p className="text-3xl font-bold text-green-600">
-                {companies.filter((c) => c.status === "Approved").length}
+                {(() => {
+                  const { ministryId } = getMinistryMockData();
+                  if (ministryId === "ministry2") return 4;
+                  if (ministryId === "ministry3") return 3;
+                  return companies.filter((c) => c.status === "Approved")
+                    .length;
+                })()}
               </p>
             </div>
             <UserCheck className="h-8 w-8 text-green-600" />
@@ -2717,7 +3686,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div>
               <p className="text-sm font-medium text-gray-600">NOC Requests</p>
               <p className="text-3xl font-bold text-orange-600">
-                {nocRequests.length}
+                {(() => {
+                  const { ministryId } = getMinistryMockData();
+                  if (ministryId === "ministry2") return 5;
+                  if (ministryId === "ministry3") return 4;
+                  return nocRequests.length;
+                })()}
               </p>
             </div>
             <FileCheck className="h-8 w-8 text-orange-600" />
@@ -2729,7 +3703,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div>
               <p className="text-sm font-medium text-gray-600">Total Bids</p>
               <p className="text-3xl font-bold text-purple-600">
-                {tenders.reduce((sum, t) => sum + t.bidsReceived, 0)}
+                {(() => {
+                  const { ministryId } = getMinistryMockData();
+                  if (ministryId === "ministry2") return 42;
+                  if (ministryId === "ministry3") return 35;
+                  return tenders.reduce((sum, t) => sum + t.bidsReceived, 0);
+                })()}
               </p>
             </div>
             <Award className="h-8 w-8 text-purple-600" />
@@ -2783,7 +3762,14 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <DollarSign className="h-8 w-8 text-green-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Total Value</p>
-                <p className="text-2xl font-bold text-gray-900">₦2.7B</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {(() => {
+                    const { ministryId } = getMinistryMockData();
+                    if (ministryId === "ministry2") return "₦43.2B";
+                    if (ministryId === "ministry3") return "₦9.8B";
+                    return "₦2.7B";
+                  })()}
+                </p>
               </div>
             </div>
           </div>
@@ -9471,6 +10457,105 @@ Blockchain Timestamp: ${Date.now()}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Enter contractor/vendor name"
                   />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category *
+                    </label>
+                    <input
+                      type="text"
+                      value={newNOCRequest.category}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          category: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="e.g., Medical Equipment, Construction"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Urgency Level *
+                    </label>
+                    <select
+                      value={newNOCRequest.urgencyLevel}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          urgencyLevel: e.target.value as
+                            | "Low"
+                            | "Medium"
+                            | "High"
+                            | "Critical",
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                      <option value="Critical">Critical</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Procuring Entity *
+                  </label>
+                  <input
+                    type="text"
+                    value={newNOCRequest.procuringEntity}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        procuringEntity: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter procuring entity name"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contact Person *
+                    </label>
+                    <input
+                      type="text"
+                      value={newNOCRequest.contactPerson}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          contactPerson: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="Enter contact person name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contact Email *
+                    </label>
+                    <input
+                      type="email"
+                      value={newNOCRequest.contactEmail}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          contactEmail: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="Enter contact email"
+                    />
+                  </div>
                 </div>
 
                 <div>
