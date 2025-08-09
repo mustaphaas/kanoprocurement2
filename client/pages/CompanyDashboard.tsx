@@ -471,7 +471,7 @@ export default function CompanyDashboard() {
     setSelectedTender(null);
   };
 
-  const confirmSubmitBid = async () => {
+  const confirmSubmitBid = () => {
     if (!selectedTender || !user) return;
 
     // Validate form
@@ -484,21 +484,37 @@ export default function CompanyDashboard() {
     setSubmitLoading(true);
 
     try {
-      // Create bid data for Firestore
-      const bidData: Omit<TenderBid, 'id'> = {
+      // Create bid data for localStorage
+      const bidData = {
+        id: `BID-${Date.now()}`,
         tenderId: selectedTender.id,
-        companyId: companyData.name, // Using company name as ID for now
-        companyUserId: user.userId,
+        tenderTitle: selectedTender.title,
         companyName: companyData.name,
+        companyUserId: user.userId,
         bidAmount: bidFormData.bidAmount,
+        timeline: bidFormData.timeline,
+        technicalProposal: bidFormData.technicalProposal,
+        financialProposal: bidFormData.financialProposal,
         status: 'Submitted',
-        documents: [], // TODO: Implement file upload
-        comments: `Timeline: ${bidFormData.timeline} days\n\nTechnical Proposal:\n${bidFormData.technicalProposal}\n\nFinancial Proposal:\n${bidFormData.financialProposal}`,
-        submittedAt: new Date() as any // Will be overridden by serverTimestamp
+        submittedAt: new Date().toISOString(),
+        technicalScore: null,
+        financialScore: null,
+        totalScore: null,
+        experience: "5+ years", // Mock data for now
+        certifications: ["ISO 9001"], // Mock data for now
+        previousProjects: 15, // Mock data for now
+        completionRate: 95.0 // Mock data for now
       };
 
-      // Submit bid to Firestore
-      await bidService.create(bidData);
+      // Get existing bids from localStorage
+      const existingBids = localStorage.getItem("tenderBids") || "[]";
+      const bidsArray = JSON.parse(existingBids);
+
+      // Add new bid
+      bidsArray.push(bidData);
+
+      // Store back to localStorage
+      localStorage.setItem("tenderBids", JSON.stringify(bidsArray));
 
       // Update the tender to show bid has been submitted
       setTenders((prevTenders) =>
