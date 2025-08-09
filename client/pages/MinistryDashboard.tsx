@@ -10423,6 +10423,101 @@ Blockchain Timestamp: ${Date.now()}
                   />
                 </div>
 
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category *
+                    </label>
+                    <input
+                      type="text"
+                      value={newNOCRequest.category}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          category: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="e.g., Medical Equipment, Construction"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Urgency Level *
+                    </label>
+                    <select
+                      value={newNOCRequest.urgencyLevel}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          urgencyLevel: e.target.value as "Low" | "Medium" | "High" | "Critical",
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                      <option value="Critical">Critical</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Procuring Entity *
+                  </label>
+                  <input
+                    type="text"
+                    value={newNOCRequest.procuringEntity}
+                    onChange={(e) =>
+                      setNewNOCRequest((prev) => ({
+                        ...prev,
+                        procuringEntity: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter procuring entity name"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contact Person *
+                    </label>
+                    <input
+                      type="text"
+                      value={newNOCRequest.contactPerson}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          contactPerson: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="Enter contact person name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contact Email *
+                    </label>
+                    <input
+                      type="email"
+                      value={newNOCRequest.contactEmail}
+                      onChange={(e) =>
+                        setNewNOCRequest((prev) => ({
+                          ...prev,
+                          contactEmail: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="Enter contact email"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Project Description
