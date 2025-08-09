@@ -2828,7 +2828,7 @@ export default function MinistryDashboard() {
     // Add to local tenders
     setTenders((prev) => {
       const updatedTenders = [tender, ...prev];
-      // Save to localStorage
+      // Save to localStorage for ministry dashboard persistence
       localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
       return updatedTenders;
     });
