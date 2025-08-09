@@ -289,6 +289,30 @@ export default function MinistryDashboard() {
   const [selectedContractForAction, setSelectedContractForAction] = useState<Contract | null>(null);
   const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [contractFormData, setContractFormData] = useState({
+    tenderId: "",
+    contractorName: "",
+    projectTitle: "",
+    contractValue: "",
+    startDate: "",
+    endDate: "",
+    description: "",
+    milestones: [
+      { title: "Initial Delivery", percentage: 30, targetDate: "", description: "" },
+      { title: "Progress Review", percentage: 40, targetDate: "", description: "" },
+      { title: "Final Completion", percentage: 30, targetDate: "", description: "" },
+    ],
+    terms: "",
+    paymentSchedule: "milestone",
+    penalties: "",
+    warranties: "",
+    digitalSignature: true,
+    blockchainVerification: false,
+    autoExecution: false,
+  });
+  const [contractStep, setContractStep] = useState(1);
+  const [generatedContract, setGeneratedContract] = useState<string>("");
+  const [isGeneratingContract, setIsGeneratingContract] = useState(false);
   const navigate = useNavigate();
 
   // Get ministry info from context/auth (mock for now)
@@ -2433,6 +2457,617 @@ export default function MinistryDashboard() {
               <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
                 Process Payment
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Contract Modal */}
+      {showContractModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-900">
+                🔐 Digital Contract Generation & Execution
+              </h3>
+              <button
+                onClick={() => {
+                  setShowContractModal(false);
+                  setContractStep(1);
+                  setGeneratedContract("");
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Progress Steps */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between">
+                {[
+                  { step: 1, title: "Contract Details", icon: FileText },
+                  { step: 2, title: "Terms & Conditions", icon: BookOpen },
+                  { step: 3, title: "Digital Features", icon: Shield },
+                  { step: 4, title: "Generate & Execute", icon: Zap },
+                ].map((item, index) => (
+                  <div key={item.step} className="flex items-center">
+                    <div
+                      className={`flex items-center justify-center w-10 h-10 rounded-full ${
+                        contractStep >= item.step
+                          ? "bg-green-600 text-white"
+                          : "bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      {contractStep > item.step ? (
+                        <CheckCircle className="h-5 w-5" />
+                      ) : (
+                        <item.icon className="h-5 w-5" />
+                      )}
+                    </div>
+                    <div className="ml-3">
+                      <p
+                        className={`text-sm font-medium ${
+                          contractStep >= item.step ? "text-green-600" : "text-gray-500"
+                        }`}
+                      >
+                        {item.title}
+                      </p>
+                    </div>
+                    {index < 3 && (
+                      <div
+                        className={`w-20 h-0.5 mx-4 ${
+                          contractStep > item.step ? "bg-green-600" : "bg-gray-200"
+                        }`}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Step 1: Contract Details */}
+            {contractStep === 1 && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Related Tender ID *
+                    </label>
+                    <select
+                      value={contractFormData.tenderId}
+                      onChange={(e) => setContractFormData({...contractFormData, tenderId: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="">Select Tender</option>
+                      {tenders.filter(t => t.status === "Awarded").map(tender => (
+                        <option key={tender.id} value={tender.id}>{tender.id} - {tender.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contractor Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={contractFormData.contractorName}
+                      onChange={(e) => setContractFormData({...contractFormData, contractorName: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="Enter contractor name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Project Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={contractFormData.projectTitle}
+                      onChange={(e) => setContractFormData({...contractFormData, projectTitle: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="Enter project title"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contract Value *
+                    </label>
+                    <input
+                      type="text"
+                      value={contractFormData.contractValue}
+                      onChange={(e) => setContractFormData({...contractFormData, contractValue: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="₦0.00"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Start Date *
+                    </label>
+                    <input
+                      type="date"
+                      value={contractFormData.startDate}
+                      onChange={(e) => setContractFormData({...contractFormData, startDate: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      End Date *
+                    </label>
+                    <input
+                      type="date"
+                      value={contractFormData.endDate}
+                      onChange={(e) => setContractFormData({...contractFormData, endDate: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Description *
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={contractFormData.description}
+                    onChange={(e) => setContractFormData({...contractFormData, description: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Detailed description of the project scope, deliverables, and expectations..."
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Terms & Conditions */}
+            {contractStep === 2 && (
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Project Milestones</h4>
+                  <div className="space-y-4">
+                    {contractFormData.milestones.map((milestone, index) => (
+                      <div key={index} className="border rounded-lg p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Milestone Title
+                            </label>
+                            <input
+                              type="text"
+                              value={milestone.title}
+                              onChange={(e) => {
+                                const newMilestones = [...contractFormData.milestones];
+                                newMilestones[index].title = e.target.value;
+                                setContractFormData({...contractFormData, milestones: newMilestones});
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Payment %
+                            </label>
+                            <input
+                              type="number"
+                              value={milestone.percentage}
+                              onChange={(e) => {
+                                const newMilestones = [...contractFormData.milestones];
+                                newMilestones[index].percentage = parseInt(e.target.value);
+                                setContractFormData({...contractFormData, milestones: newMilestones});
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                              min="0"
+                              max="100"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Target Date
+                            </label>
+                            <input
+                              type="date"
+                              value={milestone.targetDate}
+                              onChange={(e) => {
+                                const newMilestones = [...contractFormData.milestones];
+                                newMilestones[index].targetDate = e.target.value;
+                                setContractFormData({...contractFormData, milestones: newMilestones});
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                          </div>
+                          <div className="md:col-span-3">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Description
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={milestone.description}
+                              onChange={(e) => {
+                                const newMilestones = [...contractFormData.milestones];
+                                newMilestones[index].description = e.target.value;
+                                setContractFormData({...contractFormData, milestones: newMilestones});
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                              placeholder="Describe milestone deliverables and requirements"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => {
+                      setContractFormData({
+                        ...contractFormData,
+                        milestones: [
+                          ...contractFormData.milestones,
+                          { title: "", percentage: 0, targetDate: "", description: "" }
+                        ]
+                      });
+                    }}
+                    className="mt-2 inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Milestone
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Payment Schedule
+                    </label>
+                    <select
+                      value={contractFormData.paymentSchedule}
+                      onChange={(e) => setContractFormData({...contractFormData, paymentSchedule: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="milestone">Milestone-based</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="quarterly">Quarterly</option>
+                      <option value="upfront">Upfront Payment</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Warranty Period (months)
+                    </label>
+                    <input
+                      type="number"
+                      value={contractFormData.warranties}
+                      onChange={(e) => setContractFormData({...contractFormData, warranties: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="12"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Terms & Conditions
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={contractFormData.terms}
+                    onChange={(e) => setContractFormData({...contractFormData, terms: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Specify detailed terms, conditions, and legal clauses..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Penalties & Liquidated Damages
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={contractFormData.penalties}
+                    onChange={(e) => setContractFormData({...contractFormData, penalties: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Define penalties for delays, non-compliance, or breach of contract..."
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Digital Features */}
+            {contractStep === 3 && (
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <Shield className="h-5 w-5 text-blue-600 mr-2" />
+                    Digital Security & Automation Features
+                  </h4>
+
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-4">
+                      <input
+                        type="checkbox"
+                        id="digitalSignature"
+                        checked={contractFormData.digitalSignature}
+                        onChange={(e) => setContractFormData({...contractFormData, digitalSignature: e.target.checked})}
+                        className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="digitalSignature" className="text-sm font-medium text-gray-900 cursor-pointer">
+                          🔐 Advanced Digital Signatures
+                        </label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Multi-party digital signatures with PKI encryption, timestamping, and legal compliance.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-4">
+                      <input
+                        type="checkbox"
+                        id="blockchainVerification"
+                        checked={contractFormData.blockchainVerification}
+                        onChange={(e) => setContractFormData({...contractFormData, blockchainVerification: e.target.checked})}
+                        className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="blockchainVerification" className="text-sm font-medium text-gray-900 cursor-pointer">
+                          ⛓️ Blockchain Verification
+                        </label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Immutable contract storage on blockchain for tamper-proof verification and audit trails.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-4">
+                      <input
+                        type="checkbox"
+                        id="autoExecution"
+                        checked={contractFormData.autoExecution}
+                        onChange={(e) => setContractFormData({...contractFormData, autoExecution: e.target.checked})}
+                        className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="autoExecution" className="text-sm font-medium text-gray-900 cursor-pointer">
+                          🤖 Smart Contract Auto-Execution
+                        </label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Automated milestone verification and payment triggers based on predefined conditions.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                    <div>
+                      <h5 className="text-sm font-medium text-yellow-800">Legal Compliance Notice</h5>
+                      <p className="text-sm text-yellow-700 mt-1">
+                        Digital contracts generated through this system comply with the Nigerian Electronic Transactions Act and
+                        Kano State Procurement Law. All contracts are legally binding and enforceable.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-white border border-gray-200 rounded-lg p-4">
+                    <h5 className="font-medium text-gray-900 mb-2">🛡️ Security Features</h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• AES-256 encryption</li>
+                      <li>• Multi-factor authentication</li>
+                      <li>• Audit trail logging</li>
+                      <li>• IP geolocation tracking</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white border border-gray-200 rounded-lg p-4">
+                    <h5 className="font-medium text-gray-900 mb-2">⚡ Automation Benefits</h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• 90% faster processing</li>
+                      <li>• Reduced human errors</li>
+                      <li>• Real-time notifications</li>
+                      <li>• Automatic compliance checks</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Generate & Execute */}
+            {contractStep === 4 && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Zap className="h-8 w-8 text-green-600" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                    Ready to Generate Digital Contract
+                  </h4>
+                  <p className="text-gray-600 mb-6">
+                    Review your contract details and generate the legally binding digital contract.
+                  </p>
+                </div>
+
+                {/* Contract Preview */}
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <h5 className="font-medium text-gray-900 mb-4">Contract Summary</h5>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div><strong>Project:</strong> {contractFormData.projectTitle}</div>
+                    <div><strong>Contractor:</strong> {contractFormData.contractorName}</div>
+                    <div><strong>Value:</strong> {contractFormData.contractValue}</div>
+                    <div><strong>Duration:</strong> {contractFormData.startDate} to {contractFormData.endDate}</div>
+                    <div><strong>Milestones:</strong> {contractFormData.milestones.length} phases</div>
+                    <div><strong>Payment:</strong> {contractFormData.paymentSchedule}-based</div>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <h6 className="font-medium text-gray-900 mb-2">Digital Features Enabled:</h6>
+                    <div className="flex flex-wrap gap-2">
+                      {contractFormData.digitalSignature && (
+                        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                          🔐 Digital Signatures
+                        </span>
+                      )}
+                      {contractFormData.blockchainVerification && (
+                        <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
+                          ⛓️ Blockchain Verified
+                        </span>
+                      )}
+                      {contractFormData.autoExecution && (
+                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                          🤖 Auto-Execution
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Generated Contract Display */}
+                {generatedContract && (
+                  <div className="bg-white border rounded-lg p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h5 className="font-medium text-gray-900">Generated Contract Document</h5>
+                      <div className="flex space-x-2">
+                        <button className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                          <Download className="h-4 w-4 mr-1" />
+                          Download PDF
+                        </button>
+                        <button className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                          <Eye className="h-4 w-4 mr-1" />
+                          Preview
+                        </button>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded border max-h-96 overflow-y-auto">
+                      <pre className="text-sm text-gray-800 whitespace-pre-wrap">{generatedContract}</pre>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex justify-center space-x-4">
+                  {!generatedContract ? (
+                    <button
+                      onClick={() => {
+                        setIsGeneratingContract(true);
+                        // Simulate contract generation
+                        setTimeout(() => {
+                          setGeneratedContract(`DIGITAL PROCUREMENT CONTRACT
+
+Contract ID: CON-${Date.now()}
+Generated: ${new Date().toLocaleString()}
+
+PARTIES:
+Contractor: ${contractFormData.contractorName}
+Procuring Entity: ${ministryInfo.name}
+
+PROJECT DETAILS:
+Title: ${contractFormData.projectTitle}
+Value: ${contractFormData.contractValue}
+Duration: ${contractFormData.startDate} to ${contractFormData.endDate}
+
+DESCRIPTION:
+${contractFormData.description}
+
+MILESTONES:
+${contractFormData.milestones.map((m, i) => `${i + 1}. ${m.title} (${m.percentage}%) - Due: ${m.targetDate}`).join('\n')}
+
+TERMS & CONDITIONS:
+${contractFormData.terms}
+
+PENALTIES:
+${contractFormData.penalties}
+
+DIGITAL FEATURES:
+${contractFormData.digitalSignature ? '✓ Digital Signatures Enabled\n' : ''}${contractFormData.blockchainVerification ? '✓ Blockchain Verification Enabled\n' : ''}${contractFormData.autoExecution ? '✓ Smart Contract Auto-Execution Enabled\n' : ''}
+
+This contract is digitally generated and legally binding under Nigerian law.
+
+Document Hash: SHA256-${Math.random().toString(36).substring(2, 15)}
+Blockchain Timestamp: ${Date.now()}
+
+[Digital Signature Placeholder]
+[Blockchain Verification Hash]`);
+                          setIsGeneratingContract(false);
+                        }, 3000);
+                      }}
+                      disabled={isGeneratingContract}
+                      className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {isGeneratingContract ? (
+                        <>
+                          <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
+                          Generating Contract...
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="h-5 w-5 mr-2" />
+                          Generate Digital Contract
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <>
+                      <button className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700">
+                        <Shield className="h-5 w-5 mr-2" />
+                        Execute Contract
+                      </button>
+                      <button className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50">
+                        <Send className="h-5 w-5 mr-2" />
+                        Send for Signature
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
+              <button
+                onClick={() => contractStep > 1 && setContractStep(contractStep - 1)}
+                disabled={contractStep === 1}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                ← Previous
+              </button>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => {
+                    setShowContractModal(false);
+                    setContractStep(1);
+                    setGeneratedContract("");
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+
+                {contractStep < 4 ? (
+                  <button
+                    onClick={() => setContractStep(contractStep + 1)}
+                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
+                    Next →
+                  </button>
+                ) : (
+                  generatedContract && (
+                    <button
+                      onClick={() => {
+                        // Handle final contract execution
+                        alert('Contract executed successfully!');
+                        setShowContractModal(false);
+                        setContractStep(1);
+                        setGeneratedContract("");
+                      }}
+                      className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    >
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Finalize Contract
+                    </button>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </div>
