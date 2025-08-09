@@ -331,7 +331,7 @@ export default function CompanyDashboard() {
             value: formatCurrency(recentTender.value),
             deadline: recentTender.deadline,
             location: recentTender.location || "Kano State",
-            status: recentTender.status === "Open" ? "Open" : "Closed",
+            status: (recentTender.status === "Open" || recentTender.status === "Published") ? "Open" : "Closed",
             hasExpressedInterest: false,
             hasBid: false,
             unspscCode: "72141100", // Default UNSPSC code
