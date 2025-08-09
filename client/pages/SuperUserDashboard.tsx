@@ -80,7 +80,8 @@ type ActiveTab =
   | "audit-logs"
   | "settings"
   | "feedback"
-  | "no-objection-certificate";
+  | "no-objection-certificate"
+  | "mda-management";
 
 interface DashboardStats {
   newRegistrationsPending: number;
