@@ -2363,88 +2363,15 @@ export default function MinistryDashboard() {
 
                     {/* Evaluation Scoring */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {/* Technical Evaluation */}
-                      <div className="bg-blue-50 rounded-lg p-4">
-                        <h4 className="font-medium text-blue-900 mb-3">
-                          Technical Evaluation (40%)
-                        </h4>
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              ✅ Bid Price Analysis
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              18/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              ✅ Bid Security
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              19/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              ✅ Financial Capability
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              17/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              ✅ Value for Money
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              16/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">
-                              ✅ Cost Breakdown
-                            </span>
-                            <span className="text-sm font-medium text-blue-900">
-                              17/20
-                            </span>
-                          </div>
-                          <div className="border-t pt-2 mt-2">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium text-blue-900">
-                                Technical Score:
-                              </span>
-                              <span className="text-lg font-bold text-blue-900">
-                                {bidder.technicalScore}%
-                              </span>
-                            </div>
-                            <div className="w-full bg-blue-200 rounded-full h-2 mt-1">
-                              <div
-                                className="bg-blue-600 h-2 rounded-full"
-                                style={{ width: `${bidder.technicalScore}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
                       {/* Financial Evaluation */}
                       <div className="bg-green-50 rounded-lg p-4">
                         <h4 className="font-medium text-green-900 mb-3">
-                          Financial Evaluation (35%)
+                          Financial Evaluation (40%)
                         </h4>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-green-800">
-                              Experience & Expertise
-                            </span>
-                            <span className="text-sm font-medium text-green-900">
-                              16/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">
-                              Technical Approach
+                              ✅ Bid Price Analysis
                             </span>
                             <span className="text-sm font-medium text-green-900">
                               18/20
@@ -2452,15 +2379,7 @@ export default function MinistryDashboard() {
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-green-800">
-                              Quality Standards
-                            </span>
-                            <span className="text-sm font-medium text-green-900">
-                              17/20
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">
-                              Certifications
+                              ✅ Bid Security
                             </span>
                             <span className="text-sm font-medium text-green-900">
                               19/20
@@ -2468,10 +2387,26 @@ export default function MinistryDashboard() {
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-green-800">
-                              Previous Contracts (2yrs)
+                              ✅ Financial Capability
                             </span>
                             <span className="text-sm font-medium text-green-900">
-                              15/20
+                              17/20
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-green-800">
+                              ✅ Value for Money
+                            </span>
+                            <span className="text-sm font-medium text-green-900">
+                              16/20
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-green-800">
+                              ✅ Cost Breakdown
+                            </span>
+                            <span className="text-sm font-medium text-green-900">
+                              17/20
                             </span>
                           </div>
                           <div className="border-t pt-2 mt-2">
@@ -2487,6 +2422,71 @@ export default function MinistryDashboard() {
                               <div
                                 className="bg-green-600 h-2 rounded-full"
                                 style={{ width: `${bidder.financialScore}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Technical Evaluation */}
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h4 className="font-medium text-blue-900 mb-3">
+                          Technical Evaluation (35%)
+                        </h4>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">
+                              Experience & Expertise
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              16/20
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">
+                              Technical Approach
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              18/20
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">
+                              Quality Standards
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              17/20
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">
+                              Certifications
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              19/20
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-blue-800">
+                              Previous Contracts (2yrs)
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              15/20
+                            </span>
+                          </div>
+                          <div className="border-t pt-2 mt-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-blue-900">
+                                Technical Score:
+                              </span>
+                              <span className="text-lg font-bold text-blue-900">
+                                {bidder.technicalScore}%
+                              </span>
+                            </div>
+                            <div className="w-full bg-blue-200 rounded-full h-2 mt-1">
+                              <div
+                                className="bg-blue-600 h-2 rounded-full"
+                                style={{ width: `${bidder.technicalScore}%` }}
                               ></div>
                             </div>
                           </div>
@@ -3722,11 +3722,11 @@ export default function MinistryDashboard() {
                     Evaluation Criteria
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h5 className="font-medium text-blue-900 mb-2">
-                        Technical Evaluation (40%)
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h5 className="font-medium text-green-900 mb-2">
+                        Financial Evaluation (40%)
                       </h5>
-                      <ul className="text-sm text-blue-800 space-y-1">
+                      <ul className="text-sm text-green-800 space-y-1">
                         <li>✅ Bid Price Analysis</li>
                         <li>✅ Bid Security</li>
                         <li>✅ Evidence of financial capability</li>
@@ -3734,11 +3734,11 @@ export default function MinistryDashboard() {
                         <li>✅ Cost breakdown</li>
                       </ul>
                     </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h5 className="font-medium text-green-900 mb-2">
-                        Financial Evaluation (35%)
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h5 className="font-medium text-blue-900 mb-2">
+                        Technical Evaluation (35%)
                       </h5>
-                      <ul className="text-sm text-green-800 space-y-1">
+                      <ul className="text-sm text-blue-800 space-y-1">
                         <li>• Experience & Expertise</li>
                         <li>• Technical Approach</li>
                         <li>• Quality Standards</li>
