@@ -6027,7 +6027,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• AES-256 encryption</li>
-                      <li>• Multi-factor authentication</li>
+                      <li>�� Multi-factor authentication</li>
                       <li>• Audit trail logging</li>
                       <li>• IP geolocation tracking</li>
                     </ul>
@@ -7167,6 +7167,122 @@ Blockchain Timestamp: ${Date.now()}
                 >
                   <CheckCircle className="h-4 w-4 mr-2 inline" />
                   Finalize Evaluation
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tender Selection Modal for Contract Creation */}
+      {showTenderSelectionModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-4xl max-w-4xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Select Awarded Tender for Contract Creation
+                </h3>
+                <button
+                  onClick={() => setShowTenderSelectionModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-gray-600">
+                  Choose from awarded tenders to automatically create a contract with pre-filled information.
+                </p>
+              </div>
+
+              {/* Awarded Tenders List */}
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                {tenders.filter(tender => tender.status === 'Awarded').length > 0 ? (
+                  tenders.filter(tender => tender.status === 'Awarded').map((tender) => (
+                    <div
+                      key={tender.id}
+                      className="border border-gray-200 rounded-lg p-4 hover:border-green-300 hover:bg-green-50 cursor-pointer transition-all"
+                      onClick={() => handleSelectAwardedTender(tender)}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h4 className="text-lg font-semibold text-gray-900">{tender.title}</h4>
+                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                              Awarded
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                              <p className="text-gray-600">Tender ID</p>
+                              <p className="font-medium">{tender.id}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Awarded Company</p>
+                              <p className="font-medium">{tender.awardedCompany || 'N/A'}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Award Value</p>
+                              <p className="font-medium">{tender.awardAmount || tender.estimatedValue}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Award Date</p>
+                              <p className="font-medium">{tender.awardDate || 'N/A'}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Category</p>
+                              <p className="font-medium">{tender.category}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Ministry</p>
+                              <p className="font-medium">{tender.ministry}</p>
+                            </div>
+                          </div>
+
+                          <div className="mt-3">
+                            <p className="text-gray-600 text-sm">Description</p>
+                            <p className="text-sm">{tender.description}</p>
+                          </div>
+                        </div>
+
+                        <div className="ml-4">
+                          <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                            Create Contract
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <Award className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">No Awarded Tenders</h4>
+                    <p className="text-gray-600">
+                      No tenders have been awarded yet. Complete the tender evaluation and award process first.
+                    </p>
+                    <button
+                      onClick={() => {
+                        setShowTenderSelectionModal(false);
+                        // Navigate to award section
+                        setTenderSubView('award');
+                      }}
+                      className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Go to Award Tenders
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-end pt-6 mt-6 border-t">
+                <button
+                  onClick={() => setShowTenderSelectionModal(false)}
+                  className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
                 </button>
               </div>
             </div>
