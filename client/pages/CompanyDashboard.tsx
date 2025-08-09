@@ -319,6 +319,9 @@ export default function CompanyDashboard() {
   useEffect(() => {
     const loadTenders = () => {
       const storedTenders = localStorage.getItem("recentTenders");
+      const storedTenderStates = localStorage.getItem("companyTenderStates") || "{}";
+      const tenderStates = JSON.parse(storedTenderStates);
+
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
@@ -3245,7 +3248,7 @@ export default function CompanyDashboard() {
                             Northern Builders Ltd
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            ₦950M
+                            ��950M
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Jan 25, 2024
