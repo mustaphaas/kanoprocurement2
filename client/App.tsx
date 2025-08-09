@@ -76,14 +76,6 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/superuser/noc"
-              element={
-                <ProtectedRoute requiredRole="superuser">
-                  <SuperuserNOC />
-                </ProtectedRoute>
-              }
-            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
