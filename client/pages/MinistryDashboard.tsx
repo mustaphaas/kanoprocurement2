@@ -2840,11 +2840,26 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {company.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                    <button
+                      onClick={() => handleViewCompanyProfile(company)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
                       <Eye className="h-4 w-4 inline mr-1" />
-                      View Details
+                      View Profile
                     </button>
+                    {company.status === "Approved" && (
+                      <button
+                        onClick={() => {
+                          setSelectedCompany(company);
+                          setShowEditProfile(true);
+                        }}
+                        className="text-green-600 hover:text-green-900"
+                      >
+                        <Edit className="h-4 w-4 inline mr-1" />
+                        Update Profile
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
