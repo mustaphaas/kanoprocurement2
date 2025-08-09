@@ -8949,6 +8949,162 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
       )}
+
+      {/* NOC Request Modal */}
+      {showNOCRequest && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  New NOC Request
+                </h3>
+                <button
+                  onClick={() => setShowNOCRequest(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={newNOCRequest.projectTitle}
+                    onChange={(e) => setNewNOCRequest(prev => ({...prev, projectTitle: e.target.value}))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter project title"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Project Value *
+                    </label>
+                    <input
+                      type="text"
+                      value={newNOCRequest.projectValue}
+                      onChange={(e) => setNewNOCRequest(prev => ({...prev, projectValue: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="e.g., ₦500,000,000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Expected Duration
+                    </label>
+                    <input
+                      type="text"
+                      value={newNOCRequest.expectedDuration}
+                      onChange={(e) => setNewNOCRequest(prev => ({...prev, expectedDuration: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="e.g., 12 months"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Contractor Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={newNOCRequest.contractorName}
+                    onChange={(e) => setNewNOCRequest(prev => ({...prev, contractorName: e.target.value}))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter contractor/vendor name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Description
+                  </label>
+                  <textarea
+                    value={newNOCRequest.projectDescription}
+                    onChange={(e) => setNewNOCRequest(prev => ({...prev, projectDescription: e.target.value}))}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Brief description of the project"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Justification
+                  </label>
+                  <textarea
+                    value={newNOCRequest.justification}
+                    onChange={(e) => setNewNOCRequest(prev => ({...prev, justification: e.target.value}))}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Justification for NOC request"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowNOCRequest(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSubmitNOCRequest}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
+                  Submit Request
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create User Modal */}
+      {showCreateUserModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <MDAUserForm
+              mode="create"
+              mdaId="mda-001"
+              onSubmit={handleUserSubmit}
+              onCancel={() => setShowCreateUserModal(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditUserModal && selectedUser && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <MDAUserForm
+              mode="edit"
+              mdaId={selectedUser.mdaId}
+              initialData={{
+                email: selectedUser.userId,
+                displayName: selectedUser.userId,
+                role: selectedUser.role,
+                department: selectedUser.department,
+                permissions: selectedUser.permissions,
+                mdaId: selectedUser.mdaId,
+              }}
+              onSubmit={handleUserSubmit}
+              onCancel={() => {
+                setShowEditUserModal(false);
+                setSelectedUser(null);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
