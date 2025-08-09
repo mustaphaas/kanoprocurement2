@@ -1468,49 +1468,144 @@ export default function MinistryDashboard() {
 
     const mockNOCRequests = getMinistrySpecificNOCRequests();
 
-    const mockEvaluationCommittees: EvaluationCommittee[] = [
-      {
-        id: "EC-001",
-        name: "Medical Equipment Evaluation Committee",
-        chairperson: "Dr. Amina Hassan",
-        secretary: "Eng. Musa Ibrahim",
-        specialization: ["Medical Equipment", "Healthcare Technology"],
-        activeEvaluations: ["MOH-2024-002"],
-        status: "Active",
-        members: [
-          {
-            id: "MEM-001",
-            name: "Dr. Amina Hassan",
-            role: "Chairperson",
-            department: "Medical Services",
-            email: "amina.hassan@health.kano.gov.ng",
-            phone: "+234 803 123 4567",
-            expertise: ["Medical Equipment", "Quality Assurance"],
-            availability: "Available",
-          },
-          {
-            id: "MEM-002",
-            name: "Eng. Musa Ibrahim",
-            role: "Technical Expert",
-            department: "Engineering Services",
-            email: "musa.ibrahim@health.kano.gov.ng",
-            phone: "+234 805 987 6543",
-            expertise: ["Engineering", "Technical Evaluation"],
-            availability: "Available",
-          },
-          {
-            id: "MEM-003",
-            name: "Mal. Fatima Yusuf",
-            role: "Financial Analyst",
-            department: "Finance",
-            email: "fatima.yusuf@health.kano.gov.ng",
-            phone: "+234 807 555 1234",
-            expertise: ["Financial Analysis", "Cost Evaluation"],
-            availability: "Busy",
-          },
-        ],
-      },
-    ];
+    const getMinistrySpecificEvaluationCommittees = (): EvaluationCommittee[] => {
+      switch (ministryId) {
+        case "ministry2": // Ministry of Works
+          return [
+            {
+              id: "EC-001",
+              name: "Infrastructure & Construction Evaluation Committee",
+              chairperson: "Eng. Ibrahim Mohammed",
+              secretary: "Eng. Fatima Abubakar",
+              specialization: ["Construction", "Infrastructure Development", "Engineering"],
+              activeEvaluations: ["MOWI-2024-001", "MOWI-2024-002"],
+              status: "Active",
+              members: [
+                {
+                  id: "MEM-001",
+                  name: "Eng. Ibrahim Mohammed",
+                  role: "Chairperson",
+                  department: "Construction Engineering",
+                  email: "ibrahim.mohammed@works.kano.gov.ng",
+                  phone: "+234 803 123 4567",
+                  expertise: ["Construction Management", "Quality Assurance"],
+                  availability: "Available",
+                },
+                {
+                  id: "MEM-002",
+                  name: "Eng. Fatima Abubakar",
+                  role: "Technical Expert",
+                  department: "Civil Engineering",
+                  email: "fatima.abubakar@works.kano.gov.ng",
+                  phone: "+234 805 987 6543",
+                  expertise: ["Civil Engineering", "Project Evaluation"],
+                  availability: "Available",
+                },
+                {
+                  id: "MEM-003",
+                  name: "Mal. Usman Kano",
+                  role: "Financial Analyst",
+                  department: "Finance & Procurement",
+                  email: "usman.kano@works.kano.gov.ng",
+                  phone: "+234 807 555 1234",
+                  expertise: ["Financial Analysis", "Cost Estimation"],
+                  availability: "Available",
+                },
+              ],
+            },
+          ];
+        case "ministry3": // Ministry of Education
+          return [
+            {
+              id: "EC-001",
+              name: "Educational Resources Evaluation Committee",
+              chairperson: "Prof. Aisha Garba",
+              secretary: "Dr. Zainab Ibrahim",
+              specialization: ["Educational Technology", "School Infrastructure", "Learning Resources"],
+              activeEvaluations: ["MOE-2024-001", "MOE-2024-002"],
+              status: "Active",
+              members: [
+                {
+                  id: "MEM-001",
+                  name: "Prof. Aisha Garba",
+                  role: "Chairperson",
+                  department: "Educational Planning",
+                  email: "aisha.garba@education.kano.gov.ng",
+                  phone: "+234 803 123 4567",
+                  expertise: ["Educational Technology", "Curriculum Development"],
+                  availability: "Available",
+                },
+                {
+                  id: "MEM-002",
+                  name: "Dr. Zainab Ibrahim",
+                  role: "Technical Expert",
+                  department: "Educational Resources",
+                  email: "zainab.ibrahim@education.kano.gov.ng",
+                  phone: "+234 805 987 6543",
+                  expertise: ["Educational Materials", "Quality Assessment"],
+                  availability: "Available",
+                },
+                {
+                  id: "MEM-003",
+                  name: "Mal. Bello Sani",
+                  role: "Financial Analyst",
+                  department: "Finance & Administration",
+                  email: "bello.sani@education.kano.gov.ng",
+                  phone: "+234 807 555 1234",
+                  expertise: ["Educational Finance", "Budget Analysis"],
+                  availability: "Busy",
+                },
+              ],
+            },
+          ];
+        default: // Ministry of Health
+          return [
+            {
+              id: "EC-001",
+              name: "Medical Equipment Evaluation Committee",
+              chairperson: "Dr. Amina Hassan",
+              secretary: "Eng. Musa Ibrahim",
+              specialization: ["Medical Equipment", "Healthcare Technology"],
+              activeEvaluations: ["MOH-2024-002"],
+              status: "Active",
+              members: [
+                {
+                  id: "MEM-001",
+                  name: "Dr. Amina Hassan",
+                  role: "Chairperson",
+                  department: "Medical Services",
+                  email: "amina.hassan@health.kano.gov.ng",
+                  phone: "+234 803 123 4567",
+                  expertise: ["Medical Equipment", "Quality Assurance"],
+                  availability: "Available",
+                },
+                {
+                  id: "MEM-002",
+                  name: "Eng. Musa Ibrahim",
+                  role: "Technical Expert",
+                  department: "Engineering Services",
+                  email: "musa.ibrahim@health.kano.gov.ng",
+                  phone: "+234 805 987 6543",
+                  expertise: ["Engineering", "Technical Evaluation"],
+                  availability: "Available",
+                },
+                {
+                  id: "MEM-003",
+                  name: "Mal. Fatima Yusuf",
+                  role: "Financial Analyst",
+                  department: "Finance",
+                  email: "fatima.yusuf@health.kano.gov.ng",
+                  phone: "+234 807 555 1234",
+                  expertise: ["Financial Analysis", "Cost Evaluation"],
+                  availability: "Busy",
+                },
+              ],
+            },
+          ];
+      }
+    };
+
+    const mockEvaluationCommittees = getMinistrySpecificEvaluationCommittees();
 
     const mockBidEvaluations: BidEvaluation[] = [
       {
