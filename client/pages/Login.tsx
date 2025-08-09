@@ -531,28 +531,54 @@ export default function Login() {
                 Demo Credentials
               </h4>
               <div className="mt-2">
-                <p className="text-xs text-gray-700">
-                  <strong>
-                    {currentConfig.useEmail ? "Email" : "Username"}:
-                  </strong>{" "}
-                  <button
-                    onClick={() =>
-                      fillTestAccount(
-                        currentConfig.demoCredentials.identifier,
-                        currentConfig.demoCredentials.password,
-                      )
-                    }
-                    className="bg-white px-2 py-1 rounded text-xs hover:bg-gray-50 cursor-pointer transition-colors border"
-                  >
-                    {currentConfig.demoCredentials.identifier}
-                  </button>
-                </p>
-                <p className="text-xs text-gray-700 mt-1">
-                  <strong>Password:</strong>{" "}
-                  <code className="bg-white px-2 py-1 rounded text-xs border">
-                    {currentConfig.demoCredentials.password}
-                  </code>
-                </p>
+                {selectedUserType === "ministry" ? (
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-700 font-medium">Available Ministry Accounts:</p>
+                    {[
+                      { username: "ministry", name: "Ministry of Health" },
+                      { username: "ministry2", name: "Ministry of Works" },
+                      { username: "ministry3", name: "Ministry of Education" }
+                    ].map((ministry) => (
+                      <div key={ministry.username} className="bg-white p-2 rounded border">
+                        <p className="text-xs text-gray-700">
+                          <strong>{ministry.name}:</strong>{" "}
+                          <button
+                            onClick={() => fillTestAccount(ministry.username, "ministry123")}
+                            className="bg-gray-50 px-2 py-1 rounded text-xs hover:bg-gray-100 cursor-pointer transition-colors border mx-1"
+                          >
+                            {ministry.username}
+                          </button>
+                          <span className="text-gray-500">/ ministry123</span>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs text-gray-700">
+                      <strong>
+                        {currentConfig.useEmail ? "Email" : "Username"}:
+                      </strong>{" "}
+                      <button
+                        onClick={() =>
+                          fillTestAccount(
+                            currentConfig.demoCredentials.identifier.split('/')[0],
+                            currentConfig.demoCredentials.password,
+                          )
+                        }
+                        className="bg-white px-2 py-1 rounded text-xs hover:bg-gray-50 cursor-pointer transition-colors border"
+                      >
+                        {currentConfig.demoCredentials.identifier.split('/')[0]}
+                      </button>
+                    </p>
+                    <p className="text-xs text-gray-700 mt-1">
+                      <strong>Password:</strong>{" "}
+                      <code className="bg-white px-2 py-1 rounded text-xs border">
+                        {currentConfig.demoCredentials.password}
+                      </code>
+                    </p>
+                  </>
+                )}
               </div>
               <p className="text-xs text-gray-600 mt-2">
                 💡 <strong>Quick Login:</strong> Click the{" "}
