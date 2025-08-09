@@ -957,7 +957,7 @@ export default function MinistryDashboard() {
       {
         id: "CON-MOH-001",
         tenderId: "MOH-2024-001",
-        contractorName: "MedSupply Nigeria Ltd",
+        contractorName: "PrimeCare Medical Ltd",
         projectTitle: "Hospital Equipment Supply",
         contractValue: "₦850,000,000",
         startDate: "2024-02-01",
