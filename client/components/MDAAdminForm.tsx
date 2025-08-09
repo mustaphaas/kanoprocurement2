@@ -9,9 +9,9 @@ import {
   Shield,
   CheckCircle,
   AlertTriangle,
-  DollarSign
+  DollarSign,
 } from "lucide-react";
-import { MDA, CreateMDAAdminRequest, MDAPermissions } from '@shared/api';
+import { MDA, CreateMDAAdminRequest, MDAPermissions } from "@shared/api";
 
 interface MDAAdminFormProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ interface MDAAdminFormProps {
   onSubmit: (data: CreateMDAAdminRequest) => void;
   mdas: MDA[];
   selectedMDA?: MDA | null;
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
   initialData?: any;
 }
 
@@ -29,22 +29,24 @@ export default function MDAAdminForm({
   onSubmit,
   mdas,
   selectedMDA,
-  mode = 'create',
-  initialData
+  mode = "create",
+  initialData,
 }: MDAAdminFormProps) {
   const [formData, setFormData] = useState({
-    mdaId: selectedMDA?.id || '',
-    email: initialData?.email || '',
-    displayName: initialData?.displayName || '',
-    role: initialData?.role || 'mda_admin' as 'mda_admin' | 'mda_super_admin',
-    permissions: initialData?.permissions || {
-      canCreateUsers: false,
-      canManageTenders: false,
-      canApproveContracts: false,
-      canViewReports: false,
-      canManageSettings: false,
-      maxApprovalAmount: 0
-    } as MDAPermissions
+    mdaId: selectedMDA?.id || "",
+    email: initialData?.email || "",
+    displayName: initialData?.displayName || "",
+    role: initialData?.role || ("mda_admin" as "mda_admin" | "mda_super_admin"),
+    permissions:
+      initialData?.permissions ||
+      ({
+        canCreateUsers: false,
+        canManageTenders: false,
+        canApproveContracts: false,
+        canViewReports: false,
+        canManageSettings: false,
+        maxApprovalAmount: 0,
+      } as MDAPermissions),
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -54,21 +56,22 @@ export default function MDAAdminForm({
     const newErrors: Record<string, string> = {};
 
     if (!formData.mdaId) {
-      newErrors.mdaId = 'Please select an MDA';
+      newErrors.mdaId = "Please select an MDA";
     }
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
 
     if (!formData.displayName) {
-      newErrors.displayName = 'Display name is required';
+      newErrors.displayName = "Display name is required";
     }
 
     if (formData.permissions.maxApprovalAmount < 0) {
-      newErrors.maxApprovalAmount = 'Maximum approval amount must be non-negative';
+      newErrors.maxApprovalAmount =
+        "Maximum approval amount must be non-negative";
     }
 
     setErrors(newErrors);
@@ -77,7 +80,7 @@ export default function MDAAdminForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -88,45 +91,48 @@ export default function MDAAdminForm({
       onClose();
       // Reset form
       setFormData({
-        mdaId: selectedMDA?.id || '',
-        email: '',
-        displayName: '',
-        role: 'mda_admin',
+        mdaId: selectedMDA?.id || "",
+        email: "",
+        displayName: "",
+        role: "mda_admin",
         permissions: {
           canCreateUsers: false,
           canManageTenders: false,
           canApproveContracts: false,
           canViewReports: false,
           canManageSettings: false,
-          maxApprovalAmount: 0
-        }
+          maxApprovalAmount: 0,
+        },
       });
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handlePermissionChange = (permission: keyof MDAPermissions, value: boolean | number) => {
-    setFormData(prev => ({
+  const handlePermissionChange = (
+    permission: keyof MDAPermissions,
+    value: boolean | number,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       permissions: {
         ...prev.permissions,
-        [permission]: value
-      }
+        [permission]: value,
+      },
     }));
   };
 
-  const getPresetPermissions = (role: 'mda_admin' | 'mda_super_admin') => {
-    if (role === 'mda_super_admin') {
+  const getPresetPermissions = (role: "mda_admin" | "mda_super_admin") => {
+    if (role === "mda_super_admin") {
       return {
         canCreateUsers: true,
         canManageTenders: true,
         canApproveContracts: true,
         canViewReports: true,
         canManageSettings: true,
-        maxApprovalAmount: 100000000 // 100M
+        maxApprovalAmount: 100000000, // 100M
       };
     } else {
       return {
@@ -135,16 +141,16 @@ export default function MDAAdminForm({
         canApproveContracts: false,
         canViewReports: true,
         canManageSettings: false,
-        maxApprovalAmount: 25000000 // 25M
+        maxApprovalAmount: 25000000, // 25M
       };
     }
   };
 
-  const handleRoleChange = (role: 'mda_admin' | 'mda_super_admin') => {
-    setFormData(prev => ({
+  const handleRoleChange = (role: "mda_admin" | "mda_super_admin") => {
+    setFormData((prev) => ({
       ...prev,
       role,
-      permissions: getPresetPermissions(role)
+      permissions: getPresetPermissions(role),
     }));
   };
 
@@ -168,7 +174,9 @@ export default function MDAAdminForm({
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">
-                      {mode === 'create' ? 'Add New MDA Administrator' : 'Edit MDA Administrator'}
+                      {mode === "create"
+                        ? "Add New MDA Administrator"
+                        : "Edit MDA Administrator"}
                     </h2>
                     <p className="text-sm text-gray-600">
                       Configure admin access and permissions
@@ -187,15 +195,23 @@ export default function MDAAdminForm({
               <div className="space-y-6">
                 {/* MDA Selection */}
                 <div>
-                  <label htmlFor="mdaId" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="mdaId"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Ministry/Department/Agency *
                   </label>
                   <select
                     id="mdaId"
                     value={formData.mdaId}
-                    onChange={(e) => setFormData(prev => ({ ...prev, mdaId: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        mdaId: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                      errors.mdaId ? 'border-red-300' : 'border-gray-300'
+                      errors.mdaId ? "border-red-300" : "border-gray-300"
                     }`}
                     disabled={!!selectedMDA}
                   >
@@ -214,7 +230,10 @@ export default function MDAAdminForm({
                 {/* Personal Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Email Address *
                     </label>
                     <div className="relative">
@@ -223,20 +242,30 @@ export default function MDAAdminForm({
                         type="email"
                         id="email"
                         value={formData.email}
-                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
+                        }
                         className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                          errors.email ? 'border-red-300' : 'border-gray-300'
+                          errors.email ? "border-red-300" : "border-gray-300"
                         }`}
                         placeholder="admin@ministry.kano.gov.ng"
                       />
                     </div>
                     {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.email}
+                      </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="displayName"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Full Name *
                     </label>
                     <div className="relative">
@@ -245,15 +274,24 @@ export default function MDAAdminForm({
                         type="text"
                         id="displayName"
                         value={formData.displayName}
-                        onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            displayName: e.target.value,
+                          }))
+                        }
                         className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                          errors.displayName ? 'border-red-300' : 'border-gray-300'
+                          errors.displayName
+                            ? "border-red-300"
+                            : "border-gray-300"
                         }`}
                         placeholder="Dr. Amina Kano"
                       />
                     </div>
                     {errors.displayName && (
-                      <p className="mt-1 text-sm text-red-600">{errors.displayName}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.displayName}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -269,20 +307,24 @@ export default function MDAAdminForm({
                         type="radio"
                         name="role"
                         value="mda_admin"
-                        checked={formData.role === 'mda_admin'}
-                        onChange={() => handleRoleChange('mda_admin')}
+                        checked={formData.role === "mda_admin"}
+                        onChange={() => handleRoleChange("mda_admin")}
                         className="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
                       />
                       <div className="flex-1">
                         <div className="flex items-center space-x-2">
                           <Shield className="h-4 w-4 text-blue-600" />
-                          <span className="font-medium text-gray-900">MDA Administrator</span>
+                          <span className="font-medium text-gray-900">
+                            MDA Administrator
+                          </span>
                         </div>
                         <p className="text-sm text-gray-600 mt-1">
-                          Can manage users, create tenders, and view reports. Limited approval authority.
+                          Can manage users, create tenders, and view reports.
+                          Limited approval authority.
                         </p>
                         <div className="text-xs text-blue-600 mt-1">
-                          Max Approval: ₦25M • Can create users • Cannot manage settings
+                          Max Approval: ₦25M • Can create users • Cannot manage
+                          settings
                         </div>
                       </div>
                     </label>
@@ -292,20 +334,24 @@ export default function MDAAdminForm({
                         type="radio"
                         name="role"
                         value="mda_super_admin"
-                        checked={formData.role === 'mda_super_admin'}
-                        onChange={() => handleRoleChange('mda_super_admin')}
+                        checked={formData.role === "mda_super_admin"}
+                        onChange={() => handleRoleChange("mda_super_admin")}
                         className="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
                       />
                       <div className="flex-1">
                         <div className="flex items-center space-x-2">
                           <Shield className="h-4 w-4 text-purple-600" />
-                          <span className="font-medium text-gray-900">MDA Super Administrator</span>
+                          <span className="font-medium text-gray-900">
+                            MDA Super Administrator
+                          </span>
                         </div>
                         <p className="text-sm text-gray-600 mt-1">
-                          Full administrative access including settings management and high-value approvals.
+                          Full administrative access including settings
+                          management and high-value approvals.
                         </p>
                         <div className="text-xs text-purple-600 mt-1">
-                          Max Approval: ₦100M • Full permissions • Can manage all settings
+                          Max Approval: ₦100M • Full permissions • Can manage
+                          all settings
                         </div>
                       </div>
                     </label>
@@ -323,55 +369,93 @@ export default function MDAAdminForm({
                         <input
                           type="checkbox"
                           checked={formData.permissions.canCreateUsers}
-                          onChange={(e) => handlePermissionChange('canCreateUsers', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canCreateUsers",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">Create and manage users</span>
+                        <span className="text-sm text-gray-700">
+                          Create and manage users
+                        </span>
                       </label>
 
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={formData.permissions.canManageTenders}
-                          onChange={(e) => handlePermissionChange('canManageTenders', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canManageTenders",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">Create and manage tenders</span>
+                        <span className="text-sm text-gray-700">
+                          Create and manage tenders
+                        </span>
                       </label>
 
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={formData.permissions.canApproveContracts}
-                          onChange={(e) => handlePermissionChange('canApproveContracts', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canApproveContracts",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">Approve contracts</span>
+                        <span className="text-sm text-gray-700">
+                          Approve contracts
+                        </span>
                       </label>
 
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={formData.permissions.canViewReports}
-                          onChange={(e) => handlePermissionChange('canViewReports', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canViewReports",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">View reports and analytics</span>
+                        <span className="text-sm text-gray-700">
+                          View reports and analytics
+                        </span>
                       </label>
 
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={formData.permissions.canManageSettings}
-                          onChange={(e) => handlePermissionChange('canManageSettings', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canManageSettings",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">Manage MDA settings</span>
+                        <span className="text-sm text-gray-700">
+                          Manage MDA settings
+                        </span>
                       </label>
                     </div>
 
                     <div>
-                      <label htmlFor="maxApprovalAmount" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="maxApprovalAmount"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Maximum Approval Amount (₦)
                       </label>
                       <div className="relative">
@@ -380,33 +464,46 @@ export default function MDAAdminForm({
                           type="number"
                           id="maxApprovalAmount"
                           value={formData.permissions.maxApprovalAmount}
-                          onChange={(e) => handlePermissionChange('maxApprovalAmount', parseInt(e.target.value) || 0)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "maxApprovalAmount",
+                              parseInt(e.target.value) || 0,
+                            )
+                          }
                           className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                            errors.maxApprovalAmount ? 'border-red-300' : 'border-gray-300'
+                            errors.maxApprovalAmount
+                              ? "border-red-300"
+                              : "border-gray-300"
                           }`}
                           placeholder="0"
                         />
                       </div>
                       {errors.maxApprovalAmount && (
-                        <p className="mt-1 text-sm text-red-600">{errors.maxApprovalAmount}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.maxApprovalAmount}
+                        </p>
                       )}
                       <p className="mt-1 text-xs text-gray-500">
-                        Maximum amount this admin can approve without higher authorization
+                        Maximum amount this admin can approve without higher
+                        authorization
                       </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Warning for Super Admin */}
-                {formData.role === 'mda_super_admin' && (
+                {formData.role === "mda_super_admin" && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                     <div className="flex items-start space-x-3">
                       <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <h4 className="text-sm font-medium text-yellow-800">Super Administrator Access</h4>
+                        <h4 className="text-sm font-medium text-yellow-800">
+                          Super Administrator Access
+                        </h4>
                         <p className="text-sm text-yellow-700 mt-1">
-                          Super administrators have full access to all MDA functions including sensitive settings 
-                          and high-value approvals. Only assign this role to trusted personnel.
+                          Super administrators have full access to all MDA
+                          functions including sensitive settings and high-value
+                          approvals. Only assign this role to trusted personnel.
                         </p>
                       </div>
                     </div>
@@ -424,12 +521,14 @@ export default function MDAAdminForm({
                 {isSubmitting ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {mode === 'create' ? 'Creating...' : 'Updating...'}
+                    {mode === "create" ? "Creating..." : "Updating..."}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4 mr-2" />
-                    {mode === 'create' ? 'Create Administrator' : 'Update Administrator'}
+                    {mode === "create"
+                      ? "Create Administrator"
+                      : "Update Administrator"}
                   </>
                 )}
               </button>

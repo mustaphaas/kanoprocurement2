@@ -12,16 +12,16 @@ import {
   Eye,
   FileText,
   BarChart3,
-  Settings
+  Settings,
 } from "lucide-react";
-import { MDA, CreateMDAUserRequest, MDAUserPermissions } from '@shared/api';
+import { MDA, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 
 interface MDAUserFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: CreateMDAUserRequest) => void;
   mda: MDA;
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
   initialData?: any;
 }
 
@@ -30,22 +30,30 @@ export default function MDAUserForm({
   onClose,
   onSubmit,
   mda,
-  mode = 'create',
-  initialData
+  mode = "create",
+  initialData,
 }: MDAUserFormProps) {
   const [formData, setFormData] = useState({
     mdaId: mda.id,
-    email: initialData?.email || '',
-    displayName: initialData?.displayName || '',
-    role: initialData?.role || 'procurement_officer' as 'procurement_officer' | 'evaluator' | 'accountant' | 'viewer',
-    department: initialData?.department || '',
-    permissions: initialData?.permissions || {
-      canCreateTenders: false,
-      canEvaluateBids: false,
-      canViewFinancials: false,
-      canGenerateReports: false,
-      accessLevel: 'read'
-    } as MDAUserPermissions
+    email: initialData?.email || "",
+    displayName: initialData?.displayName || "",
+    role:
+      initialData?.role ||
+      ("procurement_officer" as
+        | "procurement_officer"
+        | "evaluator"
+        | "accountant"
+        | "viewer"),
+    department: initialData?.department || "",
+    permissions:
+      initialData?.permissions ||
+      ({
+        canCreateTenders: false,
+        canEvaluateBids: false,
+        canViewFinancials: false,
+        canGenerateReports: false,
+        accessLevel: "read",
+      } as MDAUserPermissions),
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -53,74 +61,74 @@ export default function MDAUserForm({
 
   const userRoles = [
     {
-      id: 'procurement_officer',
-      name: 'Procurement Officer',
-      description: 'Can create and manage procurement tenders',
+      id: "procurement_officer",
+      name: "Procurement Officer",
+      description: "Can create and manage procurement tenders",
       icon: <FileText className="h-5 w-5" />,
       defaultPermissions: {
         canCreateTenders: true,
         canEvaluateBids: true,
         canViewFinancials: true,
         canGenerateReports: true,
-        accessLevel: 'write' as const
-      }
+        accessLevel: "write" as const,
+      },
     },
     {
-      id: 'evaluator',
-      name: 'Evaluator',
-      description: 'Evaluates bids and provides technical assessments',
+      id: "evaluator",
+      name: "Evaluator",
+      description: "Evaluates bids and provides technical assessments",
       icon: <CheckCircle className="h-5 w-5" />,
       defaultPermissions: {
         canCreateTenders: false,
         canEvaluateBids: true,
         canViewFinancials: false,
         canGenerateReports: true,
-        accessLevel: 'read' as const
-      }
+        accessLevel: "read" as const,
+      },
     },
     {
-      id: 'accountant',
-      name: 'Accountant',
-      description: 'Handles financial aspects and budget management',
+      id: "accountant",
+      name: "Accountant",
+      description: "Handles financial aspects and budget management",
       icon: <BarChart3 className="h-5 w-5" />,
       defaultPermissions: {
         canCreateTenders: false,
         canEvaluateBids: false,
         canViewFinancials: true,
         canGenerateReports: true,
-        accessLevel: 'read' as const
-      }
+        accessLevel: "read" as const,
+      },
     },
     {
-      id: 'viewer',
-      name: 'Viewer',
-      description: 'Read-only access for monitoring and reporting',
+      id: "viewer",
+      name: "Viewer",
+      description: "Read-only access for monitoring and reporting",
       icon: <Eye className="h-5 w-5" />,
       defaultPermissions: {
         canCreateTenders: false,
         canEvaluateBids: false,
         canViewFinancials: false,
         canGenerateReports: true,
-        accessLevel: 'read' as const
-      }
-    }
+        accessLevel: "read" as const,
+      },
+    },
   ];
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
 
     if (!formData.displayName) {
-      newErrors.displayName = 'Display name is required';
+      newErrors.displayName = "Display name is required";
     }
 
     if (!formData.department) {
-      newErrors.department = 'Department is required';
+      newErrors.department = "Department is required";
     }
 
     setErrors(newErrors);
@@ -129,7 +137,7 @@ export default function MDAUserForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -141,43 +149,46 @@ export default function MDAUserForm({
       // Reset form
       setFormData({
         mdaId: mda.id,
-        email: '',
-        displayName: '',
-        role: 'procurement_officer',
-        department: '',
+        email: "",
+        displayName: "",
+        role: "procurement_officer",
+        department: "",
         permissions: {
           canCreateTenders: false,
           canEvaluateBids: false,
           canViewFinancials: false,
           canGenerateReports: false,
-          accessLevel: 'read'
-        }
+          accessLevel: "read",
+        },
       });
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleRoleChange = (roleId: string) => {
-    const role = userRoles.find(r => r.id === roleId);
+    const role = userRoles.find((r) => r.id === roleId);
     if (role) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         role: roleId as any,
-        permissions: role.defaultPermissions
+        permissions: role.defaultPermissions,
       }));
     }
   };
 
-  const handlePermissionChange = (permission: keyof MDAUserPermissions, value: boolean | string) => {
-    setFormData(prev => ({
+  const handlePermissionChange = (
+    permission: keyof MDAUserPermissions,
+    value: boolean | string,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       permissions: {
         ...prev.permissions,
-        [permission]: value
-      }
+        [permission]: value,
+      },
     }));
   };
 
@@ -201,7 +212,7 @@ export default function MDAUserForm({
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">
-                      {mode === 'create' ? 'Add New User' : 'Edit User'}
+                      {mode === "create" ? "Add New User" : "Edit User"}
                     </h2>
                     <p className="text-sm text-gray-600">
                       Add user to {mda.name}
@@ -224,7 +235,9 @@ export default function MDAUserForm({
                     <Building2 className="h-5 w-5 text-gray-600" />
                     <div>
                       <p className="font-medium text-gray-900">{mda.name}</p>
-                      <p className="text-sm text-gray-600">{mda.type.charAt(0).toUpperCase() + mda.type.slice(1)}</p>
+                      <p className="text-sm text-gray-600">
+                        {mda.type.charAt(0).toUpperCase() + mda.type.slice(1)}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -232,7 +245,10 @@ export default function MDAUserForm({
                 {/* Personal Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Email Address *
                     </label>
                     <div className="relative">
@@ -241,20 +257,30 @@ export default function MDAUserForm({
                         type="email"
                         id="email"
                         value={formData.email}
-                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
+                        }
                         className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          errors.email ? 'border-red-300' : 'border-gray-300'
+                          errors.email ? "border-red-300" : "border-gray-300"
                         }`}
                         placeholder="user@ministry.kano.gov.ng"
                       />
                     </div>
                     {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.email}
+                      </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="displayName"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Full Name *
                     </label>
                     <div className="relative">
@@ -263,36 +289,55 @@ export default function MDAUserForm({
                         type="text"
                         id="displayName"
                         value={formData.displayName}
-                        onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            displayName: e.target.value,
+                          }))
+                        }
                         className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          errors.displayName ? 'border-red-300' : 'border-gray-300'
+                          errors.displayName
+                            ? "border-red-300"
+                            : "border-gray-300"
                         }`}
                         placeholder="Hajiya Khadija Ahmed"
                       />
                     </div>
                     {errors.displayName && (
-                      <p className="mt-1 text-sm text-red-600">{errors.displayName}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.displayName}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 {/* Department */}
                 <div>
-                  <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="department"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Department *
                   </label>
                   <input
                     type="text"
                     id="department"
                     value={formData.department}
-                    onChange={(e) => setFormData(prev => ({ ...prev, department: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        department: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.department ? 'border-red-300' : 'border-gray-300'
+                      errors.department ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="e.g., Procurement Department, Finance, Technical Evaluation"
                   />
                   {errors.department && (
-                    <p className="mt-1 text-sm text-red-600">{errors.department}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.department}
+                    </p>
                   )}
                 </div>
 
@@ -303,7 +348,10 @@ export default function MDAUserForm({
                   </label>
                   <div className="space-y-3">
                     {userRoles.map((role) => (
-                      <label key={role.id} className="flex items-start space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                      <label
+                        key={role.id}
+                        className="flex items-start space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                      >
                         <input
                           type="radio"
                           name="role"
@@ -315,30 +363,44 @@ export default function MDAUserForm({
                         <div className="flex-1">
                           <div className="flex items-center space-x-2">
                             {role.icon}
-                            <span className="font-medium text-gray-900">{role.name}</span>
+                            <span className="font-medium text-gray-900">
+                              {role.name}
+                            </span>
                           </div>
                           <p className="text-sm text-gray-600 mt-1">
                             {role.description}
                           </p>
                           <div className="flex flex-wrap gap-1 mt-2">
                             {role.defaultPermissions.canCreateTenders && (
-                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Create Tenders</span>
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                                Create Tenders
+                              </span>
                             )}
                             {role.defaultPermissions.canEvaluateBids && (
-                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Evaluate Bids</span>
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                Evaluate Bids
+                              </span>
                             )}
                             {role.defaultPermissions.canViewFinancials && (
-                              <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">View Financials</span>
+                              <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                                View Financials
+                              </span>
                             )}
                             {role.defaultPermissions.canGenerateReports && (
-                              <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">Generate Reports</span>
+                              <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
+                                Generate Reports
+                              </span>
                             )}
-                            <span className={`text-xs px-2 py-1 rounded-full ${
-                              role.defaultPermissions.accessLevel === 'write' 
-                                ? 'bg-red-100 text-red-800' 
-                                : 'bg-gray-100 text-gray-800'
-                            }`}>
-                              {role.defaultPermissions.accessLevel === 'write' ? 'Write Access' : 'Read Only'}
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full ${
+                                role.defaultPermissions.accessLevel === "write"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {role.defaultPermissions.accessLevel === "write"
+                                ? "Write Access"
+                                : "Read Only"}
                             </span>
                           </div>
                         </div>
@@ -358,51 +420,84 @@ export default function MDAUserForm({
                         <input
                           type="checkbox"
                           checked={formData.permissions.canCreateTenders}
-                          onChange={(e) => handlePermissionChange('canCreateTenders', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canCreateTenders",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">Create and manage tenders</span>
+                        <span className="text-sm text-gray-700">
+                          Create and manage tenders
+                        </span>
                       </label>
 
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={formData.permissions.canEvaluateBids}
-                          onChange={(e) => handlePermissionChange('canEvaluateBids', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canEvaluateBids",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">Evaluate bids and proposals</span>
+                        <span className="text-sm text-gray-700">
+                          Evaluate bids and proposals
+                        </span>
                       </label>
 
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={formData.permissions.canViewFinancials}
-                          onChange={(e) => handlePermissionChange('canViewFinancials', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canViewFinancials",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">View financial information</span>
+                        <span className="text-sm text-gray-700">
+                          View financial information
+                        </span>
                       </label>
 
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={formData.permissions.canGenerateReports}
-                          onChange={(e) => handlePermissionChange('canGenerateReports', e.target.checked)}
+                          onChange={(e) =>
+                            handlePermissionChange(
+                              "canGenerateReports",
+                              e.target.checked,
+                            )
+                          }
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">Generate reports</span>
+                        <span className="text-sm text-gray-700">
+                          Generate reports
+                        </span>
                       </label>
                     </div>
 
                     <div>
-                      <label htmlFor="accessLevel" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="accessLevel"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Access Level
                       </label>
                       <select
                         id="accessLevel"
                         value={formData.permissions.accessLevel}
-                        onChange={(e) => handlePermissionChange('accessLevel', e.target.value)}
+                        onChange={(e) =>
+                          handlePermissionChange("accessLevel", e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="read">Read Only</option>
@@ -421,11 +516,14 @@ export default function MDAUserForm({
                   <div className="flex items-start space-x-3">
                     <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="text-sm font-medium text-blue-800">Security Notice</h4>
+                      <h4 className="text-sm font-medium text-blue-800">
+                        Security Notice
+                      </h4>
                       <p className="text-sm text-blue-700 mt-1">
-                        A temporary password will be generated and sent to the user's email address. 
-                        They will be required to change it on first login. All user activities will be 
-                        logged for audit purposes.
+                        A temporary password will be generated and sent to the
+                        user's email address. They will be required to change it
+                        on first login. All user activities will be logged for
+                        audit purposes.
                       </p>
                     </div>
                   </div>
@@ -442,12 +540,12 @@ export default function MDAUserForm({
                 {isSubmitting ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {mode === 'create' ? 'Creating...' : 'Updating...'}
+                    {mode === "create" ? "Creating..." : "Updating..."}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4 mr-2" />
-                    {mode === 'create' ? 'Create User' : 'Update User'}
+                    {mode === "create" ? "Create User" : "Update User"}
                   </>
                 )}
               </button>

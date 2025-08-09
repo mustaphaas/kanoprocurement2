@@ -17,7 +17,7 @@ export interface DemoResponse {
 export interface MDA {
   id: string;
   name: string;
-  type: 'ministry' | 'department' | 'agency';
+  type: "ministry" | "department" | "agency";
   description: string;
   parentMDA?: string;
   contactEmail: string;
@@ -46,7 +46,7 @@ export interface MDAAdmin {
   id: string;
   mdaId: string;
   userId: string;
-  role: 'mda_admin' | 'mda_super_admin';
+  role: "mda_admin" | "mda_super_admin";
   permissions: MDAPermissions;
   assignedBy: string;
   assignedAt: Date;
@@ -64,7 +64,7 @@ export interface MDAPermissions {
 
 export interface CreateMDARequest {
   name: string;
-  type: 'ministry' | 'department' | 'agency';
+  type: "ministry" | "department" | "agency";
   description: string;
   parentMDA?: string;
   contactEmail: string;
@@ -78,7 +78,7 @@ export interface CreateMDAAdminRequest {
   mdaId: string;
   email: string;
   displayName: string;
-  role: 'mda_admin' | 'mda_super_admin';
+  role: "mda_admin" | "mda_super_admin";
   permissions: MDAPermissions;
 }
 
@@ -86,7 +86,7 @@ export interface MDAUser {
   id: string;
   mdaId: string;
   userId: string;
-  role: 'procurement_officer' | 'evaluator' | 'accountant' | 'viewer';
+  role: "procurement_officer" | "evaluator" | "accountant" | "viewer";
   department: string;
   permissions: MDAUserPermissions;
   assignedBy: string;
@@ -99,14 +99,14 @@ export interface MDAUserPermissions {
   canEvaluateBids: boolean;
   canViewFinancials: boolean;
   canGenerateReports: boolean;
-  accessLevel: 'read' | 'write' | 'admin';
+  accessLevel: "read" | "write" | "admin";
 }
 
 export interface CreateMDAUserRequest {
   mdaId: string;
   email: string;
   displayName: string;
-  role: 'procurement_officer' | 'evaluator' | 'accountant' | 'viewer';
+  role: "procurement_officer" | "evaluator" | "accountant" | "viewer";
   department: string;
   permissions: MDAUserPermissions;
 }

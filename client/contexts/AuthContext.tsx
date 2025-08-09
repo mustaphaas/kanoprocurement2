@@ -1,13 +1,13 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from 'firebase/auth';
-import authService, { UserProfile, AuthContextType } from '@/lib/auth';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { User } from "firebase/auth";
+import authService, { UserProfile, AuthContextType } from "@/lib/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -31,7 +31,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const signIn = async (email: string, password: string): Promise<UserProfile> => {
+  const signIn = async (
+    email: string,
+    password: string,
+  ): Promise<UserProfile> => {
     setLoading(true);
     try {
       const profile = await authService.signIn(email, password);
@@ -42,9 +45,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const signUp = async (
-    email: string, 
-    password: string, 
-    profileData: Partial<UserProfile>
+    email: string,
+    password: string,
+    profileData: Partial<UserProfile>,
   ): Promise<UserProfile> => {
     setLoading(true);
     try {
@@ -68,7 +71,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     await authService.resetPassword(email);
   };
 
-  const updateUserProfile = async (updates: Partial<UserProfile>): Promise<void> => {
+  const updateUserProfile = async (
+    updates: Partial<UserProfile>,
+  ): Promise<void> => {
     if (user) {
       await authService.updateUserProfile(user.uid, updates);
       // Update local state
@@ -86,27 +91,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signUp,
     signOut,
     resetPassword,
-    updateUserProfile
+    updateUserProfile,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 // HOC for protecting routes
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'company' | 'admin' | 'superuser';
+  requiredRole?: "company" | "admin" | "superuser";
   fallback?: React.ReactNode;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole,
-  fallback = <div>Access Denied</div>
+  fallback = <div>Access Denied</div>,
 }) => {
   const { user, userProfile, loading } = useAuth();
 
@@ -120,11 +121,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (!user || !userProfile) {
     // Redirect to login
-    window.location.href = '/login';
+    window.location.href = "/login";
     return null;
   }
 
-  if (requiredRole && userProfile.role !== requiredRole && userProfile.role !== 'superuser') {
+  if (
+    requiredRole &&
+    userProfile.role !== requiredRole &&
+    userProfile.role !== "superuser"
+  ) {
     return <>{fallback}</>;
   }
 
@@ -136,10 +141,10 @@ export const useRole = () => {
   const { userProfile } = useAuth();
 
   return {
-    isCompany: userProfile?.role === 'company',
-    isAdmin: userProfile?.role === 'admin' || userProfile?.role === 'superuser',
-    isSuperUser: userProfile?.role === 'superuser',
-    role: userProfile?.role
+    isCompany: userProfile?.role === "company",
+    isAdmin: userProfile?.role === "admin" || userProfile?.role === "superuser",
+    isSuperUser: userProfile?.role === "superuser",
+    role: userProfile?.role,
   };
 };
 
@@ -151,6 +156,6 @@ export const useAuthState = () => {
     isAuthenticated: !!user && !!userProfile,
     isLoading: loading,
     user,
-    userProfile
+    userProfile,
   };
 };
