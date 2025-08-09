@@ -968,7 +968,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of medical equipment for Kano State hospitals",
               category: "Healthcare",
-              estimatedValue: "₦850,000,000",
+              estimatedValue: "���850,000,000",
               status: "Published",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
@@ -1244,7 +1244,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "₦255,000,000",
+            amount: "���255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -2259,6 +2259,11 @@ export default function MinistryDashboard() {
     setVendorCommunications(mockVendorCommunications);
     setScheduledPublications(mockScheduledPublications);
     setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
+
+    // Refresh bid counts for all tenders after initial load
+    setTimeout(() => {
+      refreshAllTenderBidCounts();
+    }, 100);
   }, []);
 
   // Function to load bids from localStorage for selected tender
@@ -2570,7 +2575,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-017",
           companyName: "Learning Tech Systems",
-          bidAmount: "₦1,850,000,000",
+          bidAmount: "��1,850,000,000",
           technicalScore: 89,
           financialScore: 87,
           totalScore: 88,
@@ -2821,6 +2826,352 @@ export default function MinistryDashboard() {
       ] || [];
     setBidders(newBidders);
   }, [selectedWorkspace]);
+
+  // Function to get workspace-specific bidder data
+  const getWorkspaceBidderData = () => {
+    return {
+      // Ministry of Works Infrastructure tenders
+      "MOWI-2024-001": [
+        {
+          id: "BID-001",
+          companyName: "Kano Construction Ltd",
+          bidAmount: "₦14,800,000,000",
+          technicalScore: 90,
+          financialScore: 87,
+          totalScore: 88.5,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "20 years",
+          certifications: ["ISO 9001", "COREN Certified", "NIQS Registered"],
+          previousProjects: 62,
+          completionRate: 97.8,
+        },
+        {
+          id: "BID-002",
+          companyName: "Sahel Bridge Builders",
+          bidAmount: "₦15,100,000,000",
+          technicalScore: 88,
+          financialScore: 85,
+          totalScore: 86.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "18 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 45,
+          completionRate: 96.2,
+        },
+        {
+          id: "BID-003",
+          companyName: "Northern Roads Nigeria",
+          bidAmount: "₦15,400,000,000",
+          technicalScore: 85,
+          financialScore: 83,
+          totalScore: 84,
+          status: "Qualified",
+          submissionDate: "2024-02-08",
+          experience: "15 years",
+          certifications: ["ISO 9001", "NBRRI Certified"],
+          previousProjects: 38,
+          completionRate: 95.5,
+        },
+        {
+          id: "BID-004",
+          companyName: "Emirate Construction Co",
+          bidAmount: "₦15,600,000,000",
+          technicalScore: 82,
+          financialScore: 80,
+          totalScore: 81,
+          status: "Qualified",
+          submissionDate: "2024-02-07",
+          experience: "12 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 29,
+          completionRate: 94.1,
+        },
+        {
+          id: "BID-005",
+          companyName: "Federal Infrastructure Ltd",
+          bidAmount: "₦15,800,000,000",
+          technicalScore: 80,
+          financialScore: 78,
+          totalScore: 79,
+          status: "Qualified",
+          submissionDate: "2024-02-06",
+          experience: "10 years",
+          certifications: ["ISO 9001", "NIQS Registered"],
+          previousProjects: 22,
+          completionRate: 92.7,
+        },
+      ],
+      "MOWI-2024-002": [
+        {
+          id: "BID-006",
+          companyName: "Sahel Bridge Builders",
+          bidAmount: "₦8,200,000,000",
+          technicalScore: 93,
+          financialScore: 89,
+          totalScore: 91,
+          status: "Qualified",
+          submissionDate: "2024-02-15",
+          experience: "18 years",
+          certifications: ["Bridge Construction Certified", "COREN Certified"],
+          previousProjects: 28,
+          completionRate: 98.1,
+        },
+        {
+          id: "BID-007",
+          companyName: "Northern Roads Nigeria",
+          bidAmount: "₦8,400,000,000",
+          technicalScore: 90,
+          financialScore: 86,
+          totalScore: 88,
+          status: "Qualified",
+          submissionDate: "2024-02-14",
+          experience: "15 years",
+          certifications: ["ISO 9001", "Bridge Engineering Certified"],
+          previousProjects: 22,
+          completionRate: 96.8,
+        },
+        {
+          id: "BID-008",
+          companyName: "Kano Construction Ltd",
+          bidAmount: "₦8,600,000,000",
+          technicalScore: 87,
+          financialScore: 84,
+          totalScore: 85.5,
+          status: "Qualified",
+          submissionDate: "2024-02-13",
+          experience: "20 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 35,
+          completionRate: 95.2,
+        },
+        {
+          id: "BID-009",
+          companyName: "Emirate Construction Co",
+          bidAmount: "₦8,800,000,000",
+          technicalScore: 84,
+          financialScore: 81,
+          totalScore: 82.5,
+          status: "Under Review",
+          submissionDate: "2024-02-12",
+          experience: "12 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 18,
+          completionRate: 93.4,
+        },
+      ],
+      // Ministry of Education tenders
+      "MOE-2024-001": [
+        {
+          id: "BID-010",
+          companyName: "EduTech Solutions Ltd",
+          bidAmount: "₦2,000,000,000",
+          technicalScore: 95,
+          financialScore: 92,
+          totalScore: 93.5,
+          status: "Qualified",
+          submissionDate: "2024-02-12",
+          experience: "12 years",
+          certifications: ["ISO 9001", "Educational Technology Certified"],
+          previousProjects: 89,
+          completionRate: 99.1,
+        },
+        {
+          id: "BID-011",
+          companyName: "Kano School Furniture Ltd",
+          bidAmount: "₦2,050,000,000",
+          technicalScore: 91,
+          financialScore: 89,
+          totalScore: 90,
+          status: "Qualified",
+          submissionDate: "2024-02-11",
+          experience: "15 years",
+          certifications: ["ISO 9001", "Furniture Quality Certified"],
+          previousProjects: 156,
+          completionRate: 98.7,
+        },
+        {
+          id: "BID-012",
+          companyName: "Northern Educational Supplies",
+          bidAmount: "₦2,100,000,000",
+          technicalScore: 88,
+          financialScore: 86,
+          totalScore: 87,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "10 years",
+          certifications: ["ISO 9001", "Educational Materials Certified"],
+          previousProjects: 67,
+          completionRate: 97.3,
+        },
+        {
+          id: "BID-013",
+          companyName: "Academic Furniture Nigeria",
+          bidAmount: "₦2,150,000,000",
+          technicalScore: 85,
+          financialScore: 84,
+          totalScore: 84.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "8 years",
+          certifications: ["ISO 9001", "School Equipment Certified"],
+          previousProjects: 43,
+          completionRate: 95.8,
+        },
+        {
+          id: "BID-014",
+          companyName: "Learning Resources Ltd",
+          bidAmount: "₦2,200,000,000",
+          technicalScore: 82,
+          financialScore: 81,
+          totalScore: 81.5,
+          status: "Under Review",
+          submissionDate: "2024-02-08",
+          experience: "6 years",
+          certifications: ["ISO 9001", "Educational Supplies Certified"],
+          previousProjects: 29,
+          completionRate: 94.2,
+        },
+      ],
+      // Ministry of Health (default) bidders
+      "MOH-2024-001": [
+        {
+          id: "BID-001",
+          companyName: "PrimeCare Medical Ltd",
+          bidAmount: "₦820,000,000",
+          technicalScore: 92,
+          financialScore: 88,
+          totalScore: 90,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "15 years",
+          certifications: ["ISO 9001", "ISO 13485", "FDA Approved"],
+          previousProjects: 45,
+          completionRate: 98.5,
+        },
+        {
+          id: "BID-002",
+          companyName: "Falcon Diagnostics Ltd",
+          bidAmount: "₦850,000,000",
+          technicalScore: 88,
+          financialScore: 85,
+          totalScore: 86.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "12 years",
+          certifications: ["ISO 9001", "GMP Certified"],
+          previousProjects: 32,
+          completionRate: 96.8,
+        },
+        {
+          id: "BID-003",
+          companyName: "Golden Gates Healthcare",
+          bidAmount: "₦875,000,000",
+          technicalScore: 85,
+          financialScore: 82,
+          totalScore: 83.5,
+          status: "Qualified",
+          submissionDate: "2024-02-08",
+          experience: "10 years",
+          certifications: ["ISO 9001"],
+          previousProjects: 28,
+          completionRate: 94.2,
+        },
+        {
+          id: "BID-004",
+          companyName: "Royal Medical Solutions",
+          bidAmount: "₦890,000,000",
+          technicalScore: 82,
+          financialScore: 79,
+          totalScore: 80.5,
+          status: "Qualified",
+          submissionDate: "2024-02-07",
+          experience: "8 years",
+          certifications: ["ISO 9001", "CE Certified"],
+          previousProjects: 22,
+          completionRate: 92.3,
+        },
+        {
+          id: "BID-005",
+          companyName: "Zenith Health Technologies",
+          bidAmount: "₦910,000,000",
+          technicalScore: 80,
+          financialScore: 76,
+          totalScore: 78,
+          status: "Qualified",
+          submissionDate: "2024-02-06",
+          experience: "6 years",
+          certifications: ["ISO 9001", "WHO Approved"],
+          previousProjects: 18,
+          completionRate: 89.7,
+        },
+      ],
+      // Renovation Aminu Kano Teaching Hospital
+      "MOH-1754780571822": [
+        {
+          id: "BID-HC-001",
+          companyName: "HealthCare Builders Nigeria",
+          bidAmount: "₦180,000,000",
+          technicalScore: 92,
+          financialScore: 88,
+          totalScore: 90,
+          status: "Qualified",
+          submissionDate: "2025-01-15",
+          experience: "15 years",
+          certifications: [
+            "ISO 9001",
+            "Healthcare Facility Certification",
+            "COREN Certified",
+          ],
+          previousProjects: 35,
+          completionRate: 98.2,
+        },
+        {
+          id: "BID-HC-002",
+          companyName: "Northern Medical Construction",
+          bidAmount: "₦190,000,000",
+          technicalScore: 89,
+          financialScore: 85,
+          totalScore: 87,
+          status: "Qualified",
+          submissionDate: "2025-01-14",
+          experience: "12 years",
+          certifications: ["ISO 9001", "Medical Equipment Installation"],
+          previousProjects: 28,
+          completionRate: 96.8,
+        },
+        {
+          id: "BID-HC-003",
+          companyName: "Kano Hospital Renovators",
+          bidAmount: "₦195,000,000",
+          technicalScore: 85,
+          financialScore: 83,
+          totalScore: 84,
+          status: "Qualified",
+          submissionDate: "2025-01-13",
+          experience: "10 years",
+          certifications: ["ISO 9001", "Hospital Renovation Specialist"],
+          previousProjects: 22,
+          completionRate: 94.5,
+        },
+        {
+          id: "BID-HC-004",
+          companyName: "Advanced Medical Facilities Ltd",
+          bidAmount: "₦210,000,000",
+          technicalScore: 80,
+          financialScore: 78,
+          totalScore: 79,
+          status: "Under Review",
+          submissionDate: "2025-01-12",
+          experience: "8 years",
+          certifications: ["ISO 9001", "Medical Construction"],
+          previousProjects: 15,
+          completionRate: 92.1,
+        },
+      ],
+    };
+  };
 
   // Set up periodic refresh of bid counts
   useEffect(() => {
@@ -3508,7 +3859,7 @@ For detailed feedback, please contact our procurement office.`,
               value: {
                 amount: parseFloat(
                   awardedTenderData.awardDetails.awardValue.replace(
-                    /[₦,]/g,
+                    /[��,]/g,
                     "",
                   ),
                 ),
@@ -4522,7 +4873,32 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     {tender.bidsReceived}
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900">
+                    <button
+                      onClick={() => {
+                        setSelectedTenderForDetails(tender);
+                        const tenderBids = loadBidsForTender(tender.id);
+
+                        // If no real bids found, fall back to mock data based on tender ID
+                        if (tenderBids.length === 0) {
+                          // Use workspace-specific mock data if available
+                          const workspaceBidderData = getWorkspaceBidderData();
+                          const workspaceBidders =
+                            workspaceBidderData[
+                              tender.id as keyof typeof workspaceBidderData
+                            ];
+                          if (workspaceBidders) {
+                            setBidders(workspaceBidders);
+                          } else {
+                            // For new/unrecognized tenders, use empty array to show "no companies" message
+                            setBidders([]);
+                          }
+                        } else {
+                          setBidders(tenderBids);
+                        }
+                        setShowTenderDetailsModal(true);
+                      }}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
                       <Eye className="h-4 w-4 inline mr-1" />
                       View
                     </button>
@@ -7038,10 +7414,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ��� Tender Details - {selectedTenderForDetails.title}
+                  📋 Tender Details - {selectedTenderForDetails.title}
                 </h3>
                 <button
-                  onClick={() => setShowTenderDetailsModal(false)}
+                  onClick={() => {
+                    setShowTenderDetailsModal(false);
+                    setSelectedTenderForDetails(null);
+                  }}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   <X className="h-6 w-6" />
@@ -7153,6 +7532,181 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </div>
                 </div>
               </div>
+
+              {/* Participating Companies Section */}
+              {bidders.length > 0 && (
+                <div className="mt-6">
+                  <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                    <Building2 className="h-5 w-5 mr-2 text-blue-600" />
+                    Companies That Participated in This Tender
+                  </h4>
+                  <div className="bg-gray-50 rounded-lg overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-100">
+                          <tr>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Company
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Bid Amount
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Technical Score
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Financial Score
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Total Score
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Status
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Submission Date
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {bidders.map((bidder) => (
+                            <tr key={bidder.id} className="hover:bg-gray-50">
+                              <td className="px-4 py-3">
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900">
+                                    {bidder.companyName}
+                                  </div>
+                                  <div className="text-sm text-gray-500">
+                                    {bidder.experience} experience
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {bidder.bidAmount}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">
+                                  {bidder.technicalScore}/100
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">
+                                  {bidder.financialScore}/100
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {bidder.totalScore}/100
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span
+                                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                    bidder.status === "Qualified"
+                                      ? "bg-green-100 text-green-800"
+                                      : bidder.status === "Under Review"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {bidder.status}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                {new Date(
+                                  bidder.submissionDate,
+                                ).toLocaleDateString()}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Summary Stats */}
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">
+                          {bidders.length}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Total Participants
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-green-600">
+                          {
+                            bidders.filter((b) => b.status === "Qualified")
+                              .length
+                          }
+                        </div>
+                        <div className="text-sm text-gray-600">Qualified</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-purple-600">
+                          {bidders.length > 0
+                            ? Math.round(
+                                bidders.reduce(
+                                  (sum, b) => sum + b.totalScore,
+                                  0,
+                                ) / bidders.length,
+                              )
+                            : 0}
+                        </div>
+                        <div className="text-sm text-gray-600">Avg Score</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-orange-600">
+                          {bidders.length > 0
+                            ? bidders
+                                .sort((a, b) => b.totalScore - a.totalScore)[0]
+                                .companyName.split(" ")[0]
+                            : "N/A"}
+                        </div>
+                        <div className="text-sm text-gray-600">Top Bidder</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Show message when no bidders */}
+              {bidders.length === 0 && (
+                <div className="mt-6">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+                    <div className="text-yellow-600 mb-2">
+                      <Users className="h-12 w-12 mx-auto" />
+                    </div>
+                    <h3 className="text-lg font-medium text-yellow-800 mb-2">
+                      No Companies Found
+                    </h3>
+                    <p className="text-yellow-700">
+                      Either no companies have submitted bids for this tender
+                      yet, or the bidding period hasn't opened.
+                    </p>
+                    <div className="mt-4 text-sm text-yellow-600">
+                      <p>
+                        <strong>Tender Status:</strong>{" "}
+                        {selectedTenderForDetails.status}
+                      </p>
+                      <p>
+                        <strong>Bid Count:</strong>{" "}
+                        {selectedTenderForDetails.bidsReceived}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="mt-6 flex justify-end space-x-3">
                 <button
@@ -8703,7 +9257,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       ⚡ Automation Benefits
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
-                      <li>��� 90% faster processing</li>
+                      <li>����� 90% faster processing</li>
                       <li>• Reduced human errors</li>
                       <li>• Real-time notifications</li>
                       <li>��� Automatic compliance checks</li>
@@ -9592,8 +10146,12 @@ Blockchain Timestamp: ${Date.now()}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-green-700 rounded-lg flex items-center justify-center">
-                <Building2 className="h-6 w-6 text-white" />
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2Fe2b03698f65d43d792efcb7e22009c33?format=webp&width=800"
+                  alt="Kano State Government Logo"
+                  className="h-10 w-10 rounded-lg object-cover"
+                />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-green-700">

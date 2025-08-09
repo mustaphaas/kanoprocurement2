@@ -70,7 +70,7 @@ export default function Index() {
         "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
       closingDate: "2024-02-15",
-      tenderFee: "���25,000",
+      tenderFee: "�����25,000",
       procuringEntity: "Kano State Ministry of Works",
       duration: "18 months",
       eligibility: "Category C contractors with road construction experience",
@@ -290,11 +290,17 @@ export default function Index() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-green-700 rounded-lg flex items-center justify-center">
-                <Building2 className="h-6 w-6 text-white" />
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2Fe2b03698f65d43d792efcb7e22009c33?format=webp&width=800"
+                  alt="Kano State Government Logo"
+                  className="h-10 w-10 rounded-lg object-cover"
+                />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-green-700">KanoProc</h1>
+                <h1 className="text-xl font-bold text-green-700">
+                  Kano State Government
+                </h1>
                 <p className="text-xs text-gray-600">
                   Kano State E-Procurement Portal
                 </p>
@@ -410,140 +416,153 @@ export default function Index() {
         {/* Hero Section */}
         <section
           id="home"
-          className="bg-gradient-to-br from-green-50 via-white to-green-25 py-20 lg:py-32"
+          className="relative bg-gradient-to-br from-green-50 via-white to-green-25 py-6 lg:py-12"
+          style={{
+            backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2F036ab409075d4a65ae5179dd5647770a?format=webp&width=800')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    Official Government Portal
-                  </span>
-                  <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                    Kano State
-                    <span className="text-green-700 block">E-Procurement</span>
-                    Portal
-                  </h1>
-                  <p className="text-xl text-gray-600 max-w-lg">
-                    Transparent, efficient, and digital procurement platform
-                    connecting government opportunities with qualified vendors
-                    across Kano State.
-                  </p>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    to="/register"
-                    className="inline-flex items-center px-8 py-4 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800"
-                  >
-                    <Building2 className="mr-2 h-5 w-5" />
-                    Register Your Company
-                  </Link>
-                  <Link
-                    to="/tenders"
-                    className="inline-flex items-center px-8 py-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
-                  >
-                    <Search className="mr-2 h-5 w-5" />
-                    Browse Tenders
-                  </Link>
-                </div>
-
-                <div className="flex items-center space-x-6 text-sm text-gray-600">
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span>Verified Vendors Only</span>
+          {/* Translucent overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-green-50/85 via-white/90 to-green-25/85"></div>
+          {/* Content wrapper */}
+          <div className="relative z-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      Official Government Portal
+                    </span>
+                    <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                      Kano State
+                      <span className="text-green-700 block">
+                        E-Procurement
+                      </span>
+                      Portal
+                    </h1>
+                    <p className="text-xl text-gray-600 max-w-lg">
+                      Transparent, efficient, and digital procurement platform
+                      connecting government opportunities with qualified vendors
+                      across Kano State.
+                    </p>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Shield className="h-4 w-4 text-blue-600" />
-                    <span>Secure Platform</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Animated Tender Slideshow */}
-              <div className="hidden lg:block">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-100 to-green-50 rounded-3xl transform rotate-6"></div>
-                  <div className="relative bg-white rounded-3xl shadow-2xl p-8 transform -rotate-2 overflow-hidden">
-                    {/* Progress bar */}
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100">
-                      <div
-                        className="h-full bg-green-700 transition-all duration-[4000ms] ease-linear"
-                        style={{
-                          width: `${((currentTenderIndex + 1) / featuredTenders.length) * 100}%`,
-                        }}
-                      ></div>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Link
+                      to="/register"
+                      className="inline-flex items-center px-8 py-4 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800"
+                    >
+                      <Building2 className="mr-2 h-5 w-5" />
+                      Register Your Company
+                    </Link>
+                    <Link
+                      to="/tenders"
+                      className="inline-flex items-center px-8 py-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
+                    >
+                      <Search className="mr-2 h-5 w-5" />
+                      Browse Tenders
+                    </Link>
+                  </div>
+
+                  <div className="flex items-center space-x-6 text-sm text-gray-600">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span>Verified Vendors Only</span>
                     </div>
+                    <div className="flex items-center space-x-2">
+                      <Shield className="h-4 w-4 text-blue-600" />
+                      <span>Secure Platform</span>
+                    </div>
+                  </div>
+                </div>
 
-                    {/* Slideshow content */}
-                    <div className="space-y-6 transition-all duration-500 ease-in-out">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
-                            <FileText className="h-6 w-6 text-green-700" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold">Featured Tender</h3>
-                            <p className="text-sm text-gray-600">
-                              {currentTender.id}
-                            </p>
-                          </div>
-                        </div>
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${currentTender.statusColor}`}
-                        >
-                          {currentTender.status}
-                        </span>
+                {/* Animated Tender Slideshow */}
+                <div className="hidden lg:block">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-100 to-green-50 rounded-3xl transform rotate-6"></div>
+                    <div className="relative bg-white rounded-3xl shadow-2xl p-8 transform -rotate-2 overflow-hidden">
+                      {/* Progress bar */}
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100">
+                        <div
+                          className="h-full bg-green-700 transition-all duration-[4000ms] ease-linear"
+                          style={{
+                            width: `${((currentTenderIndex + 1) / featuredTenders.length) * 100}%`,
+                          }}
+                        ></div>
                       </div>
 
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium text-lg">
-                            {currentTender.title}
-                          </h4>
-                          <span className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full">
-                            {currentTender.category}
+                      {/* Slideshow content */}
+                      <div className="space-y-6 transition-all duration-500 ease-in-out">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                              <FileText className="h-6 w-6 text-green-700" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold">Featured Tender</h3>
+                              <p className="text-sm text-gray-600">
+                                {currentTender.id}
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${currentTender.statusColor}`}
+                          >
+                            {currentTender.status}
                           </span>
                         </div>
-                        <p className="text-gray-600 text-sm mb-4">
-                          {currentTender.description}
-                        </p>
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Value:</span>
-                            <span className="font-medium">
-                              {currentTender.value}
+
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-lg">
+                              {currentTender.title}
+                            </h4>
+                            <span className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full">
+                              {currentTender.category}
                             </span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Deadline:</span>
-                            <span className="font-medium">
-                              {currentTender.deadline}
-                            </span>
+                          <p className="text-gray-600 text-sm mb-4">
+                            {currentTender.description}
+                          </p>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Value:</span>
+                              <span className="font-medium">
+                                {currentTender.value}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Deadline:</span>
+                              <span className="font-medium">
+                                {currentTender.deadline}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Navigation dots */}
-                      <div className="flex justify-center space-x-2 pt-4">
-                        {featuredTenders.map((_, index) => (
-                          <button
-                            key={index}
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                              index === currentTenderIndex
-                                ? "bg-green-700 w-6"
-                                : "bg-gray-300 hover:bg-gray-400"
-                            }`}
-                            onClick={() => setCurrentTenderIndex(index)}
-                          />
-                        ))}
-                      </div>
+                        {/* Navigation dots */}
+                        <div className="flex justify-center space-x-2 pt-4">
+                          {featuredTenders.map((_, index) => (
+                            <button
+                              key={index}
+                              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                index === currentTenderIndex
+                                  ? "bg-green-700 w-6"
+                                  : "bg-gray-300 hover:bg-gray-400"
+                              }`}
+                              onClick={() => setCurrentTenderIndex(index)}
+                            />
+                          ))}
+                        </div>
 
-                      {/* Action button */}
-                      <button className="w-full inline-flex items-center justify-center px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800">
-                        <Eye className="mr-2 h-4 w-4" />
-                        View Details
-                      </button>
+                        {/* Action button */}
+                        <button className="w-full inline-flex items-center justify-center px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800">
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Details
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
