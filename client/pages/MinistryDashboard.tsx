@@ -500,14 +500,48 @@ export default function MinistryDashboard() {
   ]);
   const navigate = useNavigate();
 
-  // Get ministry info from context/auth (mock for now)
-  const ministryInfo: MinistryInfo = {
-    name: "Ministry of Health",
-    code: "MOH",
-    contactEmail: "health@kanostate.gov.ng",
-    contactPhone: "08012345678",
-    address: "Kano State Secretariat, Kano",
+  // Get ministry info from localStorage
+  const getMinistryInfo = (): MinistryInfo => {
+    const ministryUser = localStorage.getItem("ministryUser");
+    if (!ministryUser) {
+      navigate("/login");
+      return {
+        name: "Ministry of Health",
+        code: "MOH",
+        contactEmail: "health@kanostate.gov.ng",
+        contactPhone: "08012345678",
+        address: "Kano State Secretariat, Kano",
+      };
+    }
+
+    try {
+      const userData = JSON.parse(ministryUser);
+      const ministry = getMinistryById(userData.ministryId);
+
+      if (ministry) {
+        return {
+          name: ministry.name,
+          code: ministry.code,
+          contactEmail: ministry.contactEmail,
+          contactPhone: ministry.contactPhone,
+          address: ministry.address,
+        };
+      }
+    } catch (error) {
+      console.error("Error parsing ministry user data:", error);
+    }
+
+    // Fallback to default
+    return {
+      name: "Ministry of Health",
+      code: "MOH",
+      contactEmail: "health@kanostate.gov.ng",
+      contactPhone: "08012345678",
+      address: "Kano State Secretariat, Kano",
+    };
   };
+
+  const ministryInfo = getMinistryInfo();
 
   // Mock data initialization
   useEffect(() => {
