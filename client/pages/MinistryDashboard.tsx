@@ -281,6 +281,9 @@ export default function MinistryDashboard() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
+  const [selectedNOCRequest, setSelectedNOCRequest] = useState<NOCRequest | null>(null);
+  const [showNOCRequestModal, setShowNOCRequestModal] = useState(false);
+  const [showNOCCertificate, setShowNOCCertificate] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showCreateTender, setShowCreateTender] = useState(false);
@@ -8940,12 +8943,18 @@ Blockchain Timestamp: ${Date.now()}
                     )}
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900">
+                    <button
+                      onClick={() => handleViewNOCRequest(request)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
                       <Eye className="h-4 w-4 inline mr-1" />
                       View
                     </button>
                     {request.status === "Approved" && (
-                      <button className="text-green-600 hover:text-green-900">
+                      <button
+                        onClick={() => handleDownloadCertificate(request)}
+                        className="text-green-600 hover:text-green-900"
+                      >
                         <Download className="h-4 w-4 inline mr-1" />
                         Download Certificate
                       </button>
