@@ -2112,16 +2112,11 @@ export default function MinistryDashboard() {
 
     // Load tenders from localStorage if available, otherwise use mock data
     const storedTenders = localStorage.getItem("ministryTenders");
-    console.log("Ministry Dashboard - Loading tenders");
-    console.log("Stored tenders:", storedTenders);
-    console.log("Mock tenders:", mockTenders);
 
     if (storedTenders) {
       const parsedTenders = JSON.parse(storedTenders);
-      console.log("Using stored tenders:", parsedTenders);
       setTenders(parsedTenders);
     } else {
-      console.log("Using mock tenders and saving to localStorage");
       setTenders(mockTenders);
       // Save initial mock tenders to localStorage
       localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
