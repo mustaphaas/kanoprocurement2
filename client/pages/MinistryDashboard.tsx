@@ -2180,14 +2180,6 @@ export default function MinistryDashboard() {
     // Run the sync function
     syncTendersToPublicKeys();
 
-    // Set up periodic refresh of bid counts every 10 seconds
-    const bidCountInterval = setInterval(() => {
-      refreshAllTenderBidCounts();
-    }, 10000);
-
-    // Cleanup interval on unmount
-    return () => clearInterval(bidCountInterval);
-
     setContracts(mockContracts);
     setNOCRequests(mockNOCRequests);
     setEvaluationCommittees(mockEvaluationCommittees);
