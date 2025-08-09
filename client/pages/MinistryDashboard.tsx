@@ -397,6 +397,9 @@ export default function MinistryDashboard() {
   });
   const [showTenderSelectionModal, setShowTenderSelectionModal] = useState(false);
   const [selectedAwardedTender, setSelectedAwardedTender] = useState<any>(null);
+  const [showAwardLetterModal, setShowAwardLetterModal] = useState(false);
+  const [selectedTenderForLetter, setSelectedTenderForLetter] = useState<any>(null);
+  const [awardLetterData, setAwardLetterData] = useState<any>(null);
   const [bidders, setBidders] = useState([
     {
       id: "BID-001",
