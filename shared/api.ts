@@ -10,3 +10,74 @@
 export interface DemoResponse {
   message: string;
 }
+
+/**
+ * MDA (Ministry, Department, Agency) types for MDA Management
+ */
+export interface MDA {
+  id: string;
+  name: string;
+  type: 'ministry' | 'department' | 'agency';
+  description: string;
+  parentMDA?: string;
+  contactEmail: string;
+  contactPhone: string;
+  address: string;
+  headOfMDA: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isActive: boolean;
+  settings: MDASettings;
+}
+
+export interface MDASettings {
+  procurementThresholds: {
+    level1: number;
+    level2: number;
+    level3: number;
+  };
+  allowedCategories: string[];
+  customWorkflows: boolean;
+  budgetYear: string;
+  totalBudget: number;
+}
+
+export interface MDAAdmin {
+  id: string;
+  mdaId: string;
+  userId: string;
+  role: 'mda_admin' | 'mda_super_admin';
+  permissions: MDAPermissions;
+  assignedBy: string;
+  assignedAt: Date;
+  isActive: boolean;
+}
+
+export interface MDAPermissions {
+  canCreateUsers: boolean;
+  canManageTenders: boolean;
+  canApproveContracts: boolean;
+  canViewReports: boolean;
+  canManageSettings: boolean;
+  maxApprovalAmount: number;
+}
+
+export interface CreateMDARequest {
+  name: string;
+  type: 'ministry' | 'department' | 'agency';
+  description: string;
+  parentMDA?: string;
+  contactEmail: string;
+  contactPhone: string;
+  address: string;
+  headOfMDA: string;
+  settings: MDASettings;
+}
+
+export interface CreateMDAAdminRequest {
+  mdaId: string;
+  email: string;
+  displayName: string;
+  role: 'mda_admin' | 'mda_super_admin';
+  permissions: MDAPermissions;
+}
