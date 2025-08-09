@@ -499,10 +499,6 @@ export default function CompanyDashboard() {
     // Store back to localStorage
     localStorage.setItem("tenderBids", JSON.stringify(bidsArray));
 
-    // Debug: Log the bid data
-    console.log("Bid submitted:", bidData);
-    console.log("All bids in localStorage:", bidsArray);
-
     // Update the tender to show bid has been submitted - IMPORTANT: maintain hasExpressedInterest
     setTenders((prevTenders) =>
       prevTenders.map((tender) =>
