@@ -728,7 +728,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-004",
             milestoneId: "MIL-005",
-            amount: "���300,000,000",
+            amount: "₦300,000,000",
             requestDate: "2024-06-25",
             status: "Approved",
             invoiceNumber: "INV-2024-004",
@@ -4829,7 +4829,7 @@ For detailed feedback, please contact our procurement office.`,
           </p>
         </div>
         <button
-          onClick={() => setShowContractModal(true)}
+          onClick={() => setShowTenderSelectionModal(true)}
           className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
         >
           <Plus className="h-4 w-4 mr-2" />
