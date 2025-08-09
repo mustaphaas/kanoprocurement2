@@ -22,6 +22,19 @@ import {
   Eye,
   Search,
   Filter,
+  XCircle,
+  User,
+  DollarSign,
+  AlertTriangle,
+  Bell,
+  RefreshCw,
+  FileCheck,
+  Award,
+  Send,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from "lucide-react";
 
 interface NoObjectionCertificateData {
