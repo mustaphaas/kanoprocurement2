@@ -979,7 +979,7 @@ export default function MinistryDashboard() {
                 "Procurement of medical equipment for Kano State hospitals",
               category: "Healthcare",
               estimatedValue: "₦850,000,000",
-              status: "Evaluated",
+              status: "Published",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
               bidsReceived: getBidCountForTender("KS-2024-015"),
