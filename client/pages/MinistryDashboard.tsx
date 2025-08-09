@@ -3664,6 +3664,7 @@ export default function MinistryDashboard() {
                       Save as Draft
                     </button>
                     <button
+                      onClick={handleAwardTender}
                       disabled={
                         !awardFormData.selectedBidder ||
                         !awardFormData.awardValue ||
