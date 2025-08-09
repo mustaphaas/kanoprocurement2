@@ -1649,12 +1649,20 @@ The award letter has been:
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
-                  <button
-                    onClick={() => handleCreateMDAAdmin(mda)}
-                    className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full hover:bg-blue-200"
-                  >
-                    Add Admin
-                  </button>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleCreateMDAAdmin(mda)}
+                      className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full hover:bg-blue-200"
+                    >
+                      Add Admin
+                    </button>
+                    <button
+                      onClick={() => handleCreateMDAUser(mda)}
+                      className="text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full hover:bg-green-200"
+                    >
+                      Add User
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
