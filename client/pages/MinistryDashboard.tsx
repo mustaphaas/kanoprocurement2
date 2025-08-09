@@ -972,7 +972,7 @@ export default function MinistryDashboard() {
               status: "Evaluated",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
-              bidsReceived: 6,
+              bidsReceived: getBidCountForTender("KS-2024-001"),
               ministry: ministry.name,
               procuringEntity: "Kano State Road Maintenance Agency",
             },
