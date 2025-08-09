@@ -78,7 +78,8 @@ type TenderSubView =
   | "create"
   | "ai-management"
   | "bulk-upload"
-  | "evaluation";
+  | "evaluation"
+  | "award";
 
 interface Company {
   id: string;
@@ -313,6 +314,64 @@ export default function MinistryDashboard() {
   const [contractStep, setContractStep] = useState(1);
   const [generatedContract, setGeneratedContract] = useState<string>("");
   const [isGeneratingContract, setIsGeneratingContract] = useState(false);
+  const [selectedTenderForAward, setSelectedTenderForAward] = useState<Tender | null>(null);
+  const [showAwardModal, setShowAwardModal] = useState(false);
+  const [awardFormData, setAwardFormData] = useState({
+    selectedBidder: "",
+    awardValue: "",
+    awardJustification: "",
+    contractDuration: "",
+    performanceBond: "",
+    advancePayment: "",
+    liquidatedDamages: "",
+    warrantyPeriod: "",
+    deliverySchedule: "",
+    specialConditions: "",
+  });
+  const [bidders] = useState([
+    {
+      id: "BID-001",
+      companyName: "MedSupply Nigeria Ltd",
+      bidAmount: "₦820,000,000",
+      technicalScore: 92,
+      financialScore: 88,
+      totalScore: 90,
+      status: "Qualified",
+      submissionDate: "2024-02-10",
+      experience: "15 years",
+      certifications: ["ISO 9001", "ISO 13485", "FDA Approved"],
+      previousProjects: 45,
+      completionRate: 98.5,
+    },
+    {
+      id: "BID-002",
+      companyName: "Sahel Medical Supplies",
+      bidAmount: "₦850,000,000",
+      technicalScore: 88,
+      financialScore: 85,
+      totalScore: 86.5,
+      status: "Qualified",
+      submissionDate: "2024-02-09",
+      experience: "12 years",
+      certifications: ["ISO 9001", "GMP Certified"],
+      previousProjects: 32,
+      completionRate: 96.8,
+    },
+    {
+      id: "BID-003",
+      companyName: "Northern Healthcare Solutions",
+      bidAmount: "₦875,000,000",
+      technicalScore: 85,
+      financialScore: 82,
+      totalScore: 83.5,
+      status: "Qualified",
+      submissionDate: "2024-02-08",
+      experience: "10 years",
+      certifications: ["ISO 9001"],
+      previousProjects: 28,
+      completionRate: 94.2,
+    },
+  ]);
   const navigate = useNavigate();
 
   // Get ministry info from context/auth (mock for now)
@@ -1927,6 +1986,8 @@ export default function MinistryDashboard() {
       return renderBulkUpload();
     } else if (tenderSubView === "evaluation") {
       return renderEvaluationManagement();
+    } else if (tenderSubView === "award") {
+      return renderTenderAward();
     }
     return null;
   };
@@ -1951,6 +2012,499 @@ export default function MinistryDashboard() {
   const handleDisputeContract = (contract: Contract) => {
     setSelectedContractForAction(contract);
     setShowDisputeModal(true);
+  };
+
+  const renderTenderAward = () => {
+    const tendersForAward = tenders.filter(t => t.status === "Evaluated" || t.status === "Closed");
+
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              🏆 Tender Award Management
+            </h1>
+            <p className="text-gray-600">
+              Award contracts to qualified bidders based on evaluation results
+            </p>
+          </div>
+          <div className="flex space-x-3">
+            <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              <FileSpreadsheet className="h-4 w-4 mr-2" />
+              Award Report
+            </button>
+            <button className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+              <Download className="h-4 w-4 mr-2" />
+              Export Awards
+            </button>
+          </div>
+        </div>
+
+        {/* Award Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <Award className="h-8 w-8 text-blue-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">
+                  Ready for Award
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {tendersForAward.length}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Awarded</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {tenders.filter((t) => t.status === "Awarded").length}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <DollarSign className="h-8 w-8 text-purple-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Total Value</p>
+                <p className="text-2xl font-bold text-gray-900">₦2.7B</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center">
+              <TrendingUp className="h-8 w-8 text-orange-600" />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-600">Avg Score</p>
+                <p className="text-2xl font-bold text-gray-900">87.3%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tenders Ready for Award */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Tenders Ready for Award
+              </h2>
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search tenders..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Evaluated">Evaluated</option>
+                  <option value="Closed">Closed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <div className="space-y-6">
+              {tendersForAward.map((tender) => (
+                <div
+                  key={tender.id}
+                  className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {tender.title}
+                        </h3>
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            tender.status === "Evaluated"
+                              ? "bg-purple-100 text-purple-800"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
+                          {tender.status}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                        <div>
+                          <span className="font-medium">Tender ID:</span> {tender.id}
+                        </div>
+                        <div>
+                          <span className="font-medium">Estimated Value:</span> {tender.estimatedValue}
+                        </div>
+                        <div>
+                          <span className="font-medium">Bids Received:</span> {tender.bidsReceived}
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedTenderForAward(tender);
+                        setShowAwardModal(true);
+                      }}
+                      className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    >
+                      <Award className="h-4 w-4 mr-2" />
+                      Award Contract
+                    </button>
+                  </div>
+
+                  {/* Top Bidders Preview */}
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-3">Top Qualified Bidders</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {bidders.slice(0, 3).map((bidder, index) => (
+                        <div
+                          key={bidder.id}
+                          className={`p-4 rounded-lg border-2 ${
+                            index === 0
+                              ? "border-green-200 bg-green-50"
+                              : "border-gray-200 bg-gray-50"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-2">
+                              {index === 0 && (
+                                <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+                                  <span className="text-white text-xs font-bold">1</span>
+                                </div>
+                              )}
+                              <span className="font-medium text-gray-900 text-sm">
+                                {bidder.companyName}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-500">
+                              Score: {bidder.totalScore}%
+                            </span>
+                          </div>
+                          <div className="space-y-1 text-xs text-gray-600">
+                            <div className="flex justify-between">
+                              <span>Bid Amount:</span>
+                              <span className="font-medium">{bidder.bidAmount}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Experience:</span>
+                              <span>{bidder.experience}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Completion Rate:</span>
+                              <span>{bidder.completionRate}%</span>
+                            </div>
+                          </div>
+                          <div className="mt-2">
+                            <div className="flex flex-wrap gap-1">
+                              {bidder.certifications.slice(0, 2).map((cert) => (
+                                <span
+                                  key={cert}
+                                  className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded text-xs"
+                                >
+                                  {cert}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+                    <button className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm">
+                      <Eye className="h-3 w-3 mr-1" />
+                      View Details
+                    </button>
+                    <button className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 text-sm">
+                      <CheckSquare className="h-3 w-3 mr-1" />
+                      Evaluation Report
+                    </button>
+                    <button className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 text-sm">
+                      <Download className="h-3 w-3 mr-1" />
+                      Download Bids
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Award Modal */}
+        {showAwardModal && selectedTenderForAward && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  🏆 Award Contract - {selectedTenderForAward.title}
+                </h3>
+                <button
+                  onClick={() => {
+                    setShowAwardModal(false);
+                    setSelectedTenderForAward(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Bidder Selection */}
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      Select Winning Bidder
+                    </h4>
+                    <div className="space-y-3">
+                      {bidders.map((bidder, index) => (
+                        <div
+                          key={bidder.id}
+                          className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                            awardFormData.selectedBidder === bidder.id
+                              ? "border-green-500 bg-green-50"
+                              : "border-gray-200 hover:border-gray-300"
+                          }`}
+                          onClick={() => {
+                            setAwardFormData({
+                              ...awardFormData,
+                              selectedBidder: bidder.id,
+                              awardValue: bidder.bidAmount,
+                            });
+                          }}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-2">
+                                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                                  index === 0 ? "bg-yellow-500 text-white" :
+                                  index === 1 ? "bg-gray-400 text-white" :
+                                  "bg-orange-400 text-white"
+                                }`}>
+                                  <span className="text-xs font-bold">{index + 1}</span>
+                                </div>
+                                <h5 className="font-semibold text-gray-900">
+                                  {bidder.companyName}
+                                </h5>
+                                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                                  {bidder.status}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                                <div>
+                                  <span className="font-medium">Bid Amount:</span>
+                                  <p className="text-lg font-semibold text-gray-900">{bidder.bidAmount}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Total Score:</span>
+                                  <p className="text-lg font-semibold text-green-600">{bidder.totalScore}%</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Technical:</span>
+                                  <p>{bidder.technicalScore}%</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Financial:</span>
+                                  <p>{bidder.financialScore}%</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Experience:</span>
+                                  <p>{bidder.experience}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Projects:</span>
+                                  <p>{bidder.previousProjects} completed</p>
+                                </div>
+                              </div>
+                              <div className="mt-2">
+                                <span className="text-sm font-medium text-gray-600">Certifications:</span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {bidder.certifications.map((cert) => (
+                                    <span
+                                      key={cert}
+                                      className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
+                                    >
+                                      {cert}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Award Details Form */}
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      Award Details & Contract Terms
+                    </h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Award Value *
+                        </label>
+                        <input
+                          type="text"
+                          value={awardFormData.awardValue}
+                          onChange={(e) => setAwardFormData({...awardFormData, awardValue: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="₦0.00"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Contract Duration (months) *
+                        </label>
+                        <input
+                          type="number"
+                          value={awardFormData.contractDuration}
+                          onChange={(e) => setAwardFormData({...awardFormData, contractDuration: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="6"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Performance Bond (%)
+                        </label>
+                        <input
+                          type="number"
+                          value={awardFormData.performanceBond}
+                          onChange={(e) => setAwardFormData({...awardFormData, performanceBond: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="10"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Advance Payment (%)
+                        </label>
+                        <input
+                          type="number"
+                          value={awardFormData.advancePayment}
+                          onChange={(e) => setAwardFormData({...awardFormData, advancePayment: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="15"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Warranty Period (months)
+                        </label>
+                        <input
+                          type="number"
+                          value={awardFormData.warrantyPeriod}
+                          onChange={(e) => setAwardFormData({...awardFormData, warrantyPeriod: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="12"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Delivery Schedule
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={awardFormData.deliverySchedule}
+                          onChange={(e) => setAwardFormData({...awardFormData, deliverySchedule: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="Specify delivery milestones and timelines..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Award Justification *
+                    </label>
+                    <textarea
+                      rows={4}
+                      value={awardFormData.awardJustification}
+                      onChange={(e) => setAwardFormData({...awardFormData, awardJustification: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="Provide detailed justification for the award decision based on evaluation criteria..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Special Conditions & Requirements
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={awardFormData.specialConditions}
+                      onChange={(e) => setAwardFormData({...awardFormData, specialConditions: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="Any special conditions or requirements for this contract..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Award Actions */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                  <div className="flex items-start space-x-3">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                    <div>
+                      <h5 className="text-sm font-medium text-yellow-800">Award Confirmation</h5>
+                      <p className="text-sm text-yellow-700 mt-1">
+                        Once awarded, this decision will be final and legally binding. Ensure all details are correct before proceeding.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <button
+                    onClick={() => {
+                      setShowAwardModal(false);
+                      setSelectedTenderForAward(null);
+                    }}
+                    className="px-6 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+
+                  <div className="flex space-x-3">
+                    <button className="px-6 py-3 border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50">
+                      Save as Draft
+                    </button>
+                    <button
+                      disabled={!awardFormData.selectedBidder || !awardFormData.awardValue || !awardFormData.awardJustification}
+                      className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Award className="h-4 w-4 mr-2 inline" />
+                      Award Contract
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   const renderContracts = () => (
@@ -3624,6 +4178,7 @@ Blockchain Timestamp: ${Date.now()}
                 { key: "ai-management", label: "AI Management", icon: Bot },
                 { key: "bulk-upload", label: "Bulk Upload", icon: Upload },
                 { key: "evaluation", label: "Evaluation", icon: CheckSquare },
+                { key: "award", label: "Award Tenders", icon: Award },
               ].map((tab) => (
                 <button
                   key={tab.key}
