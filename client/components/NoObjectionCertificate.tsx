@@ -1055,7 +1055,7 @@ export default function NoObjectionCertificate({
                 <div className="text-center mb-6">
                   <div className="flex justify-center mb-3">
                     <img
-                      src="https://cdn.builder.io/api/v1/image/assets%2F2d6560e774e84f88a03cfa15b949d449%2F4ff1f0f68b064883a635b3de138dfb31?format=webp&width=120"
+                      src="https://cdn.builder.io/api/v1/image/assets%2Fd1a5b1519ca54cb289a03fc4edaa0574%2F3f203028bd274c87854260612a877b89?format=webp&width=120"
                       alt="Kano State Coat of Arms"
                       className="h-16 w-auto"
                     />
@@ -1064,14 +1064,13 @@ export default function NoObjectionCertificate({
                     KANO STATE GOVERNMENT
                   </h1>
                   <h2 className="text-sm font-semibold text-green-700 mb-1">
-                    Ministry of Procurement, Project Monitoring & Evaluation
+                    MINISTRY OF HEALTH
                   </h2>
                   <p className="text-xs text-gray-700 mb-1">
-                    21 Magaji Rumfa Road, Kano
+                    No [MinistryAddress], Kano State, Nigeria
                   </p>
                   <p className="text-xs text-gray-600">
-                    Tel: 08065455715 Email: info@procurement.kn.gov.ng Website:
-                    www.eprocurement.kn.gov.ng
+                    Tel: [PhoneNumber], Email: [EmailAddress]
                   </p>
                 </div>
 
