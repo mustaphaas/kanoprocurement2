@@ -385,6 +385,10 @@ export default function MinistryDashboard() {
     projectDescription: "",
     justification: ""
   });
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+  const [showCompanyProfile, setShowCompanyProfile] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [editingSection, setEditingSection] = useState<string>("");
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<BidEvaluation | null>(null);
   const [showContractModal, setShowContractModal] = useState(false);
