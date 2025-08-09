@@ -2200,6 +2200,20 @@ export default function MinistryDashboard() {
     }
   };
 
+  // Function to get real bid count for a tender
+  const getBidCountForTender = (tenderId: string) => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return 0;
+
+      const allBids = JSON.parse(storedBids);
+      return allBids.filter((bid: any) => bid.tenderId === tenderId).length;
+    } catch (error) {
+      console.error('Error getting bid count:', error);
+      return 0;
+    }
+  };
+
   // Update bidders when workspace changes
   useEffect(() => {
     const bidderDataByWorkspace = {
