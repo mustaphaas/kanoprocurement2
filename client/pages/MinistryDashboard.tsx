@@ -1682,7 +1682,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "₦1,450,000,000",
+          bidAmount: "���1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,
@@ -2724,7 +2724,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
       {/* Contract Statistics */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">
           Contract Overview
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -3347,7 +3347,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end space-x-3">
+          <div className="mt-3 flex justify-end space-x-3">
             <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
               Save as Draft
             </button>
@@ -3590,7 +3590,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     ))}
                   </div>
                 </div>
-                <div className="mt-4 flex space-x-2">
+                <div className="mt-3 flex space-x-2">
                   <button className="text-blue-600 hover:text-blue-900 text-sm">
                     <Edit className="h-4 w-4 inline mr-1" />
                     Edit
@@ -3631,12 +3631,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
       {/* Upload Templates */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white rounded-lg shadow-sm border p-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <FileSpreadsheet className="h-8 w-8 text-green-600" />
             <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">Excel Template</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-3">
             Standard template for bulk tender upload
           </p>
           <button className="w-full bg-green-50 text-green-700 py-2 px-4 rounded-md hover:bg-green-100">
@@ -3644,12 +3644,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </button>
         </div>
         <div className="bg-white rounded-lg shadow-sm border p-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <FileText className="h-8 w-8 text-blue-600" />
             <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">CSV Template</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-3">
             Comma-separated values format
           </p>
           <button className="w-full bg-blue-50 text-blue-700 py-2 px-4 rounded-md hover:bg-blue-100">
@@ -3657,12 +3657,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
           </button>
         </div>
         <div className="bg-white rounded-lg shadow-sm border p-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <BookOpen className="h-8 w-8 text-purple-600" />
             <Eye className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">User Guide</h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-3">
             Step-by-step upload instructions
           </p>
           <button className="w-full bg-purple-50 text-purple-700 py-2 px-4 rounded-md hover:bg-purple-100">
@@ -3837,7 +3837,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {evaluationCommittees.map((committee) => (
               <div key={committee.id} className="border rounded-lg p-4">
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="font-semibold text-gray-900">
                       {committee.name}
@@ -3899,7 +3899,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 flex space-x-2">
+                <div className="mt-3 flex space-x-2">
                   <button className="text-blue-600 hover:text-blue-900 text-sm">
                     <Eye className="h-4 w-4 inline mr-1" />
                     View Details
@@ -4080,7 +4080,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
           <div className="p-4">
             {activeCommittee ? (
               <div className="bg-green-50 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <h3 className="text-lg font-semibold text-green-900">
                       {activeCommittee.name}
@@ -4119,7 +4119,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   ))}
                 </div>
 
-                <div className="mt-4 flex space-x-3">
+                <div className="mt-3 flex space-x-3">
                   <button
                     onClick={() => {
                       setCommitteeFormData({
@@ -4157,11 +4157,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
             ) : (
               <div className="text-center py-4">
-                <Users2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <Users2 className="h-12 w-12 text-gray-400 mx-auto mb-3" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   No Evaluation Committee
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-3">
                   Create an evaluation committee to manage the tender evaluation
                   process
                 </p>
@@ -4286,7 +4286,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
                 return (
                   <div key={bidder.id} className="border rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center space-x-4">
                         <div
                           className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
@@ -4771,7 +4771,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   key={tender.id}
                   className="border rounded-lg p-4 hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -4885,7 +4885,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                             </div>
 
                             {/* Workflow Status Steps */}
-                            <div className="mt-4">
+                            <div className="mt-3">
                               <h5 className="text-xs font-medium text-gray-700 mb-2">
                                 Vendor Workflow Status:
                               </h5>
@@ -4924,7 +4924,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                             </div>
 
                             {/* Award Eligibility Summary */}
-                            <div className="mt-4 pt-3 border-t border-gray-200">
+                            <div className="mt-3 pt-3 border-t border-gray-200">
                               <div
                                 className={`p-3 rounded-md ${
                                   isEligible
@@ -4965,7 +4965,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </div>
 
                   {/* Quick Actions */}
-                  <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+                  <div className="mt-3 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
                     <button
                       onClick={() => {
                         setSelectedTenderForDetails(tender);
@@ -5112,7 +5112,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 {/* Bidder Selection */}
                 <div className="space-y-3">
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-3">
                       Select Winning Bidder
                     </h4>
                     <div className="space-y-3">
@@ -5293,7 +5293,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 {/* Award Details Form */}
                 <div className="space-y-3">
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-3">
                       Award Details & Contract Terms
                     </h4>
                     <div className="space-y-4">
@@ -5441,7 +5441,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </div>
 
               {/* Award Actions */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="mt-3 pt-6 border-t border-gray-200">
                 <div className="space-y-4 mb-6">
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <div className="flex items-start space-x-3">
@@ -6114,7 +6114,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 key={contract.id}
                 className="border rounded-lg p-4 hover:shadow-md transition-shadow"
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">
                       {contract.projectTitle}
@@ -6147,7 +6147,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
 
                 {/* Milestone Progress */}
-                <div className="mb-4">
+                <div className="mb-3">
                   <h4 className="font-medium text-gray-900 mb-3">
                     Milestone Progress
                   </h4>
@@ -6206,7 +6206,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </div>
 
                 {/* Payment Status */}
-                <div className="mb-4">
+                <div className="mb-3">
                   <h4 className="font-medium text-gray-900 mb-3">
                     Payment Status
                   </h4>
@@ -6252,7 +6252,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
                 {/* Disputes */}
                 {contract.disputes && contract.disputes.length > 0 && (
-                  <div className="mb-4">
+                  <div className="mb-3">
                     <h4 className="font-medium text-gray-900 mb-3 flex items-center">
                       <AlertTriangle className="h-4 w-4 text-orange-600 mr-2" />
                       Active Disputes
@@ -6343,7 +6343,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       {showContractDetails && selectedContractForAction && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">
                 Contract Details - {selectedContractForAction.projectTitle}
               </h3>
@@ -6476,7 +6476,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       {showMilestoneModal && selectedMilestone && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">
                 Update Milestone - {selectedMilestone.title}
               </h3>
@@ -6555,7 +6555,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       {showPaymentModal && selectedPayment && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">
                 Process Payment - {selectedPayment.amount}
               </h3>
@@ -6681,7 +6681,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             </div>
 
             {/* Progress Steps */}
-            <div className="mb-8">
+            <div className="mb-3">
               <div className="flex items-center justify-between">
                 {[
                   { step: 1, title: "Contract Details", icon: FileText },
@@ -6864,7 +6864,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             {contractStep === 2 && (
               <div className="space-y-3">
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3">
                     Project Milestones
                   </h4>
                   <div className="space-y-4">
@@ -7066,7 +7066,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             {contractStep === 3 && (
               <div className="space-y-3">
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                     <Shield className="h-5 w-5 text-blue-600 mr-2" />
                     Digital Security & Automation Features
                   </h4>
@@ -7203,7 +7203,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             {contractStep === 4 && (
               <div className="space-y-3">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <Zap className="h-8 w-8 text-green-600" />
                   </div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">
@@ -7217,7 +7217,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
                 {/* Contract Preview */}
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h5 className="font-medium text-gray-900 mb-4">
+                  <h5 className="font-medium text-gray-900 mb-3">
                     Contract Summary
                   </h5>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -7245,7 +7245,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="mt-3 pt-4 border-t border-gray-200">
                     <h6 className="font-medium text-gray-900 mb-2">
                       Digital Features Enabled:
                     </h6>
@@ -7272,7 +7272,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 {/* Generated Contract Display */}
                 {generatedContract && (
                   <div className="bg-white border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-3">
                       <h5 className="font-medium text-gray-900">
                         Generated Contract Document
                       </h5>
@@ -7374,7 +7374,7 @@ Blockchain Timestamp: ${Date.now()}
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
+            <div className="flex justify-between mt-3 pt-6 border-t border-gray-200">
               <button
                 onClick={() =>
                   contractStep > 1 && setContractStep(contractStep - 1)
@@ -7431,7 +7431,7 @@ Blockchain Timestamp: ${Date.now()}
       {showDisputeModal && selectedContractForAction && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">
                 Dispute Resolution - {selectedContractForAction.projectTitle}
               </h3>
@@ -7547,7 +7547,7 @@ Blockchain Timestamp: ${Date.now()}
       {/* Analytics Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-white rounded-lg shadow-sm border p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <BarChart3 className="h-5 w-5 text-blue-600 mr-2" />
             Procurement by Category
           </h3>
@@ -7591,7 +7591,7 @@ Blockchain Timestamp: ${Date.now()}
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <TrendingUp className="h-5 w-5 text-green-600 mr-2" />
             Performance Metrics
           </h3>
@@ -8647,7 +8647,7 @@ Blockchain Timestamp: ${Date.now()}
                     Letter Preview
                   </h4>
                   <div className="border rounded-lg p-4 bg-gray-50 max-h-96 overflow-y-auto text-sm">
-                    <div className="text-center border-b pb-4 mb-4">
+                    <div className="text-center border-b pb-4 mb-3">
                       <div className="w-16 h-16 mx-auto mb-2 bg-gray-200 rounded-full flex items-center justify-center">
                         <img
                           src="https://cdn.builder.io/api/v1/image/assets%2Fb1307220e8f44b74a0fd54f108089b3e%2F3954c90e53b64c33bfbc92f500570bbb?format=webp&width=800"
@@ -8668,13 +8668,13 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
 
-                    <div className="text-right mb-4">
+                    <div className="text-right mb-3">
                       <strong>Date:</strong> {awardLetterData.awardDate}
                       <br />
                       <strong>Ref No:</strong> {awardLetterData.refNumber}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <strong>TO:</strong> {awardLetterData.vendorName}
                       <br />
                       {awardLetterData.vendorAddress
@@ -8684,7 +8684,7 @@ Blockchain Timestamp: ${Date.now()}
                         ))}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <strong>
                         <u>
                           SUBJECT: AWARD OF CONTRACT –{" "}
@@ -8693,7 +8693,7 @@ Blockchain Timestamp: ${Date.now()}
                       </strong>
                     </div>
 
-                    <div className="mb-4 text-justify">
+                    <div className="mb-3 text-justify">
                       Following the conclusion of the competitive procurement
                       process conducted in accordance with the provisions of the
                       Public Procurement Act 2007 and the Kano State Public
@@ -8703,7 +8703,7 @@ Blockchain Timestamp: ${Date.now()}
                       above-mentioned project.
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <strong>Contract Details:</strong>
                       <br />
                       <br />
@@ -8733,7 +8733,7 @@ Blockchain Timestamp: ${Date.now()}
                       {awardLetterData.deliveryScheduleSummary}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <strong>You are required to:</strong>
                       <br />
                       1. Confirm acceptance within{" "}
@@ -8744,7 +8744,7 @@ Blockchain Timestamp: ${Date.now()}
                       3. Report to Procurement Department for contract signing
                     </div>
 
-                    <div className="mt-8">
+                    <div className="mt-3">
                       Yours faithfully,
                       <br />
                       <br />
@@ -8753,7 +8753,7 @@ Blockchain Timestamp: ${Date.now()}
                       {awardLetterData.ministerTitle}
                     </div>
 
-                    <div className="mt-4 text-xs">
+                    <div className="mt-3 text-xs">
                       <strong>Cc:</strong> Director, Procurement Department;
                       Accountant General's Office; Project File
                     </div>
@@ -9015,7 +9015,7 @@ Blockchain Timestamp: ${Date.now()}
                     ))
                 ) : (
                   <div className="text-center py-12">
-                    <Award className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <Award className="h-12 w-12 text-gray-400 mx-auto mb-3" />
                     <h4 className="text-lg font-semibold text-gray-900 mb-2">
                       No Awarded Tenders
                     </h4>
@@ -9029,7 +9029,7 @@ Blockchain Timestamp: ${Date.now()}
                         // Navigate to award section
                         setTenderSubView("award");
                       }}
-                      className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     >
                       Go to Award Tenders
                     </button>
@@ -9069,7 +9069,7 @@ Blockchain Timestamp: ${Date.now()}
 
               {/* Award Summary */}
               <div className="bg-green-50 rounded-lg p-4 mb-6">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
                   <h4 className="text-lg font-semibold text-green-900">
                     Award Summary
                   </h4>
