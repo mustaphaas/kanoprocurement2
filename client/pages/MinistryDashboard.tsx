@@ -298,6 +298,19 @@ export default function MinistryDashboard() {
   const [selectedContract, setSelectedContract] = useState<Contract | null>(
     null,
   );
+  const [mdaUsers, setMDAUsers] = useState<MDAUser[]>([]);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<MDAUser | null>(null);
+  const [userFormMode, setUserFormMode] = useState<"create" | "edit">("create");
+  const [newNOCRequest, setNewNOCRequest] = useState({
+    projectTitle: "",
+    projectValue: "",
+    contractorName: "",
+    expectedDuration: "",
+    projectDescription: "",
+    justification: ""
+  });
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<BidEvaluation | null>(null);
   const [showContractModal, setShowContractModal] = useState(false);
@@ -4942,7 +4955,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           <li>1. ✅ Company Registration</li>
                           <li>2. ✅ Login & Verification</li>
                           <li>3. ✅ Bidding Process</li>
-                          <li>4. ��� Tender Evaluation</li>
+                          <li>4. ✅ Tender Evaluation</li>
                           <li>5. ✅ No Objection Certificate</li>
                         </ul>
                       </div>
