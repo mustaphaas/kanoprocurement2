@@ -2105,7 +2105,15 @@ export default function MinistryDashboard() {
 
     if (storedTenders) {
       const parsedTenders = JSON.parse(storedTenders);
-      setTenders(parsedTenders);
+      // Merge with mock tenders to ensure we have both created and default tenders
+      const allTenders = [...parsedTenders];
+      // Add mock tenders that don't already exist (prevent duplicates by ID)
+      mockTenders.forEach(mockTender => {
+        if (!allTenders.find(t => t.id === mockTender.id)) {
+          allTenders.push(mockTender);
+        }
+      });
+      setTenders(allTenders);
     } else {
       setTenders(mockTenders);
       // Save initial mock tenders to localStorage
@@ -7433,7 +7441,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            📄 Contract Management
+            ��� Contract Management
           </h1>
           <p className="text-gray-600">
             Comprehensive contract lifecycle management with digital signatures
