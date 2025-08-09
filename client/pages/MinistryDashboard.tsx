@@ -2809,6 +2809,13 @@ export default function MinistryDashboard() {
     return () => clearInterval(bidCountInterval);
   }, []);
 
+  // Refresh bid counts when tender sub-view changes
+  useEffect(() => {
+    if (tenderSubView === "list") {
+      refreshAllTenderBidCounts();
+    }
+  }, [tenderSubView]);
+
   const handleLogout = () => {
     localStorage.removeItem("ministryUser");
     navigate("/");
