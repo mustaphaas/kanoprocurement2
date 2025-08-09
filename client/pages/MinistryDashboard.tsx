@@ -592,7 +592,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "Kano Construction Ltd",
-          bidAmount: "₦14,800,000,000",
+          bidAmount: "���14,800,000,000",
           technicalScore: 90,
           financialScore: 87,
           totalScore: 88.5,
@@ -634,7 +634,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-004",
           companyName: "Emirate Construction Co",
-          bidAmount: "��15,600,000,000",
+          bidAmount: "₦15,600,000,000",
           technicalScore: 82,
           financialScore: 80,
           totalScore: 81,
@@ -5274,6 +5274,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
   );
 
   const renderTenders = () => {
+    // Refresh bid counts when accessing tenders view
+    React.useEffect(() => {
+      refreshAllTenderBidCounts();
+    }, [tenderSubView]);
+
     if (tenderSubView === "list") {
       return renderTenderList();
     } else if (tenderSubView === "create") {
@@ -7517,7 +7522,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            ����� Contract Management
+            ��� Contract Management
           </h1>
           <p className="text-gray-600">
             Comprehensive contract lifecycle management with digital signatures
