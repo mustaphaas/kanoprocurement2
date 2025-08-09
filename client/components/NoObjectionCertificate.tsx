@@ -658,8 +658,41 @@ export default function NoObjectionCertificate({
 
   // NOC Request Management Handlers
   const handleViewNOCRequest = (request: NOCRequest) => {
-    setSelectedNOCRequest(request);
-    setShowNOCRequestModal(true);
+    if (request.status === "Approved") {
+      // For approved requests, show the electronic certificate
+      const certificateData = {
+        certificateNumber: request.certificateNumber || `KNS/SNOC/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, "0")}`,
+        dateIssued: request.approvalDate || new Date().toISOString().split("T")[0],
+        projectTitle: request.projectTitle,
+        projectReferenceNumber: `${request.ministryCode}/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 99) + 1).padStart(2, "0")}`,
+        procuringEntity: request.procuringEntity,
+        projectLocation: "Kano State", // Default location
+        contractorVendor: request.contractorName,
+        contractAmount: request.projectValue,
+        contractAmountWords: numberToWords(request.projectValue),
+        expectedDuration: request.expectedDuration,
+        commissionerName: "Comrade Nura Iro Ma'aji",
+        commissionerTitle: "Commissioner / DG",
+      };
+
+      // Set the form data to show the certificate
+      setFormData(certificateData);
+
+      // Scroll to certificate preview section
+      setTimeout(() => {
+        const previewElement = document.querySelector(".certificate-preview");
+        if (previewElement) {
+          previewElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }, 100);
+    } else {
+      // For non-approved requests, show the request details modal
+      setSelectedNOCRequest(request);
+      setShowNOCRequestModal(true);
+    }
   };
 
   const handleApproveNOCRequest = (request: NOCRequest) => {
