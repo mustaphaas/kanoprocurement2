@@ -912,12 +912,26 @@ export default function NoObjectionCertificate({
             </CardTitle>
             <div className="flex items-center space-x-4">
               <button
-                onClick={loadNOCRequests}
+                onClick={() => {
+                  console.log("Manual refresh clicked");
+                  loadNOCRequests();
+                }}
                 className="flex items-center space-x-1 px-3 py-1.5 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
                 title="Refresh NOC Requests"
               >
                 <RefreshCw className="h-4 w-4" />
                 <span>Refresh</span>
+              </button>
+              <button
+                onClick={() => {
+                  const stored = localStorage.getItem("centralNOCRequests");
+                  alert(`Central NOCs in localStorage: ${stored ? JSON.parse(stored).length : 0} requests\n\nRaw data: ${stored}`);
+                }}
+                className="flex items-center space-x-1 px-3 py-1.5 text-sm text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors"
+                title="Debug localStorage"
+              >
+                <AlertTriangle className="h-4 w-4" />
+                <span>Debug</span>
               </button>
               <div className="relative">
                 <Bell className="h-6 w-6 text-gray-400" />
