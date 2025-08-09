@@ -284,11 +284,6 @@ export default function MinistryDashboard() {
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-
-  // Debug status filter changes
-  useEffect(() => {
-    console.log("Status filter changed to:", statusFilter);
-  }, [statusFilter]);
   const [showCreateTender, setShowCreateTender] = useState(false);
   const [showNOCRequest, setShowNOCRequest] = useState(false);
   const [newTender, setNewTender] = useState({
