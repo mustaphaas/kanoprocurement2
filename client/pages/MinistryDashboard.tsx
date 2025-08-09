@@ -473,7 +473,7 @@ export default function MinistryDashboard() {
     {
       id: "BID-003",
       companyName: "Golden Gates Healthcare",
-      bidAmount: "₦875,000,000",
+      bidAmount: "���875,000,000",
       technicalScore: 85,
       financialScore: 82,
       totalScore: 83.5,
@@ -2788,7 +2788,7 @@ export default function MinistryDashboard() {
       id: tender.id,
       title: tender.title,
       category: tender.category,
-      value: formatCurrency(tender.estimatedValue),
+      value: tender.estimatedValue, // Already formatted above
       deadline: tender.closeDate,
       location: "Kano State",
       views: 0,
