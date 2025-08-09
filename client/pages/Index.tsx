@@ -164,7 +164,12 @@ export default function Index() {
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
-          setRecentTenders(parsedTenders);
+          // Apply currency formatting to fix any incorrectly formatted values
+          const formattedTenders = parsedTenders.map((tender: any) => ({
+            ...tender,
+            value: formatCurrency(tender.value)
+          }));
+          setRecentTenders(formattedTenders);
         }
       }
     };
