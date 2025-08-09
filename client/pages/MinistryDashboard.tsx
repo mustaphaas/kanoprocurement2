@@ -73,7 +73,8 @@ type CurrentView =
   | "tenders"
   | "contracts"
   | "reports"
-  | "noc";
+  | "noc"
+  | "users";
 
 type TenderSubView =
   | "list"
@@ -4941,7 +4942,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           <li>1. ✅ Company Registration</li>
                           <li>2. ✅ Login & Verification</li>
                           <li>3. ✅ Bidding Process</li>
-                          <li>4. ✅ Tender Evaluation</li>
+                          <li>4. ��� Tender Evaluation</li>
                           <li>5. ✅ No Objection Certificate</li>
                         </ul>
                       </div>
