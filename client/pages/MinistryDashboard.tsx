@@ -1181,6 +1181,34 @@ export default function MinistryDashboard() {
           previousProjects: 35,
           completionRate: 96.7,
         },
+        {
+          id: "BID-004",
+          companyName: "Apex Medical Equipment Ltd",
+          bidAmount: "₦1,400,000,000",
+          technicalScore: 82,
+          financialScore: 79,
+          totalScore: 80.5,
+          status: "Qualified",
+          submissionDate: "2024-02-11",
+          experience: "8 years",
+          certifications: ["ISO 9001", "CE Mark"],
+          previousProjects: 22,
+          completionRate: 92.3,
+        },
+        {
+          id: "BID-005",
+          companyName: "Unity Health Systems",
+          bidAmount: "₦1,500,000,000",
+          technicalScore: 80,
+          financialScore: 76,
+          totalScore: 78,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "6 years",
+          certifications: ["ISO 9001", "WHO Approved"],
+          previousProjects: 18,
+          completionRate: 89.7,
+        },
       ],
     };
 
@@ -5311,7 +5339,7 @@ export default function MinistryDashboard() {
                           htmlFor="digitalSignature"
                           className="text-sm font-medium text-gray-900 cursor-pointer"
                         >
-                          ���� Advanced Digital Signatures
+                          🔐 Advanced Digital Signatures
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
                           Multi-party digital signatures with PKI encryption,
