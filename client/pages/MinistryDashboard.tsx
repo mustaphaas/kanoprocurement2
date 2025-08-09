@@ -2481,21 +2481,49 @@ export default function MinistryDashboard() {
               <h2 className="text-lg font-semibold text-gray-900">
                 Bid Evaluation Workspace
               </h2>
-              <select
-                value={selectedWorkspace}
-                onChange={(e) => setSelectedWorkspace(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="MOH-2024-001">
-                  MOH-2024-001 - Hospital Equipment Supply
-                </option>
-                <option value="MOH-2024-002">
-                  MOH-2024-002 - Pharmaceutical Supply
-                </option>
-                <option value="MOH-2024-003">
-                  MOH-2024-003 - Laboratory Equipment
-                </option>
-              </select>
+              <div className="flex items-center space-x-3">
+                <select
+                  value={selectedWorkspace}
+                  onChange={(e) => setSelectedWorkspace(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  <option value="MOH-2024-001">
+                    MOH-2024-001 - Hospital Equipment Supply
+                  </option>
+                  <option value="MOH-2024-002">
+                    MOH-2024-002 - Pharmaceutical Supply
+                  </option>
+                  <option value="MOH-2024-003">
+                    MOH-2024-003 - Laboratory Equipment
+                  </option>
+                </select>
+
+                {!isEditingEvaluation ? (
+                  <button
+                    onClick={() => setIsEditingEvaluation(true)}
+                    className="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Scores
+                  </button>
+                ) : (
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={saveEvaluationScores}
+                      className="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    >
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setIsEditingEvaluation(false)}
+                      className="inline-flex items-center px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -3386,7 +3414,7 @@ export default function MinistryDashboard() {
                             })
                           }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="₦0.00"
+                          placeholder="��0.00"
                         />
                       </div>
                       <div>
