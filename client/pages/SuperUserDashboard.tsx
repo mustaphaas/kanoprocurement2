@@ -1347,6 +1347,74 @@ The award letter has been:
     alert(`Administrator has been ${admin.isActive ? 'deactivated' : 'activated'}!`);
   };
 
+  const handleCreateMDAUser = (mda: MDA) => {
+    setUserFormMode('create');
+    setSelectedMDA(mda);
+    setSelectedMDAUser(null);
+    setShowCreateUserModal(true);
+  };
+
+  const handleEditMDAUser = (user: MDAUser) => {
+    setUserFormMode('edit');
+    setSelectedMDAUser(user);
+    setSelectedMDA(mdas.find(m => m.id === user.mdaId) || null);
+    setShowEditUserModal(true);
+  };
+
+  const handleDeleteMDAUser = (user: MDAUser) => {
+    const userMDA = mdas.find(m => m.id === user.mdaId);
+    if (window.confirm(`Are you sure you want to remove this user from ${userMDA?.name}?`)) {
+      setMDAUsers(prev => prev.filter(u => u.id !== user.id));
+      alert('User has been removed successfully!');
+    }
+  };
+
+  const handleMDAUserSubmit = async (data: CreateMDAUserRequest) => {
+    try {
+      if (userFormMode === 'create') {
+        const newUser: MDAUser = {
+          id: `user-${Date.now()}`,
+          mdaId: data.mdaId,
+          userId: `usr-${Date.now()}`,
+          role: data.role,
+          department: data.department,
+          permissions: data.permissions,
+          assignedBy: 'admin-001',
+          assignedAt: new Date(),
+          isActive: true
+        };
+        setMDAUsers(prev => [...prev, newUser]);
+        alert('MDA User created successfully!');
+      } else if (selectedMDAUser) {
+        const updatedUser: MDAUser = {
+          ...selectedMDAUser,
+          mdaId: data.mdaId,
+          role: data.role,
+          department: data.department,
+          permissions: data.permissions
+        };
+        setMDAUsers(prev => prev.map(u => u.id === selectedMDAUser.id ? updatedUser : u));
+        alert('MDA User updated successfully!');
+      }
+      setShowCreateUserModal(false);
+      setShowEditUserModal(false);
+      setSelectedMDAUser(null);
+      setSelectedMDA(null);
+    } catch (error) {
+      console.error('Error submitting MDA User:', error);
+      alert('Error saving MDA User. Please try again.');
+    }
+  };
+
+  const toggleUserStatus = (user: MDAUser) => {
+    setMDAUsers(prev => prev.map(u =>
+      u.id === user.id
+        ? { ...u, isActive: !u.isActive }
+        : u
+    ));
+    alert(`User has been ${user.isActive ? 'deactivated' : 'activated'}!`);
+  };
+
   const filteredMDAs = mdas.filter(mda => {
     const matchesSearch = mda.name.toLowerCase().includes(mdaSearchTerm.toLowerCase()) ||
                          mda.description.toLowerCase().includes(mdaSearchTerm.toLowerCase());
