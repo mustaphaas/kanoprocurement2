@@ -3135,11 +3135,14 @@ export default function MinistryDashboard() {
       awardJustification: awardFormData.awardJustification,
     };
 
-    setTenders((prev) =>
-      prev.map((tender) =>
+    setTenders((prev) => {
+      const updatedTenders = prev.map((tender) =>
         tender.id === selectedTenderForAward.id ? updatedTender : tender,
-      ),
-    );
+      );
+      // Save to localStorage
+      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      return updatedTenders;
+    });
 
     // Store awarded tender data for post-award workflow
     setAwardedTenderData({
