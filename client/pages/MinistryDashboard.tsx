@@ -2768,6 +2768,11 @@ export default function MinistryDashboard() {
     centralNOCs.unshift(centralNOCRequest);
     localStorage.setItem("centralNOCRequests", JSON.stringify(centralNOCs));
 
+    // Debug logging
+    console.log("Ministry NOC Request Submitted:", centralNOCRequest);
+    console.log("Total Central NOCs after submission:", centralNOCs.length);
+    console.log("Central NOCs in localStorage:", JSON.parse(localStorage.getItem("centralNOCRequests") || "[]"));
+
     // Create local ministry NOC record (showing as pending)
     const ministryNOCRequest: NOCRequest = {
       id: requestId,
@@ -6966,7 +6971,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       <ul className="text-sm text-blue-800 space-y-1">
                         <li>• Experience & Expertise</li>
                         <li>• Technical Approach</li>
-                        <li>• Quality Standards</li>
+                        <li>�� Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
                           �� Previous contracts executed in the last 2 years
