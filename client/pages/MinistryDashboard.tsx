@@ -968,7 +968,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of medical equipment for Kano State hospitals",
               category: "Healthcare",
-              estimatedValue: "₦850,000,000",
+              estimatedValue: "���850,000,000",
               status: "Published",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
@@ -3796,7 +3796,7 @@ For detailed feedback, please contact our procurement office.`,
               value: {
                 amount: parseFloat(
                   awardedTenderData.awardDetails.awardValue.replace(
-                    /[₦,]/g,
+                    /[��,]/g,
                     "",
                   ),
                 ),
@@ -7355,10 +7355,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ��� Tender Details - {selectedTenderForDetails.title}
+                  📋 Tender Details - {selectedTenderForDetails.title}
                 </h3>
                 <button
-                  onClick={() => setShowTenderDetailsModal(false)}
+                  onClick={() => {
+                    setShowTenderDetailsModal(false);
+                    setSelectedTenderForDetails(null);
+                  }}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   <X className="h-6 w-6" />
