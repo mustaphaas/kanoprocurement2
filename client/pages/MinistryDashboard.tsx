@@ -2226,6 +2226,81 @@ export default function MinistryDashboard() {
                     Intelligent vendor recommendation
                   </p>
                 </button>
+                <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+                  <Timer className="h-5 w-5 text-purple-600 mb-2" />
+                  <h4 className="font-medium text-gray-900">Auto-Scheduling</h4>
+                  <p className="text-sm text-gray-600">
+                    AI-optimized publication timing
+                  </p>
+                </button>
+                <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+                  <BarChart3 className="h-5 w-5 text-purple-600 mb-2" />
+                  <h4 className="font-medium text-gray-900">Analytics & Insights</h4>
+                  <p className="text-sm text-gray-600">
+                    Performance metrics and trends
+                  </p>
+                </button>
+                <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+                  <RefreshCw className="h-5 w-5 text-purple-600 mb-2" />
+                  <h4 className="font-medium text-gray-900">Auto-Republishing</h4>
+                  <p className="text-sm text-gray-600">
+                    Automatic failed publication retry
+                  </p>
+                </button>
+                <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+                  <Shield className="h-5 w-5 text-purple-600 mb-2" />
+                  <h4 className="font-medium text-gray-900">Compliance Check</h4>
+                  <p className="text-sm text-gray-600">
+                    AI-powered regulatory compliance
+                  </p>
+                </button>
+                <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+                  <Megaphone className="h-5 w-5 text-purple-600 mb-2" />
+                  <h4 className="font-medium text-gray-900">Channel Optimization</h4>
+                  <p className="text-sm text-gray-600">
+                    Smart distribution channel selection
+                  </p>
+                </button>
+              </div>
+
+              {/* AI Performance Metrics */}
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white rounded-lg p-4 border border-purple-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-purple-600">Publications Optimized</p>
+                      <p className="text-2xl font-bold text-purple-900">24</p>
+                    </div>
+                    <Bot className="h-8 w-8 text-purple-400" />
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 border border-purple-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-purple-600">Avg Response Rate</p>
+                      <p className="text-2xl font-bold text-purple-900">78%</p>
+                    </div>
+                    <TrendingUp className="h-8 w-8 text-purple-400" />
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 border border-purple-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-purple-600">Time Saved</p>
+                      <p className="text-2xl font-bold text-purple-900">16hrs</p>
+                    </div>
+                    <Clock className="h-8 w-8 text-purple-400" />
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 border border-purple-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-purple-600">Success Rate</p>
+                      <p className="text-2xl font-bold text-purple-900">94%</p>
+                    </div>
+                    <CheckCircle className="h-8 w-8 text-purple-400" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
