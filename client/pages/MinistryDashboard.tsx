@@ -211,6 +211,23 @@ interface BidEvaluation {
   submissionDate?: string;
 }
 
+interface VendorWorkflowStatus {
+  companyId: string;
+  companyName: string;
+  registrationCompleted: boolean;
+  loginVerificationCompleted: boolean;
+  biddingCompleted: boolean;
+  evaluationCompleted: boolean;
+  nocIssued: boolean;
+  finalApprovalStatus: "pending" | "approved" | "rejected";
+  registrationDate?: string;
+  verificationDate?: string;
+  bidSubmissionDate?: string;
+  evaluationDate?: string;
+  nocIssuedDate?: string;
+  nocCertificateNumber?: string;
+}
+
 interface VendorCommunication {
   id: string;
   vendorId: string;
@@ -328,6 +345,7 @@ export default function MinistryDashboard() {
     deliverySchedule: "",
     specialConditions: "",
   });
+  const [vendorWorkflowStatuses, setVendorWorkflowStatuses] = useState<VendorWorkflowStatus[]>([]);
   const [bidders] = useState([
     {
       id: "BID-001",
@@ -798,6 +816,52 @@ export default function MinistryDashboard() {
       },
     ];
 
+    const mockVendorWorkflowStatuses: VendorWorkflowStatus[] = [
+      {
+        companyId: "BID-001",
+        companyName: "MedSupply Nigeria Ltd",
+        registrationCompleted: true,
+        loginVerificationCompleted: true,
+        biddingCompleted: true,
+        evaluationCompleted: true,
+        nocIssued: true,
+        finalApprovalStatus: "approved",
+        registrationDate: "2024-01-15",
+        verificationDate: "2024-01-16",
+        bidSubmissionDate: "2024-02-10",
+        evaluationDate: "2024-02-12",
+        nocIssuedDate: "2024-02-14",
+        nocCertificateNumber: "NOC-001-2024",
+      },
+      {
+        companyId: "BID-002",
+        companyName: "Sahel Medical Supplies",
+        registrationCompleted: true,
+        loginVerificationCompleted: true,
+        biddingCompleted: true,
+        evaluationCompleted: true,
+        nocIssued: false,
+        finalApprovalStatus: "pending",
+        registrationDate: "2024-01-14",
+        verificationDate: "2024-01-15",
+        bidSubmissionDate: "2024-02-09",
+        evaluationDate: "2024-02-11",
+      },
+      {
+        companyId: "BID-003",
+        companyName: "Northern Healthcare Solutions",
+        registrationCompleted: true,
+        loginVerificationCompleted: true,
+        biddingCompleted: true,
+        evaluationCompleted: false,
+        nocIssued: false,
+        finalApprovalStatus: "pending",
+        registrationDate: "2024-01-13",
+        verificationDate: "2024-01-14",
+        bidSubmissionDate: "2024-02-08",
+      },
+    ];
+
     setCompanies(mockCompanies);
     setTenders(mockTenders);
     setContracts(mockContracts);
@@ -806,6 +870,7 @@ export default function MinistryDashboard() {
     setBidEvaluations(mockBidEvaluations);
     setVendorCommunications(mockVendorCommunications);
     setScheduledPublications(mockScheduledPublications);
+    setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
   }, []);
 
   const handleLogout = () => {
@@ -2014,6 +2079,63 @@ export default function MinistryDashboard() {
     setShowDisputeModal(true);
   };
 
+  const getVendorWorkflowStatus = (bidderId: string) => {
+    return vendorWorkflowStatuses.find(status => status.companyId === bidderId);
+  };
+
+  const isVendorEligibleForAward = (bidderId: string) => {
+    const status = getVendorWorkflowStatus(bidderId);
+    return status &&
+           status.registrationCompleted &&
+           status.loginVerificationCompleted &&
+           status.biddingCompleted &&
+           status.evaluationCompleted &&
+           status.nocIssued &&
+           status.finalApprovalStatus === "approved";
+  };
+
+  const renderVendorWorkflowStep = (step: string, completed: boolean, date?: string, details?: string) => {
+    return (
+      <div className={`flex items-center space-x-3 p-3 rounded-lg border-2 ${
+        completed ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
+      }`}>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+          completed ? "bg-green-600 text-white" : "bg-red-600 text-white"
+        }`}>
+          {completed ? (
+            <CheckCircle className="h-4 w-4" />
+          ) : (
+            <X className="h-4 w-4" />
+          )}
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <span className={`text-sm font-medium ${
+              completed ? "text-green-800" : "text-red-800"
+            }`}>
+              {step}
+            </span>
+            <span className={`text-xs px-2 py-1 rounded-full ${
+              completed ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+            }`}>
+              {completed ? "Completed" : "Incomplete"}
+            </span>
+          </div>
+          {date && (
+            <div className="text-xs text-gray-600 mt-1">
+              {completed ? `Completed: ${date}` : `Required for award`}
+            </div>
+          )}
+          {details && (
+            <div className="text-xs text-gray-600 mt-1">
+              {details}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const renderTenderAward = () => {
     const tendersForAward = tenders.filter(t => t.status === "Evaluated" || t.status === "Closed");
 
@@ -2022,10 +2144,10 @@ export default function MinistryDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              🏆 Tender Award Management
+              🏆 Award Tenders
             </h1>
             <p className="text-gray-600">
-              Award contracts to qualified bidders based on evaluation results
+              Award tenders to qualified vendors who have completed the required workflow process
             </p>
           </div>
           <div className="flex space-x-3">
@@ -2160,66 +2282,123 @@ export default function MinistryDashboard() {
                       className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                     >
                       <Award className="h-4 w-4 mr-2" />
-                      Award Contract
+                      Award Tender
                     </button>
                   </div>
 
-                  {/* Top Bidders Preview */}
+                  {/* Top Bidders with Workflow Status */}
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-3">Top Qualified Bidders</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {bidders.slice(0, 3).map((bidder, index) => (
-                        <div
-                          key={bidder.id}
-                          className={`p-4 rounded-lg border-2 ${
-                            index === 0
-                              ? "border-green-200 bg-green-50"
-                              : "border-gray-200 bg-gray-50"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center space-x-2">
-                              {index === 0 && (
-                                <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
-                                  <span className="text-white text-xs font-bold">1</span>
+                    <h4 className="font-medium text-gray-900 mb-3">Top Qualified Bidders & Workflow Status</h4>
+                    <div className="space-y-4">
+                      {bidders.slice(0, 3).map((bidder, index) => {
+                        const workflowStatus = getVendorWorkflowStatus(bidder.id);
+                        const isEligible = isVendorEligibleForAward(bidder.id);
+
+                        return (
+                          <div
+                            key={bidder.id}
+                            className={`p-4 rounded-lg border-2 ${
+                              isEligible && index === 0
+                                ? "border-green-200 bg-green-50"
+                                : !isEligible
+                                  ? "border-red-200 bg-red-50"
+                                  : "border-gray-200 bg-gray-50"
+                            }`}
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center space-x-3">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                  index === 0 ? "bg-yellow-500 text-white" :
+                                  index === 1 ? "bg-gray-400 text-white" :
+                                  "bg-orange-400 text-white"
+                                }`}>
+                                  <span className="text-sm font-bold">{index + 1}</span>
                                 </div>
-                              )}
-                              <span className="font-medium text-gray-900 text-sm">
-                                {bidder.companyName}
-                              </span>
+                                <div>
+                                  <span className="font-medium text-gray-900 text-sm">
+                                    {bidder.companyName}
+                                  </span>
+                                  <div className="flex items-center space-x-2 mt-1">
+                                    <span className="text-xs text-gray-500">
+                                      Score: {bidder.totalScore}%
+                                    </span>
+                                    <span className={`text-xs px-2 py-1 rounded-full ${
+                                      isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                                    }`}>
+                                      {isEligible ? "Eligible for Award" : "Not Eligible"}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-sm font-medium text-gray-900">{bidder.bidAmount}</div>
+                                <div className="text-xs text-gray-500">{bidder.experience}</div>
+                              </div>
                             </div>
-                            <span className="text-xs text-gray-500">
-                              Score: {bidder.totalScore}%
-                            </span>
+
+                            {/* Workflow Status Steps */}
+                            <div className="mt-4">
+                              <h5 className="text-xs font-medium text-gray-700 mb-2">Vendor Workflow Status:</h5>
+                              <div className="grid grid-cols-1 gap-2">
+                                {renderVendorWorkflowStep(
+                                  "1. Company Registration",
+                                  workflowStatus?.registrationCompleted || false,
+                                  workflowStatus?.registrationDate
+                                )}
+                                {renderVendorWorkflowStep(
+                                  "2. Login & Verification",
+                                  workflowStatus?.loginVerificationCompleted || false,
+                                  workflowStatus?.verificationDate
+                                )}
+                                {renderVendorWorkflowStep(
+                                  "3. Bidding Process",
+                                  workflowStatus?.biddingCompleted || false,
+                                  workflowStatus?.bidSubmissionDate
+                                )}
+                                {renderVendorWorkflowStep(
+                                  "4. Tender Evaluation",
+                                  workflowStatus?.evaluationCompleted || false,
+                                  workflowStatus?.evaluationDate
+                                )}
+                                {renderVendorWorkflowStep(
+                                  "5. No Objection Certificate",
+                                  workflowStatus?.nocIssued || false,
+                                  workflowStatus?.nocIssuedDate,
+                                  workflowStatus?.nocCertificateNumber ? `Certificate: ${workflowStatus.nocCertificateNumber}` : undefined
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Award Eligibility Summary */}
+                            <div className="mt-4 pt-3 border-t border-gray-200">
+                              <div className={`p-3 rounded-md ${
+                                isEligible ? "bg-green-100 border border-green-200" : "bg-red-100 border border-red-200"
+                              }`}>
+                                <div className="flex items-center space-x-2">
+                                  {isEligible ? (
+                                    <CheckCircle className="h-5 w-5 text-green-600" />
+                                  ) : (
+                                    <AlertCircle className="h-5 w-5 text-red-600" />
+                                  )}
+                                  <span className={`text-sm font-medium ${
+                                    isEligible ? "text-green-800" : "text-red-800"
+                                  }`}>
+                                    {isEligible
+                                      ? "✅ All requirements completed - Ready for award"
+                                      : "❌ Requirements incomplete - Cannot award tender"
+                                    }
+                                  </span>
+                                </div>
+                                {!isEligible && (
+                                  <div className="mt-2 text-xs text-red-700">
+                                    Complete all workflow steps before this vendor can be awarded a tender.
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                          <div className="space-y-1 text-xs text-gray-600">
-                            <div className="flex justify-between">
-                              <span>Bid Amount:</span>
-                              <span className="font-medium">{bidder.bidAmount}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Experience:</span>
-                              <span>{bidder.experience}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Completion Rate:</span>
-                              <span>{bidder.completionRate}%</span>
-                            </div>
-                          </div>
-                          <div className="mt-2">
-                            <div className="flex flex-wrap gap-1">
-                              {bidder.certifications.slice(0, 2).map((cert) => (
-                                <span
-                                  key={cert}
-                                  className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded text-xs"
-                                >
-                                  {cert}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -2250,8 +2429,8 @@ export default function MinistryDashboard() {
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  🏆 Award Contract - {selectedTenderForAward.title}
-                </h3>
+                🏆 Award Tender - {selectedTenderForAward.title}
+              </h3>
                 <button
                   onClick={() => {
                     setShowAwardModal(false);
@@ -2271,22 +2450,30 @@ export default function MinistryDashboard() {
                       Select Winning Bidder
                     </h4>
                     <div className="space-y-3">
-                      {bidders.map((bidder, index) => (
-                        <div
-                          key={bidder.id}
-                          className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                            awardFormData.selectedBidder === bidder.id
-                              ? "border-green-500 bg-green-50"
-                              : "border-gray-200 hover:border-gray-300"
-                          }`}
-                          onClick={() => {
-                            setAwardFormData({
-                              ...awardFormData,
-                              selectedBidder: bidder.id,
-                              awardValue: bidder.bidAmount,
-                            });
-                          }}
-                        >
+                      {bidders.map((bidder, index) => {
+                        const workflowStatus = getVendorWorkflowStatus(bidder.id);
+                        const isEligible = isVendorEligibleForAward(bidder.id);
+
+                        return (
+                          <div
+                            key={bidder.id}
+                            className={`p-4 border-2 rounded-lg transition-all ${
+                              !isEligible
+                                ? "border-red-200 bg-red-50 cursor-not-allowed opacity-60"
+                                : awardFormData.selectedBidder === bidder.id
+                                  ? "border-green-500 bg-green-50 cursor-pointer"
+                                  : "border-gray-200 hover:border-gray-300 cursor-pointer"
+                            }`}
+                            onClick={() => {
+                              if (isEligible) {
+                                setAwardFormData({
+                                  ...awardFormData,
+                                  selectedBidder: bidder.id,
+                                  awardValue: bidder.bidAmount,
+                                });
+                              }
+                            }}
+                          >
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center space-x-3 mb-2">
@@ -2300,9 +2487,24 @@ export default function MinistryDashboard() {
                                 <h5 className="font-semibold text-gray-900">
                                   {bidder.companyName}
                                 </h5>
-                                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
-                                  {bidder.status}
+                                <span className={`px-2 py-1 rounded-full text-xs ${
+                                  isEligible ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                }`}>
+                                  {isEligible ? "Eligible" : "Not Eligible"}
                                 </span>
+                              </div>
+
+                              {/* Workflow Status Indicator */}
+                              <div className="mb-3">
+                                <div className={`text-xs px-2 py-1 rounded-md inline-flex items-center space-x-1 ${
+                                  isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                                }`}>
+                                  {isEligible ? (
+                                    <><CheckCircle className="h-3 w-3" /><span>All workflow steps completed</span></>
+                                  ) : (
+                                    <><AlertCircle className="h-3 w-3" /><span>Workflow incomplete</span></>
+                                  )}
+                                </div>
                               </div>
                               <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                                 <div>
@@ -2345,8 +2547,24 @@ export default function MinistryDashboard() {
                               </div>
                             </div>
                           </div>
+
+                          {/* Eligibility Notice for Ineligible Vendors */}
+                          {!isEligible && (
+                            <div className="mt-3 p-2 bg-red-100 border border-red-200 rounded-md">
+                              <div className="text-xs text-red-700 font-medium">Required Steps Missing:</div>
+                              <ul className="text-xs text-red-600 mt-1 space-y-1">
+                                {!workflowStatus?.registrationCompleted && <li>• Company Registration</li>}
+                                {!workflowStatus?.loginVerificationCompleted && <li>• Login & Verification</li>}
+                                {!workflowStatus?.biddingCompleted && <li>• Bidding Process</li>}
+                                {!workflowStatus?.evaluationCompleted && <li>• Tender Evaluation</li>}
+                                {!workflowStatus?.nocIssued && <li>• No Objection Certificate</li>}
+                                {workflowStatus?.finalApprovalStatus !== "approved" && <li>• Final Approval</li>}
+                              </ul>
+                            </div>
+                          )}
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -2463,14 +2681,35 @@ export default function MinistryDashboard() {
 
               {/* Award Actions */}
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                  <div className="flex items-start space-x-3">
-                    <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                    <div>
-                      <h5 className="text-sm font-medium text-yellow-800">Award Confirmation</h5>
-                      <p className="text-sm text-yellow-700 mt-1">
-                        Once awarded, this decision will be final and legally binding. Ensure all details are correct before proceeding.
-                      </p>
+                <div className="space-y-4 mb-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <CheckSquare className="h-5 w-5 text-blue-600 mt-0.5" />
+                      <div>
+                        <h5 className="text-sm font-medium text-blue-800">Vendor Workflow Verification</h5>
+                        <p className="text-sm text-blue-700 mt-1">
+                          Only vendors who have completed all 5 workflow steps can be awarded a tender:
+                        </p>
+                        <ul className="text-sm text-blue-700 mt-2 ml-4 space-y-1">
+                          <li>1. ✅ Company Registration</li>
+                          <li>2. ✅ Login & Verification</li>
+                          <li>3. ✅ Bidding Process</li>
+                          <li>4. ✅ Tender Evaluation</li>
+                          <li>5. ✅ No Objection Certificate</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                      <div>
+                        <h5 className="text-sm font-medium text-yellow-800">Award Confirmation</h5>
+                        <p className="text-sm text-yellow-700 mt-1">
+                          Once awarded, this decision will be final and legally binding. Ensure all details are correct and the vendor has completed all workflow requirements before proceeding.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2491,11 +2730,11 @@ export default function MinistryDashboard() {
                       Save as Draft
                     </button>
                     <button
-                      disabled={!awardFormData.selectedBidder || !awardFormData.awardValue || !awardFormData.awardJustification}
+                      disabled={!awardFormData.selectedBidder || !awardFormData.awardValue || !awardFormData.awardJustification || !isVendorEligibleForAward(awardFormData.selectedBidder)}
                       className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Award className="h-4 w-4 mr-2 inline" />
-                      Award Contract
+                      Award Tender
                     </button>
                   </div>
                 </div>
