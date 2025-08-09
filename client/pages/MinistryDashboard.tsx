@@ -3916,7 +3916,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {tender.title}
                     </p>
                     <p className="text-xs text-gray-600">
-                      {tender.estimatedValue}
+                      {formatCurrency(tender.estimatedValue)}
                     </p>
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${
