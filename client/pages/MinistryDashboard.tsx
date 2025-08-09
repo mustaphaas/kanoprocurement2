@@ -429,7 +429,7 @@ export default function MinistryDashboard() {
   const [bidders, setBidders] = useState([
     {
       id: "BID-001",
-      companyName: "MedSupply Nigeria Ltd",
+      companyName: "PrimeCare Medical Ltd",
       bidAmount: "₦820,000,000",
       technicalScore: 92,
       financialScore: 88,
@@ -443,7 +443,7 @@ export default function MinistryDashboard() {
     },
     {
       id: "BID-002",
-      companyName: "Sahel Medical Supplies",
+      companyName: "Falcon Diagnostics Ltd",
       bidAmount: "₦850,000,000",
       technicalScore: 88,
       financialScore: 85,
@@ -457,7 +457,7 @@ export default function MinistryDashboard() {
     },
     {
       id: "BID-003",
-      companyName: "Northern Healthcare Solutions",
+      companyName: "Golden Gates Healthcare",
       bidAmount: "₦875,000,000",
       technicalScore: 85,
       financialScore: 82,
@@ -471,7 +471,7 @@ export default function MinistryDashboard() {
     },
     {
       id: "BID-004",
-      companyName: "Apex Medical Equipment Ltd",
+      companyName: "Royal Medical Solutions",
       bidAmount: "₦890,000,000",
       technicalScore: 82,
       financialScore: 79,
@@ -485,7 +485,7 @@ export default function MinistryDashboard() {
     },
     {
       id: "BID-005",
-      companyName: "Unity Health Systems",
+      companyName: "Zenith Health Technologies",
       bidAmount: "₦910,000,000",
       technicalScore: 80,
       financialScore: 76,
