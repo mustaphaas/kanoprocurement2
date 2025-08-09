@@ -7782,6 +7782,17 @@ Blockchain Timestamp: ${Date.now()}
                 <span>Contracts</span>
               </button>
               <button
+                onClick={() => setCurrentView("users")}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+                  currentView === "users"
+                    ? "text-green-700 bg-green-50"
+                    : "text-gray-700 hover:text-green-700"
+                }`}
+              >
+                <Users className="h-4 w-4" />
+                <span>User Management</span>
+              </button>
+              <button
                 onClick={() => setCurrentView("reports")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
                   currentView === "reports"
