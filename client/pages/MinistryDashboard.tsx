@@ -565,6 +565,167 @@ export default function MinistryDashboard() {
     return { ministryId, ministry: ministry || getMinistryById("ministry")! };
   };
 
+  // Set ministry-specific bidders and workspace
+  useEffect(() => {
+    const { ministryId } = getMinistryMockData();
+
+    // Set appropriate workspace for ministry
+    if (ministryId === 'ministry2') {
+      setSelectedWorkspace("MOWI-2024-001");
+      // Set Ministry of Works bidders
+      setBidders([
+        {
+          id: "BID-001",
+          companyName: "Kano Construction Ltd",
+          bidAmount: "₦14,800,000,000",
+          technicalScore: 90,
+          financialScore: 87,
+          totalScore: 88.5,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "20 years",
+          certifications: ["ISO 9001", "COREN Certified", "NIQS Registered"],
+          previousProjects: 62,
+          completionRate: 97.8,
+        },
+        {
+          id: "BID-002",
+          companyName: "Sahel Bridge Builders",
+          bidAmount: "₦15,100,000,000",
+          technicalScore: 88,
+          financialScore: 85,
+          totalScore: 86.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "18 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 45,
+          completionRate: 96.2,
+        },
+        {
+          id: "BID-003",
+          companyName: "Northern Roads Nigeria",
+          bidAmount: "₦15,400,000,000",
+          technicalScore: 85,
+          financialScore: 83,
+          totalScore: 84,
+          status: "Qualified",
+          submissionDate: "2024-02-08",
+          experience: "15 years",
+          certifications: ["ISO 9001", "NBRRI Certified"],
+          previousProjects: 38,
+          completionRate: 95.5,
+        },
+        {
+          id: "BID-004",
+          companyName: "Emirate Construction Co",
+          bidAmount: "₦15,600,000,000",
+          technicalScore: 82,
+          financialScore: 80,
+          totalScore: 81,
+          status: "Qualified",
+          submissionDate: "2024-02-07",
+          experience: "12 years",
+          certifications: ["ISO 9001", "COREN Certified"],
+          previousProjects: 29,
+          completionRate: 94.1,
+        },
+        {
+          id: "BID-005",
+          companyName: "Federal Infrastructure Ltd",
+          bidAmount: "₦15,800,000,000",
+          technicalScore: 80,
+          financialScore: 78,
+          totalScore: 79,
+          status: "Qualified",
+          submissionDate: "2024-02-06",
+          experience: "10 years",
+          certifications: ["ISO 9001", "NIQS Registered"],
+          previousProjects: 22,
+          completionRate: 92.7,
+        },
+      ]);
+    } else if (ministryId === 'ministry3') {
+      setSelectedWorkspace("MOE-2024-001");
+      // Set Ministry of Education bidders
+      setBidders([
+        {
+          id: "BID-001",
+          companyName: "EduTech Solutions Ltd",
+          bidAmount: "₦2,000,000,000",
+          technicalScore: 95,
+          financialScore: 92,
+          totalScore: 93.5,
+          status: "Qualified",
+          submissionDate: "2024-02-12",
+          experience: "12 years",
+          certifications: ["ISO 9001", "Educational Technology Certified"],
+          previousProjects: 89,
+          completionRate: 99.1,
+        },
+        {
+          id: "BID-002",
+          companyName: "Kano School Furniture Ltd",
+          bidAmount: "₦2,050,000,000",
+          technicalScore: 91,
+          financialScore: 89,
+          totalScore: 90,
+          status: "Qualified",
+          submissionDate: "2024-02-11",
+          experience: "15 years",
+          certifications: ["ISO 9001", "Furniture Quality Certified"],
+          previousProjects: 156,
+          completionRate: 98.7,
+        },
+        {
+          id: "BID-003",
+          companyName: "Northern Educational Supplies",
+          bidAmount: "₦2,100,000,000",
+          technicalScore: 88,
+          financialScore: 86,
+          totalScore: 87,
+          status: "Qualified",
+          submissionDate: "2024-02-10",
+          experience: "10 years",
+          certifications: ["ISO 9001", "Educational Materials Certified"],
+          previousProjects: 67,
+          completionRate: 97.3,
+        },
+        {
+          id: "BID-004",
+          companyName: "Academic Furniture Nigeria",
+          bidAmount: "₦2,150,000,000",
+          technicalScore: 85,
+          financialScore: 84,
+          totalScore: 84.5,
+          status: "Qualified",
+          submissionDate: "2024-02-09",
+          experience: "8 years",
+          certifications: ["ISO 9001", "School Equipment Certified"],
+          previousProjects: 43,
+          completionRate: 95.8,
+        },
+        {
+          id: "BID-005",
+          companyName: "Learning Resources Ltd",
+          bidAmount: "₦2,200,000,000",
+          technicalScore: 82,
+          financialScore: 81,
+          totalScore: 81.5,
+          status: "Under Review",
+          submissionDate: "2024-02-08",
+          experience: "6 years",
+          certifications: ["ISO 9001", "Educational Supplies Certified"],
+          previousProjects: 29,
+          completionRate: 94.2,
+        },
+      ]);
+    } else {
+      setSelectedWorkspace("MOH-2024-001");
+      // Keep Ministry of Health bidders (already set as default)
+    }
+  }, []);
+
   // Mock data initialization
   useEffect(() => {
     const { ministryId, ministry } = getMinistryMockData();
