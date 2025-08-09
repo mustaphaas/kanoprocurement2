@@ -2230,7 +2230,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-005",
           companyName: "Federal Infrastructure Ltd",
-          bidAmount: "���15,800,000,000",
+          bidAmount: "₦15,800,000,000",
           technicalScore: 80,
           financialScore: 78,
           totalScore: 79,
@@ -2767,7 +2767,7 @@ export default function MinistryDashboard() {
       id: tender.id,
       title: tender.title,
       description: tender.description,
-      value: tender.estimatedValue,
+      value: formatCurrency(tender.estimatedValue),
       deadline: new Date(tender.closeDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
       status: tender.status === "Published" ? "Open" : "Draft",
       statusColor: tender.status === "Published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800",
@@ -8432,7 +8432,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• AES-256 encryption</li>
-                      <li>���� Multi-factor authentication</li>
+                      <li>�� Multi-factor authentication</li>
                       <li>• Audit trail logging</li>
                       <li>• IP geolocation tracking</li>
                     </ul>
