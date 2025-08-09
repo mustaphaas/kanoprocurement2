@@ -2288,7 +2288,15 @@ export default function MinistryDashboard() {
       if (!storedBids) return 0;
 
       const allBids = JSON.parse(storedBids);
-      return allBids.filter((bid: any) => bid.tenderId === tenderId).length;
+      const matchingBids = allBids.filter((bid: any) => bid.tenderId === tenderId);
+
+      // Debug logging to see what's happening
+      console.log(`Getting bid count for tender ${tenderId}:`);
+      console.log('All bids:', allBids);
+      console.log('Matching bids:', matchingBids);
+      console.log('Count:', matchingBids.length);
+
+      return matchingBids.length;
     } catch (error) {
       console.error('Error getting bid count:', error);
       return 0;
@@ -5460,7 +5468,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             }`}
           >
             {steps.every((s) => s.completed)
-              ? "�� All Steps Completed"
+              ? "✓ All Steps Completed"
               : `${steps.filter((s) => s.completed).length}/${steps.length} Steps Completed`}
           </div>
         </div>
