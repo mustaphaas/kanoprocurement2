@@ -2830,7 +2830,12 @@ export default function MinistryDashboard() {
     };
 
     // Add to local tenders
-    setTenders((prev) => [tender, ...prev]);
+    setTenders((prev) => {
+      const updatedTenders = [tender, ...prev];
+      // Save to localStorage
+      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      return updatedTenders;
+    });
 
     // Store in localStorage for cross-page access
     const existingTenders = localStorage.getItem("featuredTenders") || "[]";
