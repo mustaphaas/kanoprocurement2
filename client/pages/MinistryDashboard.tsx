@@ -294,7 +294,7 @@ export default function MinistryDashboard() {
     procurementMethod: "Open Tender",
     publishDate: "",
     closeDate: "",
-    contactEmail: ""
+    contactEmail: "",
   });
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [evaluationCommittees, setEvaluationCommittees] = useState<
@@ -2735,7 +2735,13 @@ export default function MinistryDashboard() {
 
   // Tender Creation Functions
   const handleSubmitTender = (isDraft = false) => {
-    if (!newTender.title || !newTender.category || !newTender.description || !newTender.estimatedValue || !newTender.closeDate) {
+    if (
+      !newTender.title ||
+      !newTender.category ||
+      !newTender.description ||
+      !newTender.estimatedValue ||
+      !newTender.closeDate
+    ) {
       alert("Please fill in all required fields");
       return;
     }
@@ -2750,15 +2756,16 @@ export default function MinistryDashboard() {
       category: newTender.category,
       estimatedValue: formatCurrency(newTender.estimatedValue),
       status: isDraft ? "Draft" : "Published",
-      publishDate: newTender.publishDate || new Date().toISOString().split('T')[0],
+      publishDate:
+        newTender.publishDate || new Date().toISOString().split("T")[0],
       closeDate: newTender.closeDate,
       bidsReceived: 0,
       ministry: ministry.name,
-      procuringEntity: ministry.name
+      procuringEntity: ministry.name,
     };
 
     // Add to local tenders
-    setTenders(prev => [tender, ...prev]);
+    setTenders((prev) => [tender, ...prev]);
 
     // Store in localStorage for cross-page access
     const existingTenders = localStorage.getItem("featuredTenders") || "[]";
@@ -2768,12 +2775,19 @@ export default function MinistryDashboard() {
       title: tender.title,
       description: tender.description,
       value: tender.estimatedValue, // Already formatted above
-      deadline: new Date(tender.closeDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      deadline: new Date(tender.closeDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
       status: tender.status === "Published" ? "Open" : "Draft",
-      statusColor: tender.status === "Published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800",
+      statusColor:
+        tender.status === "Published"
+          ? "bg-green-100 text-green-800"
+          : "bg-gray-100 text-gray-800",
       category: tender.category,
       ministry: ministry.name,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
 
     tendersList.unshift(featuredTender);
@@ -2794,7 +2808,7 @@ export default function MinistryDashboard() {
       views: 0,
       status: tender.status === "Published" ? "Open" : "Draft",
       description: tender.description,
-      publishDate: tender.publishDate || new Date().toISOString().split('T')[0],
+      publishDate: tender.publishDate || new Date().toISOString().split("T")[0],
       closingDate: tender.closeDate,
       tenderFee: formatCurrency(25000),
       procuringEntity: ministry.name,
@@ -2805,14 +2819,14 @@ export default function MinistryDashboard() {
         "Tax clearance for last 3 years",
         "Professional license",
         "Evidence of similar projects",
-        "Financial capacity documentation"
+        "Financial capacity documentation",
       ],
       technicalSpecs: [
         "Project specifications as detailed in tender document",
         "Quality standards must meet government requirements",
-        "Timeline adherence is mandatory"
+        "Timeline adherence is mandatory",
       ],
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
 
     recentTendersList.unshift(recentTender);
@@ -2829,11 +2843,11 @@ export default function MinistryDashboard() {
       procurementMethod: "Open Tender",
       publishDate: "",
       closeDate: "",
-      contactEmail: ""
+      contactEmail: "",
     });
 
     setTenderSubView("list");
-    alert(`Tender ${isDraft ? 'saved as draft' : 'published'} successfully!`);
+    alert(`Tender ${isDraft ? "saved as draft" : "published"} successfully!`);
   };
 
   // NOC Request Functions
@@ -4378,7 +4392,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <input
                 type="text"
                 value={newTender.title}
-                onChange={(e) => setNewTender(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e) =>
+                  setNewTender((prev) => ({ ...prev, title: e.target.value }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Enter tender title"
               />
@@ -4389,7 +4405,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <select
                 value={newTender.category}
-                onChange={(e) => setNewTender(prev => ({ ...prev, category: e.target.value }))}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 <option value="">Select category</option>
@@ -4412,7 +4433,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <textarea
                 rows={4}
                 value={newTender.description}
-                onChange={(e) => setNewTender(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Detailed description of the procurement requirement"
               />
@@ -4424,7 +4450,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <input
                 type="text"
                 value={newTender.estimatedValue}
-                onChange={(e) => setNewTender(prev => ({ ...prev, estimatedValue: e.target.value }))}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    estimatedValue: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Enter amount (e.g., 2500000 for ₦2.5M)"
               />
@@ -4435,7 +4466,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
               </label>
               <select
                 value={newTender.procurementMethod}
-                onChange={(e) => setNewTender(prev => ({ ...prev, procurementMethod: e.target.value }))}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    procurementMethod: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 <option value="Open Tender">Open Tender</option>
@@ -4450,7 +4486,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <input
                 type="date"
                 value={newTender.publishDate}
-                onChange={(e) => setNewTender(prev => ({ ...prev, publishDate: e.target.value }))}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    publishDate: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
@@ -4461,7 +4502,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <input
                 type="date"
                 value={newTender.closeDate}
-                onChange={(e) => setNewTender(prev => ({ ...prev, closeDate: e.target.value }))}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    closeDate: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
@@ -4483,7 +4529,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <input
                 type="email"
                 value={newTender.contactEmail || ministryInfo.contactEmail}
-                onChange={(e) => setNewTender(prev => ({ ...prev, contactEmail: e.target.value }))}
+                onChange={(e) =>
+                  setNewTender((prev) => ({
+                    ...prev,
+                    contactEmail: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>

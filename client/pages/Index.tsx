@@ -167,7 +167,7 @@ export default function Index() {
           // Apply currency formatting to fix any incorrectly formatted values
           const formattedTenders = parsedTenders.map((tender: any) => ({
             ...tender,
-            value: formatCurrency(tender.value)
+            value: formatCurrency(tender.value),
           }));
           setRecentTenders(formattedTenders);
         }
@@ -245,7 +245,8 @@ export default function Index() {
     },
   ];
 
-  const [featuredTenders, setFeaturedTenders] = useState<FeaturedTender[]>(getDefaultTenders());
+  const [featuredTenders, setFeaturedTenders] =
+    useState<FeaturedTender[]>(getDefaultTenders());
 
   // Load featured tenders from localStorage on component mount
   useEffect(() => {
@@ -257,7 +258,7 @@ export default function Index() {
           // Apply currency formatting to fix any incorrectly formatted values
           const formattedTenders = parsedTenders.map((tender: any) => ({
             ...tender,
-            value: formatCurrency(tender.value)
+            value: formatCurrency(tender.value),
           }));
           setFeaturedTenders(formattedTenders);
         }
@@ -941,19 +942,24 @@ export default function Index() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {recentTenders.slice(0, 3).map((tender, index) => (
-                <div key={tender.id} className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow border">
+                <div
+                  key={tender.id}
+                  className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow border"
+                >
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mb-2">
                         {tender.id}
                       </span>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        tender.status === "Open"
-                          ? "bg-green-100 text-green-800"
-                          : tender.status === "Closing Soon"
-                            ? "bg-orange-100 text-orange-800"
-                            : "bg-gray-100 text-gray-800"
-                      }`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          tender.status === "Open"
+                            ? "bg-green-100 text-green-800"
+                            : tender.status === "Closing Soon"
+                              ? "bg-orange-100 text-orange-800"
+                              : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
                         {tender.status}
                       </span>
                     </div>
