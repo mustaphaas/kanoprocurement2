@@ -2780,6 +2780,45 @@ export default function MinistryDashboard() {
     const latestTenders = tendersList.slice(0, 5);
     localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
 
+    // Also store in recentTenders with more detailed information
+    const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
+    const recentTendersList = JSON.parse(existingRecentTenders);
+    const recentTender = {
+      id: tender.id,
+      title: tender.title,
+      category: tender.category,
+      value: tender.estimatedValue,
+      deadline: tender.closeDate,
+      location: "Kano State",
+      views: 0,
+      status: tender.status === "Published" ? "Open" : "Draft",
+      description: tender.description,
+      publishDate: tender.publishDate || new Date().toISOString().split('T')[0],
+      closingDate: tender.closeDate,
+      tenderFee: "₦25,000",
+      procuringEntity: ministry.name,
+      duration: "12 months",
+      eligibility: "Qualified contractors with relevant experience",
+      requirements: [
+        "Valid CAC certificate",
+        "Tax clearance for last 3 years",
+        "Professional license",
+        "Evidence of similar projects",
+        "Financial capacity documentation"
+      ],
+      technicalSpecs: [
+        "Project specifications as detailed in tender document",
+        "Quality standards must meet government requirements",
+        "Timeline adherence is mandatory"
+      ],
+      createdAt: Date.now()
+    };
+
+    recentTendersList.unshift(recentTender);
+    // Keep only the last 10 recent tenders
+    const latestRecentTenders = recentTendersList.slice(0, 10);
+    localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+
     // Reset form
     setNewTender({
       title: "",
