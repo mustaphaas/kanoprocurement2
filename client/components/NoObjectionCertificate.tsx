@@ -230,11 +230,16 @@ export default function NoObjectionCertificate({
   // Function to load NOC requests from central storage
   const loadNOCRequests = () => {
     const storedNOCs = localStorage.getItem("centralNOCRequests");
+    console.log("Superuser loading NOCs from localStorage:", storedNOCs);
     if (storedNOCs) {
       const requests = JSON.parse(storedNOCs);
+      console.log("Parsed NOC requests:", requests);
+      console.log("Number of requests loaded:", requests.length);
       setNOCRequests(requests);
       setFilteredNOCRequests(requests);
       return;
+    } else {
+      console.log("No central NOCs found in localStorage");
     }
   };
 
