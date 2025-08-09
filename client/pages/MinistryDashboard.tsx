@@ -4531,7 +4531,19 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       onClick={() => {
                         setSelectedTenderForDetails(tender);
                         const tenderBids = loadBidsForTender(tender.id);
-                        setBidders(tenderBids);
+                        // If no real bids found, fall back to mock data based on tender ID
+                        if (tenderBids.length === 0) {
+                          // Use workspace-specific mock data if available
+                          const workspaceBidders = bidderDataByWorkspace[tender.id];
+                          if (workspaceBidders) {
+                            setBidders(workspaceBidders);
+                          } else {
+                            // Use default bidders for other tenders
+                            setBidders(bidders.slice(0, tender.bidsReceived || 0));
+                          }
+                        } else {
+                          setBidders(tenderBids);
+                        }
                         setShowTenderDetailsModal(true);
                       }}
                       className="text-blue-600 hover:text-blue-900"
@@ -8845,7 +8857,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       ⚡ Automation Benefits
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
-                      <li>��� 90% faster processing</li>
+                      <li>����� 90% faster processing</li>
                       <li>• Reduced human errors</li>
                       <li>• Real-time notifications</li>
                       <li>��� Automatic compliance checks</li>
