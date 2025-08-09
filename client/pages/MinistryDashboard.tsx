@@ -2838,7 +2838,14 @@ Penalty Clause: 0.5% per week for delayed completion`,
               <DollarSign className="h-8 w-8 text-green-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Total Value</p>
-                <p className="text-2xl font-bold text-gray-900">₦2.7B</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {(() => {
+                    const { ministryId } = getMinistryMockData();
+                    if (ministryId === 'ministry2') return '₦43.2B';
+                    if (ministryId === 'ministry3') return '₦9.8B';
+                    return '₦2.7B';
+                  })()}
+                </p>
               </div>
             </div>
           </div>
