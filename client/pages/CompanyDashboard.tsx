@@ -508,6 +508,16 @@ export default function CompanyDashboard() {
       ),
     );
 
+    // Persist tender state to localStorage
+    const storedTenderStates = localStorage.getItem("companyTenderStates") || "{}";
+    const tenderStates = JSON.parse(storedTenderStates);
+    tenderStates[selectedTender.id] = {
+      ...tenderStates[selectedTender.id],
+      hasExpressedInterest: true,
+      hasBid: true
+    };
+    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
+
     // Update company stats and add notification
     setNotifications((prev) => [
       {
