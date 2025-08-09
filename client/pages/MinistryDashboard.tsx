@@ -376,6 +376,17 @@ export default function MinistryDashboard() {
   const [selectedWorkspace, setSelectedWorkspace] = useState("MOH-2024-001");
   const [isEditingEvaluation, setIsEditingEvaluation] = useState(false);
   const [evaluationScores, setEvaluationScores] = useState<{[key: string]: any}>({});
+  const [showCreateCommitteeModal, setShowCreateCommitteeModal] = useState(false);
+  const [showFinalizeEvaluationModal, setShowFinalizeEvaluationModal] = useState(false);
+  const [activeCommittee, setActiveCommittee] = useState<any>(null);
+  const [isEvaluationFinalized, setIsEvaluationFinalized] = useState(false);
+  const [committeeFormData, setCommitteeFormData] = useState({
+    name: "",
+    chairperson: "",
+    secretary: "",
+    specialization: "",
+    members: [{ name: "", department: "", role: "Member", email: "" }]
+  });
   const [bidders, setBidders] = useState([
     {
       id: "BID-001",
