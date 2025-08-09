@@ -7,15 +7,21 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatCurrency(amount: string | number): string {
   // Remove any existing currency symbols and non-numeric characters except decimal point
-  const numericAmount = typeof amount === 'string'
-    ? parseFloat(amount.replace(/[^\d.]/g, ''))
-    : amount;
+  let numericAmount: number;
 
-  if (isNaN(numericAmount)) return '₦0';
+  if (typeof amount === 'string') {
+    // Remove currency symbols, commas, and other non-numeric characters except decimal point
+    const cleanAmount = amount.replace(/[₦,\s]/g, '').replace(/[^\d.]/g, '');
+    numericAmount = parseFloat(cleanAmount);
+  } else {
+    numericAmount = amount;
+  }
+
+  if (isNaN(numericAmount) || numericAmount === 0) return '₦0';
 
   // Format with commas and add naira symbol
-  return `₦${numericAmount.toLocaleString('en-NG', {
+  return `₦${numericAmount.toLocaleString('en-US', {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 0
   })}`;
 }
