@@ -285,6 +285,16 @@ export default function MinistryDashboard() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showCreateTender, setShowCreateTender] = useState(false);
   const [showNOCRequest, setShowNOCRequest] = useState(false);
+  const [newTender, setNewTender] = useState({
+    title: "",
+    category: "",
+    description: "",
+    estimatedValue: "",
+    procurementMethod: "Open Tender",
+    publishDate: "",
+    closeDate: "",
+    contactEmail: ""
+  });
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [evaluationCommittees, setEvaluationCommittees] = useState<
     EvaluationCommittee[]
@@ -2720,6 +2730,70 @@ export default function MinistryDashboard() {
       prev.map((u) => (u.id === user.id ? { ...u, isActive: !u.isActive } : u)),
     );
     alert(`User has been ${user.isActive ? "deactivated" : "activated"}!`);
+  };
+
+  // Tender Creation Functions
+  const handleSubmitTender = (isDraft = false) => {
+    if (!newTender.title || !newTender.category || !newTender.description || !newTender.estimatedValue || !newTender.closeDate) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const { ministry } = getMinistryMockData();
+    const tenderId = `${ministry.code}-${Date.now()}`;
+
+    const tender: Tender = {
+      id: tenderId,
+      title: newTender.title,
+      description: newTender.description,
+      category: newTender.category,
+      estimatedValue: newTender.estimatedValue,
+      status: isDraft ? "Draft" : "Published",
+      publishDate: newTender.publishDate || new Date().toISOString().split('T')[0],
+      closeDate: newTender.closeDate,
+      bidsReceived: 0,
+      ministry: ministry.name,
+      procuringEntity: ministry.name
+    };
+
+    // Add to local tenders
+    setTenders(prev => [tender, ...prev]);
+
+    // Store in localStorage for cross-page access
+    const existingTenders = localStorage.getItem("featuredTenders") || "[]";
+    const tendersList = JSON.parse(existingTenders);
+    const featuredTender = {
+      id: tender.id,
+      title: tender.title,
+      description: tender.description,
+      value: tender.estimatedValue,
+      deadline: new Date(tender.closeDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      status: tender.status === "Published" ? "Open" : "Draft",
+      statusColor: tender.status === "Published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800",
+      category: tender.category,
+      ministry: ministry.name,
+      createdAt: Date.now()
+    };
+
+    tendersList.unshift(featuredTender);
+    // Keep only the last 5 tenders
+    const latestTenders = tendersList.slice(0, 5);
+    localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
+
+    // Reset form
+    setNewTender({
+      title: "",
+      category: "",
+      description: "",
+      estimatedValue: "",
+      procurementMethod: "Open Tender",
+      publishDate: "",
+      closeDate: "",
+      contactEmail: ""
+    });
+
+    setTenderSubView("list");
+    alert(`Tender ${isDraft ? 'saved as draft' : 'published'} successfully!`);
   };
 
   // NOC Request Functions
