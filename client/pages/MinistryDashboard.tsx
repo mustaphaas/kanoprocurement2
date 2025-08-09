@@ -62,6 +62,7 @@ import {
   Wifi,
   Monitor,
   Megaphone,
+  X,
 } from "lucide-react";
 
 type CurrentView =
@@ -281,6 +282,13 @@ export default function MinistryDashboard() {
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [aiAssistantActive, setAiAssistantActive] = useState(false);
+  const [showContractDetails, setShowContractDetails] = useState(false);
+  const [showMilestoneModal, setShowMilestoneModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showDisputeModal, setShowDisputeModal] = useState(false);
+  const [selectedContractForAction, setSelectedContractForAction] = useState<Contract | null>(null);
+  const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const navigate = useNavigate();
 
   // Get ministry info from context/auth (mock for now)
@@ -374,6 +382,219 @@ export default function MinistryDashboard() {
         bidsReceived: 8,
         ministry: "Ministry of Health",
         procuringEntity: "Kano State Ministry of Health",
+      },
+    ];
+
+    const mockContracts: Contract[] = [
+      {
+        id: "CON-MOH-001",
+        tenderId: "MOH-2024-001",
+        contractorName: "MedSupply Nigeria Ltd",
+        projectTitle: "Hospital Equipment Supply",
+        contractValue: "₦850,000,000",
+        startDate: "2024-02-01",
+        endDate: "2024-08-01",
+        status: "Active",
+        performanceScore: 85,
+        digitalSignature: "DS-KS-2024-001",
+        documentHash: "SHA256-ABC123",
+        milestones: [
+          {
+            id: "MIL-001",
+            title: "Equipment Procurement",
+            description: "Procure and prepare medical equipment",
+            targetDate: "2024-03-15",
+            completionDate: "2024-03-10",
+            status: "Completed",
+            paymentPercentage: 30,
+            deliverables: ["Equipment list", "Quality certificates"],
+            verificationStatus: "Verified",
+          },
+          {
+            id: "MIL-002",
+            title: "Delivery and Installation",
+            description: "Deliver and install equipment at healthcare centers",
+            targetDate: "2024-05-15",
+            status: "In Progress",
+            paymentPercentage: 50,
+            deliverables: ["Installation certificates", "Training completion"],
+            verificationStatus: "Under Review",
+          },
+          {
+            id: "MIL-003",
+            title: "Training and Handover",
+            description: "Train staff and complete project handover",
+            targetDate: "2024-07-15",
+            status: "Pending",
+            paymentPercentage: 20,
+            deliverables: ["Training certificates", "User manuals"],
+            verificationStatus: "Not Started",
+          },
+        ],
+        payments: [
+          {
+            id: "PAY-001",
+            milestoneId: "MIL-001",
+            amount: "₦255,000,000",
+            requestDate: "2024-03-12",
+            approvalDate: "2024-03-15",
+            paymentDate: "2024-03-18",
+            status: "Paid",
+            invoiceNumber: "INV-2024-001",
+          },
+          {
+            id: "PAY-002",
+            milestoneId: "MIL-002",
+            amount: "₦425,000,000",
+            requestDate: "2024-04-10",
+            status: "Pending",
+            invoiceNumber: "INV-2024-002",
+          },
+        ],
+        disputes: [],
+      },
+      {
+        id: "CON-MOH-002",
+        tenderId: "MOH-2024-002",
+        contractorName: "Sahel Medical Supplies",
+        projectTitle: "Pharmaceutical Supply Contract",
+        contractValue: "₦1,200,000,000",
+        startDate: "2024-03-01",
+        endDate: "2025-02-28",
+        status: "Active",
+        performanceScore: 92,
+        digitalSignature: "DS-KS-2024-002",
+        documentHash: "SHA256-DEF456",
+        milestones: [
+          {
+            id: "MIL-004",
+            title: "Q1 Drug Supply",
+            description: "Supply essential medicines for Q1",
+            targetDate: "2024-03-31",
+            completionDate: "2024-03-30",
+            status: "Completed",
+            paymentPercentage: 25,
+            deliverables: ["Drug delivery certificates", "Quality reports"],
+            verificationStatus: "Verified",
+          },
+          {
+            id: "MIL-005",
+            title: "Q2 Drug Supply",
+            description: "Supply essential medicines for Q2",
+            targetDate: "2024-06-30",
+            status: "In Progress",
+            paymentPercentage: 25,
+            deliverables: ["Drug delivery certificates", "Quality reports"],
+            verificationStatus: "Under Review",
+          },
+          {
+            id: "MIL-006",
+            title: "Q3 Drug Supply",
+            description: "Supply essential medicines for Q3",
+            targetDate: "2024-09-30",
+            status: "Pending",
+            paymentPercentage: 25,
+            deliverables: ["Drug delivery certificates", "Quality reports"],
+            verificationStatus: "Not Started",
+          },
+          {
+            id: "MIL-007",
+            title: "Q4 Drug Supply",
+            description: "Supply essential medicines for Q4",
+            targetDate: "2024-12-31",
+            status: "Pending",
+            paymentPercentage: 25,
+            deliverables: ["Drug delivery certificates", "Quality reports"],
+            verificationStatus: "Not Started",
+          },
+        ],
+        payments: [
+          {
+            id: "PAY-003",
+            milestoneId: "MIL-004",
+            amount: "₦300,000,000",
+            requestDate: "2024-03-30",
+            approvalDate: "2024-04-02",
+            paymentDate: "2024-04-05",
+            status: "Paid",
+            invoiceNumber: "INV-2024-003",
+          },
+          {
+            id: "PAY-004",
+            milestoneId: "MIL-005",
+            amount: "₦300,000,000",
+            requestDate: "2024-06-25",
+            status: "Approved",
+            invoiceNumber: "INV-2024-004",
+          },
+        ],
+        disputes: [],
+      },
+      {
+        id: "CON-MOH-003",
+        tenderId: "MOH-2024-003",
+        contractorName: "Northern Healthcare Solutions",
+        projectTitle: "Medical Laboratory Equipment",
+        contractValue: "₦650,000,000",
+        startDate: "2024-02-15",
+        endDate: "2024-06-15",
+        status: "Suspended",
+        performanceScore: 68,
+        digitalSignature: "DS-KS-2024-003",
+        documentHash: "SHA256-GHI789",
+        milestones: [
+          {
+            id: "MIL-008",
+            title: "Equipment Manufacturing",
+            description: "Manufacture laboratory equipment",
+            targetDate: "2024-04-15",
+            status: "Overdue",
+            paymentPercentage: 40,
+            deliverables: ["Manufacturing certificates", "Quality tests"],
+            verificationStatus: "Rejected",
+          },
+          {
+            id: "MIL-009",
+            title: "Equipment Delivery",
+            description: "Deliver equipment to laboratories",
+            targetDate: "2024-05-15",
+            status: "Pending",
+            paymentPercentage: 40,
+            deliverables: ["Delivery receipts", "Installation guides"],
+            verificationStatus: "Not Started",
+          },
+          {
+            id: "MIL-010",
+            title: "Final Commissioning",
+            description: "Commission and test all equipment",
+            targetDate: "2024-06-15",
+            status: "Pending",
+            paymentPercentage: 20,
+            deliverables: ["Commissioning reports", "Training completion"],
+            verificationStatus: "Not Started",
+          },
+        ],
+        payments: [
+          {
+            id: "PAY-005",
+            milestoneId: "MIL-008",
+            amount: "₦260,000,000",
+            requestDate: "2024-04-20",
+            status: "Rejected",
+            invoiceNumber: "INV-2024-005",
+          },
+        ],
+        disputes: [
+          {
+            id: "DIS-001",
+            title: "Quality Standards Non-Compliance",
+            description: "Equipment failed quality standards during verification",
+            raisedBy: "Ministry",
+            raisedDate: "2024-04-18",
+            status: "Under Mediation",
+            mediator: "Kano State Procurement Review Board",
+          },
+        ],
       },
     ];
 
@@ -496,6 +717,7 @@ export default function MinistryDashboard() {
 
     setCompanies(mockCompanies);
     setTenders(mockTenders);
+    setContracts(mockContracts);
     setNOCRequests(mockNOCRequests);
     setEvaluationCommittees(mockEvaluationCommittees);
     setBidEvaluations(mockBidEvaluations);
@@ -1685,6 +1907,28 @@ export default function MinistryDashboard() {
     return null;
   };
 
+  const handleViewContractDetails = (contract: Contract) => {
+    setSelectedContractForAction(contract);
+    setShowContractDetails(true);
+  };
+
+  const handleUpdateMilestone = (contract: Contract, milestone: Milestone) => {
+    setSelectedContractForAction(contract);
+    setSelectedMilestone(milestone);
+    setShowMilestoneModal(true);
+  };
+
+  const handleProcessPayment = (contract: Contract, payment: Payment) => {
+    setSelectedContractForAction(contract);
+    setSelectedPayment(payment);
+    setShowPaymentModal(true);
+  };
+
+  const handleDisputeContract = (contract: Contract) => {
+    setSelectedContractForAction(contract);
+    setShowDisputeModal(true);
+  };
+
   const renderContracts = () => (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -1705,9 +1949,580 @@ export default function MinistryDashboard() {
           New Contract
         </button>
       </div>
-      <div className="text-center py-12">
-        <p className="text-gray-500">Contract management content will be implemented here</p>
+
+      {/* Contract Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="flex items-center">
+            <FileCheck className="h-8 w-8 text-blue-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">
+                Total Contracts
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {contracts.length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="flex items-center">
+            <Activity className="h-8 w-8 text-green-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">Active</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {contracts.filter((c) => c.status === "Active").length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="flex items-center">
+            <CheckCircle className="h-8 w-8 text-purple-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">Completed</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {contracts.filter((c) => c.status === "Completed").length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="flex items-center">
+            <DollarSign className="h-8 w-8 text-green-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">Total Value</p>
+              <p className="text-2xl font-bold text-gray-900">₦2.7B</p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Contracts List */}
+      <div className="bg-white rounded-lg shadow-sm border">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Contract Portfolio
+          </h2>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 gap-6">
+            {contracts.map((contract) => (
+              <div
+                key={contract.id}
+                className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                      {contract.projectTitle}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {contract.id} • {contract.contractorName}
+                    </p>
+                    <p className="text-sm text-green-600 font-medium">
+                      {contract.contractValue}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <span
+                      className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${
+                        contract.status === "Active"
+                          ? "bg-green-100 text-green-800"
+                          : contract.status === "Completed"
+                            ? "bg-blue-100 text-blue-800"
+                            : contract.status === "Suspended"
+                              ? "bg-orange-100 text-orange-800"
+                              : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {contract.status}
+                    </span>
+                    <div className="mt-2 text-sm text-gray-500">
+                      Performance: {contract.performanceScore}%
+                    </div>
+                  </div>
+                </div>
+
+                {/* Milestone Progress */}
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-900 mb-3">
+                    Milestone Progress
+                  </h4>
+                  <div className="space-y-2">
+                    {contract.milestones.map((milestone, index) => (
+                      <div
+                        key={milestone.id}
+                        className="flex items-center space-x-3"
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
+                            milestone.status === "Completed"
+                              ? "bg-green-100 text-green-800"
+                              : milestone.status === "In Progress"
+                                ? "bg-blue-100 text-blue-800"
+                                : milestone.status === "Overdue"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-600"
+                          }`}
+                        >
+                          {index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-900">
+                              {milestone.title}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {milestone.paymentPercentage}%
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-600">
+                              Target: {milestone.targetDate}
+                            </span>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full ${
+                                milestone.verificationStatus ===
+                                "Verified"
+                                  ? "bg-green-100 text-green-700"
+                                  : milestone.verificationStatus ===
+                                      "Under Review"
+                                    ? "bg-yellow-100 text-yellow-700"
+                                    : milestone.verificationStatus ===
+                                        "Rejected"
+                                      ? "bg-red-100 text-red-700"
+                                      : "bg-gray-100 text-gray-600"
+                              }`}
+                            >
+                              {milestone.verificationStatus}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Payment Status */}
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-900 mb-3">
+                    Payment Status
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {contract.payments.map((payment) => (
+                      <div
+                        key={payment.id}
+                        className={`p-3 rounded-lg border ${
+                          payment.status === "Paid"
+                            ? "bg-green-50 border-green-200"
+                            : payment.status === "Approved"
+                              ? "bg-blue-50 border-blue-200"
+                              : payment.status === "Pending"
+                                ? "bg-yellow-50 border-yellow-200"
+                                : "bg-red-50 border-red-200"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-900">
+                            {payment.amount}
+                          </span>
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full ${
+                              payment.status === "Paid"
+                                ? "bg-green-100 text-green-800"
+                                : payment.status === "Approved"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : payment.status === "Pending"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {payment.status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">
+                          {payment.invoiceNumber}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Disputes */}
+                {contract.disputes && contract.disputes.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                      <AlertTriangle className="h-4 w-4 text-orange-600 mr-2" />
+                      Active Disputes
+                    </h4>
+                    <div className="space-y-2">
+                      {contract.disputes.map((dispute) => (
+                        <div
+                          key={dispute.id}
+                          className="p-3 bg-orange-50 border border-orange-200 rounded-lg"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-900">
+                              {dispute.title}
+                            </span>
+                            <span className="text-xs px-2 py-1 bg-orange-100 text-orange-800 rounded-full">
+                              {dispute.status}
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-1">
+                            Raised by: {dispute.raisedBy} • {dispute.raisedDate}
+                          </p>
+                          {dispute.mediator && (
+                            <p className="text-xs text-gray-600">
+                              Mediator: {dispute.mediator}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Actions */}
+                <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
+                  <button
+                    onClick={() => handleViewContractDetails(contract)}
+                    className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm"
+                  >
+                    <Eye className="h-3 w-3 mr-1" />
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => handleUpdateMilestone(contract, contract.milestones.find(m => m.status === "In Progress") || contract.milestones[0])}
+                    className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-md hover:bg-green-200 text-sm"
+                  >
+                    <CheckSquare className="h-3 w-3 mr-1" />
+                    Update Milestone
+                  </button>
+                  <button
+                    onClick={() => handleProcessPayment(contract, contract.payments.find(p => p.status === "Pending") || contract.payments[0])}
+                    className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 text-sm"
+                  >
+                    <CreditCard className="h-3 w-3 mr-1" />
+                    Process Payment
+                  </button>
+                  <button
+                    onClick={() => handleDisputeContract(contract)}
+                    className="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-800 rounded-md hover:bg-orange-200 text-sm"
+                  >
+                    <AlertTriangle className="h-3 w-3 mr-1" />
+                    Dispute Resolution
+                  </button>
+                  <button className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 text-sm">
+                    <Download className="h-3 w-3 mr-1" />
+                    Export Contract
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Contract Details Modal */}
+      {showContractDetails && selectedContractForAction && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-gray-900">
+                Contract Details - {selectedContractForAction.projectTitle}
+              </h3>
+              <button
+                onClick={() => setShowContractDetails(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Contract Information</h4>
+                <div className="space-y-2 text-sm">
+                  <p><strong>Contract ID:</strong> {selectedContractForAction.id}</p>
+                  <p><strong>Tender ID:</strong> {selectedContractForAction.tenderId}</p>
+                  <p><strong>Contractor:</strong> {selectedContractForAction.contractorName}</p>
+                  <p><strong>Value:</strong> {selectedContractForAction.contractValue}</p>
+                  <p><strong>Duration:</strong> {selectedContractForAction.startDate} to {selectedContractForAction.endDate}</p>
+                  <p><strong>Status:</strong> <span className={`px-2 py-1 rounded-full text-xs ${
+                    selectedContractForAction.status === "Active" ? "bg-green-100 text-green-800" :
+                    selectedContractForAction.status === "Completed" ? "bg-blue-100 text-blue-800" :
+                    "bg-orange-100 text-orange-800"
+                  }`}>{selectedContractForAction.status}</span></p>
+                  <p><strong>Performance Score:</strong> {selectedContractForAction.performanceScore}%</p>
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Security & Verification</h4>
+                <div className="space-y-2 text-sm">
+                  <p><strong>Digital Signature:</strong> {selectedContractForAction.digitalSignature}</p>
+                  <p><strong>Document Hash:</strong> <code className="bg-gray-100 px-2 py-1 rounded text-xs">{selectedContractForAction.documentHash}</code></p>
+                  <p><strong>Verification Status:</strong> <span className="text-green-600">✓ Verified</span></p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6">
+              <h4 className="font-semibold text-gray-900 mb-3">Detailed Milestones</h4>
+              <div className="space-y-3">
+                {selectedContractForAction.milestones.map((milestone, index) => (
+                  <div key={milestone.id} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h5 className="font-medium text-gray-900">{milestone.title}</h5>
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        milestone.status === "Completed" ? "bg-green-100 text-green-800" :
+                        milestone.status === "In Progress" ? "bg-blue-100 text-blue-800" :
+                        milestone.status === "Overdue" ? "bg-red-100 text-red-800" :
+                        "bg-gray-100 text-gray-800"
+                      }`}>{milestone.status}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{milestone.description}</p>
+                    <div className="text-xs text-gray-500">
+                      <p>Target Date: {milestone.targetDate} {milestone.completionDate && `| Completed: ${milestone.completionDate}`}</p>
+                      <p>Payment: {milestone.paymentPercentage}% | Verification: {milestone.verificationStatus}</p>
+                      <p>Deliverables: {milestone.deliverables.join(", ")}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Milestone Update Modal */}
+      {showMilestoneModal && selectedMilestone && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-gray-900">
+                Update Milestone - {selectedMilestone.title}
+              </h3>
+              <button
+                onClick={() => setShowMilestoneModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option value={selectedMilestone.status}>{selectedMilestone.status}</option>
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Overdue">Overdue</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Verification Status</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option value={selectedMilestone.verificationStatus}>{selectedMilestone.verificationStatus}</option>
+                  <option value="Not Started">Not Started</option>
+                  <option value="Under Review">Under Review</option>
+                  <option value="Verified">Verified</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Completion Date</label>
+                <input type="date" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Comments</label>
+                <textarea
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Add comments about milestone progress..."
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={() => setShowMilestoneModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                Update Milestone
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Processing Modal */}
+      {showPaymentModal && selectedPayment && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-gray-900">
+                Process Payment - {selectedPayment.amount}
+              </h3>
+              <button
+                onClick={() => setShowPaymentModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-medium text-gray-900 mb-2">Payment Details</h4>
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p><strong>Payment ID:</strong> {selectedPayment.id}</p>
+                  <p><strong>Invoice Number:</strong> {selectedPayment.invoiceNumber}</p>
+                  <p><strong>Amount:</strong> {selectedPayment.amount}</p>
+                  <p><strong>Request Date:</strong> {selectedPayment.requestDate}</p>
+                  <p><strong>Current Status:</strong> <span className={`px-2 py-1 rounded-full text-xs ${
+                    selectedPayment.status === "Paid" ? "bg-green-100 text-green-800" :
+                    selectedPayment.status === "Approved" ? "bg-blue-100 text-blue-800" :
+                    selectedPayment.status === "Pending" ? "bg-yellow-100 text-yellow-800" :
+                    "bg-red-100 text-red-800"
+                  }`}>{selectedPayment.status}</span></p>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Payment Action</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option value="approve">Approve Payment</option>
+                  <option value="reject">Reject Payment</option>
+                  <option value="process">Process Payment</option>
+                  <option value="hold">Put on Hold</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option value="bank-transfer">Bank Transfer</option>
+                  <option value="check">Check</option>
+                  <option value="wire">Wire Transfer</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Bank Details</label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Enter bank account details"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Processing Notes</label>
+                <textarea
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Add notes about payment processing..."
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={() => setShowPaymentModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                Process Payment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dispute Resolution Modal */}
+      {showDisputeModal && selectedContractForAction && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-gray-900">
+                Dispute Resolution - {selectedContractForAction.projectTitle}
+              </h3>
+              <button
+                onClick={() => setShowDisputeModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Dispute Title</label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Enter dispute title"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Dispute Category</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option value="quality">Quality Issues</option>
+                  <option value="delivery">Delivery Delays</option>
+                  <option value="payment">Payment Disputes</option>
+                  <option value="specification">Specification Changes</option>
+                  <option value="performance">Performance Issues</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Priority Level</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Describe the dispute in detail..."
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Proposed Resolution</label>
+                <textarea
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Describe your proposed resolution..."
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Assign Mediator</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option value="">Select Mediator</option>
+                  <option value="procurement-board">Kano State Procurement Review Board</option>
+                  <option value="legal-dept">Legal Department</option>
+                  <option value="technical-committee">Technical Committee</option>
+                  <option value="external-arbitrator">External Arbitrator</option>
+                </select>
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={() => setShowDisputeModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">
+                Initiate Dispute Resolution
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
