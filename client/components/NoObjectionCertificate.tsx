@@ -1617,12 +1617,21 @@ export default function NoObjectionCertificate({
             <div className="flex items-center justify-between">
               <CardTitle>Certificate Preview</CardTitle>
               {viewingCompany && (
+                <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="h-4 w-4 text-green-600" />
                   <span className="text-sm text-green-700 font-medium">
                     Viewing: {viewingCompany.name}
                   </span>
                 </div>
+                <Button
+                  onClick={() => saveCertificateForMinistry(formData)}
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  Save for Ministry Download
+                </Button>
+              </div>
               )}
             </div>
           </CardHeader>
