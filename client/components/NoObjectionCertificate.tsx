@@ -249,7 +249,6 @@ export default function NoObjectionCertificate({
           ministryCode: "MOH",
           projectDescription: "Supply of advanced medical equipment for 5 primary healthcare centers including X-ray machines, ultrasound equipment, and laboratory instruments.",
           justification: "Critical equipment needed to improve healthcare delivery in rural areas of Kano State.",
-          urgencyLevel: "High",
           category: "Medical Equipment",
           procuringEntity: "Kano State Primary Healthcare Development Agency",
           contactPerson: "Dr. Amina Hassan",
@@ -268,7 +267,6 @@ export default function NoObjectionCertificate({
           ministryCode: "MOWI",
           projectDescription: "Complete rehabilitation of 85km highway section including road surface, drainage systems, and safety infrastructure.",
           justification: "Critical transportation infrastructure to improve interstate commerce and reduce travel time.",
-          urgencyLevel: "Critical",
           category: "Road Construction",
           procuringEntity: "Kano State Road Maintenance Agency",
           contactPerson: "Eng. Ibrahim Mohammed",
@@ -288,7 +286,6 @@ export default function NoObjectionCertificate({
           ministryCode: "MOE",
           projectDescription: "Development of comprehensive digital learning platform for secondary schools with interactive content and assessment tools.",
           justification: "Essential for digital transformation of education sector and improved learning outcomes.",
-          urgencyLevel: "Medium",
           category: "Educational Technology",
           procuringEntity: "Kano State Ministry of Education",
           contactPerson: "Prof. Aisha Garba",
@@ -764,20 +761,6 @@ export default function NoObjectionCertificate({
     }
   };
 
-  const getNOCUrgencyColor = (urgency: string) => {
-    switch (urgency) {
-      case "Critical":
-        return "text-red-600 bg-red-100";
-      case "High":
-        return "text-orange-600 bg-orange-100";
-      case "Medium":
-        return "text-yellow-600 bg-yellow-100";
-      case "Low":
-        return "text-green-600 bg-green-100";
-      default:
-        return "text-gray-600 bg-gray-100";
-    }
-  };
 
   const downloadCertificateAsPDF = (htmlContent: string, filename: string) => {
     // Create a new window for printing/downloading
