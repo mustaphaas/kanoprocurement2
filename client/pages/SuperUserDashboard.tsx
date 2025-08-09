@@ -815,6 +815,7 @@ export default function SuperUserDashboard() {
     setVendorPerformances(mockVendorPerformances);
     setMDAs(mockMDAs);
     setMDAAdmins(mockMDAAdmins);
+    setMDAUsers(mockMDAUsers);
   }, []);
 
   const handleLogout = () => {
