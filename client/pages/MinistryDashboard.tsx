@@ -1445,6 +1445,98 @@ export default function MinistryDashboard() {
     navigate("/");
   };
 
+  // User Management Functions
+  const handleCreateUser = () => {
+    setUserFormMode("create");
+    setSelectedUser(null);
+    setShowCreateUserModal(true);
+  };
+
+  const handleEditUser = (user: MDAUser) => {
+    setUserFormMode("edit");
+    setSelectedUser(user);
+    setShowEditUserModal(true);
+  };
+
+  const handleDeleteUser = (user: MDAUser) => {
+    if (window.confirm(`Are you sure you want to remove ${user.role} from ${user.department}?`)) {
+      setMDAUsers(prev => prev.filter(u => u.id !== user.id));
+      alert("User removed successfully!");
+    }
+  };
+
+  const handleUserSubmit = async (data: CreateMDAUserRequest) => {
+    try {
+      if (userFormMode === "create") {
+        const newUser: MDAUser = {
+          id: `user-${Date.now()}`,
+          mdaId: "mda-001", // Current ministry MDA ID
+          userId: `usr-${Date.now()}`,
+          role: data.role,
+          department: data.department,
+          permissions: data.permissions,
+          assignedBy: "admin-001",
+          assignedAt: new Date(),
+          isActive: true,
+        };
+        setMDAUsers(prev => [...prev, newUser]);
+        alert("User created successfully!");
+      } else if (selectedUser) {
+        const updatedUser: MDAUser = {
+          ...selectedUser,
+          role: data.role,
+          department: data.department,
+          permissions: data.permissions,
+        };
+        setMDAUsers(prev => prev.map(u => u.id === selectedUser.id ? updatedUser : u));
+        alert("User updated successfully!");
+      }
+      setShowCreateUserModal(false);
+      setShowEditUserModal(false);
+      setSelectedUser(null);
+    } catch (error) {
+      console.error("Error submitting user:", error);
+      alert("Error saving user. Please try again.");
+    }
+  };
+
+  const toggleUserStatus = (user: MDAUser) => {
+    setMDAUsers(prev => prev.map(u =>
+      u.id === user.id ? { ...u, isActive: !u.isActive } : u
+    ));
+    alert(`User has been ${user.isActive ? "deactivated" : "activated"}!`);
+  };
+
+  // NOC Request Functions
+  const handleSubmitNOCRequest = () => {
+    if (!newNOCRequest.projectTitle || !newNOCRequest.contractorName || !newNOCRequest.projectValue) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const nocRequest: NOCRequest = {
+      id: `NOC-${Date.now()}`,
+      projectTitle: newNOCRequest.projectTitle,
+      requestDate: new Date().toISOString().split('T')[0],
+      status: "Pending",
+      projectValue: newNOCRequest.projectValue,
+      contractorName: newNOCRequest.contractorName,
+      expectedDuration: newNOCRequest.expectedDuration,
+    };
+
+    setNOCRequests(prev => [nocRequest, ...prev]);
+    setNewNOCRequest({
+      projectTitle: "",
+      projectValue: "",
+      contractorName: "",
+      expectedDuration: "",
+      projectDescription: "",
+      justification: ""
+    });
+    setShowNOCRequest(false);
+    alert("NOC Request submitted successfully!");
+  };
+
   // Helper functions for evaluation scoring
   const updateEvaluationScore = (
     bidderId: string,
