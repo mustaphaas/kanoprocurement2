@@ -298,7 +298,9 @@ export default function Index() {
                 />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-green-700">Kano State Government</h1>
+                <h1 className="text-xl font-bold text-green-700">
+                  Kano State Government
+                </h1>
                 <p className="text-xs text-gray-600">
                   Kano State E-Procurement Portal
                 </p>
