@@ -627,12 +627,127 @@ export default function SuperUserDashboard() {
       },
     ];
 
+    // Mock MDA data
+    const mockMDAs: MDA[] = [
+      {
+        id: "mda-001",
+        name: "Ministry of Health",
+        type: "ministry",
+        description: "Responsible for healthcare policy and administration",
+        contactEmail: "info@health.kano.gov.ng",
+        contactPhone: "+234 64 123 4567",
+        address: "Health Ministry Complex, Kano",
+        headOfMDA: "Dr. Amina Kano",
+        createdAt: new Date("2024-01-01"),
+        updatedAt: new Date("2024-01-15"),
+        isActive: true,
+        settings: {
+          procurementThresholds: {
+            level1: 5000000,
+            level2: 25000000,
+            level3: 100000000
+          },
+          allowedCategories: ["Medical Equipment", "Pharmaceuticals", "Healthcare Services"],
+          customWorkflows: true,
+          budgetYear: "2024",
+          totalBudget: 5000000000
+        }
+      },
+      {
+        id: "mda-002",
+        name: "Ministry of Education",
+        type: "ministry",
+        description: "Manages education policy and school administration",
+        contactEmail: "info@education.kano.gov.ng",
+        contactPhone: "+234 64 123 4568",
+        address: "Education Ministry, Kano",
+        headOfMDA: "Prof. Muhammad Usman",
+        createdAt: new Date("2024-01-01"),
+        updatedAt: new Date("2024-01-15"),
+        isActive: true,
+        settings: {
+          procurementThresholds: {
+            level1: 5000000,
+            level2: 25000000,
+            level3: 100000000
+          },
+          allowedCategories: ["Educational Materials", "School Infrastructure", "ICT Equipment"],
+          customWorkflows: false,
+          budgetYear: "2024",
+          totalBudget: 8000000000
+        }
+      },
+      {
+        id: "mda-003",
+        name: "Kano State Urban Development Board",
+        type: "agency",
+        description: "Urban planning and development coordination",
+        contactEmail: "info@ksudb.kano.gov.ng",
+        contactPhone: "+234 64 123 4569",
+        address: "KSUDB Complex, Kano",
+        headOfMDA: "Engr. Fatima Aliyu",
+        createdAt: new Date("2024-01-05"),
+        updatedAt: new Date("2024-01-20"),
+        isActive: true,
+        settings: {
+          procurementThresholds: {
+            level1: 3000000,
+            level2: 15000000,
+            level3: 50000000
+          },
+          allowedCategories: ["Construction", "Urban Planning", "Infrastructure"],
+          customWorkflows: true,
+          budgetYear: "2024",
+          totalBudget: 3000000000
+        }
+      }
+    ];
+
+    const mockMDAAdmins: MDAAdmin[] = [
+      {
+        id: "admin-001",
+        mdaId: "mda-001",
+        userId: "user-001",
+        role: "mda_super_admin",
+        permissions: {
+          canCreateUsers: true,
+          canManageTenders: true,
+          canApproveContracts: true,
+          canViewReports: true,
+          canManageSettings: true,
+          maxApprovalAmount: 50000000
+        },
+        assignedBy: "superuser-001",
+        assignedAt: new Date("2024-01-02"),
+        isActive: true
+      },
+      {
+        id: "admin-002",
+        mdaId: "mda-002",
+        userId: "user-002",
+        role: "mda_admin",
+        permissions: {
+          canCreateUsers: true,
+          canManageTenders: true,
+          canApproveContracts: false,
+          canViewReports: true,
+          canManageSettings: false,
+          maxApprovalAmount: 10000000
+        },
+        assignedBy: "superuser-001",
+        assignedAt: new Date("2024-01-03"),
+        isActive: true
+      }
+    ];
+
     setCompanies(mockCompanies);
     setAuditLogs(mockAuditLogs);
     setAIRecommendations(mockAIRecommendations);
     setTenders(mockTenders);
     setTenderEvaluations(mockTenderEvaluations);
     setVendorPerformances(mockVendorPerformances);
+    setMDAs(mockMDAs);
+    setMDAAdmins(mockMDAAdmins);
   }, []);
 
   const handleLogout = () => {
