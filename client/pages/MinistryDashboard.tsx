@@ -30,6 +30,38 @@ import {
   Phone,
   MapPin,
   ExternalLink,
+  Settings,
+  Upload,
+  MessageSquare,
+  Shield,
+  Gavel,
+  BookOpen,
+  Clipboard,
+  CheckSquare,
+  AlertCircle,
+  Zap,
+  Bot,
+  Timer,
+  RefreshCw,
+  Users2,
+  FileSpreadsheet,
+  Calculator,
+  PlayCircle,
+  PauseCircle,
+  StopCircle,
+  RotateCcw,
+  Star,
+  Truck,
+  Package,
+  CreditCard,
+  Scale,
+  Globe,
+  Network,
+  Radio,
+  Smartphone,
+  Wifi,
+  Monitor,
+  Megaphone,
 } from "lucide-react";
 
 type ActiveTab =
@@ -37,6 +69,11 @@ type ActiveTab =
   | "companies"
   | "tenders"
   | "create-tender"
+  | "advanced-tender-mgmt"
+  | "bulk-tender-upload"
+  | "evaluation-management"
+  | "contract-management"
+  | "vendor-communication"
   | "reports"
   | "noc-requests";
 
@@ -79,6 +116,124 @@ interface NOCRequest {
   certificateNumber?: string;
 }
 
+interface Contract {
+  id: string;
+  tenderId: string;
+  contractorName: string;
+  projectTitle: string;
+  contractValue: string;
+  startDate: string;
+  endDate: string;
+  status: "Draft" | "Active" | "Completed" | "Suspended" | "Terminated";
+  milestones: Milestone[];
+  payments: Payment[];
+  disputes?: Dispute[];
+  performanceScore: number;
+  digitalSignature?: string;
+  documentHash?: string;
+}
+
+interface Milestone {
+  id: string;
+  title: string;
+  description: string;
+  targetDate: string;
+  completionDate?: string;
+  status: "Pending" | "In Progress" | "Completed" | "Overdue";
+  paymentPercentage: number;
+  deliverables: string[];
+  verificationStatus: "Not Started" | "Under Review" | "Verified" | "Rejected";
+}
+
+interface Payment {
+  id: string;
+  milestoneId: string;
+  amount: string;
+  requestDate: string;
+  approvalDate?: string;
+  paymentDate?: string;
+  status: "Pending" | "Approved" | "Paid" | "Rejected";
+  invoiceNumber?: string;
+  bankDetails?: string;
+}
+
+interface Dispute {
+  id: string;
+  title: string;
+  description: string;
+  raisedBy: "Ministry" | "Contractor";
+  raisedDate: string;
+  status: "Open" | "Under Mediation" | "Resolved" | "Escalated";
+  resolutionDate?: string;
+  resolution?: string;
+  mediator?: string;
+}
+
+interface EvaluationCommittee {
+  id: string;
+  name: string;
+  members: CommitteeMember[];
+  chairperson: string;
+  secretary: string;
+  specialization: string[];
+  activeEvaluations: string[];
+  status: "Active" | "Inactive";
+}
+
+interface CommitteeMember {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  email: string;
+  phone: string;
+  expertise: string[];
+  availability: "Available" | "Busy" | "On Leave";
+}
+
+interface BidEvaluation {
+  id: string;
+  tenderId: string;
+  companyId: string;
+  companyName: string;
+  evaluatorId: string;
+  technicalScore: number;
+  financialScore: number;
+  complianceScore: number;
+  totalScore: number;
+  comments: string;
+  recommendations: string;
+  status: "Draft" | "Submitted" | "Reviewed" | "Final";
+  submissionDate?: string;
+}
+
+interface VendorCommunication {
+  id: string;
+  vendorId: string;
+  vendorName: string;
+  subject: string;
+  message: string;
+  type: "Tender Alert" | "Amendment" | "Clarification" | "Award Notice" | "General";
+  channels: ("Email" | "SMS" | "Portal")[];
+  sentDate: string;
+  readStatus: boolean;
+  responseRequired: boolean;
+  priority: "Low" | "Medium" | "High" | "Urgent";
+}
+
+interface ScheduledPublication {
+  id: string;
+  tenderId: string;
+  tenderTitle: string;
+  scheduledDate: string;
+  scheduledTime: string;
+  distributionChannels: ("Website" | "Email" | "SMS" | "Newspaper")[];
+  targetCategories: string[];
+  status: "Scheduled" | "Published" | "Failed" | "Cancelled";
+  createdBy: string;
+  notes?: string;
+}
+
 interface MinistryInfo {
   name: string;
   code: string;
@@ -96,6 +251,29 @@ export default function MinistryDashboard() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showCreateTender, setShowCreateTender] = useState(false);
   const [showNOCRequest, setShowNOCRequest] = useState(false);
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [evaluationCommittees, setEvaluationCommittees] = useState<EvaluationCommittee[]>([]);
+  const [bidEvaluations, setBidEvaluations] = useState<BidEvaluation[]>([]);
+  const [vendorCommunications, setVendorCommunications] = useState<VendorCommunication[]>([]);
+  const [scheduledPublications, setScheduledPublications] = useState<ScheduledPublication[]>([]);
+  const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
+  const [selectedEvaluation, setSelectedEvaluation] = useState<BidEvaluation | null>(null);
+  const [showContractModal, setShowContractModal] = useState(false);
+  const [showEvaluationModal, setShowEvaluationModal] = useState(false);
+  const [showVendorCommModal, setShowVendorCommModal] = useState(false);
+  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [aiAssistantActive, setAiAssistantActive] = useState(false);
+  const [contractFormData, setContractFormData] = useState({
+    tenderId: '',
+    contractorName: '',
+    projectTitle: '',
+    contractValue: '',
+    startDate: '',
+    endDate: '',
+    milestoneCount: 3,
+    paymentSchedule: 'milestone'
+  });
   const navigate = useNavigate();
 
   // Get ministry info from context/auth (mock for now)
@@ -192,6 +370,169 @@ export default function MinistryDashboard() {
       },
     ];
 
+    const mockContracts: Contract[] = [
+      {
+        id: "CON-MOH-001",
+        tenderId: "MOH-2024-001",
+        contractorName: "MedSupply Nigeria Ltd",
+        projectTitle: "Hospital Equipment Supply",
+        contractValue: "₦850,000,000",
+        startDate: "2024-02-01",
+        endDate: "2024-08-01",
+        status: "Active",
+        performanceScore: 85,
+        digitalSignature: "DS-KS-2024-001",
+        documentHash: "SHA256-ABC123",
+        milestones: [
+          {
+            id: "MIL-001",
+            title: "Equipment Procurement",
+            description: "Procure and prepare medical equipment",
+            targetDate: "2024-03-15",
+            completionDate: "2024-03-10",
+            status: "Completed",
+            paymentPercentage: 30,
+            deliverables: ["Equipment list", "Quality certificates"],
+            verificationStatus: "Verified"
+          },
+          {
+            id: "MIL-002",
+            title: "Delivery and Installation",
+            description: "Deliver and install equipment at healthcare centers",
+            targetDate: "2024-05-15",
+            status: "In Progress",
+            paymentPercentage: 50,
+            deliverables: ["Installation certificates", "Training completion"],
+            verificationStatus: "Under Review"
+          },
+          {
+            id: "MIL-003",
+            title: "Training and Handover",
+            description: "Train staff and complete project handover",
+            targetDate: "2024-07-15",
+            status: "Pending",
+            paymentPercentage: 20,
+            deliverables: ["Training certificates", "User manuals"],
+            verificationStatus: "Not Started"
+          }
+        ],
+        payments: [
+          {
+            id: "PAY-001",
+            milestoneId: "MIL-001",
+            amount: "₦255,000,000",
+            requestDate: "2024-03-12",
+            approvalDate: "2024-03-15",
+            paymentDate: "2024-03-18",
+            status: "Paid",
+            invoiceNumber: "INV-2024-001"
+          },
+          {
+            id: "PAY-002",
+            milestoneId: "MIL-002",
+            amount: "₦425,000,000",
+            requestDate: "2024-04-10",
+            status: "Pending",
+            invoiceNumber: "INV-2024-002"
+          }
+        ],
+        disputes: []
+      }
+    ];
+
+    const mockEvaluationCommittees: EvaluationCommittee[] = [
+      {
+        id: "EC-001",
+        name: "Medical Equipment Evaluation Committee",
+        chairperson: "Dr. Amina Hassan",
+        secretary: "Eng. Musa Ibrahim",
+        specialization: ["Medical Equipment", "Healthcare Technology"],
+        activeEvaluations: ["MOH-2024-002"],
+        status: "Active",
+        members: [
+          {
+            id: "MEM-001",
+            name: "Dr. Amina Hassan",
+            role: "Chairperson",
+            department: "Medical Services",
+            email: "amina.hassan@health.kano.gov.ng",
+            phone: "+234 803 123 4567",
+            expertise: ["Medical Equipment", "Quality Assurance"],
+            availability: "Available"
+          },
+          {
+            id: "MEM-002",
+            name: "Eng. Musa Ibrahim",
+            role: "Technical Expert",
+            department: "Engineering Services",
+            email: "musa.ibrahim@health.kano.gov.ng",
+            phone: "+234 805 987 6543",
+            expertise: ["Engineering", "Technical Evaluation"],
+            availability: "Available"
+          },
+          {
+            id: "MEM-003",
+            name: "Mal. Fatima Yusuf",
+            role: "Financial Analyst",
+            department: "Finance",
+            email: "fatima.yusuf@health.kano.gov.ng",
+            phone: "+234 807 555 1234",
+            expertise: ["Financial Analysis", "Cost Evaluation"],
+            availability: "Busy"
+          }
+        ]
+      }
+    ];
+
+    const mockBidEvaluations: BidEvaluation[] = [
+      {
+        id: "EVAL-001",
+        tenderId: "MOH-2024-002",
+        companyId: "COMP-001",
+        companyName: "Sahel Medical Supplies",
+        evaluatorId: "MEM-001",
+        technicalScore: 85,
+        financialScore: 90,
+        complianceScore: 95,
+        totalScore: 90,
+        comments: "Excellent technical proposal with competitive pricing",
+        recommendations: "Recommended for award",
+        status: "Submitted",
+        submissionDate: "2024-02-15"
+      }
+    ];
+
+    const mockVendorCommunications: VendorCommunication[] = [
+      {
+        id: "COMM-001",
+        vendorId: "VEND-001",
+        vendorName: "MedSupply Nigeria Ltd",
+        subject: "Amendment to Tender MOH-2024-001",
+        message: "Please note the amendment to delivery timeline in tender MOH-2024-001",
+        type: "Amendment",
+        channels: ["Email", "SMS"],
+        sentDate: "2024-02-10",
+        readStatus: true,
+        responseRequired: false,
+        priority: "Medium"
+      }
+    ];
+
+    const mockScheduledPublications: ScheduledPublication[] = [
+      {
+        id: "SCHED-001",
+        tenderId: "MOH-2024-004",
+        tenderTitle: "Healthcare Infrastructure Development",
+        scheduledDate: "2024-02-20",
+        scheduledTime: "09:00",
+        distributionChannels: ["Website", "Email", "SMS"],
+        targetCategories: ["Construction", "Healthcare"],
+        status: "Scheduled",
+        createdBy: "Ministry Admin",
+        notes: "Major infrastructure tender - ensure wide distribution"
+      }
+    ];
+
     const mockNOCRequests: NOCRequest[] = [
       {
         id: "NOC-MOH-001",
@@ -218,6 +559,11 @@ export default function MinistryDashboard() {
     setCompanies(mockCompanies);
     setTenders(mockTenders);
     setNOCRequests(mockNOCRequests);
+    setContracts(mockContracts);
+    setEvaluationCommittees(mockEvaluationCommittees);
+    setBidEvaluations(mockBidEvaluations);
+    setVendorCommunications(mockVendorCommunications);
+    setScheduledPublications(mockScheduledPublications);
   }, []);
 
   const handleLogout = () => {
