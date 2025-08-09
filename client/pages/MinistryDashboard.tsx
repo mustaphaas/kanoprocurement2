@@ -2645,7 +2645,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "₦1,450,000,000",
+          bidAmount: "���1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,
@@ -6416,6 +6416,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           <button
                             onClick={() => {
                               setSelectedTenderForDetails(tender);
+                              // Load real bids for this tender
+                              const tenderBids = loadBidsForTender(tender.id);
+                              if (tenderBids.length > 0) {
+                                setBidders(tenderBids);
+                              }
                               setShowTenderDetailsModal(true);
                             }}
                             className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
