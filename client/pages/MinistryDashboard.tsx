@@ -1732,6 +1732,7 @@ export default function MinistryDashboard() {
   }, [selectedWorkspace]);
 
   const handleLogout = () => {
+    localStorage.removeItem("ministryUser");
     navigate("/");
   };
 
