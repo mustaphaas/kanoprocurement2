@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import NoObjectionCertificate from "@/components/NoObjectionCertificate";
+import NOCManagement from "@/components/NOCManagement";
 import MDAForm from "@/components/MDAForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
 import MDAUserForm from "@/components/MDAUserForm";
