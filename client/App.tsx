@@ -76,23 +76,6 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            {/* MDA Routes */}
-            <Route
-              path="/mda/:mdaId/dashboard"
-              element={
-                <ProtectedRoute requiredRole="mda_admin">
-                  <MDADashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/mda/:mdaId/dashboard"
-              element={
-                <ProtectedRoute requiredRole="mda_user">
-                  <MDADashboard />
-                </ProtectedRoute>
-              }
-            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
