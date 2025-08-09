@@ -68,6 +68,28 @@ interface Company {
   procuringEntity: string;
 }
 
+interface NOCRequest {
+  id: string;
+  projectTitle: string;
+  requestDate: string;
+  status: "Pending" | "Approved" | "Rejected";
+  projectValue: string;
+  contractorName: string;
+  expectedDuration: string;
+  approvalDate?: string;
+  certificateNumber?: string;
+  requestingMinistry: string;
+  ministryCode: string;
+  projectDescription?: string;
+  justification?: string;
+  urgencyLevel: "Low" | "Medium" | "High" | "Critical";
+  category: string;
+  procuringEntity: string;
+  contactPerson: string;
+  contactEmail: string;
+  attachments?: string[];
+}
+
 interface NoObjectionCertificateProps {
   onGenerateCertificate?: (data: NoObjectionCertificateData) => void;
 }
