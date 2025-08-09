@@ -3983,7 +3983,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
   ) => {
     return (
       <div
-        className={`flex items-center space-x-3 p-3 rounded-lg border-2 ${
+        className={`flex flex-col items-center space-y-2 p-2 rounded-lg border-2 min-w-[140px] ${
           completed
             ? "border-green-200 bg-green-50"
             : "border-red-200 bg-red-50"
@@ -4000,32 +4000,32 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <X className="h-4 w-4" />
           )}
         </div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <span
-              className={`text-sm font-medium ${
-                completed ? "text-green-800" : "text-red-800"
-              }`}
-            >
-              {step}
-            </span>
-            <span
-              className={`text-xs px-2 py-1 rounded-full ${
-                completed
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
-            >
-              {completed ? "Completed" : "Incomplete"}
-            </span>
+        <div className="text-center">
+          <div
+            className={`text-xs font-medium ${
+              completed ? "text-green-800" : "text-red-800"
+            }`}
+          >
+            {step}
+          </div>
+          <div
+            className={`text-xs px-2 py-1 rounded-full mt-1 ${
+              completed
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {completed ? "✓" : "✗"}
           </div>
           {date && (
             <div className="text-xs text-gray-600 mt-1">
-              {completed ? `Completed: ${date}` : `Required for award`}
+              {completed ? date : "Pending"}
             </div>
           )}
           {details && (
-            <div className="text-xs text-gray-600 mt-1">{details}</div>
+            <div className="text-xs text-gray-600 mt-1 truncate" title={details}>
+              {details.length > 15 ? `${details.substring(0, 15)}...` : details}
+            </div>
           )}
         </div>
       </div>
