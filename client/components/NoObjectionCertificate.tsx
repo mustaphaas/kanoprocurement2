@@ -760,6 +760,7 @@ export default function NoObjectionCertificate({
 
       // Set the form data to show the certificate
       setFormData(certificateData);
+      setViewingNOCRequest(request);
 
       // Scroll to certificate preview section
       setTimeout(() => {
