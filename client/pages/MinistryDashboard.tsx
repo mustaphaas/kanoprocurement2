@@ -6435,110 +6435,320 @@ Blockchain Timestamp: ${Date.now()}
         {renderContent()}
       </main>
 
-      {/* Committee Creation Modal */}
-      {showEvaluationModal && (
+      {/* Enhanced Committee Creation Modal */}
+      {showCreateCommitteeModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+          <div className="relative top-10 mx-auto p-5 border w-4xl max-w-4xl shadow-lg rounded-md bg-white">
             <div className="mt-3">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Create Evaluation Committee
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {activeCommittee ? 'Edit Evaluation Committee' : 'Create Evaluation Committee'}
                 </h3>
                 <button
-                  onClick={() => setShowEvaluationModal(false)}
+                  onClick={() => {
+                    setShowCreateCommitteeModal(false);
+                    if (!activeCommittee) {
+                      setCommitteeFormData({
+                        name: "",
+                        chairperson: "",
+                        secretary: "",
+                        specialization: "",
+                        members: [{ name: "", department: "", role: "Member", email: "" }]
+                      });
+                    }
+                  }}
                   className="text-gray-400 hover:text-gray-600"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-6 w-6" />
                 </button>
               </div>
 
-              <form className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Committee Name *
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="e.g., IT Equipment Evaluation Committee"
-                  />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Committee Basic Info */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-medium text-gray-900">Committee Information</h4>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Committee Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={committeeFormData.name}
+                      onChange={(e) => setCommitteeFormData(prev => ({...prev, name: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder="e.g., Medical Equipment Evaluation Committee"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Chairperson *
+                    </label>
+                    <input
+                      type="text"
+                      value={committeeFormData.chairperson}
+                      onChange={(e) => setCommitteeFormData(prev => ({...prev, chairperson: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder="e.g., Dr. Amina Hassan"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Secretary
+                    </label>
+                    <input
+                      type="text"
+                      value={committeeFormData.secretary}
+                      onChange={(e) => setCommitteeFormData(prev => ({...prev, secretary: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder="e.g., Eng. Musa Ibrahim"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Specialization Areas
+                    </label>
+                    <input
+                      type="text"
+                      value={committeeFormData.specialization}
+                      onChange={(e) => setCommitteeFormData(prev => ({...prev, specialization: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder="e.g., Medical Equipment, Healthcare Technology"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Chairperson *
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="e.g., Dr. Amina Hassan"
-                  />
+                {/* Committee Members */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-medium text-gray-900">Committee Members</h4>
+                    <button
+                      type="button"
+                      onClick={addCommitteeMember}
+                      className="px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm"
+                    >
+                      <Plus className="h-4 w-4 mr-1 inline" />
+                      Add Member
+                    </button>
+                  </div>
+
+                  <div className="max-h-96 overflow-y-auto space-y-3">
+                    {committeeFormData.members.map((member, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-sm font-medium text-gray-700">Member {index + 1}</span>
+                          {committeeFormData.members.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeCommitteeMember(index)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-3">
+                          <input
+                            type="text"
+                            value={member.name}
+                            onChange={(e) => updateCommitteeMember(index, 'name', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Member Name"
+                          />
+                          <input
+                            type="text"
+                            value={member.department}
+                            onChange={(e) => updateCommitteeMember(index, 'department', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Department"
+                          />
+                          <div className="grid grid-cols-2 gap-2">
+                            <select
+                              value={member.role}
+                              onChange={(e) => updateCommitteeMember(index, 'role', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            >
+                              <option value="Member">Member</option>
+                              <option value="Technical Expert">Technical Expert</option>
+                              <option value="Financial Analyst">Financial Analyst</option>
+                              <option value="Legal Advisor">Legal Advisor</option>
+                              <option value="Subject Matter Expert">Subject Matter Expert</option>
+                            </select>
+                            <input
+                              type="email"
+                              value={member.email}
+                              onChange={(e) => updateCommitteeMember(index, 'email', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                              placeholder="Email (optional)"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateCommitteeModal(false);
+                    if (!activeCommittee) {
+                      setCommitteeFormData({
+                        name: "",
+                        chairperson: "",
+                        secretary: "",
+                        specialization: "",
+                        members: [{ name: "", department: "", role: "Member", email: "" }]
+                      });
+                    }
+                  }}
+                  className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCreateCommittee}
+                  className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                >
+                  {activeCommittee ? 'Update Committee' : 'Create Committee'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Finalize Evaluation Modal */}
+      {showFinalizeEvaluationModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-2xl max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Finalize Evaluation Process
+                </h3>
+                <button
+                  onClick={() => setShowFinalizeEvaluationModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Committee Status */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Committee Status</h4>
+                  {activeCommittee ? (
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <span className="text-green-800">Committee Active: {activeCommittee.name}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <AlertTriangle className="h-5 w-5 text-red-600" />
+                      <span className="text-red-800">No active committee assigned</span>
+                    </div>
+                  )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Secretary *
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="e.g., Eng. Musa Ibrahim"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Specialization Areas
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="e.g., IT Equipment, Software, Infrastructure"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Committee Members
-                  </label>
-                  <div className="space-y-2">
-                    <div className="flex space-x-2">
-                      <input
-                        type="text"
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        placeholder="Member Name"
-                      />
-                      <input
-                        type="text"
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        placeholder="Department"
-                      />
-                      <button
-                        type="button"
-                        className="px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
+                {/* Evaluation Summary */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Evaluation Summary</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-sm text-gray-600">Total Bidders:</span>
+                      <span className="ml-2 font-medium">{bidders.length}</span>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">Eligible Bidders:</span>
+                      <span className="ml-2 font-medium">{bidders.filter(b => isVendorEligibleForAward(b.id)).length}</span>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">Workspace:</span>
+                      <span className="ml-2 font-medium">{selectedWorkspace}</span>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">Status:</span>
+                      <span className="ml-2 font-medium">{isEvaluationFinalized ? 'Finalized' : 'In Progress'}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowEvaluationModal(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
-                  >
-                    Create Committee
-                  </button>
+                {/* Warning */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                    <div>
+                      <h5 className="font-medium text-yellow-800">Important Notice</h5>
+                      <p className="text-sm text-yellow-700 mt-1">
+                        Finalizing the evaluation will lock all scores and make the tender ready for award.
+                        This action cannot be undone without creating a new evaluation process.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </form>
+
+                {/* Finalization Requirements */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-gray-900">Finalization Requirements</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      {activeCommittee ? (
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <X className="h-4 w-4 text-red-600" />
+                      )}
+                      <span className={activeCommittee ? "text-green-800" : "text-red-800"}>
+                        Evaluation committee assigned
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {bidders.length > 0 ? (
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <X className="h-4 w-4 text-red-600" />
+                      )}
+                      <span className={bidders.length > 0 ? "text-green-800" : "text-red-800"}>
+                        Bidders evaluated
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {bidders.filter(b => isVendorEligibleForAward(b.id)).length > 0 ? (
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <X className="h-4 w-4 text-red-600" />
+                      )}
+                      <span className={bidders.filter(b => isVendorEligibleForAward(b.id)).length > 0 ? "text-green-800" : "text-red-800"}>
+                        At least one eligible bidder (NOC issued)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t">
+                <button
+                  onClick={() => setShowFinalizeEvaluationModal(false)}
+                  className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleFinalizeEvaluation}
+                  disabled={!activeCommittee || bidders.filter(b => isVendorEligibleForAward(b.id)).length === 0}
+                  className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <CheckCircle className="h-4 w-4 mr-2 inline" />
+                  Finalize Evaluation
+                </button>
+              </div>
             </div>
           </div>
         </div>
