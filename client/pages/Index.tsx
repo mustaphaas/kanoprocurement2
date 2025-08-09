@@ -218,6 +218,27 @@ export default function Index() {
     },
   ];
 
+  const [featuredTenders, setFeaturedTenders] = useState<FeaturedTender[]>(getDefaultTenders());
+
+  // Load featured tenders from localStorage on component mount
+  useEffect(() => {
+    const loadFeaturedTenders = () => {
+      const storedTenders = localStorage.getItem("featuredTenders");
+      if (storedTenders) {
+        const parsedTenders = JSON.parse(storedTenders);
+        if (parsedTenders.length > 0) {
+          setFeaturedTenders(parsedTenders);
+        }
+      }
+    };
+
+    loadFeaturedTenders();
+
+    // Set up interval to refresh featured tenders every 30 seconds
+    const interval = setInterval(loadFeaturedTenders, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTenderIndex((prev) => (prev + 1) % featuredTenders.length);
