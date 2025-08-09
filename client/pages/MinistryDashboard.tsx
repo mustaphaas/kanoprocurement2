@@ -1725,7 +1725,8 @@ export default function MinistryDashboard() {
               </div>
             </div>
 
-            <nav className="hidden md:flex items-center space-x-8">
+            {/* Quick Access Navigation */}
+            <div className="hidden lg:flex items-center space-x-6">
               <button
                 onClick={() => setActiveTab("dashboard")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
@@ -1736,17 +1737,6 @@ export default function MinistryDashboard() {
               >
                 <BarChart3 className="h-4 w-4" />
                 <span>Dashboard</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("companies")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  activeTab === "companies"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <Users className="h-4 w-4" />
-                <span>Companies</span>
               </button>
               <button
                 onClick={() => setActiveTab("tenders")}
@@ -1760,28 +1750,17 @@ export default function MinistryDashboard() {
                 <span>Tenders</span>
               </button>
               <button
-                onClick={() => setActiveTab("reports")}
+                onClick={() => setActiveTab("contract-management")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  activeTab === "reports"
+                  activeTab === "contract-management"
                     ? "text-green-700 bg-green-50"
                     : "text-gray-700 hover:text-green-700"
                 }`}
               >
-                <TrendingUp className="h-4 w-4" />
-                <span>Reports</span>
+                <FileCheck className="h-4 w-4" />
+                <span>Contracts</span>
               </button>
-              <button
-                onClick={() => setActiveTab("noc-requests")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  activeTab === "noc-requests"
-                    ? "text-green-700 bg-green-50"
-                    : "text-gray-700 hover:text-green-700"
-                }`}
-              >
-                <Send className="h-4 w-4" />
-                <span>NOC Requests</span>
-              </button>
-            </nav>
+            </div>
 
             <div className="flex items-center space-x-4">
               <Bell className="h-5 w-5 text-gray-600" />
@@ -1796,6 +1775,39 @@ export default function MinistryDashboard() {
           </div>
         </div>
       </header>
+
+      {/* Enhanced Secondary Navigation */}
+      <nav className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-1 overflow-x-auto py-2">
+            {[
+              { key: "dashboard", label: "Dashboard", icon: BarChart3 },
+              { key: "companies", label: "Companies", icon: Users },
+              { key: "tenders", label: "Tenders", icon: FileText },
+              { key: "advanced-tender-mgmt", label: "AI Tender Mgmt", icon: Bot },
+              { key: "bulk-tender-upload", label: "Bulk Upload", icon: Upload },
+              { key: "evaluation-management", label: "Evaluation", icon: CheckSquare },
+              { key: "contract-management", label: "Contracts", icon: FileCheck },
+              { key: "vendor-communication", label: "Vendor Comm", icon: MessageSquare },
+              { key: "reports", label: "Reports", icon: TrendingUp },
+              { key: "noc-requests", label: "NOC Requests", icon: Send },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as ActiveTab)}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
+                  activeTab === tab.key
+                    ? "text-green-700 bg-green-50 border border-green-200"
+                    : "text-gray-700 hover:text-green-700 hover:bg-green-50"
+                }`}
+              >
+                <tab.icon className="h-4 w-4" />
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
