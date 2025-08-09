@@ -160,7 +160,7 @@ export default function Index() {
   };
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const featuredTenders: FeaturedTender[] = [
+  const getDefaultTenders = (): FeaturedTender[] => [
     {
       id: "KS-2024-001",
       title: "Road Construction Project",
