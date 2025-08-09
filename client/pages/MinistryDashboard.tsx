@@ -304,12 +304,17 @@ export default function MinistryDashboard() {
   const [showMilestoneModal, setShowMilestoneModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showDisputeModal, setShowDisputeModal] = useState(false);
-  const [selectedContractForAction, setSelectedContractForAction] = useState<Contract | null>(null);
-  const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null);
+  const [selectedContractForAction, setSelectedContractForAction] =
+    useState<Contract | null>(null);
+  const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(
+    null,
+  );
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
-  const [showEvaluationReportModal, setShowEvaluationReportModal] = useState(false);
+  const [showEvaluationReportModal, setShowEvaluationReportModal] =
+    useState(false);
   const [showTenderDetailsModal, setShowTenderDetailsModal] = useState(false);
-  const [selectedTenderForDetails, setSelectedTenderForDetails] = useState<Tender | null>(null);
+  const [selectedTenderForDetails, setSelectedTenderForDetails] =
+    useState<Tender | null>(null);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [contractFormData, setContractFormData] = useState({
     tenderId: "",
@@ -320,9 +325,24 @@ export default function MinistryDashboard() {
     endDate: "",
     description: "",
     milestones: [
-      { title: "Initial Delivery", percentage: 30, targetDate: "", description: "" },
-      { title: "Progress Review", percentage: 40, targetDate: "", description: "" },
-      { title: "Final Completion", percentage: 30, targetDate: "", description: "" },
+      {
+        title: "Initial Delivery",
+        percentage: 30,
+        targetDate: "",
+        description: "",
+      },
+      {
+        title: "Progress Review",
+        percentage: 40,
+        targetDate: "",
+        description: "",
+      },
+      {
+        title: "Final Completion",
+        percentage: 30,
+        targetDate: "",
+        description: "",
+      },
     ],
     terms: "",
     paymentSchedule: "milestone",
@@ -335,7 +355,8 @@ export default function MinistryDashboard() {
   const [contractStep, setContractStep] = useState(1);
   const [generatedContract, setGeneratedContract] = useState<string>("");
   const [isGeneratingContract, setIsGeneratingContract] = useState(false);
-  const [selectedTenderForAward, setSelectedTenderForAward] = useState<Tender | null>(null);
+  const [selectedTenderForAward, setSelectedTenderForAward] =
+    useState<Tender | null>(null);
   const [showAwardModal, setShowAwardModal] = useState(false);
   const [awardFormData, setAwardFormData] = useState({
     selectedBidder: "",
@@ -349,7 +370,9 @@ export default function MinistryDashboard() {
     deliverySchedule: "",
     specialConditions: "",
   });
-  const [vendorWorkflowStatuses, setVendorWorkflowStatuses] = useState<VendorWorkflowStatus[]>([]);
+  const [vendorWorkflowStatuses, setVendorWorkflowStatuses] = useState<
+    VendorWorkflowStatus[]
+  >([]);
   const [bidders] = useState([
     {
       id: "BID-001",
@@ -721,7 +744,8 @@ export default function MinistryDashboard() {
           {
             id: "DIS-001",
             title: "Quality Standards Non-Compliance",
-            description: "Equipment failed quality standards during verification",
+            description:
+              "Equipment failed quality standards during verification",
             raisedBy: "Ministry",
             raisedDate: "2024-04-18",
             status: "Under Mediation",
@@ -995,9 +1019,7 @@ export default function MinistryDashboard() {
         <div className="bg-white rounded-lg shadow-sm p-6 border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">
-                NOC Requests
-              </p>
+              <p className="text-sm font-medium text-gray-600">NOC Requests</p>
               <p className="text-3xl font-bold text-orange-600">
                 {nocRequests.length}
               </p>
@@ -1009,9 +1031,7 @@ export default function MinistryDashboard() {
         <div className="bg-white rounded-lg shadow-sm p-6 border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">
-                Total Bids
-              </p>
+              <p className="text-sm font-medium text-gray-600">Total Bids</p>
               <p className="text-3xl font-bold text-purple-600">
                 {tenders.reduce((sum, t) => sum + t.bidsReceived, 0)}
               </p>
@@ -1064,9 +1084,7 @@ export default function MinistryDashboard() {
 
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
-              NOC Status
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">NOC Status</h2>
           </div>
           <div className="p-6">
             <div className="space-y-4">
@@ -1294,9 +1312,7 @@ export default function MinistryDashboard() {
           <div className="flex items-center">
             <FileText className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Total Tenders
-              </p>
+              <p className="text-sm font-medium text-gray-600">Total Tenders</p>
               <p className="text-2xl font-bold text-gray-900">
                 {tenders.length}
               </p>
@@ -1324,8 +1340,7 @@ export default function MinistryDashboard() {
               <p className="text-2xl font-bold text-gray-900">
                 {
                   tenders.filter(
-                    (t) =>
-                      t.status === "Closed" || t.status === "Evaluated",
+                    (t) => t.status === "Closed" || t.status === "Evaluated",
                   ).length
                 }
               </p>
@@ -1408,9 +1423,7 @@ export default function MinistryDashboard() {
                       <div className="text-sm font-medium text-gray-900">
                         {tender.title}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {tender.id}
-                      </div>
+                      <div className="text-sm text-gray-500">{tender.id}</div>
                       <div className="text-sm text-gray-500">
                         {tender.category}
                       </div>
@@ -1426,8 +1439,7 @@ export default function MinistryDashboard() {
                           `Published: ${new Date(tender.publishDate).toLocaleDateString()}`}
                       </div>
                       <div className="text-sm text-gray-500">
-                        Close:{" "}
-                        {new Date(tender.closeDate).toLocaleDateString()}
+                        Close: {new Date(tender.closeDate).toLocaleDateString()}
                       </div>
                     </div>
                   </td>
@@ -1521,17 +1533,13 @@ export default function MinistryDashboard() {
               </label>
               <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                 <option value="">Select category</option>
-                <option value="Medical Equipment">
-                  Medical Equipment
-                </option>
+                <option value="Medical Equipment">Medical Equipment</option>
                 <option value="Pharmaceuticals">Pharmaceuticals</option>
                 <option value="Laboratory Equipment">
                   Laboratory Equipment
                 </option>
                 <option value="Medical Supplies">Medical Supplies</option>
-                <option value="Healthcare Services">
-                  Healthcare Services
-                </option>
+                <option value="Healthcare Services">Healthcare Services</option>
               </select>
             </div>
             <div className="md:col-span-2">
@@ -1561,9 +1569,7 @@ export default function MinistryDashboard() {
               <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                 <option value="Open Tender">Open Tender</option>
                 <option value="Selective Tender">Selective Tender</option>
-                <option value="Direct Procurement">
-                  Direct Procurement
-                </option>
+                <option value="Direct Procurement">Direct Procurement</option>
               </select>
             </div>
             <div>
@@ -1686,9 +1692,7 @@ export default function MinistryDashboard() {
                 </button>
                 <button className="text-left p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
                   <Users2 className="h-5 w-5 text-purple-600 mb-2" />
-                  <h4 className="font-medium text-gray-900">
-                    Vendor Matching
-                  </h4>
+                  <h4 className="font-medium text-gray-900">Vendor Matching</h4>
                   <p className="text-sm text-gray-600">
                     Intelligent vendor recommendation
                   </p>
@@ -1808,9 +1812,7 @@ export default function MinistryDashboard() {
             <FileSpreadsheet className="h-8 w-8 text-green-600" />
             <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
           </div>
-          <h3 className="font-semibold text-gray-900 mb-2">
-            Excel Template
-          </h3>
+          <h3 className="font-semibold text-gray-900 mb-2">Excel Template</h3>
           <p className="text-sm text-gray-600 mb-4">
             Standard template for bulk tender upload
           </p>
@@ -1823,9 +1825,7 @@ export default function MinistryDashboard() {
             <FileText className="h-8 w-8 text-blue-600" />
             <Download className="h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600" />
           </div>
-          <h3 className="font-semibold text-gray-900 mb-2">
-            CSV Template
-          </h3>
+          <h3 className="font-semibold text-gray-900 mb-2">CSV Template</h3>
           <p className="text-sm text-gray-600 mb-4">
             Comma-separated values format
           </p>
@@ -1908,9 +1908,7 @@ export default function MinistryDashboard() {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">
-                    12 successful
-                  </div>
+                  <div className="text-sm text-gray-900">12 successful</div>
                   <div className="text-sm text-red-600">3 failed</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
@@ -1969,9 +1967,8 @@ export default function MinistryDashboard() {
               </p>
               <p className="text-2xl font-bold text-gray-900">
                 {
-                  evaluationCommittees.filter(
-                    (c) => c.status === "Active",
-                  ).length
+                  evaluationCommittees.filter((c) => c.status === "Active")
+                    .length
                 }
               </p>
             </div>
@@ -1985,10 +1982,7 @@ export default function MinistryDashboard() {
                 Completed Evaluations
               </p>
               <p className="text-2xl font-bold text-gray-900">
-                {
-                  bidEvaluations.filter((e) => e.status === "Final")
-                    .length
-                }
+                {bidEvaluations.filter((e) => e.status === "Final").length}
               </p>
             </div>
           </div>
@@ -2001,10 +1995,7 @@ export default function MinistryDashboard() {
                 Pending Reviews
               </p>
               <p className="text-2xl font-bold text-gray-900">
-                {
-                  bidEvaluations.filter((e) => e.status === "Submitted")
-                    .length
-                }
+                {bidEvaluations.filter((e) => e.status === "Submitted").length}
               </p>
             </div>
           </div>
@@ -2068,9 +2059,7 @@ export default function MinistryDashboard() {
                           key={member.id}
                           className="flex items-center justify-between text-sm"
                         >
-                          <span className="text-gray-900">
-                            {member.name}
-                          </span>
+                          <span className="text-gray-900">{member.name}</span>
                           <span
                             className={`px-2 py-1 rounded-full text-xs ${
                               member.availability === "Available"
@@ -2145,28 +2134,43 @@ export default function MinistryDashboard() {
   };
 
   const getVendorWorkflowStatus = (bidderId: string) => {
-    return vendorWorkflowStatuses.find(status => status.companyId === bidderId);
+    return vendorWorkflowStatuses.find(
+      (status) => status.companyId === bidderId,
+    );
   };
 
   const isVendorEligibleForAward = (bidderId: string) => {
     const status = getVendorWorkflowStatus(bidderId);
-    return status &&
-           status.registrationCompleted &&
-           status.loginVerificationCompleted &&
-           status.biddingCompleted &&
-           status.evaluationCompleted &&
-           status.nocIssued &&
-           status.finalApprovalStatus === "approved";
+    return (
+      status &&
+      status.registrationCompleted &&
+      status.loginVerificationCompleted &&
+      status.biddingCompleted &&
+      status.evaluationCompleted &&
+      status.nocIssued &&
+      status.finalApprovalStatus === "approved"
+    );
   };
 
-  const renderVendorWorkflowStep = (step: string, completed: boolean, date?: string, details?: string) => {
+  const renderVendorWorkflowStep = (
+    step: string,
+    completed: boolean,
+    date?: string,
+    details?: string,
+  ) => {
     return (
-      <div className={`flex items-center space-x-3 p-3 rounded-lg border-2 ${
-        completed ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
-      }`}>
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-          completed ? "bg-green-600 text-white" : "bg-red-600 text-white"
-        }`}>
+      <div
+        className={`flex items-center space-x-3 p-3 rounded-lg border-2 ${
+          completed
+            ? "border-green-200 bg-green-50"
+            : "border-red-200 bg-red-50"
+        }`}
+      >
+        <div
+          className={`w-6 h-6 rounded-full flex items-center justify-center ${
+            completed ? "bg-green-600 text-white" : "bg-red-600 text-white"
+          }`}
+        >
           {completed ? (
             <CheckCircle className="h-4 w-4" />
           ) : (
@@ -2175,14 +2179,20 @@ export default function MinistryDashboard() {
         </div>
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <span className={`text-sm font-medium ${
-              completed ? "text-green-800" : "text-red-800"
-            }`}>
+            <span
+              className={`text-sm font-medium ${
+                completed ? "text-green-800" : "text-red-800"
+              }`}
+            >
               {step}
             </span>
-            <span className={`text-xs px-2 py-1 rounded-full ${
-              completed ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-            }`}>
+            <span
+              className={`text-xs px-2 py-1 rounded-full ${
+                completed
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
               {completed ? "Completed" : "Incomplete"}
             </span>
           </div>
@@ -2192,9 +2202,7 @@ export default function MinistryDashboard() {
             </div>
           )}
           {details && (
-            <div className="text-xs text-gray-600 mt-1">
-              {details}
-            </div>
+            <div className="text-xs text-gray-600 mt-1">{details}</div>
           )}
         </div>
       </div>
@@ -2210,7 +2218,8 @@ export default function MinistryDashboard() {
               📊 Tender Evaluation Process
             </h1>
             <p className="text-gray-600">
-              Comprehensive evaluation of submitted bids with scoring and recommendations
+              Comprehensive evaluation of submitted bids with scoring and
+              recommendations
             </p>
           </div>
           <div className="flex space-x-3">
@@ -2231,8 +2240,12 @@ export default function MinistryDashboard() {
             <div className="flex items-center">
               <FileText className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">Total Submissions</p>
-                <p className="text-2xl font-bold text-gray-900">{bidders.length}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Submissions
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {bidders.length}
+                </p>
               </div>
             </div>
           </div>
@@ -2241,7 +2254,9 @@ export default function MinistryDashboard() {
               <CheckCircle className="h-8 w-8 text-green-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Evaluated</p>
-                <p className="text-2xl font-bold text-gray-900">{bidders.length}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {bidders.length}
+                </p>
               </div>
             </div>
           </div>
@@ -2250,7 +2265,9 @@ export default function MinistryDashboard() {
               <Award className="h-8 w-8 text-purple-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Qualified</p>
-                <p className="text-2xl font-bold text-gray-900">{bidders.filter(b => b.status === "Qualified").length}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {bidders.filter((b) => b.status === "Qualified").length}
+                </p>
               </div>
             </div>
           </div>
@@ -2269,11 +2286,19 @@ export default function MinistryDashboard() {
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Bid Evaluation Workspace</h2>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Bid Evaluation Workspace
+              </h2>
               <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                <option value="MOH-2024-001">MOH-2024-001 - Hospital Equipment Supply</option>
-                <option value="MOH-2024-002">MOH-2024-002 - Pharmaceutical Supply</option>
-                <option value="MOH-2024-003">MOH-2024-003 - Laboratory Equipment</option>
+                <option value="MOH-2024-001">
+                  MOH-2024-001 - Hospital Equipment Supply
+                </option>
+                <option value="MOH-2024-002">
+                  MOH-2024-002 - Pharmaceutical Supply
+                </option>
+                <option value="MOH-2024-003">
+                  MOH-2024-003 - Laboratory Equipment
+                </option>
               </select>
             </div>
           </div>
@@ -2288,21 +2313,37 @@ export default function MinistryDashboard() {
                   <div key={bidder.id} className="border rounded-lg p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-4">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
-                          index === 0 ? "bg-yellow-500" :
-                          index === 1 ? "bg-gray-400" :
-                          index === 2 ? "bg-orange-400" : "bg-gray-300"
-                        }`}>
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
+                            index === 0
+                              ? "bg-yellow-500"
+                              : index === 1
+                                ? "bg-gray-400"
+                                : index === 2
+                                  ? "bg-orange-400"
+                                  : "bg-gray-300"
+                          }`}
+                        >
                           {index + 1}
                         </div>
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">{bidder.companyName}</h3>
-                          <p className="text-sm text-gray-600">{bidder.experience} experience • {bidder.bidAmount}</p>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {bidder.companyName}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {bidder.experience} experience • {bidder.bidAmount}
+                          </p>
                           <div className="flex items-center space-x-2 mt-1">
-                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              isEligible ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                            }`}>
-                              {isEligible ? "Workflow Complete" : "Workflow Incomplete"}
+                            <span
+                              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                isEligible
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {isEligible
+                                ? "Workflow Complete"
+                                : "Workflow Incomplete"}
                             </span>
                             <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                               {bidder.status}
@@ -2311,8 +2352,12 @@ export default function MinistryDashboard() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-purple-600">{bidder.totalScore}%</div>
-                        <div className="text-sm text-gray-500">Overall Score</div>
+                        <div className="text-2xl font-bold text-purple-600">
+                          {bidder.totalScore}%
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Overall Score
+                        </div>
                       </div>
                     </div>
 
@@ -2320,35 +2365,64 @@ export default function MinistryDashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       {/* Technical Evaluation */}
                       <div className="bg-blue-50 rounded-lg p-4">
-                        <h4 className="font-medium text-blue-900 mb-3">Technical Evaluation (40%)</h4>
+                        <h4 className="font-medium text-blue-900 mb-3">
+                          Technical Evaluation (40%)
+                        </h4>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">✅ Bid Price Analysis</span>
-                            <span className="text-sm font-medium text-blue-900">18/20</span>
+                            <span className="text-sm text-blue-800">
+                              ✅ Bid Price Analysis
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              18/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">✅ Bid Security</span>
-                            <span className="text-sm font-medium text-blue-900">19/20</span>
+                            <span className="text-sm text-blue-800">
+                              ✅ Bid Security
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              19/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">✅ Financial Capability</span>
-                            <span className="text-sm font-medium text-blue-900">17/20</span>
+                            <span className="text-sm text-blue-800">
+                              ✅ Financial Capability
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              17/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">✅ Value for Money</span>
-                            <span className="text-sm font-medium text-blue-900">16/20</span>
+                            <span className="text-sm text-blue-800">
+                              ✅ Value for Money
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              16/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-blue-800">✅ Cost Breakdown</span>
-                            <span className="text-sm font-medium text-blue-900">17/20</span>
+                            <span className="text-sm text-blue-800">
+                              ✅ Cost Breakdown
+                            </span>
+                            <span className="text-sm font-medium text-blue-900">
+                              17/20
+                            </span>
                           </div>
                           <div className="border-t pt-2 mt-2">
                             <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium text-blue-900">Technical Score:</span>
-                              <span className="text-lg font-bold text-blue-900">{bidder.technicalScore}%</span>
+                              <span className="text-sm font-medium text-blue-900">
+                                Technical Score:
+                              </span>
+                              <span className="text-lg font-bold text-blue-900">
+                                {bidder.technicalScore}%
+                              </span>
                             </div>
                             <div className="w-full bg-blue-200 rounded-full h-2 mt-1">
-                              <div className="bg-blue-600 h-2 rounded-full" style={{width: `${bidder.technicalScore}%`}}></div>
+                              <div
+                                className="bg-blue-600 h-2 rounded-full"
+                                style={{ width: `${bidder.technicalScore}%` }}
+                              ></div>
                             </div>
                           </div>
                         </div>
@@ -2356,35 +2430,64 @@ export default function MinistryDashboard() {
 
                       {/* Financial Evaluation */}
                       <div className="bg-green-50 rounded-lg p-4">
-                        <h4 className="font-medium text-green-900 mb-3">Financial Evaluation (35%)</h4>
+                        <h4 className="font-medium text-green-900 mb-3">
+                          Financial Evaluation (35%)
+                        </h4>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">Experience & Expertise</span>
-                            <span className="text-sm font-medium text-green-900">16/20</span>
+                            <span className="text-sm text-green-800">
+                              Experience & Expertise
+                            </span>
+                            <span className="text-sm font-medium text-green-900">
+                              16/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">Technical Approach</span>
-                            <span className="text-sm font-medium text-green-900">18/20</span>
+                            <span className="text-sm text-green-800">
+                              Technical Approach
+                            </span>
+                            <span className="text-sm font-medium text-green-900">
+                              18/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">Quality Standards</span>
-                            <span className="text-sm font-medium text-green-900">17/20</span>
+                            <span className="text-sm text-green-800">
+                              Quality Standards
+                            </span>
+                            <span className="text-sm font-medium text-green-900">
+                              17/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">Certifications</span>
-                            <span className="text-sm font-medium text-green-900">19/20</span>
+                            <span className="text-sm text-green-800">
+                              Certifications
+                            </span>
+                            <span className="text-sm font-medium text-green-900">
+                              19/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-800">Previous Contracts (2yrs)</span>
-                            <span className="text-sm font-medium text-green-900">15/20</span>
+                            <span className="text-sm text-green-800">
+                              Previous Contracts (2yrs)
+                            </span>
+                            <span className="text-sm font-medium text-green-900">
+                              15/20
+                            </span>
                           </div>
                           <div className="border-t pt-2 mt-2">
                             <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium text-green-900">Financial Score:</span>
-                              <span className="text-lg font-bold text-green-900">{bidder.financialScore}%</span>
+                              <span className="text-sm font-medium text-green-900">
+                                Financial Score:
+                              </span>
+                              <span className="text-lg font-bold text-green-900">
+                                {bidder.financialScore}%
+                              </span>
                             </div>
                             <div className="w-full bg-green-200 rounded-full h-2 mt-1">
-                              <div className="bg-green-600 h-2 rounded-full" style={{width: `${bidder.financialScore}%`}}></div>
+                              <div
+                                className="bg-green-600 h-2 rounded-full"
+                                style={{ width: `${bidder.financialScore}%` }}
+                              ></div>
                             </div>
                           </div>
                         </div>
@@ -2392,31 +2495,56 @@ export default function MinistryDashboard() {
 
                       {/* Compliance Evaluation */}
                       <div className="bg-purple-50 rounded-lg p-4">
-                        <h4 className="font-medium text-purple-900 mb-3">Compliance (25%)</h4>
+                        <h4 className="font-medium text-purple-900 mb-3">
+                          Compliance (25%)
+                        </h4>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-purple-800">Document Completeness</span>
-                            <span className="text-sm font-medium text-purple-900">19/20</span>
+                            <span className="text-sm text-purple-800">
+                              Document Completeness
+                            </span>
+                            <span className="text-sm font-medium text-purple-900">
+                              19/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-purple-800">Legal Requirements</span>
-                            <span className="text-sm font-medium text-purple-900">20/20</span>
+                            <span className="text-sm text-purple-800">
+                              Legal Requirements
+                            </span>
+                            <span className="text-sm font-medium text-purple-900">
+                              20/20
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-purple-800">Workflow Completion</span>
-                            <span className="text-sm font-medium text-purple-900">{isEligible ? "20/20" : "0/20"}</span>
+                            <span className="text-sm text-purple-800">
+                              Workflow Completion
+                            </span>
+                            <span className="text-sm font-medium text-purple-900">
+                              {isEligible ? "20/20" : "0/20"}
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-purple-800">NOC Verification</span>
-                            <span className="text-sm font-medium text-purple-900">{workflowStatus?.nocIssued ? "20/20" : "0/20"}</span>
+                            <span className="text-sm text-purple-800">
+                              NOC Verification
+                            </span>
+                            <span className="text-sm font-medium text-purple-900">
+                              {workflowStatus?.nocIssued ? "20/20" : "0/20"}
+                            </span>
                           </div>
                           <div className="border-t pt-2 mt-2">
                             <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium text-purple-900">Compliance Score:</span>
-                              <span className="text-lg font-bold text-purple-900">{isEligible ? "95" : "70"}%</span>
+                              <span className="text-sm font-medium text-purple-900">
+                                Compliance Score:
+                              </span>
+                              <span className="text-lg font-bold text-purple-900">
+                                {isEligible ? "95" : "70"}%
+                              </span>
                             </div>
                             <div className="w-full bg-purple-200 rounded-full h-2 mt-1">
-                              <div className="bg-purple-600 h-2 rounded-full" style={{width: `${isEligible ? 95 : 70}%`}}></div>
+                              <div
+                                className="bg-purple-600 h-2 rounded-full"
+                                style={{ width: `${isEligible ? 95 : 70}%` }}
+                              ></div>
                             </div>
                           </div>
                         </div>
@@ -2425,24 +2553,48 @@ export default function MinistryDashboard() {
 
                     {/* Evaluator Comments */}
                     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                      <h5 className="font-medium text-gray-900 mb-2">Evaluator Comments & Recommendations</h5>
+                      <h5 className="font-medium text-gray-900 mb-2">
+                        Evaluator Comments & Recommendations
+                      </h5>
                       <textarea
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         rows={3}
                         placeholder="Add evaluation comments and recommendations..."
-                        defaultValue={index === 0 ? "Strong technical proposal with competitive pricing. Highly recommended for award." :
-                                    index === 1 ? "Good technical capability but higher pricing. Suitable alternative if primary choice fails." :
-                                    "Adequate proposal meeting minimum requirements. Consider for smaller scope projects."}
+                        defaultValue={
+                          index === 0
+                            ? "Strong technical proposal with competitive pricing. Highly recommended for award."
+                            : index === 1
+                              ? "Good technical capability but higher pricing. Suitable alternative if primary choice fails."
+                              : "Adequate proposal meeting minimum requirements. Consider for smaller scope projects."
+                        }
                       />
                       <div className="flex justify-between items-center mt-3">
                         <div className="flex items-center space-x-3">
-                          <span className="text-sm text-gray-600">Recommendation:</span>
+                          <span className="text-sm text-gray-600">
+                            Recommendation:
+                          </span>
                           <select className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value={index === 0 ? "recommend" : index === 1 ? "consider" : "reserve"}>
-                              {index === 0 ? "Recommend for Award" : index === 1 ? "Consider as Alternative" : "Reserve List"}
+                            <option
+                              value={
+                                index === 0
+                                  ? "recommend"
+                                  : index === 1
+                                    ? "consider"
+                                    : "reserve"
+                              }
+                            >
+                              {index === 0
+                                ? "Recommend for Award"
+                                : index === 1
+                                  ? "Consider as Alternative"
+                                  : "Reserve List"}
                             </option>
-                            <option value="recommend">Recommend for Award</option>
-                            <option value="consider">Consider as Alternative</option>
+                            <option value="recommend">
+                              Recommend for Award
+                            </option>
+                            <option value="consider">
+                              Consider as Alternative
+                            </option>
                             <option value="reserve">Reserve List</option>
                             <option value="reject">Reject</option>
                           </select>
@@ -2468,7 +2620,9 @@ export default function MinistryDashboard() {
   };
 
   const renderTenderAward = () => {
-    const tendersForAward = tenders.filter(t => t.status === "Evaluated" || t.status === "Closed");
+    const tendersForAward = tenders.filter(
+      (t) => t.status === "Evaluated" || t.status === "Closed",
+    );
 
     return (
       <div className="space-y-8">
@@ -2478,7 +2632,8 @@ export default function MinistryDashboard() {
               🏆 Award Tenders
             </h1>
             <p className="text-gray-600">
-              Award tenders to qualified vendors who have completed the required workflow process
+              Award tenders to qualified vendors who have completed the required
+              workflow process
             </p>
           </div>
           <div className="flex space-x-3">
@@ -2503,7 +2658,11 @@ export default function MinistryDashboard() {
                   Ready for Award
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {bidders.filter(bidder => isVendorEligibleForAward(bidder.id)).length}
+                  {
+                    bidders.filter((bidder) =>
+                      isVendorEligibleForAward(bidder.id),
+                    ).length
+                  }
                 </p>
               </div>
             </div>
@@ -2595,13 +2754,16 @@ export default function MinistryDashboard() {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
                         <div>
-                          <span className="font-medium">Tender ID:</span> {tender.id}
+                          <span className="font-medium">Tender ID:</span>{" "}
+                          {tender.id}
                         </div>
                         <div>
-                          <span className="font-medium">Estimated Value:</span> {tender.estimatedValue}
+                          <span className="font-medium">Estimated Value:</span>{" "}
+                          {tender.estimatedValue}
                         </div>
                         <div>
-                          <span className="font-medium">Bids Received:</span> {tender.bidsReceived}
+                          <span className="font-medium">Bids Received:</span>{" "}
+                          {tender.bidsReceived}
                         </div>
                       </div>
                     </div>
@@ -2619,10 +2781,14 @@ export default function MinistryDashboard() {
 
                   {/* Top Bidders with Workflow Status */}
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-3">Top Qualified Bidders & Workflow Status</h4>
+                    <h4 className="font-medium text-gray-900 mb-3">
+                      Top Qualified Bidders & Workflow Status
+                    </h4>
                     <div className="space-y-4">
                       {bidders.slice(0, 5).map((bidder, index) => {
-                        const workflowStatus = getVendorWorkflowStatus(bidder.id);
+                        const workflowStatus = getVendorWorkflowStatus(
+                          bidder.id,
+                        );
                         const isEligible = isVendorEligibleForAward(bidder.id);
 
                         return (
@@ -2638,12 +2804,18 @@ export default function MinistryDashboard() {
                           >
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center space-x-3">
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                  index === 0 ? "bg-yellow-500 text-white" :
-                                  index === 1 ? "bg-gray-400 text-white" :
-                                  "bg-orange-400 text-white"
-                                }`}>
-                                  <span className="text-sm font-bold">{index + 1}</span>
+                                <div
+                                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                    index === 0
+                                      ? "bg-yellow-500 text-white"
+                                      : index === 1
+                                        ? "bg-gray-400 text-white"
+                                        : "bg-orange-400 text-white"
+                                  }`}
+                                >
+                                  <span className="text-sm font-bold">
+                                    {index + 1}
+                                  </span>
                                 </div>
                                 <div>
                                   <span className="font-medium text-gray-900 text-sm">
@@ -2653,76 +2825,100 @@ export default function MinistryDashboard() {
                                     <span className="text-xs text-gray-500">
                                       Score: {bidder.totalScore}%
                                     </span>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${
-                                      isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                                    }`}>
-                                      {isEligible ? "Eligible for Award" : "Not Eligible"}
+                                    <span
+                                      className={`text-xs px-2 py-1 rounded-full ${
+                                        isEligible
+                                          ? "bg-green-100 text-green-700"
+                                          : "bg-red-100 text-red-700"
+                                      }`}
+                                    >
+                                      {isEligible
+                                        ? "Eligible for Award"
+                                        : "Not Eligible"}
                                     </span>
                                   </div>
                                 </div>
                               </div>
                               <div className="text-right">
-                                <div className="text-sm font-medium text-gray-900">{bidder.bidAmount}</div>
-                                <div className="text-xs text-gray-500">{bidder.experience}</div>
+                                <div className="text-sm font-medium text-gray-900">
+                                  {bidder.bidAmount}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {bidder.experience}
+                                </div>
                               </div>
                             </div>
 
                             {/* Workflow Status Steps */}
                             <div className="mt-4">
-                              <h5 className="text-xs font-medium text-gray-700 mb-2">Vendor Workflow Status:</h5>
+                              <h5 className="text-xs font-medium text-gray-700 mb-2">
+                                Vendor Workflow Status:
+                              </h5>
                               <div className="grid grid-cols-1 gap-2">
                                 {renderVendorWorkflowStep(
                                   "1. Company Registration",
-                                  workflowStatus?.registrationCompleted || false,
-                                  workflowStatus?.registrationDate
+                                  workflowStatus?.registrationCompleted ||
+                                    false,
+                                  workflowStatus?.registrationDate,
                                 )}
                                 {renderVendorWorkflowStep(
                                   "2. Login & Verification",
-                                  workflowStatus?.loginVerificationCompleted || false,
-                                  workflowStatus?.verificationDate
+                                  workflowStatus?.loginVerificationCompleted ||
+                                    false,
+                                  workflowStatus?.verificationDate,
                                 )}
                                 {renderVendorWorkflowStep(
                                   "3. Bidding Process",
                                   workflowStatus?.biddingCompleted || false,
-                                  workflowStatus?.bidSubmissionDate
+                                  workflowStatus?.bidSubmissionDate,
                                 )}
                                 {renderVendorWorkflowStep(
                                   "4. Tender Evaluation",
                                   workflowStatus?.evaluationCompleted || false,
-                                  workflowStatus?.evaluationDate
+                                  workflowStatus?.evaluationDate,
                                 )}
                                 {renderVendorWorkflowStep(
                                   "5. No Objection Certificate",
                                   workflowStatus?.nocIssued || false,
                                   workflowStatus?.nocIssuedDate,
-                                  workflowStatus?.nocCertificateNumber ? `Certificate: ${workflowStatus.nocCertificateNumber}` : undefined
+                                  workflowStatus?.nocCertificateNumber
+                                    ? `Certificate: ${workflowStatus.nocCertificateNumber}`
+                                    : undefined,
                                 )}
                               </div>
                             </div>
 
                             {/* Award Eligibility Summary */}
                             <div className="mt-4 pt-3 border-t border-gray-200">
-                              <div className={`p-3 rounded-md ${
-                                isEligible ? "bg-green-100 border border-green-200" : "bg-red-100 border border-red-200"
-                              }`}>
+                              <div
+                                className={`p-3 rounded-md ${
+                                  isEligible
+                                    ? "bg-green-100 border border-green-200"
+                                    : "bg-red-100 border border-red-200"
+                                }`}
+                              >
                                 <div className="flex items-center space-x-2">
                                   {isEligible ? (
                                     <CheckCircle className="h-5 w-5 text-green-600" />
                                   ) : (
                                     <AlertCircle className="h-5 w-5 text-red-600" />
                                   )}
-                                  <span className={`text-sm font-medium ${
-                                    isEligible ? "text-green-800" : "text-red-800"
-                                  }`}>
+                                  <span
+                                    className={`text-sm font-medium ${
+                                      isEligible
+                                        ? "text-green-800"
+                                        : "text-red-800"
+                                    }`}
+                                  >
                                     {isEligible
                                       ? "✅ All requirements completed - Ready for award"
-                                      : "❌ Requirements incomplete - Cannot award tender"
-                                    }
+                                      : "❌ Requirements incomplete - Cannot award tender"}
                                   </span>
                                 </div>
                                 {!isEligible && (
                                   <div className="mt-2 text-xs text-red-700">
-                                    Complete all workflow steps before this vendor can be awarded a tender.
+                                    Complete all workflow steps before this
+                                    vendor can be awarded a tender.
                                   </div>
                                 )}
                               </div>
@@ -2778,8 +2974,8 @@ export default function MinistryDashboard() {
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                🏆 Award Tender - {selectedTenderForAward.title}
-              </h3>
+                  🏆 Award Tender - {selectedTenderForAward.title}
+                </h3>
                 <button
                   onClick={() => {
                     setShowAwardModal(false);
@@ -2800,7 +2996,9 @@ export default function MinistryDashboard() {
                     </h4>
                     <div className="space-y-3">
                       {bidders.map((bidder, index) => {
-                        const workflowStatus = getVendorWorkflowStatus(bidder.id);
+                        const workflowStatus = getVendorWorkflowStatus(
+                          bidder.id,
+                        );
                         const isEligible = isVendorEligibleForAward(bidder.id);
 
                         return (
@@ -2823,95 +3021,148 @@ export default function MinistryDashboard() {
                               }
                             }}
                           >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3 mb-2">
-                                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                                  index === 0 ? "bg-yellow-500 text-white" :
-                                  index === 1 ? "bg-gray-400 text-white" :
-                                  "bg-orange-400 text-white"
-                                }`}>
-                                  <span className="text-xs font-bold">{index + 1}</span>
-                                </div>
-                                <h5 className="font-semibold text-gray-900">
-                                  {bidder.companyName}
-                                </h5>
-                                <span className={`px-2 py-1 rounded-full text-xs ${
-                                  isEligible ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                                }`}>
-                                  {isEligible ? "Eligible" : "Not Eligible"}
-                                </span>
-                              </div>
-
-                              {/* Workflow Status Indicator */}
-                              <div className="mb-3">
-                                <div className={`text-xs px-2 py-1 rounded-md inline-flex items-center space-x-1 ${
-                                  isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                                }`}>
-                                  {isEligible ? (
-                                    <><CheckCircle className="h-3 w-3" /><span>All workflow steps completed</span></>
-                                  ) : (
-                                    <><AlertCircle className="h-3 w-3" /><span>Workflow incomplete</span></>
-                                  )}
-                                </div>
-                              </div>
-                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                                <div>
-                                  <span className="font-medium">Bid Amount:</span>
-                                  <p className="text-lg font-semibold text-gray-900">{bidder.bidAmount}</p>
-                                </div>
-                                <div>
-                                  <span className="font-medium">Total Score:</span>
-                                  <p className="text-lg font-semibold text-green-600">{bidder.totalScore}%</p>
-                                </div>
-                                <div>
-                                  <span className="font-medium">Technical:</span>
-                                  <p>{bidder.technicalScore}%</p>
-                                </div>
-                                <div>
-                                  <span className="font-medium">Financial:</span>
-                                  <p>{bidder.financialScore}%</p>
-                                </div>
-                                <div>
-                                  <span className="font-medium">Experience:</span>
-                                  <p>{bidder.experience}</p>
-                                </div>
-                                <div>
-                                  <span className="font-medium">Projects:</span>
-                                  <p>{bidder.previousProjects} completed</p>
-                                </div>
-                              </div>
-                              <div className="mt-2">
-                                <span className="text-sm font-medium text-gray-600">Certifications:</span>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {bidder.certifications.map((cert) => (
-                                    <span
-                                      key={cert}
-                                      className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
-                                    >
-                                      {cert}
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-2">
+                                  <div
+                                    className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                                      index === 0
+                                        ? "bg-yellow-500 text-white"
+                                        : index === 1
+                                          ? "bg-gray-400 text-white"
+                                          : "bg-orange-400 text-white"
+                                    }`}
+                                  >
+                                    <span className="text-xs font-bold">
+                                      {index + 1}
                                     </span>
-                                  ))}
+                                  </div>
+                                  <h5 className="font-semibold text-gray-900">
+                                    {bidder.companyName}
+                                  </h5>
+                                  <span
+                                    className={`px-2 py-1 rounded-full text-xs ${
+                                      isEligible
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-red-100 text-red-800"
+                                    }`}
+                                  >
+                                    {isEligible ? "Eligible" : "Not Eligible"}
+                                  </span>
+                                </div>
+
+                                {/* Workflow Status Indicator */}
+                                <div className="mb-3">
+                                  <div
+                                    className={`text-xs px-2 py-1 rounded-md inline-flex items-center space-x-1 ${
+                                      isEligible
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-red-100 text-red-700"
+                                    }`}
+                                  >
+                                    {isEligible ? (
+                                      <>
+                                        <CheckCircle className="h-3 w-3" />
+                                        <span>
+                                          All workflow steps completed
+                                        </span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <AlertCircle className="h-3 w-3" />
+                                        <span>Workflow incomplete</span>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                                  <div>
+                                    <span className="font-medium">
+                                      Bid Amount:
+                                    </span>
+                                    <p className="text-lg font-semibold text-gray-900">
+                                      {bidder.bidAmount}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium">
+                                      Total Score:
+                                    </span>
+                                    <p className="text-lg font-semibold text-green-600">
+                                      {bidder.totalScore}%
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium">
+                                      Technical:
+                                    </span>
+                                    <p>{bidder.technicalScore}%</p>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium">
+                                      Financial:
+                                    </span>
+                                    <p>{bidder.financialScore}%</p>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium">
+                                      Experience:
+                                    </span>
+                                    <p>{bidder.experience}</p>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium">
+                                      Projects:
+                                    </span>
+                                    <p>{bidder.previousProjects} completed</p>
+                                  </div>
+                                </div>
+                                <div className="mt-2">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    Certifications:
+                                  </span>
+                                  <div className="flex flex-wrap gap-1 mt-1">
+                                    {bidder.certifications.map((cert) => (
+                                      <span
+                                        key={cert}
+                                        className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
+                                      >
+                                        {cert}
+                                      </span>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
 
-                          {/* Eligibility Notice for Ineligible Vendors */}
-                          {!isEligible && (
-                            <div className="mt-3 p-2 bg-red-100 border border-red-200 rounded-md">
-                              <div className="text-xs text-red-700 font-medium">Required Steps Missing:</div>
-                              <ul className="text-xs text-red-600 mt-1 space-y-1">
-                                {!workflowStatus?.registrationCompleted && <li>��� Company Registration</li>}
-                                {!workflowStatus?.loginVerificationCompleted && <li>• Login & Verification</li>}
-                                {!workflowStatus?.biddingCompleted && <li>• Bidding Process</li>}
-                                {!workflowStatus?.evaluationCompleted && <li>• Tender Evaluation</li>}
-                                {!workflowStatus?.nocIssued && <li>• No Objection Certificate</li>}
-                                {workflowStatus?.finalApprovalStatus !== "approved" && <li>• Final Approval</li>}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
+                            {/* Eligibility Notice for Ineligible Vendors */}
+                            {!isEligible && (
+                              <div className="mt-3 p-2 bg-red-100 border border-red-200 rounded-md">
+                                <div className="text-xs text-red-700 font-medium">
+                                  Required Steps Missing:
+                                </div>
+                                <ul className="text-xs text-red-600 mt-1 space-y-1">
+                                  {!workflowStatus?.registrationCompleted && (
+                                    <li>��� Company Registration</li>
+                                  )}
+                                  {!workflowStatus?.loginVerificationCompleted && (
+                                    <li>• Login & Verification</li>
+                                  )}
+                                  {!workflowStatus?.biddingCompleted && (
+                                    <li>• Bidding Process</li>
+                                  )}
+                                  {!workflowStatus?.evaluationCompleted && (
+                                    <li>• Tender Evaluation</li>
+                                  )}
+                                  {!workflowStatus?.nocIssued && (
+                                    <li>• No Objection Certificate</li>
+                                  )}
+                                  {workflowStatus?.finalApprovalStatus !==
+                                    "approved" && <li>• Final Approval</li>}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
                         );
                       })}
                     </div>
@@ -2932,7 +3183,12 @@ export default function MinistryDashboard() {
                         <input
                           type="text"
                           value={awardFormData.awardValue}
-                          onChange={(e) => setAwardFormData({...awardFormData, awardValue: e.target.value})}
+                          onChange={(e) =>
+                            setAwardFormData({
+                              ...awardFormData,
+                              awardValue: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="₦0.00"
                         />
@@ -2944,7 +3200,12 @@ export default function MinistryDashboard() {
                         <input
                           type="number"
                           value={awardFormData.contractDuration}
-                          onChange={(e) => setAwardFormData({...awardFormData, contractDuration: e.target.value})}
+                          onChange={(e) =>
+                            setAwardFormData({
+                              ...awardFormData,
+                              contractDuration: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="6"
                         />
@@ -2956,7 +3217,12 @@ export default function MinistryDashboard() {
                         <input
                           type="number"
                           value={awardFormData.performanceBond}
-                          onChange={(e) => setAwardFormData({...awardFormData, performanceBond: e.target.value})}
+                          onChange={(e) =>
+                            setAwardFormData({
+                              ...awardFormData,
+                              performanceBond: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="10"
                         />
@@ -2968,7 +3234,12 @@ export default function MinistryDashboard() {
                         <input
                           type="number"
                           value={awardFormData.advancePayment}
-                          onChange={(e) => setAwardFormData({...awardFormData, advancePayment: e.target.value})}
+                          onChange={(e) =>
+                            setAwardFormData({
+                              ...awardFormData,
+                              advancePayment: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="15"
                         />
@@ -2980,7 +3251,12 @@ export default function MinistryDashboard() {
                         <input
                           type="number"
                           value={awardFormData.warrantyPeriod}
-                          onChange={(e) => setAwardFormData({...awardFormData, warrantyPeriod: e.target.value})}
+                          onChange={(e) =>
+                            setAwardFormData({
+                              ...awardFormData,
+                              warrantyPeriod: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="12"
                         />
@@ -2992,7 +3268,12 @@ export default function MinistryDashboard() {
                         <textarea
                           rows={3}
                           value={awardFormData.deliverySchedule}
-                          onChange={(e) => setAwardFormData({...awardFormData, deliverySchedule: e.target.value})}
+                          onChange={(e) =>
+                            setAwardFormData({
+                              ...awardFormData,
+                              deliverySchedule: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="Specify delivery milestones and timelines..."
                         />
@@ -3007,7 +3288,12 @@ export default function MinistryDashboard() {
                     <textarea
                       rows={4}
                       value={awardFormData.awardJustification}
-                      onChange={(e) => setAwardFormData({...awardFormData, awardJustification: e.target.value})}
+                      onChange={(e) =>
+                        setAwardFormData({
+                          ...awardFormData,
+                          awardJustification: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Provide detailed justification for the award decision based on evaluation criteria..."
                     />
@@ -3020,7 +3306,12 @@ export default function MinistryDashboard() {
                     <textarea
                       rows={3}
                       value={awardFormData.specialConditions}
-                      onChange={(e) => setAwardFormData({...awardFormData, specialConditions: e.target.value})}
+                      onChange={(e) =>
+                        setAwardFormData({
+                          ...awardFormData,
+                          specialConditions: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Any special conditions or requirements for this contract..."
                     />
@@ -3035,9 +3326,12 @@ export default function MinistryDashboard() {
                     <div className="flex items-start space-x-3">
                       <CheckSquare className="h-5 w-5 text-blue-600 mt-0.5" />
                       <div>
-                        <h5 className="text-sm font-medium text-blue-800">Vendor Workflow Verification</h5>
+                        <h5 className="text-sm font-medium text-blue-800">
+                          Vendor Workflow Verification
+                        </h5>
                         <p className="text-sm text-blue-700 mt-1">
-                          Only vendors who have completed all 5 workflow steps can be awarded a tender:
+                          Only vendors who have completed all 5 workflow steps
+                          can be awarded a tender:
                         </p>
                         <ul className="text-sm text-blue-700 mt-2 ml-4 space-y-1">
                           <li>1. ✅ Company Registration</li>
@@ -3054,9 +3348,14 @@ export default function MinistryDashboard() {
                     <div className="flex items-start space-x-3">
                       <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                       <div>
-                        <h5 className="text-sm font-medium text-yellow-800">Award Confirmation</h5>
+                        <h5 className="text-sm font-medium text-yellow-800">
+                          Award Confirmation
+                        </h5>
                         <p className="text-sm text-yellow-700 mt-1">
-                          Once awarded, this decision will be final and legally binding. Ensure all details are correct and the vendor has completed all workflow requirements before proceeding.
+                          Once awarded, this decision will be final and legally
+                          binding. Ensure all details are correct and the vendor
+                          has completed all workflow requirements before
+                          proceeding.
                         </p>
                       </div>
                     </div>
@@ -3079,7 +3378,12 @@ export default function MinistryDashboard() {
                       Save as Draft
                     </button>
                     <button
-                      disabled={!awardFormData.selectedBidder || !awardFormData.awardValue || !awardFormData.awardJustification || !isVendorEligibleForAward(awardFormData.selectedBidder)}
+                      disabled={
+                        !awardFormData.selectedBidder ||
+                        !awardFormData.awardValue ||
+                        !awardFormData.awardJustification ||
+                        !isVendorEligibleForAward(awardFormData.selectedBidder)
+                      }
                       className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Award className="h-4 w-4 mr-2 inline" />
@@ -3111,16 +3415,34 @@ export default function MinistryDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Basic Information</h4>
+                    <h4 className="font-semibold text-gray-900 mb-3">
+                      Basic Information
+                    </h4>
                     <div className="space-y-2 text-sm">
-                      <p><strong>Tender ID:</strong> {selectedTenderForDetails.id}</p>
-                      <p><strong>Title:</strong> {selectedTenderForDetails.title}</p>
-                      <p><strong>Category:</strong> {selectedTenderForDetails.category}</p>
-                      <p><strong>Estimated Value:</strong> {selectedTenderForDetails.estimatedValue}</p>
-                      <p><strong>Status:</strong>
-                        <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
-                          selectedTenderForDetails.status === "Evaluated" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"
-                        }`}>
+                      <p>
+                        <strong>Tender ID:</strong>{" "}
+                        {selectedTenderForDetails.id}
+                      </p>
+                      <p>
+                        <strong>Title:</strong> {selectedTenderForDetails.title}
+                      </p>
+                      <p>
+                        <strong>Category:</strong>{" "}
+                        {selectedTenderForDetails.category}
+                      </p>
+                      <p>
+                        <strong>Estimated Value:</strong>{" "}
+                        {selectedTenderForDetails.estimatedValue}
+                      </p>
+                      <p>
+                        <strong>Status:</strong>
+                        <span
+                          className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                            selectedTenderForDetails.status === "Evaluated"
+                              ? "bg-purple-100 text-purple-800"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
                           {selectedTenderForDetails.status}
                         </span>
                       </p>
@@ -3128,23 +3450,56 @@ export default function MinistryDashboard() {
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Timeline</h4>
+                    <h4 className="font-semibold text-gray-900 mb-3">
+                      Timeline
+                    </h4>
                     <div className="space-y-2 text-sm">
-                      <p><strong>Published:</strong> {selectedTenderForDetails.publishDate ? new Date(selectedTenderForDetails.publishDate).toLocaleDateString() : 'Not published'}</p>
-                      <p><strong>Closing Date:</strong> {new Date(selectedTenderForDetails.closeDate).toLocaleDateString()}</p>
-                      <p><strong>Ministry:</strong> {selectedTenderForDetails.ministry}</p>
-                      <p><strong>Procuring Entity:</strong> {selectedTenderForDetails.procuringEntity}</p>
+                      <p>
+                        <strong>Published:</strong>{" "}
+                        {selectedTenderForDetails.publishDate
+                          ? new Date(
+                              selectedTenderForDetails.publishDate,
+                            ).toLocaleDateString()
+                          : "Not published"}
+                      </p>
+                      <p>
+                        <strong>Closing Date:</strong>{" "}
+                        {new Date(
+                          selectedTenderForDetails.closeDate,
+                        ).toLocaleDateString()}
+                      </p>
+                      <p>
+                        <strong>Ministry:</strong>{" "}
+                        {selectedTenderForDetails.ministry}
+                      </p>
+                      <p>
+                        <strong>Procuring Entity:</strong>{" "}
+                        {selectedTenderForDetails.procuringEntity}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Bidding Statistics</h4>
+                    <h4 className="font-semibold text-gray-900 mb-3">
+                      Bidding Statistics
+                    </h4>
                     <div className="space-y-2 text-sm">
-                      <p><strong>Total Bids Received:</strong> {selectedTenderForDetails.bidsReceived}</p>
-                      <p><strong>Eligible Vendors:</strong> {bidders.filter(bidder => isVendorEligibleForAward(bidder.id)).length}</p>
-                      <p><strong>Evaluation Status:</strong>
+                      <p>
+                        <strong>Total Bids Received:</strong>{" "}
+                        {selectedTenderForDetails.bidsReceived}
+                      </p>
+                      <p>
+                        <strong>Eligible Vendors:</strong>{" "}
+                        {
+                          bidders.filter((bidder) =>
+                            isVendorEligibleForAward(bidder.id),
+                          ).length
+                        }
+                      </p>
+                      <p>
+                        <strong>Evaluation Status:</strong>
                         <span className="ml-2 px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
                           Completed
                         </span>
@@ -3153,7 +3508,9 @@ export default function MinistryDashboard() {
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Description</h4>
+                    <h4 className="font-semibold text-gray-900 mb-3">
+                      Description
+                    </h4>
                     <p className="text-sm text-gray-600">
                       {selectedTenderForDetails.description}
                     </p>
@@ -3196,22 +3553,36 @@ export default function MinistryDashboard() {
               <div className="space-y-6">
                 {/* Evaluation Summary */}
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Evaluation Summary</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    Evaluation Summary
+                  </h4>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">{selectedTenderForDetails.bidsReceived}</div>
+                      <div className="text-2xl font-bold text-blue-600">
+                        {selectedTenderForDetails.bidsReceived}
+                      </div>
                       <div className="text-gray-600">Total Bids</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">{bidders.filter(b => b.status === "Qualified").length}</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        {bidders.filter((b) => b.status === "Qualified").length}
+                      </div>
                       <div className="text-gray-600">Qualified</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">{bidders.filter(bidder => isVendorEligibleForAward(bidder.id)).length}</div>
+                      <div className="text-2xl font-bold text-purple-600">
+                        {
+                          bidders.filter((bidder) =>
+                            isVendorEligibleForAward(bidder.id),
+                          ).length
+                        }
+                      </div>
                       <div className="text-gray-600">Eligible for Award</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-orange-600">87.3%</div>
+                      <div className="text-2xl font-bold text-orange-600">
+                        87.3%
+                      </div>
                       <div className="text-gray-600">Avg Score</div>
                     </div>
                   </div>
@@ -3219,62 +3590,122 @@ export default function MinistryDashboard() {
 
                 {/* Detailed Vendor Evaluations */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Vendor Evaluation Details</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    Vendor Evaluation Details
+                  </h4>
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bid Amount</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technical Score</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Financial Score</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Score</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Workflow Status</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Rank
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Company
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Bid Amount
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Technical Score
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Financial Score
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Total Score
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Workflow Status
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {bidders.map((bidder, index) => {
-                          const isEligible = isVendorEligibleForAward(bidder.id);
+                          const isEligible = isVendorEligibleForAward(
+                            bidder.id,
+                          );
                           return (
-                            <tr key={bidder.id} className={isEligible ? "bg-green-50" : "bg-red-50"}>
+                            <tr
+                              key={bidder.id}
+                              className={
+                                isEligible ? "bg-green-50" : "bg-red-50"
+                              }
+                            >
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
-                                  index === 0 ? "bg-yellow-500" :
-                                  index === 1 ? "bg-gray-400" :
-                                  index === 2 ? "bg-orange-400" : "bg-gray-300"
-                                }`}>
+                                <div
+                                  className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
+                                    index === 0
+                                      ? "bg-yellow-500"
+                                      : index === 1
+                                        ? "bg-gray-400"
+                                        : index === 2
+                                          ? "bg-orange-400"
+                                          : "bg-gray-300"
+                                  }`}
+                                >
                                   {index + 1}
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm font-medium text-gray-900">{bidder.companyName}</div>
-                                <div className="text-xs text-gray-500">{bidder.experience} experience</div>
+                                <div className="text-sm font-medium text-gray-900">
+                                  {bidder.companyName}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {bidder.experience} experience
+                                </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{bidder.bidAmount}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {bidder.bidAmount}
+                              </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{bidder.technicalScore}%</div>
+                                <div className="text-sm text-gray-900">
+                                  {bidder.technicalScore}%
+                                </div>
                                 <div className="w-20 bg-gray-200 rounded-full h-2">
-                                  <div className="bg-blue-600 h-2 rounded-full" style={{width: `${bidder.technicalScore}%`}}></div>
+                                  <div
+                                    className="bg-blue-600 h-2 rounded-full"
+                                    style={{
+                                      width: `${bidder.technicalScore}%`,
+                                    }}
+                                  ></div>
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{bidder.financialScore}%</div>
+                                <div className="text-sm text-gray-900">
+                                  {bidder.financialScore}%
+                                </div>
                                 <div className="w-20 bg-gray-200 rounded-full h-2">
-                                  <div className="bg-green-600 h-2 rounded-full" style={{width: `${bidder.financialScore}%`}}></div>
+                                  <div
+                                    className="bg-green-600 h-2 rounded-full"
+                                    style={{
+                                      width: `${bidder.financialScore}%`,
+                                    }}
+                                  ></div>
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm font-bold text-gray-900">{bidder.totalScore}%</div>
+                                <div className="text-sm font-bold text-gray-900">
+                                  {bidder.totalScore}%
+                                </div>
                                 <div className="w-20 bg-gray-200 rounded-full h-2">
-                                  <div className="bg-purple-600 h-2 rounded-full" style={{width: `${bidder.totalScore}%`}}></div>
+                                  <div
+                                    className="bg-purple-600 h-2 rounded-full"
+                                    style={{ width: `${bidder.totalScore}%` }}
+                                  ></div>
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                  isEligible ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                                }`}>
-                                  {isEligible ? "✅ Eligible" : "❌ Not Eligible"}
+                                <span
+                                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                    isEligible
+                                      ? "bg-green-100 text-green-800"
+                                      : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {isEligible
+                                    ? "✅ Eligible"
+                                    : "❌ Not Eligible"}
                                 </span>
                               </td>
                             </tr>
@@ -3287,10 +3718,14 @@ export default function MinistryDashboard() {
 
                 {/* Evaluation Criteria */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Evaluation Criteria</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    Evaluation Criteria
+                  </h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="bg-blue-50 p-4 rounded-lg">
-                      <h5 className="font-medium text-blue-900 mb-2">Technical Evaluation (40%)</h5>
+                      <h5 className="font-medium text-blue-900 mb-2">
+                        Technical Evaluation (40%)
+                      </h5>
                       <ul className="text-sm text-blue-800 space-y-1">
                         <li>✅ Bid Price Analysis</li>
                         <li>✅ Bid Security</li>
@@ -3300,17 +3735,23 @@ export default function MinistryDashboard() {
                       </ul>
                     </div>
                     <div className="bg-green-50 p-4 rounded-lg">
-                      <h5 className="font-medium text-green-900 mb-2">Financial Evaluation (35%)</h5>
+                      <h5 className="font-medium text-green-900 mb-2">
+                        Financial Evaluation (35%)
+                      </h5>
                       <ul className="text-sm text-green-800 space-y-1">
                         <li>• Experience & Expertise</li>
                         <li>• Technical Approach</li>
                         <li>• Quality Standards</li>
                         <li>• Certifications</li>
-                        <li>• Previous contracts executed in the last 2 years</li>
+                        <li>
+                          • Previous contracts executed in the last 2 years
+                        </li>
                       </ul>
                     </div>
                     <div className="bg-purple-50 p-4 rounded-lg">
-                      <h5 className="font-medium text-purple-900 mb-2">Compliance (25%)</h5>
+                      <h5 className="font-medium text-purple-900 mb-2">
+                        Compliance (25%)
+                      </h5>
                       <ul className="text-sm text-purple-800 space-y-1">
                         <li>Document Completeness</li>
                         <li>Legal Requirements</li>
@@ -3359,36 +3800,58 @@ export default function MinistryDashboard() {
                   <div className="flex items-start space-x-3">
                     <Download className="h-5 w-5 text-blue-600 mt-0.5" />
                     <div>
-                      <h4 className="text-sm font-medium text-blue-800">Available Downloads</h4>
+                      <h4 className="text-sm font-medium text-blue-800">
+                        Available Downloads
+                      </h4>
                       <p className="text-sm text-blue-700 mt-1">
-                        Select the bid documents you want to download. All files are encrypted and password protected.
+                        Select the bid documents you want to download. All files
+                        are encrypted and password protected.
                       </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-gray-900">Individual Bid Documents</h4>
+                  <h4 className="font-semibold text-gray-900">
+                    Individual Bid Documents
+                  </h4>
                   {bidders.map((bidder, index) => (
                     <div key={bidder.id} className="border rounded-lg p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold ${
-                            index === 0 ? "bg-yellow-500" :
-                            index === 1 ? "bg-gray-400" :
-                            index === 2 ? "bg-orange-400" : "bg-gray-300"
-                          }`}>
+                          <div
+                            className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold ${
+                              index === 0
+                                ? "bg-yellow-500"
+                                : index === 1
+                                  ? "bg-gray-400"
+                                  : index === 2
+                                    ? "bg-orange-400"
+                                    : "bg-gray-300"
+                            }`}
+                          >
                             {index + 1}
                           </div>
                           <div>
-                            <h5 className="font-medium text-gray-900">{bidder.companyName}</h5>
-                            <p className="text-sm text-gray-600">Bid Amount: {bidder.bidAmount} • Score: {bidder.totalScore}%</p>
+                            <h5 className="font-medium text-gray-900">
+                              {bidder.companyName}
+                            </h5>
+                            <p className="text-sm text-gray-600">
+                              Bid Amount: {bidder.bidAmount} • Score:{" "}
+                              {bidder.totalScore}%
+                            </p>
                           </div>
                         </div>
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          isVendorEligibleForAward(bidder.id) ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                        }`}>
-                          {isVendorEligibleForAward(bidder.id) ? "Eligible" : "Not Eligible"}
+                        <span
+                          className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                            isVendorEligibleForAward(bidder.id)
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {isVendorEligibleForAward(bidder.id)
+                            ? "Eligible"
+                            : "Not Eligible"}
                         </span>
                       </div>
 
@@ -3411,7 +3874,9 @@ export default function MinistryDashboard() {
                 </div>
 
                 <div className="border-t pt-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Bulk Download Options</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    Bulk Download Options
+                  </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <button className="flex items-center justify-center px-4 py-3 bg-indigo-100 text-indigo-800 rounded-md hover:bg-indigo-200">
                       <Package className="h-5 w-5 mr-2" />
@@ -3452,8 +3917,8 @@ export default function MinistryDashboard() {
             📄 Contract Management
           </h1>
           <p className="text-gray-600">
-            Comprehensive contract lifecycle management with digital
-            signatures and milestone tracking
+            Comprehensive contract lifecycle management with digital signatures
+            and milestone tracking
           </p>
         </div>
         <button
@@ -3598,8 +4063,7 @@ export default function MinistryDashboard() {
                             </span>
                             <span
                               className={`text-xs px-2 py-1 rounded-full ${
-                                milestone.verificationStatus ===
-                                "Verified"
+                                milestone.verificationStatus === "Verified"
                                   ? "bg-green-100 text-green-700"
                                   : milestone.verificationStatus ===
                                       "Under Review"
@@ -3709,14 +4173,27 @@ export default function MinistryDashboard() {
                     View Details
                   </button>
                   <button
-                    onClick={() => handleUpdateMilestone(contract, contract.milestones.find(m => m.status === "In Progress") || contract.milestones[0])}
+                    onClick={() =>
+                      handleUpdateMilestone(
+                        contract,
+                        contract.milestones.find(
+                          (m) => m.status === "In Progress",
+                        ) || contract.milestones[0],
+                      )
+                    }
                     className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-md hover:bg-green-200 text-sm"
                   >
                     <CheckSquare className="h-3 w-3 mr-1" />
                     Update Milestone
                   </button>
                   <button
-                    onClick={() => handleProcessPayment(contract, contract.payments.find(p => p.status === "Pending") || contract.payments[0])}
+                    onClick={() =>
+                      handleProcessPayment(
+                        contract,
+                        contract.payments.find((p) => p.status === "Pending") ||
+                          contract.payments[0],
+                      )
+                    }
                     className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 text-sm"
                   >
                     <CreditCard className="h-3 w-3 mr-1" />
@@ -3757,52 +4234,116 @@ export default function MinistryDashboard() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-3">Contract Information</h4>
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  Contract Information
+                </h4>
                 <div className="space-y-2 text-sm">
-                  <p><strong>Contract ID:</strong> {selectedContractForAction.id}</p>
-                  <p><strong>Tender ID:</strong> {selectedContractForAction.tenderId}</p>
-                  <p><strong>Contractor:</strong> {selectedContractForAction.contractorName}</p>
-                  <p><strong>Value:</strong> {selectedContractForAction.contractValue}</p>
-                  <p><strong>Duration:</strong> {selectedContractForAction.startDate} to {selectedContractForAction.endDate}</p>
-                  <p><strong>Status:</strong> <span className={`px-2 py-1 rounded-full text-xs ${
-                    selectedContractForAction.status === "Active" ? "bg-green-100 text-green-800" :
-                    selectedContractForAction.status === "Completed" ? "bg-blue-100 text-blue-800" :
-                    "bg-orange-100 text-orange-800"
-                  }`}>{selectedContractForAction.status}</span></p>
-                  <p><strong>Performance Score:</strong> {selectedContractForAction.performanceScore}%</p>
+                  <p>
+                    <strong>Contract ID:</strong> {selectedContractForAction.id}
+                  </p>
+                  <p>
+                    <strong>Tender ID:</strong>{" "}
+                    {selectedContractForAction.tenderId}
+                  </p>
+                  <p>
+                    <strong>Contractor:</strong>{" "}
+                    {selectedContractForAction.contractorName}
+                  </p>
+                  <p>
+                    <strong>Value:</strong>{" "}
+                    {selectedContractForAction.contractValue}
+                  </p>
+                  <p>
+                    <strong>Duration:</strong>{" "}
+                    {selectedContractForAction.startDate} to{" "}
+                    {selectedContractForAction.endDate}
+                  </p>
+                  <p>
+                    <strong>Status:</strong>{" "}
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        selectedContractForAction.status === "Active"
+                          ? "bg-green-100 text-green-800"
+                          : selectedContractForAction.status === "Completed"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-orange-100 text-orange-800"
+                      }`}
+                    >
+                      {selectedContractForAction.status}
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Performance Score:</strong>{" "}
+                    {selectedContractForAction.performanceScore}%
+                  </p>
                 </div>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-3">Security & Verification</h4>
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  Security & Verification
+                </h4>
                 <div className="space-y-2 text-sm">
-                  <p><strong>Digital Signature:</strong> {selectedContractForAction.digitalSignature}</p>
-                  <p><strong>Document Hash:</strong> <code className="bg-gray-100 px-2 py-1 rounded text-xs">{selectedContractForAction.documentHash}</code></p>
-                  <p><strong>Verification Status:</strong> <span className="text-green-600">✓ Verified</span></p>
+                  <p>
+                    <strong>Digital Signature:</strong>{" "}
+                    {selectedContractForAction.digitalSignature}
+                  </p>
+                  <p>
+                    <strong>Document Hash:</strong>{" "}
+                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      {selectedContractForAction.documentHash}
+                    </code>
+                  </p>
+                  <p>
+                    <strong>Verification Status:</strong>{" "}
+                    <span className="text-green-600">✓ Verified</span>
+                  </p>
                 </div>
               </div>
             </div>
             <div className="mt-6">
-              <h4 className="font-semibold text-gray-900 mb-3">Detailed Milestones</h4>
+              <h4 className="font-semibold text-gray-900 mb-3">
+                Detailed Milestones
+              </h4>
               <div className="space-y-3">
-                {selectedContractForAction.milestones.map((milestone, index) => (
-                  <div key={milestone.id} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h5 className="font-medium text-gray-900">{milestone.title}</h5>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        milestone.status === "Completed" ? "bg-green-100 text-green-800" :
-                        milestone.status === "In Progress" ? "bg-blue-100 text-blue-800" :
-                        milestone.status === "Overdue" ? "bg-red-100 text-red-800" :
-                        "bg-gray-100 text-gray-800"
-                      }`}>{milestone.status}</span>
+                {selectedContractForAction.milestones.map(
+                  (milestone, index) => (
+                    <div key={milestone.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-medium text-gray-900">
+                          {milestone.title}
+                        </h5>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            milestone.status === "Completed"
+                              ? "bg-green-100 text-green-800"
+                              : milestone.status === "In Progress"
+                                ? "bg-blue-100 text-blue-800"
+                                : milestone.status === "Overdue"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {milestone.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">
+                        {milestone.description}
+                      </p>
+                      <div className="text-xs text-gray-500">
+                        <p>
+                          Target Date: {milestone.targetDate}{" "}
+                          {milestone.completionDate &&
+                            `| Completed: ${milestone.completionDate}`}
+                        </p>
+                        <p>
+                          Payment: {milestone.paymentPercentage}% |
+                          Verification: {milestone.verificationStatus}
+                        </p>
+                        <p>Deliverables: {milestone.deliverables.join(", ")}</p>
+                      </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{milestone.description}</p>
-                    <div className="text-xs text-gray-500">
-                      <p>Target Date: {milestone.targetDate} {milestone.completionDate && `| Completed: ${milestone.completionDate}`}</p>
-                      <p>Payment: {milestone.paymentPercentage}% | Verification: {milestone.verificationStatus}</p>
-                      <p>Deliverables: {milestone.deliverables.join(", ")}</p>
-                    </div>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </div>
           </div>
@@ -3826,9 +4367,13 @@ export default function MinistryDashboard() {
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Status
+                </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                  <option value={selectedMilestone.status}>{selectedMilestone.status}</option>
+                  <option value={selectedMilestone.status}>
+                    {selectedMilestone.status}
+                  </option>
                   <option value="Pending">Pending</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Completed">Completed</option>
@@ -3836,9 +4381,13 @@ export default function MinistryDashboard() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Verification Status</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Verification Status
+                </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                  <option value={selectedMilestone.verificationStatus}>{selectedMilestone.verificationStatus}</option>
+                  <option value={selectedMilestone.verificationStatus}>
+                    {selectedMilestone.verificationStatus}
+                  </option>
                   <option value="Not Started">Not Started</option>
                   <option value="Under Review">Under Review</option>
                   <option value="Verified">Verified</option>
@@ -3846,11 +4395,18 @@ export default function MinistryDashboard() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Completion Date</label>
-                <input type="date" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Completion Date
+                </label>
+                <input
+                  type="date"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Comments</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Comments
+                </label>
                 <textarea
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -3890,22 +4446,45 @@ export default function MinistryDashboard() {
             </div>
             <div className="space-y-4">
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-medium text-gray-900 mb-2">Payment Details</h4>
+                <h4 className="font-medium text-gray-900 mb-2">
+                  Payment Details
+                </h4>
                 <div className="text-sm text-gray-600 space-y-1">
-                  <p><strong>Payment ID:</strong> {selectedPayment.id}</p>
-                  <p><strong>Invoice Number:</strong> {selectedPayment.invoiceNumber}</p>
-                  <p><strong>Amount:</strong> {selectedPayment.amount}</p>
-                  <p><strong>Request Date:</strong> {selectedPayment.requestDate}</p>
-                  <p><strong>Current Status:</strong> <span className={`px-2 py-1 rounded-full text-xs ${
-                    selectedPayment.status === "Paid" ? "bg-green-100 text-green-800" :
-                    selectedPayment.status === "Approved" ? "bg-blue-100 text-blue-800" :
-                    selectedPayment.status === "Pending" ? "bg-yellow-100 text-yellow-800" :
-                    "bg-red-100 text-red-800"
-                  }`}>{selectedPayment.status}</span></p>
+                  <p>
+                    <strong>Payment ID:</strong> {selectedPayment.id}
+                  </p>
+                  <p>
+                    <strong>Invoice Number:</strong>{" "}
+                    {selectedPayment.invoiceNumber}
+                  </p>
+                  <p>
+                    <strong>Amount:</strong> {selectedPayment.amount}
+                  </p>
+                  <p>
+                    <strong>Request Date:</strong> {selectedPayment.requestDate}
+                  </p>
+                  <p>
+                    <strong>Current Status:</strong>{" "}
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        selectedPayment.status === "Paid"
+                          ? "bg-green-100 text-green-800"
+                          : selectedPayment.status === "Approved"
+                            ? "bg-blue-100 text-blue-800"
+                            : selectedPayment.status === "Pending"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {selectedPayment.status}
+                    </span>
+                  </p>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Payment Action</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Payment Action
+                </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                   <option value="approve">Approve Payment</option>
                   <option value="reject">Reject Payment</option>
@@ -3914,7 +4493,9 @@ export default function MinistryDashboard() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Payment Method
+                </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                   <option value="bank-transfer">Bank Transfer</option>
                   <option value="check">Check</option>
@@ -3922,7 +4503,9 @@ export default function MinistryDashboard() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Bank Details</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Bank Details
+                </label>
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -3930,7 +4513,9 @@ export default function MinistryDashboard() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Processing Notes</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Processing Notes
+                </label>
                 <textarea
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -3999,7 +4584,9 @@ export default function MinistryDashboard() {
                     <div className="ml-3">
                       <p
                         className={`text-sm font-medium ${
-                          contractStep >= item.step ? "text-green-600" : "text-gray-500"
+                          contractStep >= item.step
+                            ? "text-green-600"
+                            : "text-gray-500"
                         }`}
                       >
                         {item.title}
@@ -4008,7 +4595,9 @@ export default function MinistryDashboard() {
                     {index < 3 && (
                       <div
                         className={`w-20 h-0.5 mx-4 ${
-                          contractStep > item.step ? "bg-green-600" : "bg-gray-200"
+                          contractStep > item.step
+                            ? "bg-green-600"
+                            : "bg-gray-200"
                         }`}
                       />
                     )}
@@ -4027,13 +4616,22 @@ export default function MinistryDashboard() {
                     </label>
                     <select
                       value={contractFormData.tenderId}
-                      onChange={(e) => setContractFormData({...contractFormData, tenderId: e.target.value})}
+                      onChange={(e) =>
+                        setContractFormData({
+                          ...contractFormData,
+                          tenderId: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     >
                       <option value="">Select Tender</option>
-                      {tenders.filter(t => t.status === "Awarded").map(tender => (
-                        <option key={tender.id} value={tender.id}>{tender.id} - {tender.title}</option>
-                      ))}
+                      {tenders
+                        .filter((t) => t.status === "Awarded")
+                        .map((tender) => (
+                          <option key={tender.id} value={tender.id}>
+                            {tender.id} - {tender.title}
+                          </option>
+                        ))}
                     </select>
                   </div>
                   <div>
@@ -4043,7 +4641,12 @@ export default function MinistryDashboard() {
                     <input
                       type="text"
                       value={contractFormData.contractorName}
-                      onChange={(e) => setContractFormData({...contractFormData, contractorName: e.target.value})}
+                      onChange={(e) =>
+                        setContractFormData({
+                          ...contractFormData,
+                          contractorName: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Enter contractor name"
                     />
@@ -4055,7 +4658,12 @@ export default function MinistryDashboard() {
                     <input
                       type="text"
                       value={contractFormData.projectTitle}
-                      onChange={(e) => setContractFormData({...contractFormData, projectTitle: e.target.value})}
+                      onChange={(e) =>
+                        setContractFormData({
+                          ...contractFormData,
+                          projectTitle: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Enter project title"
                     />
@@ -4067,7 +4675,12 @@ export default function MinistryDashboard() {
                     <input
                       type="text"
                       value={contractFormData.contractValue}
-                      onChange={(e) => setContractFormData({...contractFormData, contractValue: e.target.value})}
+                      onChange={(e) =>
+                        setContractFormData({
+                          ...contractFormData,
+                          contractValue: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="₦0.00"
                     />
@@ -4079,7 +4692,12 @@ export default function MinistryDashboard() {
                     <input
                       type="date"
                       value={contractFormData.startDate}
-                      onChange={(e) => setContractFormData({...contractFormData, startDate: e.target.value})}
+                      onChange={(e) =>
+                        setContractFormData({
+                          ...contractFormData,
+                          startDate: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -4090,7 +4708,12 @@ export default function MinistryDashboard() {
                     <input
                       type="date"
                       value={contractFormData.endDate}
-                      onChange={(e) => setContractFormData({...contractFormData, endDate: e.target.value})}
+                      onChange={(e) =>
+                        setContractFormData({
+                          ...contractFormData,
+                          endDate: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -4102,7 +4725,12 @@ export default function MinistryDashboard() {
                   <textarea
                     rows={4}
                     value={contractFormData.description}
-                    onChange={(e) => setContractFormData({...contractFormData, description: e.target.value})}
+                    onChange={(e) =>
+                      setContractFormData({
+                        ...contractFormData,
+                        description: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Detailed description of the project scope, deliverables, and expectations..."
                   />
@@ -4114,7 +4742,9 @@ export default function MinistryDashboard() {
             {contractStep === 2 && (
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Project Milestones</h4>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                    Project Milestones
+                  </h4>
                   <div className="space-y-4">
                     {contractFormData.milestones.map((milestone, index) => (
                       <div key={index} className="border rounded-lg p-4">
@@ -4127,9 +4757,14 @@ export default function MinistryDashboard() {
                               type="text"
                               value={milestone.title}
                               onChange={(e) => {
-                                const newMilestones = [...contractFormData.milestones];
+                                const newMilestones = [
+                                  ...contractFormData.milestones,
+                                ];
                                 newMilestones[index].title = e.target.value;
-                                setContractFormData({...contractFormData, milestones: newMilestones});
+                                setContractFormData({
+                                  ...contractFormData,
+                                  milestones: newMilestones,
+                                });
                               }}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                             />
@@ -4142,9 +4777,16 @@ export default function MinistryDashboard() {
                               type="number"
                               value={milestone.percentage}
                               onChange={(e) => {
-                                const newMilestones = [...contractFormData.milestones];
-                                newMilestones[index].percentage = parseInt(e.target.value);
-                                setContractFormData({...contractFormData, milestones: newMilestones});
+                                const newMilestones = [
+                                  ...contractFormData.milestones,
+                                ];
+                                newMilestones[index].percentage = parseInt(
+                                  e.target.value,
+                                );
+                                setContractFormData({
+                                  ...contractFormData,
+                                  milestones: newMilestones,
+                                });
                               }}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                               min="0"
@@ -4159,9 +4801,15 @@ export default function MinistryDashboard() {
                               type="date"
                               value={milestone.targetDate}
                               onChange={(e) => {
-                                const newMilestones = [...contractFormData.milestones];
-                                newMilestones[index].targetDate = e.target.value;
-                                setContractFormData({...contractFormData, milestones: newMilestones});
+                                const newMilestones = [
+                                  ...contractFormData.milestones,
+                                ];
+                                newMilestones[index].targetDate =
+                                  e.target.value;
+                                setContractFormData({
+                                  ...contractFormData,
+                                  milestones: newMilestones,
+                                });
                               }}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                             />
@@ -4174,9 +4822,15 @@ export default function MinistryDashboard() {
                               rows={2}
                               value={milestone.description}
                               onChange={(e) => {
-                                const newMilestones = [...contractFormData.milestones];
-                                newMilestones[index].description = e.target.value;
-                                setContractFormData({...contractFormData, milestones: newMilestones});
+                                const newMilestones = [
+                                  ...contractFormData.milestones,
+                                ];
+                                newMilestones[index].description =
+                                  e.target.value;
+                                setContractFormData({
+                                  ...contractFormData,
+                                  milestones: newMilestones,
+                                });
                               }}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                               placeholder="Describe milestone deliverables and requirements"
@@ -4192,8 +4846,13 @@ export default function MinistryDashboard() {
                         ...contractFormData,
                         milestones: [
                           ...contractFormData.milestones,
-                          { title: "", percentage: 0, targetDate: "", description: "" }
-                        ]
+                          {
+                            title: "",
+                            percentage: 0,
+                            targetDate: "",
+                            description: "",
+                          },
+                        ],
                       });
                     }}
                     className="mt-2 inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50"
@@ -4210,7 +4869,12 @@ export default function MinistryDashboard() {
                     </label>
                     <select
                       value={contractFormData.paymentSchedule}
-                      onChange={(e) => setContractFormData({...contractFormData, paymentSchedule: e.target.value})}
+                      onChange={(e) =>
+                        setContractFormData({
+                          ...contractFormData,
+                          paymentSchedule: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     >
                       <option value="milestone">Milestone-based</option>
@@ -4226,7 +4890,12 @@ export default function MinistryDashboard() {
                     <input
                       type="number"
                       value={contractFormData.warranties}
-                      onChange={(e) => setContractFormData({...contractFormData, warranties: e.target.value})}
+                      onChange={(e) =>
+                        setContractFormData({
+                          ...contractFormData,
+                          warranties: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="12"
                     />
@@ -4240,7 +4909,12 @@ export default function MinistryDashboard() {
                   <textarea
                     rows={4}
                     value={contractFormData.terms}
-                    onChange={(e) => setContractFormData({...contractFormData, terms: e.target.value})}
+                    onChange={(e) =>
+                      setContractFormData({
+                        ...contractFormData,
+                        terms: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Specify detailed terms, conditions, and legal clauses..."
                   />
@@ -4253,7 +4927,12 @@ export default function MinistryDashboard() {
                   <textarea
                     rows={3}
                     value={contractFormData.penalties}
-                    onChange={(e) => setContractFormData({...contractFormData, penalties: e.target.value})}
+                    onChange={(e) =>
+                      setContractFormData({
+                        ...contractFormData,
+                        penalties: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Define penalties for delays, non-compliance, or breach of contract..."
                   />
@@ -4276,15 +4955,24 @@ export default function MinistryDashboard() {
                         type="checkbox"
                         id="digitalSignature"
                         checked={contractFormData.digitalSignature}
-                        onChange={(e) => setContractFormData({...contractFormData, digitalSignature: e.target.checked})}
+                        onChange={(e) =>
+                          setContractFormData({
+                            ...contractFormData,
+                            digitalSignature: e.target.checked,
+                          })
+                        }
                         className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                       />
                       <div className="flex-1">
-                        <label htmlFor="digitalSignature" className="text-sm font-medium text-gray-900 cursor-pointer">
+                        <label
+                          htmlFor="digitalSignature"
+                          className="text-sm font-medium text-gray-900 cursor-pointer"
+                        >
                           🔐 Advanced Digital Signatures
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
-                          Multi-party digital signatures with PKI encryption, timestamping, and legal compliance.
+                          Multi-party digital signatures with PKI encryption,
+                          timestamping, and legal compliance.
                         </p>
                       </div>
                     </div>
@@ -4294,15 +4982,24 @@ export default function MinistryDashboard() {
                         type="checkbox"
                         id="blockchainVerification"
                         checked={contractFormData.blockchainVerification}
-                        onChange={(e) => setContractFormData({...contractFormData, blockchainVerification: e.target.checked})}
+                        onChange={(e) =>
+                          setContractFormData({
+                            ...contractFormData,
+                            blockchainVerification: e.target.checked,
+                          })
+                        }
                         className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                       />
                       <div className="flex-1">
-                        <label htmlFor="blockchainVerification" className="text-sm font-medium text-gray-900 cursor-pointer">
+                        <label
+                          htmlFor="blockchainVerification"
+                          className="text-sm font-medium text-gray-900 cursor-pointer"
+                        >
                           ⛓️ Blockchain Verification
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
-                          Immutable contract storage on blockchain for tamper-proof verification and audit trails.
+                          Immutable contract storage on blockchain for
+                          tamper-proof verification and audit trails.
                         </p>
                       </div>
                     </div>
@@ -4312,15 +5009,24 @@ export default function MinistryDashboard() {
                         type="checkbox"
                         id="autoExecution"
                         checked={contractFormData.autoExecution}
-                        onChange={(e) => setContractFormData({...contractFormData, autoExecution: e.target.checked})}
+                        onChange={(e) =>
+                          setContractFormData({
+                            ...contractFormData,
+                            autoExecution: e.target.checked,
+                          })
+                        }
                         className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                       />
                       <div className="flex-1">
-                        <label htmlFor="autoExecution" className="text-sm font-medium text-gray-900 cursor-pointer">
+                        <label
+                          htmlFor="autoExecution"
+                          className="text-sm font-medium text-gray-900 cursor-pointer"
+                        >
                           🤖 Smart Contract Auto-Execution
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
-                          Automated milestone verification and payment triggers based on predefined conditions.
+                          Automated milestone verification and payment triggers
+                          based on predefined conditions.
                         </p>
                       </div>
                     </div>
@@ -4331,10 +5037,14 @@ export default function MinistryDashboard() {
                   <div className="flex items-start space-x-3">
                     <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                     <div>
-                      <h5 className="text-sm font-medium text-yellow-800">Legal Compliance Notice</h5>
+                      <h5 className="text-sm font-medium text-yellow-800">
+                        Legal Compliance Notice
+                      </h5>
                       <p className="text-sm text-yellow-700 mt-1">
-                        Digital contracts generated through this system comply with the Nigerian Electronic Transactions Act and
-                        Kano State Procurement Law. All contracts are legally binding and enforceable.
+                        Digital contracts generated through this system comply
+                        with the Nigerian Electronic Transactions Act and Kano
+                        State Procurement Law. All contracts are legally binding
+                        and enforceable.
                       </p>
                     </div>
                   </div>
@@ -4342,7 +5052,9 @@ export default function MinistryDashboard() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <h5 className="font-medium text-gray-900 mb-2">🛡️ Security Features</h5>
+                    <h5 className="font-medium text-gray-900 mb-2">
+                      🛡️ Security Features
+                    </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• AES-256 encryption</li>
                       <li>• Multi-factor authentication</li>
@@ -4351,7 +5063,9 @@ export default function MinistryDashboard() {
                     </ul>
                   </div>
                   <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <h5 className="font-medium text-gray-900 mb-2">⚡ Automation Benefits</h5>
+                    <h5 className="font-medium text-gray-900 mb-2">
+                      ⚡ Automation Benefits
+                    </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• 90% faster processing</li>
                       <li>• Reduced human errors</li>
@@ -4374,24 +5088,45 @@ export default function MinistryDashboard() {
                     Ready to Generate Digital Contract
                   </h4>
                   <p className="text-gray-600 mb-6">
-                    Review your contract details and generate the legally binding digital contract.
+                    Review your contract details and generate the legally
+                    binding digital contract.
                   </p>
                 </div>
 
                 {/* Contract Preview */}
                 <div className="bg-gray-50 rounded-lg p-6">
-                  <h5 className="font-medium text-gray-900 mb-4">Contract Summary</h5>
+                  <h5 className="font-medium text-gray-900 mb-4">
+                    Contract Summary
+                  </h5>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div><strong>Project:</strong> {contractFormData.projectTitle}</div>
-                    <div><strong>Contractor:</strong> {contractFormData.contractorName}</div>
-                    <div><strong>Value:</strong> {contractFormData.contractValue}</div>
-                    <div><strong>Duration:</strong> {contractFormData.startDate} to {contractFormData.endDate}</div>
-                    <div><strong>Milestones:</strong> {contractFormData.milestones.length} phases</div>
-                    <div><strong>Payment:</strong> {contractFormData.paymentSchedule}-based</div>
+                    <div>
+                      <strong>Project:</strong> {contractFormData.projectTitle}
+                    </div>
+                    <div>
+                      <strong>Contractor:</strong>{" "}
+                      {contractFormData.contractorName}
+                    </div>
+                    <div>
+                      <strong>Value:</strong> {contractFormData.contractValue}
+                    </div>
+                    <div>
+                      <strong>Duration:</strong> {contractFormData.startDate} to{" "}
+                      {contractFormData.endDate}
+                    </div>
+                    <div>
+                      <strong>Milestones:</strong>{" "}
+                      {contractFormData.milestones.length} phases
+                    </div>
+                    <div>
+                      <strong>Payment:</strong>{" "}
+                      {contractFormData.paymentSchedule}-based
+                    </div>
                   </div>
 
                   <div className="mt-4 pt-4 border-t border-gray-200">
-                    <h6 className="font-medium text-gray-900 mb-2">Digital Features Enabled:</h6>
+                    <h6 className="font-medium text-gray-900 mb-2">
+                      Digital Features Enabled:
+                    </h6>
                     <div className="flex flex-wrap gap-2">
                       {contractFormData.digitalSignature && (
                         <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
@@ -4416,7 +5151,9 @@ export default function MinistryDashboard() {
                 {generatedContract && (
                   <div className="bg-white border rounded-lg p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h5 className="font-medium text-gray-900">Generated Contract Document</h5>
+                      <h5 className="font-medium text-gray-900">
+                        Generated Contract Document
+                      </h5>
                       <div className="flex space-x-2">
                         <button className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
                           <Download className="h-4 w-4 mr-1" />
@@ -4429,7 +5166,9 @@ export default function MinistryDashboard() {
                       </div>
                     </div>
                     <div className="bg-gray-50 p-4 rounded border max-h-96 overflow-y-auto">
-                      <pre className="text-sm text-gray-800 whitespace-pre-wrap">{generatedContract}</pre>
+                      <pre className="text-sm text-gray-800 whitespace-pre-wrap">
+                        {generatedContract}
+                      </pre>
                     </div>
                   </div>
                 )}
@@ -4460,7 +5199,7 @@ DESCRIPTION:
 ${contractFormData.description}
 
 MILESTONES:
-${contractFormData.milestones.map((m, i) => `${i + 1}. ${m.title} (${m.percentage}%) - Due: ${m.targetDate}`).join('\n')}
+${contractFormData.milestones.map((m, i) => `${i + 1}. ${m.title} (${m.percentage}%) - Due: ${m.targetDate}`).join("\n")}
 
 TERMS & CONDITIONS:
 ${contractFormData.terms}
@@ -4469,7 +5208,7 @@ PENALTIES:
 ${contractFormData.penalties}
 
 DIGITAL FEATURES:
-${contractFormData.digitalSignature ? '✓ Digital Signatures Enabled\n' : ''}${contractFormData.blockchainVerification ? '✓ Blockchain Verification Enabled\n' : ''}${contractFormData.autoExecution ? '✓ Smart Contract Auto-Execution Enabled\n' : ''}
+${contractFormData.digitalSignature ? "✓ Digital Signatures Enabled\n" : ""}${contractFormData.blockchainVerification ? "✓ Blockchain Verification Enabled\n" : ""}${contractFormData.autoExecution ? "✓ Smart Contract Auto-Execution Enabled\n" : ""}
 
 This contract is digitally generated and legally binding under Nigerian law.
 
@@ -4515,7 +5254,9 @@ Blockchain Timestamp: ${Date.now()}
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
               <button
-                onClick={() => contractStep > 1 && setContractStep(contractStep - 1)}
+                onClick={() =>
+                  contractStep > 1 && setContractStep(contractStep - 1)
+                }
                 disabled={contractStep === 1}
                 className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -4546,7 +5287,7 @@ Blockchain Timestamp: ${Date.now()}
                     <button
                       onClick={() => {
                         // Handle final contract execution
-                        alert('Contract executed successfully!');
+                        alert("Contract executed successfully!");
                         setShowContractModal(false);
                         setContractStep(1);
                         setGeneratedContract("");
@@ -4581,7 +5322,9 @@ Blockchain Timestamp: ${Date.now()}
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Dispute Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Dispute Title
+                </label>
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -4589,7 +5332,9 @@ Blockchain Timestamp: ${Date.now()}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Dispute Category</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Dispute Category
+                </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                   <option value="quality">Quality Issues</option>
                   <option value="delivery">Delivery Delays</option>
@@ -4600,7 +5345,9 @@ Blockchain Timestamp: ${Date.now()}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Priority Level</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Priority Level
+                </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -4609,7 +5356,9 @@ Blockchain Timestamp: ${Date.now()}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description
+                </label>
                 <textarea
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -4617,7 +5366,9 @@ Blockchain Timestamp: ${Date.now()}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Proposed Resolution</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Proposed Resolution
+                </label>
                 <textarea
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -4625,13 +5376,21 @@ Blockchain Timestamp: ${Date.now()}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Assign Mediator</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Assign Mediator
+                </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                   <option value="">Select Mediator</option>
-                  <option value="procurement-board">Kano State Procurement Review Board</option>
+                  <option value="procurement-board">
+                    Kano State Procurement Review Board
+                  </option>
                   <option value="legal-dept">Legal Department</option>
-                  <option value="technical-committee">Technical Committee</option>
-                  <option value="external-arbitrator">External Arbitrator</option>
+                  <option value="technical-committee">
+                    Technical Committee
+                  </option>
+                  <option value="external-arbitrator">
+                    External Arbitrator
+                  </option>
                 </select>
               </div>
             </div>
@@ -4659,8 +5418,7 @@ Blockchain Timestamp: ${Date.now()}
           Reports & Analytics
         </h1>
         <p className="text-gray-600">
-          View procurement analytics and generate reports for your
-          ministry
+          View procurement analytics and generate reports for your ministry
         </p>
       </div>
 
@@ -4694,14 +5452,9 @@ Blockchain Timestamp: ${Date.now()}
                 percentage: 12,
               },
             ].map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between"
-              >
+              <div key={index} className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-900">
-                    {item.category}
-                  </p>
+                  <p className="font-medium text-gray-900">{item.category}</p>
                   <p className="text-sm text-gray-600">{item.amount}</p>
                 </div>
                 <div className="w-24 bg-gray-200 rounded-full h-2">
@@ -4739,18 +5492,14 @@ Blockchain Timestamp: ${Date.now()}
                 key={index}
                 className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
               >
-                <span className="text-sm text-gray-700">
-                  {item.metric}
-                </span>
+                <span className="text-sm text-gray-700">{item.metric}</span>
                 <div className="flex items-center space-x-2">
                   <span className="font-medium text-gray-900">
                     {item.value}
                   </span>
                   <TrendingUp
                     className={`h-4 w-4 ${
-                      item.trend === "up"
-                        ? "text-green-500"
-                        : "text-red-500"
+                      item.trend === "up" ? "text-green-500" : "text-red-500"
                     }`}
                   />
                 </div>
@@ -4809,9 +5558,7 @@ Blockchain Timestamp: ${Date.now()}
                 <h3 className="font-medium text-gray-900 mb-2">
                   {report.title}
                 </h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  {report.desc}
-                </p>
+                <p className="text-sm text-gray-600 mb-3">{report.desc}</p>
                 <button className="w-full inline-flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
                   <Download className="h-4 w-4 mr-2" />
                   Generate
@@ -4863,9 +5610,7 @@ Blockchain Timestamp: ${Date.now()}
           <div className="flex items-center">
             <CheckCircle className="h-8 w-8 text-green-600" />
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Approved
-              </p>
+              <p className="text-sm font-medium text-gray-600">Approved</p>
               <p className="text-2xl font-bold text-gray-900">
                 {nocRequests.filter((r) => r.status === "Approved").length}
               </p>
@@ -4876,9 +5621,7 @@ Blockchain Timestamp: ${Date.now()}
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-orange-600" />
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Pending
-              </p>
+              <p className="text-sm font-medium text-gray-600">Pending</p>
               <p className="text-2xl font-bold text-gray-900">
                 {nocRequests.filter((r) => r.status === "Pending").length}
               </p>
@@ -4923,11 +5666,10 @@ Blockchain Timestamp: ${Date.now()}
                       <div className="text-sm font-medium text-gray-900">
                         {request.projectTitle}
                       </div>
+                      <div className="text-sm text-gray-500">{request.id}</div>
                       <div className="text-sm text-gray-500">
-                        {request.id}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Requested: {new Date(request.requestDate).toLocaleDateString()}
+                        Requested:{" "}
+                        {new Date(request.requestDate).toLocaleDateString()}
                       </div>
                     </div>
                   </td>
@@ -5045,7 +5787,10 @@ Blockchain Timestamp: ${Date.now()}
                 <span>Companies</span>
               </button>
               <button
-                onClick={() => { setCurrentView("tenders"); setTenderSubView("list"); }}
+                onClick={() => {
+                  setCurrentView("tenders");
+                  setTenderSubView("list");
+                }}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
                   currentView === "tenders"
                     ? "text-green-700 bg-green-50"
