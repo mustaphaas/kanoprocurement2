@@ -4889,37 +4889,37 @@ Penalty Clause: 0.5% per week for delayed completion`,
                               <h5 className="text-xs font-medium text-gray-700 mb-2">
                                 Vendor Workflow Status:
                               </h5>
-                              <div className="flex flex-wrap gap-2">
-                                {renderVendorWorkflowStep(
-                                  "1. Company Registration",
-                                  workflowStatus?.registrationCompleted ||
-                                    false,
-                                  workflowStatus?.registrationDate,
-                                )}
-                                {renderVendorWorkflowStep(
-                                  "2. Login & Verification",
-                                  workflowStatus?.loginVerificationCompleted ||
-                                    false,
-                                  workflowStatus?.verificationDate,
-                                )}
-                                {renderVendorWorkflowStep(
-                                  "3. Bidding Process",
-                                  workflowStatus?.biddingCompleted || false,
-                                  workflowStatus?.bidSubmissionDate,
-                                )}
-                                {renderVendorWorkflowStep(
-                                  "4. Tender Evaluation",
-                                  workflowStatus?.evaluationCompleted || false,
-                                  workflowStatus?.evaluationDate,
-                                )}
-                                {renderVendorWorkflowStep(
-                                  "5. No Objection Certificate",
-                                  workflowStatus?.nocIssued || false,
-                                  workflowStatus?.nocIssuedDate,
-                                  workflowStatus?.nocCertificateNumber
-                                    ? `Certificate: ${workflowStatus.nocCertificateNumber}`
-                                    : undefined,
-                                )}
+                              <div className="w-full">
+                                {renderVendorWorkflowStepper([
+                                  {
+                                    step: "Company Registration",
+                                    completed: workflowStatus?.registrationCompleted || false,
+                                    date: workflowStatus?.registrationDate,
+                                  },
+                                  {
+                                    step: "Login & Verification",
+                                    completed: workflowStatus?.loginVerificationCompleted || false,
+                                    date: workflowStatus?.verificationDate,
+                                  },
+                                  {
+                                    step: "Bidding Process",
+                                    completed: workflowStatus?.biddingCompleted || false,
+                                    date: workflowStatus?.bidSubmissionDate,
+                                  },
+                                  {
+                                    step: "Tender Evaluation",
+                                    completed: workflowStatus?.evaluationCompleted || false,
+                                    date: workflowStatus?.evaluationDate,
+                                  },
+                                  {
+                                    step: "No Objection Certificate",
+                                    completed: workflowStatus?.nocIssued || false,
+                                    date: workflowStatus?.nocIssuedDate,
+                                    details: workflowStatus?.nocCertificateNumber
+                                      ? `Certificate: ${workflowStatus.nocCertificateNumber}`
+                                      : undefined,
+                                  },
+                                ])}
                               </div>
                             </div>
 
