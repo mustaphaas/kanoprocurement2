@@ -543,6 +543,28 @@ export default function MinistryDashboard() {
 
   const ministryInfo = getMinistryInfo();
 
+  // Get ministry-specific mock data
+  const getMinistryMockData = () => {
+    const ministryUser = localStorage.getItem("ministryUser");
+    let ministryId = "ministry"; // default
+
+    if (ministryUser) {
+      try {
+        const userData = JSON.parse(ministryUser);
+        ministryId = userData.ministryId || "ministry";
+      } catch (error) {
+        console.error("Error parsing ministry user data:", error);
+      }
+    }
+
+    const ministry = getMinistryById(ministryId);
+    if (!ministry) {
+      ministryId = "ministry"; // fallback
+    }
+
+    return { ministryId, ministry: ministry || getMinistryById("ministry")! };
+  };
+
   // Mock data initialization
   useEffect(() => {
     const mockCompanies: Company[] = [
