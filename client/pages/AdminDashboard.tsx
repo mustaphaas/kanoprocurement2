@@ -192,7 +192,7 @@ export default function AdminDashboard() {
           phone: "+234 806 333 4444",
           registrationDate: "2024-01-05",
           status:
-            (localStorage.getItem(`userStatus_blacklisted@company.com`) as
+            (localStorage.getItem(`userStatus_${"blacklisted@company.com".toLowerCase()}`) as
               | "Pending"
               | "Approved"
               | "Suspended"
