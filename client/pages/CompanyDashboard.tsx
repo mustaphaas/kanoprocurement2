@@ -611,13 +611,116 @@ export default function CompanyDashboard() {
       case "dashboard":
         return (
           <div className="space-y-6">
-            {/* Dynamic Dashboard Header */}
-            <DynamicDashboardHeader
-              status={companyData.status}
-              companyName={companyData.name}
-              companyData={companyData}
-              onSectionChange={setActiveSection}
-            />
+            {/* Welcome Message */}
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                Welcome, {companyData.name}!
+              </h1>
+              <div className="flex items-center space-x-2">
+                <span className="text-gray-600">Account Status:</span>
+                <span
+                  className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
+                    companyData.status === "Approved"
+                      ? "bg-green-100 text-green-800"
+                      : companyData.status === "Pending"
+                        ? "bg-blue-100 text-blue-800"
+                        : companyData.status === "Suspended"
+                          ? "bg-orange-100 text-orange-800"
+                          : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {companyData.status === "Approved" && (
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                  )}
+                  {companyData.status === "Pending" && (
+                    <Clock className="h-4 w-4 mr-1" />
+                  )}
+                  {companyData.status === "Suspended" && (
+                    <AlertTriangle className="h-4 w-4 mr-1" />
+                  )}
+                  {companyData.status === "Blacklisted" && (
+                    <Ban className="h-4 w-4 mr-1" />
+                  )}
+                  {companyData.status}
+                </span>
+              </div>
+
+              {/* Dynamic Status-Based Actions */}
+              {companyData.status === "Pending" && (
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    onClick={() => setActiveSection("my-documents")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Complete Verification
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("my-profile")}
+                    className="inline-flex items-center px-4 py-2 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50"
+                  >
+                    View Requirements
+                  </button>
+                </div>
+              )}
+
+              {companyData.status === "Suspended" && (
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    onClick={() => setActiveSection("my-documents")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Fix Issues Now
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("detailed-compliance")}
+                    className="inline-flex items-center px-4 py-2 border border-orange-300 text-sm font-medium rounded-md text-orange-700 bg-white hover:bg-orange-50"
+                  >
+                    View Compliance
+                  </button>
+                </div>
+              )}
+
+              {companyData.status === "Blacklisted" && (
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    onClick={() => setActiveSection("grievance")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                  >
+                    <Gavel className="h-4 w-4 mr-2" />
+                    Submit Appeal
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("my-profile")}
+                    className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50"
+                  >
+                    View Restrictions
+                  </button>
+                </div>
+              )}
+
+              {companyData.status === "Approved" && (
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    onClick={() => setActiveSection("tender-ads")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                  >
+                    <Search className="h-4 w-4 mr-2" />
+                    Browse Tenders
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("contracts-awarded")}
+                    className="inline-flex items-center px-4 py-2 border border-green-300 text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50"
+                  >
+                    View Contracts
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Status Alert */}
+            {getStatusAlert()}
 
             {/* Restricted Access Message for Pending Companies */}
             {companyData.status === "Pending" && (
