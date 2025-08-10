@@ -141,16 +141,15 @@ export default function CompanyDashboard() {
   };
 
   const getCompanyStatus = (): CompanyStatus => {
+    const userEmail = user?.email?.toLowerCase() || "";
+
     // Check localStorage for admin-set status first
-    const adminSetStatus = localStorage.getItem(`userStatus_${user?.uid}`);
+    const adminSetStatus = localStorage.getItem(`userStatus_${userEmail}`);
     if (adminSetStatus && ["Pending", "Approved", "Suspended", "Blacklisted"].includes(adminSetStatus)) {
       return adminSetStatus as CompanyStatus;
     }
 
     // Check user email to assign specific test account statuses
-    const userEmail = user?.email?.toLowerCase() || "";
-
-    // Test account status mapping
     if (userEmail === "pending@company.com") return "Pending";
     if (userEmail === "suspended@company.com") return "Suspended";
     if (userEmail === "blacklisted@company.com") return "Blacklisted";
