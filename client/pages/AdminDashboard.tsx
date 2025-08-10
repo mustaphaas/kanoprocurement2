@@ -1016,10 +1016,8 @@ export default function AdminDashboard() {
                     onChange={(e) => setStatusFilter(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
-                    <option value="all">All Status</option>
+                    <option value="all">All Pending</option>
                     <option value="Pending">Pending</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Rejected">Rejected</option>
                   </select>
                 </div>
               </div>
