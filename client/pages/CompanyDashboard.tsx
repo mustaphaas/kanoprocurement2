@@ -129,7 +129,6 @@ export default function CompanyDashboard() {
     useState(false);
   const [showSubmitBidModal, setShowSubmitBidModal] = useState(false);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
-  const [demoStatus, setDemoStatus] = useState<CompanyStatus | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
