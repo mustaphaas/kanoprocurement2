@@ -64,6 +64,13 @@ export const TenderVisibilityStatus: React.FC = () => {
               </span>
               <span className="text-blue-600">View only</span>
             </div>
+            <div className="flex items-center justify-between">
+              <span className="flex items-center">
+                <span className="h-3 w-3 bg-orange-500 rounded-full mr-1"></span>
+                Suspended Users
+              </span>
+              <span className="text-orange-600">View only + alerts</span>
+            </div>
           </div>
         </div>
         
