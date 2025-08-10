@@ -172,6 +172,68 @@ export default function CompanyDashboard() {
       console.log('✅ All userStatus cleared!');
     };
 
+    // Add comprehensive localStorage testing
+    (window as any).testLocalStorage = () => {
+      console.log('=== COMPREHENSIVE LOCALSTORAGE TEST ===');
+
+      // Test 1: Basic localStorage functionality
+      try {
+        localStorage.setItem('test_basic', 'basic_works');
+        const basicTest = localStorage.getItem('test_basic');
+        console.log('✅ Basic localStorage test:', basicTest === 'basic_works' ? 'WORKS' : 'FAILED');
+        localStorage.removeItem('test_basic');
+      } catch (e) {
+        console.log('❌ Basic localStorage test FAILED:', e);
+      }
+
+      // Test 2: Test userStatus key pattern
+      try {
+        const testKey = 'userStatus_test@example.com';
+        localStorage.setItem(testKey, 'TestStatus');
+        const testResult = localStorage.getItem(testKey);
+        console.log('✅ UserStatus pattern test:', testResult === 'TestStatus' ? 'WORKS' : 'FAILED');
+        localStorage.removeItem(testKey);
+      } catch (e) {
+        console.log('❌ UserStatus pattern test FAILED:', e);
+      }
+
+      // Test 3: List all current localStorage keys
+      console.log('📋 All localStorage keys:', Object.keys(localStorage));
+      console.log('📋 UserStatus keys:', Object.keys(localStorage).filter(k => k.startsWith('userStatus_')));
+
+      // Test 4: Check current user status lookup
+      const currentEmail = user?.email?.toLowerCase() || 'no-email';
+      const currentKey = `userStatus_${currentEmail}`;
+      const currentStatus = localStorage.getItem(currentKey);
+      console.log(`👤 Current user: ${currentEmail}`);
+      console.log(`🔑 Current key: ${currentKey}`);
+      console.log(`📊 Current status: ${currentStatus || 'NOT FOUND'}`);
+
+      console.log('=== TEST COMPLETED ===');
+    };
+
+    // Add localStorage monitoring
+    (window as any).monitorLocalStorage = () => {
+      const monitor = setInterval(() => {
+        const userStatusKeys = Object.keys(localStorage).filter(k => k.startsWith('userStatus_'));
+        if (userStatusKeys.length > 0) {
+          console.log('📊 LocalStorage Monitor - UserStatus keys found:', userStatusKeys.map(k => ({
+            key: k,
+            value: localStorage.getItem(k)
+          })));
+        } else {
+          console.log('📊 LocalStorage Monitor - No userStatus keys found');
+        }
+      }, 5000);
+
+      (window as any).stopMonitoring = () => {
+        clearInterval(monitor);
+        console.log('📊 LocalStorage monitoring stopped');
+      };
+
+      console.log('📊 LocalStorage monitoring started. Call window.stopMonitoring() to stop.');
+    };
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
@@ -240,7 +302,7 @@ export default function CompanyDashboard() {
         bidsExpressedInterest: 0, // Pending companies can't express interest yet
         activeBids: 0,
         notActiveBids: 0,
-        totalContractValue: "₦0",
+        totalContractValue: "���0",
       },
       "suspended@company.com": {
         name: "Omega Engineering Services",
@@ -3688,7 +3750,7 @@ export default function CompanyDashboard() {
                             Northern Builders Ltd
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            ��950M
+                            ����950M
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Jan 25, 2024
