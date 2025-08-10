@@ -317,11 +317,11 @@ export default function AdminDashboard() {
     // We'll use the email as the key since that's what the dashboard checks
     const company = companies.find((c) => c.id === companyId);
     if (company) {
-      const storageKey = `userStatus_${company.email}`;
+      const storageKey = `userStatus_${company.email.toLowerCase()}`;
       localStorage.setItem(storageKey, newStatus);
 
       // Also store the reason
-      localStorage.setItem(`userStatusReason_${company.email}`, reason);
+      localStorage.setItem(`userStatusReason_${company.email.toLowerCase()}`, reason);
 
       console.log(
         `Company ${company.companyName} status changed to ${newStatus}. Reason: ${reason}`,
