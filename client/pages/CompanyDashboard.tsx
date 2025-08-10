@@ -145,7 +145,12 @@ export default function CompanyDashboard() {
 
     // Check localStorage for admin-set status first
     const adminSetStatus = localStorage.getItem(`userStatus_${userEmail}`);
-    if (adminSetStatus && ["Pending", "Approved", "Suspended", "Blacklisted"].includes(adminSetStatus)) {
+    if (
+      adminSetStatus &&
+      ["Pending", "Approved", "Suspended", "Blacklisted"].includes(
+        adminSetStatus,
+      )
+    ) {
       return adminSetStatus as CompanyStatus;
     }
 
@@ -424,15 +429,21 @@ export default function CompanyDashboard() {
 
   const handleExpressInterest = (tender: Tender) => {
     if (companyData.status === "Suspended") {
-      alert("Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore tender participation privileges.");
+      alert(
+        "Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore tender participation privileges.",
+      );
       return;
     }
     if (companyData.status === "Pending") {
-      alert("Your account is pending approval. You will be able to express interest in tenders once your registration is approved.");
+      alert(
+        "Your account is pending approval. You will be able to express interest in tenders once your registration is approved.",
+      );
       return;
     }
     if (companyData.status === "Blacklisted") {
-      alert("Your account is blacklisted. You cannot participate in procurement activities. Please submit an appeal if you believe this is in error.");
+      alert(
+        "Your account is blacklisted. You cannot participate in procurement activities. Please submit an appeal if you believe this is in error.",
+      );
       return;
     }
     if (companyData.status !== "Approved") {
@@ -445,15 +456,21 @@ export default function CompanyDashboard() {
 
   const handleSubmitBid = (tender: Tender) => {
     if (companyData.status === "Suspended") {
-      alert("Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore bidding privileges.");
+      alert(
+        "Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore bidding privileges.",
+      );
       return;
     }
     if (companyData.status === "Pending") {
-      alert("Your account is pending approval. You will be able to submit bids once your registration is approved.");
+      alert(
+        "Your account is pending approval. You will be able to submit bids once your registration is approved.",
+      );
       return;
     }
     if (companyData.status === "Blacklisted") {
-      alert("Your account is blacklisted. You cannot submit bids. Please submit an appeal if you believe this is in error.");
+      alert(
+        "Your account is blacklisted. You cannot submit bids. Please submit an appeal if you believe this is in error.",
+      );
       return;
     }
     if (companyData.status !== "Approved") {
@@ -1045,10 +1062,14 @@ export default function CompanyDashboard() {
                   <Edit className="h-6 w-6 text-green-600" />
                   <div>
                     <h3 className="font-medium text-gray-900">
-                      {companyData.status === "Blacklisted" ? "View Profile Details" : "Update Company Profile"}
+                      {companyData.status === "Blacklisted"
+                        ? "View Profile Details"
+                        : "Update Company Profile"}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {companyData.status === "Blacklisted" ? "View your company information" : "Manage your company information"}
+                      {companyData.status === "Blacklisted"
+                        ? "View your company information"
+                        : "Manage your company information"}
                     </p>
                   </div>
                 </div>
@@ -1125,15 +1146,19 @@ export default function CompanyDashboard() {
                     Account Restrictions
                   </h2>
                   <p className="text-sm text-gray-600 mt-1">
-                    Information about your current restrictions and available options
+                    Information about your current restrictions and available
+                    options
                   </p>
                 </div>
                 <div className="p-6">
                   <div className="space-y-4">
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                      <h3 className="font-medium text-red-900 mb-2">Procurement Participation Suspended</h3>
+                      <h3 className="font-medium text-red-900 mb-2">
+                        Procurement Participation Suspended
+                      </h3>
                       <p className="text-sm text-red-800 mb-3">
-                        Your company is currently restricted from viewing or participating in procurement opportunities.
+                        Your company is currently restricted from viewing or
+                        participating in procurement opportunities.
                       </p>
                       <ul className="text-sm text-red-700 space-y-1">
                         <li>• Cannot view tender advertisements</li>
@@ -1144,9 +1169,12 @@ export default function CompanyDashboard() {
                     </div>
 
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <h3 className="font-medium text-blue-900 mb-2">Next Steps Available</h3>
+                      <h3 className="font-medium text-blue-900 mb-2">
+                        Next Steps Available
+                      </h3>
                       <p className="text-sm text-blue-800 mb-3">
-                        You can take the following actions to address your status:
+                        You can take the following actions to address your
+                        status:
                       </p>
                       <div className="space-y-2">
                         <button
@@ -1208,7 +1236,8 @@ export default function CompanyDashboard() {
                 Access Restricted
               </h3>
               <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                Your company is currently blacklisted and cannot access tender advertisements or participate in procurement opportunities.
+                Your company is currently blacklisted and cannot access tender
+                advertisements or participate in procurement opportunities.
               </p>
               <button
                 onClick={() => setActiveSection("grievance")}
@@ -1229,10 +1258,13 @@ export default function CompanyDashboard() {
                 <div className="flex items-start">
                   <AlertTriangle className="h-5 w-5 text-orange-400 mt-0.5 mr-3 flex-shrink-0" />
                   <div className="flex-1">
-                    <h3 className="font-semibold text-orange-800">Account Suspended - Limited Access</h3>
+                    <h3 className="font-semibold text-orange-800">
+                      Account Suspended - Limited Access
+                    </h3>
                     <p className="text-sm text-orange-700 mt-1">
-                      You can view tender opportunities but cannot express interest or submit bids.
-                      Please resolve compliance issues through the "Reinstatement Portal" to restore full access.
+                      You can view tender opportunities but cannot express
+                      interest or submit bids. Please resolve compliance issues
+                      through the "Reinstatement Portal" to restore full access.
                     </p>
                     <button
                       onClick={() => setActiveSection("detailed-compliance")}
@@ -1252,10 +1284,13 @@ export default function CompanyDashboard() {
                 <div className="flex items-start">
                   <Clock className="h-5 w-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
                   <div className="flex-1">
-                    <h3 className="font-semibold text-blue-800">Account Pending Approval</h3>
+                    <h3 className="font-semibold text-blue-800">
+                      Account Pending Approval
+                    </h3>
                     <p className="text-sm text-blue-700 mt-1">
-                      You can browse tender opportunities but cannot participate until your registration is approved.
-                      This typically takes 5-7 business days.
+                      You can browse tender opportunities but cannot participate
+                      until your registration is approved. This typically takes
+                      5-7 business days.
                     </p>
                     <button
                       onClick={() => setActiveSection("my-documents")}
@@ -1448,7 +1483,8 @@ export default function CompanyDashboard() {
                                 Express Interest
                               </button>
                               <p className="text-xs text-orange-600">
-                                Account suspended - resolve issues to participate
+                                Account suspended - resolve issues to
+                                participate
                               </p>
                             </div>
                           )}
@@ -3751,7 +3787,9 @@ export default function CompanyDashboard() {
                 }`}
               >
                 <FileText className="h-4 w-4 mr-3" />
-                {companyData.status === "Pending" ? "Browse Opportunities" : "Tender Advertisements"}
+                {companyData.status === "Pending"
+                  ? "Browse Opportunities"
+                  : "Tender Advertisements"}
                 {companyData.status === "Pending" && (
                   <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
                     View Only
@@ -3767,11 +3805,17 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
-              disabled={companyData.status === "Pending" || companyData.status === "Blacklisted"}
+              disabled={
+                companyData.status === "Pending" ||
+                companyData.status === "Blacklisted"
+              }
             >
               <Bookmark className="h-4 w-4 mr-3" />
-              {companyData.status === "Approved" ? "Purchased Bids" : "My Applications"}
-              {(companyData.status === "Pending" || companyData.status === "Blacklisted") && (
+              {companyData.status === "Approved"
+                ? "Purchased Bids"
+                : "My Applications"}
+              {(companyData.status === "Pending" ||
+                companyData.status === "Blacklisted") && (
                 <Lock className="h-4 w-4 ml-2 text-gray-400" />
               )}
             </button>
@@ -3783,11 +3827,17 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
-              disabled={companyData.status === "Pending" || companyData.status === "Blacklisted"}
+              disabled={
+                companyData.status === "Pending" ||
+                companyData.status === "Blacklisted"
+              }
             >
               <Award className="h-4 w-4 mr-3" />
-              {companyData.status === "Approved" ? "Awarded Bids" : "Previous Awards"}
-              {(companyData.status === "Pending" || companyData.status === "Blacklisted") && (
+              {companyData.status === "Approved"
+                ? "Awarded Bids"
+                : "Previous Awards"}
+              {(companyData.status === "Pending" ||
+                companyData.status === "Blacklisted") && (
                 <Lock className="h-4 w-4 ml-2 text-gray-400" />
               )}
             </button>
@@ -3819,8 +3869,11 @@ export default function CompanyDashboard() {
               }`}
             >
               <Upload className="h-4 w-4 mr-3" />
-              {companyData.status === "Pending" ? "Verification Center" :
-               companyData.status === "Suspended" ? "Document Updates" : "My Documents"}
+              {companyData.status === "Pending"
+                ? "Verification Center"
+                : companyData.status === "Suspended"
+                  ? "Document Updates"
+                  : "My Documents"}
               {companyData.status === "Pending" && (
                 <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full">
                   Required
@@ -3843,7 +3896,9 @@ export default function CompanyDashboard() {
               disabled={companyData.status === "Blacklisted"}
             >
               <Shield className="h-4 w-4 mr-3" />
-              {companyData.status === "Suspended" ? "Reinstatement Portal" : "Detailed Compliance"}
+              {companyData.status === "Suspended"
+                ? "Reinstatement Portal"
+                : "Detailed Compliance"}
               {companyData.status === "Blacklisted" && (
                 <Lock className="h-4 w-4 ml-2 text-gray-400" />
               )}
@@ -3865,7 +3920,9 @@ export default function CompanyDashboard() {
               disabled={companyData.status !== "Approved"}
             >
               <Plus className="h-4 w-4 mr-3" />
-              {companyData.status === "Approved" ? "New Clarifications" : "Request Clarifications"}
+              {companyData.status === "Approved"
+                ? "New Clarifications"
+                : "Request Clarifications"}
               {companyData.status !== "Approved" && (
                 <Lock className="h-4 w-4 ml-2 text-gray-400" />
               )}
@@ -3880,7 +3937,9 @@ export default function CompanyDashboard() {
               }`}
             >
               <History className="h-4 w-4 mr-3" />
-              {companyData.status === "Approved" ? "Existing Clarifications" : "Previous Requests"}
+              {companyData.status === "Approved"
+                ? "Existing Clarifications"
+                : "Previous Requests"}
             </button>
 
             <button
@@ -3892,7 +3951,9 @@ export default function CompanyDashboard() {
               }`}
             >
               <Mail className="h-4 w-4 mr-3" />
-              {companyData.status === "Approved" ? "Messages" : "Notifications Center"}
+              {companyData.status === "Approved"
+                ? "Messages"
+                : "Notifications Center"}
             </button>
 
             <div className="pt-4 mb-4">
@@ -3908,11 +3969,15 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
-              disabled={companyData.status === "Pending" || companyData.status === "Blacklisted"}
+              disabled={
+                companyData.status === "Pending" ||
+                companyData.status === "Blacklisted"
+              }
             >
               <CreditCard className="h-4 w-4 mr-3" />
               Transaction History
-              {(companyData.status === "Pending" || companyData.status === "Blacklisted") && (
+              {(companyData.status === "Pending" ||
+                companyData.status === "Blacklisted") && (
                 <Lock className="h-4 w-4 ml-2 text-gray-400" />
               )}
             </button>
@@ -3927,7 +3992,9 @@ export default function CompanyDashboard() {
               disabled={companyData.status === "Blacklisted"}
             >
               <FileCheck className="h-4 w-4 mr-3" />
-              {companyData.status === "Approved" ? "Contracts Awarded" : "Contract History"}
+              {companyData.status === "Approved"
+                ? "Contracts Awarded"
+                : "Contract History"}
               {companyData.status === "Blacklisted" && (
                 <Lock className="h-4 w-4 ml-2 text-gray-400" />
               )}
@@ -3940,11 +4007,17 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
-              disabled={companyData.status === "Pending" || companyData.status === "Blacklisted"}
+              disabled={
+                companyData.status === "Pending" ||
+                companyData.status === "Blacklisted"
+              }
             >
               <BarChart3 className="h-4 w-4 mr-3" />
-              {companyData.status === "Approved" ? "Annual Report" : "Performance Report"}
-              {(companyData.status === "Pending" || companyData.status === "Blacklisted") && (
+              {companyData.status === "Approved"
+                ? "Annual Report"
+                : "Performance Report"}
+              {(companyData.status === "Pending" ||
+                companyData.status === "Blacklisted") && (
                 <Lock className="h-4 w-4 ml-2 text-gray-400" />
               )}
             </button>
@@ -3958,7 +4031,9 @@ export default function CompanyDashboard() {
               }`}
             >
               <Gavel className="h-4 w-4 mr-3" />
-              {companyData.status === "Blacklisted" ? "Appeal Center" : "Grievance Redress"}
+              {companyData.status === "Blacklisted"
+                ? "Appeal Center"
+                : "Grievance Redress"}
               {companyData.status === "Blacklisted" && (
                 <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
                   Available

@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { RefreshCw, CheckCircle, XCircle, Users, Eye } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { RefreshCw, CheckCircle, XCircle, Users, Eye } from "lucide-react";
 
 export const TenderVisibilityStatus: React.FC = () => {
   const [tenderCount, setTenderCount] = useState(0);
-  const [lastUpdated, setLastUpdated] = useState<string>('');
+  const [lastUpdated, setLastUpdated] = useState<string>("");
 
   const refreshStatus = () => {
-    const recentTenders = JSON.parse(localStorage.getItem("recentTenders") || "[]");
-    const publishedTenders = recentTenders.filter((t: any) => t.status === "Open");
+    const recentTenders = JSON.parse(
+      localStorage.getItem("recentTenders") || "[]",
+    );
+    const publishedTenders = recentTenders.filter(
+      (t: any) => t.status === "Open",
+    );
     setTenderCount(publishedTenders.length);
     setLastUpdated(new Date().toLocaleTimeString());
   };
@@ -21,7 +25,9 @@ export const TenderVisibilityStatus: React.FC = () => {
   return (
     <div className="fixed bottom-4 right-4 z-50 bg-white rounded-lg shadow-lg border p-4 max-w-sm">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-gray-900">Tender Visibility Status</h3>
+        <h3 className="font-semibold text-gray-900">
+          Tender Visibility Status
+        </h3>
         <button
           onClick={refreshStatus}
           className="p-1 text-gray-500 hover:text-gray-700"
@@ -29,19 +35,19 @@ export const TenderVisibilityStatus: React.FC = () => {
           <RefreshCw className="h-4 w-4" />
         </button>
       </div>
-      
+
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">Active Tenders:</span>
           <span className="font-semibold text-green-600">{tenderCount}</span>
         </div>
-        
-        <div className="text-xs text-gray-500">
-          Last updated: {lastUpdated}
-        </div>
-        
+
+        <div className="text-xs text-gray-500">Last updated: {lastUpdated}</div>
+
         <div className="border-t pt-3">
-          <h4 className="text-sm font-medium text-gray-900 mb-2">User Access Status:</h4>
+          <h4 className="text-sm font-medium text-gray-900 mb-2">
+            User Access Status:
+          </h4>
           <div className="space-y-2 text-xs">
             <div className="flex items-center justify-between">
               <span className="flex items-center">
@@ -73,9 +79,11 @@ export const TenderVisibilityStatus: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="border-t pt-3">
-          <h4 className="text-sm font-medium text-gray-900 mb-2">Quick Test Logins:</h4>
+          <h4 className="text-sm font-medium text-gray-900 mb-2">
+            Quick Test Logins:
+          </h4>
           <div className="space-y-1 text-xs">
             <div>✅ approved@company.com (Full access)</div>
             <div>❌ blacklisted@company.com (No tender access)</div>

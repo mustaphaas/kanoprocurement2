@@ -1,11 +1,11 @@
-import React from 'react';
-import { 
-  getDashboardConfig, 
-  getAvailableFunctions, 
+import React from "react";
+import {
+  getDashboardConfig,
+  getAvailableFunctions,
   getFunctionsByCategory,
   type CompanyStatus,
-  type DashboardFunction 
-} from '@/lib/dashboardConfig';
+  type DashboardFunction,
+} from "@/lib/dashboardConfig";
 import {
   Search,
   Heart,
@@ -24,7 +24,7 @@ import {
   ChevronRight,
   Lock,
   Zap,
-} from 'lucide-react';
+} from "lucide-react";
 
 const iconMap = {
   Search,
@@ -71,10 +71,10 @@ const NavigationGroup: React.FC<NavigationGroupProps> = ({
   if (functions.length === 0) return null;
 
   const statusColors = {
-    Pending: 'text-blue-600',
-    Approved: 'text-green-600',
-    Suspended: 'text-orange-600',
-    Blacklisted: 'text-red-600',
+    Pending: "text-blue-600",
+    Approved: "text-green-600",
+    Suspended: "text-orange-600",
+    Blacklisted: "text-red-600",
   };
 
   return (
@@ -84,7 +84,8 @@ const NavigationGroup: React.FC<NavigationGroupProps> = ({
       </h3>
       <div className="space-y-1">
         {functions.map((func) => {
-          const IconComponent = iconMap[func.icon as keyof typeof iconMap] || FileText;
+          const IconComponent =
+            iconMap[func.icon as keyof typeof iconMap] || FileText;
           const isActive = activeSection === func.route;
           const isEnabled = func.enabled;
 
@@ -97,24 +98,26 @@ const NavigationGroup: React.FC<NavigationGroupProps> = ({
                 isActive
                   ? `bg-green-100 ${statusColors[status]} border-l-4 border-current`
                   : isEnabled
-                    ? 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                    : 'text-gray-400 cursor-not-allowed'
+                    ? "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    : "text-gray-400 cursor-not-allowed"
               }`}
             >
-              <IconComponent 
-                className={`h-5 w-5 mr-3 ${isActive ? statusColors[status] : ''}`} 
+              <IconComponent
+                className={`h-5 w-5 mr-3 ${isActive ? statusColors[status] : ""}`}
               />
               <div className="flex-1 text-left">
                 <div className="flex items-center justify-between">
                   <span className="truncate">{func.name}</span>
                   {func.badge && (
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ml-2 ${
-                      func.badge === 'Required' 
-                        ? 'bg-red-100 text-red-800'
-                        : func.badge === 'Action Required'
-                          ? 'bg-orange-100 text-orange-800'
-                          : 'bg-blue-100 text-blue-800'
-                    }`}>
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ml-2 ${
+                        func.badge === "Required"
+                          ? "bg-red-100 text-red-800"
+                          : func.badge === "Action Required"
+                            ? "bg-orange-100 text-orange-800"
+                            : "bg-blue-100 text-blue-800"
+                      }`}
+                    >
                       {func.badge}
                     </span>
                   )}
@@ -123,9 +126,7 @@ const NavigationGroup: React.FC<NavigationGroupProps> = ({
                   {func.description}
                 </p>
               </div>
-              {!isEnabled && (
-                <Lock className="h-4 w-4 ml-2 text-gray-400" />
-              )}
+              {!isEnabled && <Lock className="h-4 w-4 ml-2 text-gray-400" />}
             </button>
           );
         })}
@@ -144,41 +145,44 @@ export const DynamicNavigation: React.FC<DynamicNavigationProps> = ({
   const availableFunctions = getAvailableFunctions(status);
 
   // Group functions by category
-  const tenderFunctions = getFunctionsByCategory(status, 'tender');
-  const profileFunctions = getFunctionsByCategory(status, 'profile');
-  const documentFunctions = getFunctionsByCategory(status, 'documents');
-  const communicationFunctions = getFunctionsByCategory(status, 'communication');
-  const contractFunctions = getFunctionsByCategory(status, 'contracts');
-  const complianceFunctions = getFunctionsByCategory(status, 'compliance');
+  const tenderFunctions = getFunctionsByCategory(status, "tender");
+  const profileFunctions = getFunctionsByCategory(status, "profile");
+  const documentFunctions = getFunctionsByCategory(status, "documents");
+  const communicationFunctions = getFunctionsByCategory(
+    status,
+    "communication",
+  );
+  const contractFunctions = getFunctionsByCategory(status, "contracts");
+  const complianceFunctions = getFunctionsByCategory(status, "compliance");
 
   const statusConfig = {
     Pending: {
       icon: Shield,
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-200',
-      textColor: 'text-blue-800',
-      iconColor: 'text-blue-600',
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
+      textColor: "text-blue-800",
+      iconColor: "text-blue-600",
     },
     Approved: {
       icon: CheckCircle,
-      bgColor: 'bg-green-50',
-      borderColor: 'border-green-200',
-      textColor: 'text-green-800',
-      iconColor: 'text-green-600',
+      bgColor: "bg-green-50",
+      borderColor: "border-green-200",
+      textColor: "text-green-800",
+      iconColor: "text-green-600",
     },
     Suspended: {
       icon: AlertTriangle,
-      bgColor: 'bg-orange-50',
-      borderColor: 'border-orange-200',
-      textColor: 'text-orange-800',
-      iconColor: 'text-orange-600',
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200",
+      textColor: "text-orange-800",
+      iconColor: "text-orange-600",
     },
     Blacklisted: {
       icon: Lock,
-      bgColor: 'bg-red-50',
-      borderColor: 'border-red-200',
-      textColor: 'text-red-800',
-      iconColor: 'text-red-600',
+      bgColor: "bg-red-50",
+      borderColor: "border-red-200",
+      textColor: "text-red-800",
+      iconColor: "text-red-600",
     },
   };
 
@@ -197,8 +201,12 @@ export const DynamicNavigation: React.FC<DynamicNavigationProps> = ({
             <h2 className="text-sm font-semibold text-gray-900 truncate">
               {companyName}
             </h2>
-            <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${currentStatusConfig.bgColor} ${currentStatusConfig.borderColor} ${currentStatusConfig.textColor} border`}>
-              <StatusIcon className={`h-3 w-3 mr-1 ${currentStatusConfig.iconColor}`} />
+            <div
+              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${currentStatusConfig.bgColor} ${currentStatusConfig.borderColor} ${currentStatusConfig.textColor} border`}
+            >
+              <StatusIcon
+                className={`h-3 w-3 mr-1 ${currentStatusConfig.iconColor}`}
+              />
               {status}
             </div>
           </div>
@@ -206,19 +214,29 @@ export const DynamicNavigation: React.FC<DynamicNavigationProps> = ({
       </div>
 
       {/* Status Message */}
-      <div className={`m-4 p-4 rounded-lg ${currentStatusConfig.bgColor} ${currentStatusConfig.borderColor} border`}>
+      <div
+        className={`m-4 p-4 rounded-lg ${currentStatusConfig.bgColor} ${currentStatusConfig.borderColor} border`}
+      >
         <div className="flex items-start space-x-3">
-          <StatusIcon className={`h-5 w-5 mt-0.5 ${currentStatusConfig.iconColor}`} />
+          <StatusIcon
+            className={`h-5 w-5 mt-0.5 ${currentStatusConfig.iconColor}`}
+          />
           <div className="flex-1">
-            <h4 className={`text-sm font-medium ${currentStatusConfig.textColor}`}>
+            <h4
+              className={`text-sm font-medium ${currentStatusConfig.textColor}`}
+            >
               {config.statusDescription}
             </h4>
             {config.nextSteps.length > 0 && (
               <div className="mt-2">
-                <p className={`text-xs ${currentStatusConfig.textColor} font-medium`}>
+                <p
+                  className={`text-xs ${currentStatusConfig.textColor} font-medium`}
+                >
                   Next Steps:
                 </p>
-                <ul className={`text-xs ${currentStatusConfig.textColor} mt-1 space-y-1`}>
+                <ul
+                  className={`text-xs ${currentStatusConfig.textColor} mt-1 space-y-1`}
+                >
                   {config.nextSteps.slice(0, 2).map((step, index) => (
                     <li key={index} className="flex items-start">
                       <ChevronRight className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0" />
@@ -237,14 +255,16 @@ export const DynamicNavigation: React.FC<DynamicNavigationProps> = ({
         {/* Dashboard Overview */}
         <div className="mb-6">
           <button
-            onClick={() => onSectionChange('dashboard')}
+            onClick={() => onSectionChange("dashboard")}
             className={`w-full flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-              activeSection === 'dashboard'
-                ? 'bg-green-100 text-green-600 border-l-4 border-green-600'
-                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+              activeSection === "dashboard"
+                ? "bg-green-100 text-green-600 border-l-4 border-green-600"
+                : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
             }`}
           >
-            <Zap className={`h-5 w-5 mr-3 ${activeSection === 'dashboard' ? 'text-green-600' : ''}`} />
+            <Zap
+              className={`h-5 w-5 mr-3 ${activeSection === "dashboard" ? "text-green-600" : ""}`}
+            />
             <span>Dashboard Overview</span>
           </button>
         </div>
