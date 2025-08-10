@@ -264,11 +264,10 @@ export default function CompanyDashboard() {
     };
   };
 
-  // Use statusUpdateTrigger to force re-evaluation when status changes
-  const companyData: CompanyData = (() => {
-    // This function will re-run whenever statusUpdateTrigger changes
+  // Use useMemo to re-evaluate companyData when status changes
+  const companyData: CompanyData = useMemo(() => {
     return getCompanyDetails();
-  })();
+  }, [statusUpdateTrigger, user?.email]);
 
   const [notifications, setNotifications] = useState<Notification[]>([
     {
