@@ -261,15 +261,15 @@ export default function CompanyDashboard() {
     const userEmail = user?.email?.toLowerCase() || "";
     const storageKey = `userStatus_${userEmail}`;
 
-    // Check localStorage for admin-set status first
-    const adminSetStatus = localStorage.getItem(storageKey);
+    // Check persistent storage for admin-set status first
+    const adminSetStatus = persistentStorage.getItem(storageKey);
 
-    // Debug: Check all localStorage keys
+    // Debug: Check all storage keys
     console.log(`=== DEBUGGING STATUS CHECK ===`);
     console.log(`User email: ${user?.email} -> normalized: ${userEmail}`);
     console.log(`Storage key: ${storageKey}`);
     console.log(`Admin set status: ${adminSetStatus}`);
-    console.log(`All userStatus keys in localStorage:`, Object.keys(localStorage).filter(key => key.startsWith('userStatus_')));
+    console.log(`All userStatus keys in storage:`, persistentStorage.getUserStatusKeys());
 
     if (
       adminSetStatus &&
