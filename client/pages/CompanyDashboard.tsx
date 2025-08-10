@@ -973,22 +973,24 @@ export default function CompanyDashboard() {
 
             {/* Quick Links */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <button
-                onClick={() => setActiveSection("tender-ads")}
-                className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center space-x-3">
-                  <Search className="h-6 w-6 text-blue-600" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">
-                      Browse Latest Tenders
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      View all available opportunities
-                    </p>
+              {companyData.status !== "Blacklisted" && (
+                <button
+                  onClick={() => setActiveSection("tender-ads")}
+                  className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Search className="h-6 w-6 text-blue-600" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        Browse Latest Tenders
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        View all available opportunities
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </button>
+                </button>
+              )}
 
               <button
                 onClick={() => setActiveSection("my-profile")}
@@ -1512,7 +1514,7 @@ export default function CompanyDashboard() {
                       id: "AW002",
                       title: "Construction of Primary Health Care Center",
                       awardDate: "2023-12-15",
-                      contractValue: "₦85,000,000",
+                      contractValue: "��85,000,000",
                       status: "In Progress",
                       progress: 40,
                       completionDate: "2024-06-15",
