@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
 import { formatCurrency } from "@/lib/utils";
+import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
+import DynamicNavigation from "@/components/DynamicNavigation";
+import DynamicDashboardHeader from "@/components/DynamicDashboardHeader";
 import {
   Building2,
   Home,
@@ -1039,7 +1042,7 @@ export default function CompanyDashboard() {
                       <option value="">Project Value</option>
                       <option value="0-100m">₦0 - ₦100M</option>
                       <option value="100m-1b">₦100M - ₦1B</option>
-                      <option value="1b+">₦1B+</option>
+                      <option value="1b+">���1B+</option>
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">All Methods</option>
@@ -1699,7 +1702,7 @@ export default function CompanyDashboard() {
                             Total Contract Value
                           </span>
                           <span className="font-medium text-green-600">
-                            ₦240,500,000
+                            ��240,500,000
                           </span>
                         </div>
                       </div>
