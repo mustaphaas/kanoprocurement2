@@ -240,21 +240,10 @@ export default function AdminDashboard() {
 
     handleStatusChange(selectedCompany.id, approvalDecision, actionReason);
 
-    // Update company status
-    setCompanies(prev => prev.map(company => 
-      company.id === selectedCompany.id 
-        ? { ...company, status: approvalDecision }
-        : company
-    ));
-
     // Simulate sending notification
     if (sendNotification) {
       console.log(`Notification sent to ${selectedCompany.email}`);
     }
-
-    alert(`Company ${approvalDecision.toLowerCase()} successfully!`);
-    setViewMode("list");
-    setSelectedCompany(null);
   };
 
   const handleLogout = () => {
