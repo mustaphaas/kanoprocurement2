@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
 import { formatCurrency } from "@/lib/utils";
 import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
-import StatusDemo from "@/components/StatusDemo";
 import {
   Building2,
   Home,
