@@ -93,22 +93,30 @@ export const TenderVisibilityStatus: React.FC = () => {
           </h4>
           <div className="space-y-1 text-xs">
             <div className="font-medium text-blue-600">
-              Company Approval Tab:
+              Company Approval Tab (Pending Only):
+            </div>
+            <div>⏳ pending@company.com / password123</div>
+            <div className="text-xs text-gray-500 ml-4">
+              ↳ Shows only in Company Approval tab
+            </div>
+
+            <div className="font-medium text-green-600 mt-2">
+              Approved Companies (Not in Admin):
             </div>
             <div>✅ approved@company.com / password123</div>
             <div>✅ testcompany@example.com / test123</div>
             <div>✅ demo@company.com / demo123</div>
-            <div>⏳ pending@company.com / password123</div>
             <div className="text-xs text-gray-500 ml-4">
-              ↳ Pending goes to SuperUser approval workflow
+              ↳ Approved companies don't appear in admin workflow
             </div>
+
             <div className="font-medium text-orange-600 mt-2">
-              Company Status Issues:
+              Company Status Tab (Issues Only):
             </div>
             <div>⚠️ suspended@company.com / password123</div>
             <div>❌ blacklisted@company.com / password123</div>
             <div className="text-xs text-gray-500 ml-4">
-              ↳ Status problems requiring intervention
+              ↳ Shows only in Company Status tab
             </div>
           </div>
         </div>
