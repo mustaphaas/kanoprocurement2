@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
 import { formatCurrency } from "@/lib/utils";
+import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
 import {
   Building2,
   Home,
@@ -48,6 +49,8 @@ import {
   Shield,
   Gavel,
   Archive,
+  Lock,
+  RefreshCw,
 } from "lucide-react";
 
 type CompanyStatus = "Pending" | "Approved" | "Suspended" | "Blacklisted";
@@ -138,21 +141,33 @@ export default function CompanyDashboard() {
   };
 
   const getCompanyStatus = (): CompanyStatus => {
-    // Check user email to assign specific test account statuses
     const userEmail = user?.email?.toLowerCase() || "";
 
-    // Test account status mapping
+    // Check localStorage for admin-set status first
+    const adminSetStatus = localStorage.getItem(`userStatus_${userEmail}`);
+    if (
+      adminSetStatus &&
+      ["Pending", "Approved", "Suspended", "Blacklisted"].includes(
+        adminSetStatus,
+      )
+    ) {
+      return adminSetStatus as CompanyStatus;
+    }
+
+    // Check user email to assign specific test account statuses (for testing only)
     if (userEmail === "pending@company.com") return "Pending";
     if (userEmail === "suspended@company.com") return "Suspended";
     if (userEmail === "blacklisted@company.com") return "Blacklisted";
     if (userEmail === "approved@company.com") return "Approved";
 
-    // For other emails, check for expired documents
+    // For other emails, check for expired documents and if suspended due to that
     const hasExpired = hasExpiredDocuments();
     if (hasExpired) return "Suspended";
 
-    // Default to Approved for other valid emails
-    return "Approved";
+    // IMPORTANT: All new user registrations should start as "Pending" by default
+    // This ensures proper admin approval workflow for real users
+    // Only the test accounts above get different default statuses
+    return "Pending";
   };
 
   const getCompanyDetails = () => {
@@ -413,6 +428,24 @@ export default function CompanyDashboard() {
   };
 
   const handleExpressInterest = (tender: Tender) => {
+    if (companyData.status === "Suspended") {
+      alert(
+        "Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore tender participation privileges.",
+      );
+      return;
+    }
+    if (companyData.status === "Pending") {
+      alert(
+        "Your account is pending approval. You will be able to express interest in tenders once your registration is approved.",
+      );
+      return;
+    }
+    if (companyData.status === "Blacklisted") {
+      alert(
+        "Your account is blacklisted. You cannot participate in procurement activities. Please submit an appeal if you believe this is in error.",
+      );
+      return;
+    }
     if (companyData.status !== "Approved") {
       alert("Your account must be approved to express interest in tenders.");
       return;
@@ -422,6 +455,24 @@ export default function CompanyDashboard() {
   };
 
   const handleSubmitBid = (tender: Tender) => {
+    if (companyData.status === "Suspended") {
+      alert(
+        "Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore bidding privileges.",
+      );
+      return;
+    }
+    if (companyData.status === "Pending") {
+      alert(
+        "Your account is pending approval. You will be able to submit bids once your registration is approved.",
+      );
+      return;
+    }
+    if (companyData.status === "Blacklisted") {
+      alert(
+        "Your account is blacklisted. You cannot submit bids. Please submit an appeal if you believe this is in error.",
+      );
+      return;
+    }
     if (companyData.status !== "Approved") {
       alert("Your account must be approved to submit bids.");
       return;
@@ -636,6 +687,79 @@ export default function CompanyDashboard() {
                   {companyData.status}
                 </span>
               </div>
+
+              {/* Dynamic Status-Based Actions */}
+              {companyData.status === "Pending" && (
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    onClick={() => setActiveSection("my-documents")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Complete Verification
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("my-profile")}
+                    className="inline-flex items-center px-4 py-2 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50"
+                  >
+                    View Requirements
+                  </button>
+                </div>
+              )}
+
+              {companyData.status === "Suspended" && (
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    onClick={() => setActiveSection("my-documents")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Fix Issues Now
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("detailed-compliance")}
+                    className="inline-flex items-center px-4 py-2 border border-orange-300 text-sm font-medium rounded-md text-orange-700 bg-white hover:bg-orange-50"
+                  >
+                    View Compliance
+                  </button>
+                </div>
+              )}
+
+              {companyData.status === "Blacklisted" && (
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    onClick={() => setActiveSection("grievance")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                  >
+                    <Gavel className="h-4 w-4 mr-2" />
+                    Submit Appeal
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("my-profile")}
+                    className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50"
+                  >
+                    View Restrictions
+                  </button>
+                </div>
+              )}
+
+              {companyData.status === "Approved" && (
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    onClick={() => setActiveSection("tender-ads")}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                  >
+                    <Search className="h-4 w-4 mr-2" />
+                    Browse Tenders
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("contracts-awarded")}
+                    className="inline-flex items-center px-4 py-2 border border-green-300 text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50"
+                  >
+                    View Contracts
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Status Alert */}
@@ -760,22 +884,43 @@ export default function CompanyDashboard() {
 
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Total Adverts
-                    </p>
-                    <p className="text-3xl font-bold text-blue-600">
-                      {companyData.totalAdverts}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Active tenders available
-                    </p>
+              {companyData.status !== "Blacklisted" && (
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Total Adverts
+                      </p>
+                      <p className="text-3xl font-bold text-blue-600">
+                        {companyData.totalAdverts}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Active tenders available
+                      </p>
+                    </div>
+                    <FileText className="h-8 w-8 text-blue-600" />
                   </div>
-                  <FileText className="h-8 w-8 text-blue-600" />
                 </div>
-              </div>
+              )}
+
+              {companyData.status === "Blacklisted" && (
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Access Status
+                      </p>
+                      <p className="text-3xl font-bold text-red-600">
+                        Restricted
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Procurement participation blocked
+                      </p>
+                    </div>
+                    <Ban className="h-8 w-8 text-red-600" />
+                  </div>
+                </div>
+              )}
 
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between">
@@ -871,22 +1016,43 @@ export default function CompanyDashboard() {
 
             {/* Quick Links */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <button
-                onClick={() => setActiveSection("tender-ads")}
-                className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center space-x-3">
-                  <Search className="h-6 w-6 text-blue-600" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">
-                      Browse Latest Tenders
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      View all available opportunities
-                    </p>
+              {companyData.status !== "Blacklisted" && (
+                <button
+                  onClick={() => setActiveSection("tender-ads")}
+                  className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Search className="h-6 w-6 text-blue-600" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        Browse Latest Tenders
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        View all available opportunities
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </button>
+                </button>
+              )}
+
+              {companyData.status === "Blacklisted" && (
+                <button
+                  onClick={() => setActiveSection("grievance")}
+                  className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Gavel className="h-6 w-6 text-red-600" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        Submit Appeal
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Appeal your blacklist status
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              )}
 
               <button
                 onClick={() => setActiveSection("my-profile")}
@@ -896,69 +1062,147 @@ export default function CompanyDashboard() {
                   <Edit className="h-6 w-6 text-green-600" />
                   <div>
                     <h3 className="font-medium text-gray-900">
-                      Update Company Profile
+                      {companyData.status === "Blacklisted"
+                        ? "View Profile Details"
+                        : "Update Company Profile"}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      Manage your company information
+                      {companyData.status === "Blacklisted"
+                        ? "View your company information"
+                        : "Manage your company information"}
                     </p>
                   </div>
                 </div>
               </button>
 
-              <button
-                onClick={() => setActiveSection("contracts-awarded")}
-                className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center space-x-3">
-                  <Award className="h-6 w-6 text-purple-600" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">
-                      View My Awarded Contracts
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Track contract performance
-                    </p>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            {/* Personalized Tender Recommendations */}
-            <div className="bg-white rounded-lg shadow-sm border">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                  <Target className="h-5 w-5 text-purple-600 mr-2" />
-                  Personalized Tender Recommendations
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Based on your profile, you might be interested in:
-                </p>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {recommendedTenders.map((tender) => (
-                    <div
-                      key={tender.id}
-                      className="flex items-center justify-between p-4 bg-purple-50 rounded-lg"
-                    >
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          {tender.title}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {tender.ministry} • Deadline:{" "}
-                          {new Date(tender.deadline).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <button className="flex items-center px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm">
-                        <Eye className="h-4 w-4 mr-1" />
-                        View Details
-                      </button>
+              {companyData.status !== "Blacklisted" && (
+                <button
+                  onClick={() => setActiveSection("contracts-awarded")}
+                  className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Award className="h-6 w-6 text-purple-600" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        View My Awarded Contracts
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Track contract performance
+                      </p>
                     </div>
-                  ))}
+                  </div>
+                </button>
+              )}
+            </div>
+
+            {/* Personalized Tender Recommendations - Hidden for Blacklisted Users */}
+            {companyData.status !== "Blacklisted" && (
+              <div className="bg-white rounded-lg shadow-sm border">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <Target className="h-5 w-5 text-purple-600 mr-2" />
+                    Personalized Tender Recommendations
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Based on your profile, you might be interested in:
+                  </p>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    {recommendedTenders.map((tender) => (
+                      <div
+                        key={tender.id}
+                        className="flex items-center justify-between p-4 bg-purple-50 rounded-lg"
+                      >
+                        <div>
+                          <h3 className="font-medium text-gray-900">
+                            {tender.title}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {tender.ministry} • Deadline:{" "}
+                            {new Date(tender.deadline).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <button
+                          className="flex items-center px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm"
+                          disabled={companyData.status === "Pending"}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View Details
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Special Content for Blacklisted Users */}
+            {companyData.status === "Blacklisted" && (
+              <div className="bg-white rounded-lg shadow-sm border">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+                    Account Restrictions
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Information about your current restrictions and available
+                    options
+                  </p>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <h3 className="font-medium text-red-900 mb-2">
+                        Procurement Participation Suspended
+                      </h3>
+                      <p className="text-sm text-red-800 mb-3">
+                        Your company is currently restricted from viewing or
+                        participating in procurement opportunities.
+                      </p>
+                      <ul className="text-sm text-red-700 space-y-1">
+                        <li>• Cannot view tender advertisements</li>
+                        <li>• Cannot submit bids or expressions of interest</li>
+                        <li>• Cannot access procurement documents</li>
+                        <li>• Historical contract data remains accessible</li>
+                      </ul>
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h3 className="font-medium text-blue-900 mb-2">
+                        Next Steps Available
+                      </h3>
+                      <p className="text-sm text-blue-800 mb-3">
+                        You can take the following actions to address your
+                        status:
+                      </p>
+                      <div className="space-y-2">
+                        <button
+                          onClick={() => setActiveSection("grievance")}
+                          className="w-full flex items-center justify-between p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        >
+                          <span className="flex items-center">
+                            <Gavel className="h-4 w-4 mr-2" />
+                            Submit Appeal
+                          </span>
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => setActiveSection("my-profile")}
+                          className="w-full flex items-center justify-between p-3 border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50"
+                        >
+                          <span className="flex items-center">
+                            <Edit className="h-4 w-4 mr-2" />
+                            Review Profile
+                          </span>
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* User Feedback Prompt */}
             <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
@@ -981,8 +1225,85 @@ export default function CompanyDashboard() {
         );
 
       case "tender-ads":
+        // Blacklisted users should not access tender advertisements at all
+        if (companyData.status === "Blacklisted") {
+          return (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <Ban className="h-8 w-8 text-red-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Access Restricted
+              </h3>
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                Your company is currently blacklisted and cannot access tender
+                advertisements or participate in procurement opportunities.
+              </p>
+              <button
+                onClick={() => setActiveSection("grievance")}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+              >
+                <Gavel className="h-4 w-4 mr-2" />
+                Submit Appeal
+              </button>
+            </div>
+          );
+        }
+
         return (
           <div className="space-y-6">
+            {/* Suspended User Notice */}
+            {companyData.status === "Suspended" && (
+              <div className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-lg">
+                <div className="flex items-start">
+                  <AlertTriangle className="h-5 w-5 text-orange-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-orange-800">
+                      Account Suspended - Limited Access
+                    </h3>
+                    <p className="text-sm text-orange-700 mt-1">
+                      You can view tender opportunities but cannot express
+                      interest or submit bids. Please resolve compliance issues
+                      through the "Reinstatement Portal" to restore full access.
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("detailed-compliance")}
+                      className="mt-2 inline-flex items-center px-3 py-1 bg-orange-600 text-white rounded-md text-sm hover:bg-orange-700"
+                    >
+                      <RefreshCw className="h-3 w-3 mr-1" />
+                      Go to Reinstatement Portal
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Pending User Notice */}
+            {companyData.status === "Pending" && (
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                <div className="flex items-start">
+                  <Clock className="h-5 w-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-blue-800">
+                      Account Pending Approval
+                    </h3>
+                    <p className="text-sm text-blue-700 mt-1">
+                      You can browse tender opportunities but cannot participate
+                      until your registration is approved. This typically takes
+                      5-7 business days.
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("my-documents")}
+                      className="mt-2 inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+                    >
+                      <Upload className="h-3 w-3 mr-1" />
+                      Complete Verification
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold text-gray-900">
                 Tender Advertisements
@@ -1147,6 +1468,42 @@ export default function CompanyDashboard() {
                                 </button>
                               ) : null}
                             </>
+                          )}
+
+                        {/* Suspended user actions */}
+                        {companyData.status === "Suspended" &&
+                          tender.status === "Open" && (
+                            <div className="flex flex-col space-y-2">
+                              <button
+                                onClick={() => handleExpressInterest(tender)}
+                                className="flex items-center px-3 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed text-sm"
+                                disabled
+                              >
+                                <Plus className="h-4 w-4 mr-1" />
+                                Express Interest
+                              </button>
+                              <p className="text-xs text-orange-600">
+                                Account suspended - resolve issues to
+                                participate
+                              </p>
+                            </div>
+                          )}
+
+                        {/* Pending user actions */}
+                        {companyData.status === "Pending" &&
+                          tender.status === "Open" && (
+                            <div className="flex flex-col space-y-2">
+                              <button
+                                className="flex items-center px-3 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed text-sm"
+                                disabled
+                              >
+                                <Plus className="h-4 w-4 mr-1" />
+                                Express Interest
+                              </button>
+                              <p className="text-xs text-blue-600">
+                                Account pending approval
+                              </p>
+                            </div>
                           )}
                       </div>
                     </div>
@@ -3420,17 +3777,26 @@ export default function CompanyDashboard() {
               </h2>
             </div>
 
-            <button
-              onClick={() => setActiveSection("tender-ads")}
-              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                activeSection === "tender-ads"
-                  ? "bg-green-100 text-green-700"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <FileText className="h-4 w-4 mr-3" />
-              Tender Advertisements
-            </button>
+            {companyData.status !== "Blacklisted" && (
+              <button
+                onClick={() => setActiveSection("tender-ads")}
+                className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                  activeSection === "tender-ads"
+                    ? "bg-green-100 text-green-700"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <FileText className="h-4 w-4 mr-3" />
+                {companyData.status === "Pending"
+                  ? "Browse Opportunities"
+                  : "Tender Advertisements"}
+                {companyData.status === "Pending" && (
+                  <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                    View Only
+                  </span>
+                )}
+              </button>
+            )}
 
             <button
               onClick={() => setActiveSection("purchased-bids")}
@@ -3439,9 +3805,19 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
+              disabled={
+                companyData.status === "Pending" ||
+                companyData.status === "Blacklisted"
+              }
             >
               <Bookmark className="h-4 w-4 mr-3" />
-              Purchased Bids
+              {companyData.status === "Approved"
+                ? "Purchased Bids"
+                : "My Applications"}
+              {(companyData.status === "Pending" ||
+                companyData.status === "Blacklisted") && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
             </button>
 
             <button
@@ -3451,9 +3827,19 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
+              disabled={
+                companyData.status === "Pending" ||
+                companyData.status === "Blacklisted"
+              }
             >
               <Award className="h-4 w-4 mr-3" />
-              Awarded Bids
+              {companyData.status === "Approved"
+                ? "Awarded Bids"
+                : "Previous Awards"}
+              {(companyData.status === "Pending" ||
+                companyData.status === "Blacklisted") && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
             </button>
 
             <div className="pt-4 mb-4">
@@ -3483,7 +3869,21 @@ export default function CompanyDashboard() {
               }`}
             >
               <Upload className="h-4 w-4 mr-3" />
-              My Documents
+              {companyData.status === "Pending"
+                ? "Verification Center"
+                : companyData.status === "Suspended"
+                  ? "Document Updates"
+                  : "My Documents"}
+              {companyData.status === "Pending" && (
+                <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full">
+                  Required
+                </span>
+              )}
+              {companyData.status === "Suspended" && (
+                <span className="ml-2 text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">
+                  Action Required
+                </span>
+              )}
             </button>
 
             <button
@@ -3493,9 +3893,15 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
+              disabled={companyData.status === "Blacklisted"}
             >
               <Shield className="h-4 w-4 mr-3" />
-              Detailed Compliance
+              {companyData.status === "Suspended"
+                ? "Reinstatement Portal"
+                : "Detailed Compliance"}
+              {companyData.status === "Blacklisted" && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
             </button>
 
             <div className="pt-4 mb-4">
@@ -3511,9 +3917,15 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
+              disabled={companyData.status !== "Approved"}
             >
               <Plus className="h-4 w-4 mr-3" />
-              New Clarifications
+              {companyData.status === "Approved"
+                ? "New Clarifications"
+                : "Request Clarifications"}
+              {companyData.status !== "Approved" && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
             </button>
 
             <button
@@ -3525,7 +3937,9 @@ export default function CompanyDashboard() {
               }`}
             >
               <History className="h-4 w-4 mr-3" />
-              Existing Clarifications
+              {companyData.status === "Approved"
+                ? "Existing Clarifications"
+                : "Previous Requests"}
             </button>
 
             <button
@@ -3537,7 +3951,9 @@ export default function CompanyDashboard() {
               }`}
             >
               <Mail className="h-4 w-4 mr-3" />
-              Messages
+              {companyData.status === "Approved"
+                ? "Messages"
+                : "Notifications Center"}
             </button>
 
             <div className="pt-4 mb-4">
@@ -3553,9 +3969,17 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
+              disabled={
+                companyData.status === "Pending" ||
+                companyData.status === "Blacklisted"
+              }
             >
               <CreditCard className="h-4 w-4 mr-3" />
               Transaction History
+              {(companyData.status === "Pending" ||
+                companyData.status === "Blacklisted") && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
             </button>
 
             <button
@@ -3565,9 +3989,15 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
+              disabled={companyData.status === "Blacklisted"}
             >
               <FileCheck className="h-4 w-4 mr-3" />
-              Contracts Awarded
+              {companyData.status === "Approved"
+                ? "Contracts Awarded"
+                : "Contract History"}
+              {companyData.status === "Blacklisted" && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
             </button>
 
             <button
@@ -3577,9 +4007,19 @@ export default function CompanyDashboard() {
                   ? "bg-green-100 text-green-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
+              disabled={
+                companyData.status === "Pending" ||
+                companyData.status === "Blacklisted"
+              }
             >
               <BarChart3 className="h-4 w-4 mr-3" />
-              Annual Report
+              {companyData.status === "Approved"
+                ? "Annual Report"
+                : "Performance Report"}
+              {(companyData.status === "Pending" ||
+                companyData.status === "Blacklisted") && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
             </button>
 
             <button
@@ -3591,7 +4031,14 @@ export default function CompanyDashboard() {
               }`}
             >
               <Gavel className="h-4 w-4 mr-3" />
-              Grievance Redress
+              {companyData.status === "Blacklisted"
+                ? "Appeal Center"
+                : "Grievance Redress"}
+              {companyData.status === "Blacklisted" && (
+                <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                  Available
+                </span>
+              )}
             </button>
           </nav>
         </div>

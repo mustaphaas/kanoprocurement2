@@ -12,7 +12,7 @@ import {
   Calendar,
   CheckCircle2,
   XCircle,
-  Edit3
+  Edit3,
 } from "lucide-react";
 
 interface FormData {
@@ -44,10 +44,10 @@ interface DocumentExpiry {
 }
 
 interface ExtractionStatus {
-  incorporation?: 'processing' | 'success' | 'failed' | 'manual';
-  taxClearance?: 'processing' | 'success' | 'failed' | 'manual';
-  companyProfile?: 'processing' | 'success' | 'failed' | 'manual';
-  cacForm?: 'processing' | 'success' | 'failed' | 'manual';
+  incorporation?: "processing" | "success" | "failed" | "manual";
+  taxClearance?: "processing" | "success" | "failed" | "manual";
+  companyProfile?: "processing" | "success" | "failed" | "manual";
+  cacForm?: "processing" | "success" | "failed" | "manual";
 }
 
 export default function CompanyRegistration() {
@@ -61,7 +61,7 @@ export default function CompanyRegistration() {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    agreeToTerms: false
+    agreeToTerms: false,
   });
 
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFiles>({
@@ -69,11 +69,13 @@ export default function CompanyRegistration() {
     taxClearance: null,
     companyProfile: null,
     cacForm: null,
-    otherDocuments: []
+    otherDocuments: [],
   });
 
   const [documentExpiry, setDocumentExpiry] = useState<DocumentExpiry>({});
-  const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus>({});
+  const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus>(
+    {},
+  );
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -85,50 +87,64 @@ export default function CompanyRegistration() {
     "NGO/Non-Profit",
     "Cooperative Society",
     "Government Agency",
-    "International Organization"
+    "International Organization",
   ];
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
     const { name, value, type } = e.target;
-    
+
     if (type === "checkbox") {
       const checkbox = e.target as HTMLInputElement;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: checkbox.checked
+        [name]: checkbox.checked,
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, fileType: keyof UploadedFiles) => {
+  const handleFileUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fileType: keyof UploadedFiles,
+  ) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     // File validation
     const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+    const allowedTypes = [
+      "application/pdf",
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+    ];
 
     const filesToProcess = Array.from(files);
-    const validFiles = filesToProcess.filter(file => {
+    const validFiles = filesToProcess.filter((file) => {
       if (file.size > maxSize) {
         alert(`File "${file.name}" is too large. Maximum size allowed is 5MB.`);
         return false;
       }
       if (!allowedTypes.includes(file.type)) {
-        alert(`File "${file.name}" has an invalid format. Only PDF, JPG, JPEG, and PNG files are allowed.`);
+        alert(
+          `File "${file.name}" has an invalid format. Only PDF, JPG, JPEG, and PNG files are allowed.`,
+        );
         return false;
       }
       return true;
@@ -137,14 +153,14 @@ export default function CompanyRegistration() {
     if (validFiles.length === 0) return;
 
     if (fileType === "otherDocuments") {
-      setUploadedFiles(prev => ({
+      setUploadedFiles((prev) => ({
         ...prev,
-        [fileType]: [...prev.otherDocuments, ...validFiles]
+        [fileType]: [...prev.otherDocuments, ...validFiles],
       }));
     } else {
-      setUploadedFiles(prev => ({
+      setUploadedFiles((prev) => ({
         ...prev,
-        [fileType]: validFiles[0]
+        [fileType]: validFiles[0],
       }));
 
       // Automatically process document for expiry date extraction
@@ -153,32 +169,32 @@ export default function CompanyRegistration() {
 
     // Clear any previous errors for this field
     if (errors[fileType]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [fileType]: ""
+        [fileType]: "",
       }));
     }
   };
 
   const removeFile = (fileType: keyof UploadedFiles, index?: number) => {
     if (fileType === "otherDocuments" && typeof index === "number") {
-      setUploadedFiles(prev => ({
+      setUploadedFiles((prev) => ({
         ...prev,
-        otherDocuments: prev.otherDocuments.filter((_, i) => i !== index)
+        otherDocuments: prev.otherDocuments.filter((_, i) => i !== index),
       }));
     } else {
-      setUploadedFiles(prev => ({
+      setUploadedFiles((prev) => ({
         ...prev,
-        [fileType]: null
+        [fileType]: null,
       }));
       // Clear expiry date when file is removed
-      setDocumentExpiry(prev => ({
+      setDocumentExpiry((prev) => ({
         ...prev,
-        [fileType]: undefined
+        [fileType]: undefined,
       }));
-      setExtractionStatus(prev => ({
+      setExtractionStatus((prev) => ({
         ...prev,
-        [fileType]: undefined
+        [fileType]: undefined,
       }));
     }
   };
@@ -193,34 +209,40 @@ export default function CompanyRegistration() {
 
     // Simulated extraction with common document patterns
     return new Promise((resolve) => {
-      setTimeout(() => {
-        // Mock extracted text based on file name patterns
-        const fileName = file.name.toLowerCase();
+      setTimeout(
+        () => {
+          // Mock extracted text based on file name patterns
+          const fileName = file.name.toLowerCase();
 
-        if (fileName.includes('tax') || fileName.includes('clearance')) {
-          resolve(`TAX CLEARANCE CERTIFICATE
+          if (fileName.includes("tax") || fileName.includes("clearance")) {
+            resolve(`TAX CLEARANCE CERTIFICATE
             This is to certify that SAMPLE COMPANY LIMITED
             has fulfilled all tax obligations as at December 31, 2024
             Valid until: 31/12/2025
             Expiry Date: December 31, 2025
             Nigeria Internal Revenue Service`);
-        } else if (fileName.includes('cac') || fileName.includes('incorporation')) {
-          resolve(`CERTIFICATE OF INCORPORATION
+          } else if (
+            fileName.includes("cac") ||
+            fileName.includes("incorporation")
+          ) {
+            resolve(`CERTIFICATE OF INCORPORATION
             Company Name: SAMPLE COMPANY LIMITED
             Registration Number: RC123456
             Date of Incorporation: 15/01/2020
             Valid Period: 5 Years
             Expires: 15/01/2025
             Corporate Affairs Commission`);
-        } else {
-          resolve(`BUSINESS DOCUMENT
+          } else {
+            resolve(`BUSINESS DOCUMENT
             Company: SAMPLE BUSINESS
             Issue Date: 10/05/2023
             Validity Period: 2 Years
             Expiration: 10/05/2025
             Valid until 10th May 2025`);
-        }
-      }, 2000 + Math.random() * 3000); // Simulate processing time
+          }
+        },
+        2000 + Math.random() * 3000,
+      ); // Simulate processing time
     });
   };
 
@@ -248,7 +270,7 @@ export default function CompanyRegistration() {
     const fallbackPatterns = [
       /\b(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})\b/g,
       /\b([a-z]+\s+\d{1,2},?\s+\d{4})\b/gi,
-      /\b(\d{1,2}(?:st|nd|rd|th)?\s+[a-z]+\s+\d{4})\b/gi
+      /\b(\d{1,2}(?:st|nd|rd|th)?\s+[a-z]+\s+\d{4})\b/gi,
     ];
 
     for (const pattern of fallbackPatterns) {
@@ -268,12 +290,16 @@ export default function CompanyRegistration() {
       // Try to parse various date formats
       let date: Date;
 
-      if (dateString.includes('/') || dateString.includes('-')) {
+      if (dateString.includes("/") || dateString.includes("-")) {
         // Handle DD/MM/YYYY or MM/DD/YYYY formats
         const parts = dateString.split(/[\/\-]/);
         if (parts.length === 3) {
           // Assume DD/MM/YYYY format for international compliance
-          date = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+          date = new Date(
+            parseInt(parts[2]),
+            parseInt(parts[1]) - 1,
+            parseInt(parts[0]),
+          );
         } else {
           date = new Date(dateString);
         }
@@ -293,19 +319,22 @@ export default function CompanyRegistration() {
       }
 
       // Format as YYYY-MM-DD for HTML date input
-      return date.toISOString().split('T')[0];
+      return date.toISOString().split("T")[0];
     } catch {
       return null;
     }
   };
 
   // Process document for expiry date extraction
-  const processDocumentForExpiry = async (file: File, fileType: keyof UploadedFiles) => {
-    if (fileType === 'otherDocuments') return;
+  const processDocumentForExpiry = async (
+    file: File,
+    fileType: keyof UploadedFiles,
+  ) => {
+    if (fileType === "otherDocuments") return;
 
-    setExtractionStatus(prev => ({
+    setExtractionStatus((prev) => ({
       ...prev,
-      [fileType]: 'processing'
+      [fileType]: "processing",
     }));
 
     try {
@@ -319,46 +348,49 @@ export default function CompanyRegistration() {
         const formattedDate = validateAndFormatDate(rawDate);
 
         if (formattedDate) {
-          setDocumentExpiry(prev => ({
+          setDocumentExpiry((prev) => ({
             ...prev,
-            [fileType]: formattedDate
+            [fileType]: formattedDate,
           }));
-          setExtractionStatus(prev => ({
+          setExtractionStatus((prev) => ({
             ...prev,
-            [fileType]: 'success'
+            [fileType]: "success",
           }));
         } else {
           // Date found but invalid/expired
-          setExtractionStatus(prev => ({
+          setExtractionStatus((prev) => ({
             ...prev,
-            [fileType]: 'failed'
+            [fileType]: "failed",
           }));
         }
       } else {
         // No date pattern found
-        setExtractionStatus(prev => ({
+        setExtractionStatus((prev) => ({
           ...prev,
-          [fileType]: 'failed'
+          [fileType]: "failed",
         }));
       }
     } catch (error) {
-      console.error('Error processing document:', error);
-      setExtractionStatus(prev => ({
+      console.error("Error processing document:", error);
+      setExtractionStatus((prev) => ({
         ...prev,
-        [fileType]: 'failed'
+        [fileType]: "failed",
       }));
     }
   };
 
   // Handle manual date input
-  const handleManualDateInput = (fileType: keyof UploadedFiles, date: string) => {
-    setDocumentExpiry(prev => ({
+  const handleManualDateInput = (
+    fileType: keyof UploadedFiles,
+    date: string,
+  ) => {
+    setDocumentExpiry((prev) => ({
       ...prev,
-      [fileType]: date
+      [fileType]: date,
     }));
-    setExtractionStatus(prev => ({
+    setExtractionStatus((prev) => ({
       ...prev,
-      [fileType]: 'manual'
+      [fileType]: "manual",
     }));
   };
 
@@ -366,20 +398,32 @@ export default function CompanyRegistration() {
     const newErrors: Record<string, string> = {};
 
     // Required field validation
-    if (!formData.companyName.trim()) newErrors.companyName = "Company name is required";
-    if (!formData.registrationNumber.trim()) newErrors.registrationNumber = "Registration number is required";
-    if (!formData.address.trim()) newErrors.address = "Company address is required";
-    if (!formData.businessType) newErrors.businessType = "Business type is required";
-    if (!formData.contactPersonName.trim()) newErrors.contactPersonName = "Contact person name is required";
-    if (!formData.contactPersonEmail.trim()) newErrors.contactPersonEmail = "Contact email is required";
-    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required";
+    if (!formData.companyName.trim())
+      newErrors.companyName = "Company name is required";
+    if (!formData.registrationNumber.trim())
+      newErrors.registrationNumber = "Registration number is required";
+    if (!formData.address.trim())
+      newErrors.address = "Company address is required";
+    if (!formData.businessType)
+      newErrors.businessType = "Business type is required";
+    if (!formData.contactPersonName.trim())
+      newErrors.contactPersonName = "Contact person name is required";
+    if (!formData.contactPersonEmail.trim())
+      newErrors.contactPersonEmail = "Contact email is required";
+    if (!formData.phoneNumber.trim())
+      newErrors.phoneNumber = "Phone number is required";
     if (!formData.password) newErrors.password = "Password is required";
-    if (!formData.confirmPassword) newErrors.confirmPassword = "Please confirm your password";
-    if (!formData.agreeToTerms) newErrors.agreeToTerms = "You must agree to the terms and conditions";
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "Please confirm your password";
+    if (!formData.agreeToTerms)
+      newErrors.agreeToTerms = "You must agree to the terms and conditions";
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.contactPersonEmail && !emailRegex.test(formData.contactPersonEmail)) {
+    if (
+      formData.contactPersonEmail &&
+      !emailRegex.test(formData.contactPersonEmail)
+    ) {
       newErrors.contactPersonEmail = "Please enter a valid email address";
     }
 
@@ -399,9 +443,12 @@ export default function CompanyRegistration() {
     }
 
     // Document validation
-    if (!uploadedFiles.incorporation) newErrors.incorporation = "Certificate of Incorporation is required";
-    if (!uploadedFiles.taxClearance) newErrors.taxClearance = "Tax Clearance Certificate is required";
-    if (!uploadedFiles.companyProfile) newErrors.companyProfile = "Company Profile is required";
+    if (!uploadedFiles.incorporation)
+      newErrors.incorporation = "Certificate of Incorporation is required";
+    if (!uploadedFiles.taxClearance)
+      newErrors.taxClearance = "Tax Clearance Certificate is required";
+    if (!uploadedFiles.companyProfile)
+      newErrors.companyProfile = "Company Profile is required";
     if (!uploadedFiles.cacForm) newErrors.cacForm = "CAC Form is required";
 
     setErrors(newErrors);
@@ -410,11 +457,43 @@ export default function CompanyRegistration() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      // Here you would typically send the data to your backend
+      // Create registration record
+      const registrationData = {
+        id: `company-${Date.now()}`,
+        companyName: formData.companyName,
+        registrationNumber: formData.registrationNumber,
+        address: formData.address,
+        businessType: formData.businessType,
+        contactPerson: formData.contactPersonName,
+        email: formData.contactPersonEmail.toLowerCase(),
+        phone: formData.phoneNumber,
+        registrationDate: new Date().toISOString().split("T")[0],
+        status: "Pending", // All new registrations start as Pending
+        submittedAt: new Date().toISOString(),
+      };
+
+      // Save to localStorage for admin dashboard to pick up
+      const existingRegistrations = JSON.parse(
+        localStorage.getItem("registeredCompanies") || "[]",
+      );
+      const updatedRegistrations = [registrationData, ...existingRegistrations];
+      localStorage.setItem(
+        "registeredCompanies",
+        JSON.stringify(updatedRegistrations),
+      );
+
+      // Also set initial user status as Pending
+      localStorage.setItem(
+        `userStatus_${formData.contactPersonEmail.toLowerCase()}`,
+        "Pending",
+      );
+
+      console.log("Registration Data Saved:", registrationData);
       console.log("Form Data:", formData);
       console.log("Uploaded Files:", uploadedFiles);
+
       setIsSubmitted(true);
     }
   };
@@ -427,12 +506,15 @@ export default function CompanyRegistration() {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <Check className="h-8 w-8 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Registration Submitted</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Registration Submitted
+            </h2>
             <p className="text-gray-600 mb-6">
-              Thank you for registering. Your application is under review. You will receive an email notification once your account is activated.
+              Thank you for registering. Your application is under review. You
+              will receive an email notification once your account is activated.
             </p>
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="inline-flex items-center px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -459,8 +541,8 @@ export default function CompanyRegistration() {
                 <p className="text-xs text-gray-600">Company Registration</p>
               </div>
             </Link>
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="flex items-center px-4 py-2 text-gray-600 hover:text-green-700"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -474,17 +556,27 @@ export default function CompanyRegistration() {
       <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">Company Registration</h1>
-            <p className="text-gray-600 mt-1">Register your company to participate in Kano State procurement opportunities</p>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Company Registration
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Register your company to participate in Kano State procurement
+              opportunities
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 space-y-8">
             {/* Company Information */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Company Information
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="companyName"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Company Name *
                   </label>
                   <input
@@ -493,7 +585,7 @@ export default function CompanyRegistration() {
                     name="companyName"
                     value={formData.companyName}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.companyName ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.companyName ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Enter company name"
                   />
                   {errors.companyName && (
@@ -505,7 +597,10 @@ export default function CompanyRegistration() {
                 </div>
 
                 <div>
-                  <label htmlFor="registrationNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="registrationNumber"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Company Registration Number (CAC) *
                   </label>
                   <input
@@ -514,7 +609,7 @@ export default function CompanyRegistration() {
                     name="registrationNumber"
                     value={formData.registrationNumber}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.registrationNumber ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.registrationNumber ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Enter CAC registration number"
                   />
                   {errors.registrationNumber && (
@@ -526,7 +621,10 @@ export default function CompanyRegistration() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="address"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Company Address *
                   </label>
                   <textarea
@@ -535,7 +633,7 @@ export default function CompanyRegistration() {
                     rows={3}
                     value={formData.address}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.address ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.address ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Enter complete company address"
                   />
                   {errors.address && (
@@ -547,7 +645,10 @@ export default function CompanyRegistration() {
                 </div>
 
                 <div>
-                  <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="businessType"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Business Type *
                   </label>
                   <select
@@ -555,11 +656,13 @@ export default function CompanyRegistration() {
                     name="businessType"
                     value={formData.businessType}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.businessType ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.businessType ? "border-red-500" : "border-gray-300"}`}
                   >
                     <option value="">Select business type</option>
                     {businessTypes.map((type) => (
-                      <option key={type} value={type}>{type}</option>
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
                     ))}
                   </select>
                   {errors.businessType && (
@@ -574,10 +677,15 @@ export default function CompanyRegistration() {
 
             {/* Contact Information */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Contact Information
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="contactPersonName" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="contactPersonName"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Contact Person Name *
                   </label>
                   <input
@@ -586,7 +694,7 @@ export default function CompanyRegistration() {
                     name="contactPersonName"
                     value={formData.contactPersonName}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.contactPersonName ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.contactPersonName ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Enter contact person full name"
                   />
                   {errors.contactPersonName && (
@@ -598,7 +706,10 @@ export default function CompanyRegistration() {
                 </div>
 
                 <div>
-                  <label htmlFor="contactPersonEmail" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="contactPersonEmail"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Contact Person Email *
                   </label>
                   <input
@@ -607,7 +718,7 @@ export default function CompanyRegistration() {
                     name="contactPersonEmail"
                     value={formData.contactPersonEmail}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.contactPersonEmail ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.contactPersonEmail ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Enter email address"
                   />
                   {errors.contactPersonEmail && (
@@ -619,7 +730,10 @@ export default function CompanyRegistration() {
                 </div>
 
                 <div>
-                  <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="phoneNumber"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Phone Number *
                   </label>
                   <input
@@ -628,7 +742,7 @@ export default function CompanyRegistration() {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.phoneNumber ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.phoneNumber ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Enter phone number"
                   />
                   {errors.phoneNumber && (
@@ -643,10 +757,15 @@ export default function CompanyRegistration() {
 
             {/* Password Setup */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Password Setup</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Password Setup
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Password *
                   </label>
                   <input
@@ -655,7 +774,7 @@ export default function CompanyRegistration() {
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.password ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Enter password (min. 8 characters)"
                   />
                   {errors.password && (
@@ -667,7 +786,10 @@ export default function CompanyRegistration() {
                 </div>
 
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Confirm Password *
                   </label>
                   <input
@@ -676,7 +798,7 @@ export default function CompanyRegistration() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Confirm your password"
                   />
                   {errors.confirmPassword && (
@@ -691,7 +813,9 @@ export default function CompanyRegistration() {
 
             {/* Document Uploads */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Document Uploads</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Document Uploads
+              </h2>
               <div className="space-y-6">
                 {/* Certificate of Incorporation */}
                 <div>
@@ -703,11 +827,13 @@ export default function CompanyRegistration() {
                       <div className="flex items-center justify-between bg-green-50 p-3 rounded-md">
                         <div className="flex items-center">
                           <FileText className="h-5 w-5 text-green-600 mr-2" />
-                          <span className="text-sm text-green-800">{uploadedFiles.incorporation.name}</span>
+                          <span className="text-sm text-green-800">
+                            {uploadedFiles.incorporation.name}
+                          </span>
                         </div>
                         <button
                           type="button"
-                          onClick={() => removeFile('incorporation')}
+                          onClick={() => removeFile("incorporation")}
                           className="text-red-500 hover:text-red-700"
                         >
                           Remove
@@ -716,13 +842,20 @@ export default function CompanyRegistration() {
                     ) : (
                       <div className="text-center">
                         <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <label htmlFor="incorporation" className="cursor-pointer">
-                          <span className="text-sm text-gray-600">Click to upload or drag and drop</span>
+                        <label
+                          htmlFor="incorporation"
+                          className="cursor-pointer"
+                        >
+                          <span className="text-sm text-gray-600">
+                            Click to upload or drag and drop
+                          </span>
                           <input
                             type="file"
                             id="incorporation"
                             accept=".pdf,.jpg,.jpeg,.png"
-                            onChange={(e) => handleFileUpload(e, 'incorporation')}
+                            onChange={(e) =>
+                              handleFileUpload(e, "incorporation")
+                            }
                             className="hidden"
                           />
                         </label>
@@ -749,15 +882,22 @@ export default function CompanyRegistration() {
                           <div className="flex items-center">
                             <FileText className="h-5 w-5 text-green-600 mr-2" />
                             <div>
-                              <span className="text-sm text-green-800 block">{uploadedFiles.taxClearance.name}</span>
+                              <span className="text-sm text-green-800 block">
+                                {uploadedFiles.taxClearance.name}
+                              </span>
                               <span className="text-xs text-green-600">
-                                {(uploadedFiles.taxClearance.size / 1024 / 1024).toFixed(2)} MB
+                                {(
+                                  uploadedFiles.taxClearance.size /
+                                  1024 /
+                                  1024
+                                ).toFixed(2)}{" "}
+                                MB
                               </span>
                             </div>
                           </div>
                           <button
                             type="button"
-                            onClick={() => removeFile('taxClearance')}
+                            onClick={() => removeFile("taxClearance")}
                             className="text-red-500 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"
                           >
                             Remove
@@ -767,29 +907,35 @@ export default function CompanyRegistration() {
                         {/* Expiry Date Extraction Status */}
                         <div className="bg-blue-50 p-3 rounded-md">
                           <div className="flex items-center justify-between mb-2">
-                            <label className="text-sm font-medium text-blue-900">Document Expiry Date:</label>
-                            {extractionStatus.taxClearance === 'processing' && (
+                            <label className="text-sm font-medium text-blue-900">
+                              Document Expiry Date:
+                            </label>
+                            {extractionStatus.taxClearance === "processing" && (
                               <div className="flex items-center text-blue-600">
                                 <Loader2 className="h-4 w-4 mr-1 animate-spin" />
                                 <span className="text-xs">Extracting...</span>
                               </div>
                             )}
-                            {extractionStatus.taxClearance === 'success' && (
+                            {extractionStatus.taxClearance === "success" && (
                               <div className="flex items-center text-green-600">
                                 <CheckCircle2 className="h-4 w-4 mr-1" />
                                 <span className="text-xs">Auto-detected</span>
                               </div>
                             )}
-                            {extractionStatus.taxClearance === 'failed' && (
+                            {extractionStatus.taxClearance === "failed" && (
                               <div className="flex items-center text-yellow-600">
                                 <XCircle className="h-4 w-4 mr-1" />
-                                <span className="text-xs">Manual input required</span>
+                                <span className="text-xs">
+                                  Manual input required
+                                </span>
                               </div>
                             )}
-                            {extractionStatus.taxClearance === 'manual' && (
+                            {extractionStatus.taxClearance === "manual" && (
                               <div className="flex items-center text-blue-600">
                                 <Edit3 className="h-4 w-4 mr-1" />
-                                <span className="text-xs">Manually entered</span>
+                                <span className="text-xs">
+                                  Manually entered
+                                </span>
                               </div>
                             )}
                           </div>
@@ -798,14 +944,27 @@ export default function CompanyRegistration() {
                             <Calendar className="h-4 w-4 text-blue-600" />
                             <input
                               type="date"
-                              value={documentExpiry.taxClearance || ''}
-                              onChange={(e) => handleManualDateInput('taxClearance', e.target.value)}
+                              value={documentExpiry.taxClearance || ""}
+                              onChange={(e) =>
+                                handleManualDateInput(
+                                  "taxClearance",
+                                  e.target.value,
+                                )
+                              }
                               className="text-sm border border-blue-300 rounded px-2 py-1 bg-white"
-                              min={new Date().toISOString().split('T')[0]}
+                              min={new Date().toISOString().split("T")[0]}
                             />
                             {documentExpiry.taxClearance && (
                               <span className="text-xs text-blue-700">
-                                Valid for {Math.ceil((new Date(documentExpiry.taxClearance).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days
+                                Valid for{" "}
+                                {Math.ceil(
+                                  (new Date(
+                                    documentExpiry.taxClearance,
+                                  ).getTime() -
+                                    new Date().getTime()) /
+                                    (1000 * 60 * 60 * 24),
+                                )}{" "}
+                                days
                               </span>
                             )}
                           </div>
@@ -814,13 +973,20 @@ export default function CompanyRegistration() {
                     ) : (
                       <div className="text-center">
                         <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <label htmlFor="taxClearance" className="cursor-pointer">
-                          <span className="text-sm text-gray-600">Click to upload or drag and drop</span>
+                        <label
+                          htmlFor="taxClearance"
+                          className="cursor-pointer"
+                        >
+                          <span className="text-sm text-gray-600">
+                            Click to upload or drag and drop
+                          </span>
                           <input
                             type="file"
                             id="taxClearance"
                             accept=".pdf,.jpg,.jpeg,.png"
-                            onChange={(e) => handleFileUpload(e, 'taxClearance')}
+                            onChange={(e) =>
+                              handleFileUpload(e, "taxClearance")
+                            }
                             className="hidden"
                           />
                         </label>
@@ -845,11 +1011,13 @@ export default function CompanyRegistration() {
                       <div className="flex items-center justify-between bg-green-50 p-3 rounded-md">
                         <div className="flex items-center">
                           <FileText className="h-5 w-5 text-green-600 mr-2" />
-                          <span className="text-sm text-green-800">{uploadedFiles.companyProfile.name}</span>
+                          <span className="text-sm text-green-800">
+                            {uploadedFiles.companyProfile.name}
+                          </span>
                         </div>
                         <button
                           type="button"
-                          onClick={() => removeFile('companyProfile')}
+                          onClick={() => removeFile("companyProfile")}
                           className="text-red-500 hover:text-red-700"
                         >
                           Remove
@@ -858,13 +1026,20 @@ export default function CompanyRegistration() {
                     ) : (
                       <div className="text-center">
                         <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <label htmlFor="companyProfile" className="cursor-pointer">
-                          <span className="text-sm text-gray-600">Click to upload or drag and drop</span>
+                        <label
+                          htmlFor="companyProfile"
+                          className="cursor-pointer"
+                        >
+                          <span className="text-sm text-gray-600">
+                            Click to upload or drag and drop
+                          </span>
                           <input
                             type="file"
                             id="companyProfile"
                             accept=".pdf,.jpg,.jpeg,.png"
-                            onChange={(e) => handleFileUpload(e, 'companyProfile')}
+                            onChange={(e) =>
+                              handleFileUpload(e, "companyProfile")
+                            }
                             className="hidden"
                           />
                         </label>
@@ -883,27 +1058,38 @@ export default function CompanyRegistration() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     CAC Form *
-                    <span className="text-xs text-gray-500 ml-2">(PDF, JPG, PNG - Max 5MB)</span>
+                    <span className="text-xs text-gray-500 ml-2">
+                      (PDF, JPG, PNG - Max 5MB)
+                    </span>
                   </label>
                   <div
                     className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-green-400 transition-colors"
                     onDragOver={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.add('border-green-400', 'bg-green-50');
+                      e.currentTarget.classList.add(
+                        "border-green-400",
+                        "bg-green-50",
+                      );
                     }}
                     onDragLeave={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.remove('border-green-400', 'bg-green-50');
+                      e.currentTarget.classList.remove(
+                        "border-green-400",
+                        "bg-green-50",
+                      );
                     }}
                     onDrop={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.remove('border-green-400', 'bg-green-50');
+                      e.currentTarget.classList.remove(
+                        "border-green-400",
+                        "bg-green-50",
+                      );
                       const files = e.dataTransfer.files;
                       if (files.length > 0) {
                         const mockEvent = {
-                          target: { files }
+                          target: { files },
                         } as React.ChangeEvent<HTMLInputElement>;
-                        handleFileUpload(mockEvent, 'cacForm');
+                        handleFileUpload(mockEvent, "cacForm");
                       }
                     }}
                   >
@@ -913,15 +1099,22 @@ export default function CompanyRegistration() {
                           <div className="flex items-center">
                             <FileText className="h-5 w-5 text-green-600 mr-2" />
                             <div>
-                              <span className="text-sm text-green-800 block">{uploadedFiles.cacForm.name}</span>
+                              <span className="text-sm text-green-800 block">
+                                {uploadedFiles.cacForm.name}
+                              </span>
                               <span className="text-xs text-green-600">
-                                {(uploadedFiles.cacForm.size / 1024 / 1024).toFixed(2)} MB
+                                {(
+                                  uploadedFiles.cacForm.size /
+                                  1024 /
+                                  1024
+                                ).toFixed(2)}{" "}
+                                MB
                               </span>
                             </div>
                           </div>
                           <button
                             type="button"
-                            onClick={() => removeFile('cacForm')}
+                            onClick={() => removeFile("cacForm")}
                             className="text-red-500 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"
                           >
                             Remove
@@ -935,25 +1128,25 @@ export default function CompanyRegistration() {
                               <Shield className="h-4 w-4 mr-1" />
                               AI Document Analysis
                             </label>
-                            {extractionStatus.cacForm === 'processing' && (
+                            {extractionStatus.cacForm === "processing" && (
                               <div className="flex items-center text-purple-600">
                                 <Loader2 className="h-4 w-4 mr-1 animate-spin" />
                                 <span className="text-xs">Processing...</span>
                               </div>
                             )}
-                            {extractionStatus.cacForm === 'success' && (
+                            {extractionStatus.cacForm === "success" && (
                               <div className="flex items-center text-green-600">
                                 <CheckCircle2 className="h-4 w-4 mr-1" />
                                 <span className="text-xs">Validated</span>
                               </div>
                             )}
-                            {extractionStatus.cacForm === 'failed' && (
+                            {extractionStatus.cacForm === "failed" && (
                               <div className="flex items-center text-amber-600">
                                 <XCircle className="h-4 w-4 mr-1" />
                                 <span className="text-xs">Verify manually</span>
                               </div>
                             )}
-                            {extractionStatus.cacForm === 'manual' && (
+                            {extractionStatus.cacForm === "manual" && (
                               <div className="flex items-center text-blue-600">
                                 <Edit3 className="h-4 w-4 mr-1" />
                                 <span className="text-xs">User verified</span>
@@ -964,29 +1157,37 @@ export default function CompanyRegistration() {
                           <div className="space-y-2">
                             <div className="flex items-center space-x-2">
                               <Calendar className="h-4 w-4 text-purple-600" />
-                              <span className="text-xs text-purple-800">Document Validity Period:</span>
+                              <span className="text-xs text-purple-800">
+                                Document Validity Period:
+                              </span>
                               <input
                                 type="date"
-                                value={documentExpiry.cacForm || ''}
-                                onChange={(e) => handleManualDateInput('cacForm', e.target.value)}
+                                value={documentExpiry.cacForm || ""}
+                                onChange={(e) =>
+                                  handleManualDateInput(
+                                    "cacForm",
+                                    e.target.value,
+                                  )
+                                }
                                 className="text-xs border border-purple-300 rounded px-2 py-1 bg-white"
-                                min={new Date().toISOString().split('T')[0]}
+                                min={new Date().toISOString().split("T")[0]}
                               />
                             </div>
 
                             {documentExpiry.cacForm && (
                               <div className="text-xs text-purple-700 bg-purple-100 p-2 rounded">
-                                <strong>Validity Status:</strong> {
-                                  new Date(documentExpiry.cacForm) > new Date()
-                                    ? `Valid for ${Math.ceil((new Date(documentExpiry.cacForm).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days`
-                                    : 'Document Expired - Upload new version'
-                                }
+                                <strong>Validity Status:</strong>{" "}
+                                {new Date(documentExpiry.cacForm) > new Date()
+                                  ? `Valid for ${Math.ceil((new Date(documentExpiry.cacForm).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days`
+                                  : "Document Expired - Upload new version"}
                               </div>
                             )}
 
-                            {extractionStatus.cacForm === 'processing' && (
+                            {extractionStatus.cacForm === "processing" && (
                               <div className="text-xs text-purple-600 bg-purple-100 p-2 rounded">
-                                <strong>AI Processing:</strong> Extracting validity period, registration details, and verification codes...
+                                <strong>AI Processing:</strong> Extracting
+                                validity period, registration details, and
+                                verification codes...
                               </div>
                             )}
                           </div>
@@ -995,21 +1196,26 @@ export default function CompanyRegistration() {
                     ) : (
                       <div className="text-center py-6">
                         <Upload className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                        <label htmlFor="cacForm" className="cursor-pointer block">
+                        <label
+                          htmlFor="cacForm"
+                          className="cursor-pointer block"
+                        >
                           <span className="text-sm text-gray-600 block mb-1">
-                            <strong>Click to upload</strong> or drag and drop your CAC Form
+                            <strong>Click to upload</strong> or drag and drop
+                            your CAC Form
                           </span>
                           <span className="text-xs text-gray-500">
                             PDF, JPG, JPEG or PNG (max. 5MB)
                           </span>
                           <span className="text-xs text-blue-600 block mt-1">
-                            ✨ AI will automatically extract expiry dates and validate document
+                            ✨ AI will automatically extract expiry dates and
+                            validate document
                           </span>
                           <input
                             type="file"
                             id="cacForm"
                             accept=".pdf,.jpg,.jpeg,.png"
-                            onChange={(e) => handleFileUpload(e, 'cacForm')}
+                            onChange={(e) => handleFileUpload(e, "cacForm")}
                             className="hidden"
                           />
                         </label>
@@ -1033,28 +1239,40 @@ export default function CompanyRegistration() {
                     {uploadedFiles.otherDocuments.length > 0 ? (
                       <div className="space-y-2">
                         {uploadedFiles.otherDocuments.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between bg-blue-50 p-3 rounded-md">
+                          <div
+                            key={index}
+                            className="flex items-center justify-between bg-blue-50 p-3 rounded-md"
+                          >
                             <div className="flex items-center">
                               <FileText className="h-5 w-5 text-blue-600 mr-2" />
-                              <span className="text-sm text-blue-800">{file.name}</span>
+                              <span className="text-sm text-blue-800">
+                                {file.name}
+                              </span>
                             </div>
                             <button
                               type="button"
-                              onClick={() => removeFile('otherDocuments', index)}
+                              onClick={() =>
+                                removeFile("otherDocuments", index)
+                              }
                               className="text-red-500 hover:text-red-700"
                             >
                               Remove
                             </button>
                           </div>
                         ))}
-                        <label htmlFor="otherDocuments" className="block cursor-pointer text-center p-3 border border-dashed border-blue-300 rounded-md text-blue-600 hover:bg-blue-50">
+                        <label
+                          htmlFor="otherDocuments"
+                          className="block cursor-pointer text-center p-3 border border-dashed border-blue-300 rounded-md text-blue-600 hover:bg-blue-50"
+                        >
                           Add more documents
                           <input
                             type="file"
                             id="otherDocuments"
                             multiple
                             accept=".pdf,.jpg,.jpeg,.png"
-                            onChange={(e) => handleFileUpload(e, 'otherDocuments')}
+                            onChange={(e) =>
+                              handleFileUpload(e, "otherDocuments")
+                            }
                             className="hidden"
                           />
                         </label>
@@ -1062,14 +1280,21 @@ export default function CompanyRegistration() {
                     ) : (
                       <div className="text-center">
                         <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <label htmlFor="otherDocuments" className="cursor-pointer">
-                          <span className="text-sm text-gray-600">Click to upload additional documents</span>
+                        <label
+                          htmlFor="otherDocuments"
+                          className="cursor-pointer"
+                        >
+                          <span className="text-sm text-gray-600">
+                            Click to upload additional documents
+                          </span>
                           <input
                             type="file"
                             id="otherDocuments"
                             multiple
                             accept=".pdf,.jpg,.jpeg,.png"
-                            onChange={(e) => handleFileUpload(e, 'otherDocuments')}
+                            onChange={(e) =>
+                              handleFileUpload(e, "otherDocuments")
+                            }
                             className="hidden"
                           />
                         </label>
@@ -1092,7 +1317,12 @@ export default function CompanyRegistration() {
                   className="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 />
                 <label htmlFor="agreeToTerms" className="text-sm text-gray-700">
-                  I agree to the <a href="#" className="text-green-600 hover:underline">Terms and Conditions</a> and acknowledge that all information provided is accurate and complete. *
+                  I agree to the{" "}
+                  <a href="#" className="text-green-600 hover:underline">
+                    Terms and Conditions
+                  </a>{" "}
+                  and acknowledge that all information provided is accurate and
+                  complete. *
                 </label>
               </div>
               {errors.agreeToTerms && (
@@ -1110,8 +1340,10 @@ export default function CompanyRegistration() {
                 <div className="text-sm text-blue-800">
                   <p className="font-medium mb-1">Security Notice</p>
                   <p>
-                    Your application will be reviewed by our admin team. You will receive an email notification once your account is activated. 
-                    Please ensure all documents are valid and up-to-date to avoid delays in processing.
+                    Your application will be reviewed by our admin team. You
+                    will receive an email notification once your account is
+                    activated. Please ensure all documents are valid and
+                    up-to-date to avoid delays in processing.
                   </p>
                 </div>
               </div>

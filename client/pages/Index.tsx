@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "@/lib/utils";
+import TenderTestHelper from "@/components/TenderTestHelper";
+import TenderVisibilityStatus from "@/components/TenderVisibilityStatus";
 import {
   Building2,
   FileText,
@@ -237,7 +239,7 @@ export default function Index() {
       title: "Water Treatment Plant",
       description:
         "Construction of modern water treatment facility serving 200,000 residents",
-      value: "���5.7B",
+      value: "�����5.7B",
       deadline: "Mar 05, 2024",
       status: "Open",
       statusColor: "bg-green-100 text-green-800",
@@ -282,8 +284,19 @@ export default function Index() {
 
   const currentTender = featuredTenders[currentTenderIndex];
 
+  const handleTenderCreated = () => {
+    // Refresh the featured and recent tenders when a new tender is created
+    loadFeaturedTenders();
+    loadRecentTenders();
+  };
+
   return (
     <div className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+      {/* Tender Test Helper */}
+      <TenderTestHelper onTenderCreated={handleTenderCreated} />
+
+      {/* Tender Visibility Status */}
+      <TenderVisibilityStatus />
       {/* Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
