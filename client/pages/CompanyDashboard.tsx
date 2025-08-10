@@ -3387,16 +3387,241 @@ export default function CompanyDashboard() {
       </header>
 
       <div className="flex">
-        {/* Dynamic Sidebar */}
+        {/* Sidebar */}
         <div
-          className={`${sidebarOpen ? "w-80" : "w-0"} overflow-hidden transition-all duration-300 bg-white border-r border-gray-200 h-screen sticky top-16`}
+          className={`${sidebarOpen ? "w-64" : "w-0"} overflow-hidden transition-all duration-300 bg-white border-r border-gray-200 h-screen sticky top-16`}
         >
-          <DynamicNavigation
-            status={companyData.status}
-            activeSection={activeSection}
-            onSectionChange={setActiveSection}
-            companyName={companyData.name}
-          />
+          <nav className="p-4 space-y-2">
+            <div className="mb-4">
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Bid Activity
+              </h2>
+            </div>
+
+            <button
+              onClick={() => setActiveSection("tender-ads")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "tender-ads"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status === "Blacklisted"}
+            >
+              <FileText className="h-4 w-4 mr-3" />
+              {companyData.status === "Pending" ? "Browse Opportunities" : "Tender Advertisements"}
+              {companyData.status === "Pending" && (
+                <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                  View Only
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("purchased-bids")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "purchased-bids"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status === "Pending" || companyData.status === "Blacklisted"}
+            >
+              <Bookmark className="h-4 w-4 mr-3" />
+              {companyData.status === "Approved" ? "Purchased Bids" : "My Applications"}
+              {(companyData.status === "Pending" || companyData.status === "Blacklisted") && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("awarded-bids")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "awarded-bids"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status === "Pending" || companyData.status === "Blacklisted"}
+            >
+              <Award className="h-4 w-4 mr-3" />
+              {companyData.status === "Approved" ? "Awarded Bids" : "Previous Awards"}
+              {(companyData.status === "Pending" || companyData.status === "Blacklisted") && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <div className="pt-4 mb-4">
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Company Profile & Compliance
+              </h2>
+            </div>
+
+            <button
+              onClick={() => setActiveSection("my-profile")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "my-profile"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Users className="h-4 w-4 mr-3" />
+              My Profile
+            </button>
+
+            <button
+              onClick={() => setActiveSection("my-documents")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "my-documents"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Upload className="h-4 w-4 mr-3" />
+              {companyData.status === "Pending" ? "Verification Center" :
+               companyData.status === "Suspended" ? "Document Updates" : "My Documents"}
+              {companyData.status === "Pending" && (
+                <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full">
+                  Required
+                </span>
+              )}
+              {companyData.status === "Suspended" && (
+                <span className="ml-2 text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">
+                  Action Required
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("detailed-compliance")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "detailed-compliance"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status === "Blacklisted"}
+            >
+              <Shield className="h-4 w-4 mr-3" />
+              {companyData.status === "Suspended" ? "Reinstatement Portal" : "Detailed Compliance"}
+              {companyData.status === "Blacklisted" && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <div className="pt-4 mb-4">
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Communication
+              </h2>
+            </div>
+
+            <button
+              onClick={() => setActiveSection("new-clarifications")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "new-clarifications"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status !== "Approved"}
+            >
+              <Plus className="h-4 w-4 mr-3" />
+              {companyData.status === "Approved" ? "New Clarifications" : "Request Clarifications"}
+              {companyData.status !== "Approved" && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("existing-clarifications")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "existing-clarifications"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <History className="h-4 w-4 mr-3" />
+              {companyData.status === "Approved" ? "Existing Clarifications" : "Previous Requests"}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("messages")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "messages"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Mail className="h-4 w-4 mr-3" />
+              {companyData.status === "Approved" ? "Messages" : "Notifications Center"}
+            </button>
+
+            <div className="pt-4 mb-4">
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Business
+              </h2>
+            </div>
+
+            <button
+              onClick={() => setActiveSection("transaction-history")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "transaction-history"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status === "Pending" || companyData.status === "Blacklisted"}
+            >
+              <CreditCard className="h-4 w-4 mr-3" />
+              Transaction History
+              {(companyData.status === "Pending" || companyData.status === "Blacklisted") && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("contracts-awarded")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "contracts-awarded"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status === "Blacklisted"}
+            >
+              <FileCheck className="h-4 w-4 mr-3" />
+              {companyData.status === "Approved" ? "Contracts Awarded" : "Contract History"}
+              {companyData.status === "Blacklisted" && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("annual-report")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "annual-report"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status === "Pending" || companyData.status === "Blacklisted"}
+            >
+              <BarChart3 className="h-4 w-4 mr-3" />
+              {companyData.status === "Approved" ? "Annual Report" : "Performance Report"}
+              {(companyData.status === "Pending" || companyData.status === "Blacklisted") && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("grievance")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "grievance"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Gavel className="h-4 w-4 mr-3" />
+              {companyData.status === "Blacklisted" ? "Appeal Center" : "Grievance Redress"}
+              {companyData.status === "Blacklisted" && (
+                <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                  Available
+                </span>
+              )}
+            </button>
+          </nav>
         </div>
 
         {/* Main Content */}
