@@ -606,14 +606,28 @@ export default function AdminDashboard() {
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#" className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-green-700 bg-green-50">
-                <Users className="h-4 w-4" />
-                <span>Dashboard</span>
-              </a>
-              <a href="#" className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-700">
+              <button
+                onClick={() => setActiveTab("companies")}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+                  activeTab === "companies"
+                    ? "text-green-700 bg-green-50"
+                    : "text-gray-700 hover:text-green-700"
+                }`}
+              >
                 <CheckSquare className="h-4 w-4" />
                 <span>Company Approvals</span>
-              </a>
+              </button>
+              <button
+                onClick={() => setActiveTab("user-management")}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+                  activeTab === "user-management"
+                    ? "text-green-700 bg-green-50"
+                    : "text-gray-700 hover:text-green-700"
+                }`}
+              >
+                <Settings className="h-4 w-4" />
+                <span>User Management</span>
+              </button>
             </nav>
 
             <div className="flex items-center space-x-4">
