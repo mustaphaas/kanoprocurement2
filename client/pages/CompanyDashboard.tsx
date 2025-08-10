@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
 import { formatCurrency } from "@/lib/utils";
 import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
-import DynamicNavigation from "@/components/DynamicNavigation";
-import DynamicDashboardHeader from "@/components/DynamicDashboardHeader";
 import StatusDemo from "@/components/StatusDemo";
 import {
   Building2,
@@ -1029,7 +1027,7 @@ export default function CompanyDashboard() {
                           {tender.title}
                         </h3>
                         <p className="text-sm text-gray-600">
-                          {tender.ministry} �� Deadline:{" "}
+                          {tender.ministry} • Deadline:{" "}
                           {new Date(tender.deadline).toLocaleDateString()}
                         </p>
                       </div>
