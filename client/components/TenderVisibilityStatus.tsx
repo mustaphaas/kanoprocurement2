@@ -46,49 +46,79 @@ export const TenderVisibilityStatus: React.FC = () => {
 
         <div className="border-t pt-3">
           <h4 className="text-sm font-medium text-gray-900 mb-2">
-            User Access Status:
+            Company Approval (SuperUser Tab):
           </h4>
           <div className="space-y-2 text-xs">
             <div className="flex items-center justify-between">
               <span className="flex items-center">
                 <CheckCircle className="h-3 w-3 text-green-500 mr-1" />
-                Approved Users
+                Approved
               </span>
-              <span className="text-green-600">Can see all {tenderCount}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="flex items-center">
-                <XCircle className="h-3 w-3 text-red-500 mr-1" />
-                Blacklisted Users
+              <span className="text-green-600">
+                Full access to all {tenderCount}
               </span>
-              <span className="text-red-600">Cannot see any</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center">
                 <Eye className="h-3 w-3 text-blue-500 mr-1" />
-                Pending Users
+                Pending Approval
               </span>
-              <span className="text-blue-600">View only</span>
+              <span className="text-blue-600">Awaiting review</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="flex items-center">
-                <span className="h-3 w-3 bg-orange-500 rounded-full mr-1"></span>
-                Suspended Users
-              </span>
-              <span className="text-orange-600">View only + alerts</span>
-            </div>
+          </div>
+          <div className="text-xs text-gray-500 mt-2">
+            Pending users go through approval workflow
           </div>
         </div>
 
         <div className="border-t pt-3">
           <h4 className="text-sm font-medium text-gray-900 mb-2">
-            Quick Test Logins:
+            Company Status (Issues):
+          </h4>
+          <div className="space-y-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center">
+                <span className="h-3 w-3 bg-orange-500 rounded-full mr-1"></span>
+                Suspended
+              </span>
+              <span className="text-orange-600">Compliance issues</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="flex items-center">
+                <XCircle className="h-3 w-3 text-red-500 mr-1" />
+                Blacklisted
+              </span>
+              <span className="text-red-600">Banned from system</span>
+            </div>
+          </div>
+          <div className="text-xs text-gray-500 mt-2">
+            Status issues requiring admin intervention
+          </div>
+        </div>
+
+        <div className="border-t pt-3">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">
+            Test Company Logins:
           </h4>
           <div className="space-y-1 text-xs">
-            <div>✅ approved@company.com (Full access)</div>
-            <div>❌ blacklisted@company.com (No tender access)</div>
-            <div>⏳ pending@company.com (View only)</div>
-            <div>⚠️ suspended@company.com (View + restricted)</div>
+            <div className="font-medium text-blue-600">
+              Company Approval Tab:
+            </div>
+            <div>✅ approved@company.com / password123</div>
+            <div>✅ testcompany@example.com / test123</div>
+            <div>✅ demo@company.com / demo123</div>
+            <div>⏳ pending@company.com / password123</div>
+            <div className="text-xs text-gray-500 ml-4">
+              ↳ Pending goes to SuperUser approval workflow
+            </div>
+            <div className="font-medium text-orange-600 mt-2">
+              Company Status Issues:
+            </div>
+            <div>⚠️ suspended@company.com / password123</div>
+            <div>❌ blacklisted@company.com / password123</div>
+            <div className="text-xs text-gray-500 ml-4">
+              ↳ Status problems requiring intervention
+            </div>
           </div>
         </div>
       </div>

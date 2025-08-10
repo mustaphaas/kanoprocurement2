@@ -383,7 +383,7 @@ export default function SuperUserDashboard() {
   const navigate = useNavigate();
 
   const dashboardStats: DashboardStats = {
-    newRegistrationsPending: 12,
+    newRegistrationsPending: 4, // Including pending@company.com + 3 other mock companies
     activeTenders: 47,
     upcomingDeadlines: 8,
     awardedContractsToday: 3,
@@ -395,33 +395,66 @@ export default function SuperUserDashboard() {
   // Mock data initialization
   useEffect(() => {
     const mockCompanies: Company[] = [
+      // Company Approval Status - Approved
       {
         id: "1",
-        companyName: "Northern Construction Ltd",
-        contactPerson: "Ahmad Mahmoud",
-        email: "ahmad@northernconstruction.com",
+        companyName: "Approved Test Ltd",
+        contactPerson: "Test User 1",
+        email: "approved@company.com",
         status: "Active",
         registrationDate: "2024-01-15",
-        lastActivity: "2024-01-20",
+        lastActivity: "2024-01-22",
       },
       {
         id: "2",
-        companyName: "Sahel Medical Supplies",
-        contactPerson: "Fatima Yusuf",
-        email: "fatima@sahelmedical.com",
-        status: "Suspended",
+        companyName: "Test Company Ltd",
+        contactPerson: "Test User 2",
+        email: "testcompany@example.com",
+        status: "Active",
         registrationDate: "2024-01-14",
-        lastActivity: "2024-01-18",
-        suspensionReason: "Expired Tax Clearance Certificate",
+        lastActivity: "2024-01-21",
       },
       {
         id: "3",
-        companyName: "TechSolutions Nigeria",
-        contactPerson: "Ibrahim Hassan",
-        email: "ibrahim@techsolutions.ng",
+        companyName: "Demo Company Ltd",
+        contactPerson: "Demo User",
+        email: "demo@company.com",
         status: "Active",
         registrationDate: "2024-01-13",
-        lastActivity: "2024-01-22",
+        lastActivity: "2024-01-20",
+      },
+      // Company Approval Status - Pending (Shows in Company Approval tab)
+      {
+        id: "4",
+        companyName: "Pending Test Ltd",
+        contactPerson: "Pending User",
+        email: "pending@company.com",
+        status: "Active", // Will show in Company Approval section as "Pending Review"
+        registrationDate: "2024-01-29",
+        lastActivity: "2024-01-29",
+        pendingApproval: true, // Flag to indicate this shows in Company Approval
+      },
+      // Company Status - Suspended
+      {
+        id: "5",
+        companyName: "Suspended Test Ltd",
+        contactPerson: "Suspended User",
+        email: "suspended@company.com",
+        status: "Suspended",
+        registrationDate: "2024-01-11",
+        lastActivity: "2024-01-18",
+        suspensionReason: "Expired compliance documents",
+      },
+      // Company Status - Blacklisted
+      {
+        id: "6",
+        companyName: "Blacklisted Test Ltd",
+        contactPerson: "Blacklisted User",
+        email: "blacklisted@company.com",
+        status: "Blacklisted",
+        registrationDate: "2024-01-10",
+        lastActivity: "2024-01-17",
+        blacklistReason: "Failed to meet contract obligations",
       },
     ];
 
@@ -5623,7 +5656,8 @@ The award letter has been:
                   Company Approvals
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Review and approve company registrations
+                  Review and approve company registrations. All new
+                  registrations automatically appear here with "Pending" status.
                 </p>
               </div>
               <div className="flex items-center space-x-3">
@@ -5737,6 +5771,16 @@ The award letter has been:
                     {[
                       {
                         id: "COM001",
+                        name: "Pending Test Ltd",
+                        email: "pending@company.com",
+                        regNumber: "RC-TEST001",
+                        submissionDate: "2024-01-29",
+                        status: "Pending Review",
+                        documentsComplete: true,
+                        category: "Test Company",
+                      },
+                      {
+                        id: "COM002",
                         name: "Northern Construction Ltd",
                         email: "info@northernconst.com",
                         regNumber: "RC-456789",
@@ -5746,7 +5790,7 @@ The award letter has been:
                         category: "Construction",
                       },
                       {
-                        id: "COM002",
+                        id: "COM003",
                         name: "Sahel Engineering Services",
                         email: "contact@saheleng.com",
                         regNumber: "RC-789012",
@@ -5756,7 +5800,7 @@ The award letter has been:
                         category: "Engineering",
                       },
                       {
-                        id: "COM003",
+                        id: "COM004",
                         name: "Kano Medical Supplies",
                         email: "orders@kanomedical.com",
                         regNumber: "RC-345678",
@@ -5766,7 +5810,7 @@ The award letter has been:
                         category: "Healthcare",
                       },
                       {
-                        id: "COM004",
+                        id: "COM005",
                         name: "Tech Solutions Nigeria",
                         email: "hello@techsolutions.ng",
                         regNumber: "RC-234567",

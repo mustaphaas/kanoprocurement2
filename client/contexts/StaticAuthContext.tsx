@@ -34,7 +34,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Static demo credentials
+// Static demo credentials for testing functions
 const demoCredentials: Record<
   string,
   { password: string; profile: UserProfile }
@@ -55,15 +55,123 @@ const demoCredentials: Record<
       name: "Super User",
     },
   },
+  // Test company users for superuser testing
+  "approved@company.com": {
+    password: "password123",
+    profile: {
+      role: "company",
+      email: "approved@company.com",
+      name: "Approved Test Company",
+      companyName: "Approved Test Ltd",
+    },
+  },
+  "testcompany@example.com": {
+    password: "test123",
+    profile: {
+      role: "company",
+      email: "testcompany@example.com",
+      name: "Test Company Representative",
+      companyName: "Test Company Ltd",
+    },
+  },
+  "demo@company.com": {
+    password: "demo123",
+    profile: {
+      role: "company",
+      email: "demo@company.com",
+      name: "Demo Company User",
+      companyName: "Demo Company Ltd",
+    },
+  },
+  // Company Approval Status - Pending
+  "pending@company.com": {
+    password: "password123",
+    profile: {
+      role: "company",
+      email: "pending@company.com",
+      name: "Pending Approval Company",
+      companyName: "Pending Test Ltd",
+    },
+  },
+  // Company Status - Suspended
+  "suspended@company.com": {
+    password: "password123",
+    profile: {
+      role: "company",
+      email: "suspended@company.com",
+      name: "Suspended Company",
+      companyName: "Suspended Test Ltd",
+    },
+  },
+  // Company Status - Blacklisted
+  "blacklisted@company.com": {
+    password: "password123",
+    profile: {
+      role: "company",
+      email: "blacklisted@company.com",
+      name: "Blacklisted Company",
+      companyName: "Blacklisted Test Ltd",
+    },
+  },
 };
 
-// Helper function to determine role for other logins (company emails)
+// Helper function to determine role for company logins
 const determineCompanyRole = (email: string): UserProfile => {
+  // Allow specific test company emails for testing different statuses
+  const testCompanyEmails = [
+    "approved@company.com",
+    "testcompany@example.com",
+    "demo@company.com",
+    "pending@company.com",
+    "suspended@company.com",
+    "blacklisted@company.com",
+  ];
+
+  if (testCompanyEmails.includes(email)) {
+    // Return specific profile based on email
+    const emailToProfile: Record<
+      string,
+      Omit<UserProfile, "role" | "email">
+    > = {
+      "approved@company.com": {
+        name: "Approved Test Company",
+        companyName: "Approved Test Ltd",
+      },
+      "testcompany@example.com": {
+        name: "Test Company Representative",
+        companyName: "Test Company Ltd",
+      },
+      "demo@company.com": {
+        name: "Demo Company User",
+        companyName: "Demo Company Ltd",
+      },
+      "pending@company.com": {
+        name: "Pending Approval Company",
+        companyName: "Pending Test Ltd",
+      },
+      "suspended@company.com": {
+        name: "Suspended Company",
+        companyName: "Suspended Test Ltd",
+      },
+      "blacklisted@company.com": {
+        name: "Blacklisted Company",
+        companyName: "Blacklisted Test Ltd",
+      },
+    };
+
+    return {
+      role: "company",
+      email: email,
+      ...emailToProfile[email],
+    };
+  }
+
+  // Default for any other company email
   return {
     role: "company",
     email: email,
     name: "Company Representative",
-    companyName: "Demo Company Ltd",
+    companyName: "Generic Company Ltd",
   };
 };
 
@@ -211,17 +319,41 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             </p>
             <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
               <p>
-                <strong>Demo Credentials:</strong>
+                <strong>Test Credentials for Superuser:</strong>
               </p>
               <p>
                 Admin: username <code>admin</code> / password{" "}
-                <code>password</code>
+                <code>admin123</code>
               </p>
               <p>
                 Super User: username <code>superuser</code> / password{" "}
-                <code>admin123</code>
+                <code>superuser123</code>
               </p>
-              <p>Company: any email@domain.com / any password</p>
+              <p className="mt-2">
+                <strong>Company Approval Status:</strong>
+              </p>
+              <p>
+                ✅ <code>approved@company.com</code> / <code>password123</code>
+              </p>
+              <p>
+                ✅ <code>testcompany@example.com</code> / <code>test123</code>
+              </p>
+              <p>
+                ✅ <code>demo@company.com</code> / <code>demo123</code>
+              </p>
+              <p>
+                ⏳ <code>pending@company.com</code> / <code>password123</code>
+              </p>
+              <p className="mt-2">
+                <strong>Company Status:</strong>
+              </p>
+              <p>
+                ⚠️ <code>suspended@company.com</code> / <code>password123</code>
+              </p>
+              <p>
+                ❌ <code>blacklisted@company.com</code> /{" "}
+                <code>password123</code>
+              </p>
             </div>
           </div>
         </div>
