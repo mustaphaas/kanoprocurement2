@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
 import { formatCurrency } from "@/lib/utils";
 import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
+import { persistentStorage } from "@/lib/persistentStorage";
 import {
   Building2,
   Home,
@@ -302,7 +303,7 @@ export default function CompanyDashboard() {
         bidsExpressedInterest: 0, // Pending companies can't express interest yet
         activeBids: 0,
         notActiveBids: 0,
-        totalContractValue: "���0",
+        totalContractValue: "₦0",
       },
       "suspended@company.com": {
         name: "Omega Engineering Services",
@@ -3750,7 +3751,7 @@ export default function CompanyDashboard() {
                             Northern Builders Ltd
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            ����950M
+                            ��950M
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Jan 25, 2024
