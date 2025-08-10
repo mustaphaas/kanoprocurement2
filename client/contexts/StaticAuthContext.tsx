@@ -309,11 +309,17 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 <code>superuser123</code>
               </p>
               <p className="mt-2">
-                <strong>Approved Company Test Users:</strong>
+                <strong>Company Approval Status:</strong>
               </p>
-              <p>• <code>approved@company.com</code> / <code>password123</code></p>
-              <p>• <code>testcompany@example.com</code> / <code>test123</code></p>
-              <p>• <code>demo@company.com</code> / <code>demo123</code></p>
+              <p>✅ <code>approved@company.com</code> / <code>password123</code></p>
+              <p>✅ <code>testcompany@example.com</code> / <code>test123</code></p>
+              <p>✅ <code>demo@company.com</code> / <code>demo123</code></p>
+              <p>⏳ <code>pending@company.com</code> / <code>password123</code></p>
+              <p className="mt-2">
+                <strong>Company Status:</strong>
+              </p>
+              <p>⚠️ <code>suspended@company.com</code> / <code>password123</code></p>
+              <p>❌ <code>blacklisted@company.com</code> / <code>password123</code></p>
             </div>
           </div>
         </div>
