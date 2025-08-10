@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "@/lib/utils";
 import TenderTestHelper from "@/components/TenderTestHelper";
+import TenderVisibilityStatus from "@/components/TenderVisibilityStatus";
 import {
   Building2,
   FileText,
@@ -2529,7 +2530,7 @@ export default function Index() {
                           4. Request for Quotation (RFQ)
                         </h4>
                         <p className="text-sm text-green-800">
-                          For goods/services below ���5 million. Minimum three
+                          For goods/services below ₦5 million. Minimum three
                           quotations required.
                         </p>
                         <p className="text-xs text-green-600 mt-1">
