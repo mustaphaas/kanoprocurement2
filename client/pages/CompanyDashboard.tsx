@@ -421,6 +421,18 @@ export default function CompanyDashboard() {
   };
 
   const handleExpressInterest = (tender: Tender) => {
+    if (companyData.status === "Suspended") {
+      alert("Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore tender participation privileges.");
+      return;
+    }
+    if (companyData.status === "Pending") {
+      alert("Your account is pending approval. You will be able to express interest in tenders once your registration is approved.");
+      return;
+    }
+    if (companyData.status === "Blacklisted") {
+      alert("Your account is blacklisted. You cannot participate in procurement activities. Please submit an appeal if you believe this is in error.");
+      return;
+    }
     if (companyData.status !== "Approved") {
       alert("Your account must be approved to express interest in tenders.");
       return;
@@ -430,6 +442,18 @@ export default function CompanyDashboard() {
   };
 
   const handleSubmitBid = (tender: Tender) => {
+    if (companyData.status === "Suspended") {
+      alert("Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore bidding privileges.");
+      return;
+    }
+    if (companyData.status === "Pending") {
+      alert("Your account is pending approval. You will be able to submit bids once your registration is approved.");
+      return;
+    }
+    if (companyData.status === "Blacklisted") {
+      alert("Your account is blacklisted. You cannot submit bids. Please submit an appeal if you believe this is in error.");
+      return;
+    }
     if (companyData.status !== "Approved") {
       alert("Your account must be approved to submit bids.");
       return;
