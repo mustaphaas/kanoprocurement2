@@ -841,22 +841,43 @@ export default function CompanyDashboard() {
 
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Total Adverts
-                    </p>
-                    <p className="text-3xl font-bold text-blue-600">
-                      {companyData.totalAdverts}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Active tenders available
-                    </p>
+              {companyData.status !== "Blacklisted" && (
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Total Adverts
+                      </p>
+                      <p className="text-3xl font-bold text-blue-600">
+                        {companyData.totalAdverts}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Active tenders available
+                      </p>
+                    </div>
+                    <FileText className="h-8 w-8 text-blue-600" />
                   </div>
-                  <FileText className="h-8 w-8 text-blue-600" />
                 </div>
-              </div>
+              )}
+
+              {companyData.status === "Blacklisted" && (
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Access Status
+                      </p>
+                      <p className="text-3xl font-bold text-red-600">
+                        Restricted
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Procurement participation blocked
+                      </p>
+                    </div>
+                    <Ban className="h-8 w-8 text-red-600" />
+                  </div>
+                </div>
+              )}
 
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between">
