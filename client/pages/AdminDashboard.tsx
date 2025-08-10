@@ -233,10 +233,12 @@ export default function AdminDashboard() {
   const submitApproval = () => {
     if (!selectedCompany || !approvalDecision) return;
 
-    if (approvalDecision === "Rejected" && !rejectionReason.trim()) {
-      alert("Please provide a reason for rejection");
+    if ((approvalDecision === "Suspended" || approvalDecision === "Blacklisted") && !actionReason.trim()) {
+      alert(`Please provide a reason for ${approvalDecision.toLowerCase()}`);
       return;
     }
+
+    handleStatusChange(selectedCompany.id, approvalDecision, actionReason);
 
     // Update company status
     setCompanies(prev => prev.map(company => 
