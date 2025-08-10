@@ -264,7 +264,11 @@ export default function CompanyDashboard() {
     };
   };
 
-  const companyData: CompanyData = getCompanyDetails();
+  // Use statusUpdateTrigger to force re-evaluation when status changes
+  const companyData: CompanyData = (() => {
+    // This function will re-run whenever statusUpdateTrigger changes
+    return getCompanyDetails();
+  })();
 
   const [notifications, setNotifications] = useState<Notification[]>([
     {
