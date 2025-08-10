@@ -167,12 +167,14 @@ export default function CompanyDashboard() {
 
     // Check localStorage for admin-set status first
     const adminSetStatus = localStorage.getItem(`userStatus_${userEmail}`);
+    console.log(`Checking status for ${userEmail}: ${adminSetStatus}`);
     if (
       adminSetStatus &&
       ["Pending", "Approved", "Suspended", "Blacklisted"].includes(
         adminSetStatus,
       )
     ) {
+      console.log(`Using admin-set status: ${adminSetStatus}`);
       return adminSetStatus as CompanyStatus;
     }
 
