@@ -1109,7 +1109,9 @@ export default function AdminDashboard() {
                         {company.status === "Pending" && (
                           <>
                             <button
-                              onClick={() => handleApproval(company)}
+                              onClick={() => {
+                                handleStatusChange(company.id, "Approved", "Approved by admin");
+                              }}
                               className="text-green-600 hover:text-green-900 ml-3"
                             >
                               <CheckCircle className="h-4 w-4 inline mr-1" />
