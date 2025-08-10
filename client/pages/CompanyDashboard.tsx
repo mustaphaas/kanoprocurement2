@@ -134,14 +134,20 @@ export default function CompanyDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Add useEffect to listen for localStorage changes
+  // Add useEffect to listen for storage changes (both localStorage and persistent storage)
   useEffect(() => {
     const handleStorageChange = () => {
       setStatusUpdateTrigger(prev => prev + 1);
     };
 
+    const handlePersistentStorageChange = () => {
+      setStatusUpdateTrigger(prev => prev + 1);
+    };
+
     // Listen for storage events from other tabs/windows
     window.addEventListener('storage', handleStorageChange);
+    // Listen for custom persistent storage events (same-tab updates)
+    window.addEventListener('persistentStorageChange', handlePersistentStorageChange);
 
     // Also check for status changes periodically (for same-tab updates)
     const interval = setInterval(() => {
