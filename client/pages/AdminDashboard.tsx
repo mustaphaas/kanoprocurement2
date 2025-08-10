@@ -411,15 +411,16 @@ export default function AdminDashboard() {
       ),
     );
 
-    // Store the status change in localStorage for the company dashboard to pick up
+    // Store the status change using persistent storage for the company dashboard to pick up
     // We'll use the email as the key since that's what the dashboard checks
     const company = companies.find((c) => c.id === companyId);
     if (company) {
       const storageKey = `userStatus_${company.email.toLowerCase()}`;
-      localStorage.setItem(storageKey, newStatus);
+      const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
 
-      // Also store the reason
-      localStorage.setItem(`userStatusReason_${company.email.toLowerCase()}`, reason);
+      // Use persistent storage instead of localStorage
+      persistentStorage.setItem(storageKey, newStatus);
+      persistentStorage.setItem(reasonKey, reason);
 
       console.log(`=== ADMIN STATUS CHANGE ===`);
       console.log(`Company: ${company.companyName}`);
@@ -427,8 +428,11 @@ export default function AdminDashboard() {
       console.log(`Normalized email: ${company.email.toLowerCase()}`);
       console.log(`Storage key: ${storageKey}`);
       console.log(`New status: ${newStatus}`);
-      console.log(`Value stored: ${localStorage.getItem(storageKey)}`);
-      console.log(`All userStatus keys:`, Object.keys(localStorage).filter(key => key.startsWith('userStatus_')));
+      console.log(`Value stored: ${persistentStorage.getItem(storageKey)}`);
+      console.log(`All userStatus keys:`, persistentStorage.getUserStatusKeys());
+
+      // Debug the persistent storage
+      persistentStorage.debugInfo();
     } else {
       console.error(`❌ Company with ID ${companyId} not found!`);
     }
