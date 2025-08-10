@@ -199,8 +199,35 @@ export default function AdminDashboard() {
     setSelectedCompany(company);
     setViewMode("approval");
     setApprovalDecision("");
-    setRejectionReason("");
+    setActionReason("");
     setSendNotification(true);
+  };
+
+  const handleStatusChange = (companyId: string, newStatus: "Approved" | "Suspended" | "Blacklisted", reason: string) => {
+    // Update the company status in the local state
+    setCompanies(prev => prev.map(company =>
+      company.id === companyId
+        ? { ...company, status: newStatus }
+        : company
+    ));
+
+    // Store the status change in localStorage for the company dashboard to pick up
+    // We'll use the email as the key since that's what the dashboard checks
+    const company = companies.find(c => c.id === companyId);
+    if (company) {
+      localStorage.setItem(`userStatus_${company.email}`, newStatus);
+
+      // Also store the reason
+      localStorage.setItem(`userStatusReason_${company.email}`, reason);
+
+      console.log(`Company ${company.companyName} status changed to ${newStatus}. Reason: ${reason}`);
+    }
+
+    // Reset form
+    setActionReason("");
+    setApprovalDecision("");
+    setSelectedCompany(null);
+    setViewMode("list");
   };
 
   const submitApproval = () => {
