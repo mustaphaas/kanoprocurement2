@@ -653,15 +653,15 @@ export default function AdminDashboard() {
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-sm p-6 border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">New Registrations Pending</p>
+                <p className="text-sm font-medium text-gray-600">Pending Review</p>
                 <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
               </div>
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-yellow-600" />
+                <Clock className="h-6 w-6 text-yellow-600" />
               </div>
             </div>
           </div>
@@ -669,11 +669,11 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-lg shadow-sm p-6 border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Companies Approved</p>
+                <p className="text-sm font-medium text-gray-600">Active Companies</p>
                 <p className="text-3xl font-bold text-green-600">{approvedCount}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <CheckCircle className="h-6 w-6 text-green-600" />
+                <UserCheck className="h-6 w-6 text-green-600" />
               </div>
             </div>
           </div>
@@ -681,11 +681,23 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-lg shadow-sm p-6 border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Companies Rejected</p>
-                <p className="text-3xl font-bold text-red-600">{rejectedCount}</p>
+                <p className="text-sm font-medium text-gray-600">Suspended</p>
+                <p className="text-3xl font-bold text-orange-600">{suspendedCount}</p>
+              </div>
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <Shield className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Blacklisted</p>
+                <p className="text-3xl font-bold text-red-600">{blacklistedCount}</p>
               </div>
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <XCircle className="h-6 w-6 text-red-600" />
+                <Ban className="h-6 w-6 text-red-600" />
               </div>
             </div>
           </div>
