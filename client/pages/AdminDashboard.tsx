@@ -1118,6 +1118,10 @@ export default function AdminDashboard() {
                           <>
                             <button
                               onClick={() => {
+                                console.log('🔄 APPROVE BUTTON CLICKED');
+                                console.log('Company ID:', company.id);
+                                console.log('Company Email:', company.email);
+                                console.log('Company Name:', company.companyName);
                                 handleStatusChange(company.id, "Approved", "Approved by admin");
                               }}
                               className="text-green-600 hover:text-green-900 ml-3"
