@@ -17,7 +17,12 @@ import {
   Phone,
   AlertTriangle,
   CheckSquare,
-  X
+  X,
+  Ban,
+  Clock,
+  UserCheck,
+  Shield,
+  Settings
 } from "lucide-react";
 
 interface Company {
