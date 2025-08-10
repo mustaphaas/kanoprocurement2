@@ -46,18 +46,9 @@ export const TenderVisibilityStatus: React.FC = () => {
 
         <div className="border-t pt-3">
           <h4 className="text-sm font-medium text-gray-900 mb-2">
-            Company Approval (SuperUser Tab):
+            Company Approval Tab (Only Pending):
           </h4>
           <div className="space-y-2 text-xs">
-            <div className="flex items-center justify-between">
-              <span className="flex items-center">
-                <CheckCircle className="h-3 w-3 text-green-500 mr-1" />
-                Approved
-              </span>
-              <span className="text-green-600">
-                Full access to all {tenderCount}
-              </span>
-            </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center">
                 <Eye className="h-3 w-3 text-blue-500 mr-1" />
@@ -67,7 +58,7 @@ export const TenderVisibilityStatus: React.FC = () => {
             </div>
           </div>
           <div className="text-xs text-gray-500 mt-2">
-            Pending users go through approval workflow
+            New registrations appear here for admin approval
           </div>
         </div>
 
