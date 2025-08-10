@@ -606,43 +606,13 @@ export default function CompanyDashboard() {
       case "dashboard":
         return (
           <div className="space-y-6">
-            {/* Welcome Message */}
-            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                Welcome, {companyData.name}!
-              </h1>
-              <div className="flex items-center space-x-2">
-                <span className="text-gray-600">Account Status:</span>
-                <span
-                  className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
-                    companyData.status === "Approved"
-                      ? "bg-green-100 text-green-800"
-                      : companyData.status === "Pending"
-                        ? "bg-blue-100 text-blue-800"
-                        : companyData.status === "Suspended"
-                          ? "bg-orange-100 text-orange-800"
-                          : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {companyData.status === "Approved" && (
-                    <CheckCircle className="h-4 w-4 mr-1" />
-                  )}
-                  {companyData.status === "Pending" && (
-                    <Clock className="h-4 w-4 mr-1" />
-                  )}
-                  {companyData.status === "Suspended" && (
-                    <AlertTriangle className="h-4 w-4 mr-1" />
-                  )}
-                  {companyData.status === "Blacklisted" && (
-                    <Ban className="h-4 w-4 mr-1" />
-                  )}
-                  {companyData.status}
-                </span>
-              </div>
-            </div>
-
-            {/* Status Alert */}
-            {getStatusAlert()}
+            {/* Dynamic Dashboard Header */}
+            <DynamicDashboardHeader
+              status={companyData.status}
+              companyName={companyData.name}
+              companyData={companyData}
+              onSectionChange={setActiveSection}
+            />
 
             {/* Restricted Access Message for Pending Companies */}
             {companyData.status === "Pending" && (
@@ -1042,7 +1012,7 @@ export default function CompanyDashboard() {
                       <option value="">Project Value</option>
                       <option value="0-100m">₦0 - ₦100M</option>
                       <option value="100m-1b">₦100M - ₦1B</option>
-                      <option value="1b+">���1B+</option>
+                      <option value="1b+">₦1B+</option>
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">All Methods</option>
@@ -1702,7 +1672,7 @@ export default function CompanyDashboard() {
                             Total Contract Value
                           </span>
                           <span className="font-medium text-green-600">
-                            ��240,500,000
+                            ₦240,500,000
                           </span>
                         </div>
                       </div>
