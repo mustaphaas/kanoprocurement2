@@ -243,6 +243,7 @@ export default function CompanyDashboard() {
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('persistentStorageChange', handlePersistentStorageChange);
       clearInterval(interval);
       delete (window as any).refreshCompanyStatus;
     };
