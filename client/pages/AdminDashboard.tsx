@@ -60,20 +60,24 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<"companies" | "user-management">("companies");
   const navigate = useNavigate();
 
-  // Mock data
+  // Load companies from registrations and mock data
   useEffect(() => {
-    const mockCompanies: Company[] = [
-      {
-        id: "1",
-        companyName: "Northern Construction Ltd",
-        contactPerson: "Ahmad Mahmoud",
-        email: "ahmad@northernconstruction.com",
-        phone: "+234 803 123 4567",
-        registrationDate: "2024-01-15",
-        status: "Pending",
-        registrationNumber: "RC123456",
-        businessType: "Limited Liability Company",
-        address: "123 Ahmadu Bello Way, Kano",
+    const loadCompanies = () => {
+      // Load registered companies from localStorage (where CompanyRegistration saves them)
+      const registeredCompanies = JSON.parse(localStorage.getItem("registeredCompanies") || "[]");
+
+      // Convert registered companies to admin dashboard format
+      const formattedRegisteredCompanies = registeredCompanies.map((reg: any, index: number) => ({
+        id: reg.id || `reg-${index}`,
+        companyName: reg.companyName || "Unknown Company",
+        contactPerson: reg.contactPerson || "Unknown Contact",
+        email: reg.email || "",
+        phone: reg.phone || "",
+        registrationDate: reg.registrationDate || new Date().toISOString().split('T')[0],
+        status: localStorage.getItem(`userStatus_${reg.email?.toLowerCase()}`) as "Pending" | "Approved" | "Suspended" | "Blacklisted" || "Pending",
+        registrationNumber: reg.registrationNumber || `RC${Date.now()}`,
+        businessType: reg.businessType || "Limited Liability Company",
+        address: reg.address || "",
         documents: {
           incorporation: true,
           taxClearance: true,
@@ -81,100 +85,146 @@ export default function AdminDashboard() {
           cacForm: true
         },
         verificationStatus: {
-          cac: "Verified",
-          firs: "Pending"
+          cac: "Pending" as const,
+          firs: "Pending" as const
         }
-      },
-      {
-        id: "2",
-        companyName: "Sahel Medical Supplies",
-        contactPerson: "Fatima Yusuf",
-        email: "fatima@sahelmedical.com",
-        phone: "+234 805 987 6543",
-        registrationDate: "2024-01-14",
-        status: "Pending",
-        registrationNumber: "RC234567",
-        businessType: "Limited Liability Company",
-        address: "45 Hospital Road, Kano",
-        documents: {
-          incorporation: true,
-          taxClearance: false,
-          companyProfile: true,
-          cacForm: true
+      }));
+
+      // Default test companies for demonstration
+      const mockCompanies: Company[] = [
+        {
+          id: "test-1",
+          companyName: "Northern Construction Ltd",
+          contactPerson: "Ahmad Mahmoud",
+          email: "ahmad@northernconstruction.com",
+          phone: "+234 803 123 4567",
+          registrationDate: "2024-01-15",
+          status: "Pending",
+          registrationNumber: "RC123456",
+          businessType: "Limited Liability Company",
+          address: "123 Ahmadu Bello Way, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: true,
+            companyProfile: true,
+            cacForm: true
+          },
+          verificationStatus: {
+            cac: "Verified",
+            firs: "Pending"
+          }
         },
-        verificationStatus: {
-          cac: "Verified",
-          firs: "Failed"
-        }
-      },
-      {
-        id: "3",
-        companyName: "TechSolutions Nigeria",
-        contactPerson: "Ibrahim Hassan",
-        email: "ibrahim@techsolutions.ng",
-        phone: "+234 807 555 1234",
-        registrationDate: "2024-01-13",
-        status: "Approved",
-        registrationNumber: "RC345678",
-        businessType: "Limited Liability Company",
-        address: "78 Independence Road, Kano",
-        documents: {
-          incorporation: true,
-          taxClearance: true,
-          companyProfile: true,
-          cacForm: true
+        {
+          id: "test-2",
+          companyName: "Premier Construction Company",
+          contactPerson: "Muhammad Ali",
+          email: "approved@company.com",
+          phone: "+234 805 987 6543",
+          registrationDate: "2024-01-13",
+          status: localStorage.getItem(`userStatus_approved@company.com`) as "Pending" | "Approved" | "Suspended" | "Blacklisted" || "Approved",
+          registrationNumber: "RC345678",
+          businessType: "Limited Liability Company",
+          address: "78 Independence Road, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: true,
+            companyProfile: true,
+            cacForm: true
+          },
+          verificationStatus: {
+            cac: "Verified",
+            firs: "Verified"
+          }
         },
-        verificationStatus: {
-          cac: "Verified",
-          firs: "Verified"
-        }
-      },
-      {
-        id: "4",
-        companyName: "Omega Engineering Services",
-        contactPerson: "Sani Abdullahi",
-        email: "suspended@company.com",
-        phone: "+234 809 111 2222",
-        registrationDate: "2024-01-10",
-        status: "Suspended",
-        registrationNumber: "RC456789",
-        businessType: "Limited Liability Company",
-        address: "12 Engineering Close, Kano",
-        documents: {
-          incorporation: true,
-          taxClearance: false,
-          companyProfile: true,
-          cacForm: true
+        {
+          id: "test-3",
+          companyName: "Omega Engineering Services",
+          contactPerson: "Sani Abdullahi",
+          email: "suspended@company.com",
+          phone: "+234 809 111 2222",
+          registrationDate: "2024-01-10",
+          status: localStorage.getItem(`userStatus_suspended@company.com`) as "Pending" | "Approved" | "Suspended" | "Blacklisted" || "Suspended",
+          registrationNumber: "RC456789",
+          businessType: "Limited Liability Company",
+          address: "12 Engineering Close, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: false,
+            companyProfile: true,
+            cacForm: true
+          },
+          verificationStatus: {
+            cac: "Verified",
+            firs: "Failed"
+          }
         },
-        verificationStatus: {
-          cac: "Verified",
-          firs: "Failed"
-        }
-      },
-      {
-        id: "5",
-        companyName: "Restricted Corp Ltd",
-        contactPerson: "Ahmed Musa",
-        email: "blacklisted@company.com",
-        phone: "+234 806 333 4444",
-        registrationDate: "2024-01-05",
-        status: "Blacklisted",
-        registrationNumber: "RC567890",
-        businessType: "Limited Liability Company",
-        address: "56 Industrial Layout, Kano",
-        documents: {
-          incorporation: true,
-          taxClearance: true,
-          companyProfile: true,
-          cacForm: true
+        {
+          id: "test-4",
+          companyName: "Restricted Corp Ltd",
+          contactPerson: "Ahmed Musa",
+          email: "blacklisted@company.com",
+          phone: "+234 806 333 4444",
+          registrationDate: "2024-01-05",
+          status: localStorage.getItem(`userStatus_blacklisted@company.com`) as "Pending" | "Approved" | "Suspended" | "Blacklisted" || "Blacklisted",
+          registrationNumber: "RC567890",
+          businessType: "Limited Liability Company",
+          address: "56 Industrial Layout, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: true,
+            companyProfile: true,
+            cacForm: true
+          },
+          verificationStatus: {
+            cac: "Verified",
+            firs: "Verified"
+          }
         },
-        verificationStatus: {
-          cac: "Verified",
-          firs: "Verified"
+        {
+          id: "test-5",
+          companyName: "New Ventures Construction Ltd",
+          contactPerson: "Amina Suleiman",
+          email: "pending@company.com",
+          phone: "+234 807 444 5555",
+          registrationDate: "2024-01-20",
+          status: localStorage.getItem(`userStatus_pending@company.com`) as "Pending" | "Approved" | "Suspended" | "Blacklisted" || "Pending",
+          registrationNumber: "RC678901",
+          businessType: "Limited Liability Company",
+          address: "90 New GRA, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: false,
+            companyProfile: true,
+            cacForm: true
+          },
+          verificationStatus: {
+            cac: "Pending",
+            firs: "Pending"
+          }
         }
-      }
-    ];
-    setCompanies(mockCompanies);
+      ];
+
+      // Combine registered companies with test companies (avoid duplicates by email)
+      const allCompanies = [...formattedRegisteredCompanies];
+
+      // Add test companies if they don't already exist
+      mockCompanies.forEach(testCompany => {
+        const existsInRegistered = formattedRegisteredCompanies.find(
+          reg => reg.email.toLowerCase() === testCompany.email.toLowerCase()
+        );
+        if (!existsInRegistered) {
+          allCompanies.push(testCompany);
+        }
+      });
+
+      setCompanies(allCompanies);
+    };
+
+    loadCompanies();
+
+    // Refresh company list every 30 seconds to pick up new registrations
+    const interval = setInterval(loadCompanies, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const pendingCount = companies.filter(c => c.status === "Pending").length;
