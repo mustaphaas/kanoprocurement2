@@ -128,6 +128,50 @@ export default function AdminDashboard() {
           cac: "Verified",
           firs: "Verified"
         }
+      },
+      {
+        id: "4",
+        companyName: "Omega Engineering Services",
+        contactPerson: "Sani Abdullahi",
+        email: "suspended@company.com",
+        phone: "+234 809 111 2222",
+        registrationDate: "2024-01-10",
+        status: "Suspended",
+        registrationNumber: "RC456789",
+        businessType: "Limited Liability Company",
+        address: "12 Engineering Close, Kano",
+        documents: {
+          incorporation: true,
+          taxClearance: false,
+          companyProfile: true,
+          cacForm: true
+        },
+        verificationStatus: {
+          cac: "Verified",
+          firs: "Failed"
+        }
+      },
+      {
+        id: "5",
+        companyName: "Restricted Corp Ltd",
+        contactPerson: "Ahmed Musa",
+        email: "blacklisted@company.com",
+        phone: "+234 806 333 4444",
+        registrationDate: "2024-01-05",
+        status: "Blacklisted",
+        registrationNumber: "RC567890",
+        businessType: "Limited Liability Company",
+        address: "56 Industrial Layout, Kano",
+        documents: {
+          incorporation: true,
+          taxClearance: true,
+          companyProfile: true,
+          cacForm: true
+        },
+        verificationStatus: {
+          cac: "Verified",
+          firs: "Verified"
+        }
       }
     ];
     setCompanies(mockCompanies);
