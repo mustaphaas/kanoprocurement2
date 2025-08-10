@@ -46,33 +46,61 @@ export const TenderVisibilityStatus: React.FC = () => {
 
         <div className="border-t pt-3">
           <h4 className="text-sm font-medium text-gray-900 mb-2">
-            Superuser Test Status:
+            Company Approval Status:
           </h4>
           <div className="space-y-2 text-xs">
             <div className="flex items-center justify-between">
               <span className="flex items-center">
                 <CheckCircle className="h-3 w-3 text-green-500 mr-1" />
-                Approved Companies
+                Approved
               </span>
               <span className="text-green-600">Full access to all {tenderCount}</span>
             </div>
-            <div className="text-gray-500 text-xs mt-1">
-              All test users have approved company status for testing functions
+            <div className="flex items-center justify-between">
+              <span className="flex items-center">
+                <Eye className="h-3 w-3 text-blue-500 mr-1" />
+                Pending
+              </span>
+              <span className="text-blue-600">View only</span>
             </div>
           </div>
         </div>
 
         <div className="border-t pt-3">
           <h4 className="text-sm font-medium text-gray-900 mb-2">
-            Test Company Logins (All Approved):
+            Company Status:
+          </h4>
+          <div className="space-y-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center">
+                <span className="h-3 w-3 bg-orange-500 rounded-full mr-1"></span>
+                Suspended
+              </span>
+              <span className="text-orange-600">Restricted access</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="flex items-center">
+                <XCircle className="h-3 w-3 text-red-500 mr-1" />
+                Blacklisted
+              </span>
+              <span className="text-red-600">No access</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t pt-3">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">
+            Test Company Logins:
           </h4>
           <div className="space-y-1 text-xs">
+            <div className="font-medium text-gray-700">Company Approval:</div>
             <div>✅ approved@company.com / password123</div>
             <div>✅ testcompany@example.com / test123</div>
             <div>✅ demo@company.com / demo123</div>
-            <div className="text-gray-500 mt-2">
-              All accounts have "Approved" status for full function testing
-            </div>
+            <div>⏳ pending@company.com / password123</div>
+            <div className="font-medium text-gray-700 mt-2">Company Status:</div>
+            <div>⚠️ suspended@company.com / password123</div>
+            <div>❌ blacklisted@company.com / password123</div>
           </div>
         </div>
       </div>
