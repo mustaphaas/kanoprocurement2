@@ -870,7 +870,12 @@ export default function AdminDashboard() {
                 }`}
               >
                 <CheckSquare className="h-4 w-4" />
-                <span>Company Approvals</span>
+                <span>Company Approval</span>
+                {pendingCount > 0 && (
+                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-yellow-500 rounded-full">
+                    {pendingCount}
+                  </span>
+                )}
               </button>
               <button
                 onClick={() => setActiveTab("user-management")}
@@ -880,8 +885,13 @@ export default function AdminDashboard() {
                     : "text-gray-700 hover:text-green-700"
                 }`}
               >
-                <Settings className="h-4 w-4" />
-                <span>User Management</span>
+                <AlertTriangle className="h-4 w-4" />
+                <span>Company Status</span>
+                {(suspendedCount + blacklistedCount) > 0 && (
+                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                    {suspendedCount + blacklistedCount}
+                  </span>
+                )}
               </button>
             </nav>
 
