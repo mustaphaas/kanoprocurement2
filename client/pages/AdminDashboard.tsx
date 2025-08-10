@@ -317,7 +317,8 @@ export default function AdminDashboard() {
     // We'll use the email as the key since that's what the dashboard checks
     const company = companies.find((c) => c.id === companyId);
     if (company) {
-      localStorage.setItem(`userStatus_${company.email}`, newStatus);
+      const storageKey = `userStatus_${company.email}`;
+      localStorage.setItem(storageKey, newStatus);
 
       // Also store the reason
       localStorage.setItem(`userStatusReason_${company.email}`, reason);
@@ -325,6 +326,7 @@ export default function AdminDashboard() {
       console.log(
         `Company ${company.companyName} status changed to ${newStatus}. Reason: ${reason}`,
       );
+      console.log(`Storage key: ${storageKey}, Value stored: ${localStorage.getItem(storageKey)}`);
     }
 
     // Reset form
