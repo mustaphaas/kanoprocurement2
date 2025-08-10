@@ -239,7 +239,7 @@ export default function Index() {
       title: "Water Treatment Plant",
       description:
         "Construction of modern water treatment facility serving 200,000 residents",
-      value: "���5.7B",
+      value: "�����5.7B",
       deadline: "Mar 05, 2024",
       status: "Open",
       statusColor: "bg-green-100 text-green-800",
@@ -294,6 +294,9 @@ export default function Index() {
     <div className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
       {/* Tender Test Helper */}
       <TenderTestHelper onTenderCreated={handleTenderCreated} />
+
+      {/* Tender Visibility Status */}
+      <TenderVisibilityStatus />
       {/* Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
