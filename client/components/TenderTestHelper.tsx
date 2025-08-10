@@ -104,12 +104,15 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({ onTenderCrea
     localStorage.setItem("featuredTenders", JSON.stringify(latestFeaturedTenders));
 
     console.log("Test tender created:", testTender);
-    console.log("Stored in localStorage with key 'recentTenders'");
-    
+    console.log("Stored in localStorage with keys:");
+    console.log("- 'recentTenders' (for CompanyDashboard)");
+    console.log("- 'ministryTenders' (for MinistryDashboard)");
+    console.log("- 'featuredTenders' (for Index page)");
+
     setIsCreating(false);
     onTenderCreated();
-    
-    alert(`Test tender "${testTender.title}" created successfully! Active company users should now see it in their dashboard.`);
+
+    alert(`Test tender "${testTender.title}" created successfully! Now visible in:\n• Company dashboards (for active users)\n• Ministry dashboard\n• Main index page`);
   };
 
   const clearAllTenders = () => {
