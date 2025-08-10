@@ -1048,42 +1048,107 @@ export default function CompanyDashboard() {
               )}
             </div>
 
-            {/* Personalized Tender Recommendations */}
-            <div className="bg-white rounded-lg shadow-sm border">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                  <Target className="h-5 w-5 text-purple-600 mr-2" />
-                  Personalized Tender Recommendations
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Based on your profile, you might be interested in:
-                </p>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {recommendedTenders.map((tender) => (
-                    <div
-                      key={tender.id}
-                      className="flex items-center justify-between p-4 bg-purple-50 rounded-lg"
-                    >
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          {tender.title}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {tender.ministry} • Deadline:{" "}
-                          {new Date(tender.deadline).toLocaleDateString()}
-                        </p>
+            {/* Personalized Tender Recommendations - Hidden for Blacklisted Users */}
+            {companyData.status !== "Blacklisted" && (
+              <div className="bg-white rounded-lg shadow-sm border">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <Target className="h-5 w-5 text-purple-600 mr-2" />
+                    Personalized Tender Recommendations
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Based on your profile, you might be interested in:
+                  </p>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    {recommendedTenders.map((tender) => (
+                      <div
+                        key={tender.id}
+                        className="flex items-center justify-between p-4 bg-purple-50 rounded-lg"
+                      >
+                        <div>
+                          <h3 className="font-medium text-gray-900">
+                            {tender.title}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {tender.ministry} • Deadline:{" "}
+                            {new Date(tender.deadline).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <button
+                          className="flex items-center px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm"
+                          disabled={companyData.status === "Pending"}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View Details
+                        </button>
                       </div>
-                      <button className="flex items-center px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm">
-                        <Eye className="h-4 w-4 mr-1" />
-                        View Details
-                      </button>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Special Content for Blacklisted Users */}
+            {companyData.status === "Blacklisted" && (
+              <div className="bg-white rounded-lg shadow-sm border">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+                    Account Restrictions
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Information about your current restrictions and available options
+                  </p>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <h3 className="font-medium text-red-900 mb-2">Procurement Participation Suspended</h3>
+                      <p className="text-sm text-red-800 mb-3">
+                        Your company is currently restricted from viewing or participating in procurement opportunities.
+                      </p>
+                      <ul className="text-sm text-red-700 space-y-1">
+                        <li>• Cannot view tender advertisements</li>
+                        <li>• Cannot submit bids or expressions of interest</li>
+                        <li>• Cannot access procurement documents</li>
+                        <li>• Historical contract data remains accessible</li>
+                      </ul>
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h3 className="font-medium text-blue-900 mb-2">Next Steps Available</h3>
+                      <p className="text-sm text-blue-800 mb-3">
+                        You can take the following actions to address your status:
+                      </p>
+                      <div className="space-y-2">
+                        <button
+                          onClick={() => setActiveSection("grievance")}
+                          className="w-full flex items-center justify-between p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        >
+                          <span className="flex items-center">
+                            <Gavel className="h-4 w-4 mr-2" />
+                            Submit Appeal
+                          </span>
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => setActiveSection("my-profile")}
+                          className="w-full flex items-center justify-between p-3 border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50"
+                        >
+                          <span className="flex items-center">
+                            <Edit className="h-4 w-4 mr-2" />
+                            Review Profile
+                          </span>
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* User Feedback Prompt */}
             <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
