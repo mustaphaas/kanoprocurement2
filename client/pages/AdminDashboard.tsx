@@ -280,9 +280,10 @@ export default function AdminDashboard() {
     const matchesStatus =
       statusFilter === "all" || company.status === statusFilter;
 
-    // For Company Approval tab, only show pending companies
+    // For Company Approval tab, show all companies for easier testing
+    // TODO: Change back to only pending after debugging
     if (activeTab === "companies") {
-      return matchesSearch && matchesStatus && company.status === "Pending";
+      return matchesSearch && matchesStatus; // Show all companies temporarily
     }
 
     return matchesSearch && matchesStatus;
