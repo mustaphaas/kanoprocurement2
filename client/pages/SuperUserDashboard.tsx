@@ -395,6 +395,7 @@ export default function SuperUserDashboard() {
   // Mock data initialization
   useEffect(() => {
     const mockCompanies: Company[] = [
+      // Company Approval Status - Approved
       {
         id: "1",
         companyName: "Approved Test Ltd",
@@ -421,6 +422,38 @@ export default function SuperUserDashboard() {
         status: "Active",
         registrationDate: "2024-01-13",
         lastActivity: "2024-01-20",
+      },
+      // Company Approval Status - Pending
+      {
+        id: "4",
+        companyName: "Pending Test Ltd",
+        contactPerson: "Pending User",
+        email: "pending@company.com",
+        status: "Active", // Note: In the actual system this would map to "Pending" status
+        registrationDate: "2024-01-12",
+        lastActivity: "2024-01-19",
+      },
+      // Company Status - Suspended
+      {
+        id: "5",
+        companyName: "Suspended Test Ltd",
+        contactPerson: "Suspended User",
+        email: "suspended@company.com",
+        status: "Suspended",
+        registrationDate: "2024-01-11",
+        lastActivity: "2024-01-18",
+        suspensionReason: "Expired compliance documents",
+      },
+      // Company Status - Blacklisted
+      {
+        id: "6",
+        companyName: "Blacklisted Test Ltd",
+        contactPerson: "Blacklisted User",
+        email: "blacklisted@company.com",
+        status: "Blacklisted",
+        registrationDate: "2024-01-10",
+        lastActivity: "2024-01-17",
+        blacklistReason: "Failed to meet contract obligations",
       },
     ];
 
