@@ -149,18 +149,20 @@ export default function CompanyDashboard() {
       return adminSetStatus as CompanyStatus;
     }
 
-    // Check user email to assign specific test account statuses
+    // Check user email to assign specific test account statuses (for testing only)
     if (userEmail === "pending@company.com") return "Pending";
     if (userEmail === "suspended@company.com") return "Suspended";
     if (userEmail === "blacklisted@company.com") return "Blacklisted";
     if (userEmail === "approved@company.com") return "Approved";
 
-    // For other emails, check for expired documents
+    // For other emails, check for expired documents and if suspended due to that
     const hasExpired = hasExpiredDocuments();
     if (hasExpired) return "Suspended";
 
-    // Default to Approved for other valid emails
-    return "Approved";
+    // IMPORTANT: All new user registrations should start as "Pending" by default
+    // This ensures proper admin approval workflow for real users
+    // Only the test accounts above get different default statuses
+    return "Pending";
   };
 
   const getCompanyDetails = () => {
