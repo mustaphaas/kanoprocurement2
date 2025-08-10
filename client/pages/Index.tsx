@@ -283,8 +283,16 @@ export default function Index() {
 
   const currentTender = featuredTenders[currentTenderIndex];
 
+  const handleTenderCreated = () => {
+    // Refresh the featured and recent tenders when a new tender is created
+    loadFeaturedTenders();
+    loadRecentTenders();
+  };
+
   return (
     <div className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+      {/* Tender Test Helper */}
+      <TenderTestHelper onTenderCreated={handleTenderCreated} />
       {/* Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2521,7 +2529,7 @@ export default function Index() {
                           4. Request for Quotation (RFQ)
                         </h4>
                         <p className="text-sm text-green-800">
-                          For goods/services below ₦5 million. Minimum three
+                          For goods/services below ���5 million. Minimum three
                           quotations required.
                         </p>
                         <p className="text-xs text-green-600 mt-1">
