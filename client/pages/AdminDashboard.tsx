@@ -1142,16 +1142,16 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-lg shadow-sm border">
             <div className="px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900">
-                User Management
+                Company Status Issues
               </h2>
               <p className="text-gray-600 mt-1">
-                Manage user statuses and permissions
+                Manage suspended and blacklisted companies
               </p>
             </div>
 
             <div className="p-6">
               <div className="space-y-4">
-                {companies.map((company) => (
+                {companies.filter(company => company.status === "Suspended" || company.status === "Blacklisted").map((company) => (
                   <div
                     key={company.id}
                     className="border rounded-lg p-4 hover:shadow-md transition-shadow"
