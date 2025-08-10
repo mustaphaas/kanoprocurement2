@@ -120,7 +120,7 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({ onTenderCrea
     localStorage.removeItem("featuredTenders");
     localStorage.removeItem("ministryTenders");
     onTenderCreated();
-    alert("All tenders cleared from localStorage");
+    alert("All tenders cleared from localStorage:\n• recentTenders\n• featuredTenders\n• ministryTenders");
   };
 
   const viewStoredTenders = () => {
