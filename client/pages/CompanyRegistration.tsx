@@ -410,11 +410,35 @@ export default function CompanyRegistration() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      // Here you would typically send the data to your backend
+      // Create registration record
+      const registrationData = {
+        id: `company-${Date.now()}`,
+        companyName: formData.companyName,
+        registrationNumber: formData.registrationNumber,
+        address: formData.address,
+        businessType: formData.businessType,
+        contactPerson: formData.contactPersonName,
+        email: formData.contactPersonEmail.toLowerCase(),
+        phone: formData.phoneNumber,
+        registrationDate: new Date().toISOString().split('T')[0],
+        status: "Pending", // All new registrations start as Pending
+        submittedAt: new Date().toISOString(),
+      };
+
+      // Save to localStorage for admin dashboard to pick up
+      const existingRegistrations = JSON.parse(localStorage.getItem("registeredCompanies") || "[]");
+      const updatedRegistrations = [registrationData, ...existingRegistrations];
+      localStorage.setItem("registeredCompanies", JSON.stringify(updatedRegistrations));
+
+      // Also set initial user status as Pending
+      localStorage.setItem(`userStatus_${formData.contactPersonEmail.toLowerCase()}`, "Pending");
+
+      console.log("Registration Data Saved:", registrationData);
       console.log("Form Data:", formData);
       console.log("Uploaded Files:", uploadedFiles);
+
       setIsSubmitted(true);
     }
   };
