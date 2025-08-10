@@ -1362,6 +1362,41 @@ export default function CompanyDashboard() {
                               ) : null}
                             </>
                           )}
+
+                        {/* Suspended user actions */}
+                        {companyData.status === "Suspended" &&
+                          tender.status === "Open" && (
+                            <div className="flex flex-col space-y-2">
+                              <button
+                                onClick={() => handleExpressInterest(tender)}
+                                className="flex items-center px-3 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed text-sm"
+                                disabled
+                              >
+                                <Plus className="h-4 w-4 mr-1" />
+                                Express Interest
+                              </button>
+                              <p className="text-xs text-orange-600">
+                                Account suspended - resolve issues to participate
+                              </p>
+                            </div>
+                          )}
+
+                        {/* Pending user actions */}
+                        {companyData.status === "Pending" &&
+                          tender.status === "Open" && (
+                            <div className="flex flex-col space-y-2">
+                              <button
+                                className="flex items-center px-3 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed text-sm"
+                                disabled
+                              >
+                                <Plus className="h-4 w-4 mr-1" />
+                                Express Interest
+                              </button>
+                              <p className="text-xs text-blue-600">
+                                Account pending approval
+                              </p>
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
