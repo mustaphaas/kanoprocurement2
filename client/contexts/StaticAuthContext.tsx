@@ -115,30 +115,42 @@ const demoCredentials: Record<
   },
 };
 
-// Helper function to determine role for approved company logins
+// Helper function to determine role for company logins
 const determineCompanyRole = (email: string): UserProfile => {
-  // Only allow specific test company emails for easy testing
-  const approvedTestEmails = [
+  // Allow specific test company emails for testing different statuses
+  const testCompanyEmails = [
     "approved@company.com",
     "testcompany@example.com",
-    "demo@company.com"
+    "demo@company.com",
+    "pending@company.com",
+    "suspended@company.com",
+    "blacklisted@company.com"
   ];
 
-  if (approvedTestEmails.includes(email)) {
+  if (testCompanyEmails.includes(email)) {
+    // Return specific profile based on email
+    const emailToProfile: Record<string, Omit<UserProfile, "role" | "email">> = {
+      "approved@company.com": { name: "Approved Test Company", companyName: "Approved Test Ltd" },
+      "testcompany@example.com": { name: "Test Company Representative", companyName: "Test Company Ltd" },
+      "demo@company.com": { name: "Demo Company User", companyName: "Demo Company Ltd" },
+      "pending@company.com": { name: "Pending Approval Company", companyName: "Pending Test Ltd" },
+      "suspended@company.com": { name: "Suspended Company", companyName: "Suspended Test Ltd" },
+      "blacklisted@company.com": { name: "Blacklisted Company", companyName: "Blacklisted Test Ltd" },
+    };
+
     return {
       role: "company",
       email: email,
-      name: "Approved Test Company",
-      companyName: "Approved Test Company Ltd",
+      ...emailToProfile[email],
     };
   }
 
-  // Default for any other company email - still approved for testing
+  // Default for any other company email
   return {
     role: "company",
     email: email,
     name: "Company Representative",
-    companyName: "Test Company Ltd",
+    companyName: "Generic Company Ltd",
   };
 };
 
