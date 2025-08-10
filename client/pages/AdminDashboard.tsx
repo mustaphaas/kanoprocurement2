@@ -1112,6 +1112,7 @@ export default function AdminDashboard() {
                           <Eye className="h-4 w-4 inline mr-1" />
                           View Details
                         </button>
+
                         {company.status === "Pending" && (
                           <>
                             <button
@@ -1132,6 +1133,15 @@ export default function AdminDashboard() {
                             </button>
                           </>
                         )}
+
+                        {/* Add Manage Status for all companies */}
+                        <button
+                          onClick={() => handleApproval(company)}
+                          className="text-gray-600 hover:text-gray-900 ml-3"
+                        >
+                          <Settings className="h-4 w-4 inline mr-1" />
+                          Manage Status
+                        </button>
                       </td>
                     </tr>
                   ))}
