@@ -992,6 +992,25 @@ export default function CompanyDashboard() {
                 </button>
               )}
 
+              {companyData.status === "Blacklisted" && (
+                <button
+                  onClick={() => setActiveSection("grievance")}
+                  className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Gavel className="h-6 w-6 text-red-600" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        Submit Appeal
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Appeal your blacklist status
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              )}
+
               <button
                 onClick={() => setActiveSection("my-profile")}
                 className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
@@ -1000,31 +1019,33 @@ export default function CompanyDashboard() {
                   <Edit className="h-6 w-6 text-green-600" />
                   <div>
                     <h3 className="font-medium text-gray-900">
-                      Update Company Profile
+                      {companyData.status === "Blacklisted" ? "View Profile Details" : "Update Company Profile"}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      Manage your company information
+                      {companyData.status === "Blacklisted" ? "View your company information" : "Manage your company information"}
                     </p>
                   </div>
                 </div>
               </button>
 
-              <button
-                onClick={() => setActiveSection("contracts-awarded")}
-                className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center space-x-3">
-                  <Award className="h-6 w-6 text-purple-600" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">
-                      View My Awarded Contracts
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Track contract performance
-                    </p>
+              {companyData.status !== "Blacklisted" && (
+                <button
+                  onClick={() => setActiveSection("contracts-awarded")}
+                  className="bg-white rounded-lg shadow-sm border p-6 text-left hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Award className="h-6 w-6 text-purple-600" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        View My Awarded Contracts
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Track contract performance
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </button>
+                </button>
+              )}
             </div>
 
             {/* Personalized Tender Recommendations */}
@@ -1514,7 +1535,7 @@ export default function CompanyDashboard() {
                       id: "AW002",
                       title: "Construction of Primary Health Care Center",
                       awardDate: "2023-12-15",
-                      contractValue: "��85,000,000",
+                      contractValue: "₦85,000,000",
                       status: "In Progress",
                       progress: 40,
                       completionDate: "2024-06-15",
