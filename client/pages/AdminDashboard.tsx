@@ -54,7 +54,7 @@ export default function AdminDashboard() {
   const [viewMode, setViewMode] = useState<"list" | "details" | "approval">("list");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [approvalDecision, setApprovalDecision] = useState<"Approved" | "Rejected" | "">("");
+  const [approvalDecision, setApprovalDecision] = useState<"Approved" | "Suspended" | "Blacklisted" | "">("");
   const [rejectionReason, setRejectionReason] = useState("");
   const [sendNotification, setSendNotification] = useState(true);
   const navigate = useNavigate();
