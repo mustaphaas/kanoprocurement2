@@ -55,8 +55,9 @@ export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [approvalDecision, setApprovalDecision] = useState<"Approved" | "Suspended" | "Blacklisted" | "">("");
-  const [rejectionReason, setRejectionReason] = useState("");
+  const [actionReason, setActionReason] = useState("");
   const [sendNotification, setSendNotification] = useState(true);
+  const [activeTab, setActiveTab] = useState<"companies" | "user-management">("companies");
   const navigate = useNavigate();
 
   // Mock data
