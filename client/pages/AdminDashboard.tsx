@@ -276,14 +276,14 @@ export default function AdminDashboard() {
         console.log('❌ Admin localStorage test FAILED:', e);
       }
 
-      // Test manual userStatus save
+      // Test manual userStatus save with persistent storage
       try {
         const testKey = 'userStatus_admin_test@company.com';
-        localStorage.setItem(testKey, 'Approved');
-        const testResult = localStorage.getItem(testKey);
+        persistentStorage.setItem(testKey, 'Approved');
+        const testResult = persistentStorage.getItem(testKey);
         console.log('✅ Manual userStatus save test:', testResult === 'Approved' ? 'WORKS' : 'FAILED');
-        console.log('📋 All userStatus keys after test:', Object.keys(localStorage).filter(k => k.startsWith('userStatus_')));
-        localStorage.removeItem(testKey);
+        console.log('📋 All userStatus keys after test:', persistentStorage.getUserStatusKeys());
+        persistentStorage.removeItem(testKey);
       } catch (e) {
         console.log('❌ Manual userStatus save test FAILED:', e);
       }
@@ -323,14 +323,14 @@ export default function AdminDashboard() {
         console.log('❌ Admin localStorage test FAILED:', e);
       }
 
-      // Test manual userStatus save
+      // Test manual userStatus save with persistent storage
       try {
         const testKey = 'userStatus_admin_test@company.com';
-        localStorage.setItem(testKey, 'Approved');
-        const testResult = localStorage.getItem(testKey);
+        persistentStorage.setItem(testKey, 'Approved');
+        const testResult = persistentStorage.getItem(testKey);
         console.log('✅ Manual userStatus save test:', testResult === 'Approved' ? 'WORKS' : 'FAILED');
-        console.log('📋 All userStatus keys after test:', Object.keys(localStorage).filter(k => k.startsWith('userStatus_')));
-        localStorage.removeItem(testKey);
+        console.log('📋 All userStatus keys after test:', persistentStorage.getUserStatusKeys());
+        persistentStorage.removeItem(testKey);
       } catch (e) {
         console.log('❌ Manual userStatus save test FAILED:', e);
       }
