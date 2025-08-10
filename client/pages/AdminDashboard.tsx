@@ -279,6 +279,12 @@ export default function AdminDashboard() {
       company.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === "all" || company.status === statusFilter;
+
+    // For Company Approval tab, only show pending companies
+    if (activeTab === "companies") {
+      return matchesSearch && matchesStatus && company.status === "Pending";
+    }
+
     return matchesSearch && matchesStatus;
   });
 
