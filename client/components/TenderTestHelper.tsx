@@ -49,10 +49,59 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({ onTenderCrea
     const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
     const recentTendersList = JSON.parse(existingRecentTenders);
     recentTendersList.unshift(testTender);
-    
+
     // Keep only the last 10 recent tenders
     const latestRecentTenders = recentTendersList.slice(0, 10);
     localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+
+    // Also store in ministryTenders (what MinistryDashboard looks for)
+    const ministryTenderFormat = {
+      id: testTender.id,
+      title: testTender.title,
+      description: testTender.description,
+      category: testTender.category,
+      estimatedValue: testTender.value,
+      status: "Published",
+      publishDate: testTender.publishDate,
+      closeDate: testTender.closingDate,
+      bidsReceived: 0,
+      ministry: testTender.procuringEntity,
+      procuringEntity: testTender.procuringEntity,
+    };
+
+    const existingMinistryTenders = localStorage.getItem("ministryTenders") || "[]";
+    const ministryTendersList = JSON.parse(existingMinistryTenders);
+    ministryTendersList.unshift(ministryTenderFormat);
+
+    // Keep only the last 10 ministry tenders
+    const latestMinistryTenders = ministryTendersList.slice(0, 10);
+    localStorage.setItem("ministryTenders", JSON.stringify(latestMinistryTenders));
+
+    // Also store in featuredTenders for the main index page
+    const featuredTenderFormat = {
+      id: testTender.id,
+      title: testTender.title,
+      description: testTender.description,
+      value: testTender.value,
+      deadline: new Date(testTender.deadline).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      status: "Open",
+      statusColor: "bg-green-100 text-green-800",
+      category: testTender.category,
+      ministry: testTender.procuringEntity,
+      createdAt: Date.now(),
+    };
+
+    const existingFeaturedTenders = localStorage.getItem("featuredTenders") || "[]";
+    const featuredTendersList = JSON.parse(existingFeaturedTenders);
+    featuredTendersList.unshift(featuredTenderFormat);
+
+    // Keep only the last 5 featured tenders
+    const latestFeaturedTenders = featuredTendersList.slice(0, 5);
+    localStorage.setItem("featuredTenders", JSON.stringify(latestFeaturedTenders));
 
     console.log("Test tender created:", testTender);
     console.log("Stored in localStorage with key 'recentTenders'");
