@@ -1221,6 +1221,52 @@ export default function CompanyDashboard() {
 
         return (
           <div className="space-y-6">
+            {/* Suspended User Notice */}
+            {companyData.status === "Suspended" && (
+              <div className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-lg">
+                <div className="flex items-start">
+                  <AlertTriangle className="h-5 w-5 text-orange-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-orange-800">Account Suspended - Limited Access</h3>
+                    <p className="text-sm text-orange-700 mt-1">
+                      You can view tender opportunities but cannot express interest or submit bids.
+                      Please resolve compliance issues through the "Reinstatement Portal" to restore full access.
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("detailed-compliance")}
+                      className="mt-2 inline-flex items-center px-3 py-1 bg-orange-600 text-white rounded-md text-sm hover:bg-orange-700"
+                    >
+                      <RefreshCw className="h-3 w-3 mr-1" />
+                      Go to Reinstatement Portal
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Pending User Notice */}
+            {companyData.status === "Pending" && (
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                <div className="flex items-start">
+                  <Clock className="h-5 w-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-blue-800">Account Pending Approval</h3>
+                    <p className="text-sm text-blue-700 mt-1">
+                      You can browse tender opportunities but cannot participate until your registration is approved.
+                      This typically takes 5-7 business days.
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("my-documents")}
+                      className="mt-2 inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+                    >
+                      <Upload className="h-3 w-3 mr-1" />
+                      Complete Verification
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold text-gray-900">
                 Tender Advertisements
