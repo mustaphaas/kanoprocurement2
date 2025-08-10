@@ -1171,6 +1171,30 @@ export default function CompanyDashboard() {
         );
 
       case "tender-ads":
+        // Blacklisted users should not access tender advertisements at all
+        if (companyData.status === "Blacklisted") {
+          return (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <Ban className="h-8 w-8 text-red-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Access Restricted
+              </h3>
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                Your company is currently blacklisted and cannot access tender advertisements or participate in procurement opportunities.
+              </p>
+              <button
+                onClick={() => setActiveSection("grievance")}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+              >
+                <Gavel className="h-4 w-4 mr-2" />
+                Submit Appeal
+              </button>
+            </div>
+          );
+        }
+
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
