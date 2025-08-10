@@ -423,15 +423,16 @@ export default function SuperUserDashboard() {
         registrationDate: "2024-01-13",
         lastActivity: "2024-01-20",
       },
-      // Company Approval Status - Pending
+      // Company Approval Status - Pending (Shows in Company Approval tab)
       {
         id: "4",
         companyName: "Pending Test Ltd",
         contactPerson: "Pending User",
         email: "pending@company.com",
-        status: "Active", // Note: In the actual system this would map to "Pending" status
-        registrationDate: "2024-01-12",
-        lastActivity: "2024-01-19",
+        status: "Active", // Will show in Company Approval section as "Pending Review"
+        registrationDate: "2024-01-29",
+        lastActivity: "2024-01-29",
+        pendingApproval: true, // Flag to indicate this shows in Company Approval
       },
       // Company Status - Suspended
       {
