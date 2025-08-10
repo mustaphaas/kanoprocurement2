@@ -802,9 +802,9 @@ export default function AdminDashboard() {
                     <strong>Decision:</strong>{" "}
                     {approvalDecision || "Not selected"}
                   </p>
-                  {approvalDecision === "Rejected" && rejectionReason && (
+                  {(approvalDecision === "Suspended" || approvalDecision === "Blacklisted") && actionReason && (
                     <p>
-                      <strong>Reason:</strong> {rejectionReason}
+                      <strong>Reason:</strong> {actionReason}
                     </p>
                   )}
                   <p>
