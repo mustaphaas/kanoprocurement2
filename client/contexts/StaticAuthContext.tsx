@@ -34,7 +34,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Static demo credentials
+// Static demo credentials for testing functions
 const demoCredentials: Record<
   string,
   { password: string; profile: UserProfile }
@@ -55,15 +55,60 @@ const demoCredentials: Record<
       name: "Super User",
     },
   },
+  // Test company users for superuser testing
+  "approved@company.com": {
+    password: "password123",
+    profile: {
+      role: "company",
+      email: "approved@company.com",
+      name: "Approved Test Company",
+      companyName: "Approved Test Ltd",
+    },
+  },
+  "testcompany@example.com": {
+    password: "test123",
+    profile: {
+      role: "company",
+      email: "testcompany@example.com",
+      name: "Test Company Representative",
+      companyName: "Test Company Ltd",
+    },
+  },
+  "demo@company.com": {
+    password: "demo123",
+    profile: {
+      role: "company",
+      email: "demo@company.com",
+      name: "Demo Company User",
+      companyName: "Demo Company Ltd",
+    },
+  },
 };
 
-// Helper function to determine role for other logins (company emails)
+// Helper function to determine role for approved company logins
 const determineCompanyRole = (email: string): UserProfile => {
+  // Only allow specific test company emails for easy testing
+  const approvedTestEmails = [
+    "approved@company.com",
+    "testcompany@example.com",
+    "demo@company.com"
+  ];
+
+  if (approvedTestEmails.includes(email)) {
+    return {
+      role: "company",
+      email: email,
+      name: "Approved Test Company",
+      companyName: "Approved Test Company Ltd",
+    };
+  }
+
+  // Default for any other company email - still approved for testing
   return {
     role: "company",
     email: email,
     name: "Company Representative",
-    companyName: "Demo Company Ltd",
+    companyName: "Test Company Ltd",
   };
 };
 
@@ -211,17 +256,22 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             </p>
             <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
               <p>
-                <strong>Demo Credentials:</strong>
+                <strong>Test Credentials for Superuser:</strong>
               </p>
               <p>
                 Admin: username <code>admin</code> / password{" "}
-                <code>password</code>
+                <code>admin123</code>
               </p>
               <p>
                 Super User: username <code>superuser</code> / password{" "}
-                <code>admin123</code>
+                <code>superuser123</code>
               </p>
-              <p>Company: any email@domain.com / any password</p>
+              <p className="mt-2">
+                <strong>Approved Company Test Users:</strong>
+              </p>
+              <p>• <code>approved@company.com</code> / <code>password123</code></p>
+              <p>• <code>testcompany@example.com</code> / <code>test123</code></p>
+              <p>• <code>demo@company.com</code> / <code>demo123</code></p>
             </div>
           </div>
         </div>
