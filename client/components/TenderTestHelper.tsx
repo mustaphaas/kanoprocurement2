@@ -108,13 +108,23 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({ onTenderCrea
         </button>
       </div>
       
-      <div className="mt-4 p-3 bg-gray-50 rounded text-xs text-gray-600">
+      <div className="mt-4 p-3 bg-blue-50 rounded text-xs text-gray-600">
+        <strong>✅ Scalable System:</strong>
+        <div className="mt-1 space-y-1">
+          <div>• New user registrations → Start as "Pending"</div>
+          <div>• Admin can manage any registered user</div>
+          <div>• System works for unlimited users</div>
+          <div>• Dynamic status changes affect all users</div>
+        </div>
+      </div>
+
+      <div className="mt-2 p-3 bg-gray-50 rounded text-xs text-gray-600">
         <strong>Test Instructions:</strong>
         <ol className="mt-1 space-y-1">
           <li>1. Create a test tender using the button above</li>
-          <li>2. Login as approved@company.com to see the tender</li>
-          <li>3. Verify that the tender appears in the company dashboard</li>
-          <li>4. Test that blacklisted users cannot see it</li>
+          <li>2. Register new users or use test accounts</li>
+          <li>3. Admin can change any user's status</li>
+          <li>4. Verify tender visibility per user status</li>
         </ol>
       </div>
     </div>
