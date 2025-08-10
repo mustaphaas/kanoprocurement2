@@ -165,7 +165,7 @@ export default function AdminDashboard() {
           phone: "+234 809 111 2222",
           registrationDate: "2024-01-10",
           status:
-            (localStorage.getItem(`userStatus_suspended@company.com`) as
+            (localStorage.getItem(`userStatus_${"suspended@company.com".toLowerCase()}`) as
               | "Pending"
               | "Approved"
               | "Suspended"
