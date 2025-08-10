@@ -8,7 +8,7 @@ interface StorageItem {
 class PersistentStorage {
   private memoryStore: Map<string, StorageItem> = new Map();
   private isLocalStorageAvailable: boolean = false;
-  private localStorageTestKey = '_storage_test_';
+  private localStorageTestKey = "_storage_test_";
 
   constructor() {
     this.testLocalStorage();
@@ -17,20 +17,20 @@ class PersistentStorage {
   private testLocalStorage(): void {
     try {
       // Test if localStorage is actually working
-      const testValue = 'test_' + Date.now();
+      const testValue = "test_" + Date.now();
       localStorage.setItem(this.localStorageTestKey, testValue);
       const retrieved = localStorage.getItem(this.localStorageTestKey);
-      
+
       if (retrieved === testValue) {
         localStorage.removeItem(this.localStorageTestKey);
         this.isLocalStorageAvailable = true;
-        console.log('✅ localStorage is available and working');
+        console.log("✅ localStorage is available and working");
       } else {
-        console.log('❌ localStorage test failed - using memory fallback');
+        console.log("❌ localStorage test failed - using memory fallback");
         this.isLocalStorageAvailable = false;
       }
     } catch (error) {
-      console.log('❌ localStorage error:', error);
+      console.log("❌ localStorage error:", error);
       this.isLocalStorageAvailable = false;
     }
   }
@@ -38,7 +38,7 @@ class PersistentStorage {
   setItem(key: string, value: string): void {
     const item: StorageItem = {
       value,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     // Always store in memory as backup
@@ -118,12 +118,12 @@ class PersistentStorage {
       try {
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
-          if (key && !key.endsWith('_timestamp')) {
+          if (key && !key.endsWith("_timestamp")) {
             keys.add(key);
           }
         }
       } catch (error) {
-        console.log('❌ Failed to get localStorage keys:', error);
+        console.log("❌ Failed to get localStorage keys:", error);
       }
     }
 
@@ -131,28 +131,28 @@ class PersistentStorage {
   }
 
   getUserStatusKeys(): string[] {
-    return this.getAllKeys().filter(key => key.startsWith('userStatus_'));
+    return this.getAllKeys().filter((key) => key.startsWith("userStatus_"));
   }
 
   private triggerStorageEvent(key: string, newValue: string | null): void {
     // Create custom event for same-window storage updates
-    const event = new CustomEvent('persistentStorageChange', {
-      detail: { key, newValue }
+    const event = new CustomEvent("persistentStorageChange", {
+      detail: { key, newValue },
     });
     window.dispatchEvent(event);
   }
 
   // Debug methods
   debugInfo(): void {
-    console.log('=== PERSISTENT STORAGE DEBUG ===');
-    console.log('localStorage available:', this.isLocalStorageAvailable);
-    console.log('Memory store size:', this.memoryStore.size);
-    console.log('All keys:', this.getAllKeys());
-    console.log('UserStatus keys:', this.getUserStatusKeys());
-    
+    console.log("=== PERSISTENT STORAGE DEBUG ===");
+    console.log("localStorage available:", this.isLocalStorageAvailable);
+    console.log("Memory store size:", this.memoryStore.size);
+    console.log("All keys:", this.getAllKeys());
+    console.log("UserStatus keys:", this.getUserStatusKeys());
+
     // Show all userStatus entries
     const userStatusKeys = this.getUserStatusKeys();
-    userStatusKeys.forEach(key => {
+    userStatusKeys.forEach((key) => {
       const value = this.getItem(key);
       console.log(`${key}: ${value}`);
     });
@@ -166,17 +166,17 @@ class PersistentStorage {
     if (this.isLocalStorageAvailable) {
       try {
         const keysToRemove = this.getUserStatusKeys();
-        keysToRemove.forEach(key => {
+        keysToRemove.forEach((key) => {
           localStorage.removeItem(key);
           localStorage.removeItem(`${key}_timestamp`);
         });
-        console.log('🗑️ Cleared localStorage userStatus keys');
+        console.log("🗑️ Cleared localStorage userStatus keys");
       } catch (error) {
-        console.log('❌ Failed to clear localStorage:', error);
+        console.log("❌ Failed to clear localStorage:", error);
       }
     }
 
-    console.log('🗑️ Cleared all storage');
+    console.log("🗑️ Cleared all storage");
   }
 }
 
@@ -187,9 +187,12 @@ export const persistentStorage = new PersistentStorage();
 (window as any).debugStorage = () => persistentStorage.debugInfo();
 (window as any).clearAllStorage = () => persistentStorage.clearAll();
 (window as any).testStorage = () => {
-  console.log('=== TESTING PERSISTENT STORAGE ===');
-  persistentStorage.setItem('test_key', 'test_value');
-  const retrieved = persistentStorage.getItem('test_key');
-  console.log('Test result:', retrieved === 'test_value' ? 'SUCCESS' : 'FAILED');
-  persistentStorage.removeItem('test_key');
+  console.log("=== TESTING PERSISTENT STORAGE ===");
+  persistentStorage.setItem("test_key", "test_value");
+  const retrieved = persistentStorage.getItem("test_key");
+  console.log(
+    "Test result:",
+    retrieved === "test_value" ? "SUCCESS" : "FAILED",
+  );
+  persistentStorage.removeItem("test_key");
 };

@@ -137,109 +137,137 @@ export default function CompanyDashboard() {
   // Add useEffect to listen for storage changes (both localStorage and persistent storage)
   useEffect(() => {
     const handleStorageChange = () => {
-      setStatusUpdateTrigger(prev => prev + 1);
+      setStatusUpdateTrigger((prev) => prev + 1);
     };
 
     const handlePersistentStorageChange = () => {
-      setStatusUpdateTrigger(prev => prev + 1);
+      setStatusUpdateTrigger((prev) => prev + 1);
     };
 
     // Listen for storage events from other tabs/windows
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
     // Listen for custom persistent storage events (same-tab updates)
-    window.addEventListener('persistentStorageChange', handlePersistentStorageChange);
+    window.addEventListener(
+      "persistentStorageChange",
+      handlePersistentStorageChange,
+    );
 
     // Also check for status changes periodically (for same-tab updates)
     const interval = setInterval(() => {
-      setStatusUpdateTrigger(prev => prev + 1);
+      setStatusUpdateTrigger((prev) => prev + 1);
     }, 200);
 
     // Add global debug functions for manual testing
     (window as any).refreshCompanyStatus = () => {
-      console.log('🔄 Manually refreshing company status...');
-      setStatusUpdateTrigger(prev => prev + 1);
+      console.log("🔄 Manually refreshing company status...");
+      setStatusUpdateTrigger((prev) => prev + 1);
     };
 
-    (window as any).testBlacklist = (email = 'approved@company.com') => {
+    (window as any).testBlacklist = (email = "approved@company.com") => {
       console.log(`🧪 Manually blacklisting ${email} for testing...`);
-      persistentStorage.setItem(`userStatus_${email.toLowerCase()}`, 'Blacklisted');
-      persistentStorage.setItem(`userStatusReason_${email.toLowerCase()}`, 'Manual test blacklist');
-      setStatusUpdateTrigger(prev => prev + 1);
-      console.log('✅ Blacklist test completed, status should update!');
+      persistentStorage.setItem(
+        `userStatus_${email.toLowerCase()}`,
+        "Blacklisted",
+      );
+      persistentStorage.setItem(
+        `userStatusReason_${email.toLowerCase()}`,
+        "Manual test blacklist",
+      );
+      setStatusUpdateTrigger((prev) => prev + 1);
+      console.log("✅ Blacklist test completed, status should update!");
     };
 
     (window as any).clearAllStatus = () => {
-      console.log('🧹 Clearing all userStatus from storage...');
+      console.log("🧹 Clearing all userStatus from storage...");
       persistentStorage.clearAll();
-      setStatusUpdateTrigger(prev => prev + 1);
-      console.log('✅ All userStatus cleared!');
+      setStatusUpdateTrigger((prev) => prev + 1);
+      console.log("✅ All userStatus cleared!");
     };
 
     // Add comprehensive localStorage testing
     (window as any).testLocalStorage = () => {
-      console.log('=== COMPREHENSIVE LOCALSTORAGE TEST ===');
+      console.log("=== COMPREHENSIVE LOCALSTORAGE TEST ===");
 
       // Test 1: Basic localStorage functionality
       try {
-        localStorage.setItem('test_basic', 'basic_works');
-        const basicTest = localStorage.getItem('test_basic');
-        console.log('✅ Basic localStorage test:', basicTest === 'basic_works' ? 'WORKS' : 'FAILED');
-        localStorage.removeItem('test_basic');
+        localStorage.setItem("test_basic", "basic_works");
+        const basicTest = localStorage.getItem("test_basic");
+        console.log(
+          "✅ Basic localStorage test:",
+          basicTest === "basic_works" ? "WORKS" : "FAILED",
+        );
+        localStorage.removeItem("test_basic");
       } catch (e) {
-        console.log('❌ Basic localStorage test FAILED:', e);
+        console.log("❌ Basic localStorage test FAILED:", e);
       }
 
       // Test 2: Test userStatus key pattern
       try {
-        const testKey = 'userStatus_test@example.com';
-        localStorage.setItem(testKey, 'TestStatus');
+        const testKey = "userStatus_test@example.com";
+        localStorage.setItem(testKey, "TestStatus");
         const testResult = localStorage.getItem(testKey);
-        console.log('✅ UserStatus pattern test:', testResult === 'TestStatus' ? 'WORKS' : 'FAILED');
+        console.log(
+          "✅ UserStatus pattern test:",
+          testResult === "TestStatus" ? "WORKS" : "FAILED",
+        );
         localStorage.removeItem(testKey);
       } catch (e) {
-        console.log('❌ UserStatus pattern test FAILED:', e);
+        console.log("❌ UserStatus pattern test FAILED:", e);
       }
 
       // Test 3: List all current localStorage keys
-      console.log('📋 All localStorage keys:', Object.keys(localStorage));
-      console.log('📋 UserStatus keys:', Object.keys(localStorage).filter(k => k.startsWith('userStatus_')));
+      console.log("📋 All localStorage keys:", Object.keys(localStorage));
+      console.log(
+        "📋 UserStatus keys:",
+        Object.keys(localStorage).filter((k) => k.startsWith("userStatus_")),
+      );
 
       // Test 4: Check current user status lookup
-      const currentEmail = user?.email?.toLowerCase() || 'no-email';
+      const currentEmail = user?.email?.toLowerCase() || "no-email";
       const currentKey = `userStatus_${currentEmail}`;
       const currentStatus = localStorage.getItem(currentKey);
       console.log(`👤 Current user: ${currentEmail}`);
       console.log(`🔑 Current key: ${currentKey}`);
-      console.log(`📊 Current status: ${currentStatus || 'NOT FOUND'}`);
+      console.log(`📊 Current status: ${currentStatus || "NOT FOUND"}`);
 
-      console.log('=== TEST COMPLETED ===');
+      console.log("=== TEST COMPLETED ===");
     };
 
     // Add localStorage monitoring
     (window as any).monitorLocalStorage = () => {
       const monitor = setInterval(() => {
-        const userStatusKeys = Object.keys(localStorage).filter(k => k.startsWith('userStatus_'));
+        const userStatusKeys = Object.keys(localStorage).filter((k) =>
+          k.startsWith("userStatus_"),
+        );
         if (userStatusKeys.length > 0) {
-          console.log('📊 LocalStorage Monitor - UserStatus keys found:', userStatusKeys.map(k => ({
-            key: k,
-            value: localStorage.getItem(k)
-          })));
+          console.log(
+            "📊 LocalStorage Monitor - UserStatus keys found:",
+            userStatusKeys.map((k) => ({
+              key: k,
+              value: localStorage.getItem(k),
+            })),
+          );
         } else {
-          console.log('📊 LocalStorage Monitor - No userStatus keys found');
+          console.log("📊 LocalStorage Monitor - No userStatus keys found");
         }
       }, 5000);
 
       (window as any).stopMonitoring = () => {
         clearInterval(monitor);
-        console.log('📊 LocalStorage monitoring stopped');
+        console.log("📊 LocalStorage monitoring stopped");
       };
 
-      console.log('📊 LocalStorage monitoring started. Call window.stopMonitoring() to stop.');
+      console.log(
+        "📊 LocalStorage monitoring started. Call window.stopMonitoring() to stop.",
+      );
     };
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('persistentStorageChange', handlePersistentStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "persistentStorageChange",
+        handlePersistentStorageChange,
+      );
       clearInterval(interval);
       delete (window as any).refreshCompanyStatus;
     };
@@ -265,7 +293,10 @@ export default function CompanyDashboard() {
     console.log(`User email: ${user?.email} -> normalized: ${userEmail}`);
     console.log(`Storage key: ${storageKey}`);
     console.log(`Admin set status: ${adminSetStatus}`);
-    console.log(`All userStatus keys in storage:`, persistentStorage.getUserStatusKeys());
+    console.log(
+      `All userStatus keys in storage:`,
+      persistentStorage.getUserStatusKeys(),
+    );
 
     if (
       adminSetStatus &&

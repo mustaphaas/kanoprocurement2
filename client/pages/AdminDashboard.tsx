@@ -139,11 +139,10 @@ export default function AdminDashboard() {
           phone: "+234 805 987 6543",
           registrationDate: "2024-01-13",
           status:
-            (localStorage.getItem(`userStatus_${"approved@company.com".toLowerCase()}`) as
-              | "Pending"
-              | "Approved"
-              | "Suspended"
-              | "Blacklisted") || "Approved",
+            (localStorage.getItem(
+              `userStatus_${"approved@company.com".toLowerCase()}`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Approved",
           registrationNumber: "RC345678",
           businessType: "Limited Liability Company",
           address: "78 Independence Road, Kano",
@@ -166,11 +165,10 @@ export default function AdminDashboard() {
           phone: "+234 809 111 2222",
           registrationDate: "2024-01-10",
           status:
-            (localStorage.getItem(`userStatus_${"suspended@company.com".toLowerCase()}`) as
-              | "Pending"
-              | "Approved"
-              | "Suspended"
-              | "Blacklisted") || "Suspended",
+            (localStorage.getItem(
+              `userStatus_${"suspended@company.com".toLowerCase()}`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Suspended",
           registrationNumber: "RC456789",
           businessType: "Limited Liability Company",
           address: "12 Engineering Close, Kano",
@@ -193,11 +191,10 @@ export default function AdminDashboard() {
           phone: "+234 806 333 4444",
           registrationDate: "2024-01-05",
           status:
-            (localStorage.getItem(`userStatus_${"blacklisted@company.com".toLowerCase()}`) as
-              | "Pending"
-              | "Approved"
-              | "Suspended"
-              | "Blacklisted") || "Blacklisted",
+            (localStorage.getItem(
+              `userStatus_${"blacklisted@company.com".toLowerCase()}`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Blacklisted",
           registrationNumber: "RC567890",
           businessType: "Limited Liability Company",
           address: "56 Industrial Layout, Kano",
@@ -220,11 +217,10 @@ export default function AdminDashboard() {
           phone: "+234 807 444 5555",
           registrationDate: "2024-01-20",
           status:
-            (localStorage.getItem(`userStatus_${"pending@company.com".toLowerCase()}`) as
-              | "Pending"
-              | "Approved"
-              | "Suspended"
-              | "Blacklisted") || "Pending",
+            (localStorage.getItem(
+              `userStatus_${"pending@company.com".toLowerCase()}`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Pending",
           registrationNumber: "RC678901",
           businessType: "Limited Liability Company",
           address: "90 New GRA, Kano",
@@ -264,42 +260,60 @@ export default function AdminDashboard() {
 
     // Add global admin debugging functions
     (window as any).adminTestLocalStorage = () => {
-      console.log('=== ADMIN LOCALSTORAGE TEST ===');
+      console.log("=== ADMIN LOCALSTORAGE TEST ===");
 
       // Test basic localStorage
       try {
-        localStorage.setItem('admin_test', 'admin_works');
-        const adminTest = localStorage.getItem('admin_test');
-        console.log('✅ Admin localStorage test:', adminTest === 'admin_works' ? 'WORKS' : 'FAILED');
-        localStorage.removeItem('admin_test');
+        localStorage.setItem("admin_test", "admin_works");
+        const adminTest = localStorage.getItem("admin_test");
+        console.log(
+          "✅ Admin localStorage test:",
+          adminTest === "admin_works" ? "WORKS" : "FAILED",
+        );
+        localStorage.removeItem("admin_test");
       } catch (e) {
-        console.log('❌ Admin localStorage test FAILED:', e);
+        console.log("❌ Admin localStorage test FAILED:", e);
       }
 
       // Test manual userStatus save with persistent storage
       try {
-        const testKey = 'userStatus_admin_test@company.com';
-        persistentStorage.setItem(testKey, 'Approved');
+        const testKey = "userStatus_admin_test@company.com";
+        persistentStorage.setItem(testKey, "Approved");
         const testResult = persistentStorage.getItem(testKey);
-        console.log('✅ Manual userStatus save test:', testResult === 'Approved' ? 'WORKS' : 'FAILED');
-        console.log('📋 All userStatus keys after test:', persistentStorage.getUserStatusKeys());
+        console.log(
+          "✅ Manual userStatus save test:",
+          testResult === "Approved" ? "WORKS" : "FAILED",
+        );
+        console.log(
+          "📋 All userStatus keys after test:",
+          persistentStorage.getUserStatusKeys(),
+        );
         persistentStorage.removeItem(testKey);
       } catch (e) {
-        console.log('❌ Manual userStatus save test FAILED:', e);
+        console.log("❌ Manual userStatus save test FAILED:", e);
       }
 
-      console.log('=== ADMIN TEST COMPLETED ===');
+      console.log("=== ADMIN TEST COMPLETED ===");
     };
 
     (window as any).adminTestStatusChange = () => {
-      console.log('=== TESTING HANDLESTATUSCHANGE FUNCTION ===');
-      const testCompany = companies.find(c => c.email === 'approved@company.com');
+      console.log("=== TESTING HANDLESTATUSCHANGE FUNCTION ===");
+      const testCompany = companies.find(
+        (c) => c.email === "approved@company.com",
+      );
       if (testCompany) {
-        console.log('🧪 Found test company:', testCompany);
-        handleStatusChange(testCompany.id, 'Blacklisted', 'Manual admin test');
+        console.log("🧪 Found test company:", testCompany);
+        handleStatusChange(testCompany.id, "Blacklisted", "Manual admin test");
       } else {
-        console.log('❌ No test company found with email approved@company.com');
-        console.log('📋 Available companies:', companies.map(c => ({ id: c.id, email: c.email, name: c.companyName })));
+        console.log("❌ No test company found with email approved@company.com");
+        console.log(
+          "📋 Available companies:",
+          companies.map((c) => ({
+            id: c.id,
+            email: c.email,
+            name: c.companyName,
+          })),
+        );
       }
     };
 
@@ -311,42 +325,60 @@ export default function AdminDashboard() {
   // Add global admin debugging functions (outside useEffect to avoid dependency issues)
   useEffect(() => {
     (window as any).adminTestLocalStorage = () => {
-      console.log('=== ADMIN LOCALSTORAGE TEST ===');
+      console.log("=== ADMIN LOCALSTORAGE TEST ===");
 
       // Test basic localStorage
       try {
-        localStorage.setItem('admin_test', 'admin_works');
-        const adminTest = localStorage.getItem('admin_test');
-        console.log('✅ Admin localStorage test:', adminTest === 'admin_works' ? 'WORKS' : 'FAILED');
-        localStorage.removeItem('admin_test');
+        localStorage.setItem("admin_test", "admin_works");
+        const adminTest = localStorage.getItem("admin_test");
+        console.log(
+          "✅ Admin localStorage test:",
+          adminTest === "admin_works" ? "WORKS" : "FAILED",
+        );
+        localStorage.removeItem("admin_test");
       } catch (e) {
-        console.log('❌ Admin localStorage test FAILED:', e);
+        console.log("❌ Admin localStorage test FAILED:", e);
       }
 
       // Test manual userStatus save with persistent storage
       try {
-        const testKey = 'userStatus_admin_test@company.com';
-        persistentStorage.setItem(testKey, 'Approved');
+        const testKey = "userStatus_admin_test@company.com";
+        persistentStorage.setItem(testKey, "Approved");
         const testResult = persistentStorage.getItem(testKey);
-        console.log('✅ Manual userStatus save test:', testResult === 'Approved' ? 'WORKS' : 'FAILED');
-        console.log('📋 All userStatus keys after test:', persistentStorage.getUserStatusKeys());
+        console.log(
+          "✅ Manual userStatus save test:",
+          testResult === "Approved" ? "WORKS" : "FAILED",
+        );
+        console.log(
+          "📋 All userStatus keys after test:",
+          persistentStorage.getUserStatusKeys(),
+        );
         persistentStorage.removeItem(testKey);
       } catch (e) {
-        console.log('❌ Manual userStatus save test FAILED:', e);
+        console.log("❌ Manual userStatus save test FAILED:", e);
       }
 
-      console.log('=== ADMIN TEST COMPLETED ===');
+      console.log("=== ADMIN TEST COMPLETED ===");
     };
 
     (window as any).adminTestStatusChange = () => {
-      console.log('=== TESTING HANDLESTATUSCHANGE FUNCTION ===');
-      const testCompany = companies.find(c => c.email === 'approved@company.com');
+      console.log("=== TESTING HANDLESTATUSCHANGE FUNCTION ===");
+      const testCompany = companies.find(
+        (c) => c.email === "approved@company.com",
+      );
       if (testCompany) {
-        console.log('🧪 Found test company:', testCompany);
-        handleStatusChange(testCompany.id, 'Blacklisted', 'Manual admin test');
+        console.log("🧪 Found test company:", testCompany);
+        handleStatusChange(testCompany.id, "Blacklisted", "Manual admin test");
       } else {
-        console.log('❌ No test company found with email approved@company.com');
-        console.log('📋 Available companies:', companies.map(c => ({ id: c.id, email: c.email, name: c.companyName })));
+        console.log("❌ No test company found with email approved@company.com");
+        console.log(
+          "📋 Available companies:",
+          companies.map((c) => ({
+            id: c.id,
+            email: c.email,
+            name: c.companyName,
+          })),
+        );
       }
     };
 
@@ -400,9 +432,9 @@ export default function AdminDashboard() {
     newStatus: "Approved" | "Suspended" | "Blacklisted",
     reason: string,
   ) => {
-    console.log('🚀 handleStatusChange CALLED');
-    console.log('📥 Parameters:', { companyId, newStatus, reason });
-    console.log('📋 Current companies array length:', companies.length);
+    console.log("🚀 handleStatusChange CALLED");
+    console.log("📥 Parameters:", { companyId, newStatus, reason });
+    console.log("📋 Current companies array length:", companies.length);
 
     // Update the company status in the local state
     setCompanies((prev) =>
@@ -429,7 +461,10 @@ export default function AdminDashboard() {
       console.log(`Storage key: ${storageKey}`);
       console.log(`New status: ${newStatus}`);
       console.log(`Value stored: ${persistentStorage.getItem(storageKey)}`);
-      console.log(`All userStatus keys:`, persistentStorage.getUserStatusKeys());
+      console.log(
+        `All userStatus keys:`,
+        persistentStorage.getUserStatusKeys(),
+      );
 
       // Debug the persistent storage
       persistentStorage.debugInfo();
@@ -912,11 +947,13 @@ export default function AdminDashboard() {
                     <strong>Decision:</strong>{" "}
                     {approvalDecision || "Not selected"}
                   </p>
-                  {(approvalDecision === "Suspended" || approvalDecision === "Blacklisted") && actionReason && (
-                    <p>
-                      <strong>Reason:</strong> {actionReason}
-                    </p>
-                  )}
+                  {(approvalDecision === "Suspended" ||
+                    approvalDecision === "Blacklisted") &&
+                    actionReason && (
+                      <p>
+                        <strong>Reason:</strong> {actionReason}
+                      </p>
+                    )}
                   <p>
                     <strong>Notification:</strong>{" "}
                     {sendNotification ? "Will be sent" : "Will not be sent"}
@@ -936,7 +973,9 @@ export default function AdminDashboard() {
                   onClick={submitApproval}
                   disabled={
                     !approvalDecision ||
-                    ((approvalDecision === "Suspended" || approvalDecision === "Blacklisted") && !actionReason.trim())
+                    ((approvalDecision === "Suspended" ||
+                      approvalDecision === "Blacklisted") &&
+                      !actionReason.trim())
                   }
                   className="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -997,7 +1036,7 @@ export default function AdminDashboard() {
               >
                 <AlertTriangle className="h-4 w-4" />
                 <span>Company Status</span>
-                {(suspendedCount + blacklistedCount) > 0 && (
+                {suspendedCount + blacklistedCount > 0 && (
                   <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
                     {suspendedCount + blacklistedCount}
                   </span>
@@ -1219,11 +1258,18 @@ export default function AdminDashboard() {
                           <>
                             <button
                               onClick={() => {
-                                console.log('🔄 APPROVE BUTTON CLICKED');
-                                console.log('Company ID:', company.id);
-                                console.log('Company Email:', company.email);
-                                console.log('Company Name:', company.companyName);
-                                handleStatusChange(company.id, "Approved", "Approved by admin");
+                                console.log("🔄 APPROVE BUTTON CLICKED");
+                                console.log("Company ID:", company.id);
+                                console.log("Company Email:", company.email);
+                                console.log(
+                                  "Company Name:",
+                                  company.companyName,
+                                );
+                                handleStatusChange(
+                                  company.id,
+                                  "Approved",
+                                  "Approved by admin",
+                                );
                               }}
                               className="text-green-600 hover:text-green-900 ml-3"
                             >
@@ -1285,65 +1331,75 @@ export default function AdminDashboard() {
 
             <div className="p-6">
               <div className="space-y-4">
-                {companies.filter(company => company.status === "Suspended" || company.status === "Blacklisted").map((company) => (
-                  <div
-                    key={company.id}
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3">
-                          <h3 className="font-medium text-gray-900">
-                            {company.companyName}
-                          </h3>
-                          <span
-                            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              company.status === "Approved"
-                                ? "bg-green-100 text-green-800"
-                                : company.status === "Pending"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : company.status === "Suspended"
-                                    ? "bg-orange-100 text-orange-800"
-                                    : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {company.status === "Approved" && (
-                              <UserCheck className="h-3 w-3 mr-1" />
-                            )}
-                            {company.status === "Pending" && (
-                              <Clock className="h-3 w-3 mr-1" />
-                            )}
-                            {company.status === "Suspended" && (
-                              <Shield className="h-3 w-3 mr-1" />
-                            )}
-                            {company.status === "Blacklisted" && (
-                              <Ban className="h-3 w-3 mr-1" />
-                            )}
-                            {company.status}
-                          </span>
+                {companies
+                  .filter(
+                    (company) =>
+                      company.status === "Suspended" ||
+                      company.status === "Blacklisted",
+                  )
+                  .map((company) => (
+                    <div
+                      key={company.id}
+                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3">
+                            <h3 className="font-medium text-gray-900">
+                              {company.companyName}
+                            </h3>
+                            <span
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                company.status === "Approved"
+                                  ? "bg-green-100 text-green-800"
+                                  : company.status === "Pending"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : company.status === "Suspended"
+                                      ? "bg-orange-100 text-orange-800"
+                                      : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {company.status === "Approved" && (
+                                <UserCheck className="h-3 w-3 mr-1" />
+                              )}
+                              {company.status === "Pending" && (
+                                <Clock className="h-3 w-3 mr-1" />
+                              )}
+                              {company.status === "Suspended" && (
+                                <Shield className="h-3 w-3 mr-1" />
+                              )}
+                              {company.status === "Blacklisted" && (
+                                <Ban className="h-3 w-3 mr-1" />
+                              )}
+                              {company.status}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {company.email}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {company.contactPerson} • {company.phone}
+                          </p>
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {company.email}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {company.contactPerson} • {company.phone}
-                        </p>
-                      </div>
 
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleApproval(company)}
-                          className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                        >
-                          <Settings className="h-4 w-4 mr-1" />
-                          Manage Status
-                        </button>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleApproval(company)}
+                            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                          >
+                            <Settings className="h-4 w-4 mr-1" />
+                            Manage Status
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
 
-                {companies.filter(company => company.status === "Suspended" || company.status === "Blacklisted").length === 0 && (
+                {companies.filter(
+                  (company) =>
+                    company.status === "Suspended" ||
+                    company.status === "Blacklisted",
+                ).length === 0 && (
                   <div className="text-center py-12">
                     <CheckCircle className="mx-auto h-12 w-12 text-green-400" />
                     <h3 className="mt-2 text-sm font-medium text-gray-900">
