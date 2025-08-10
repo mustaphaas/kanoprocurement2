@@ -5769,6 +5769,16 @@ The award letter has been:
                     {[
                       {
                         id: "COM001",
+                        name: "Pending Test Ltd",
+                        email: "pending@company.com",
+                        regNumber: "RC-TEST001",
+                        submissionDate: "2024-01-29",
+                        status: "Pending Review",
+                        documentsComplete: true,
+                        category: "Test Company",
+                      },
+                      {
+                        id: "COM002",
                         name: "Northern Construction Ltd",
                         email: "info@northernconst.com",
                         regNumber: "RC-456789",
@@ -5778,7 +5788,7 @@ The award letter has been:
                         category: "Construction",
                       },
                       {
-                        id: "COM002",
+                        id: "COM003",
                         name: "Sahel Engineering Services",
                         email: "contact@saheleng.com",
                         regNumber: "RC-789012",
@@ -5788,7 +5798,7 @@ The award letter has been:
                         category: "Engineering",
                       },
                       {
-                        id: "COM003",
+                        id: "COM004",
                         name: "Kano Medical Supplies",
                         email: "orders@kanomedical.com",
                         regNumber: "RC-345678",
@@ -5798,7 +5808,7 @@ The award letter has been:
                         category: "Healthcare",
                       },
                       {
-                        id: "COM004",
+                        id: "COM005",
                         name: "Tech Solutions Nigeria",
                         email: "hello@techsolutions.ng",
                         regNumber: "RC-234567",
