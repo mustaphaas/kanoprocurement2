@@ -304,6 +304,52 @@ export default function AdminDashboard() {
 
     return () => {
       clearInterval(interval);
+    };
+  }, []);
+
+  // Add global admin debugging functions (outside useEffect to avoid dependency issues)
+  useEffect(() => {
+    (window as any).adminTestLocalStorage = () => {
+      console.log('=== ADMIN LOCALSTORAGE TEST ===');
+
+      // Test basic localStorage
+      try {
+        localStorage.setItem('admin_test', 'admin_works');
+        const adminTest = localStorage.getItem('admin_test');
+        console.log('✅ Admin localStorage test:', adminTest === 'admin_works' ? 'WORKS' : 'FAILED');
+        localStorage.removeItem('admin_test');
+      } catch (e) {
+        console.log('❌ Admin localStorage test FAILED:', e);
+      }
+
+      // Test manual userStatus save
+      try {
+        const testKey = 'userStatus_admin_test@company.com';
+        localStorage.setItem(testKey, 'Approved');
+        const testResult = localStorage.getItem(testKey);
+        console.log('✅ Manual userStatus save test:', testResult === 'Approved' ? 'WORKS' : 'FAILED');
+        console.log('📋 All userStatus keys after test:', Object.keys(localStorage).filter(k => k.startsWith('userStatus_')));
+        localStorage.removeItem(testKey);
+      } catch (e) {
+        console.log('❌ Manual userStatus save test FAILED:', e);
+      }
+
+      console.log('=== ADMIN TEST COMPLETED ===');
+    };
+
+    (window as any).adminTestStatusChange = () => {
+      console.log('=== TESTING HANDLESTATUSCHANGE FUNCTION ===');
+      const testCompany = companies.find(c => c.email === 'approved@company.com');
+      if (testCompany) {
+        console.log('🧪 Found test company:', testCompany);
+        handleStatusChange(testCompany.id, 'Blacklisted', 'Manual admin test');
+      } else {
+        console.log('❌ No test company found with email approved@company.com');
+        console.log('📋 Available companies:', companies.map(c => ({ id: c.id, email: c.email, name: c.companyName })));
+      }
+    };
+
+    return () => {
       delete (window as any).adminTestLocalStorage;
       delete (window as any).adminTestStatusChange;
     };
