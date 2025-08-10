@@ -163,17 +163,25 @@ export default function CompanyDashboard() {
 
   const getCompanyStatus = (): CompanyStatus => {
     const userEmail = user?.email?.toLowerCase() || "";
+    const storageKey = `userStatus_${userEmail}`;
 
     // Check localStorage for admin-set status first
-    const adminSetStatus = localStorage.getItem(`userStatus_${userEmail}`);
-    console.log(`Checking status for ${userEmail}: ${adminSetStatus}`);
+    const adminSetStatus = localStorage.getItem(storageKey);
+
+    // Debug: Check all localStorage keys
+    console.log(`=== DEBUGGING STATUS CHECK ===`);
+    console.log(`User email: ${user?.email} -> normalized: ${userEmail}`);
+    console.log(`Storage key: ${storageKey}`);
+    console.log(`Admin set status: ${adminSetStatus}`);
+    console.log(`All userStatus keys in localStorage:`, Object.keys(localStorage).filter(key => key.startsWith('userStatus_')));
+
     if (
       adminSetStatus &&
       ["Pending", "Approved", "Suspended", "Blacklisted"].includes(
         adminSetStatus,
       )
     ) {
-      console.log(`Using admin-set status: ${adminSetStatus}`);
+      console.log(`✅ Using admin-set status: ${adminSetStatus}`);
       return adminSetStatus as CompanyStatus;
     }
 
