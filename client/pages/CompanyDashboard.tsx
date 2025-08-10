@@ -133,6 +133,26 @@ export default function CompanyDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  // Add useEffect to listen for localStorage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setStatusUpdateTrigger(prev => prev + 1);
+    };
+
+    // Listen for storage events from other tabs/windows
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also check for status changes periodically (for same-tab updates)
+    const interval = setInterval(() => {
+      setStatusUpdateTrigger(prev => prev + 1);
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
   // Mock company data - Check for expired documents and auto-suspend
   const hasExpiredDocuments = () => {
     const expiredDocs = [
