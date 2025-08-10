@@ -101,16 +101,22 @@ export const TenderVisibilityStatus: React.FC = () => {
             Test Company Logins:
           </h4>
           <div className="space-y-1 text-xs">
-            <div className="font-medium text-gray-700">Company Approval:</div>
+            <div className="font-medium text-blue-600">Company Approval Tab:</div>
             <div>✅ approved@company.com / password123</div>
             <div>✅ testcompany@example.com / test123</div>
             <div>✅ demo@company.com / demo123</div>
             <div>⏳ pending@company.com / password123</div>
-            <div className="font-medium text-gray-700 mt-2">
-              Company Status:
+            <div className="text-xs text-gray-500 ml-4">
+              ↳ Pending goes to SuperUser approval workflow
+            </div>
+            <div className="font-medium text-orange-600 mt-2">
+              Company Status Issues:
             </div>
             <div>⚠️ suspended@company.com / password123</div>
             <div>❌ blacklisted@company.com / password123</div>
+            <div className="text-xs text-gray-500 ml-4">
+              ↳ Status problems requiring intervention
+            </div>
           </div>
         </div>
       </div>
