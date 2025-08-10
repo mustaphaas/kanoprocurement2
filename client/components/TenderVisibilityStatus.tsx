@@ -54,7 +54,9 @@ export const TenderVisibilityStatus: React.FC = () => {
                 <CheckCircle className="h-3 w-3 text-green-500 mr-1" />
                 Approved
               </span>
-              <span className="text-green-600">Full access to all {tenderCount}</span>
+              <span className="text-green-600">
+                Full access to all {tenderCount}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center">
@@ -98,7 +100,9 @@ export const TenderVisibilityStatus: React.FC = () => {
             <div>✅ testcompany@example.com / test123</div>
             <div>✅ demo@company.com / demo123</div>
             <div>⏳ pending@company.com / password123</div>
-            <div className="font-medium text-gray-700 mt-2">Company Status:</div>
+            <div className="font-medium text-gray-700 mt-2">
+              Company Status:
+            </div>
             <div>⚠️ suspended@company.com / password123</div>
             <div>❌ blacklisted@company.com / password123</div>
           </div>
