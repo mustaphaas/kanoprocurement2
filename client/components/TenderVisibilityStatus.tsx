@@ -46,49 +46,33 @@ export const TenderVisibilityStatus: React.FC = () => {
 
         <div className="border-t pt-3">
           <h4 className="text-sm font-medium text-gray-900 mb-2">
-            User Access Status:
+            Superuser Test Status:
           </h4>
           <div className="space-y-2 text-xs">
             <div className="flex items-center justify-between">
               <span className="flex items-center">
                 <CheckCircle className="h-3 w-3 text-green-500 mr-1" />
-                Approved Users
+                Approved Companies
               </span>
-              <span className="text-green-600">Can see all {tenderCount}</span>
+              <span className="text-green-600">Full access to all {tenderCount}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="flex items-center">
-                <XCircle className="h-3 w-3 text-red-500 mr-1" />
-                Blacklisted Users
-              </span>
-              <span className="text-red-600">Cannot see any</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="flex items-center">
-                <Eye className="h-3 w-3 text-blue-500 mr-1" />
-                Pending Users
-              </span>
-              <span className="text-blue-600">View only</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="flex items-center">
-                <span className="h-3 w-3 bg-orange-500 rounded-full mr-1"></span>
-                Suspended Users
-              </span>
-              <span className="text-orange-600">View only + alerts</span>
+            <div className="text-gray-500 text-xs mt-1">
+              All test users have approved company status for testing functions
             </div>
           </div>
         </div>
 
         <div className="border-t pt-3">
           <h4 className="text-sm font-medium text-gray-900 mb-2">
-            Quick Test Logins:
+            Test Company Logins (All Approved):
           </h4>
           <div className="space-y-1 text-xs">
-            <div>✅ approved@company.com (Full access)</div>
-            <div>❌ blacklisted@company.com (No tender access)</div>
-            <div>⏳ pending@company.com (View only)</div>
-            <div>⚠️ suspended@company.com (View + restricted)</div>
+            <div>✅ approved@company.com / password123</div>
+            <div>✅ testcompany@example.com / test123</div>
+            <div>✅ demo@company.com / demo123</div>
+            <div className="text-gray-500 mt-2">
+              All accounts have "Approved" status for full function testing
+            </div>
           </div>
         </div>
       </div>
