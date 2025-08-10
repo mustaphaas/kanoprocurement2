@@ -101,7 +101,9 @@ export const TenderVisibilityStatus: React.FC = () => {
             Test Company Logins:
           </h4>
           <div className="space-y-1 text-xs">
-            <div className="font-medium text-blue-600">Company Approval Tab:</div>
+            <div className="font-medium text-blue-600">
+              Company Approval Tab:
+            </div>
             <div>✅ approved@company.com / password123</div>
             <div>✅ testcompany@example.com / test123</div>
             <div>✅ demo@company.com / demo123</div>
