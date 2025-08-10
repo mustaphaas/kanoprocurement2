@@ -145,7 +145,7 @@ export default function CompanyDashboard() {
     // Also check for status changes periodically (for same-tab updates)
     const interval = setInterval(() => {
       setStatusUpdateTrigger(prev => prev + 1);
-    }, 1000);
+    }, 200);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
