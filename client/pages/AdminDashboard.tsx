@@ -323,10 +323,16 @@ export default function AdminDashboard() {
       // Also store the reason
       localStorage.setItem(`userStatusReason_${company.email.toLowerCase()}`, reason);
 
-      console.log(
-        `Company ${company.companyName} status changed to ${newStatus}. Reason: ${reason}`,
-      );
-      console.log(`Storage key: ${storageKey}, Value stored: ${localStorage.getItem(storageKey)}`);
+      console.log(`=== ADMIN STATUS CHANGE ===`);
+      console.log(`Company: ${company.companyName}`);
+      console.log(`Original email: ${company.email}`);
+      console.log(`Normalized email: ${company.email.toLowerCase()}`);
+      console.log(`Storage key: ${storageKey}`);
+      console.log(`New status: ${newStatus}`);
+      console.log(`Value stored: ${localStorage.getItem(storageKey)}`);
+      console.log(`All userStatus keys:`, Object.keys(localStorage).filter(key => key.startsWith('userStatus_')));
+    } else {
+      console.error(`❌ Company with ID ${companyId} not found!`);
     }
 
     // Reset form
