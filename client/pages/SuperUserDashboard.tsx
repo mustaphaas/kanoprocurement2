@@ -383,7 +383,7 @@ export default function SuperUserDashboard() {
   const navigate = useNavigate();
 
   const dashboardStats: DashboardStats = {
-    newRegistrationsPending: 12,
+    newRegistrationsPending: 4, // Including pending@company.com + 3 other mock companies
     activeTenders: 47,
     upcomingDeadlines: 8,
     awardedContractsToday: 3,
