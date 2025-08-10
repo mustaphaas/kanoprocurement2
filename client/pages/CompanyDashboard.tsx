@@ -3403,6 +3403,12 @@ export default function CompanyDashboard() {
         <main className="flex-1 p-6">{renderMainContent()}</main>
       </div>
 
+      {/* Status Demo Panel */}
+      <StatusDemo
+        currentStatus={companyData.status}
+        onStatusChange={setDemoStatus}
+      />
+
       {/* Express Interest Modal */}
       {showExpressInterestModal && selectedTender && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
