@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/utils";
 import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
 import DynamicNavigation from "@/components/DynamicNavigation";
 import DynamicDashboardHeader from "@/components/DynamicDashboardHeader";
+import StatusDemo from "@/components/StatusDemo";
 import {
   Building2,
   Home,
