@@ -179,7 +179,8 @@ export default function AdminDashboard() {
 
   const pendingCount = companies.filter(c => c.status === "Pending").length;
   const approvedCount = companies.filter(c => c.status === "Approved").length;
-  const rejectedCount = companies.filter(c => c.status === "Rejected").length;
+  const suspendedCount = companies.filter(c => c.status === "Suspended").length;
+  const blacklistedCount = companies.filter(c => c.status === "Blacklisted").length;
 
   const filteredCompanies = companies.filter(company => {
     const matchesSearch = company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
