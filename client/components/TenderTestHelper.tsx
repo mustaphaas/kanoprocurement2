@@ -125,8 +125,15 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({ onTenderCrea
 
   const viewStoredTenders = () => {
     const recentTenders = JSON.parse(localStorage.getItem("recentTenders") || "[]");
-    console.log("Current tenders in localStorage:", recentTenders);
-    alert(`Found ${recentTenders.length} tenders in localStorage. Check console for details.`);
+    const ministryTenders = JSON.parse(localStorage.getItem("ministryTenders") || "[]");
+    const featuredTenders = JSON.parse(localStorage.getItem("featuredTenders") || "[]");
+
+    console.log("=== TENDER STORAGE STATUS ===");
+    console.log("recentTenders (CompanyDashboard):", recentTenders);
+    console.log("ministryTenders (MinistryDashboard):", ministryTenders);
+    console.log("featuredTenders (Index page):", featuredTenders);
+
+    alert(`Tender Storage Status:\n• Company Dashboard: ${recentTenders.length} tenders\n• Ministry Dashboard: ${ministryTenders.length} tenders\n• Index Page: ${featuredTenders.length} tenders\n\nCheck console for details.`);
   };
 
   return (
