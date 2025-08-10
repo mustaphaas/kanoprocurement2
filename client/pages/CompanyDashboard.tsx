@@ -141,8 +141,11 @@ export default function CompanyDashboard() {
   };
 
   const getCompanyStatus = (): CompanyStatus => {
-    // Use demo status if set (for testing purposes)
-    if (demoStatus) return demoStatus;
+    // Check localStorage for admin-set status first
+    const adminSetStatus = localStorage.getItem(`userStatus_${user?.uid}`);
+    if (adminSetStatus && ["Pending", "Approved", "Suspended", "Blacklisted"].includes(adminSetStatus)) {
+      return adminSetStatus as CompanyStatus;
+    }
 
     // Check user email to assign specific test account statuses
     const userEmail = user?.email?.toLowerCase() || "";
