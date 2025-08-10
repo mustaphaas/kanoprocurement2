@@ -1206,6 +1206,18 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
+
+                {companies.filter(company => company.status === "Suspended" || company.status === "Blacklisted").length === 0 && (
+                  <div className="text-center py-12">
+                    <CheckCircle className="mx-auto h-12 w-12 text-green-400" />
+                    <h3 className="mt-2 text-sm font-medium text-gray-900">
+                      No Status Issues
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      All companies are currently in good standing.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
