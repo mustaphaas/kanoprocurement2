@@ -307,6 +307,10 @@ export default function AdminDashboard() {
     newStatus: "Approved" | "Suspended" | "Blacklisted",
     reason: string,
   ) => {
+    console.log('🚀 handleStatusChange CALLED');
+    console.log('📥 Parameters:', { companyId, newStatus, reason });
+    console.log('📋 Current companies array length:', companies.length);
+
     // Update the company status in the local state
     setCompanies((prev) =>
       prev.map((company) =>
