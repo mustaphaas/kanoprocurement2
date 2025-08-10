@@ -83,6 +83,36 @@ const demoCredentials: Record<
       companyName: "Demo Company Ltd",
     },
   },
+  // Company Approval Status - Pending
+  "pending@company.com": {
+    password: "password123",
+    profile: {
+      role: "company",
+      email: "pending@company.com",
+      name: "Pending Approval Company",
+      companyName: "Pending Test Ltd",
+    },
+  },
+  // Company Status - Suspended
+  "suspended@company.com": {
+    password: "password123",
+    profile: {
+      role: "company",
+      email: "suspended@company.com",
+      name: "Suspended Company",
+      companyName: "Suspended Test Ltd",
+    },
+  },
+  // Company Status - Blacklisted
+  "blacklisted@company.com": {
+    password: "password123",
+    profile: {
+      role: "company",
+      email: "blacklisted@company.com",
+      name: "Blacklisted Company",
+      companyName: "Blacklisted Test Ltd",
+    },
+  },
 };
 
 // Helper function to determine role for approved company logins
