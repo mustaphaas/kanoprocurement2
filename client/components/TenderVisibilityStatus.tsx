@@ -78,9 +78,9 @@ export const TenderVisibilityStatus: React.FC = () => {
           <h4 className="text-sm font-medium text-gray-900 mb-2">Quick Test Logins:</h4>
           <div className="space-y-1 text-xs">
             <div>✅ approved@company.com (Full access)</div>
-            <div>❌ blacklisted@company.com (No access)</div>
+            <div>❌ blacklisted@company.com (No tender access)</div>
             <div>⏳ pending@company.com (View only)</div>
-            <div>⚠️ suspended@company.com (Limited)</div>
+            <div>⚠️ suspended@company.com (View + restricted)</div>
           </div>
         </div>
       </div>
