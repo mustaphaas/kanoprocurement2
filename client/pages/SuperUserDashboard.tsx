@@ -5656,7 +5656,7 @@ The award letter has been:
                   Company Approvals
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Review and approve company registrations
+                  Review and approve company registrations. All new registrations automatically appear here with "Pending" status.
                 </p>
               </div>
               <div className="flex items-center space-x-3">
