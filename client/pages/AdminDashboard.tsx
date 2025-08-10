@@ -704,7 +704,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Company Approvals Section */}
-        <div className="bg-white rounded-lg shadow-sm border">
+        {activeTab === "companies" && (
+          <div className="bg-white rounded-lg shadow-sm border">
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">Company Registrations</h2>
@@ -844,7 +845,61 @@ export default function AdminDashboard() {
               </p>
             </div>
           )}
-        </div>
+          </div>
+        )}
+
+        {/* User Management Section */}
+        {activeTab === "user-management" && (
+          <div className="bg-white rounded-lg shadow-sm border">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">User Management</h2>
+              <p className="text-gray-600 mt-1">Manage user statuses and permissions</p>
+            </div>
+
+            <div className="p-6">
+              <div className="space-y-4">
+                {companies.map((company) => (
+                  <div key={company.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3">
+                          <h3 className="font-medium text-gray-900">{company.companyName}</h3>
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            company.status === "Approved"
+                              ? "bg-green-100 text-green-800"
+                              : company.status === "Pending"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : company.status === "Suspended"
+                                  ? "bg-orange-100 text-orange-800"
+                                  : "bg-red-100 text-red-800"
+                          }`}>
+                            {company.status === "Approved" && <UserCheck className="h-3 w-3 mr-1" />}
+                            {company.status === "Pending" && <Clock className="h-3 w-3 mr-1" />}
+                            {company.status === "Suspended" && <Shield className="h-3 w-3 mr-1" />}
+                            {company.status === "Blacklisted" && <Ban className="h-3 w-3 mr-1" />}
+                            {company.status}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{company.email}</p>
+                        <p className="text-sm text-gray-500">{company.contactPerson} • {company.phone}</p>
+                      </div>
+
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleApproval(company)}
+                          className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        >
+                          <Settings className="h-4 w-4 mr-1" />
+                          Manage Status
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
