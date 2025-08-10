@@ -27,7 +27,7 @@ interface Company {
   email: string;
   phone: string;
   registrationDate: string;
-  status: "Pending" | "Approved" | "Rejected";
+  status: "Pending" | "Approved" | "Suspended" | "Blacklisted";
   registrationNumber: string;
   businessType: string;
   address: string;
