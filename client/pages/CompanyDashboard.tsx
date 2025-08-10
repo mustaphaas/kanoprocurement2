@@ -162,19 +162,15 @@ export default function CompanyDashboard() {
 
     (window as any).testBlacklist = (email = 'approved@company.com') => {
       console.log(`🧪 Manually blacklisting ${email} for testing...`);
-      localStorage.setItem(`userStatus_${email.toLowerCase()}`, 'Blacklisted');
-      localStorage.setItem(`userStatusReason_${email.toLowerCase()}`, 'Manual test blacklist');
+      persistentStorage.setItem(`userStatus_${email.toLowerCase()}`, 'Blacklisted');
+      persistentStorage.setItem(`userStatusReason_${email.toLowerCase()}`, 'Manual test blacklist');
       setStatusUpdateTrigger(prev => prev + 1);
       console.log('✅ Blacklist test completed, status should update!');
     };
 
     (window as any).clearAllStatus = () => {
-      console.log('🧹 Clearing all userStatus from localStorage...');
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('userStatus')) {
-          localStorage.removeItem(key);
-        }
-      });
+      console.log('🧹 Clearing all userStatus from storage...');
+      persistentStorage.clearAll();
       setStatusUpdateTrigger(prev => prev + 1);
       console.log('✅ All userStatus cleared!');
     };
