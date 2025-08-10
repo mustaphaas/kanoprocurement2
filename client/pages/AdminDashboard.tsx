@@ -485,9 +485,25 @@ export default function AdminDashboard() {
             </div>
 
             <div className="p-6 space-y-6">
-              {/* Decision */}
+              {/* Current Status */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 mb-2">Current Status</h3>
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                  selectedCompany.status === "Approved"
+                    ? "bg-green-100 text-green-800"
+                    : selectedCompany.status === "Pending"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : selectedCompany.status === "Suspended"
+                        ? "bg-orange-100 text-orange-800"
+                        : "bg-red-100 text-red-800"
+                }`}>
+                  {selectedCompany.status}
+                </span>
+              </div>
+
+              {/* New Status Decision */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Decision *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-3">Change Status To *</label>
                 <div className="space-y-3">
                   <label className="flex items-center">
                     <input
@@ -495,44 +511,60 @@ export default function AdminDashboard() {
                       name="decision"
                       value="Approved"
                       checked={approvalDecision === "Approved"}
-                      onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Rejected")}
+                      onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
                       className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
                     />
                     <span className="ml-2 text-sm text-gray-700 flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-                      Approve Registration
+                      <UserCheck className="h-4 w-4 text-green-500 mr-1" />
+                      Approved - Full Access
                     </span>
                   </label>
                   <label className="flex items-center">
                     <input
                       type="radio"
                       name="decision"
-                      value="Rejected"
-                      checked={approvalDecision === "Rejected"}
-                      onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Rejected")}
+                      value="Suspended"
+                      checked={approvalDecision === "Suspended"}
+                      onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
+                      className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
+                    />
+                    <span className="ml-2 text-sm text-gray-700 flex items-center">
+                      <Shield className="h-4 w-4 text-orange-500 mr-1" />
+                      Suspended - Limited Access
+                    </span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="decision"
+                      value="Blacklisted"
+                      checked={approvalDecision === "Blacklisted"}
+                      onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
                       className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                     />
                     <span className="ml-2 text-sm text-gray-700 flex items-center">
-                      <XCircle className="h-4 w-4 text-red-500 mr-1" />
-                      Reject Registration
+                      <Ban className="h-4 w-4 text-red-500 mr-1" />
+                      Blacklisted - No Access
                     </span>
                   </label>
                 </div>
               </div>
 
-              {/* Rejection Reason */}
-              {approvalDecision === "Rejected" && (
+              {/* Action Reason */}
+              {(approvalDecision === "Suspended" || approvalDecision === "Blacklisted") && (
                 <div>
-                  <label htmlFor="rejectionReason" className="block text-sm font-medium text-gray-700 mb-2">
-                    Reason for Rejection *
+                  <label htmlFor="actionReason" className="block text-sm font-medium text-gray-700 mb-2">
+                    Reason for {approvalDecision === "Suspended" ? "Suspension" : "Blacklisting"} *
                   </label>
                   <textarea
-                    id="rejectionReason"
+                    id="actionReason"
                     rows={4}
-                    value={rejectionReason}
-                    onChange={(e) => setRejectionReason(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                    placeholder="Please provide a detailed reason for rejection..."
+                    value={actionReason}
+                    onChange={(e) => setActionReason(e.target.value)}
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 ${
+                      approvalDecision === "Suspended" ? "focus:ring-orange-500" : "focus:ring-red-500"
+                    }`}
+                    placeholder={`Please provide a detailed reason for ${approvalDecision === "Suspended" ? "suspension" : "blacklisting"}...`}
                   />
                 </div>
               )}
