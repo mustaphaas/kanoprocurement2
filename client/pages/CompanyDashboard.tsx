@@ -143,6 +143,9 @@ export default function CompanyDashboard() {
   };
 
   const getCompanyStatus = (): CompanyStatus => {
+    // Use demo status if set (for testing purposes)
+    if (demoStatus) return demoStatus;
+
     // Check user email to assign specific test account statuses
     const userEmail = user?.email?.toLowerCase() || "";
 
