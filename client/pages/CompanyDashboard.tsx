@@ -52,6 +52,8 @@ import {
   Shield,
   Gavel,
   Archive,
+  Lock,
+  RefreshCw,
 } from "lucide-react";
 
 type CompanyStatus = "Pending" | "Approved" | "Suspended" | "Blacklisted";
@@ -1027,7 +1029,7 @@ export default function CompanyDashboard() {
                           {tender.title}
                         </h3>
                         <p className="text-sm text-gray-600">
-                          {tender.ministry} • Deadline:{" "}
+                          {tender.ministry} �� Deadline:{" "}
                           {new Date(tender.deadline).toLocaleDateString()}
                         </p>
                       </div>
