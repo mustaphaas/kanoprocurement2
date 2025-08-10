@@ -147,9 +147,16 @@ export default function CompanyDashboard() {
       setStatusUpdateTrigger(prev => prev + 1);
     }, 200);
 
+    // Add global debug function for manual testing
+    (window as any).refreshCompanyStatus = () => {
+      console.log('🔄 Manually refreshing company status...');
+      setStatusUpdateTrigger(prev => prev + 1);
+    };
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
+      delete (window as any).refreshCompanyStatus;
     };
   }, []);
 
