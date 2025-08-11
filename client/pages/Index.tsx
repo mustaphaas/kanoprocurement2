@@ -160,8 +160,8 @@ export default function Index() {
   const [recentTenders, setRecentTenders] = useState(getDefaultRecentTenders());
 
   // Load recent tenders from localStorage
-  useEffect(() => {
-    const loadRecentTenders = () => {
+  const loadRecentTenders = () => {
+    try {
       const storedTenders = localStorage.getItem("recentTenders");
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
@@ -174,8 +174,12 @@ export default function Index() {
           setRecentTenders(formattedTenders);
         }
       }
-    };
+    } catch (error) {
+      console.error('Error loading recent tenders:', error);
+    }
+  };
 
+  useEffect(() => {
     loadRecentTenders();
 
     // Set up interval to refresh recent tenders every 30 seconds
