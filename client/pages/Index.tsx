@@ -70,7 +70,7 @@ export default function Index() {
         "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
       closingDate: "2024-02-15",
-      tenderFee: "�����25,000",
+      tenderFee: "₦25,000",
       procuringEntity: "Kano State Ministry of Works",
       duration: "18 months",
       eligibility: "Category C contractors with road construction experience",
@@ -241,7 +241,7 @@ export default function Index() {
       title: "Water Treatment Plant",
       description:
         "Construction of modern water treatment facility serving 200,000 residents",
-      value: "�����5.7B",
+      value: "₦5.7B",
       deadline: "Mar 05, 2024",
       status: "Open",
       statusColor: "bg-green-100 text-green-800",
