@@ -276,21 +276,38 @@ export default function Index() {
   const loadFeaturedTenders = () => {
     try {
       const storedTenders = localStorage.getItem("featuredTenders");
-      if (storedTenders) {
+      if (storedTenders && storedTenders.trim() !== '') {
         const parsedTenders = JSON.parse(storedTenders);
         if (Array.isArray(parsedTenders) && parsedTenders.length > 0) {
           // Apply currency formatting to fix any incorrectly formatted values
-          const formattedTenders = parsedTenders.map((tender: any) => ({
-            ...tender,
-            value: formatCurrency(tender.value || '0'),
-          }));
+          const formattedTenders = parsedTenders.map((tender: any) => {
+            try {
+              return {
+                ...tender,
+                value: formatCurrency(tender?.value || '0'),
+              };
+            } catch (formatError) {
+              console.warn("Error formatting tender value:", tender?.value, formatError);
+              return {
+                ...tender,
+                value: '₦0',
+              };
+            }
+          });
           setFeaturedTenders(formattedTenders);
+          return;
         }
       }
+      // If no valid stored data, use defaults
+      setFeaturedTenders(getDefaultTenders());
     } catch (error) {
       console.error("Error loading featured tenders:", error);
       // Clear corrupted data and fall back to defaults
-      localStorage.removeItem("featuredTenders");
+      try {
+        localStorage.removeItem("featuredTenders");
+      } catch (storageError) {
+        console.warn("Could not clear localStorage:", storageError);
+      }
       setFeaturedTenders(getDefaultTenders());
     }
   };
