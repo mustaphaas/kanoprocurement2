@@ -16,8 +16,9 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName?: string;
-  role: "company" | "admin" | "superuser";
+  role: "company" | "admin" | "superuser" | "ministry";
   companyId?: string;
+  ministryId?: string;
   createdAt: Date;
   lastLoginAt: Date;
   emailVerified: boolean;
