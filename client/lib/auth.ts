@@ -116,6 +116,7 @@ class AuthService {
         displayName: profileData.displayName,
         role: profileData.role || "company",
         companyId: profileData.companyId,
+        ministryId: profileData.ministryId,
         createdAt: new Date(),
         lastLoginAt: new Date(),
         emailVerified: user.emailVerified,
