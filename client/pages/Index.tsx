@@ -161,21 +161,38 @@ export default function Index() {
   const loadRecentTenders = () => {
     try {
       const storedTenders = localStorage.getItem("recentTenders");
-      if (storedTenders) {
+      if (storedTenders && storedTenders.trim() !== '') {
         const parsedTenders = JSON.parse(storedTenders);
         if (Array.isArray(parsedTenders) && parsedTenders.length > 0) {
           // Apply currency formatting to fix any incorrectly formatted values
-          const formattedTenders = parsedTenders.map((tender: any) => ({
-            ...tender,
-            value: formatCurrency(tender.value || '0'),
-          }));
+          const formattedTenders = parsedTenders.map((tender: any) => {
+            try {
+              return {
+                ...tender,
+                value: formatCurrency(tender?.value || '0'),
+              };
+            } catch (formatError) {
+              console.warn("Error formatting tender value:", tender?.value, formatError);
+              return {
+                ...tender,
+                value: '₦0',
+              };
+            }
+          });
           setRecentTenders(formattedTenders);
+          return;
         }
       }
+      // If no valid stored data, use defaults
+      setRecentTenders(getDefaultRecentTenders());
     } catch (error) {
       console.error("Error loading recent tenders:", error);
       // Clear corrupted data and fall back to defaults
-      localStorage.removeItem("recentTenders");
+      try {
+        localStorage.removeItem("recentTenders");
+      } catch (storageError) {
+        console.warn("Could not clear localStorage:", storageError);
+      }
       setRecentTenders(getDefaultRecentTenders());
     }
   };
