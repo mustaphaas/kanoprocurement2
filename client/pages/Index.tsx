@@ -163,17 +163,20 @@ export default function Index() {
       const storedTenders = localStorage.getItem("recentTenders");
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
-        if (parsedTenders.length > 0) {
+        if (Array.isArray(parsedTenders) && parsedTenders.length > 0) {
           // Apply currency formatting to fix any incorrectly formatted values
           const formattedTenders = parsedTenders.map((tender: any) => ({
             ...tender,
-            value: formatCurrency(tender.value),
+            value: formatCurrency(tender.value || '₦0'),
           }));
           setRecentTenders(formattedTenders);
         }
       }
     } catch (error) {
       console.error("Error loading recent tenders:", error);
+      // Clear corrupted data and fall back to defaults
+      localStorage.removeItem("recentTenders");
+      setRecentTenders(getDefaultRecentTenders());
     }
   };
 
@@ -258,17 +261,20 @@ export default function Index() {
       const storedTenders = localStorage.getItem("featuredTenders");
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
-        if (parsedTenders.length > 0) {
+        if (Array.isArray(parsedTenders) && parsedTenders.length > 0) {
           // Apply currency formatting to fix any incorrectly formatted values
           const formattedTenders = parsedTenders.map((tender: any) => ({
             ...tender,
-            value: formatCurrency(tender.value),
+            value: formatCurrency(tender.value || '₦0'),
           }));
           setFeaturedTenders(formattedTenders);
         }
       }
     } catch (error) {
       console.error("Error loading featured tenders:", error);
+      // Clear corrupted data and fall back to defaults
+      localStorage.removeItem("featuredTenders");
+      setFeaturedTenders(getDefaultTenders());
     }
   };
 
