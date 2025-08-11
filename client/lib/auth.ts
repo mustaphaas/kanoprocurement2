@@ -16,8 +16,9 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName?: string;
-  role: "company" | "admin" | "superuser";
+  role: "company" | "admin" | "superuser" | "ministry";
   companyId?: string;
+  ministryId?: string;
   createdAt: Date;
   lastLoginAt: Date;
   emailVerified: boolean;
@@ -115,6 +116,7 @@ class AuthService {
         displayName: profileData.displayName,
         role: profileData.role || "company",
         companyId: profileData.companyId,
+        ministryId: profileData.ministryId,
         createdAt: new Date(),
         lastLoginAt: new Date(),
         emailVerified: user.emailVerified,
@@ -271,6 +273,11 @@ class AuthService {
     return profile?.role === "company";
   }
 
+  // Check if user is ministry
+  isMinistry(profile: UserProfile | null): boolean {
+    return profile?.role === "ministry";
+  }
+
   // Get user role-based redirect path
   getRoleBasedRedirect(profile: UserProfile | null): string {
     if (!profile) return "/login";
@@ -282,6 +289,8 @@ class AuthService {
         return "/admin/dashboard";
       case "superuser":
         return "/superuser/dashboard";
+      case "ministry":
+        return "/ministry/dashboard";
       default:
         return "/";
     }

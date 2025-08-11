@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "@/lib/utils";
-import TenderTestHelper from "@/components/TenderTestHelper";
-import TenderVisibilityStatus from "@/components/TenderVisibilityStatus";
 import {
   Building2,
   FileText,
@@ -72,7 +70,7 @@ export default function Index() {
         "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
       closingDate: "2024-02-15",
-      tenderFee: "�����25,000",
+      tenderFee: "₦25,000",
       procuringEntity: "Kano State Ministry of Works",
       duration: "18 months",
       eligibility: "Category C contractors with road construction experience",
@@ -160,22 +158,12 @@ export default function Index() {
   const [recentTenders, setRecentTenders] = useState(getDefaultRecentTenders());
 
   // Load recent tenders from localStorage
-  useEffect(() => {
-    const loadRecentTenders = () => {
-      const storedTenders = localStorage.getItem("recentTenders");
-      if (storedTenders) {
-        const parsedTenders = JSON.parse(storedTenders);
-        if (parsedTenders.length > 0) {
-          // Apply currency formatting to fix any incorrectly formatted values
-          const formattedTenders = parsedTenders.map((tender: any) => ({
-            ...tender,
-            value: formatCurrency(tender.value),
-          }));
-          setRecentTenders(formattedTenders);
-        }
-      }
-    };
+  const loadRecentTenders = () => {
+    // Always use default data for now to avoid localStorage issues
+    setRecentTenders(getDefaultRecentTenders());
+  };
 
+  useEffect(() => {
     loadRecentTenders();
 
     // Set up interval to refresh recent tenders every 30 seconds
@@ -239,7 +227,7 @@ export default function Index() {
       title: "Water Treatment Plant",
       description:
         "Construction of modern water treatment facility serving 200,000 residents",
-      value: "�����5.7B",
+      value: "₦5.7B",
       deadline: "Mar 05, 2024",
       status: "Open",
       statusColor: "bg-green-100 text-green-800",
@@ -251,22 +239,12 @@ export default function Index() {
     useState<FeaturedTender[]>(getDefaultTenders());
 
   // Load featured tenders from localStorage on component mount
-  useEffect(() => {
-    const loadFeaturedTenders = () => {
-      const storedTenders = localStorage.getItem("featuredTenders");
-      if (storedTenders) {
-        const parsedTenders = JSON.parse(storedTenders);
-        if (parsedTenders.length > 0) {
-          // Apply currency formatting to fix any incorrectly formatted values
-          const formattedTenders = parsedTenders.map((tender: any) => ({
-            ...tender,
-            value: formatCurrency(tender.value),
-          }));
-          setFeaturedTenders(formattedTenders);
-        }
-      }
-    };
+  const loadFeaturedTenders = () => {
+    // Always use default data for now to avoid localStorage issues
+    setFeaturedTenders(getDefaultTenders());
+  };
 
+  useEffect(() => {
     loadFeaturedTenders();
 
     // Set up interval to refresh featured tenders every 30 seconds
@@ -282,21 +260,20 @@ export default function Index() {
     return () => clearInterval(interval);
   }, [featuredTenders.length]);
 
-  const currentTender = featuredTenders[currentTenderIndex];
-
-  const handleTenderCreated = () => {
-    // Refresh the featured and recent tenders when a new tender is created
-    loadFeaturedTenders();
-    loadRecentTenders();
-  };
+  const currentTender = featuredTenders[currentTenderIndex] ||
+    featuredTenders[0] || {
+      id: "default",
+      title: "Loading...",
+      description: "Loading tender information...",
+      value: "₦0",
+      deadline: "TBD",
+      status: "Loading",
+      statusColor: "bg-gray-100 text-gray-800",
+      category: "Loading",
+    };
 
   return (
     <div className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
-      {/* Tender Test Helper */}
-      <TenderTestHelper onTenderCreated={handleTenderCreated} />
-
-      {/* Tender Visibility Status */}
-      <TenderVisibilityStatus />
       {/* Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2250,7 +2227,7 @@ export default function Index() {
                             <li>• Technical specifications compliance</li>
                             <li>• Company experience and track record</li>
                             <li>• Personnel qualifications</li>
-                            <li>• Methodology and approach</li>
+                            <li>�� Methodology and approach</li>
                           </ul>
                         </div>
                         <div>
