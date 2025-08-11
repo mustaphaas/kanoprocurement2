@@ -21,13 +21,13 @@ export function formatCurrency(amount: string | number): string {
 
       // Handle billion, million, thousand suffixes
       let multiplier = 1;
-      if (cleanAmount.toUpperCase().includes('B')) {
+      if (cleanAmount.toUpperCase().includes("B")) {
         multiplier = 1000000000;
         cleanAmount = cleanAmount.replace(/[B]/gi, "");
-      } else if (cleanAmount.toUpperCase().includes('M')) {
+      } else if (cleanAmount.toUpperCase().includes("M")) {
         multiplier = 1000000;
         cleanAmount = cleanAmount.replace(/[M]/gi, "");
-      } else if (cleanAmount.toUpperCase().includes('K')) {
+      } else if (cleanAmount.toUpperCase().includes("K")) {
         multiplier = 1000;
         cleanAmount = cleanAmount.replace(/[K]/gi, "");
       }
