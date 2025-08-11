@@ -251,42 +251,8 @@ export default function Index() {
 
   // Load featured tenders from localStorage on component mount
   const loadFeaturedTenders = () => {
-    try {
-      const storedTenders = localStorage.getItem("featuredTenders");
-      if (storedTenders && storedTenders.trim() !== '') {
-        const parsedTenders = JSON.parse(storedTenders);
-        if (Array.isArray(parsedTenders) && parsedTenders.length > 0) {
-          // Apply currency formatting to fix any incorrectly formatted values
-          const formattedTenders = parsedTenders.map((tender: any) => {
-            try {
-              return {
-                ...tender,
-                value: formatCurrency(tender?.value || '0'),
-              };
-            } catch (formatError) {
-              console.warn("Error formatting tender value:", tender?.value, formatError);
-              return {
-                ...tender,
-                value: '₦0',
-              };
-            }
-          });
-          setFeaturedTenders(formattedTenders);
-          return;
-        }
-      }
-      // If no valid stored data, use defaults
-      setFeaturedTenders(getDefaultTenders());
-    } catch (error) {
-      console.error("Error loading featured tenders:", error);
-      // Clear corrupted data and fall back to defaults
-      try {
-        localStorage.removeItem("featuredTenders");
-      } catch (storageError) {
-        console.warn("Could not clear localStorage:", storageError);
-      }
-      setFeaturedTenders(getDefaultTenders());
-    }
+    // Always use default data for now to avoid localStorage issues
+    setFeaturedTenders(getDefaultTenders());
   };
 
   useEffect(() => {
