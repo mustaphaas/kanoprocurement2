@@ -21,7 +21,9 @@
     "typecheck": "tsc",
     "firebase:init": "firebase init",
     "firebase:deploy": "npm run build:client && firebase deploy",
-    "firebase:serve": "npm run build:client && firebase serve"
+    "firebase:serve": "npm run build:client && firebase serve",
+    "setup:users": "npx tsx scripts/createInitialUsers.ts",
+    "seed:firestore": "npx tsx scripts/seedFirestore.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.0",
