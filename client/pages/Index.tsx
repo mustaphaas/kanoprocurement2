@@ -198,6 +198,17 @@ export default function Index() {
   };
 
   useEffect(() => {
+    // Clear any potentially corrupted localStorage data on first load
+    try {
+      const recentTendersData = localStorage.getItem("recentTenders");
+      if (recentTendersData) {
+        JSON.parse(recentTendersData); // Test if it's valid JSON
+      }
+    } catch (error) {
+      console.warn("Clearing corrupted recentTenders data");
+      localStorage.removeItem("recentTenders");
+    }
+
     loadRecentTenders();
 
     // Set up interval to refresh recent tenders every 30 seconds
