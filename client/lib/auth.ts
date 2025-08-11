@@ -272,6 +272,11 @@ class AuthService {
     return profile?.role === "company";
   }
 
+  // Check if user is ministry
+  isMinistry(profile: UserProfile | null): boolean {
+    return profile?.role === "ministry";
+  }
+
   // Get user role-based redirect path
   getRoleBasedRedirect(profile: UserProfile | null): string {
     if (!profile) return "/login";
