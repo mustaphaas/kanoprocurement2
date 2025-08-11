@@ -159,42 +159,8 @@ export default function Index() {
 
   // Load recent tenders from localStorage
   const loadRecentTenders = () => {
-    try {
-      const storedTenders = localStorage.getItem("recentTenders");
-      if (storedTenders && storedTenders.trim() !== '') {
-        const parsedTenders = JSON.parse(storedTenders);
-        if (Array.isArray(parsedTenders) && parsedTenders.length > 0) {
-          // Apply currency formatting to fix any incorrectly formatted values
-          const formattedTenders = parsedTenders.map((tender: any) => {
-            try {
-              return {
-                ...tender,
-                value: formatCurrency(tender?.value || '0'),
-              };
-            } catch (formatError) {
-              console.warn("Error formatting tender value:", tender?.value, formatError);
-              return {
-                ...tender,
-                value: '₦0',
-              };
-            }
-          });
-          setRecentTenders(formattedTenders);
-          return;
-        }
-      }
-      // If no valid stored data, use defaults
-      setRecentTenders(getDefaultRecentTenders());
-    } catch (error) {
-      console.error("Error loading recent tenders:", error);
-      // Clear corrupted data and fall back to defaults
-      try {
-        localStorage.removeItem("recentTenders");
-      } catch (storageError) {
-        console.warn("Could not clear localStorage:", storageError);
-      }
-      setRecentTenders(getDefaultRecentTenders());
-    }
+    // Always use default data for now to avoid localStorage issues
+    setRecentTenders(getDefaultRecentTenders());
   };
 
   useEffect(() => {
