@@ -255,8 +255,8 @@ export default function Index() {
     useState<FeaturedTender[]>(getDefaultTenders());
 
   // Load featured tenders from localStorage on component mount
-  useEffect(() => {
-    const loadFeaturedTenders = () => {
+  const loadFeaturedTenders = () => {
+    try {
       const storedTenders = localStorage.getItem("featuredTenders");
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
@@ -269,8 +269,12 @@ export default function Index() {
           setFeaturedTenders(formattedTenders);
         }
       }
-    };
+    } catch (error) {
+      console.error('Error loading featured tenders:', error);
+    }
+  };
 
+  useEffect(() => {
     loadFeaturedTenders();
 
     // Set up interval to refresh featured tenders every 30 seconds
@@ -2254,7 +2258,7 @@ export default function Index() {
                             <li>• Technical specifications compliance</li>
                             <li>• Company experience and track record</li>
                             <li>• Personnel qualifications</li>
-                            <li>• Methodology and approach</li>
+                            <li>�� Methodology and approach</li>
                           </ul>
                         </div>
                         <div>
