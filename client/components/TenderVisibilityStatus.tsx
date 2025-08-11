@@ -6,14 +6,20 @@ export const TenderVisibilityStatus: React.FC = () => {
   const [lastUpdated, setLastUpdated] = useState<string>("");
 
   const refreshStatus = () => {
-    const recentTenders = JSON.parse(
-      localStorage.getItem("recentTenders") || "[]",
-    );
-    const publishedTenders = recentTenders.filter(
-      (t: any) => t.status === "Open",
-    );
-    setTenderCount(publishedTenders.length);
-    setLastUpdated(new Date().toLocaleTimeString());
+    try {
+      const recentTenders = JSON.parse(
+        localStorage.getItem("recentTenders") || "[]",
+      );
+      const publishedTenders = recentTenders.filter(
+        (t: any) => t.status === "Open",
+      );
+      setTenderCount(publishedTenders.length);
+      setLastUpdated(new Date().toLocaleTimeString());
+    } catch (error) {
+      console.error('Error loading tender data:', error);
+      setTenderCount(0);
+      setLastUpdated(new Date().toLocaleTimeString());
+    }
   };
 
   useEffect(() => {
