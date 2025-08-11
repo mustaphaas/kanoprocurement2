@@ -290,7 +290,6 @@ export default function Index() {
 
   const currentTender = featuredTenders[currentTenderIndex];
 
-
   return (
     <div className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
       {/* Header */}
