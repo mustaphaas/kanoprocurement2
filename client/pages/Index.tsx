@@ -260,7 +260,16 @@ export default function Index() {
     return () => clearInterval(interval);
   }, [featuredTenders.length]);
 
-  const currentTender = featuredTenders[currentTenderIndex];
+  const currentTender = featuredTenders[currentTenderIndex] || featuredTenders[0] || {
+    id: "default",
+    title: "Loading...",
+    description: "Loading tender information...",
+    value: "₦0",
+    deadline: "TBD",
+    status: "Loading",
+    statusColor: "bg-gray-100 text-gray-800",
+    category: "Loading"
+  };
 
   return (
     <div className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
