@@ -265,7 +265,7 @@ export default function Index() {
           // Apply currency formatting to fix any incorrectly formatted values
           const formattedTenders = parsedTenders.map((tender: any) => ({
             ...tender,
-            value: formatCurrency(tender.value || '₦0'),
+            value: formatCurrency(tender.value || '0'),
           }));
           setFeaturedTenders(formattedTenders);
         }
