@@ -22,17 +22,18 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Connect to emulators in development
-if (import.meta.env.DEV) {
-  // Only connect to emulators if not already connected
+// Connect to emulators only when explicitly requested
+if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true') {
   try {
     connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
     connectFirestoreEmulator(db, 'localhost', 8080);
     connectStorageEmulator(storage, 'localhost', 9199);
+    console.log('Connected to Firebase emulators');
   } catch (error) {
-    // Emulators already connected or not running
     console.log('Firebase emulators not available or already connected');
   }
+} else {
+  console.log('Using production Firebase services');
 }
 
 export default app;
