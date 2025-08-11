@@ -16,7 +16,7 @@ export const TenderVisibilityStatus: React.FC = () => {
       setTenderCount(publishedTenders.length);
       setLastUpdated(new Date().toLocaleTimeString());
     } catch (error) {
-      console.error('Error loading tender data:', error);
+      console.error("Error loading tender data:", error);
       setTenderCount(0);
       setLastUpdated(new Date().toLocaleTimeString());
     }

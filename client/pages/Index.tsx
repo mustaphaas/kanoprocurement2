@@ -175,7 +175,7 @@ export default function Index() {
         }
       }
     } catch (error) {
-      console.error('Error loading recent tenders:', error);
+      console.error("Error loading recent tenders:", error);
     }
   };
 
@@ -270,7 +270,7 @@ export default function Index() {
         }
       }
     } catch (error) {
-      console.error('Error loading featured tenders:', error);
+      console.error("Error loading featured tenders:", error);
     }
   };
 
