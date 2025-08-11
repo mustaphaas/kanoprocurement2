@@ -324,6 +324,17 @@ export default function Index() {
   };
 
   useEffect(() => {
+    // Clear any potentially corrupted localStorage data on first load
+    try {
+      const featuredTendersData = localStorage.getItem("featuredTenders");
+      if (featuredTendersData) {
+        JSON.parse(featuredTendersData); // Test if it's valid JSON
+      }
+    } catch (error) {
+      console.warn("Clearing corrupted featuredTenders data");
+      localStorage.removeItem("featuredTenders");
+    }
+
     loadFeaturedTenders();
 
     // Set up interval to refresh featured tenders every 30 seconds
