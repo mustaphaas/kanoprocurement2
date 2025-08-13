@@ -114,9 +114,23 @@ interface Company {
   companyName: string;
   contactPerson: string;
   email: string;
-  status: "Active" | "Suspended" | "Blacklisted";
+  phone: string;
   registrationDate: string;
-  lastActivity: string;
+  status: "Pending" | "Approved" | "Suspended" | "Blacklisted";
+  registrationNumber: string;
+  businessType: string;
+  address: string;
+  documents: {
+    incorporation: boolean;
+    taxClearance: boolean;
+    companyProfile: boolean;
+    cacForm: boolean;
+  };
+  verificationStatus: {
+    cac: "Pending" | "Verified" | "Failed";
+    firs: "Pending" | "Verified" | "Failed";
+  };
+  lastActivity?: string;
   suspensionReason?: string;
   blacklistReason?: string;
 }
