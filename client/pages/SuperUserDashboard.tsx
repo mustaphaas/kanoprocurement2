@@ -406,6 +406,45 @@ export default function SuperUserDashboard() {
 
   const navigate = useNavigate();
 
+  const handleCompanyStatusChange = (
+    companyId: string,
+    newStatus: "Approved" | "Suspended" | "Blacklisted",
+    reason: string,
+  ) => {
+    console.log("🚀 SuperUser handleCompanyStatusChange CALLED");
+    console.log("📥 Parameters:", { companyId, newStatus, reason });
+
+    // Update the company status in the local state
+    setCompanies((prev) =>
+      prev.map((company) =>
+        company.id === companyId ? { ...company, status: newStatus } : company,
+      ),
+    );
+
+    // Store the status change using persistent storage for sync with admin dashboard
+    const company = companies.find((c) => c.id === companyId);
+    if (company) {
+      const storageKey = `userStatus_${company.email.toLowerCase()}`;
+      const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
+
+      persistentStorage.setItem(storageKey, newStatus);
+      persistentStorage.setItem(reasonKey, reason);
+
+      console.log(`=== SUPERUSER STATUS CHANGE ===`);
+      console.log(`Company: ${company.companyName}`);
+      console.log(`Email: ${company.email.toLowerCase()}`);
+      console.log(`New status: ${newStatus}`);
+      console.log(`Storage key: ${storageKey}`);
+      console.log(`Value stored: ${persistentStorage.getItem(storageKey)}`);
+    }
+
+    // Reset form
+    setActionReason("");
+    setApprovalDecision("");
+    setSelectedCompanyForApproval(null);
+    setViewMode("list");
+  };
+
   const dashboardStats: DashboardStats = {
     newRegistrationsPending: 4, // Including pending@company.com + 3 other mock companies
     activeTenders: 47,
