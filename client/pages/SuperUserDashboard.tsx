@@ -395,6 +395,15 @@ export default function SuperUserDashboard() {
   );
   const [userFormMode, setUserFormMode] = useState<"create" | "edit">("create");
 
+  // Company approval state
+  const [selectedCompanyForApproval, setSelectedCompanyForApproval] = useState<Company | null>(null);
+  const [viewMode, setViewMode] = useState<"list" | "details" | "approval">("list");
+  const [companySearchTerm, setCompanySearchTerm] = useState("");
+  const [companyStatusFilter, setCompanyStatusFilter] = useState<string>("all");
+  const [approvalDecision, setApprovalDecision] = useState<"Approved" | "Suspended" | "Blacklisted" | "">("");
+  const [actionReason, setActionReason] = useState("");
+  const [sendNotification, setSendNotification] = useState(true);
+
   const navigate = useNavigate();
 
   const dashboardStats: DashboardStats = {
