@@ -67,6 +67,58 @@ export default function AdminDashboard() {
   );
   const navigate = useNavigate();
 
+  const handleStatusChange = (
+    companyId: string,
+    newStatus: "Approved" | "Suspended" | "Blacklisted",
+    reason: string,
+  ) => {
+    console.log("🚀 handleStatusChange CALLED");
+    console.log("📥 Parameters:", { companyId, newStatus, reason });
+    console.log("📋 Current companies array length:", companies.length);
+
+    // Update the company status in the local state
+    setCompanies((prev) =>
+      prev.map((company) =>
+        company.id === companyId ? { ...company, status: newStatus } : company,
+      ),
+    );
+
+    // Store the status change using persistent storage for the company dashboard to pick up
+    // We'll use the email as the key since that's what the dashboard checks
+    const company = companies.find((c) => c.id === companyId);
+    if (company) {
+      const storageKey = `userStatus_${company.email.toLowerCase()}`;
+      const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
+
+      // Use persistent storage instead of localStorage
+      persistentStorage.setItem(storageKey, newStatus);
+      persistentStorage.setItem(reasonKey, reason);
+
+      console.log(`=== ADMIN STATUS CHANGE ===`);
+      console.log(`Company: ${company.companyName}`);
+      console.log(`Original email: ${company.email}`);
+      console.log(`Normalized email: ${company.email.toLowerCase()}`);
+      console.log(`Storage key: ${storageKey}`);
+      console.log(`New status: ${newStatus}`);
+      console.log(`Value stored: ${persistentStorage.getItem(storageKey)}`);
+      console.log(
+        `All userStatus keys:`,
+        persistentStorage.getUserStatusKeys(),
+      );
+
+      // Debug the persistent storage
+      persistentStorage.debugInfo();
+    } else {
+      console.error(`❌ Company with ID ${companyId} not found!`);
+    }
+
+    // Reset form
+    setActionReason("");
+    setApprovalDecision("");
+    setSelectedCompany(null);
+    setViewMode("list");
+  };
+
   // Load companies from registrations and mock data
   useEffect(() => {
     const loadCompanies = () => {
