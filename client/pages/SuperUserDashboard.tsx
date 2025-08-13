@@ -932,7 +932,186 @@ export default function SuperUserDashboard() {
       },
     ];
 
-    setCompanies(mockCompanies);
+    // Load companies with AdminDashboard-compatible format and sync with persistent storage
+    const loadCompanies = () => {
+      // Load registered companies from localStorage
+      const registeredCompanies = JSON.parse(
+        localStorage.getItem("registeredCompanies") || "[]",
+      );
+
+      // Convert registered companies to dashboard format
+      const formattedRegisteredCompanies = registeredCompanies.map(
+        (reg: any, index: number) => ({
+          id: reg.id || `reg-${index}`,
+          companyName: reg.companyName || "Unknown Company",
+          contactPerson: reg.contactPerson || "Unknown Contact",
+          email: reg.email || "",
+          phone: reg.phone || "",
+          registrationDate:
+            reg.registrationDate || new Date().toISOString().split("T")[0],
+          status:
+            (persistentStorage.getItem(`userStatus_${reg.email?.toLowerCase()}`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Pending",
+          registrationNumber: reg.registrationNumber || `RC${Date.now()}`,
+          businessType: reg.businessType || "Limited Liability Company",
+          address: reg.address || "",
+          documents: {
+            incorporation: true,
+            taxClearance: true,
+            companyProfile: true,
+            cacForm: true,
+          },
+          verificationStatus: {
+            cac: "Pending" as const,
+            firs: "Pending" as const,
+          },
+        }),
+      );
+
+      // Test companies that sync with AdminDashboard
+      const testCompanies = [
+        {
+          id: "test-1",
+          companyName: "Northern Construction Ltd",
+          contactPerson: "Ahmad Mahmoud",
+          email: "ahmad@northernconstruction.com",
+          phone: "+234 803 123 4567",
+          registrationDate: "2024-01-15",
+          status:
+            (persistentStorage.getItem(`userStatus_ahmad@northernconstruction.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Pending",
+          registrationNumber: "RC123456",
+          businessType: "Limited Liability Company",
+          address: "123 Ahmadu Bello Way, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: true,
+            companyProfile: true,
+            cacForm: true,
+          },
+          verificationStatus: { cac: "Verified" as const, firs: "Pending" as const },
+        },
+        {
+          id: "test-2",
+          companyName: "Premier Construction Company",
+          contactPerson: "Muhammad Ali",
+          email: "approved@company.com",
+          phone: "+234 805 987 6543",
+          registrationDate: "2024-01-13",
+          status:
+            (persistentStorage.getItem(`userStatus_approved@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Approved",
+          registrationNumber: "RC345678",
+          businessType: "Limited Liability Company",
+          address: "78 Independence Road, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: true,
+            companyProfile: true,
+            cacForm: true,
+          },
+          verificationStatus: { cac: "Verified" as const, firs: "Verified" as const },
+        },
+        {
+          id: "test-3",
+          companyName: "Omega Engineering Services",
+          contactPerson: "Sani Abdullahi",
+          email: "suspended@company.com",
+          phone: "+234 809 111 2222",
+          registrationDate: "2024-01-10",
+          status:
+            (persistentStorage.getItem(`userStatus_suspended@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Suspended",
+          registrationNumber: "RC456789",
+          businessType: "Limited Liability Company",
+          address: "12 Engineering Close, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: false,
+            companyProfile: true,
+            cacForm: true,
+          },
+          verificationStatus: { cac: "Verified" as const, firs: "Failed" as const },
+        },
+        {
+          id: "test-4",
+          companyName: "Restricted Corp Ltd",
+          contactPerson: "Ahmed Musa",
+          email: "blacklisted@company.com",
+          phone: "+234 806 333 4444",
+          registrationDate: "2024-01-05",
+          status:
+            (persistentStorage.getItem(`userStatus_blacklisted@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Blacklisted",
+          registrationNumber: "RC567890",
+          businessType: "Limited Liability Company",
+          address: "56 Industrial Layout, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: true,
+            companyProfile: true,
+            cacForm: true,
+          },
+          verificationStatus: { cac: "Verified" as const, firs: "Verified" as const },
+        },
+        {
+          id: "test-5",
+          companyName: "New Ventures Construction Ltd",
+          contactPerson: "Amina Suleiman",
+          email: "pending@company.com",
+          phone: "+234 807 444 5555",
+          registrationDate: "2024-01-20",
+          status:
+            (persistentStorage.getItem(`userStatus_pending@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Pending",
+          registrationNumber: "RC678901",
+          businessType: "Limited Liability Company",
+          address: "90 New GRA, Kano",
+          documents: {
+            incorporation: true,
+            taxClearance: false,
+            companyProfile: true,
+            cacForm: true,
+          },
+          verificationStatus: { cac: "Pending" as const, firs: "Pending" as const },
+        },
+      ];
+
+      // Combine registered companies with test companies (avoid duplicates by email)
+      const allCompanies = [...formattedRegisteredCompanies];
+      testCompanies.forEach((testCompany) => {
+        const existsInRegistered = formattedRegisteredCompanies.find(
+          (reg) => reg.email.toLowerCase() === testCompany.email.toLowerCase(),
+        );
+        if (!existsInRegistered) {
+          allCompanies.push(testCompany);
+        }
+      });
+
+      setCompanies(allCompanies);
+    };
+
+    loadCompanies();
+
+    // Set other mock data
     setAuditLogs(mockAuditLogs);
     setAIRecommendations(mockAIRecommendations);
     setTenders(mockTenders);
@@ -941,6 +1120,10 @@ export default function SuperUserDashboard() {
     setMDAs(mockMDAs);
     setMDAAdmins(mockMDAAdmins);
     setMDAUsers(mockMDAUsers);
+
+    // Refresh company data every 30 seconds to sync with AdminDashboard changes
+    const interval = setInterval(loadCompanies, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogout = () => {
