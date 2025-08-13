@@ -5894,40 +5894,341 @@ The award letter has been:
         );
 
       case "companies":
+        // Add handlers for company approval operations
+        const handleViewDetails = (company: Company) => {
+          setSelectedCompanyForApproval(company);
+          setViewMode("details");
+        };
+
+        const handleApproval = (company: Company) => {
+          setSelectedCompanyForApproval(company);
+          setViewMode("approval");
+          setApprovalDecision("");
+          setActionReason("");
+          setSendNotification(true);
+        };
+
+        const submitApproval = () => {
+          if (!selectedCompanyForApproval || !approvalDecision) return;
+
+          if (
+            (approvalDecision === "Suspended" ||
+              approvalDecision === "Blacklisted") &&
+            !actionReason.trim()
+          ) {
+            alert(`Please provide a reason for ${approvalDecision.toLowerCase()}`);
+            return;
+          }
+
+          handleCompanyStatusChange(selectedCompanyForApproval.id, approvalDecision, actionReason);
+
+          // Simulate sending notification
+          if (sendNotification) {
+            console.log(`Notification sent to ${selectedCompanyForApproval.email}`);
+          }
+        };
+
+        const exportData = () => {
+          const dataStr = JSON.stringify(filteredCompanies, null, 2);
+          const dataBlob = new Blob([dataStr], { type: "application/json" });
+          const url = URL.createObjectURL(dataBlob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "company_registrations.json";
+          link.click();
+        };
+
+        // Calculate dynamic stats
+        const pendingCount = companies.filter((c) => c.status === "Pending").length;
+        const approvedCount = companies.filter((c) => c.status === "Approved").length;
+        const suspendedCount = companies.filter((c) => c.status === "Suspended").length;
+        const blacklistedCount = companies.filter((c) => c.status === "Blacklisted").length;
+
+        const filteredCompanies = companies.filter((company) => {
+          const matchesSearch =
+            company.companyName.toLowerCase().includes(companySearchTerm.toLowerCase()) ||
+            company.contactPerson.toLowerCase().includes(companySearchTerm.toLowerCase()) ||
+            company.email.toLowerCase().includes(companySearchTerm.toLowerCase());
+          const matchesStatus =
+            companyStatusFilter === "all" || company.status === companyStatusFilter;
+
+          return matchesSearch && matchesStatus;
+        });
+
+        // Company Details View
+        if (viewMode === "details" && selectedCompanyForApproval) {
+          return (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-gray-900">Company Details</h1>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className="flex items-center px-4 py-2 text-gray-600 hover:text-green-700"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Back to List
+                </button>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Company Name</label>
+                        <p className="text-gray-900">{selectedCompanyForApproval.companyName}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Registration Number</label>
+                        <p className="text-gray-900">{selectedCompanyForApproval.registrationNumber}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Business Type</label>
+                        <p className="text-gray-900">{selectedCompanyForApproval.businessType}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Contact Person</label>
+                        <p className="text-gray-900">{selectedCompanyForApproval.contactPerson}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                        <p className="text-gray-900">{selectedCompanyForApproval.email}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Phone</label>
+                        <p className="text-gray-900">{selectedCompanyForApproval.phone}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Address</label>
+                        <p className="text-gray-900">{selectedCompanyForApproval.address}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Status & Verification</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Current Status</label>
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            selectedCompanyForApproval.status === "Pending"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : selectedCompanyForApproval.status === "Approved"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {selectedCompanyForApproval.status}
+                        </span>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">CAC Verification</label>
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                            selectedCompanyForApproval.verificationStatus.cac === "Verified"
+                              ? "bg-green-100 text-green-800"
+                              : selectedCompanyForApproval.verificationStatus.cac === "Failed"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {selectedCompanyForApproval.verificationStatus.cac}
+                        </span>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">FIRS Verification</label>
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                            selectedCompanyForApproval.verificationStatus.firs === "Verified"
+                              ? "bg-green-100 text-green-800"
+                              : selectedCompanyForApproval.verificationStatus.firs === "Failed"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {selectedCompanyForApproval.verificationStatus.firs}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flex space-x-3">
+                      <button
+                        onClick={() => setViewMode("list")}
+                        className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                      >
+                        Back to List
+                      </button>
+                      <button
+                        onClick={() => handleApproval(selectedCompanyForApproval)}
+                        className="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800"
+                      >
+                        Manage Status
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        // Company Approval View
+        if (viewMode === "approval" && selectedCompanyForApproval) {
+          return (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-gray-900">Company Status Management</h1>
+                <button
+                  onClick={() => setViewMode("details")}
+                  className="flex items-center px-4 py-2 text-gray-600 hover:text-green-700"
+                >
+                  Back to Details
+                </button>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  {selectedCompanyForApproval.companyName}
+                </h2>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Change Status To *
+                    </label>
+                    <div className="space-y-3">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="decision"
+                          value="Approved"
+                          checked={approvalDecision === "Approved"}
+                          onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
+                          className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                        />
+                        <span className="ml-2 text-sm text-gray-700 flex items-center">
+                          <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
+                          Approved - Full Access
+                        </span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="decision"
+                          value="Suspended"
+                          checked={approvalDecision === "Suspended"}
+                          onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
+                          className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
+                        />
+                        <span className="ml-2 text-sm text-gray-700 flex items-center">
+                          <Shield className="h-4 w-4 text-orange-500 mr-1" />
+                          Suspended - Limited Access
+                        </span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="decision"
+                          value="Blacklisted"
+                          checked={approvalDecision === "Blacklisted"}
+                          onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
+                          className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
+                        />
+                        <span className="ml-2 text-sm text-gray-700 flex items-center">
+                          <Ban className="h-4 w-4 text-red-500 mr-1" />
+                          Blacklisted - No Access
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {(approvalDecision === "Suspended" || approvalDecision === "Blacklisted") && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Reason for {approvalDecision === "Suspended" ? "Suspension" : "Blacklisting"} *
+                      </label>
+                      <textarea
+                        rows={4}
+                        value={actionReason}
+                        onChange={(e) => setActionReason(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder={`Please provide a detailed reason for ${approvalDecision === "Suspended" ? "suspension" : "blacklisting"}...`}
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={sendNotification}
+                        onChange={(e) => setSendNotification(e.target.checked)}
+                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        Send automated email notification to the company
+                      </span>
+                    </label>
+                  </div>
+
+                  <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                    <button
+                      onClick={() => setViewMode("details")}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={submitApproval}
+                      disabled={
+                        !approvalDecision ||
+                        ((approvalDecision === "Suspended" || approvalDecision === "Blacklisted") &&
+                          !actionReason.trim())
+                      }
+                      className="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Update Status
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        // Main Companies List View
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Company Approvals
+                  Company Management (SuperUser)
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Review and approve company registrations. All new
-                  registrations automatically appear here with "Pending" status.
+                  Review and manage company registrations. Changes sync with Admin dashboard.
                 </p>
               </div>
               <div className="flex items-center space-x-3">
-                <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                <button
+                  onClick={exportData}
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
                   <Download className="h-4 w-4 mr-2" />
                   Export List
-                </button>
-                <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
-                  <CheckSquare className="h-4 w-4 mr-2" />
-                  Bulk Approve
                 </button>
               </div>
             </div>
 
-            {/* Approval Statistics */}
+            {/* Dynamic Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="bg-white rounded-lg shadow-sm p-6 border">
                 <div className="flex items-center">
                   <Clock className="h-8 w-8 text-yellow-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">
-                      Pending Review
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900">23</p>
+                    <p className="text-sm font-medium text-gray-600">Pending Review</p>
+                    <p className="text-2xl font-bold text-gray-900">{pendingCount}</p>
                   </div>
                 </div>
               </div>
@@ -5935,38 +6236,32 @@ The award letter has been:
                 <div className="flex items-center">
                   <CheckCircle className="h-8 w-8 text-green-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">
-                      Approved
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900">847</p>
+                    <p className="text-sm font-medium text-gray-600">Approved</p>
+                    <p className="text-2xl font-bold text-gray-900">{approvedCount}</p>
                   </div>
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-6 border">
                 <div className="flex items-center">
-                  <XCircle className="h-8 w-8 text-red-600" />
+                  <Shield className="h-8 w-8 text-orange-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">
-                      Rejected
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900">67</p>
+                    <p className="text-sm font-medium text-gray-600">Suspended</p>
+                    <p className="text-2xl font-bold text-gray-900">{suspendedCount}</p>
                   </div>
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-6 border">
                 <div className="flex items-center">
-                  <AlertTriangle className="h-8 w-8 text-orange-600" />
+                  <Ban className="h-8 w-8 text-red-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">
-                      Under Review
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900">12</p>
+                    <p className="text-sm font-medium text-gray-600">Blacklisted</p>
+                    <p className="text-2xl font-bold text-gray-900">{blacklistedCount}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Company Approval Queue */}
+            {/* Company List */}
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
@@ -5974,18 +6269,24 @@ The award letter has been:
                     Company Registration Queue
                   </h2>
                   <div className="flex items-center space-x-3">
-                    <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select
+                      value={companyStatusFilter}
+                      onChange={(e) => setCompanyStatusFilter(e.target.value)}
+                      className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
                       <option value="all">All Status</option>
-                      <option value="pending">Pending Review</option>
-                      <option value="under-review">Under Review</option>
-                      <option value="approved">Approved</option>
-                      <option value="rejected">Rejected</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Approved">Approved</option>
+                      <option value="Suspended">Suspended</option>
+                      <option value="Blacklisted">Blacklisted</option>
                     </select>
                     <div className="relative">
                       <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="text"
                         placeholder="Search companies..."
+                        value={companySearchTerm}
+                        onChange={(e) => setCompanySearchTerm(e.target.value)}
                         className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -5997,16 +6298,16 @@ The award letter has been:
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Company
+                        Company Name
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Registration
+                        Contact Person
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Registration Date
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Documents
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
@@ -6014,135 +6315,94 @@ The award letter has been:
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {[
-                      {
-                        id: "COM001",
-                        name: "Pending Test Ltd",
-                        email: "pending@company.com",
-                        regNumber: "RC-TEST001",
-                        submissionDate: "2024-01-29",
-                        status: "Pending Review",
-                        documentsComplete: true,
-                        category: "Test Company",
-                      },
-                      {
-                        id: "COM002",
-                        name: "Northern Construction Ltd",
-                        email: "info@northernconst.com",
-                        regNumber: "RC-456789",
-                        submissionDate: "2024-01-28",
-                        status: "Pending Review",
-                        documentsComplete: true,
-                        category: "Construction",
-                      },
-                      {
-                        id: "COM003",
-                        name: "Sahel Engineering Services",
-                        email: "contact@saheleng.com",
-                        regNumber: "RC-789012",
-                        submissionDate: "2024-01-27",
-                        status: "Under Review",
-                        documentsComplete: false,
-                        category: "Engineering",
-                      },
-                      {
-                        id: "COM004",
-                        name: "Kano Medical Supplies",
-                        email: "orders@kanomedical.com",
-                        regNumber: "RC-345678",
-                        submissionDate: "2024-01-26",
-                        status: "Pending Review",
-                        documentsComplete: true,
-                        category: "Healthcare",
-                      },
-                      {
-                        id: "COM005",
-                        name: "Tech Solutions Nigeria",
-                        email: "hello@techsolutions.ng",
-                        regNumber: "RC-234567",
-                        submissionDate: "2024-01-25",
-                        status: "Approved",
-                        documentsComplete: true,
-                        category: "Technology",
-                      },
-                    ].map((company) => (
+                    {filteredCompanies.map((company) => (
                       <tr key={company.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
                             <div className="text-sm font-medium text-gray-900">
-                              {company.name}
+                              {company.companyName}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {company.registrationNumber}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div>
+                            <div className="text-sm text-gray-900">
+                              {company.contactPerson}
                             </div>
                             <div className="text-sm text-gray-500">
                               {company.email}
                             </div>
-                            <div className="text-xs text-gray-400">
-                              {company.category}
-                            </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {company.regNumber}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            Submitted:{" "}
-                            {new Date(
-                              company.submissionDate,
-                            ).toLocaleDateString()}
-                          </div>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {new Date(company.registrationDate).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              company.status === "Approved"
-                                ? "bg-green-100 text-green-800"
-                                : company.status === "Pending Review"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : company.status === "Under Review"
-                                    ? "bg-blue-100 text-blue-800"
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              company.status === "Pending"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : company.status === "Approved"
+                                  ? "bg-green-100 text-green-800"
+                                  : company.status === "Suspended"
+                                    ? "bg-orange-100 text-orange-800"
                                     : "bg-red-100 text-red-800"
                             }`}
                           >
                             {company.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            {company.documentsComplete ? (
-                              <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                            ) : (
-                              <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                            )}
-                            <span className="text-sm text-gray-900">
-                              {company.documentsComplete
-                                ? "Complete"
-                                : "Incomplete"}
-                            </span>
-                          </div>
-                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                          <button className="inline-flex items-center px-2 py-1 border border-gray-300 rounded text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
-                            <Eye className="h-3 w-3 mr-1" />
-                            Review
+                          <button
+                            onClick={() => handleViewDetails(company)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            <Eye className="h-4 w-4 inline mr-1" />
+                            View Details
                           </button>
-                          {company.status === "Pending Review" && (
-                            <>
-                              <button className="inline-flex items-center px-2 py-1 border border-transparent rounded text-xs font-medium text-white bg-green-600 hover:bg-green-700">
-                                <CheckCircle className="h-3 w-3 mr-1" />
-                                Approve
-                              </button>
-                              <button className="inline-flex items-center px-2 py-1 border border-transparent rounded text-xs font-medium text-white bg-red-600 hover:bg-red-700">
-                                <XCircle className="h-3 w-3 mr-1" />
-                                Reject
-                              </button>
-                            </>
+
+                          {company.status === "Pending" && (
+                            <button
+                              onClick={() => {
+                                handleCompanyStatusChange(company.id, "Approved", "Approved by superuser");
+                              }}
+                              className="text-green-600 hover:text-green-900 ml-3"
+                            >
+                              <CheckCircle className="h-4 w-4 inline mr-1" />
+                              Approve
+                            </button>
                           )}
+
+                          <button
+                            onClick={() => handleApproval(company)}
+                            className="text-gray-600 hover:text-gray-900 ml-3"
+                          >
+                            <Settings className="h-4 w-4 inline mr-1" />
+                            Manage Status
+                          </button>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+
+              {filteredCompanies.length === 0 && (
+                <div className="text-center py-12">
+                  <Users className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">
+                    No companies found
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {companySearchTerm || companyStatusFilter !== "all"
+                      ? "Try adjusting your search or filter criteria."
+                      : "No company registrations available."}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         );
