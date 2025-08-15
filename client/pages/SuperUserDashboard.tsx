@@ -1137,22 +1137,21 @@ export default function SuperUserDashboard() {
     setMDAAdmins(mockMDAAdmins);
     setMDAUsers(mockMDAUsers);
 
-    // Listen for storage changes from Admin dashboard
-    const handleStorageChange = (event: any) => {
-      const { key, newValue } = event.detail;
-      if (key && key.startsWith('userStatus_')) {
-        console.log('🔄 Storage change detected in SuperUserDashboard:', key, newValue);
+    // Listen for localStorage changes (cross-tab sync)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key && event.key.startsWith('userStatus_') && event.newValue) {
+        console.log('🔄 localStorage change detected in SuperUserDashboard:', event.key, event.newValue);
 
         // Extract email from storage key (remove 'userStatus_' prefix)
-        const email = key.replace('userStatus_', '');
+        const email = event.key.replace('userStatus_', '');
         console.log('🔍 Looking for company with email:', email);
 
         // Update the specific company's status immediately
         setCompanies(prevCompanies => {
           const updatedCompanies = prevCompanies.map(company => {
             if (company.email.toLowerCase() === email) {
-              console.log('✅ Updating company status:', company.companyName, 'from', company.status, 'to', newValue);
-              return { ...company, status: newValue };
+              console.log('✅ Updating company status:', company.companyName, 'from', company.status, 'to', event.newValue);
+              return { ...company, status: event.newValue };
             }
             return company;
           });
@@ -1163,7 +1162,29 @@ export default function SuperUserDashboard() {
       }
     };
 
-    window.addEventListener('persistentStorageChange', handleStorageChange);
+    // Listen for localStorage changes from other tabs/windows
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also listen for custom events within the same tab
+    const handleCustomStorageChange = (event: any) => {
+      const { key, newValue } = event.detail;
+      if (key && key.startsWith('userStatus_')) {
+        console.log('🔄 Custom storage change detected in SuperUserDashboard:', key, newValue);
+
+        const email = key.replace('userStatus_', '');
+        setCompanies(prevCompanies => {
+          return prevCompanies.map(company => {
+            if (company.email.toLowerCase() === email) {
+              console.log('✅ Updating company status via custom event:', company.companyName, 'to', newValue);
+              return { ...company, status: newValue };
+            }
+            return company;
+          });
+        });
+      }
+    };
+
+    window.addEventListener('persistentStorageChange', handleCustomStorageChange);
 
     // Refresh company data every 30 seconds to sync with AdminDashboard changes
     const interval = setInterval(loadCompanies, 30000);
@@ -4756,7 +4777,7 @@ The award letter has been:
                       {activeEvaluationTender
                         ? activeEvaluationTender.id
                         : "KS-2024-002"}{" "}
-                      • {tenderEvaluations.length} bids to evaluate
+                      ��� {tenderEvaluations.length} bids to evaluate
                     </p>
                   </div>
                   {activeEvaluationTender && (
