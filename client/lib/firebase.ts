@@ -92,7 +92,8 @@ if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === "true" && hasFirebaseConfig) 
   console.log("🎭 Running in demo mode - Firebase features limited");
 }
 
-// Export Firebase services (may be null in demo mode)
+// Export Firebase services with fallback
 export { auth, db, storage, hasFirebaseConfig };
 
-export default app;
+// Export app with fallback
+export default app || null;
