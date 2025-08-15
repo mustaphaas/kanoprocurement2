@@ -67,6 +67,64 @@ export default function AdminDashboard() {
   );
   const navigate = useNavigate();
 
+  const handleStatusChange = (
+    companyId: string,
+    newStatus: "Approved" | "Suspended" | "Blacklisted",
+    reason: string,
+  ) => {
+    console.log("🚀 ADMIN handleStatusChange CALLED");
+    console.log("📥 Parameters:", { companyId, newStatus, reason });
+    console.log("📋 Current companies array length:", companies.length);
+
+    // Find the company first
+    const company = companies.find((c) => c.id === companyId);
+    if (!company) {
+      console.error(`❌ Company with ID ${companyId} not found!`);
+      return;
+    }
+
+    console.log(`=== ADMIN STATUS CHANGE ===`);
+    console.log(`Company: ${company.companyName}`);
+    console.log(`Original Email: ${company.email}`);
+    console.log(`Normalized Email: ${company.email.toLowerCase()}`);
+    console.log(`New status: ${newStatus}`);
+
+    // Update the company status in the local state FIRST
+    setCompanies((prev) =>
+      prev.map((c) => (c.id === companyId ? { ...c, status: newStatus } : c)),
+    );
+
+    // Store the status change using persistent storage
+    const storageKey = `userStatus_${company.email.toLowerCase()}`;
+    const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
+
+    console.log(`📦 Setting storage key: ${storageKey} = ${newStatus}`);
+
+    persistentStorage.setItem(storageKey, newStatus);
+    persistentStorage.setItem(reasonKey, reason);
+
+    // Verify the storage was set correctly
+    const verifyValue = persistentStorage.getItem(storageKey);
+    console.log(`✅ Verification - stored value: ${verifyValue}`);
+
+    if (verifyValue !== newStatus) {
+      console.error(
+        `❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`,
+      );
+    }
+
+    console.log(`All userStatus keys:`, persistentStorage.getUserStatusKeys());
+
+    // Debug the persistent storage
+    persistentStorage.debugInfo();
+
+    // Reset form
+    setActionReason("");
+    setApprovalDecision("");
+    setSelectedCompany(null);
+    setViewMode("list");
+  };
+
   // Load companies from registrations and mock data
   useEffect(() => {
     const loadCompanies = () => {
@@ -258,6 +316,35 @@ export default function AdminDashboard() {
     // Refresh company list every 30 seconds to pick up new registrations
     const interval = setInterval(loadCompanies, 30000);
 
+    // Additional polling for status changes (faster sync)
+    const syncInterval = setInterval(() => {
+      console.log("🔄 AdminDashboard: Checking for status changes...");
+      setCompanies((prevCompanies) => {
+        let hasChanges = false;
+        const updatedCompanies = prevCompanies.map((company) => {
+          const currentStatus = persistentStorage.getItem(
+            `userStatus_${company.email.toLowerCase()}`,
+          );
+          if (currentStatus && currentStatus !== company.status) {
+            console.log(
+              `🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`,
+            );
+            hasChanges = true;
+            return { ...company, status: currentStatus };
+          }
+          return company;
+        });
+
+        if (hasChanges) {
+          console.log(
+            "✅ AdminDashboard: Updated company statuses via polling",
+          );
+        }
+
+        return hasChanges ? updatedCompanies : prevCompanies;
+      });
+    }, 3000); // Check every 3 seconds
+
     // Add global admin debugging functions
     (window as any).adminTestLocalStorage = () => {
       console.log("=== ADMIN LOCALSTORAGE TEST ===");
@@ -317,8 +404,92 @@ export default function AdminDashboard() {
       }
     };
 
+    // Listen for localStorage changes (cross-tab sync)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
+        console.log(
+          "🔄 localStorage change detected in AdminDashboard:",
+          event.key,
+          event.newValue,
+        );
+
+        // Extract email from storage key (remove 'userStatus_' prefix)
+        const email = event.key.replace("userStatus_", "");
+        console.log("🔍 Looking for company with email:", email);
+
+        // Update the specific company's status immediately
+        setCompanies((prevCompanies) => {
+          const updatedCompanies = prevCompanies.map((company) => {
+            if (company.email.toLowerCase() === email) {
+              console.log(
+                "✅ Updating company status:",
+                company.companyName,
+                "from",
+                company.status,
+                "to",
+                event.newValue,
+              );
+              return { ...company, status: event.newValue };
+            }
+            return company;
+          });
+
+          console.log(
+            "📊 Updated companies:",
+            updatedCompanies.map((c) => ({
+              name: c.companyName,
+              status: c.status,
+            })),
+          );
+          return updatedCompanies;
+        });
+      }
+    };
+
+    // Listen for localStorage changes from other tabs/windows
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also listen for custom events within the same tab
+    const handleCustomStorageChange = (event: any) => {
+      const { key, newValue } = event.detail;
+      if (key && key.startsWith("userStatus_")) {
+        console.log(
+          "🔄 Custom storage change detected in AdminDashboard:",
+          key,
+          newValue,
+        );
+
+        const email = key.replace("userStatus_", "");
+        setCompanies((prevCompanies) => {
+          return prevCompanies.map((company) => {
+            if (company.email.toLowerCase() === email) {
+              console.log(
+                "✅ Updating company status via custom event:",
+                company.companyName,
+                "to",
+                newValue,
+              );
+              return { ...company, status: newValue };
+            }
+            return company;
+          });
+        });
+      }
+    };
+
+    window.addEventListener(
+      "persistentStorageChange",
+      handleCustomStorageChange,
+    );
+
     return () => {
       clearInterval(interval);
+      clearInterval(syncInterval);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "persistentStorageChange",
+        handleCustomStorageChange,
+      );
     };
   }, []);
 
@@ -382,9 +553,49 @@ export default function AdminDashboard() {
       }
     };
 
+    // Global test function for company approval sync
+    (window as any).testApproval = () => {
+      console.log("=== TESTING COMPANY APPROVAL SYNC ===");
+      const pendingCompany = companies.find(
+        (c) => c.email === "pending@company.com",
+      );
+      if (pendingCompany) {
+        console.log("📋 Found pending company:", pendingCompany);
+        console.log("📊 Current status:", pendingCompany.status);
+        console.log("🔄 Attempting to approve...");
+        handleStatusChange(
+          pendingCompany.id,
+          "Approved",
+          "Test approval from admin",
+        );
+      } else {
+        console.log("❌ pending@company.com not found");
+        console.log(
+          "📋 Available companies:",
+          companies.map((c) => ({ email: c.email, status: c.status })),
+        );
+      }
+    };
+
+    // Manual sync test
+    (window as any).testManualSync = (email: string, status: string) => {
+      console.log(`=== MANUAL SYNC TEST ===`);
+      console.log(`Triggering storage event for ${email} -> ${status}`);
+
+      // Manually trigger the storage event
+      const event = new CustomEvent("persistentStorageChange", {
+        detail: {
+          key: `userStatus_${email.toLowerCase()}`,
+          newValue: status,
+        },
+      });
+      window.dispatchEvent(event);
+    };
+
     return () => {
       delete (window as any).adminTestLocalStorage;
       delete (window as any).adminTestStatusChange;
+      delete (window as any).testApproval;
     };
   }, [companies, handleStatusChange]);
 
@@ -425,58 +636,6 @@ export default function AdminDashboard() {
     setApprovalDecision("");
     setActionReason("");
     setSendNotification(true);
-  };
-
-  const handleStatusChange = (
-    companyId: string,
-    newStatus: "Approved" | "Suspended" | "Blacklisted",
-    reason: string,
-  ) => {
-    console.log("🚀 handleStatusChange CALLED");
-    console.log("📥 Parameters:", { companyId, newStatus, reason });
-    console.log("📋 Current companies array length:", companies.length);
-
-    // Update the company status in the local state
-    setCompanies((prev) =>
-      prev.map((company) =>
-        company.id === companyId ? { ...company, status: newStatus } : company,
-      ),
-    );
-
-    // Store the status change using persistent storage for the company dashboard to pick up
-    // We'll use the email as the key since that's what the dashboard checks
-    const company = companies.find((c) => c.id === companyId);
-    if (company) {
-      const storageKey = `userStatus_${company.email.toLowerCase()}`;
-      const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
-
-      // Use persistent storage instead of localStorage
-      persistentStorage.setItem(storageKey, newStatus);
-      persistentStorage.setItem(reasonKey, reason);
-
-      console.log(`=== ADMIN STATUS CHANGE ===`);
-      console.log(`Company: ${company.companyName}`);
-      console.log(`Original email: ${company.email}`);
-      console.log(`Normalized email: ${company.email.toLowerCase()}`);
-      console.log(`Storage key: ${storageKey}`);
-      console.log(`New status: ${newStatus}`);
-      console.log(`Value stored: ${persistentStorage.getItem(storageKey)}`);
-      console.log(
-        `All userStatus keys:`,
-        persistentStorage.getUserStatusKeys(),
-      );
-
-      // Debug the persistent storage
-      persistentStorage.debugInfo();
-    } else {
-      console.error(`❌ Company with ID ${companyId} not found!`);
-    }
-
-    // Reset form
-    setActionReason("");
-    setApprovalDecision("");
-    setSelectedCompany(null);
-    setViewMode("list");
   };
 
   const submitApproval = () => {
@@ -1258,17 +1417,23 @@ export default function AdminDashboard() {
                           <>
                             <button
                               onClick={() => {
-                                console.log("🔄 APPROVE BUTTON CLICKED");
+                                console.log("🔄 ADMIN APPROVE BUTTON CLICKED");
                                 console.log("Company ID:", company.id);
                                 console.log("Company Email:", company.email);
                                 console.log(
                                   "Company Name:",
                                   company.companyName,
                                 );
+
                                 handleStatusChange(
                                   company.id,
                                   "Approved",
                                   "Approved by admin",
+                                );
+
+                                // Show success message
+                                alert(
+                                  `✅ ${company.companyName} has been approved successfully!`,
                                 );
                               }}
                               className="text-green-600 hover:text-green-900 ml-3"
