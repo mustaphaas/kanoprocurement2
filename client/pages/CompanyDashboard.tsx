@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/StaticAuthContext";
 import { formatCurrency } from "@/lib/utils";
 import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
 import { persistentStorage } from "@/lib/persistentStorage";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   Home,
@@ -544,6 +545,26 @@ export default function CompanyDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Log dashboard access
+  useEffect(() => {
+    logUserAction(
+      companyData.email.toLowerCase(),
+      "company_user",
+      "COMPANY_DASHBOARD_ACCESSED",
+      "Company Dashboard",
+      `Company user ${companyData.name} accessed the company dashboard`,
+      "LOW",
+      undefined,
+      {
+        accessTime: new Date().toISOString(),
+        companyName: companyData.name,
+        companyEmail: companyData.email,
+        companyStatus: companyData.status,
+        userAgent: navigator.userAgent,
+      },
+    );
+  }, []); // Run only once on component mount
+
   const [contracts, setContracts] = useState<Contract[]>([
     {
       id: "CON-2024-001",
@@ -581,6 +602,22 @@ export default function CompanyDashboard() {
   ];
 
   const handleLogout = () => {
+    // Log company logout
+    logUserAction(
+      companyData.email.toLowerCase(),
+      "company_user",
+      "COMPANY_LOGOUT",
+      "Company Portal",
+      `Company user ${companyData.email} logged out of the system`,
+      "LOW",
+      undefined,
+      {
+        logoutTime: new Date().toISOString(),
+        companyName: companyData.name,
+        sessionDuration: "N/A",
+      },
+    );
+
     navigate("/");
   };
 
@@ -679,6 +716,28 @@ export default function CompanyDashboard() {
       ...prev,
     ]);
 
+    // Log interest expression
+    logUserAction(
+      companyData.email.toLowerCase(),
+      "company_user",
+      "TENDER_INTEREST_EXPRESSED",
+      selectedTender.title,
+      `Company ${companyData.name} expressed interest in tender: ${selectedTender.title}`,
+      "MEDIUM",
+      selectedTender.id,
+      {
+        tenderId: selectedTender.id,
+        tenderTitle: selectedTender.title,
+        ministry: selectedTender.ministry,
+        category: selectedTender.category,
+        value: selectedTender.value,
+        deadline: selectedTender.deadline,
+        companyName: companyData.name,
+        companyEmail: companyData.email,
+        actionTimestamp: new Date().toISOString(),
+      },
+    );
+
     setShowExpressInterestModal(false);
     setSelectedTender(null);
   };
@@ -742,6 +801,30 @@ export default function CompanyDashboard() {
       },
       ...prev,
     ]);
+
+    // Log bid submission
+    logUserAction(
+      companyData.email.toLowerCase(),
+      "company_user",
+      "BID_SUBMITTED",
+      selectedTender.title,
+      `Company ${companyData.name} submitted bid for tender: ${selectedTender.title}`,
+      "HIGH",
+      selectedTender.id,
+      {
+        bidId: bidData.id,
+        tenderId: selectedTender.id,
+        tenderTitle: selectedTender.title,
+        ministry: selectedTender.ministry,
+        category: selectedTender.category,
+        tenderValue: selectedTender.value,
+        bidAmount: bidData.bidAmount,
+        deadline: selectedTender.deadline,
+        companyName: companyData.name,
+        companyEmail: companyData.email,
+        submissionTimestamp: bidData.submittedAt,
+      },
+    );
 
     setShowSubmitBidModal(false);
     setSelectedTender(null);

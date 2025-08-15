@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   User,
@@ -78,8 +79,43 @@ export default function MinistryLogin() {
               role: "ministry",
             }),
           );
+
+          // Log successful ministry login
+          logUserAction(
+            formData.username,
+            "ministry_user",
+            "MINISTRY_LOGIN_SUCCESS",
+            "Ministry Portal",
+            `Ministry user ${formData.username} successfully logged in`,
+            "MEDIUM",
+            undefined,
+            {
+              loginTime: new Date().toISOString(),
+              userAgent: navigator.userAgent,
+              loginMethod: "credentials",
+              username: formData.username,
+            },
+          );
+
           navigate("/ministry/dashboard");
         } else {
+          // Log failed ministry login attempt
+          logUserAction(
+            formData.username || "Unknown",
+            "anonymous",
+            "MINISTRY_LOGIN_FAILED",
+            "Ministry Portal",
+            `Failed ministry login attempt for user: ${formData.username}`,
+            "HIGH",
+            undefined,
+            {
+              attemptTime: new Date().toISOString(),
+              userAgent: navigator.userAgent,
+              username: formData.username,
+              ipAddress: "127.0.0.1",
+            },
+          );
+
           setErrors({
             general: "Invalid credentials. Use: ministry / ministry123",
           });

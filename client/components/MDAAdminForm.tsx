@@ -12,6 +12,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { MDA, CreateMDAAdminRequest, MDAPermissions } from "@shared/api";
+import { logUserAction } from "@/lib/auditLogStorage";
 
 interface MDAAdminFormProps {
   isOpen: boolean;
@@ -88,6 +89,30 @@ export default function MDAAdminForm({
     setIsSubmitting(true);
     try {
       await onSubmit(formData);
+
+      // Log MDA admin creation/edit
+      const selectedMDAName =
+        mdas.find((mda) => mda.id === formData.mdaId)?.name || "Unknown MDA";
+      logUserAction(
+        "SuperUser",
+        "super_admin",
+        mode === "create" ? "MDA_ADMIN_CREATED" : "MDA_ADMIN_UPDATED",
+        selectedMDAName,
+        `${mode === "create" ? "Created" : "Updated"} MDA administrator: ${formData.displayName} (${formData.email})`,
+        "HIGH",
+        formData.mdaId,
+        {
+          adminEmail: formData.email,
+          adminName: formData.displayName,
+          adminRole: formData.role,
+          mdaId: formData.mdaId,
+          mdaName: selectedMDAName,
+          permissions: formData.permissions,
+          actionMode: mode,
+          actionTimestamp: new Date().toISOString(),
+        },
+      );
+
       onClose();
       // Reset form
       setFormData({

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { persistentStorage } from "@/lib/persistentStorage";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   Users,
@@ -65,6 +66,27 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<"companies" | "user-management">(
     "companies",
   );
+
+  // Handle tab navigation with audit logging
+  const handleTabChange = (newTab: "companies" | "user-management") => {
+    if (newTab !== activeTab) {
+      logUserAction(
+        "AdminUser",
+        "admin",
+        "ADMIN_TAB_NAVIGATION",
+        `Admin Dashboard - ${newTab}`,
+        `Admin navigated to ${newTab} tab`,
+        "LOW",
+        undefined,
+        {
+          previousTab: activeTab,
+          newTab,
+          navigationTime: new Date().toISOString(),
+        },
+      );
+    }
+    setActiveTab(newTab);
+  };
   const navigate = useNavigate();
 
   const handleStatusChange = (
@@ -117,6 +139,29 @@ export default function AdminDashboard() {
 
     // Debug the persistent storage
     persistentStorage.debugInfo();
+
+    // Log the admin action
+    logUserAction(
+      "AdminUser",
+      "admin",
+      newStatus === "Approved"
+        ? "COMPANY_APPROVED"
+        : newStatus === "Suspended"
+          ? "COMPANY_SUSPENDED"
+          : "COMPANY_BLACKLISTED",
+      company.companyName,
+      `Admin changed company status to ${newStatus}. Reason: ${reason}`,
+      newStatus === "Blacklisted" ? "HIGH" : "MEDIUM",
+      company.id,
+      {
+        previousStatus: company.status,
+        newStatus,
+        reason,
+        email: company.email,
+        adminAction: true,
+        actionTimestamp: new Date().toISOString(),
+      },
+    );
 
     // Reset form
     setActionReason("");
@@ -312,6 +357,21 @@ export default function AdminDashboard() {
     };
 
     loadCompanies();
+
+    // Log dashboard access
+    logUserAction(
+      "AdminUser",
+      "admin",
+      "ADMIN_DASHBOARD_ACCESSED",
+      "Admin Dashboard",
+      "Admin accessed the admin dashboard",
+      "LOW",
+      undefined,
+      {
+        accessTime: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+      },
+    );
 
     // Refresh company list every 30 seconds to pick up new registrations
     const interval = setInterval(loadCompanies, 30000);
@@ -538,7 +598,7 @@ export default function AdminDashboard() {
         (c) => c.email === "approved@company.com",
       );
       if (testCompany) {
-        console.log("🧪 Found test company:", testCompany);
+        console.log("���� Found test company:", testCompany);
         handleStatusChange(testCompany.id, "Blacklisted", "Manual admin test");
       } else {
         console.log("❌ No test company found with email approved@company.com");
@@ -592,10 +652,30 @@ export default function AdminDashboard() {
       window.dispatchEvent(event);
     };
 
+    // Test admin audit logging
+    (window as any).testAdminAuditLogs = () => {
+      console.log("=== TESTING ADMIN AUDIT LOGS ===");
+
+      // Test admin action log
+      logUserAction(
+        "TestAdmin",
+        "admin",
+        "TEST_ADMIN_ACTION",
+        "Test Admin Entity",
+        "This is a test admin audit log entry",
+        "MEDIUM",
+        "test-admin-123",
+        { testData: "admin test metadata" },
+      );
+
+      console.log("✅ Test admin audit log added");
+    };
+
     return () => {
       delete (window as any).adminTestLocalStorage;
       delete (window as any).adminTestStatusChange;
       delete (window as any).testApproval;
+      delete (window as any).testAdminAuditLogs;
     };
   }, [companies, handleStatusChange]);
 
@@ -659,6 +739,21 @@ export default function AdminDashboard() {
   };
 
   const handleLogout = () => {
+    // Log admin logout
+    logUserAction(
+      "AdminUser",
+      "admin",
+      "ADMIN_LOGOUT",
+      "Admin Portal",
+      "Admin user logged out of the system",
+      "LOW",
+      undefined,
+      {
+        logoutTime: new Date().toISOString(),
+        sessionDuration: "N/A", // Could calculate actual session duration
+      },
+    );
+
     navigate("/");
   };
 
@@ -670,6 +765,23 @@ export default function AdminDashboard() {
     link.href = url;
     link.download = "company_registrations.json";
     link.click();
+
+    // Log the export action
+    logUserAction(
+      "AdminUser",
+      "admin",
+      "DATA_EXPORTED",
+      "Company Registration Data",
+      `Admin exported ${filteredCompanies.length} company records as JSON`,
+      "MEDIUM",
+      undefined,
+      {
+        exportFormat: "JSON",
+        recordCount: filteredCompanies.length,
+        exportTime: new Date().toISOString(),
+        fileName: "company_registrations.json",
+      },
+    );
   };
 
   if (viewMode === "details" && selectedCompany) {
@@ -1170,7 +1282,7 @@ export default function AdminDashboard() {
 
             <nav className="hidden md:flex items-center space-x-8">
               <button
-                onClick={() => setActiveTab("companies")}
+                onClick={() => handleTabChange("companies")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
                   activeTab === "companies"
                     ? "text-green-700 bg-green-50"
@@ -1186,7 +1298,7 @@ export default function AdminDashboard() {
                 )}
               </button>
               <button
-                onClick={() => setActiveTab("user-management")}
+                onClick={() => handleTabChange("user-management")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
                   activeTab === "user-management"
                     ? "text-green-700 bg-green-50"

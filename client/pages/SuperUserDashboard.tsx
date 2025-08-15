@@ -4,6 +4,13 @@ import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import { mdaInitializer } from "@/lib/mdaInitializer";
 import { mdaLocalStorageService } from "@/lib/mdaLocalStorage";
+import { dynamicMDACreationService } from "@/lib/dynamicMDACreation";
+import {
+  auditLogStorage,
+  logUserAction,
+  AuditLogEntry,
+  AuditLogFilter,
+} from "@/lib/auditLogStorage";
 import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
@@ -102,7 +109,8 @@ type ActiveTab =
   | "settings"
   | "feedback"
   | "no-objection-certificate"
-  | "mda-management";
+  | "mda-management"
+  | "mda-testing";
 
 interface DashboardStats {
   newRegistrationsPending: number;
@@ -140,14 +148,7 @@ interface Company {
   blacklistReason?: string;
 }
 
-interface AuditLog {
-  id: string;
-  timestamp: string;
-  user: string;
-  action: string;
-  entity: string;
-  details: string;
-}
+// AuditLogEntry is now imported from auditLogStorage
 
 interface AIRecommendation {
   id: string;
@@ -288,8 +289,35 @@ interface TenderForm {
 
 export default function SuperUserDashboard() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("dashboard");
+
+  // Log tab navigation
+  const handleTabChange = (newTab: ActiveTab) => {
+    if (newTab !== activeTab) {
+      logUserAction(
+        "SuperUser",
+        "super_admin",
+        "TAB_NAVIGATION",
+        `SuperUser Dashboard - ${newTab}`,
+        `Navigated to ${newTab} tab`,
+        "LOW",
+        undefined,
+        {
+          previousTab: activeTab,
+          newTab,
+          navigationTime: new Date().toISOString(),
+        },
+      );
+    }
+    setActiveTab(newTab);
+  };
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
+  const [auditLogFilter, setAuditLogFilter] = useState<AuditLogFilter>({});
+  const [auditSearchTerm, setAuditSearchTerm] = useState("");
+  const [auditDateFilter, setAuditDateFilter] = useState("");
+  const [auditUserFilter, setAuditUserFilter] = useState("");
+  const [auditActionFilter, setAuditActionFilter] = useState("");
+  const [auditSeverityFilter, setAuditSeverityFilter] = useState("");
   const [aiRecommendations, setAIRecommendations] = useState<
     AIRecommendation[]
   >([]);
@@ -419,7 +447,7 @@ export default function SuperUserDashboard() {
   // Initialize MDA system with localStorage
   const initializeMDASystem = useCallback(async () => {
     try {
-      console.log("���� Initializing MDA system with localStorage...");
+      console.log("������ Initializing MDA system with localStorage...");
 
       // Initialize MDAs from static ministries if not already done
       await mdaInitializer.initialize();
@@ -451,6 +479,226 @@ export default function SuperUserDashboard() {
       setMDAs(fallbackMDAs);
     }
   }, []);
+
+  // Load audit logs based on current filters
+  const loadAuditLogs = useCallback(() => {
+    const filter: AuditLogFilter = {};
+
+    if (auditSearchTerm) filter.searchTerm = auditSearchTerm;
+    if (auditDateFilter) filter.startDate = auditDateFilter;
+    if (auditUserFilter && auditUserFilter !== "all")
+      filter.user = auditUserFilter;
+    if (auditActionFilter && auditActionFilter !== "all")
+      filter.action = auditActionFilter;
+    if (auditSeverityFilter && auditSeverityFilter !== "all")
+      filter.severity = auditSeverityFilter;
+
+    const logs = auditLogStorage.getLogs(filter, 100);
+    setAuditLogs(logs);
+  }, [
+    auditSearchTerm,
+    auditDateFilter,
+    auditUserFilter,
+    auditActionFilter,
+    auditSeverityFilter,
+  ]);
+
+  // Update audit logs when filters change
+  useEffect(() => {
+    loadAuditLogs();
+  }, [loadAuditLogs]);
+
+  // Export audit logs
+  const handleExportAuditLogs = () => {
+    const csvData = auditLogStorage.exportLogs("csv");
+    const blob = new Blob([csvData], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `audit_logs_${new Date().toISOString().split("T")[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+
+    // Log the export action
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "AUDIT_LOGS_EXPORTED",
+      "Audit Log System",
+      "Audit logs exported to CSV file",
+      "MEDIUM",
+      undefined,
+      {
+        exportFormat: "CSV",
+        exportTime: new Date().toISOString(),
+        totalRecords: auditLogs.length,
+      },
+    );
+  };
+
+  // Clear audit logs (for testing/maintenance)
+  const handleClearAuditLogs = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to clear all audit logs? This action cannot be undone.",
+      )
+    ) {
+      auditLogStorage.clearAllLogs();
+      loadAuditLogs();
+
+      // Log the clear action (this will be the only log left)
+      logUserAction(
+        "SuperUser",
+        "super_admin",
+        "AUDIT_LOGS_CLEARED",
+        "Audit Log System",
+        "All audit logs have been cleared by SuperUser",
+        "CRITICAL",
+        undefined,
+        {
+          clearTime: new Date().toISOString(),
+          reason: "Manual admin action",
+        },
+      );
+
+      loadAuditLogs();
+      alert("All audit logs have been cleared.");
+    }
+  };
+
+  // Get audit log statistics
+  const auditStats = auditLogStorage.getLogStats();
+
+  // MDA Testing functions
+  const handleCreateSampleMDAs = async () => {
+    try {
+      if (
+        window.confirm(
+          "This will create 4 sample MDAs with full functionality. Continue?",
+        )
+      ) {
+        console.log("🚀 Creating sample MDAs...");
+        const createdMDAs =
+          await dynamicMDACreationService.createSampleMDAs("SuperUser");
+
+        // Update the MDA list
+        setMDAs((prev) => [...prev, ...createdMDAs]);
+
+        alert(
+          `Successfully created ${createdMDAs.length} sample MDAs with full ministry functionality!`,
+        );
+        console.log(
+          "✅ Sample MDAs created:",
+          createdMDAs.map((m) => m.name),
+        );
+      }
+    } catch (error) {
+      console.error("❌ Error creating sample MDAs:", error);
+      alert("Error creating sample MDAs. Please try again.");
+    }
+  };
+
+  const handleTestMDAFunctionality = (mda: MDA) => {
+    const hasFunctionality = dynamicMDACreationService.hasMDAFunctionality(
+      mda.id,
+    );
+    const configs = dynamicMDACreationService.getMDAConfigurations();
+    const mdaConfig = configs.find((c) => c.mdaId === mda.id);
+
+    const testResults = {
+      name: mda.name,
+      type: mda.type,
+      hasFunctionality,
+      features: mdaConfig?.features || "No functionality configured",
+      tenderConfig: localStorage.getItem(`${mda.id}_tenders`)
+        ? "Configured"
+        : "Not configured",
+      dashboardConfig: mdaConfig ? "Configured" : "Not configured",
+      credentials: JSON.parse(
+        localStorage.getItem("mdaCredentials") || "[]",
+      ).find((c: any) => c.id === mda.id)
+        ? "Created"
+        : "Not created",
+    };
+
+    console.log("🧪 MDA Functionality Test Results:", testResults);
+    alert(
+      `MDA Functionality Test Results:\n\nMDA: ${testResults.name}\nType: ${testResults.type}\nFunctionality: ${testResults.hasFunctionality ? "Enabled" : "Disabled"}\nCredentials: ${testResults.credentials}\nDashboard: ${testResults.dashboardConfig}\nTender System: ${testResults.tenderConfig}`,
+    );
+  };
+
+  const handleClearAllMDAs = async () => {
+    if (
+      window.confirm(
+        "This will delete ALL MDAs and their configurations. This action cannot be undone. Continue?",
+      )
+    ) {
+      try {
+        // Clear all MDA-related localStorage
+        localStorage.removeItem("mdas");
+        localStorage.removeItem("mda_admins");
+        localStorage.removeItem("mda_users");
+        localStorage.removeItem("mdaCredentials");
+        localStorage.removeItem("mdaDashboardConfigs");
+        localStorage.removeItem("mdaTenderConfigs");
+        localStorage.removeItem("mdaCategoryConfigs");
+        localStorage.removeItem("mdaAdminStructures");
+
+        // Clear individual MDA tender/bid data
+        mdas.forEach((mda) => {
+          localStorage.removeItem(`${mda.id}_tenders`);
+          localStorage.removeItem(`${mda.id}_bids`);
+          localStorage.removeItem(`${mda.id}_evaluations`);
+        });
+
+        // Reset MDA state
+        setMDAs([]);
+        setMDAAdmins([]);
+        setMDAUsers([]);
+
+        alert("All MDAs and configurations have been cleared!");
+        console.log("����️ All MDA data cleared");
+      } catch (error) {
+        console.error("❌ Error clearing MDAs:", error);
+        alert("Error clearing MDAs. Please try again.");
+      }
+    }
+  };
+
+  const handleMDAIntegrityCheck = () => {
+    const mdaConfigs = dynamicMDACreationService.getMDAConfigurations();
+    const credentials = JSON.parse(
+      localStorage.getItem("mdaCredentials") || "[]",
+    );
+
+    const integrityReport = mdas.map((mda) => {
+      const hasConfig = mdaConfigs.some((c) => c.mdaId === mda.id);
+      const hasCredentials = credentials.some((c: any) => c.id === mda.id);
+      const hasTenderSystem =
+        localStorage.getItem(`${mda.id}_tenders`) !== null;
+
+      return {
+        name: mda.name,
+        type: mda.type,
+        hasConfig,
+        hasCredentials,
+        hasTenderSystem,
+        isFullyFunctional: hasConfig && hasCredentials && hasTenderSystem,
+      };
+    });
+
+    const fullyFunctional = integrityReport.filter(
+      (r) => r.isFullyFunctional,
+    ).length;
+    const total = integrityReport.length;
+
+    console.log("🔍 MDA Integrity Check Report:", integrityReport);
+    alert(
+      `MDA Integrity Check Complete:\n\nTotal MDAs: ${total}\nFully Functional: ${fullyFunctional}\nPartial/Broken: ${total - fullyFunctional}\n\nCheck console for detailed report.`,
+    );
+  };
 
   const handleCompanyStatusChange = useCallback(
     (
@@ -500,6 +748,31 @@ export default function SuperUserDashboard() {
 
       // Debug the persistent storage state
       persistentStorage.debugInfo();
+
+      // Log the status change action
+      logUserAction(
+        "SuperUser",
+        "super_admin",
+        newStatus === "Approved"
+          ? "COMPANY_APPROVED"
+          : newStatus === "Suspended"
+            ? "COMPANY_SUSPENDED"
+            : "COMPANY_BLACKLISTED",
+        company.companyName,
+        `Company status changed to ${newStatus}. Reason: ${reason}`,
+        newStatus === "Blacklisted" ? "HIGH" : "MEDIUM",
+        company.id,
+        {
+          previousStatus: company.status,
+          newStatus,
+          reason,
+          email: company.email,
+          actionTimestamp: new Date().toISOString(),
+        },
+      );
+
+      // Reload audit logs to show the new entry
+      loadAuditLogs();
 
       // Reset form
       setActionReason("");
@@ -586,32 +859,26 @@ export default function SuperUserDashboard() {
       },
     ];
 
-    const mockAuditLogs: AuditLog[] = [
+    // Initialize audit log system with sample data
+    auditLogStorage.initializeSampleData();
+
+    // Log dashboard access
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "DASHBOARD_ACCESSED",
+      "SuperUser Dashboard",
+      "SuperUser accessed the main dashboard",
+      "LOW",
+      undefined,
       {
-        id: "1",
-        timestamp: "2024-01-22 14:30:00",
-        user: "SuperUser",
-        action: "Company Approved",
-        entity: "TechSolutions Nigeria",
-        details: "Company registration approved after document verification",
+        accessTime: new Date().toISOString(),
+        userAgent: navigator.userAgent,
       },
-      {
-        id: "2",
-        timestamp: "2024-01-22 13:15:00",
-        user: "Admin",
-        action: "Document Upload",
-        entity: "Northern Construction Ltd",
-        details: "New tax clearance certificate uploaded",
-      },
-      {
-        id: "3",
-        timestamp: "2024-01-22 11:45:00",
-        user: "SuperUser",
-        action: "Tender Created",
-        entity: "KS-2024-015",
-        details: "New tender published: Hospital Equipment Supply",
-      },
-    ];
+    );
+
+    // Load initial audit logs
+    loadAuditLogs();
 
     const mockAIRecommendations: AIRecommendation[] = [
       {
@@ -1172,8 +1439,7 @@ export default function SuperUserDashboard() {
 
     loadCompanies();
 
-    // Set other mock data
-    setAuditLogs(mockAuditLogs);
+    // Note: Audit logs are now loaded separately using loadAuditLogs()
     setAIRecommendations(mockAIRecommendations);
     setTenders(mockTenders);
     setTenderEvaluations(mockTenderEvaluations);
@@ -1294,6 +1560,43 @@ export default function SuperUserDashboard() {
       });
     }, 3000); // Check every 3 seconds
 
+    // Global test functions for audit logs
+    (window as any).testAuditLogs = () => {
+      console.log("=== TESTING AUDIT LOG SYSTEM ===");
+
+      // Add a test log entry
+      logUserAction(
+        "TestUser",
+        "admin",
+        "TEST_ACTION",
+        "Test Entity",
+        "This is a test audit log entry",
+        "HIGH",
+        "test-entity-123",
+        { testData: "sample metadata" },
+      );
+
+      console.log("✅ Test audit log added");
+      loadAuditLogs();
+
+      // Show stats
+      const stats = auditLogStorage.getLogStats();
+      console.log("📊 Audit log statistics:", stats);
+    };
+
+    (window as any).clearAuditLogs = () => {
+      if (window.confirm("Clear all audit logs?")) {
+        auditLogStorage.clearAllLogs();
+        loadAuditLogs();
+        console.log("🗑️ All audit logs cleared");
+      }
+    };
+
+    (window as any).showAuditStats = () => {
+      const stats = auditLogStorage.getLogStats();
+      console.log("📊 Current audit log statistics:", stats);
+    };
+
     // Global test function for company approval sync
     (window as any).testSuperUserApproval = () => {
       console.log("=== TESTING SUPERUSER COMPANY APPROVAL SYNC ===");
@@ -1354,6 +1657,9 @@ export default function SuperUserDashboard() {
         "persistentStorageChange",
         handleCustomStorageChange,
       );
+      delete (window as any).testAuditLogs;
+      delete (window as any).clearAuditLogs;
+      delete (window as any).showAuditStats;
       delete (window as any).testSuperUserApproval;
       delete (window as any).testNorthernApproval;
     };
@@ -1373,6 +1679,21 @@ export default function SuperUserDashboard() {
   }, []); // Empty dependency array - run only once
 
   const handleLogout = () => {
+    // Log logout action
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "USER_LOGOUT",
+      "SuperUser Dashboard",
+      "SuperUser logged out of the system",
+      "LOW",
+      undefined,
+      {
+        logoutTime: new Date().toISOString(),
+        sessionDuration: "N/A", // Could calculate actual session duration
+      },
+    );
+
     navigate("/");
   };
 
@@ -1468,6 +1789,29 @@ export default function SuperUserDashboard() {
       ),
     );
 
+    // Log the tender award action
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "TENDER_AWARDED",
+      selectedAwardTender.title,
+      `Tender awarded to ${awardFormData.winningCompany.split(" (")[0]} for ${awardFormData.awardAmount}`,
+      "HIGH",
+      selectedAwardTender.id,
+      {
+        awardedCompany: awardFormData.winningCompany.split(" (")[0],
+        awardAmount: awardFormData.awardAmount,
+        awardDate: awardFormData.awardDate,
+        contractDuration: awardFormData.contractDuration,
+        notifyWinner: awardFormData.notifyWinner,
+        notifyUnsuccessful: awardFormData.notifyUnsuccessful,
+        publishOCDS: awardFormData.publishOCDS,
+      },
+    );
+
+    // Reload audit logs
+    loadAuditLogs();
+
     // Close modal and reset form
     setShowAwardModal(false);
     setSelectedAwardTender(null);
@@ -1484,6 +1828,17 @@ export default function SuperUserDashboard() {
 
     alert(
       "Tender awarded successfully! Notifications sent and OCDS data published.",
+    );
+
+    // Log successful completion
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "TENDER_AWARD_COMPLETED",
+      selectedAwardTender.title,
+      "Tender award process completed successfully. Notifications sent and OCDS published.",
+      "MEDIUM",
+      selectedAwardTender.id,
     );
   };
 
@@ -1891,13 +2246,15 @@ The award letter has been:
   const handleMDASubmit = async (data: CreateMDARequest) => {
     try {
       if (mdaFormMode === "create") {
-        // Create new MDA in localStorage
-        const newMDA = await mdaLocalStorageService.createMDA(
+        // Create new MDA with full ministry functionality
+        const newMDA = await dynamicMDACreationService.createFullyFunctionalMDA(
           data,
-          "superuser",
+          "SuperUser",
         );
         setMDAs((prev) => [...prev, newMDA]);
-        alert("MDA created successfully!");
+        alert(
+          `${newMDA.type.charAt(0).toUpperCase() + newMDA.type.slice(1)} "${newMDA.name}" created successfully with full ministry functionality!`,
+        );
       } else if (selectedMDA) {
         // Update existing MDA in localStorage
         await mdaLocalStorageService.updateMDA(
@@ -2080,6 +2437,386 @@ The award letter has been:
     const matchesType = mdaFilterType === "all" || mda.type === mdaFilterType;
     return matchesSearch && matchesType;
   });
+
+  const renderMDATesting = () => {
+    return (
+      <div className="space-y-8">
+        {/* Firebase Status Banner */}
+        <FirebaseStatus variant="banner" showDetails={true} />
+
+        {/* MDA Testing Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              MDA Testing Environment
+            </h1>
+            <p className="text-gray-600 mb-2">
+              Automated testing and validation for MDA functionality
+            </p>
+            <div className="flex items-center space-x-2 text-sm">
+              <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+                <span className="w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
+                Testing Mode Active
+              </span>
+              <span className="text-gray-500">•</span>
+              <FirebaseStatus variant="badge" />
+              <span className="text-gray-500">•</span>
+              <span className="text-gray-600">
+                Dynamic MDA creation with full ministry functionality
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={() => handleTabChange("mda-management")}
+            className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
+          >
+            ← Back to MDA Management
+          </button>
+        </div>
+
+        {/* Testing Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total MDAs</p>
+                <p className="text-3xl font-bold text-blue-600">
+                  {mdas.length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Functional MDAs
+                </p>
+                <p className="text-3xl font-bold text-green-600">
+                  {
+                    mdas.filter((mda) =>
+                      dynamicMDACreationService.hasMDAFunctionality(mda.id),
+                    ).length
+                  }
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Test Configurations
+                </p>
+                <p className="text-3xl font-bold text-purple-600">
+                  {dynamicMDACreationService.getMDAConfigurations().length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <Settings className="h-6 w-6 text-purple-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  System Health
+                </p>
+                <p className="text-3xl font-bold text-orange-600">98.5%</p>
+              </div>
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <Activity className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <button
+            onClick={handleCreateSampleMDAs}
+            className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            Create Sample MDAs
+          </button>
+
+          <button
+            onClick={handleMDAIntegrityCheck}
+            className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <CheckCircle className="h-5 w-5 mr-2" />
+            Integrity Check
+          </button>
+
+          <button
+            onClick={() => {
+              const mdaConfigs =
+                dynamicMDACreationService.getMDAConfigurations();
+              console.log("🔍 MDA Configurations:", mdaConfigs);
+              alert(
+                `Found ${mdaConfigs.length} MDA configurations. Check console for details.`,
+              );
+            }}
+            className="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            <Eye className="h-5 w-5 mr-2" />
+            View Configurations
+          </button>
+
+          <button
+            onClick={handleClearAllMDAs}
+            className="flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            <Trash2 className="h-5 w-5 mr-2" />
+            Clear All MDAs
+          </button>
+        </div>
+
+        {/* MDA Testing Interface */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              MDA Functionality Testing
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Test and validate MDA functionality without manual form submission
+            </p>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Automated Testing */}
+              <div>
+                <h3 className="text-md font-semibold text-gray-900 mb-4">
+                  Automated Testing
+                </h3>
+                <div className="space-y-4">
+                  <div className="border rounded-lg p-4 bg-green-50 border-green-200">
+                    <h4 className="font-medium text-green-900 mb-2">
+                      Sample MDA Creation
+                    </h4>
+                    <p className="text-sm text-green-800 mb-3">
+                      Automatically create 4 sample MDAs with full ministry
+                      functionality:
+                    </p>
+                    <ul className="text-sm text-green-700 mb-3 space-y-1">
+                      <li>• Ministry of Agriculture & Rural Development</li>
+                      <li>• Ministry of Urban Development & Planning</li>
+                      <li>• Ministry of Information Technology</li>
+                      <li>• Ministry of Environment & Climate</li>
+                    </ul>
+                    <button
+                      onClick={handleCreateSampleMDAs}
+                      className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    >
+                      Create Sample MDAs
+                    </button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 bg-blue-50 border-blue-200">
+                    <h4 className="font-medium text-blue-900 mb-2">
+                      System Integrity Check
+                    </h4>
+                    <p className="text-sm text-blue-800 mb-3">
+                      Verify that all MDAs have proper configurations,
+                      credentials, and tender systems
+                    </p>
+                    <button
+                      onClick={handleMDAIntegrityCheck}
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Run Integrity Check
+                    </button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 bg-red-50 border-red-200">
+                    <h4 className="font-medium text-red-900 mb-2">
+                      Reset Testing Environment
+                    </h4>
+                    <p className="text-sm text-red-800 mb-3">
+                      Clear all MDAs and configurations to start fresh
+                    </p>
+                    <button
+                      onClick={handleClearAllMDAs}
+                      className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    >
+                      Clear All MDAs
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Individual MDA Testing */}
+              <div>
+                <h3 className="text-md font-semibold text-gray-900 mb-4">
+                  Individual MDA Testing
+                </h3>
+                <div className="space-y-4">
+                  {mdas.length > 0 ? (
+                    mdas.map((mda) => (
+                      <div key={mda.id} className="border rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium text-gray-900">
+                            {mda.name}
+                          </h4>
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              dynamicMDACreationService.hasMDAFunctionality(
+                                mda.id,
+                              )
+                                ? "bg-green-100 text-green-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {dynamicMDACreationService.hasMDAFunctionality(
+                              mda.id,
+                            )
+                              ? "Functional"
+                              : "Basic"}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Type:{" "}
+                          {mda.type.charAt(0).toUpperCase() + mda.type.slice(1)}
+                        </p>
+                        <button
+                          onClick={() => handleTestMDAFunctionality(mda)}
+                          className="w-full px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 text-sm"
+                        >
+                          Test Functionality
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12">
+                      <Building2 className="mx-auto h-12 w-12 text-gray-400" />
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        No MDAs Available
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Create sample MDAs to start testing functionality.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Testing Results */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Testing Results & Logs
+            </h2>
+          </div>
+          <div className="p-6">
+            <div className="bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-lg overflow-auto max-h-64">
+              <div className="space-y-1">
+                <div>🧪 MDA Testing Environment - Ready</div>
+                <div>✅ Dynamic MDA Creation Service - Loaded</div>
+                <div>✅ Ministry Functionality Templates - Available</div>
+                <div>📊 Current MDAs: {mdas.length}</div>
+                <div>
+                  🔧 Active Configurations:{" "}
+                  {dynamicMDACreationService.getMDAConfigurations().length}
+                </div>
+                <div>💾 Storage: localStorage (Browser)</div>
+                <div>🚀 Status: Ready for testing</div>
+                <div className="text-yellow-400">
+                  💡 Use the actions above to test MDA functionality
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Advanced Testing Options */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Advanced Testing Options
+            </h2>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-900">
+                  Credentials Testing
+                </h4>
+                <button
+                  onClick={() => {
+                    const credentials = JSON.parse(
+                      localStorage.getItem("mdaCredentials") || "[]",
+                    );
+                    console.log("🔐 MDA Credentials:", credentials);
+                    alert(
+                      `Found ${credentials.length} MDA credential sets. Check console for details.`,
+                    );
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Check Credentials
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-900">Dashboard Testing</h4>
+                <button
+                  onClick={() => {
+                    const dashboardConfigs = JSON.parse(
+                      localStorage.getItem("mdaDashboardConfigs") || "[]",
+                    );
+                    console.log("📊 Dashboard Configs:", dashboardConfigs);
+                    alert(
+                      `Found ${dashboardConfigs.length} dashboard configurations. Check console for details.`,
+                    );
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Check Dashboards
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-900">
+                  Tender System Testing
+                </h4>
+                <button
+                  onClick={() => {
+                    const tenderCounts = mdas.map((mda) => ({
+                      name: mda.name,
+                      tenders: JSON.parse(
+                        localStorage.getItem(`${mda.id}_tenders`) || "[]",
+                      ).length,
+                    }));
+                    console.log("📋 Tender Systems:", tenderCounts);
+                    alert(
+                      `Tender system status checked. See console for details.`,
+                    );
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Check Tender Systems
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderMDAManagement = () => {
     return (
@@ -3316,6 +4053,63 @@ The award letter has been:
                 Detailed logging of all user actions for accountability and
                 security auditing.
               </p>
+
+              {/* Audit Log Statistics */}
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <Activity className="h-5 w-5 text-blue-600 mr-2" />
+                    <span className="text-sm font-medium text-blue-900">
+                      Total Logs
+                    </span>
+                  </div>
+                  <p className="text-2xl font-bold text-blue-900 mt-1">
+                    {auditStats.totalLogs}
+                  </p>
+                </div>
+
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+                    <span className="text-sm font-medium text-red-900">
+                      Critical
+                    </span>
+                  </div>
+                  <p className="text-2xl font-bold text-red-900 mt-1">
+                    {auditStats.logsBySeverity.CRITICAL || 0}
+                  </p>
+                </div>
+
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <AlertCircle className="h-5 w-5 text-orange-600 mr-2" />
+                    <span className="text-sm font-medium text-orange-900">
+                      High
+                    </span>
+                  </div>
+                  <p className="text-2xl font-bold text-orange-900 mt-1">
+                    {auditStats.logsBySeverity.HIGH || 0}
+                  </p>
+                </div>
+
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                    <span className="text-sm font-medium text-green-900">
+                      Today's Logs
+                    </span>
+                  </div>
+                  <p className="text-2xl font-bold text-green-900 mt-1">
+                    {
+                      auditLogs.filter(
+                        (log) =>
+                          new Date(log.timestamp).toDateString() ===
+                          new Date().toDateString(),
+                      ).length
+                    }
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="bg-white rounded-lg shadow-sm border">
@@ -3325,16 +4119,48 @@ The award letter has been:
                     System Activity Logs
                   </h2>
                   <div className="flex items-center space-x-3">
-                    <select className="px-3 py-2 border border-gray-300 rounded-md text-sm">
-                      <option>All Actions</option>
-                      <option>User Login</option>
-                      <option>Company Actions</option>
-                      <option>Tender Actions</option>
-                      <option>System Changes</option>
+                    <select
+                      value={auditActionFilter}
+                      onChange={(e) => setAuditActionFilter(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    >
+                      <option value="all">All Actions</option>
+                      <option value="COMPANY_APPROVED">Company Approved</option>
+                      <option value="COMPANY_SUSPENDED">
+                        Company Suspended
+                      </option>
+                      <option value="COMPANY_BLACKLISTED">
+                        Company Blacklisted
+                      </option>
+                      <option value="TENDER_CREATED">Tender Created</option>
+                      <option value="BID_EVALUATED">Bid Evaluated</option>
+                      <option value="NOC_APPROVED">NOC Approved</option>
+                      <option value="SYSTEM_LOGIN">System Login</option>
                     </select>
-                    <button className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                    <select
+                      value={auditSeverityFilter}
+                      onChange={(e) => setAuditSeverityFilter(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    >
+                      <option value="all">All Severity</option>
+                      <option value="LOW">Low</option>
+                      <option value="MEDIUM">Medium</option>
+                      <option value="HIGH">High</option>
+                      <option value="CRITICAL">Critical</option>
+                    </select>
+                    <button
+                      onClick={handleExportAuditLogs}
+                      className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+                    >
                       <Download className="h-4 w-4 mr-2" />
                       Export
+                    </button>
+                    <button
+                      onClick={handleClearAuditLogs}
+                      className="flex items-center px-3 py-2 text-sm border border-red-300 text-red-600 rounded-md hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Clear All
                     </button>
                   </div>
                 </div>
@@ -3343,17 +4169,29 @@ The award letter has been:
                   <input
                     type="text"
                     placeholder="Search logs..."
+                    value={auditSearchTerm}
+                    onChange={(e) => setAuditSearchTerm(e.target.value)}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="date"
+                    value={auditDateFilter}
+                    onChange={(e) => setAuditDateFilter(e.target.value)}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                  <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>All Users</option>
-                    <option>SuperUser</option>
-                    <option>Admin</option>
-                    <option>System</option>
+                  <select
+                    value={auditUserFilter}
+                    onChange={(e) => setAuditUserFilter(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">All Users</option>
+                    <option value="SuperUser">SuperUser</option>
+                    <option value="AdminUser">Admin</option>
+                    <option value="SYSTEM">System</option>
+                    <option value="EvaluationCommittee">
+                      Evaluation Committee
+                    </option>
+                    <option value="SystemAdmin">System Admin</option>
                   </select>
                 </div>
               </div>
@@ -3369,14 +4207,15 @@ The award letter has been:
                         <div className="flex items-start space-x-3">
                           <div
                             className={`w-3 h-3 rounded-full mt-2 ${
-                              log.action.includes("Approved")
-                                ? "bg-green-500"
-                                : log.action.includes("Rejected")
-                                  ? "bg-red-500"
-                                  : log.action.includes("Created")
-                                    ? "bg-blue-500"
-                                    : "bg-gray-500"
+                              log.severity === "CRITICAL"
+                                ? "bg-red-600"
+                                : log.severity === "HIGH"
+                                  ? "bg-orange-500"
+                                  : log.severity === "MEDIUM"
+                                    ? "bg-yellow-500"
+                                    : "bg-green-500"
                             }`}
+                            title={`Severity: ${log.severity}`}
                           ></div>
                           <div className="flex-1">
                             <div className="flex items-center space-x-2">
@@ -3392,9 +4231,15 @@ The award letter has been:
                               {log.details}
                             </p>
                             <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                              <span>User: {log.user}</span>
+                              <span>
+                                User: {log.user} ({log.userRole})
+                              </span>
                               <span>•</span>
-                              <span>{log.timestamp}</span>
+                              <span>Severity: {log.severity}</span>
+                              <span>•</span>
+                              <span>
+                                {new Date(log.timestamp).toLocaleString()}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -4163,7 +5008,7 @@ The award letter has been:
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <button
-                onClick={() => setActiveTab("create-tender")}
+                onClick={() => handleTabChange("create-tender")}
                 className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Plus className="h-5 w-5 mr-2" />
@@ -4171,7 +5016,7 @@ The award letter has been:
               </button>
 
               <button
-                onClick={() => setActiveTab("manage-tenders")}
+                onClick={() => handleTabChange("manage-tenders")}
                 className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
                 <Edit className="h-5 w-5 mr-2" />
@@ -4179,7 +5024,7 @@ The award letter has been:
               </button>
 
               <button
-                onClick={() => setActiveTab("tender-evaluation")}
+                onClick={() => handleTabChange("tender-evaluation")}
                 className="flex items-center justify-center px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
               >
                 <ClipboardList className="h-5 w-5 mr-2" />
@@ -4187,7 +5032,7 @@ The award letter has been:
               </button>
 
               <button
-                onClick={() => setActiveTab("vendor-performance")}
+                onClick={() => handleTabChange("vendor-performance")}
                 className="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
               >
                 <BarChart3 className="h-5 w-5 mr-2" />
@@ -4303,7 +5148,7 @@ The award letter has been:
                   Bulk Upload
                 </button>
                 <button
-                  onClick={() => setActiveTab("tenders")}
+                  onClick={() => handleTabChange("tenders")}
                   className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
                   ← Back to Tenders
@@ -4673,7 +5518,7 @@ The award letter has been:
 
                 <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
                   <button
-                    onClick={() => setActiveTab("tenders")}
+                    onClick={() => handleTabChange("tenders")}
                     className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                   >
                     Cancel
@@ -4704,7 +5549,7 @@ The award letter has been:
                 </p>
               </div>
               <button
-                onClick={() => setActiveTab("tenders")}
+                onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Back to Tenders
@@ -4884,7 +5729,7 @@ The award letter has been:
                 </p>
               </div>
               <button
-                onClick={() => setActiveTab("tenders")}
+                onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Back to Tenders
@@ -5123,7 +5968,7 @@ The award letter has been:
                     Print Report
                   </button>
                   <button
-                    onClick={() => setActiveTab("tender-awards")}
+                    onClick={() => handleTabChange("tender-awards")}
                     className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
                     <Gavel className="h-4 w-4 mr-2" />
@@ -5149,7 +5994,7 @@ The award letter has been:
                 </p>
               </div>
               <button
-                onClick={() => setActiveTab("tenders")}
+                onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Back to Tenders
@@ -5643,7 +6488,7 @@ The award letter has been:
                 </p>
               </div>
               <button
-                onClick={() => setActiveTab("tenders")}
+                onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Back to Tenders
@@ -7210,6 +8055,9 @@ The award letter has been:
       case "mda-management":
         return renderMDAManagement();
 
+      case "mda-testing":
+        return renderMDATesting();
+
       case "settings":
         return (
           <div className="space-y-8">
@@ -7684,7 +8532,7 @@ The award letter has been:
               ].map((tab) => (
                 <button
                   key={tab.key}
-                  onClick={() => setActiveTab(tab.key as ActiveTab)}
+                  onClick={() => handleTabChange(tab.key as ActiveTab)}
                   className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     activeTab === tab.key
                       ? "bg-white bg-opacity-20 text-white"
@@ -7739,12 +8587,17 @@ The award letter has been:
                 label: "MDA Management",
                 icon: Building2,
               },
+              {
+                key: "mda-testing",
+                label: "MDA Testing",
+                icon: RefreshCw,
+              },
               { key: "settings", label: "Settings", icon: Settings },
               { key: "feedback", label: "Feedback", icon: MessageSquare },
             ].map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => setActiveTab(tab.key as ActiveTab)}
+                onClick={() => handleTabChange(tab.key as ActiveTab)}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.key
                     ? "bg-blue-50 text-blue-600 border border-blue-200"
@@ -7758,7 +8611,7 @@ The award letter has been:
 
             {/* Quick access to NOC Management Tab */}
             <button
-              onClick={() => setActiveTab("no-objection-certificate")}
+              onClick={() => handleTabChange("no-objection-certificate")}
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
                 activeTab === "no-objection-certificate"
                   ? "text-blue-600 bg-blue-50 border-l-2 border-blue-500"
@@ -8237,7 +9090,7 @@ The award letter has been:
                       Northern Construction Ltd (��2.3B - Score: 87.5)
                     </option>
                     <option value="BuildRight Engineering (₦2.6B - Score: 76.5)">
-                      BuildRight Engineering (₦2.6B - Score: 76.5)
+                      BuildRight Engineering (��2.6B - Score: 76.5)
                     </option>
                     <option value="Kano Infrastructure Corp (₦2.1B - Score: 82.0)">
                       Kano Infrastructure Corp (₦2.1B - Score: 82.0)
