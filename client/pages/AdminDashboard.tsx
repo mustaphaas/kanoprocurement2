@@ -66,6 +66,27 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<"companies" | "user-management">(
     "companies",
   );
+
+  // Handle tab navigation with audit logging
+  const handleTabChange = (newTab: "companies" | "user-management") => {
+    if (newTab !== activeTab) {
+      logUserAction(
+        "AdminUser",
+        "admin",
+        "ADMIN_TAB_NAVIGATION",
+        `Admin Dashboard - ${newTab}`,
+        `Admin navigated to ${newTab} tab`,
+        "LOW",
+        undefined,
+        {
+          previousTab: activeTab,
+          newTab,
+          navigationTime: new Date().toISOString()
+        }
+      );
+    }
+    setActiveTab(newTab);
+  };
   const navigate = useNavigate();
 
   const handleStatusChange = (
@@ -333,6 +354,21 @@ export default function AdminDashboard() {
     };
 
     loadCompanies();
+
+    // Log dashboard access
+    logUserAction(
+      "AdminUser",
+      "admin",
+      "ADMIN_DASHBOARD_ACCESSED",
+      "Admin Dashboard",
+      "Admin accessed the admin dashboard",
+      "LOW",
+      undefined,
+      {
+        accessTime: new Date().toISOString(),
+        userAgent: navigator.userAgent
+      }
+    );
 
     // Refresh company list every 30 seconds to pick up new registrations
     const interval = setInterval(loadCompanies, 30000);
