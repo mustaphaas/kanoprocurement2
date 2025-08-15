@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
@@ -450,7 +450,7 @@ export default function SuperUserDashboard() {
     }
   };
 
-  const handleCompanyStatusChange = (
+  const handleCompanyStatusChange = useCallback((
     companyId: string,
     newStatus: "Approved" | "Suspended" | "Blacklisted",
     reason: string,
@@ -503,7 +503,7 @@ export default function SuperUserDashboard() {
     setApprovalDecision("");
     setSelectedCompanyForApproval(null);
     setViewMode("list");
-  };
+  }, [companies]);
 
   const dashboardStats: DashboardStats = {
     newRegistrationsPending: 4, // Including pending@company.com + 3 other mock companies
