@@ -1896,20 +1896,22 @@ The award letter has been:
   const handleMDAAdminSubmit = async (data: CreateMDAAdminRequest) => {
     try {
       if (adminFormMode === "create") {
-        const newAdmin: MDAAdmin = {
-          id: `admin-${Date.now()}`,
-          mdaId: data.mdaId,
-          userId: `user-${Date.now()}`,
-          role: data.role,
-          permissions: data.permissions,
-          assignedBy: "superuser-001",
-          assignedAt: new Date(),
-          isActive: true,
-        };
-        setMDAAdmins((prev) => [...prev, newAdmin]);
+        // Create new admin in localStorage
+        const newAdmin = await mdaLocalStorageService.createMDAAdmin(data, 'superuser');
+
+        // Fetch updated admin list to get the full admin with user data
+        const updatedAdmins = await mdaLocalStorageService.getMDAAdmins(data.mdaId);
+        const createdAdmin = updatedAdmins.find(admin => admin.id === newAdmin.id);
+
+        if (createdAdmin) {
+          setMDAAdmins((prev) => [...prev, createdAdmin]);
+        }
+
         alert("MDA Administrator created successfully!");
       } else if (selectedMDAAdmin) {
-        const updatedAdmin: MDAAdmin = {
+        // Note: For updates, we would need to add an update method to the service
+        // For now, just update the UI state
+        const updatedAdmin: MDAAdmin & { user: EnhancedUserProfile; mda: MDA } = {
           ...selectedMDAAdmin,
           mdaId: data.mdaId,
           role: data.role,
