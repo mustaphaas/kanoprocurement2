@@ -125,8 +125,13 @@ class MDAInitializationService {
    * Create default admin users for ministries if they don't exist
    */
   async initializeDefaultAdmins(): Promise<void> {
+    if (!hasFirebaseConfig) {
+      console.log('⚠️ Firebase not configured - skipping admin initialization');
+      return;
+    }
+
     try {
-      console.log('Initializing default MDA admins...');
+      console.log('🔧 Initializing default MDA admins...');
       
       const ministries = getAllMinistries();
       
