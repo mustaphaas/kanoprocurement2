@@ -1860,16 +1860,13 @@ The award letter has been:
   const handleMDASubmit = async (data: CreateMDARequest) => {
     try {
       if (mdaFormMode === "create") {
-        const newMDA: MDA = {
-          id: `mda-${Date.now()}`,
-          ...data,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          isActive: true,
-        };
+        // Create new MDA in localStorage
+        const newMDA = await mdaLocalStorageService.createMDA(data, 'superuser');
         setMDAs((prev) => [...prev, newMDA]);
         alert("MDA created successfully!");
       } else if (selectedMDA) {
+        // Update existing MDA in localStorage
+        await mdaLocalStorageService.updateMDA(selectedMDA.id, data, 'superuser');
         const updatedMDA: MDA = {
           ...selectedMDA,
           ...data,
