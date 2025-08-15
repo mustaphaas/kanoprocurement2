@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   User,
@@ -78,6 +79,24 @@ export default function MinistryLogin() {
               role: "ministry",
             }),
           );
+
+          // Log successful ministry login
+          logUserAction(
+            formData.username,
+            "ministry_user",
+            "MINISTRY_LOGIN_SUCCESS",
+            "Ministry Portal",
+            `Ministry user ${formData.username} successfully logged in`,
+            "MEDIUM",
+            undefined,
+            {
+              loginTime: new Date().toISOString(),
+              userAgent: navigator.userAgent,
+              loginMethod: "credentials",
+              username: formData.username
+            }
+          );
+
           navigate("/ministry/dashboard");
         } else {
           setErrors({
