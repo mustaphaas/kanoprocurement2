@@ -1171,8 +1171,7 @@ export default function SuperUserDashboard() {
     setMDAAdmins(mockMDAAdmins);
     setMDAUsers(mockMDAUsers);
 
-    // Initialize MDA system with static ministry configuration
-    initializeMDASystem();
+    // Note: MDA system initialization moved to separate useEffect for better dependency management
 
     // Listen for localStorage changes (cross-tab sync)
     const handleStorageChange = (event: StorageEvent) => {
