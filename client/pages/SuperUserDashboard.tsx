@@ -2023,6 +2023,33 @@ The award letter has been:
   const renderMDAManagement = () => {
     return (
       <div className="space-y-8">
+        {/* Firebase Demo Mode Banner */}
+        {!hasFirebaseConfig && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <AlertTriangle className="h-5 w-5 text-yellow-600" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-yellow-800">
+                  Demo Mode Active
+                </h3>
+                <div className="mt-2 text-sm text-yellow-700">
+                  <p>
+                    You're currently running in demo mode. MDA data is stored locally and will not persist between sessions.
+                  </p>
+                  <p className="mt-1">
+                    To enable full functionality with persistent data, please set up Firebase configuration.
+                    <Link to="/settings" className="font-medium underline ml-1">
+                      See setup guide
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* MDA Management Header */}
         <div className="flex justify-between items-center">
           <div>
