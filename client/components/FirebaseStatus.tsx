@@ -71,5 +71,5 @@ export default function FirebaseStatus({
   return null;
 }
 
-// Export Firebase status for other components to use
-export { hasFirebaseConfig };
+// Export localStorage availability for other components to use
+export const hasLocalStorage = typeof Storage !== "undefined";
