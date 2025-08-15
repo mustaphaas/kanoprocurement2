@@ -7836,7 +7836,7 @@ The award letter has been:
               ].map((tab) => (
                 <button
                   key={tab.key}
-                  onClick={() => setActiveTab(tab.key as ActiveTab)}
+                  onClick={() => handleTabChange(tab.key as ActiveTab)}
                   className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     activeTab === tab.key
                       ? "bg-white bg-opacity-20 text-white"
