@@ -140,6 +140,18 @@ class PersistentStorage {
       detail: { key, newValue },
     });
     window.dispatchEvent(event);
+
+    // Also trigger localStorage event for cross-tab communication
+    if (this.isLocalStorageAvailable) {
+      try {
+        // Create a temporary item to trigger storage event
+        const tempKey = `_sync_trigger_${Date.now()}`;
+        localStorage.setItem(tempKey, JSON.stringify({ key, newValue, timestamp: Date.now() }));
+        localStorage.removeItem(tempKey);
+      } catch (error) {
+        console.log('❌ Failed to trigger localStorage event:', error);
+      }
+    }
   }
 
   // Debug methods
