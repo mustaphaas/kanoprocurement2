@@ -413,6 +413,31 @@ export default function SuperUserDashboard() {
 
   const navigate = useNavigate();
 
+  // Initialize MDA system with static ministries
+  const initializeMDASystem = async () => {
+    try {
+      console.log('🚀 Initializing MDA system with static ministries...');
+
+      // Use fallback MDAs for immediate UI display
+      const fallbackMDAs = mdaInitializer.getMinistryMDAs();
+      setMDAs(fallbackMDAs);
+
+      // Initialize Firebase MDAs in background (if Firebase is available)
+      if (typeof window !== 'undefined') {
+        mdaInitializer.initialize()
+          .then(() => {
+            console.log('✅ MDA system initialized successfully');
+            // Optionally reload MDAs from Firebase here
+          })
+          .catch((error) => {
+            console.warn('⚠️ Firebase MDA initialization failed, using static data:', error);
+          });
+      }
+    } catch (error) {
+      console.error('❌ MDA system initialization error:', error);
+    }
+  };
+
   const handleCompanyStatusChange = (
     companyId: string,
     newStatus: "Approved" | "Suspended" | "Blacklisted",
