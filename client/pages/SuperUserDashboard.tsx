@@ -1505,6 +1505,9 @@ export default function SuperUserDashboard() {
         "persistentStorageChange",
         handleCustomStorageChange,
       );
+      delete (window as any).testAuditLogs;
+      delete (window as any).clearAuditLogs;
+      delete (window as any).showAuditStats;
       delete (window as any).testSuperUserApproval;
       delete (window as any).testNorthernApproval;
     };
