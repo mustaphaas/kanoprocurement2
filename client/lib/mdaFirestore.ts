@@ -33,6 +33,25 @@ import {
 } from "@shared/api";
 
 class MDAFirestoreService {
+  /**
+   * Check if Firebase is available and configured
+   */
+  private checkFirebaseAvailability(): boolean {
+    if (!hasFirebaseConfig || !db || !auth) {
+      console.warn('⚠️ Firebase not configured - MDA operations will use local storage fallback');
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Handle Firebase unavailable scenario
+   */
+  private handleFirebaseUnavailable(operation: string): void {
+    console.warn(`⚠️ Firebase operation '${operation}' skipped - running in demo mode`);
+    console.log('💡 To enable full Firebase functionality, please set up Firebase configuration');
+  }
+
   // MDA Operations
   async createMDA(data: CreateMDARequest, createdBy: string): Promise<MDA> {
     try {
