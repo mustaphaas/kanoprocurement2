@@ -282,6 +282,27 @@ interface TenderForm {
 
 export default function SuperUserDashboard() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("dashboard");
+
+  // Log tab navigation
+  const handleTabChange = (newTab: ActiveTab) => {
+    if (newTab !== activeTab) {
+      logUserAction(
+        "SuperUser",
+        "super_admin",
+        "TAB_NAVIGATION",
+        `SuperUser Dashboard - ${newTab}`,
+        `Navigated to ${newTab} tab`,
+        "LOW",
+        undefined,
+        {
+          previousTab: activeTab,
+          newTab,
+          navigationTime: new Date().toISOString()
+        }
+      );
+    }
+    setActiveTab(newTab);
+  };
   const [companies, setCompanies] = useState<Company[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
   const [auditLogFilter, setAuditLogFilter] = useState<AuditLogFilter>({});
@@ -643,6 +664,21 @@ export default function SuperUserDashboard() {
 
     // Initialize audit log system with sample data
     auditLogStorage.initializeSampleData();
+
+    // Log dashboard access
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "DASHBOARD_ACCESSED",
+      "SuperUser Dashboard",
+      "SuperUser accessed the main dashboard",
+      "LOW",
+      undefined,
+      {
+        accessTime: new Date().toISOString(),
+        userAgent: navigator.userAgent
+      }
+    );
 
     // Load initial audit logs
     loadAuditLogs();
@@ -1406,6 +1442,21 @@ export default function SuperUserDashboard() {
   }, []); // Empty dependency array - run only once
 
   const handleLogout = () => {
+    // Log logout action
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "USER_LOGOUT",
+      "SuperUser Dashboard",
+      "SuperUser logged out of the system",
+      "LOW",
+      undefined,
+      {
+        logoutTime: new Date().toISOString(),
+        sessionDuration: "N/A" // Could calculate actual session duration
+      }
+    );
+
     navigate("/");
   };
 
