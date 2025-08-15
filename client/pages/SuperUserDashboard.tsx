@@ -4315,7 +4315,7 @@ The award letter has been:
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <button
-                onClick={() => setActiveTab("create-tender")}
+                onClick={() => handleTabChange("create-tender")}
                 className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Plus className="h-5 w-5 mr-2" />
@@ -4323,7 +4323,7 @@ The award letter has been:
               </button>
 
               <button
-                onClick={() => setActiveTab("manage-tenders")}
+                onClick={() => handleTabChange("manage-tenders")}
                 className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
                 <Edit className="h-5 w-5 mr-2" />
@@ -4331,7 +4331,7 @@ The award letter has been:
               </button>
 
               <button
-                onClick={() => setActiveTab("tender-evaluation")}
+                onClick={() => handleTabChange("tender-evaluation")}
                 className="flex items-center justify-center px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
               >
                 <ClipboardList className="h-5 w-5 mr-2" />
@@ -4339,7 +4339,7 @@ The award letter has been:
               </button>
 
               <button
-                onClick={() => setActiveTab("vendor-performance")}
+                onClick={() => handleTabChange("vendor-performance")}
                 className="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
               >
                 <BarChart3 className="h-5 w-5 mr-2" />
@@ -4455,7 +4455,7 @@ The award letter has been:
                   Bulk Upload
                 </button>
                 <button
-                  onClick={() => setActiveTab("tenders")}
+                  onClick={() => handleTabChange("tenders")}
                   className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
                   ← Back to Tenders
@@ -4825,7 +4825,7 @@ The award letter has been:
 
                 <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
                   <button
-                    onClick={() => setActiveTab("tenders")}
+                    onClick={() => handleTabChange("tenders")}
                     className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                   >
                     Cancel
@@ -4856,7 +4856,7 @@ The award letter has been:
                 </p>
               </div>
               <button
-                onClick={() => setActiveTab("tenders")}
+                onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Back to Tenders
@@ -5036,7 +5036,7 @@ The award letter has been:
                 </p>
               </div>
               <button
-                onClick={() => setActiveTab("tenders")}
+                onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Back to Tenders
@@ -5275,7 +5275,7 @@ The award letter has been:
                     Print Report
                   </button>
                   <button
-                    onClick={() => setActiveTab("tender-awards")}
+                    onClick={() => handleTabChange("tender-awards")}
                     className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
                     <Gavel className="h-4 w-4 mr-2" />
@@ -5301,7 +5301,7 @@ The award letter has been:
                 </p>
               </div>
               <button
-                onClick={() => setActiveTab("tenders")}
+                onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Back to Tenders
@@ -5795,7 +5795,7 @@ The award letter has been:
                 </p>
               </div>
               <button
-                onClick={() => setActiveTab("tenders")}
+                onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Back to Tenders
@@ -7896,7 +7896,7 @@ The award letter has been:
             ].map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => setActiveTab(tab.key as ActiveTab)}
+                onClick={() => handleTabChange(tab.key as ActiveTab)}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.key
                     ? "bg-blue-50 text-blue-600 border border-blue-200"
@@ -7910,7 +7910,7 @@ The award letter has been:
 
             {/* Quick access to NOC Management Tab */}
             <button
-              onClick={() => setActiveTab("no-objection-certificate")}
+              onClick={() => handleTabChange("no-objection-certificate")}
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
                 activeTab === "no-objection-certificate"
                   ? "text-blue-600 bg-blue-50 border-l-2 border-blue-500"
