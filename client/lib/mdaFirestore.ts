@@ -19,7 +19,7 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { db, auth } from "./firebase";
+import { db, auth, hasFirebaseConfig } from "./firebase";
 import { auditService } from "./firestore";
 import {
   MDA,
