@@ -91,9 +91,7 @@ export default function AdminDashboard() {
 
     // Update the company status in the local state FIRST
     setCompanies((prev) =>
-      prev.map((c) =>
-        c.id === companyId ? { ...c, status: newStatus } : c,
-      ),
+      prev.map((c) => (c.id === companyId ? { ...c, status: newStatus } : c)),
     );
 
     // Store the status change using persistent storage
@@ -110,13 +108,12 @@ export default function AdminDashboard() {
     console.log(`✅ Verification - stored value: ${verifyValue}`);
 
     if (verifyValue !== newStatus) {
-      console.error(`❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`);
+      console.error(
+        `❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`,
+      );
     }
 
-    console.log(
-      `All userStatus keys:`,
-      persistentStorage.getUserStatusKeys(),
-    );
+    console.log(`All userStatus keys:`, persistentStorage.getUserStatusKeys());
 
     // Debug the persistent storage
     persistentStorage.debugInfo();
@@ -321,13 +318,17 @@ export default function AdminDashboard() {
 
     // Additional polling for status changes (faster sync)
     const syncInterval = setInterval(() => {
-      console.log('🔄 AdminDashboard: Checking for status changes...');
-      setCompanies(prevCompanies => {
+      console.log("🔄 AdminDashboard: Checking for status changes...");
+      setCompanies((prevCompanies) => {
         let hasChanges = false;
-        const updatedCompanies = prevCompanies.map(company => {
-          const currentStatus = persistentStorage.getItem(`userStatus_${company.email.toLowerCase()}`);
+        const updatedCompanies = prevCompanies.map((company) => {
+          const currentStatus = persistentStorage.getItem(
+            `userStatus_${company.email.toLowerCase()}`,
+          );
           if (currentStatus && currentStatus !== company.status) {
-            console.log(`🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`);
+            console.log(
+              `🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`,
+            );
             hasChanges = true;
             return { ...company, status: currentStatus };
           }
@@ -335,7 +336,9 @@ export default function AdminDashboard() {
         });
 
         if (hasChanges) {
-          console.log('✅ AdminDashboard: Updated company statuses via polling');
+          console.log(
+            "✅ AdminDashboard: Updated company statuses via polling",
+          );
         }
 
         return hasChanges ? updatedCompanies : prevCompanies;
@@ -403,43 +406,69 @@ export default function AdminDashboard() {
 
     // Listen for localStorage changes (cross-tab sync)
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key && event.key.startsWith('userStatus_') && event.newValue) {
-        console.log('🔄 localStorage change detected in AdminDashboard:', event.key, event.newValue);
+      if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
+        console.log(
+          "🔄 localStorage change detected in AdminDashboard:",
+          event.key,
+          event.newValue,
+        );
 
         // Extract email from storage key (remove 'userStatus_' prefix)
-        const email = event.key.replace('userStatus_', '');
-        console.log('🔍 Looking for company with email:', email);
+        const email = event.key.replace("userStatus_", "");
+        console.log("🔍 Looking for company with email:", email);
 
         // Update the specific company's status immediately
-        setCompanies(prevCompanies => {
-          const updatedCompanies = prevCompanies.map(company => {
+        setCompanies((prevCompanies) => {
+          const updatedCompanies = prevCompanies.map((company) => {
             if (company.email.toLowerCase() === email) {
-              console.log('✅ Updating company status:', company.companyName, 'from', company.status, 'to', event.newValue);
+              console.log(
+                "✅ Updating company status:",
+                company.companyName,
+                "from",
+                company.status,
+                "to",
+                event.newValue,
+              );
               return { ...company, status: event.newValue };
             }
             return company;
           });
 
-          console.log('📊 Updated companies:', updatedCompanies.map(c => ({ name: c.companyName, status: c.status })));
+          console.log(
+            "📊 Updated companies:",
+            updatedCompanies.map((c) => ({
+              name: c.companyName,
+              status: c.status,
+            })),
+          );
           return updatedCompanies;
         });
       }
     };
 
     // Listen for localStorage changes from other tabs/windows
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     // Also listen for custom events within the same tab
     const handleCustomStorageChange = (event: any) => {
       const { key, newValue } = event.detail;
-      if (key && key.startsWith('userStatus_')) {
-        console.log('🔄 Custom storage change detected in AdminDashboard:', key, newValue);
+      if (key && key.startsWith("userStatus_")) {
+        console.log(
+          "🔄 Custom storage change detected in AdminDashboard:",
+          key,
+          newValue,
+        );
 
-        const email = key.replace('userStatus_', '');
-        setCompanies(prevCompanies => {
-          return prevCompanies.map(company => {
+        const email = key.replace("userStatus_", "");
+        setCompanies((prevCompanies) => {
+          return prevCompanies.map((company) => {
             if (company.email.toLowerCase() === email) {
-              console.log('✅ Updating company status via custom event:', company.companyName, 'to', newValue);
+              console.log(
+                "✅ Updating company status via custom event:",
+                company.companyName,
+                "to",
+                newValue,
+              );
               return { ...company, status: newValue };
             }
             return company;
@@ -448,13 +477,19 @@ export default function AdminDashboard() {
       }
     };
 
-    window.addEventListener('persistentStorageChange', handleCustomStorageChange);
+    window.addEventListener(
+      "persistentStorageChange",
+      handleCustomStorageChange,
+    );
 
     return () => {
       clearInterval(interval);
       clearInterval(syncInterval);
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('persistentStorageChange', handleCustomStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "persistentStorageChange",
+        handleCustomStorageChange,
+      );
     };
   }, []);
 
@@ -521,15 +556,24 @@ export default function AdminDashboard() {
     // Global test function for company approval sync
     (window as any).testApproval = () => {
       console.log("=== TESTING COMPANY APPROVAL SYNC ===");
-      const pendingCompany = companies.find(c => c.email === "pending@company.com");
+      const pendingCompany = companies.find(
+        (c) => c.email === "pending@company.com",
+      );
       if (pendingCompany) {
         console.log("📋 Found pending company:", pendingCompany);
         console.log("📊 Current status:", pendingCompany.status);
         console.log("🔄 Attempting to approve...");
-        handleStatusChange(pendingCompany.id, "Approved", "Test approval from admin");
+        handleStatusChange(
+          pendingCompany.id,
+          "Approved",
+          "Test approval from admin",
+        );
       } else {
         console.log("❌ pending@company.com not found");
-        console.log("📋 Available companies:", companies.map(c => ({ email: c.email, status: c.status })));
+        console.log(
+          "📋 Available companies:",
+          companies.map((c) => ({ email: c.email, status: c.status })),
+        );
       }
     };
 
@@ -542,7 +586,7 @@ export default function AdminDashboard() {
       const event = new CustomEvent("persistentStorageChange", {
         detail: {
           key: `userStatus_${email.toLowerCase()}`,
-          newValue: status
+          newValue: status,
         },
       });
       window.dispatchEvent(event);
@@ -1376,7 +1420,10 @@ export default function AdminDashboard() {
                                 console.log("🔄 ADMIN APPROVE BUTTON CLICKED");
                                 console.log("Company ID:", company.id);
                                 console.log("Company Email:", company.email);
-                                console.log("Company Name:", company.companyName);
+                                console.log(
+                                  "Company Name:",
+                                  company.companyName,
+                                );
 
                                 handleStatusChange(
                                   company.id,
@@ -1385,7 +1432,9 @@ export default function AdminDashboard() {
                                 );
 
                                 // Show success message
-                                alert(`✅ ${company.companyName} has been approved successfully!`);
+                                alert(
+                                  `✅ ${company.companyName} has been approved successfully!`,
+                                );
                               }}
                               className="text-green-600 hover:text-green-900 ml-3"
                             >

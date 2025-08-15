@@ -146,10 +146,13 @@ class PersistentStorage {
       try {
         // Create a temporary item to trigger storage event
         const tempKey = `_sync_trigger_${Date.now()}`;
-        localStorage.setItem(tempKey, JSON.stringify({ key, newValue, timestamp: Date.now() }));
+        localStorage.setItem(
+          tempKey,
+          JSON.stringify({ key, newValue, timestamp: Date.now() }),
+        );
         localStorage.removeItem(tempKey);
       } catch (error) {
-        console.log('❌ Failed to trigger localStorage event:', error);
+        console.log("❌ Failed to trigger localStorage event:", error);
       }
     }
   }

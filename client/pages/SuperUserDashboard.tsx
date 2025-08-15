@@ -396,11 +396,16 @@ export default function SuperUserDashboard() {
   const [userFormMode, setUserFormMode] = useState<"create" | "edit">("create");
 
   // Company approval state
-  const [selectedCompanyForApproval, setSelectedCompanyForApproval] = useState<Company | null>(null);
-  const [viewMode, setViewMode] = useState<"list" | "details" | "approval">("list");
+  const [selectedCompanyForApproval, setSelectedCompanyForApproval] =
+    useState<Company | null>(null);
+  const [viewMode, setViewMode] = useState<"list" | "details" | "approval">(
+    "list",
+  );
   const [companySearchTerm, setCompanySearchTerm] = useState("");
   const [companyStatusFilter, setCompanyStatusFilter] = useState<string>("all");
-  const [approvalDecision, setApprovalDecision] = useState<"Approved" | "Suspended" | "Blacklisted" | "">("");
+  const [approvalDecision, setApprovalDecision] = useState<
+    "Approved" | "Suspended" | "Blacklisted" | ""
+  >("");
   const [actionReason, setActionReason] = useState("");
   const [sendNotification, setSendNotification] = useState(true);
 
@@ -429,9 +434,7 @@ export default function SuperUserDashboard() {
 
     // Update the company status in the local state FIRST
     setCompanies((prev) =>
-      prev.map((c) =>
-        c.id === companyId ? { ...c, status: newStatus } : c,
-      ),
+      prev.map((c) => (c.id === companyId ? { ...c, status: newStatus } : c)),
     );
 
     // Store the status change using persistent storage
@@ -448,7 +451,9 @@ export default function SuperUserDashboard() {
     console.log(`✅ Verification - stored value: ${verifyValue}`);
 
     if (verifyValue !== newStatus) {
-      console.error(`❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`);
+      console.error(
+        `❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`,
+      );
     }
 
     // Debug the persistent storage state
@@ -966,11 +971,10 @@ export default function SuperUserDashboard() {
           registrationDate:
             reg.registrationDate || new Date().toISOString().split("T")[0],
           status:
-            (persistentStorage.getItem(`userStatus_${reg.email?.toLowerCase()}`) as
-              | "Pending"
-              | "Approved"
-              | "Suspended"
-              | "Blacklisted") || "Pending",
+            (persistentStorage.getItem(
+              `userStatus_${reg.email?.toLowerCase()}`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Pending",
           registrationNumber: reg.registrationNumber || `RC${Date.now()}`,
           businessType: reg.businessType || "Limited Liability Company",
           address: reg.address || "",
@@ -997,11 +1001,10 @@ export default function SuperUserDashboard() {
           phone: "+234 803 123 4567",
           registrationDate: "2024-01-15",
           status:
-            (persistentStorage.getItem(`userStatus_ahmad@northernconstruction.com`) as
-              | "Pending"
-              | "Approved"
-              | "Suspended"
-              | "Blacklisted") || "Pending",
+            (persistentStorage.getItem(
+              `userStatus_ahmad@northernconstruction.com`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Pending",
           registrationNumber: "RC123456",
           businessType: "Limited Liability Company",
           address: "123 Ahmadu Bello Way, Kano",
@@ -1011,7 +1014,10 @@ export default function SuperUserDashboard() {
             companyProfile: true,
             cacForm: true,
           },
-          verificationStatus: { cac: "Verified" as const, firs: "Pending" as const },
+          verificationStatus: {
+            cac: "Verified" as const,
+            firs: "Pending" as const,
+          },
         },
         {
           id: "test-2",
@@ -1035,7 +1041,10 @@ export default function SuperUserDashboard() {
             companyProfile: true,
             cacForm: true,
           },
-          verificationStatus: { cac: "Verified" as const, firs: "Verified" as const },
+          verificationStatus: {
+            cac: "Verified" as const,
+            firs: "Verified" as const,
+          },
         },
         {
           id: "test-3",
@@ -1059,7 +1068,10 @@ export default function SuperUserDashboard() {
             companyProfile: true,
             cacForm: true,
           },
-          verificationStatus: { cac: "Verified" as const, firs: "Failed" as const },
+          verificationStatus: {
+            cac: "Verified" as const,
+            firs: "Failed" as const,
+          },
         },
         {
           id: "test-4",
@@ -1083,7 +1095,10 @@ export default function SuperUserDashboard() {
             companyProfile: true,
             cacForm: true,
           },
-          verificationStatus: { cac: "Verified" as const, firs: "Verified" as const },
+          verificationStatus: {
+            cac: "Verified" as const,
+            firs: "Verified" as const,
+          },
         },
         {
           id: "test-5",
@@ -1107,7 +1122,10 @@ export default function SuperUserDashboard() {
             companyProfile: true,
             cacForm: true,
           },
-          verificationStatus: { cac: "Pending" as const, firs: "Pending" as const },
+          verificationStatus: {
+            cac: "Pending" as const,
+            firs: "Pending" as const,
+          },
         },
       ];
 
@@ -1139,43 +1157,69 @@ export default function SuperUserDashboard() {
 
     // Listen for localStorage changes (cross-tab sync)
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key && event.key.startsWith('userStatus_') && event.newValue) {
-        console.log('🔄 localStorage change detected in SuperUserDashboard:', event.key, event.newValue);
+      if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
+        console.log(
+          "🔄 localStorage change detected in SuperUserDashboard:",
+          event.key,
+          event.newValue,
+        );
 
         // Extract email from storage key (remove 'userStatus_' prefix)
-        const email = event.key.replace('userStatus_', '');
-        console.log('🔍 Looking for company with email:', email);
+        const email = event.key.replace("userStatus_", "");
+        console.log("🔍 Looking for company with email:", email);
 
         // Update the specific company's status immediately
-        setCompanies(prevCompanies => {
-          const updatedCompanies = prevCompanies.map(company => {
+        setCompanies((prevCompanies) => {
+          const updatedCompanies = prevCompanies.map((company) => {
             if (company.email.toLowerCase() === email) {
-              console.log('✅ Updating company status:', company.companyName, 'from', company.status, 'to', event.newValue);
+              console.log(
+                "✅ Updating company status:",
+                company.companyName,
+                "from",
+                company.status,
+                "to",
+                event.newValue,
+              );
               return { ...company, status: event.newValue };
             }
             return company;
           });
 
-          console.log('📊 Updated companies:', updatedCompanies.map(c => ({ name: c.companyName, status: c.status })));
+          console.log(
+            "📊 Updated companies:",
+            updatedCompanies.map((c) => ({
+              name: c.companyName,
+              status: c.status,
+            })),
+          );
           return updatedCompanies;
         });
       }
     };
 
     // Listen for localStorage changes from other tabs/windows
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     // Also listen for custom events within the same tab
     const handleCustomStorageChange = (event: any) => {
       const { key, newValue } = event.detail;
-      if (key && key.startsWith('userStatus_')) {
-        console.log('🔄 Custom storage change detected in SuperUserDashboard:', key, newValue);
+      if (key && key.startsWith("userStatus_")) {
+        console.log(
+          "🔄 Custom storage change detected in SuperUserDashboard:",
+          key,
+          newValue,
+        );
 
-        const email = key.replace('userStatus_', '');
-        setCompanies(prevCompanies => {
-          return prevCompanies.map(company => {
+        const email = key.replace("userStatus_", "");
+        setCompanies((prevCompanies) => {
+          return prevCompanies.map((company) => {
             if (company.email.toLowerCase() === email) {
-              console.log('✅ Updating company status via custom event:', company.companyName, 'to', newValue);
+              console.log(
+                "✅ Updating company status via custom event:",
+                company.companyName,
+                "to",
+                newValue,
+              );
               return { ...company, status: newValue };
             }
             return company;
@@ -1184,20 +1228,27 @@ export default function SuperUserDashboard() {
       }
     };
 
-    window.addEventListener('persistentStorageChange', handleCustomStorageChange);
+    window.addEventListener(
+      "persistentStorageChange",
+      handleCustomStorageChange,
+    );
 
     // Refresh company data every 30 seconds to sync with AdminDashboard changes
     const interval = setInterval(loadCompanies, 30000);
 
     // Additional polling for status changes (faster sync)
     const syncInterval = setInterval(() => {
-      console.log('🔄 SuperUserDashboard: Checking for status changes...');
-      setCompanies(prevCompanies => {
+      console.log("🔄 SuperUserDashboard: Checking for status changes...");
+      setCompanies((prevCompanies) => {
         let hasChanges = false;
-        const updatedCompanies = prevCompanies.map(company => {
-          const currentStatus = persistentStorage.getItem(`userStatus_${company.email.toLowerCase()}`);
+        const updatedCompanies = prevCompanies.map((company) => {
+          const currentStatus = persistentStorage.getItem(
+            `userStatus_${company.email.toLowerCase()}`,
+          );
           if (currentStatus && currentStatus !== company.status) {
-            console.log(`🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`);
+            console.log(
+              `🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`,
+            );
             hasChanges = true;
             return { ...company, status: currentStatus };
           }
@@ -1205,7 +1256,9 @@ export default function SuperUserDashboard() {
         });
 
         if (hasChanges) {
-          console.log('✅ SuperUserDashboard: Updated company statuses via polling');
+          console.log(
+            "✅ SuperUserDashboard: Updated company statuses via polling",
+          );
         }
 
         return hasChanges ? updatedCompanies : prevCompanies;
@@ -1215,38 +1268,63 @@ export default function SuperUserDashboard() {
     // Global test function for company approval sync
     (window as any).testSuperUserApproval = () => {
       console.log("=== TESTING SUPERUSER COMPANY APPROVAL SYNC ===");
-      const pendingCompany = companies.find(c => c.email === "pending@company.com");
+      const pendingCompany = companies.find(
+        (c) => c.email === "pending@company.com",
+      );
       if (pendingCompany) {
         console.log("📋 Found pending company:", pendingCompany);
         console.log("📊 Current status:", pendingCompany.status);
         console.log("🔄 Attempting to approve from SuperUser...");
-        handleCompanyStatusChange(pendingCompany.id, "Approved", "Test approval from superuser");
+        handleCompanyStatusChange(
+          pendingCompany.id,
+          "Approved",
+          "Test approval from superuser",
+        );
       } else {
         console.log("❌ pending@company.com not found");
-        console.log("📋 Available companies:", companies.map(c => ({ email: c.email, status: c.status })));
+        console.log(
+          "📋 Available companies:",
+          companies.map((c) => ({ email: c.email, status: c.status })),
+        );
       }
     };
 
     // Test Northern Construction approval
     (window as any).testNorthernApproval = () => {
       console.log("=== TESTING NORTHERN CONSTRUCTION APPROVAL ===");
-      const northernCompany = companies.find(c => c.email === "ahmad@northernconstruction.com");
+      const northernCompany = companies.find(
+        (c) => c.email === "ahmad@northernconstruction.com",
+      );
       if (northernCompany) {
         console.log("📋 Found Northern Construction:", northernCompany);
         console.log("📊 Current status:", northernCompany.status);
         console.log("🔄 Attempting to approve from SuperUser...");
-        handleCompanyStatusChange(northernCompany.id, "Approved", "Test approval from superuser");
+        handleCompanyStatusChange(
+          northernCompany.id,
+          "Approved",
+          "Test approval from superuser",
+        );
       } else {
         console.log("❌ Northern Construction not found");
-        console.log("📋 Available companies:", companies.map(c => ({ email: c.email, name: c.companyName, status: c.status })));
+        console.log(
+          "📋 Available companies:",
+          companies.map((c) => ({
+            email: c.email,
+            name: c.companyName,
+            status: c.status,
+          })),
+        );
       }
     };
 
     return () => {
       clearInterval(interval);
       clearInterval(syncInterval);
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('persistentStorageChange', handleCustomStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "persistentStorageChange",
+        handleCustomStorageChange,
+      );
       delete (window as any).testSuperUserApproval;
       delete (window as any).testNorthernApproval;
     };
@@ -6042,15 +6120,23 @@ The award letter has been:
               approvalDecision === "Blacklisted") &&
             !actionReason.trim()
           ) {
-            alert(`Please provide a reason for ${approvalDecision.toLowerCase()}`);
+            alert(
+              `Please provide a reason for ${approvalDecision.toLowerCase()}`,
+            );
             return;
           }
 
-          handleCompanyStatusChange(selectedCompanyForApproval.id, approvalDecision, actionReason);
+          handleCompanyStatusChange(
+            selectedCompanyForApproval.id,
+            approvalDecision,
+            actionReason,
+          );
 
           // Simulate sending notification
           if (sendNotification) {
-            console.log(`Notification sent to ${selectedCompanyForApproval.email}`);
+            console.log(
+              `Notification sent to ${selectedCompanyForApproval.email}`,
+            );
           }
         };
 
@@ -6065,18 +6151,33 @@ The award letter has been:
         };
 
         // Calculate dynamic stats
-        const pendingCount = companies.filter((c) => c.status === "Pending").length;
-        const approvedCount = companies.filter((c) => c.status === "Approved").length;
-        const suspendedCount = companies.filter((c) => c.status === "Suspended").length;
-        const blacklistedCount = companies.filter((c) => c.status === "Blacklisted").length;
+        const pendingCount = companies.filter(
+          (c) => c.status === "Pending",
+        ).length;
+        const approvedCount = companies.filter(
+          (c) => c.status === "Approved",
+        ).length;
+        const suspendedCount = companies.filter(
+          (c) => c.status === "Suspended",
+        ).length;
+        const blacklistedCount = companies.filter(
+          (c) => c.status === "Blacklisted",
+        ).length;
 
         const filteredCompanies = companies.filter((company) => {
           const matchesSearch =
-            company.companyName.toLowerCase().includes(companySearchTerm.toLowerCase()) ||
-            company.contactPerson.toLowerCase().includes(companySearchTerm.toLowerCase()) ||
-            company.email.toLowerCase().includes(companySearchTerm.toLowerCase());
+            company.companyName
+              .toLowerCase()
+              .includes(companySearchTerm.toLowerCase()) ||
+            company.contactPerson
+              .toLowerCase()
+              .includes(companySearchTerm.toLowerCase()) ||
+            company.email
+              .toLowerCase()
+              .includes(companySearchTerm.toLowerCase());
           const matchesStatus =
-            companyStatusFilter === "all" || company.status === companyStatusFilter;
+            companyStatusFilter === "all" ||
+            company.status === companyStatusFilter;
 
           return matchesSearch && matchesStatus;
         });
@@ -6086,7 +6187,9 @@ The award letter has been:
           return (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-gray-900">Company Details</h1>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Company Details
+                </h1>
                 <button
                   onClick={() => setViewMode("list")}
                   className="flex items-center px-4 py-2 text-gray-600 hover:text-green-700"
@@ -6099,44 +6202,78 @@ The award letter has been:
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Company Information
+                    </h3>
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Company Name</label>
-                        <p className="text-gray-900">{selectedCompanyForApproval.companyName}</p>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Company Name
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedCompanyForApproval.companyName}
+                        </p>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Registration Number</label>
-                        <p className="text-gray-900">{selectedCompanyForApproval.registrationNumber}</p>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Registration Number
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedCompanyForApproval.registrationNumber}
+                        </p>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Business Type</label>
-                        <p className="text-gray-900">{selectedCompanyForApproval.businessType}</p>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Business Type
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedCompanyForApproval.businessType}
+                        </p>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Contact Person</label>
-                        <p className="text-gray-900">{selectedCompanyForApproval.contactPerson}</p>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Contact Person
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedCompanyForApproval.contactPerson}
+                        </p>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
-                        <p className="text-gray-900">{selectedCompanyForApproval.email}</p>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Email
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedCompanyForApproval.email}
+                        </p>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Phone</label>
-                        <p className="text-gray-900">{selectedCompanyForApproval.phone}</p>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Phone
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedCompanyForApproval.phone}
+                        </p>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Address</label>
-                        <p className="text-gray-900">{selectedCompanyForApproval.address}</p>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Address
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedCompanyForApproval.address}
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Status & Verification</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Status & Verification
+                    </h3>
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Current Status</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Current Status
+                        </label>
                         <span
                           className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                             selectedCompanyForApproval.status === "Pending"
@@ -6150,12 +6287,16 @@ The award letter has been:
                         </span>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">CAC Verification</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                          CAC Verification
+                        </label>
                         <span
                           className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                            selectedCompanyForApproval.verificationStatus.cac === "Verified"
+                            selectedCompanyForApproval.verificationStatus
+                              .cac === "Verified"
                               ? "bg-green-100 text-green-800"
-                              : selectedCompanyForApproval.verificationStatus.cac === "Failed"
+                              : selectedCompanyForApproval.verificationStatus
+                                    .cac === "Failed"
                                 ? "bg-red-100 text-red-800"
                                 : "bg-yellow-100 text-yellow-800"
                           }`}
@@ -6164,12 +6305,16 @@ The award letter has been:
                         </span>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">FIRS Verification</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                          FIRS Verification
+                        </label>
                         <span
                           className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                            selectedCompanyForApproval.verificationStatus.firs === "Verified"
+                            selectedCompanyForApproval.verificationStatus
+                              .firs === "Verified"
                               ? "bg-green-100 text-green-800"
-                              : selectedCompanyForApproval.verificationStatus.firs === "Failed"
+                              : selectedCompanyForApproval.verificationStatus
+                                    .firs === "Failed"
                                 ? "bg-red-100 text-red-800"
                                 : "bg-yellow-100 text-yellow-800"
                           }`}
@@ -6187,7 +6332,9 @@ The award letter has been:
                         Back to List
                       </button>
                       <button
-                        onClick={() => handleApproval(selectedCompanyForApproval)}
+                        onClick={() =>
+                          handleApproval(selectedCompanyForApproval)
+                        }
                         className="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800"
                       >
                         Manage Status
@@ -6205,7 +6352,9 @@ The award letter has been:
           return (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-gray-900">Company Status Management</h1>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Company Status Management
+                </h1>
                 <button
                   onClick={() => setViewMode("details")}
                   className="flex items-center px-4 py-2 text-gray-600 hover:text-green-700"
@@ -6231,7 +6380,14 @@ The award letter has been:
                           name="decision"
                           value="Approved"
                           checked={approvalDecision === "Approved"}
-                          onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
+                          onChange={(e) =>
+                            setApprovalDecision(
+                              e.target.value as
+                                | "Approved"
+                                | "Suspended"
+                                | "Blacklisted",
+                            )
+                          }
                           className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
                         />
                         <span className="ml-2 text-sm text-gray-700 flex items-center">
@@ -6245,7 +6401,14 @@ The award letter has been:
                           name="decision"
                           value="Suspended"
                           checked={approvalDecision === "Suspended"}
-                          onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
+                          onChange={(e) =>
+                            setApprovalDecision(
+                              e.target.value as
+                                | "Approved"
+                                | "Suspended"
+                                | "Blacklisted",
+                            )
+                          }
                           className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
                         />
                         <span className="ml-2 text-sm text-gray-700 flex items-center">
@@ -6259,7 +6422,14 @@ The award letter has been:
                           name="decision"
                           value="Blacklisted"
                           checked={approvalDecision === "Blacklisted"}
-                          onChange={(e) => setApprovalDecision(e.target.value as "Approved" | "Suspended" | "Blacklisted")}
+                          onChange={(e) =>
+                            setApprovalDecision(
+                              e.target.value as
+                                | "Approved"
+                                | "Suspended"
+                                | "Blacklisted",
+                            )
+                          }
                           className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                         />
                         <span className="ml-2 text-sm text-gray-700 flex items-center">
@@ -6270,10 +6440,15 @@ The award letter has been:
                     </div>
                   </div>
 
-                  {(approvalDecision === "Suspended" || approvalDecision === "Blacklisted") && (
+                  {(approvalDecision === "Suspended" ||
+                    approvalDecision === "Blacklisted") && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Reason for {approvalDecision === "Suspended" ? "Suspension" : "Blacklisting"} *
+                        Reason for{" "}
+                        {approvalDecision === "Suspended"
+                          ? "Suspension"
+                          : "Blacklisting"}{" "}
+                        *
                       </label>
                       <textarea
                         rows={4}
@@ -6310,7 +6485,8 @@ The award letter has been:
                       onClick={submitApproval}
                       disabled={
                         !approvalDecision ||
-                        ((approvalDecision === "Suspended" || approvalDecision === "Blacklisted") &&
+                        ((approvalDecision === "Suspended" ||
+                          approvalDecision === "Blacklisted") &&
                           !actionReason.trim())
                       }
                       className="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -6333,7 +6509,8 @@ The award letter has been:
                   Company Management (SuperUser)
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Review and manage company registrations. Changes sync with Admin dashboard.
+                  Review and manage company registrations. Changes sync with
+                  Admin dashboard.
                 </p>
               </div>
               <div className="flex items-center space-x-3">
@@ -6353,8 +6530,12 @@ The award letter has been:
                 <div className="flex items-center">
                   <Clock className="h-8 w-8 text-yellow-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Pending Review</p>
-                    <p className="text-2xl font-bold text-gray-900">{pendingCount}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Pending Review
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {pendingCount}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -6362,8 +6543,12 @@ The award letter has been:
                 <div className="flex items-center">
                   <CheckCircle className="h-8 w-8 text-green-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Approved</p>
-                    <p className="text-2xl font-bold text-gray-900">{approvedCount}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Approved
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {approvedCount}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -6371,8 +6556,12 @@ The award letter has been:
                 <div className="flex items-center">
                   <Shield className="h-8 w-8 text-orange-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Suspended</p>
-                    <p className="text-2xl font-bold text-gray-900">{suspendedCount}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Suspended
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {suspendedCount}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -6380,8 +6569,12 @@ The award letter has been:
                 <div className="flex items-center">
                   <Ban className="h-8 w-8 text-red-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Blacklisted</p>
-                    <p className="text-2xl font-bold text-gray-900">{blacklistedCount}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Blacklisted
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {blacklistedCount}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -6464,7 +6657,9 @@ The award letter has been:
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(company.registrationDate).toLocaleDateString()}
+                          {new Date(
+                            company.registrationDate,
+                          ).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
@@ -6493,15 +6688,26 @@ The award letter has been:
                           {company.status === "Pending" && (
                             <button
                               onClick={() => {
-                                console.log("🔄 SUPERUSER APPROVE BUTTON CLICKED");
+                                console.log(
+                                  "🔄 SUPERUSER APPROVE BUTTON CLICKED",
+                                );
                                 console.log("Company ID:", company.id);
                                 console.log("Company Email:", company.email);
-                                console.log("Company Name:", company.companyName);
+                                console.log(
+                                  "Company Name:",
+                                  company.companyName,
+                                );
 
-                                handleCompanyStatusChange(company.id, "Approved", "Approved by superuser");
+                                handleCompanyStatusChange(
+                                  company.id,
+                                  "Approved",
+                                  "Approved by superuser",
+                                );
 
                                 // Show success message
-                                alert(`✅ ${company.companyName} has been approved successfully!`);
+                                alert(
+                                  `✅ ${company.companyName} has been approved successfully!`,
+                                );
                               }}
                               className="text-green-600 hover:text-green-900 ml-3"
                             >
