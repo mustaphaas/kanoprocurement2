@@ -76,18 +76,11 @@ class MDAInitializationService {
       return;
     }
 
-    if (!hasFirebaseConfig) {
-      console.log('⚠️ Firebase not configured - skipping Firebase MDA initialization');
-      console.log('✅ Using static ministry configuration for demo mode');
-      this.initialized = true;
-      return;
-    }
-
     try {
       console.log('🚀 Starting MDA initialization from static ministries...');
-      
-      // Get existing MDAs
-      const existingMDAs = await mdaFirestoreService.getAllMDAs();
+
+      // Get existing MDAs from localStorage
+      const existingMDAs = await mdaLocalStorageService.getAllMDAs();
       const existingMDAIds = existingMDAs.map(mda => mda.id);
 
       // Get all ministry configurations
@@ -97,11 +90,11 @@ class MDAInitializationService {
         // Check if MDA for this ministry already exists
         if (!existingMDAIds.includes(ministry.id)) {
           console.log(`Creating MDA for ${ministry.name}...`);
-          
+
           const mdaData = this.convertMinistryToMDA(ministry);
-          
-          // Create the MDA using the firestore service
-          await mdaFirestoreService.createMDA({
+
+          // Create the MDA using the localStorage service
+          await mdaLocalStorageService.createMDA({
             ...mdaData,
             parentMDA: undefined, // Ministries don't have parent MDAs
           }, 'system-initializer');
@@ -113,9 +106,9 @@ class MDAInitializationService {
       }
 
       this.initialized = true;
-      console.log('MDA initialization completed successfully');
+      console.log('✅ MDA initialization completed successfully with localStorage');
     } catch (error) {
-      console.error('Error during MDA initialization:', error);
+      console.error('❌ Error during MDA initialization:', error);
       throw error;
     }
   }
