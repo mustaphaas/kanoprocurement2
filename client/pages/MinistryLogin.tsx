@@ -99,6 +99,23 @@ export default function MinistryLogin() {
 
           navigate("/ministry/dashboard");
         } else {
+          // Log failed ministry login attempt
+          logUserAction(
+            formData.username || "Unknown",
+            "anonymous",
+            "MINISTRY_LOGIN_FAILED",
+            "Ministry Portal",
+            `Failed ministry login attempt for user: ${formData.username}`,
+            "HIGH",
+            undefined,
+            {
+              attemptTime: new Date().toISOString(),
+              userAgent: navigator.userAgent,
+              username: formData.username,
+              ipAddress: "127.0.0.1"
+            }
+          );
+
           setErrors({
             general: "Invalid credentials. Use: ministry / ministry123",
           });
