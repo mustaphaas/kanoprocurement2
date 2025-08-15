@@ -487,6 +487,21 @@ export default function AdminDashboard() {
       }
     };
 
+    // Manual sync test
+    (window as any).testManualSync = (email: string, status: string) => {
+      console.log(`=== MANUAL SYNC TEST ===`);
+      console.log(`Triggering storage event for ${email} -> ${status}`);
+
+      // Manually trigger the storage event
+      const event = new CustomEvent("persistentStorageChange", {
+        detail: {
+          key: `userStatus_${email.toLowerCase()}`,
+          newValue: status
+        },
+      });
+      window.dispatchEvent(event);
+    };
+
     return () => {
       delete (window as any).adminTestLocalStorage;
       delete (window as any).adminTestStatusChange;
