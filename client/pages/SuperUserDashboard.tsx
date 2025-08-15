@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
+import { mdaInitializer } from "@/lib/mdaInitializer";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import MDAForm from "@/components/MDAForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
@@ -673,7 +674,7 @@ export default function SuperUserDashboard() {
           "Supply of advanced medical equipment for specialist units",
         category: "Healthcare",
         ministry: "Ministry of Health",
-        estimatedValue: "��950M",
+        estimatedValue: "₦950M",
         status: "Closed",
         workflowStatus: "NOC_Requested",
         workflowStep: 5,
