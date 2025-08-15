@@ -429,7 +429,8 @@ export default function AdminDashboard() {
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('persistentStorageChange', handleStorageChange);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('persistentStorageChange', handleCustomStorageChange);
     };
   }, []);
 
