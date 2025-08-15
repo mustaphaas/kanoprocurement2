@@ -3358,14 +3358,35 @@ The award letter has been:
                     System Activity Logs
                   </h2>
                   <div className="flex items-center space-x-3">
-                    <select className="px-3 py-2 border border-gray-300 rounded-md text-sm">
-                      <option>All Actions</option>
-                      <option>User Login</option>
-                      <option>Company Actions</option>
-                      <option>Tender Actions</option>
-                      <option>System Changes</option>
+                    <select
+                      value={auditActionFilter}
+                      onChange={(e) => setAuditActionFilter(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    >
+                      <option value="all">All Actions</option>
+                      <option value="COMPANY_APPROVED">Company Approved</option>
+                      <option value="COMPANY_SUSPENDED">Company Suspended</option>
+                      <option value="COMPANY_BLACKLISTED">Company Blacklisted</option>
+                      <option value="TENDER_CREATED">Tender Created</option>
+                      <option value="BID_EVALUATED">Bid Evaluated</option>
+                      <option value="NOC_APPROVED">NOC Approved</option>
+                      <option value="SYSTEM_LOGIN">System Login</option>
                     </select>
-                    <button className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                    <select
+                      value={auditSeverityFilter}
+                      onChange={(e) => setAuditSeverityFilter(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    >
+                      <option value="all">All Severity</option>
+                      <option value="LOW">Low</option>
+                      <option value="MEDIUM">Medium</option>
+                      <option value="HIGH">High</option>
+                      <option value="CRITICAL">Critical</option>
+                    </select>
+                    <button
+                      onClick={handleExportAuditLogs}
+                      className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+                    >
                       <Download className="h-4 w-4 mr-2" />
                       Export
                     </button>
@@ -3376,17 +3397,27 @@ The award letter has been:
                   <input
                     type="text"
                     placeholder="Search logs..."
+                    value={auditSearchTerm}
+                    onChange={(e) => setAuditSearchTerm(e.target.value)}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="date"
+                    value={auditDateFilter}
+                    onChange={(e) => setAuditDateFilter(e.target.value)}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                  <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>All Users</option>
-                    <option>SuperUser</option>
-                    <option>Admin</option>
-                    <option>System</option>
+                  <select
+                    value={auditUserFilter}
+                    onChange={(e) => setAuditUserFilter(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">All Users</option>
+                    <option value="SuperUser">SuperUser</option>
+                    <option value="AdminUser">Admin</option>
+                    <option value="SYSTEM">System</option>
+                    <option value="EvaluationCommittee">Evaluation Committee</option>
+                    <option value="SystemAdmin">System Admin</option>
                   </select>
                 </div>
               </div>
@@ -3402,14 +3433,15 @@ The award letter has been:
                         <div className="flex items-start space-x-3">
                           <div
                             className={`w-3 h-3 rounded-full mt-2 ${
-                              log.action.includes("Approved")
-                                ? "bg-green-500"
-                                : log.action.includes("Rejected")
-                                  ? "bg-red-500"
-                                  : log.action.includes("Created")
-                                    ? "bg-blue-500"
-                                    : "bg-gray-500"
+                              log.severity === "CRITICAL"
+                                ? "bg-red-600"
+                                : log.severity === "HIGH"
+                                  ? "bg-orange-500"
+                                  : log.severity === "MEDIUM"
+                                    ? "bg-yellow-500"
+                                    : "bg-green-500"
                             }`}
+                            title={`Severity: ${log.severity}`}
                           ></div>
                           <div className="flex-1">
                             <div className="flex items-center space-x-2">
@@ -3425,9 +3457,11 @@ The award letter has been:
                               {log.details}
                             </p>
                             <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                              <span>User: {log.user}</span>
+                              <span>User: {log.user} ({log.userRole})</span>
                               <span>•</span>
-                              <span>{log.timestamp}</span>
+                              <span>Severity: {log.severity}</span>
+                              <span>•</span>
+                              <span>{new Date(log.timestamp).toLocaleString()}</span>
                             </div>
                           </div>
                         </div>
