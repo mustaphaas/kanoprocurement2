@@ -1501,6 +1501,29 @@ export default function SuperUserDashboard() {
       ),
     );
 
+    // Log the tender award action
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "TENDER_AWARDED",
+      selectedAwardTender.title,
+      `Tender awarded to ${awardFormData.winningCompany.split(" (")[0]} for ${awardFormData.awardAmount}`,
+      "HIGH",
+      selectedAwardTender.id,
+      {
+        awardedCompany: awardFormData.winningCompany.split(" (")[0],
+        awardAmount: awardFormData.awardAmount,
+        awardDate: awardFormData.awardDate,
+        contractDuration: awardFormData.contractDuration,
+        notifyWinner: awardFormData.notifyWinner,
+        notifyUnsuccessful: awardFormData.notifyUnsuccessful,
+        publishOCDS: awardFormData.publishOCDS
+      }
+    );
+
+    // Reload audit logs
+    loadAuditLogs();
+
     // Close modal and reset form
     setShowAwardModal(false);
     setSelectedAwardTender(null);
@@ -1517,6 +1540,17 @@ export default function SuperUserDashboard() {
 
     alert(
       "Tender awarded successfully! Notifications sent and OCDS data published.",
+    );
+
+    // Log successful completion
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "TENDER_AWARD_COMPLETED",
+      selectedAwardTender.title,
+      "Tender award process completed successfully. Notifications sent and OCDS published.",
+      "MEDIUM",
+      selectedAwardTender.id
     );
   };
 
