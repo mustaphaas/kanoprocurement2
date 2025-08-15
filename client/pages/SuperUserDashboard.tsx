@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import { mdaInitializer } from "@/lib/mdaInitializer";
+import { hasFirebaseConfig } from "@/lib/firebase";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import MDAForm from "@/components/MDAForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
@@ -1264,7 +1265,7 @@ export default function SuperUserDashboard() {
 
         if (hasChanges) {
           console.log(
-            "��� SuperUserDashboard: Updated company statuses via polling",
+            "✅ SuperUserDashboard: Updated company statuses via polling",
           );
         }
 
