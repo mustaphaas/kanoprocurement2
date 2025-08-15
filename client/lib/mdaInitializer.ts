@@ -77,8 +77,15 @@ class MDAInitializationService {
       return;
     }
 
+    if (!hasFirebaseConfig) {
+      console.log('⚠️ Firebase not configured - skipping Firebase MDA initialization');
+      console.log('✅ Using static ministry configuration for demo mode');
+      this.initialized = true;
+      return;
+    }
+
     try {
-      console.log('Starting MDA initialization from static ministries...');
+      console.log('🚀 Starting MDA initialization from static ministries...');
       
       // Get existing MDAs
       const existingMDAs = await mdaFirestoreService.getAllMDAs();
