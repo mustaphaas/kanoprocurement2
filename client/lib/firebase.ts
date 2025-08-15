@@ -58,25 +58,41 @@ try {
   app = initializeApp(defaultConfig);
 }
 
-// Initialize Firebase services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+// Initialize Firebase services with error handling
+try {
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
+
+  if (hasFirebaseConfig) {
+    console.log("✅ Firebase services initialized successfully");
+  } else {
+    console.log("⚠️ Firebase services initialized in demo mode");
+  }
+} catch (error) {
+  console.error("❌ Failed to initialize Firebase services:", error);
+  console.log("🔧 Application will continue with limited functionality");
+}
 
 // Connect to emulators only when explicitly requested
-if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === "true") {
+if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === "true" && hasFirebaseConfig) {
   try {
     connectAuthEmulator(auth, "http://localhost:9099", {
       disableWarnings: true,
     });
     connectFirestoreEmulator(db, "localhost", 8080);
     connectStorageEmulator(storage, "localhost", 9199);
-    console.log("Connected to Firebase emulators");
+    console.log("🔧 Connected to Firebase emulators");
   } catch (error) {
-    console.log("Firebase emulators not available or already connected");
+    console.log("⚠️ Firebase emulators not available or already connected");
   }
+} else if (hasFirebaseConfig) {
+  console.log("🌐 Using production Firebase services");
 } else {
-  console.log("Using production Firebase services");
+  console.log("🎭 Running in demo mode - Firebase features limited");
 }
+
+// Export Firebase services (may be null in demo mode)
+export { auth, db, storage, hasFirebaseConfig };
 
 export default app;
