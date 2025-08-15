@@ -1,68 +1,90 @@
 import { useState } from "react";
 import { mdaLocalStorageService } from "@/lib/mdaLocalStorage";
-import { Download, Upload, Trash2, Database, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import {
+  Download,
+  Upload,
+  Trash2,
+  Database,
+  FileText,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 
 export default function DataManagement() {
   const [showExportData, setShowExportData] = useState(false);
   const [exportedData, setExportedData] = useState("");
   const [importData, setImportData] = useState("");
-  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const handleExportData = () => {
     try {
       const data = mdaLocalStorageService.exportData();
       setExportedData(data);
       setShowExportData(true);
-      setMessage({ type: 'success', text: 'Data exported successfully!' });
+      setMessage({ type: "success", text: "Data exported successfully!" });
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to export data' });
+      setMessage({ type: "error", text: "Failed to export data" });
     }
   };
 
   const handleImportData = () => {
     if (!importData.trim()) {
-      setMessage({ type: 'error', text: 'Please provide data to import' });
+      setMessage({ type: "error", text: "Please provide data to import" });
       return;
     }
 
     try {
       mdaLocalStorageService.importData(importData);
-      setMessage({ type: 'success', text: 'Data imported successfully! Please refresh the page.' });
+      setMessage({
+        type: "success",
+        text: "Data imported successfully! Please refresh the page.",
+      });
       setImportData("");
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to import data. Please check the format.' });
+      setMessage({
+        type: "error",
+        text: "Failed to import data. Please check the format.",
+      });
     }
   };
 
   const handleClearAllData = () => {
-    if (window.confirm(
-      'Are you sure you want to clear all MDA data? This action cannot be undone.'
-    )) {
+    if (
+      window.confirm(
+        "Are you sure you want to clear all MDA data? This action cannot be undone.",
+      )
+    ) {
       try {
         mdaLocalStorageService.clearAllData();
-        setMessage({ type: 'success', text: 'All data cleared successfully! Please refresh the page.' });
+        setMessage({
+          type: "success",
+          text: "All data cleared successfully! Please refresh the page.",
+        });
       } catch (error) {
-        setMessage({ type: 'error', text: 'Failed to clear data' });
+        setMessage({ type: "error", text: "Failed to clear data" });
       }
     }
   };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    setMessage({ type: 'success', text: 'Copied to clipboard!' });
+    setMessage({ type: "success", text: "Copied to clipboard!" });
   };
 
   const downloadAsFile = (data: string) => {
-    const blob = new Blob([data], { type: 'application/json' });
+    const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `mda-data-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `mda-data-${new Date().toISOString().split("T")[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    setMessage({ type: 'success', text: 'Data file downloaded!' });
+    setMessage({ type: "success", text: "Data file downloaded!" });
   };
 
   return (
@@ -71,27 +93,35 @@ export default function DataManagement() {
       <div className="flex items-center space-x-3">
         <Database className="h-6 w-6 text-blue-600" />
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">Data Management</h2>
-          <p className="text-sm text-gray-600">Manage your localStorage MDA data</p>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Data Management
+          </h2>
+          <p className="text-sm text-gray-600">
+            Manage your localStorage MDA data
+          </p>
         </div>
       </div>
 
       {/* Status Message */}
       {message && (
-        <div className={`rounded-lg p-4 ${
-          message.type === 'success' 
-            ? 'bg-green-50 border border-green-200' 
-            : 'bg-red-50 border border-red-200'
-        }`}>
+        <div
+          className={`rounded-lg p-4 ${
+            message.type === "success"
+              ? "bg-green-50 border border-green-200"
+              : "bg-red-50 border border-red-200"
+          }`}
+        >
           <div className="flex items-center">
-            {message.type === 'success' ? (
+            {message.type === "success" ? (
               <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
             ) : (
               <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
             )}
-            <span className={`text-sm ${
-              message.type === 'success' ? 'text-green-800' : 'text-red-800'
-            }`}>
+            <span
+              className={`text-sm ${
+                message.type === "success" ? "text-green-800" : "text-red-800"
+              }`}
+            >
               {message.text}
             </span>
           </div>
@@ -191,7 +221,7 @@ export default function DataManagement() {
               </button>
             </div>
           </div>
-          
+
           <div className="bg-gray-50 rounded-md p-4 max-h-96 overflow-auto">
             <pre className="text-xs text-gray-700 whitespace-pre-wrap">
               {exportedData}
@@ -202,7 +232,9 @@ export default function DataManagement() {
 
       {/* Info Section */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h4 className="font-medium text-blue-900 mb-2">About LocalStorage Data</h4>
+        <h4 className="font-medium text-blue-900 mb-2">
+          About LocalStorage Data
+        </h4>
         <ul className="text-sm text-blue-800 space-y-1">
           <li>• Data is stored locally in your browser</li>
           <li>• Data persists across browser sessions</li>

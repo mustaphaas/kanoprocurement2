@@ -1,10 +1,14 @@
-import { MINISTRIES, getAllMinistries, MinistryConfig } from "@shared/ministries";
+import {
+  MINISTRIES,
+  getAllMinistries,
+  MinistryConfig,
+} from "@shared/ministries";
 import { MDA, MDAAdmin, MDAUser, MDASettings } from "@shared/api";
 import { mdaLocalStorageService } from "./mdaLocalStorage";
 
 /**
  * MDA Initialization Service
- * 
+ *
  * This service is responsible for initializing the dynamic MDA system
  * with data from the static ministry configuration. It ensures that
  * the three pre-configured ministries are properly represented in
@@ -16,12 +20,14 @@ class MDAInitializationService {
   /**
    * Convert a static ministry configuration to an MDA object
    */
-  private convertMinistryToMDA(ministry: MinistryConfig): Omit<MDA, 'id' | 'createdAt' | 'updatedAt'> {
+  private convertMinistryToMDA(
+    ministry: MinistryConfig,
+  ): Omit<MDA, "id" | "createdAt" | "updatedAt"> {
     const baseSettings: MDASettings = {
       procurementThresholds: {
-        level1: 5000000,    // ₦5M
-        level2: 25000000,   // ₦25M
-        level3: 100000000,  // ₦100M
+        level1: 5000000, // ₦5M
+        level2: 25000000, // ₦25M
+        level3: 100000000, // ₦100M
       },
       allowedCategories: ministry.specializations,
       customWorkflows: true,
@@ -47,9 +53,9 @@ class MDAInitializationService {
    */
   private getBudgetByMinistry(code: string): number {
     const budgetMap: Record<string, number> = {
-      'MOH': 5000000000,   // ₦5B for Health
-      'MOWI': 8500000000,  // ₦8.5B for Works & Infrastructure
-      'MOE': 8000000000,   // ₦8B for Education
+      MOH: 5000000000, // ₦5B for Health
+      MOWI: 8500000000, // ₦8.5B for Works & Infrastructure
+      MOE: 8000000000, // ₦8B for Education
     };
     return budgetMap[code] || 3000000000; // Default ₦3B
   }
@@ -59,11 +65,11 @@ class MDAInitializationService {
    */
   private getHeadOfMDAByMinistry(code: string): string {
     const headMap: Record<string, string> = {
-      'MOH': 'Dr. Amina Kano',
-      'MOWI': 'Engr. Musa Abdullahi',
-      'MOE': 'Prof. Muhammad Usman',
+      MOH: "Dr. Amina Kano",
+      MOWI: "Engr. Musa Abdullahi",
+      MOE: "Prof. Muhammad Usman",
     };
-    return headMap[code] || 'To be Assigned';
+    return headMap[code] || "To be Assigned";
   }
 
   /**
@@ -72,16 +78,16 @@ class MDAInitializationService {
    */
   async initializeMDAsFromMinistries(): Promise<void> {
     if (this.initialized) {
-      console.log('MDA initialization already completed');
+      console.log("MDA initialization already completed");
       return;
     }
 
     try {
-      console.log('🚀 Starting MDA initialization from static ministries...');
+      console.log("🚀 Starting MDA initialization from static ministries...");
 
       // Get existing MDAs from localStorage
       const existingMDAs = await mdaLocalStorageService.getAllMDAs();
-      const existingMDAIds = existingMDAs.map(mda => mda.id);
+      const existingMDAIds = existingMDAs.map((mda) => mda.id);
 
       // Get all ministry configurations
       const ministries = getAllMinistries();
@@ -94,10 +100,13 @@ class MDAInitializationService {
           const mdaData = this.convertMinistryToMDA(ministry);
 
           // Create the MDA using the localStorage service
-          await mdaLocalStorageService.createMDA({
-            ...mdaData,
-            parentMDA: undefined, // Ministries don't have parent MDAs
-          }, 'system-initializer');
+          await mdaLocalStorageService.createMDA(
+            {
+              ...mdaData,
+              parentMDA: undefined, // Ministries don't have parent MDAs
+            },
+            "system-initializer",
+          );
 
           console.log(`✅ Created MDA for ${ministry.name}`);
         } else {
@@ -106,9 +115,11 @@ class MDAInitializationService {
       }
 
       this.initialized = true;
-      console.log('✅ MDA initialization completed successfully with localStorage');
+      console.log(
+        "✅ MDA initialization completed successfully with localStorage",
+      );
     } catch (error) {
-      console.error('❌ Error during MDA initialization:', error);
+      console.error("❌ Error during MDA initialization:", error);
       throw error;
     }
   }
@@ -118,13 +129,15 @@ class MDAInitializationService {
    */
   async initializeDefaultAdmins(): Promise<void> {
     try {
-      console.log('🔧 Initializing default MDA admins...');
+      console.log("🔧 Initializing default MDA admins...");
 
       const ministries = getAllMinistries();
 
       for (const ministry of ministries) {
         // Check if admin already exists for this ministry
-        const existingAdmins = await mdaLocalStorageService.getMDAAdmins(ministry.id);
+        const existingAdmins = await mdaLocalStorageService.getMDAAdmins(
+          ministry.id,
+        );
 
         if (existingAdmins.length === 0) {
           console.log(`Creating default admin for ${ministry.name}...`);
@@ -134,7 +147,7 @@ class MDAInitializationService {
             mdaId: ministry.id,
             email: ministry.contactEmail,
             displayName: `${ministry.code} Administrator`,
-            role: 'mda_super_admin' as const,
+            role: "mda_super_admin" as const,
             permissions: {
               canCreateUsers: true,
               canManageTenders: true,
@@ -145,14 +158,17 @@ class MDAInitializationService {
             },
           };
 
-          await mdaLocalStorageService.createMDAAdmin(adminData, 'system-initializer');
+          await mdaLocalStorageService.createMDAAdmin(
+            adminData,
+            "system-initializer",
+          );
           console.log(`✅ Created default admin for ${ministry.name}`);
         } else {
           console.log(`✓ Admin already exists for ${ministry.name}`);
         }
       }
     } catch (error) {
-      console.error('❌ Error creating default admins:', error);
+      console.error("❌ Error creating default admins:", error);
       throw error;
     }
   }
@@ -163,10 +179,10 @@ class MDAInitializationService {
    */
   getMinistryMDAs(): MDA[] {
     const ministries = getAllMinistries();
-    return ministries.map(ministry => ({
+    return ministries.map((ministry) => ({
       id: ministry.id,
       ...this.convertMinistryToMDA(ministry),
-      createdAt: new Date('2024-01-01'),
+      createdAt: new Date("2024-01-01"),
       updatedAt: new Date(),
     }));
   }
@@ -191,14 +207,16 @@ class MDAInitializationService {
   async initialize(): Promise<void> {
     try {
       if (!mdaLocalStorageService.isAvailable()) {
-        throw new Error('localStorage is not available');
+        throw new Error("localStorage is not available");
       }
 
       await this.initializeMDAsFromMinistries();
       await this.initializeDefaultAdmins();
-      console.log('🎉 Complete MDA system initialization finished with localStorage');
+      console.log(
+        "🎉 Complete MDA system initialization finished with localStorage",
+      );
     } catch (error) {
-      console.error('❌ MDA initialization failed:', error);
+      console.error("❌ MDA initialization failed:", error);
       throw error;
     }
   }

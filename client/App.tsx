@@ -77,10 +77,7 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/firebase-setup"
-              element={<FirebaseSetup />}
-            />
+            <Route path="/firebase-setup" element={<FirebaseSetup />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

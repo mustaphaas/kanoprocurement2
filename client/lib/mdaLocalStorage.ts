@@ -11,16 +11,16 @@ import {
 
 /**
  * MDA LocalStorage Service
- * 
+ *
  * This service provides MDA management functionality using localStorage
  * for data persistence. All data is stored locally in the browser.
  */
 class MDALocalStorageService {
-  private readonly MDA_KEY = 'mdas';
-  private readonly MDA_ADMIN_KEY = 'mda_admins';
-  private readonly MDA_USER_KEY = 'mda_users';
-  private readonly MDA_TENDER_KEY = 'mda_tenders';
-  private readonly MDA_STATS_KEY = 'mda_stats';
+  private readonly MDA_KEY = "mdas";
+  private readonly MDA_ADMIN_KEY = "mda_admins";
+  private readonly MDA_USER_KEY = "mda_users";
+  private readonly MDA_TENDER_KEY = "mda_tenders";
+  private readonly MDA_STATS_KEY = "mda_stats";
 
   // Utility methods for localStorage operations
   private getFromStorage<T>(key: string, defaultValue: T[] = []): T[] {
@@ -48,7 +48,7 @@ class MDALocalStorageService {
   // MDA Operations
   async createMDA(data: CreateMDARequest, createdBy: string): Promise<MDA> {
     const mdas = this.getFromStorage<MDA>(this.MDA_KEY);
-    
+
     const newMDA: MDA = {
       id: this.generateId(),
       ...data,
@@ -66,8 +66,8 @@ class MDALocalStorageService {
 
   async getMDA(mdaId: string): Promise<MDA | null> {
     const mdas = this.getFromStorage<MDA>(this.MDA_KEY);
-    const mda = mdas.find(m => m.id === mdaId);
-    
+    const mda = mdas.find((m) => m.id === mdaId);
+
     if (mda) {
       // Convert date strings back to Date objects
       return {
@@ -76,16 +76,16 @@ class MDALocalStorageService {
         updatedAt: new Date(mda.updatedAt),
       };
     }
-    
+
     return null;
   }
 
   async getAllMDAs(): Promise<MDA[]> {
     const mdas = this.getFromStorage<MDA>(this.MDA_KEY);
-    
+
     return mdas
-      .filter(mda => mda.isActive)
-      .map(mda => ({
+      .filter((mda) => mda.isActive)
+      .map((mda) => ({
         ...mda,
         createdAt: new Date(mda.createdAt),
         updatedAt: new Date(mda.updatedAt),
@@ -93,17 +93,21 @@ class MDALocalStorageService {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  async updateMDA(mdaId: string, updates: Partial<MDA>, updatedBy: string): Promise<void> {
+  async updateMDA(
+    mdaId: string,
+    updates: Partial<MDA>,
+    updatedBy: string,
+  ): Promise<void> {
     const mdas = this.getFromStorage<MDA>(this.MDA_KEY);
-    const index = mdas.findIndex(m => m.id === mdaId);
-    
+    const index = mdas.findIndex((m) => m.id === mdaId);
+
     if (index !== -1) {
       mdas[index] = {
         ...mdas[index],
         ...updates,
         updatedAt: new Date(),
       };
-      
+
       this.saveToStorage(this.MDA_KEY, mdas);
       console.log(`✅ Updated MDA: ${mdas[index].name}`);
     }
@@ -111,26 +115,29 @@ class MDALocalStorageService {
 
   async deleteMDA(mdaId: string): Promise<void> {
     const mdas = this.getFromStorage<MDA>(this.MDA_KEY);
-    const updatedMDAs = mdas.filter(m => m.id !== mdaId);
-    
+    const updatedMDAs = mdas.filter((m) => m.id !== mdaId);
+
     this.saveToStorage(this.MDA_KEY, updatedMDAs);
-    
+
     // Also remove related admins and users
     const admins = this.getFromStorage<MDAAdmin>(this.MDA_ADMIN_KEY);
-    const updatedAdmins = admins.filter(a => a.mdaId !== mdaId);
+    const updatedAdmins = admins.filter((a) => a.mdaId !== mdaId);
     this.saveToStorage(this.MDA_ADMIN_KEY, updatedAdmins);
-    
+
     const users = this.getFromStorage<MDAUser>(this.MDA_USER_KEY);
-    const updatedUsers = users.filter(u => u.mdaId !== mdaId);
+    const updatedUsers = users.filter((u) => u.mdaId !== mdaId);
     this.saveToStorage(this.MDA_USER_KEY, updatedUsers);
-    
+
     console.log(`✅ Deleted MDA and related data for ID: ${mdaId}`);
   }
 
   // MDA Admin Operations
-  async createMDAAdmin(data: CreateMDAAdminRequest, createdBy: string): Promise<MDAAdmin> {
+  async createMDAAdmin(
+    data: CreateMDAAdminRequest,
+    createdBy: string,
+  ): Promise<MDAAdmin> {
     const admins = this.getFromStorage<MDAAdmin>(this.MDA_ADMIN_KEY);
-    
+
     const newAdmin: MDAAdmin = {
       id: this.generateId(),
       mdaId: data.mdaId,
@@ -145,29 +152,33 @@ class MDALocalStorageService {
     admins.push(newAdmin);
     this.saveToStorage(this.MDA_ADMIN_KEY, admins);
 
-    console.log(`✅ Created MDA Admin: ${data.displayName} for MDA: ${data.mdaId}`);
+    console.log(
+      `✅ Created MDA Admin: ${data.displayName} for MDA: ${data.mdaId}`,
+    );
     return newAdmin;
   }
 
-  async getMDAAdmins(mdaId?: string): Promise<(MDAAdmin & { user: EnhancedUserProfile; mda: MDA })[]> {
+  async getMDAAdmins(
+    mdaId?: string,
+  ): Promise<(MDAAdmin & { user: EnhancedUserProfile; mda: MDA })[]> {
     const admins = this.getFromStorage<MDAAdmin>(this.MDA_ADMIN_KEY);
     const mdas = this.getFromStorage<MDA>(this.MDA_KEY);
-    
-    let filteredAdmins = admins.filter(admin => admin.isActive);
-    
+
+    let filteredAdmins = admins.filter((admin) => admin.isActive);
+
     if (mdaId) {
-      filteredAdmins = filteredAdmins.filter(admin => admin.mdaId === mdaId);
+      filteredAdmins = filteredAdmins.filter((admin) => admin.mdaId === mdaId);
     }
 
-    return filteredAdmins.map(admin => {
-      const mda = mdas.find(m => m.id === admin.mdaId);
-      
+    return filteredAdmins.map((admin) => {
+      const mda = mdas.find((m) => m.id === admin.mdaId);
+
       // Create mock user profile
       const user: EnhancedUserProfile = {
         uid: admin.userId,
         email: `admin-${admin.id}@kanostate.gov.ng`,
         displayName: `MDA Administrator`,
-        role: 'mda_admin',
+        role: "mda_admin",
         mdaId: admin.mdaId,
         mdaRole: admin.role,
         createdAt: new Date(admin.assignedAt),
@@ -179,19 +190,24 @@ class MDALocalStorageService {
         ...admin,
         assignedAt: new Date(admin.assignedAt),
         user,
-        mda: mda ? {
-          ...mda,
-          createdAt: new Date(mda.createdAt),
-          updatedAt: new Date(mda.updatedAt),
-        } : {} as MDA,
+        mda: mda
+          ? {
+              ...mda,
+              createdAt: new Date(mda.createdAt),
+              updatedAt: new Date(mda.updatedAt),
+            }
+          : ({} as MDA),
       };
     });
   }
 
   // MDA User Operations
-  async createMDAUser(data: CreateMDAUserRequest, createdBy: string): Promise<MDAUser> {
+  async createMDAUser(
+    data: CreateMDAUserRequest,
+    createdBy: string,
+  ): Promise<MDAUser> {
     const users = this.getFromStorage<MDAUser>(this.MDA_USER_KEY);
-    
+
     const newUser: MDAUser = {
       id: this.generateId(),
       mdaId: data.mdaId,
@@ -207,24 +223,28 @@ class MDALocalStorageService {
     users.push(newUser);
     this.saveToStorage(this.MDA_USER_KEY, users);
 
-    console.log(`✅ Created MDA User: ${data.displayName} (${data.role}) for MDA: ${data.mdaId}`);
+    console.log(
+      `✅ Created MDA User: ${data.displayName} (${data.role}) for MDA: ${data.mdaId}`,
+    );
     return newUser;
   }
 
-  async getMDAUsers(mdaId: string): Promise<(MDAUser & { user: EnhancedUserProfile })[]> {
+  async getMDAUsers(
+    mdaId: string,
+  ): Promise<(MDAUser & { user: EnhancedUserProfile })[]> {
     const users = this.getFromStorage<MDAUser>(this.MDA_USER_KEY);
-    
-    const filteredUsers = users.filter(user => 
-      user.mdaId === mdaId && user.isActive
+
+    const filteredUsers = users.filter(
+      (user) => user.mdaId === mdaId && user.isActive,
     );
 
-    return filteredUsers.map(user => {
+    return filteredUsers.map((user) => {
       // Create mock user profile
       const userProfile: EnhancedUserProfile = {
         uid: user.userId,
         email: `${user.role}-${user.id}@kanostate.gov.ng`,
-        displayName: `${user.role.replace('_', ' ').toUpperCase()} User`,
-        role: 'mda_user',
+        displayName: `${user.role.replace("_", " ").toUpperCase()} User`,
+        role: "mda_user",
         mdaId: user.mdaId,
         mdaRole: user.role,
         department: user.department,
@@ -242,9 +262,12 @@ class MDALocalStorageService {
   }
 
   // Tender Operations
-  async createTender(tender: Omit<MDATender, "id" | "createdAt" | "updatedAt">, createdBy: string): Promise<MDATender> {
+  async createTender(
+    tender: Omit<MDATender, "id" | "createdAt" | "updatedAt">,
+    createdBy: string,
+  ): Promise<MDATender> {
     const tenders = this.getFromStorage<MDATender>(this.MDA_TENDER_KEY);
-    
+
     const newTender: MDATender = {
       ...tender,
       id: this.generateId(),
@@ -261,10 +284,10 @@ class MDALocalStorageService {
 
   async getMDATenders(mdaId: string): Promise<MDATender[]> {
     const tenders = this.getFromStorage<MDATender>(this.MDA_TENDER_KEY);
-    
+
     return tenders
-      .filter(tender => tender.mdaId === mdaId)
-      .map(tender => ({
+      .filter((tender) => tender.mdaId === mdaId)
+      .map((tender) => ({
         ...tender,
         publishDate: tender.publishDate ? new Date(tender.publishDate) : null,
         closingDate: tender.closingDate ? new Date(tender.closingDate) : null,
@@ -279,11 +302,13 @@ class MDALocalStorageService {
     const tenders = await this.getMDATenders(mdaId);
     const users = await this.getMDAUsers(mdaId);
     const admins = await this.getMDAAdmins(mdaId);
-    
-    const activeTenders = tenders.filter(t => t.status === 'published').length;
+
+    const activeTenders = tenders.filter(
+      (t) => t.status === "published",
+    ).length;
     const totalValue = tenders.reduce((sum, t) => sum + t.estimatedValue, 0);
-    const awardedTenders = tenders.filter(t => t.status === 'awarded').length;
-    const draftTenders = tenders.filter(t => t.status === 'draft').length;
+    const awardedTenders = tenders.filter((t) => t.status === "awarded").length;
+    const draftTenders = tenders.filter((t) => t.status === "draft").length;
 
     return {
       totalTenders: tenders.length,
@@ -303,12 +328,12 @@ class MDALocalStorageService {
     const allAdmins = await this.getMDAAdmins();
     const allTenders = this.getFromStorage<MDATender>(this.MDA_TENDER_KEY);
     const allUsers = this.getFromStorage<MDAUser>(this.MDA_USER_KEY);
-    
+
     const totalValue = allTenders.reduce((sum, t) => sum + t.estimatedValue, 0);
 
     return {
       totalMDAs: mdas.length,
-      activeMDAs: mdas.filter(m => m.isActive).length,
+      activeMDAs: mdas.filter((m) => m.isActive).length,
       totalAdmins: allAdmins.length,
       totalUsers: allUsers.length,
       systemWideStats: {
@@ -316,10 +341,10 @@ class MDALocalStorageService {
         totalValue,
         averageEfficiency: 92.5, // Mock value
       },
-      mdaPerformance: mdas.map(mda => ({
+      mdaPerformance: mdas.map((mda) => ({
         mdaId: mda.id,
         mdaName: mda.name,
-        tenderCount: allTenders.filter(t => t.mdaId === mda.id).length,
+        tenderCount: allTenders.filter((t) => t.mdaId === mda.id).length,
         efficiency: Math.floor(Math.random() * 20) + 80, // Mock efficiency between 80-100%
       })),
     };
@@ -327,12 +352,13 @@ class MDALocalStorageService {
 
   // Utility Methods
   private generateMockTrends(tenders: MDATender[]): any[] {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-    
-    return months.map(month => {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May"];
+
+    return months.map((month) => {
       const monthTenders = Math.floor(Math.random() * 5) + 1;
-      const monthValue = monthTenders * (Math.floor(Math.random() * 100000000) + 50000000);
-      
+      const monthValue =
+        monthTenders * (Math.floor(Math.random() * 100000000) + 50000000);
+
       return {
         month,
         tenders: monthTenders,
@@ -348,7 +374,7 @@ class MDALocalStorageService {
     localStorage.removeItem(this.MDA_USER_KEY);
     localStorage.removeItem(this.MDA_TENDER_KEY);
     localStorage.removeItem(this.MDA_STATS_KEY);
-    console.log('🗑️ Cleared all MDA data from localStorage');
+    console.log("🗑️ Cleared all MDA data from localStorage");
   }
 
   exportData(): string {
@@ -359,31 +385,31 @@ class MDALocalStorageService {
       tenders: this.getFromStorage(this.MDA_TENDER_KEY),
       exportDate: new Date().toISOString(),
     };
-    
+
     return JSON.stringify(data, null, 2);
   }
 
   importData(jsonData: string): void {
     try {
       const data = JSON.parse(jsonData);
-      
+
       if (data.mdas) this.saveToStorage(this.MDA_KEY, data.mdas);
       if (data.admins) this.saveToStorage(this.MDA_ADMIN_KEY, data.admins);
       if (data.users) this.saveToStorage(this.MDA_USER_KEY, data.users);
       if (data.tenders) this.saveToStorage(this.MDA_TENDER_KEY, data.tenders);
-      
-      console.log('✅ Successfully imported MDA data');
+
+      console.log("✅ Successfully imported MDA data");
     } catch (error) {
-      console.error('❌ Failed to import MDA data:', error);
-      throw new Error('Invalid data format');
+      console.error("❌ Failed to import MDA data:", error);
+      throw new Error("Invalid data format");
     }
   }
 
   // Check if service is available
   isAvailable(): boolean {
     try {
-      const testKey = '__mda_test__';
-      localStorage.setItem(testKey, 'test');
+      const testKey = "__mda_test__";
+      localStorage.setItem(testKey, "test");
       localStorage.removeItem(testKey);
       return true;
     } catch {

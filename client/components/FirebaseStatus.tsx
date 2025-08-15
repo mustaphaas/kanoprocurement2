@@ -7,7 +7,7 @@ interface FirebaseStatusProps {
 
 export default function FirebaseStatus({
   variant = "badge",
-  showDetails = false
+  showDetails = false,
 }: FirebaseStatusProps) {
   // Check if localStorage is available
   const hasLocalStorage = typeof Storage !== "undefined";
@@ -25,7 +25,8 @@ export default function FirebaseStatus({
             </h3>
             <div className="mt-2 text-sm text-blue-700">
               <p>
-                Your MDA data is stored locally in your browser. Changes persist across sessions.
+                Your MDA data is stored locally in your browser. Changes persist
+                across sessions.
               </p>
               {showDetails && (
                 <div className="mt-2">
@@ -38,7 +39,8 @@ export default function FirebaseStatus({
                   </ul>
                   <div className="mt-3">
                     <p className="text-xs text-blue-600">
-                      💡 All MDA management features are fully functional with localStorage
+                      💡 All MDA management features are fully functional with
+                      localStorage
                     </p>
                   </div>
                 </div>

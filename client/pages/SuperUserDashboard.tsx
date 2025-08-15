@@ -419,7 +419,7 @@ export default function SuperUserDashboard() {
   // Initialize MDA system with localStorage
   const initializeMDASystem = useCallback(async () => {
     try {
-      console.log('���� Initializing MDA system with localStorage...');
+      console.log("���� Initializing MDA system with localStorage...");
 
       // Initialize MDAs from static ministries if not already done
       await mdaInitializer.initialize();
@@ -440,70 +440,75 @@ export default function SuperUserDashboard() {
       }
       setMDAUsers(allUsers);
 
-      console.log('✅ MDA system initialized successfully with localStorage');
-      console.log(`📊 Loaded: ${loadedMDAs.length} MDAs, ${loadedAdmins.length} admins, ${allUsers.length} users`);
+      console.log("✅ MDA system initialized successfully with localStorage");
+      console.log(
+        `📊 Loaded: ${loadedMDAs.length} MDAs, ${loadedAdmins.length} admins, ${allUsers.length} users`,
+      );
     } catch (error) {
-      console.error('❌ MDA system initialization error:', error);
+      console.error("❌ MDA system initialization error:", error);
       // Fallback to static data
       const fallbackMDAs = mdaInitializer.getMinistryMDAs();
       setMDAs(fallbackMDAs);
     }
   }, []);
 
-  const handleCompanyStatusChange = useCallback((
-    companyId: string,
-    newStatus: "Approved" | "Suspended" | "Blacklisted",
-    reason: string,
-  ) => {
-    console.log("���� SuperUser handleCompanyStatusChange CALLED");
-    console.log("📥 Parameters:", { companyId, newStatus, reason });
+  const handleCompanyStatusChange = useCallback(
+    (
+      companyId: string,
+      newStatus: "Approved" | "Suspended" | "Blacklisted",
+      reason: string,
+    ) => {
+      console.log("���� SuperUser handleCompanyStatusChange CALLED");
+      console.log("📥 Parameters:", { companyId, newStatus, reason });
 
-    // Find the company first
-    const company = companies.find((c) => c.id === companyId);
-    if (!company) {
-      console.error(`❌ Company with ID ${companyId} not found!`);
-      return;
-    }
+      // Find the company first
+      const company = companies.find((c) => c.id === companyId);
+      if (!company) {
+        console.error(`❌ Company with ID ${companyId} not found!`);
+        return;
+      }
 
-    console.log(`=== SUPERUSER STATUS CHANGE ===`);
-    console.log(`Company: ${company.companyName}`);
-    console.log(`Original Email: ${company.email}`);
-    console.log(`Normalized Email: ${company.email.toLowerCase()}`);
-    console.log(`New status: ${newStatus}`);
+      console.log(`=== SUPERUSER STATUS CHANGE ===`);
+      console.log(`Company: ${company.companyName}`);
+      console.log(`Original Email: ${company.email}`);
+      console.log(`Normalized Email: ${company.email.toLowerCase()}`);
+      console.log(`New status: ${newStatus}`);
 
-    // Update the company status in the local state FIRST
-    setCompanies((prev) =>
-      prev.map((c) => (c.id === companyId ? { ...c, status: newStatus } : c)),
-    );
-
-    // Store the status change using persistent storage
-    const storageKey = `userStatus_${company.email.toLowerCase()}`;
-    const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
-
-    console.log(`📦 Setting storage key: ${storageKey} = ${newStatus}`);
-
-    persistentStorage.setItem(storageKey, newStatus);
-    persistentStorage.setItem(reasonKey, reason);
-
-    // Verify the storage was set correctly
-    const verifyValue = persistentStorage.getItem(storageKey);
-    console.log(`✅ Verification - stored value: ${verifyValue}`);
-
-    if (verifyValue !== newStatus) {
-      console.error(
-        `❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`,
+      // Update the company status in the local state FIRST
+      setCompanies((prev) =>
+        prev.map((c) => (c.id === companyId ? { ...c, status: newStatus } : c)),
       );
-    }
 
-    // Debug the persistent storage state
-    persistentStorage.debugInfo();
+      // Store the status change using persistent storage
+      const storageKey = `userStatus_${company.email.toLowerCase()}`;
+      const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
 
-    // Reset form
-    setActionReason("");
-    setApprovalDecision("");
-    setSelectedCompanyForApproval(null);
-    setViewMode("list");
-  }, [companies]);
+      console.log(`📦 Setting storage key: ${storageKey} = ${newStatus}`);
+
+      persistentStorage.setItem(storageKey, newStatus);
+      persistentStorage.setItem(reasonKey, reason);
+
+      // Verify the storage was set correctly
+      const verifyValue = persistentStorage.getItem(storageKey);
+      console.log(`✅ Verification - stored value: ${verifyValue}`);
+
+      if (verifyValue !== newStatus) {
+        console.error(
+          `❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`,
+        );
+      }
+
+      // Debug the persistent storage state
+      persistentStorage.debugInfo();
+
+      // Reset form
+      setActionReason("");
+      setApprovalDecision("");
+      setSelectedCompanyForApproval(null);
+      setViewMode("list");
+    },
+    [companies],
+  );
 
   const dashboardStats: DashboardStats = {
     newRegistrationsPending: 4, // Including pending@company.com + 3 other mock companies
@@ -824,7 +829,12 @@ export default function SuperUserDashboard() {
         contactEmail: ministry.contactEmail,
         contactPhone: ministry.contactPhone,
         address: ministry.address,
-        headOfMDA: index === 0 ? "Dr. Amina Kano" : index === 1 ? "Engr. Musa Abdullahi" : "Prof. Muhammad Usman",
+        headOfMDA:
+          index === 0
+            ? "Dr. Amina Kano"
+            : index === 1
+              ? "Engr. Musa Abdullahi"
+              : "Prof. Muhammad Usman",
         createdAt: new Date("2024-01-01"),
         updatedAt: new Date("2024-01-15"),
         isActive: true,
@@ -837,7 +847,8 @@ export default function SuperUserDashboard() {
           allowedCategories: ministry.specializations,
           customWorkflows: true,
           budgetYear: "2024",
-          totalBudget: index === 0 ? 5000000000 : index === 1 ? 8500000000 : 8000000000, // Different budgets per ministry
+          totalBudget:
+            index === 0 ? 5000000000 : index === 1 ? 8500000000 : 8000000000, // Different budgets per ministry
         },
       }));
     };
@@ -1354,7 +1365,7 @@ export default function SuperUserDashboard() {
       try {
         await initializeMDASystem();
       } catch (error) {
-        console.error('Failed to initialize MDA system:', error);
+        console.error("Failed to initialize MDA system:", error);
       }
     };
 
@@ -1881,12 +1892,19 @@ The award letter has been:
     try {
       if (mdaFormMode === "create") {
         // Create new MDA in localStorage
-        const newMDA = await mdaLocalStorageService.createMDA(data, 'superuser');
+        const newMDA = await mdaLocalStorageService.createMDA(
+          data,
+          "superuser",
+        );
         setMDAs((prev) => [...prev, newMDA]);
         alert("MDA created successfully!");
       } else if (selectedMDA) {
         // Update existing MDA in localStorage
-        await mdaLocalStorageService.updateMDA(selectedMDA.id, data, 'superuser');
+        await mdaLocalStorageService.updateMDA(
+          selectedMDA.id,
+          data,
+          "superuser",
+        );
         const updatedMDA: MDA = {
           ...selectedMDA,
           ...data,
@@ -1910,11 +1928,18 @@ The award letter has been:
     try {
       if (adminFormMode === "create") {
         // Create new admin in localStorage
-        const newAdmin = await mdaLocalStorageService.createMDAAdmin(data, 'superuser');
+        const newAdmin = await mdaLocalStorageService.createMDAAdmin(
+          data,
+          "superuser",
+        );
 
         // Fetch updated admin list to get the full admin with user data
-        const updatedAdmins = await mdaLocalStorageService.getMDAAdmins(data.mdaId);
-        const createdAdmin = updatedAdmins.find(admin => admin.id === newAdmin.id);
+        const updatedAdmins = await mdaLocalStorageService.getMDAAdmins(
+          data.mdaId,
+        );
+        const createdAdmin = updatedAdmins.find(
+          (admin) => admin.id === newAdmin.id,
+        );
 
         if (createdAdmin) {
           setMDAAdmins((prev) => [...prev, createdAdmin]);
@@ -1924,12 +1949,13 @@ The award letter has been:
       } else if (selectedMDAAdmin) {
         // Note: For updates, we would need to add an update method to the service
         // For now, just update the UI state
-        const updatedAdmin: MDAAdmin & { user: EnhancedUserProfile; mda: MDA } = {
-          ...selectedMDAAdmin,
-          mdaId: data.mdaId,
-          role: data.role,
-          permissions: data.permissions,
-        };
+        const updatedAdmin: MDAAdmin & { user: EnhancedUserProfile; mda: MDA } =
+          {
+            ...selectedMDAAdmin,
+            mdaId: data.mdaId,
+            role: data.role,
+            permissions: data.permissions,
+          };
         setMDAAdmins((prev) =>
           prev.map((a) => (a.id === selectedMDAAdmin.id ? updatedAdmin : a)),
         );
@@ -1999,11 +2025,16 @@ The award letter has been:
     try {
       if (userFormMode === "create") {
         // Create new user in localStorage
-        const newUser = await mdaLocalStorageService.createMDAUser(data, 'superuser');
+        const newUser = await mdaLocalStorageService.createMDAUser(
+          data,
+          "superuser",
+        );
 
         // Fetch updated user list to get the full user with profile data
-        const updatedUsers = await mdaLocalStorageService.getMDAUsers(data.mdaId);
-        const createdUser = updatedUsers.find(user => user.id === newUser.id);
+        const updatedUsers = await mdaLocalStorageService.getMDAUsers(
+          data.mdaId,
+        );
+        const createdUser = updatedUsers.find((user) => user.id === newUser.id);
 
         if (createdUser) {
           setMDAUsers((prev) => [...prev, createdUser]);
@@ -2073,7 +2104,9 @@ The award letter has been:
               <span className="text-gray-500">•</span>
               <FirebaseStatus variant="badge" />
               <span className="text-gray-500">•</span>
-              <span className="text-gray-600">Data stored in browser localStorage</span>
+              <span className="text-gray-600">
+                Data stored in browser localStorage
+              </span>
             </div>
           </div>
           <button

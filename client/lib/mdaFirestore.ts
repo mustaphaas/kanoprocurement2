@@ -38,7 +38,9 @@ class MDAFirestoreService {
    */
   private checkFirebaseAvailability(): boolean {
     if (!hasFirebaseConfig || !db || !auth) {
-      console.warn('⚠️ Firebase not configured - MDA operations will use local storage fallback');
+      console.warn(
+        "⚠️ Firebase not configured - MDA operations will use local storage fallback",
+      );
       return false;
     }
     return true;
@@ -48,8 +50,12 @@ class MDAFirestoreService {
    * Handle Firebase unavailable scenario
    */
   private handleFirebaseUnavailable(operation: string): void {
-    console.warn(`⚠️ Firebase operation '${operation}' skipped - running in demo mode`);
-    console.log('💡 To enable full Firebase functionality, please set up Firebase configuration');
+    console.warn(
+      `⚠️ Firebase operation '${operation}' skipped - running in demo mode`,
+    );
+    console.log(
+      "💡 To enable full Firebase functionality, please set up Firebase configuration",
+    );
   }
 
   // MDA Operations
@@ -63,7 +69,7 @@ class MDAFirestoreService {
         updatedAt: new Date(),
         isActive: true,
       };
-      this.handleFirebaseUnavailable('createMDA');
+      this.handleFirebaseUnavailable("createMDA");
       return mockMDA;
     }
 

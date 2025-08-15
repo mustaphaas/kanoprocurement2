@@ -6,8 +6,8 @@ import { getStorage, connectStorageEmulator } from "firebase/storage";
 // Check if Firebase configuration is available
 const hasFirebaseConfig = Boolean(
   import.meta.env.VITE_FIREBASE_API_KEY &&
-  import.meta.env.VITE_FIREBASE_AUTH_DOMAIN &&
-  import.meta.env.VITE_FIREBASE_PROJECT_ID
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN &&
+    import.meta.env.VITE_FIREBASE_PROJECT_ID,
 );
 
 // Default configuration for development/demo mode
@@ -18,19 +18,21 @@ const defaultConfig = {
   storageBucket: "demo-project.appspot.com",
   messagingSenderId: "123456789",
   appId: "1:123456789:web:demo",
-  measurementId: "G-DEMO123"
+  measurementId: "G-DEMO123",
 };
 
 // Your web app's Firebase configuration
-const firebaseConfig = hasFirebaseConfig ? {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-} : defaultConfig;
+const firebaseConfig = hasFirebaseConfig
+  ? {
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.VITE_FIREBASE_APP_ID,
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+    }
+  : defaultConfig;
 
 // Initialize Firebase
 let app: any = null;
@@ -44,7 +46,9 @@ try {
     app = initializeApp(firebaseConfig);
   } else {
     console.log("⚠️ Firebase config missing, running in demo mode");
-    console.log("ℹ️ Some features may be limited. To enable full Firebase functionality:");
+    console.log(
+      "ℹ️ Some features may be limited. To enable full Firebase functionality:",
+    );
     console.log("1. Set up a Firebase project");
     console.log("2. Add Firebase environment variables to .env file");
     console.log("3. See FIREBASE_SETUP.md for detailed instructions");
@@ -75,7 +79,10 @@ try {
 }
 
 // Connect to emulators only when explicitly requested
-if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === "true" && hasFirebaseConfig) {
+if (
+  import.meta.env.VITE_USE_FIREBASE_EMULATOR === "true" &&
+  hasFirebaseConfig
+) {
   try {
     connectAuthEmulator(auth, "http://localhost:9099", {
       disableWarnings: true,
