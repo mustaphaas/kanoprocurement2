@@ -571,6 +571,104 @@ export default function SuperUserDashboard() {
   // Get audit log statistics
   const auditStats = auditLogStorage.getLogStats();
 
+  // MDA Testing functions
+  const handleCreateSampleMDAs = async () => {
+    try {
+      if (window.confirm('This will create 4 sample MDAs with full functionality. Continue?')) {
+        console.log('🚀 Creating sample MDAs...');
+        const createdMDAs = await dynamicMDACreationService.createSampleMDAs('SuperUser');
+
+        // Update the MDA list
+        setMDAs(prev => [...prev, ...createdMDAs]);
+
+        alert(`Successfully created ${createdMDAs.length} sample MDAs with full ministry functionality!`);
+        console.log('✅ Sample MDAs created:', createdMDAs.map(m => m.name));
+      }
+    } catch (error) {
+      console.error('❌ Error creating sample MDAs:', error);
+      alert('Error creating sample MDAs. Please try again.');
+    }
+  };
+
+  const handleTestMDAFunctionality = (mda: MDA) => {
+    const hasFunctionality = dynamicMDACreationService.hasMDAFunctionality(mda.id);
+    const configs = dynamicMDACreationService.getMDAConfigurations();
+    const mdaConfig = configs.find(c => c.mdaId === mda.id);
+
+    const testResults = {
+      name: mda.name,
+      type: mda.type,
+      hasFunctionality,
+      features: mdaConfig?.features || 'No functionality configured',
+      tenderConfig: localStorage.getItem(`${mda.id}_tenders`) ? 'Configured' : 'Not configured',
+      dashboardConfig: mdaConfig ? 'Configured' : 'Not configured',
+      credentials: JSON.parse(localStorage.getItem('mdaCredentials') || '[]').find((c: any) => c.id === mda.id) ? 'Created' : 'Not created'
+    };
+
+    console.log('🧪 MDA Functionality Test Results:', testResults);
+    alert(`MDA Functionality Test Results:\n\nMDA: ${testResults.name}\nType: ${testResults.type}\nFunctionality: ${testResults.hasFunctionality ? 'Enabled' : 'Disabled'}\nCredentials: ${testResults.credentials}\nDashboard: ${testResults.dashboardConfig}\nTender System: ${testResults.tenderConfig}`);
+  };
+
+  const handleClearAllMDAs = async () => {
+    if (window.confirm('This will delete ALL MDAs and their configurations. This action cannot be undone. Continue?')) {
+      try {
+        // Clear all MDA-related localStorage
+        localStorage.removeItem('mdas');
+        localStorage.removeItem('mda_admins');
+        localStorage.removeItem('mda_users');
+        localStorage.removeItem('mdaCredentials');
+        localStorage.removeItem('mdaDashboardConfigs');
+        localStorage.removeItem('mdaTenderConfigs');
+        localStorage.removeItem('mdaCategoryConfigs');
+        localStorage.removeItem('mdaAdminStructures');
+
+        // Clear individual MDA tender/bid data
+        mdas.forEach(mda => {
+          localStorage.removeItem(`${mda.id}_tenders`);
+          localStorage.removeItem(`${mda.id}_bids`);
+          localStorage.removeItem(`${mda.id}_evaluations`);
+        });
+
+        // Reset MDA state
+        setMDAs([]);
+        setMDAAdmins([]);
+        setMDAUsers([]);
+
+        alert('All MDAs and configurations have been cleared!');
+        console.log('🗑️ All MDA data cleared');
+      } catch (error) {
+        console.error('❌ Error clearing MDAs:', error);
+        alert('Error clearing MDAs. Please try again.');
+      }
+    }
+  };
+
+  const handleMDAIntegrityCheck = () => {
+    const mdaConfigs = dynamicMDACreationService.getMDAConfigurations();
+    const credentials = JSON.parse(localStorage.getItem('mdaCredentials') || '[]');
+
+    const integrityReport = mdas.map(mda => {
+      const hasConfig = mdaConfigs.some(c => c.mdaId === mda.id);
+      const hasCredentials = credentials.some((c: any) => c.id === mda.id);
+      const hasTenderSystem = localStorage.getItem(`${mda.id}_tenders`) !== null;
+
+      return {
+        name: mda.name,
+        type: mda.type,
+        hasConfig,
+        hasCredentials,
+        hasTenderSystem,
+        isFullyFunctional: hasConfig && hasCredentials && hasTenderSystem
+      };
+    });
+
+    const fullyFunctional = integrityReport.filter(r => r.isFullyFunctional).length;
+    const total = integrityReport.length;
+
+    console.log('🔍 MDA Integrity Check Report:', integrityReport);
+    alert(`MDA Integrity Check Complete:\n\nTotal MDAs: ${total}\nFully Functional: ${fullyFunctional}\nPartial/Broken: ${total - fullyFunctional}\n\nCheck console for detailed report.`);
+  };
+
   const handleCompanyStatusChange = useCallback(
     (
       companyId: string,
@@ -7543,6 +7641,9 @@ The award letter has been:
 
       case "mda-management":
         return renderMDAManagement();
+
+      case "mda-testing":
+        return renderMDATesting();
 
       case "settings":
         return (
