@@ -455,9 +455,25 @@ export default function AdminDashboard() {
       }
     };
 
+    // Global test function for company approval sync
+    (window as any).testApproval = () => {
+      console.log("=== TESTING COMPANY APPROVAL SYNC ===");
+      const pendingCompany = companies.find(c => c.email === "pending@company.com");
+      if (pendingCompany) {
+        console.log("📋 Found pending company:", pendingCompany);
+        console.log("📊 Current status:", pendingCompany.status);
+        console.log("🔄 Attempting to approve...");
+        handleStatusChange(pendingCompany.id, "Approved", "Test approval from admin");
+      } else {
+        console.log("❌ pending@company.com not found");
+        console.log("📋 Available companies:", companies.map(c => ({ email: c.email, status: c.status })));
+      }
+    };
+
     return () => {
       delete (window as any).adminTestLocalStorage;
       delete (window as any).adminTestStatusChange;
+      delete (window as any).testApproval;
     };
   }, [companies, handleStatusChange]);
 
