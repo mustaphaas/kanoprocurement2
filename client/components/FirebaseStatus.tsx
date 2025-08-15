@@ -31,8 +31,16 @@ export default function FirebaseStatus({
                   <ul className="mt-1 list-disc list-inside space-y-1">
                     <li>Set up a Firebase project</li>
                     <li>Add Firebase configuration environment variables</li>
-                    <li>See FIREBASE_SETUP.md for detailed instructions</li>
+                    <li>Restart the application</li>
                   </ul>
+                  <div className="mt-3">
+                    <a
+                      href="/firebase-setup"
+                      className="inline-flex items-center text-sm font-medium text-yellow-800 hover:text-yellow-900 underline"
+                    >
+                      View setup guide →
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
