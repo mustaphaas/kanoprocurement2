@@ -72,54 +72,54 @@ export default function AdminDashboard() {
     newStatus: "Approved" | "Suspended" | "Blacklisted",
     reason: string,
   ) => {
-    console.log("🚀 handleStatusChange CALLED");
+    console.log("🚀 ADMIN handleStatusChange CALLED");
     console.log("📥 Parameters:", { companyId, newStatus, reason });
     console.log("📋 Current companies array length:", companies.length);
 
-    // Update the company status in the local state
+    // Find the company first
+    const company = companies.find((c) => c.id === companyId);
+    if (!company) {
+      console.error(`❌ Company with ID ${companyId} not found!`);
+      return;
+    }
+
+    console.log(`=== ADMIN STATUS CHANGE ===`);
+    console.log(`Company: ${company.companyName}`);
+    console.log(`Original Email: ${company.email}`);
+    console.log(`Normalized Email: ${company.email.toLowerCase()}`);
+    console.log(`New status: ${newStatus}`);
+
+    // Update the company status in the local state FIRST
     setCompanies((prev) =>
-      prev.map((company) =>
-        company.id === companyId ? { ...company, status: newStatus } : company,
+      prev.map((c) =>
+        c.id === companyId ? { ...c, status: newStatus } : c,
       ),
     );
 
-    // Store the status change using persistent storage for the company dashboard to pick up
-    // We'll use the email as the key since that's what the dashboard checks
-    const company = companies.find((c) => c.id === companyId);
-    if (company) {
-      const storageKey = `userStatus_${company.email.toLowerCase()}`;
-      const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
+    // Store the status change using persistent storage
+    const storageKey = `userStatus_${company.email.toLowerCase()}`;
+    const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
 
-      // Use persistent storage instead of localStorage
-      persistentStorage.setItem(storageKey, newStatus);
-      persistentStorage.setItem(reasonKey, reason);
+    console.log(`📦 Setting storage key: ${storageKey} = ${newStatus}`);
 
-      console.log(`=== ADMIN STATUS CHANGE ===`);
-      console.log(`Company: ${company.companyName}`);
-      console.log(`Original email: ${company.email}`);
-      console.log(`Normalized email: ${company.email.toLowerCase()}`);
-      console.log(`Storage key: ${storageKey}`);
-      console.log(`New status: ${newStatus}`);
-      console.log(`Value stored: ${persistentStorage.getItem(storageKey)}`);
-      console.log(
-        `All userStatus keys:`,
-        persistentStorage.getUserStatusKeys(),
-      );
+    persistentStorage.setItem(storageKey, newStatus);
+    persistentStorage.setItem(reasonKey, reason);
 
-      // Debug the persistent storage
-      persistentStorage.debugInfo();
+    // Verify the storage was set correctly
+    const verifyValue = persistentStorage.getItem(storageKey);
+    console.log(`✅ Verification - stored value: ${verifyValue}`);
 
-      // Force a UI update by refreshing companies state
-      setTimeout(() => {
-        console.log('🔄 Refreshing companies state after status change...');
-        const updatedCompanies = companies.map((c) =>
-          c.id === companyId ? { ...c, status: newStatus } : c,
-        );
-        setCompanies(updatedCompanies);
-      }, 100);
-    } else {
-      console.error(`❌ Company with ID ${companyId} not found!`);
+    if (verifyValue !== newStatus) {
+      console.error(`❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`);
     }
+
+    console.log(
+      `All userStatus keys:`,
+      persistentStorage.getUserStatusKeys(),
+    );
+
+    // Debug the persistent storage
+    persistentStorage.debugInfo();
 
     // Reset form
     setActionReason("");
