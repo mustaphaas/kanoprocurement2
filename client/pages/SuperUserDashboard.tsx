@@ -1121,9 +1121,24 @@ export default function SuperUserDashboard() {
     setMDAAdmins(mockMDAAdmins);
     setMDAUsers(mockMDAUsers);
 
+    // Listen for storage changes from Admin dashboard
+    const handleStorageChange = (event: any) => {
+      const { key, newValue } = event.detail;
+      if (key && key.startsWith('userStatus_')) {
+        console.log('🔄 Storage change detected in SuperUserDashboard:', key, newValue);
+        loadCompanies(); // Reload companies when status changes
+      }
+    };
+
+    window.addEventListener('persistentStorageChange', handleStorageChange);
+
     // Refresh company data every 30 seconds to sync with AdminDashboard changes
     const interval = setInterval(loadCompanies, 30000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('persistentStorageChange', handleStorageChange);
+    };
   }, []);
 
   const handleLogout = () => {
