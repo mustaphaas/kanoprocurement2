@@ -1221,8 +1221,10 @@ export default function SuperUserDashboard() {
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('persistentStorageChange', handleStorageChange);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('persistentStorageChange', handleCustomStorageChange);
       delete (window as any).testSuperUserApproval;
+      delete (window as any).testNorthernApproval;
     };
   }, [companies, handleCompanyStatusChange]);
 
@@ -4777,7 +4779,7 @@ The award letter has been:
                       {activeEvaluationTender
                         ? activeEvaluationTender.id
                         : "KS-2024-002"}{" "}
-                      ��� {tenderEvaluations.length} bids to evaluate
+                      • {tenderEvaluations.length} bids to evaluate
                     </p>
                   </div>
                   {activeEvaluationTender && (
