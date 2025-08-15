@@ -470,7 +470,7 @@ export default function SuperUserDashboard() {
     const storageKey = `userStatus_${company.email.toLowerCase()}`;
     const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
 
-    console.log(`���� Setting storage key: ${storageKey} = ${newStatus}`);
+    console.log(`📦 Setting storage key: ${storageKey} = ${newStatus}`);
 
     persistentStorage.setItem(storageKey, newStatus);
     persistentStorage.setItem(reasonKey, reason);
@@ -2042,17 +2042,7 @@ The award letter has been:
                 3 Pre-configured Ministries Active
               </span>
               <span className="text-gray-500">•</span>
-              {hasFirebaseConfig ? (
-                <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
-                  <span className="w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
-                  Firebase Connected
-                </span>
-              ) : (
-                <span className="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">
-                  <span className="w-2 h-2 bg-yellow-600 rounded-full mr-1"></span>
-                  Demo Mode (Local Storage)
-                </span>
-              )}
+              <FirebaseStatus variant="badge" />
               <span className="text-gray-500">•</span>
               <span className="text-gray-600">Ready to create new MDAs</span>
             </div>
