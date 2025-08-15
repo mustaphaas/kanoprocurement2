@@ -2265,6 +2265,26 @@ export default function MinistryDashboard() {
     setTimeout(() => {
       refreshAllTenderBidCounts();
     }, 100);
+
+    // Log ministry dashboard access
+    logUserAction(
+      "MinistryUser",
+      "ministry_user",
+      "MINISTRY_DASHBOARD_ACCESSED",
+      "Ministry Dashboard",
+      `Ministry user from ${ministry.name} accessed the ministry dashboard`,
+      "LOW",
+      undefined,
+      {
+        accessTime: new Date().toISOString(),
+        ministryName: ministry.name,
+        ministryCode: ministry.code,
+        ministryId: ministryId,
+        userAgent: navigator.userAgent,
+        tendersLoaded: mockTenders.length,
+        companiesLoaded: companies.length
+      }
+    );
   }, []);
 
   // Function to load bids from localStorage for selected tender
