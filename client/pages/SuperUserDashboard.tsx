@@ -5,6 +5,7 @@ import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import { mdaInitializer } from "@/lib/mdaInitializer";
 import { mdaLocalStorageService } from "@/lib/mdaLocalStorage";
 import FirebaseStatus from "@/components/FirebaseStatus";
+import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import MDAForm from "@/components/MDAForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
