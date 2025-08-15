@@ -117,23 +117,18 @@ class MDAInitializationService {
    * Create default admin users for ministries if they don't exist
    */
   async initializeDefaultAdmins(): Promise<void> {
-    if (!hasFirebaseConfig) {
-      console.log('⚠️ Firebase not configured - skipping admin initialization');
-      return;
-    }
-
     try {
       console.log('🔧 Initializing default MDA admins...');
-      
+
       const ministries = getAllMinistries();
-      
+
       for (const ministry of ministries) {
         // Check if admin already exists for this ministry
-        const existingAdmins = await mdaFirestoreService.getMDAAdmins(ministry.id);
-        
+        const existingAdmins = await mdaLocalStorageService.getMDAAdmins(ministry.id);
+
         if (existingAdmins.length === 0) {
           console.log(`Creating default admin for ${ministry.name}...`);
-          
+
           // Create default admin with ministry credentials
           const adminData = {
             mdaId: ministry.id,
@@ -150,14 +145,14 @@ class MDAInitializationService {
             },
           };
 
-          await mdaFirestoreService.createMDAAdmin(adminData, 'system-initializer');
+          await mdaLocalStorageService.createMDAAdmin(adminData, 'system-initializer');
           console.log(`✅ Created default admin for ${ministry.name}`);
         } else {
           console.log(`✓ Admin already exists for ${ministry.name}`);
         }
       }
     } catch (error) {
-      console.error('Error creating default admins:', error);
+      console.error('❌ Error creating default admins:', error);
       throw error;
     }
   }
