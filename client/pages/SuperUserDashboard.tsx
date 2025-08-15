@@ -1189,6 +1189,29 @@ export default function SuperUserDashboard() {
     // Refresh company data every 30 seconds to sync with AdminDashboard changes
     const interval = setInterval(loadCompanies, 30000);
 
+    // Additional polling for status changes (faster sync)
+    const syncInterval = setInterval(() => {
+      console.log('🔄 SuperUserDashboard: Checking for status changes...');
+      setCompanies(prevCompanies => {
+        let hasChanges = false;
+        const updatedCompanies = prevCompanies.map(company => {
+          const currentStatus = persistentStorage.getItem(`userStatus_${company.email.toLowerCase()}`);
+          if (currentStatus && currentStatus !== company.status) {
+            console.log(`🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`);
+            hasChanges = true;
+            return { ...company, status: currentStatus };
+          }
+          return company;
+        });
+
+        if (hasChanges) {
+          console.log('✅ SuperUserDashboard: Updated company statuses via polling');
+        }
+
+        return hasChanges ? updatedCompanies : prevCompanies;
+      });
+    }, 3000); // Check every 3 seconds
+
     // Global test function for company approval sync
     (window as any).testSuperUserApproval = () => {
       console.log("=== TESTING SUPERUSER COMPANY APPROVAL SYNC ===");
