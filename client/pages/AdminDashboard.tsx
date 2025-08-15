@@ -108,6 +108,15 @@ export default function AdminDashboard() {
 
       // Debug the persistent storage
       persistentStorage.debugInfo();
+
+      // Force a UI update by refreshing companies state
+      setTimeout(() => {
+        console.log('🔄 Refreshing companies state after status change...');
+        const updatedCompanies = companies.map((c) =>
+          c.id === companyId ? { ...c, status: newStatus } : c,
+        );
+        setCompanies(updatedCompanies);
+      }, 100);
     } else {
       console.error(`❌ Company with ID ${companyId} not found!`);
     }
