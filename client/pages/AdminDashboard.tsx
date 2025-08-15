@@ -319,6 +319,29 @@ export default function AdminDashboard() {
     // Refresh company list every 30 seconds to pick up new registrations
     const interval = setInterval(loadCompanies, 30000);
 
+    // Additional polling for status changes (faster sync)
+    const syncInterval = setInterval(() => {
+      console.log('🔄 AdminDashboard: Checking for status changes...');
+      setCompanies(prevCompanies => {
+        let hasChanges = false;
+        const updatedCompanies = prevCompanies.map(company => {
+          const currentStatus = persistentStorage.getItem(`userStatus_${company.email.toLowerCase()}`);
+          if (currentStatus && currentStatus !== company.status) {
+            console.log(`🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`);
+            hasChanges = true;
+            return { ...company, status: currentStatus };
+          }
+          return company;
+        });
+
+        if (hasChanges) {
+          console.log('✅ AdminDashboard: Updated company statuses via polling');
+        }
+
+        return hasChanges ? updatedCompanies : prevCompanies;
+      });
+    }, 3000); // Check every 3 seconds
+
     // Add global admin debugging functions
     (window as any).adminTestLocalStorage = () => {
       console.log("=== ADMIN LOCALSTORAGE TEST ===");
