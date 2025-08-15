@@ -3661,6 +3661,32 @@ export default function MinistryDashboard() {
       awardDetails: awardFormData,
     });
 
+    // Log tender award action
+    const { ministry } = getMinistryMockData();
+    logUserAction(
+      "MinistryUser",
+      "ministry_user",
+      "TENDER_AWARDED_BY_MINISTRY",
+      selectedTenderForAward.title,
+      `Ministry ${ministry.name} awarded tender "${selectedTenderForAward.title}" to ${selectedBidder.companyName}`,
+      "CRITICAL",
+      selectedTenderForAward.id,
+      {
+        tenderId: selectedTenderForAward.id,
+        tenderTitle: selectedTenderForAward.title,
+        awardedCompany: selectedBidder.companyName,
+        awardValue: awardFormData.awardValue,
+        awardJustification: awardFormData.awardJustification,
+        contractDuration: awardFormData.contractDuration,
+        performanceBond: awardFormData.performanceBond,
+        ministryName: ministry.name,
+        ministryCode: ministry.code,
+        bidderId: selectedBidder.id,
+        bidderScore: selectedBidder.totalScore,
+        awardTimestamp: new Date().toISOString()
+      }
+    );
+
     // Close award modal and show post-award workflow
     setShowAwardModal(false);
     setSelectedTenderForAward(null);
@@ -9303,7 +9329,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>����� 90% faster processing</li>
-                      <li>• Reduced human errors</li>
+                      <li>��� Reduced human errors</li>
                       <li>• Real-time notifications</li>
                       <li>��� Automatic compliance checks</li>
                     </ul>
