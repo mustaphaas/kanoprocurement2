@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { persistentStorage } from "@/lib/persistentStorage";
+import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import MDAForm from "@/components/MDAForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
@@ -672,7 +673,7 @@ export default function SuperUserDashboard() {
           "Supply of advanced medical equipment for specialist units",
         category: "Healthcare",
         ministry: "Ministry of Health",
-        estimatedValue: "₦950M",
+        estimatedValue: "��950M",
         status: "Closed",
         workflowStatus: "NOC_Requested",
         workflowStep: 5,
@@ -774,17 +775,18 @@ export default function SuperUserDashboard() {
       },
     ];
 
-    // Mock MDA data
-    const mockMDAs: MDA[] = [
-      {
-        id: "mda-001",
-        name: "Ministry of Health",
-        type: "ministry",
-        description: "Responsible for healthcare policy and administration",
-        contactEmail: "info@health.kano.gov.ng",
-        contactPhone: "+234 64 123 4567",
-        address: "Health Ministry Complex, Kano",
-        headOfMDA: "Dr. Amina Kano",
+    // Initialize MDAs from static ministry configuration
+    const initializeMDAFromMinistries = (): MDA[] => {
+      const ministries = getAllMinistries();
+      return ministries.map((ministry, index) => ({
+        id: ministry.id,
+        name: ministry.name,
+        type: "ministry" as const,
+        description: ministry.description,
+        contactEmail: ministry.contactEmail,
+        contactPhone: ministry.contactPhone,
+        address: ministry.address,
+        headOfMDA: index === 0 ? "Dr. Amina Kano" : index === 1 ? "Engr. Musa Abdullahi" : "Prof. Muhammad Usman",
         createdAt: new Date("2024-01-01"),
         updatedAt: new Date("2024-01-15"),
         isActive: true,
@@ -794,78 +796,20 @@ export default function SuperUserDashboard() {
             level2: 25000000,
             level3: 100000000,
           },
-          allowedCategories: [
-            "Medical Equipment",
-            "Pharmaceuticals",
-            "Healthcare Services",
-          ],
+          allowedCategories: ministry.specializations,
           customWorkflows: true,
           budgetYear: "2024",
-          totalBudget: 5000000000,
+          totalBudget: index === 0 ? 5000000000 : index === 1 ? 8500000000 : 8000000000, // Different budgets per ministry
         },
-      },
-      {
-        id: "mda-002",
-        name: "Ministry of Education",
-        type: "ministry",
-        description: "Manages education policy and school administration",
-        contactEmail: "info@education.kano.gov.ng",
-        contactPhone: "+234 64 123 4568",
-        address: "Education Ministry, Kano",
-        headOfMDA: "Prof. Muhammad Usman",
-        createdAt: new Date("2024-01-01"),
-        updatedAt: new Date("2024-01-15"),
-        isActive: true,
-        settings: {
-          procurementThresholds: {
-            level1: 5000000,
-            level2: 25000000,
-            level3: 100000000,
-          },
-          allowedCategories: [
-            "Educational Materials",
-            "School Infrastructure",
-            "ICT Equipment",
-          ],
-          customWorkflows: false,
-          budgetYear: "2024",
-          totalBudget: 8000000000,
-        },
-      },
-      {
-        id: "mda-003",
-        name: "Kano State Urban Development Board",
-        type: "agency",
-        description: "Urban planning and development coordination",
-        contactEmail: "info@ksudb.kano.gov.ng",
-        contactPhone: "+234 64 123 4569",
-        address: "KSUDB Complex, Kano",
-        headOfMDA: "Engr. Fatima Aliyu",
-        createdAt: new Date("2024-01-05"),
-        updatedAt: new Date("2024-01-20"),
-        isActive: true,
-        settings: {
-          procurementThresholds: {
-            level1: 3000000,
-            level2: 15000000,
-            level3: 50000000,
-          },
-          allowedCategories: [
-            "Construction",
-            "Urban Planning",
-            "Infrastructure",
-          ],
-          customWorkflows: true,
-          budgetYear: "2024",
-          totalBudget: 3000000000,
-        },
-      },
-    ];
+      }));
+    };
+
+    const mockMDAs: MDA[] = initializeMDAFromMinistries();
 
     const mockMDAAdmins: MDAAdmin[] = [
       {
         id: "admin-001",
-        mdaId: "mda-001",
+        mdaId: "ministry", // Ministry of Health
         userId: "user-001",
         role: "mda_super_admin",
         permissions: {
@@ -882,7 +826,7 @@ export default function SuperUserDashboard() {
       },
       {
         id: "admin-002",
-        mdaId: "mda-002",
+        mdaId: "ministry2", // Ministry of Works and Infrastructure
         userId: "user-002",
         role: "mda_admin",
         permissions: {
@@ -897,15 +841,32 @@ export default function SuperUserDashboard() {
         assignedAt: new Date("2024-01-03"),
         isActive: true,
       },
+      {
+        id: "admin-003",
+        mdaId: "ministry3", // Ministry of Education
+        userId: "user-003",
+        role: "mda_admin",
+        permissions: {
+          canCreateUsers: true,
+          canManageTenders: true,
+          canApproveContracts: false,
+          canViewReports: true,
+          canManageSettings: false,
+          maxApprovalAmount: 15000000,
+        },
+        assignedBy: "superuser-001",
+        assignedAt: new Date("2024-01-04"),
+        isActive: true,
+      },
     ];
 
     const mockMDAUsers: MDAUser[] = [
       {
         id: "mdauser-001",
-        mdaId: "mda-001",
+        mdaId: "ministry", // Ministry of Health
         userId: "usr-001",
         role: "procurement_officer",
-        department: "Procurement Department",
+        department: "Medical Services",
         permissions: {
           canCreateTenders: true,
           canEvaluateBids: true,
@@ -919,10 +880,10 @@ export default function SuperUserDashboard() {
       },
       {
         id: "mdauser-002",
-        mdaId: "mda-001",
+        mdaId: "ministry", // Ministry of Health
         userId: "usr-002",
         role: "evaluator",
-        department: "Technical Evaluation",
+        department: "Public Health",
         permissions: {
           canCreateTenders: false,
           canEvaluateBids: true,
@@ -936,19 +897,36 @@ export default function SuperUserDashboard() {
       },
       {
         id: "mdauser-003",
-        mdaId: "mda-002",
+        mdaId: "ministry2", // Ministry of Works and Infrastructure
         userId: "usr-003",
-        role: "accountant",
-        department: "Finance Department",
+        role: "procurement_officer",
+        department: "Road Construction",
         permissions: {
-          canCreateTenders: false,
-          canEvaluateBids: false,
+          canCreateTenders: true,
+          canEvaluateBids: true,
           canViewFinancials: true,
           canGenerateReports: true,
-          accessLevel: "read",
+          accessLevel: "write",
         },
         assignedBy: "admin-002",
         assignedAt: new Date("2024-01-07"),
+        isActive: true,
+      },
+      {
+        id: "mdauser-004",
+        mdaId: "ministry3", // Ministry of Education
+        userId: "usr-004",
+        role: "procurement_officer",
+        department: "Basic Education",
+        permissions: {
+          canCreateTenders: true,
+          canEvaluateBids: true,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          accessLevel: "write",
+        },
+        assignedBy: "admin-003",
+        assignedAt: new Date("2024-01-08"),
         isActive: true,
       },
     ];
