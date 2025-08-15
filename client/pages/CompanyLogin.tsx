@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   Mail,
@@ -70,8 +71,44 @@ export default function CompanyLogin() {
 
     try {
       await signIn(formData.email, formData.password);
+
+      // Log successful company login
+      logUserAction(
+        formData.email.toLowerCase(),
+        "company_user",
+        "COMPANY_LOGIN_SUCCESS",
+        "Company Portal",
+        `Company user ${formData.email} successfully logged in`,
+        "LOW",
+        undefined,
+        {
+          loginTime: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          loginMethod: "credentials",
+          email: formData.email.toLowerCase()
+        }
+      );
+
       navigate("/company/dashboard");
     } catch (error) {
+      // Log failed company login attempt
+      logUserAction(
+        formData.email.toLowerCase() || "Unknown",
+        "anonymous",
+        "COMPANY_LOGIN_FAILED",
+        "Company Portal",
+        `Failed company login attempt for user: ${formData.email}`,
+        "MEDIUM",
+        undefined,
+        {
+          attemptTime: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          errorMessage: error instanceof Error ? error.message : "Login failed",
+          email: formData.email.toLowerCase(),
+          ipAddress: "127.0.0.1"
+        }
+      );
+
       setErrors({
         general:
           error instanceof Error
