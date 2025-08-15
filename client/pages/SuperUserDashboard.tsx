@@ -455,7 +455,7 @@ export default function SuperUserDashboard() {
     newStatus: "Approved" | "Suspended" | "Blacklisted",
     reason: string,
   ) => {
-    console.log("🚀 SuperUser handleCompanyStatusChange CALLED");
+    console.log("���� SuperUser handleCompanyStatusChange CALLED");
     console.log("📥 Parameters:", { companyId, newStatus, reason });
 
     // Find the company first
@@ -1347,6 +1347,19 @@ export default function SuperUserDashboard() {
       delete (window as any).testNorthernApproval;
     };
   }, [companies, handleCompanyStatusChange]);
+
+  // Separate useEffect for MDA system initialization
+  useEffect(() => {
+    const initMDASystem = async () => {
+      try {
+        await initializeMDASystem();
+      } catch (error) {
+        console.error('Failed to initialize MDA system:', error);
+      }
+    };
+
+    initMDASystem();
+  }, []); // Empty dependency array - run only once
 
   const handleLogout = () => {
     navigate("/");
