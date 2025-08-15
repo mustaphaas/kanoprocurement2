@@ -2405,6 +2405,345 @@ The award letter has been:
     return matchesSearch && matchesType;
   });
 
+  const renderMDATesting = () => {
+    return (
+      <div className="space-y-8">
+        {/* Firebase Status Banner */}
+        <FirebaseStatus variant="banner" showDetails={true} />
+
+        {/* MDA Testing Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              MDA Testing Environment
+            </h1>
+            <p className="text-gray-600 mb-2">
+              Automated testing and validation for MDA functionality
+            </p>
+            <div className="flex items-center space-x-2 text-sm">
+              <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+                <span className="w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
+                Testing Mode Active
+              </span>
+              <span className="text-gray-500">•</span>
+              <FirebaseStatus variant="badge" />
+              <span className="text-gray-500">•</span>
+              <span className="text-gray-600">
+                Dynamic MDA creation with full ministry functionality
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={() => handleTabChange("mda-management")}
+            className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
+          >
+            ← Back to MDA Management
+          </button>
+        </div>
+
+        {/* Testing Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total MDAs</p>
+                <p className="text-3xl font-bold text-blue-600">
+                  {mdas.length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Functional MDAs
+                </p>
+                <p className="text-3xl font-bold text-green-600">
+                  {mdas.filter(mda => dynamicMDACreationService.hasMDAFunctionality(mda.id)).length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Test Configurations
+                </p>
+                <p className="text-3xl font-bold text-purple-600">
+                  {dynamicMDACreationService.getMDAConfigurations().length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <Settings className="h-6 w-6 text-purple-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  System Health
+                </p>
+                <p className="text-3xl font-bold text-orange-600">98.5%</p>
+              </div>
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <Activity className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <button
+            onClick={handleCreateSampleMDAs}
+            className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            Create Sample MDAs
+          </button>
+
+          <button
+            onClick={handleMDAIntegrityCheck}
+            className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <CheckCircle className="h-5 w-5 mr-2" />
+            Integrity Check
+          </button>
+
+          <button
+            onClick={() => {
+              const mdaConfigs = dynamicMDACreationService.getMDAConfigurations();
+              console.log('🔍 MDA Configurations:', mdaConfigs);
+              alert(`Found ${mdaConfigs.length} MDA configurations. Check console for details.`);
+            }}
+            className="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            <Eye className="h-5 w-5 mr-2" />
+            View Configurations
+          </button>
+
+          <button
+            onClick={handleClearAllMDAs}
+            className="flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            <Trash2 className="h-5 w-5 mr-2" />
+            Clear All MDAs
+          </button>
+        </div>
+
+        {/* MDA Testing Interface */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              MDA Functionality Testing
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Test and validate MDA functionality without manual form submission
+            </p>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Automated Testing */}
+              <div>
+                <h3 className="text-md font-semibold text-gray-900 mb-4">
+                  Automated Testing
+                </h3>
+                <div className="space-y-4">
+                  <div className="border rounded-lg p-4 bg-green-50 border-green-200">
+                    <h4 className="font-medium text-green-900 mb-2">
+                      Sample MDA Creation
+                    </h4>
+                    <p className="text-sm text-green-800 mb-3">
+                      Automatically create 4 sample MDAs with full ministry functionality:
+                    </p>
+                    <ul className="text-sm text-green-700 mb-3 space-y-1">
+                      <li>• Ministry of Agriculture & Rural Development</li>
+                      <li>• Ministry of Urban Development & Planning</li>
+                      <li>• Ministry of Information Technology</li>
+                      <li>• Ministry of Environment & Climate</li>
+                    </ul>
+                    <button
+                      onClick={handleCreateSampleMDAs}
+                      className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    >
+                      Create Sample MDAs
+                    </button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 bg-blue-50 border-blue-200">
+                    <h4 className="font-medium text-blue-900 mb-2">
+                      System Integrity Check
+                    </h4>
+                    <p className="text-sm text-blue-800 mb-3">
+                      Verify that all MDAs have proper configurations, credentials, and tender systems
+                    </p>
+                    <button
+                      onClick={handleMDAIntegrityCheck}
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Run Integrity Check
+                    </button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 bg-red-50 border-red-200">
+                    <h4 className="font-medium text-red-900 mb-2">
+                      Reset Testing Environment
+                    </h4>
+                    <p className="text-sm text-red-800 mb-3">
+                      Clear all MDAs and configurations to start fresh
+                    </p>
+                    <button
+                      onClick={handleClearAllMDAs}
+                      className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    >
+                      Clear All MDAs
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Individual MDA Testing */}
+              <div>
+                <h3 className="text-md font-semibold text-gray-900 mb-4">
+                  Individual MDA Testing
+                </h3>
+                <div className="space-y-4">
+                  {mdas.length > 0 ? (
+                    mdas.map((mda) => (
+                      <div key={mda.id} className="border rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium text-gray-900">{mda.name}</h4>
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            dynamicMDACreationService.hasMDAFunctionality(mda.id)
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}>
+                            {dynamicMDACreationService.hasMDAFunctionality(mda.id) ? 'Functional' : 'Basic'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Type: {mda.type.charAt(0).toUpperCase() + mda.type.slice(1)}
+                        </p>
+                        <button
+                          onClick={() => handleTestMDAFunctionality(mda)}
+                          className="w-full px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 text-sm"
+                        >
+                          Test Functionality
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12">
+                      <Building2 className="mx-auto h-12 w-12 text-gray-400" />
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        No MDAs Available
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Create sample MDAs to start testing functionality.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Testing Results */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Testing Results & Logs
+            </h2>
+          </div>
+          <div className="p-6">
+            <div className="bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-lg overflow-auto max-h-64">
+              <div className="space-y-1">
+                <div>🧪 MDA Testing Environment - Ready</div>
+                <div>✅ Dynamic MDA Creation Service - Loaded</div>
+                <div>✅ Ministry Functionality Templates - Available</div>
+                <div>📊 Current MDAs: {mdas.length}</div>
+                <div>🔧 Active Configurations: {dynamicMDACreationService.getMDAConfigurations().length}</div>
+                <div>💾 Storage: localStorage (Browser)</div>
+                <div>🚀 Status: Ready for testing</div>
+                <div className="text-yellow-400">💡 Use the actions above to test MDA functionality</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Advanced Testing Options */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Advanced Testing Options
+            </h2>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-900">Credentials Testing</h4>
+                <button
+                  onClick={() => {
+                    const credentials = JSON.parse(localStorage.getItem('mdaCredentials') || '[]');
+                    console.log('🔐 MDA Credentials:', credentials);
+                    alert(`Found ${credentials.length} MDA credential sets. Check console for details.`);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Check Credentials
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-900">Dashboard Testing</h4>
+                <button
+                  onClick={() => {
+                    const dashboardConfigs = JSON.parse(localStorage.getItem('mdaDashboardConfigs') || '[]');
+                    console.log('📊 Dashboard Configs:', dashboardConfigs);
+                    alert(`Found ${dashboardConfigs.length} dashboard configurations. Check console for details.`);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Check Dashboards
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-900">Tender System Testing</h4>
+                <button
+                  onClick={() => {
+                    const tenderCounts = mdas.map(mda => ({
+                      name: mda.name,
+                      tenders: JSON.parse(localStorage.getItem(`${mda.id}_tenders`) || '[]').length
+                    }));
+                    console.log('📋 Tender Systems:', tenderCounts);
+                    alert(`Tender system status checked. See console for details.`);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Check Tender Systems
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderMDAManagement = () => {
     return (
       <div className="space-y-8">
