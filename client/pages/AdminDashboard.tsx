@@ -1259,7 +1259,7 @@ export default function AdminDashboard() {
 
             <nav className="hidden md:flex items-center space-x-8">
               <button
-                onClick={() => setActiveTab("companies")}
+                onClick={() => handleTabChange("companies")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
                   activeTab === "companies"
                     ? "text-green-700 bg-green-50"
@@ -1275,7 +1275,7 @@ export default function AdminDashboard() {
                 )}
               </button>
               <button
-                onClick={() => setActiveTab("user-management")}
+                onClick={() => handleTabChange("user-management")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
                   activeTab === "user-management"
                     ? "text-green-700 bg-green-50"
