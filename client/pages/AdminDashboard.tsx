@@ -369,8 +369,20 @@ export default function AdminDashboard() {
       }
     };
 
+    // Listen for storage changes from SuperUser dashboard
+    const handleStorageChange = (event: any) => {
+      const { key, newValue } = event.detail;
+      if (key && key.startsWith('userStatus_')) {
+        console.log('🔄 Storage change detected in AdminDashboard:', key, newValue);
+        loadCompanies(); // Reload companies when status changes
+      }
+    };
+
+    window.addEventListener('persistentStorageChange', handleStorageChange);
+
     return () => {
       clearInterval(interval);
+      window.removeEventListener('persistentStorageChange', handleStorageChange);
     };
   }, []);
 
