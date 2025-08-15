@@ -447,7 +447,7 @@ export default function SuperUserDashboard() {
   // Initialize MDA system with localStorage
   const initializeMDASystem = useCallback(async () => {
     try {
-      console.log("���� Initializing MDA system with localStorage...");
+      console.log("������ Initializing MDA system with localStorage...");
 
       // Initialize MDAs from static ministries if not already done
       await mdaInitializer.initialize();
@@ -635,7 +635,7 @@ export default function SuperUserDashboard() {
         setMDAUsers([]);
 
         alert('All MDAs and configurations have been cleared!');
-        console.log('🗑️ All MDA data cleared');
+        console.log('����️ All MDA data cleared');
       } catch (error) {
         console.error('❌ Error clearing MDAs:', error);
         alert('Error clearing MDAs. Please try again.');
@@ -8512,6 +8512,11 @@ The award letter has been:
                 key: "mda-management",
                 label: "MDA Management",
                 icon: Building2,
+              },
+              {
+                key: "mda-testing",
+                label: "MDA Testing",
+                icon: RefreshCw,
               },
               { key: "settings", label: "Settings", icon: Settings },
               { key: "feedback", label: "Feedback", icon: MessageSquare },
