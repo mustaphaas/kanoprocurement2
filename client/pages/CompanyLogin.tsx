@@ -85,8 +85,8 @@ export default function CompanyLogin() {
           loginTime: new Date().toISOString(),
           userAgent: navigator.userAgent,
           loginMethod: "credentials",
-          email: formData.email.toLowerCase()
-        }
+          email: formData.email.toLowerCase(),
+        },
       );
 
       navigate("/company/dashboard");
@@ -105,8 +105,8 @@ export default function CompanyLogin() {
           userAgent: navigator.userAgent,
           errorMessage: error instanceof Error ? error.message : "Login failed",
           email: formData.email.toLowerCase(),
-          ipAddress: "127.0.0.1"
-        }
+          ipAddress: "127.0.0.1",
+        },
       );
 
       setErrors({

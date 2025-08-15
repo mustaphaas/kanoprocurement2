@@ -560,8 +560,8 @@ export default function CompanyDashboard() {
         companyName: companyData.name,
         companyEmail: companyData.email,
         companyStatus: companyData.status,
-        userAgent: navigator.userAgent
-      }
+        userAgent: navigator.userAgent,
+      },
     );
   }, []); // Run only once on component mount
 
@@ -614,8 +614,8 @@ export default function CompanyDashboard() {
       {
         logoutTime: new Date().toISOString(),
         companyName: companyData.name,
-        sessionDuration: "N/A"
-      }
+        sessionDuration: "N/A",
+      },
     );
 
     navigate("/");
@@ -734,8 +734,8 @@ export default function CompanyDashboard() {
         deadline: selectedTender.deadline,
         companyName: companyData.name,
         companyEmail: companyData.email,
-        actionTimestamp: new Date().toISOString()
-      }
+        actionTimestamp: new Date().toISOString(),
+      },
     );
 
     setShowExpressInterestModal(false);
@@ -822,8 +822,8 @@ export default function CompanyDashboard() {
         deadline: selectedTender.deadline,
         companyName: companyData.name,
         companyEmail: companyData.email,
-        submissionTimestamp: bidData.submittedAt
-      }
+        submissionTimestamp: bidData.submittedAt,
+      },
     );
 
     setShowSubmitBidModal(false);

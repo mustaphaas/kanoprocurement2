@@ -2282,8 +2282,8 @@ export default function MinistryDashboard() {
         ministryId: ministryId,
         userAgent: navigator.userAgent,
         tendersLoaded: mockTenders.length,
-        companiesLoaded: companies.length
-      }
+        companiesLoaded: companies.length,
+      },
     );
   }, []);
 
@@ -3226,8 +3226,8 @@ export default function MinistryDashboard() {
         logoutTime: new Date().toISOString(),
         ministryName: ministry.name,
         ministryCode: ministry.code,
-        sessionDuration: "N/A"
-      }
+        sessionDuration: "N/A",
+      },
     );
 
     localStorage.removeItem("ministryUser");
@@ -3535,8 +3535,8 @@ export default function MinistryDashboard() {
         ministryCode: ministry.code,
         contactPerson: newNOCRequest.contactPerson,
         contactEmail: newNOCRequest.contactEmail,
-        submissionTimestamp: new Date().toISOString()
-      }
+        submissionTimestamp: new Date().toISOString(),
+      },
     );
 
     alert(
@@ -3703,8 +3703,8 @@ export default function MinistryDashboard() {
         ministryCode: ministry.code,
         bidderId: selectedBidder.id,
         bidderScore: selectedBidder.totalScore,
-        awardTimestamp: new Date().toISOString()
-      }
+        awardTimestamp: new Date().toISOString(),
+      },
     );
 
     // Close award modal and show post-award workflow

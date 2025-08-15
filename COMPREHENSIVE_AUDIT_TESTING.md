@@ -1,16 +1,18 @@
 # Comprehensive Audit Log Testing Guide
 
 ## Overview
+
 The audit log system now captures actions from **ALL user types** across the procurement platform using localStorage:
 
 1. ✅ **SuperUser** - SuperUser dashboard actions
-2. ✅ **Admin** - Admin dashboard actions  
+2. ✅ **Admin** - Admin dashboard actions
 3. ✅ **Company Users** - Company registration, login, bidding
 4. ✅ **Ministry Users** - Ministry login, tender creation, NOC management
 
 ## Complete User Action Coverage
 
 ### **🏛️ SuperUser Actions**
+
 - `DASHBOARD_ACCESSED` - SuperUser dashboard access
 - `TAB_NAVIGATION` - Navigation between tabs
 - `COMPANY_APPROVED/SUSPENDED/BLACKLISTED` - Company status changes
@@ -18,7 +20,8 @@ The audit log system now captures actions from **ALL user types** across the pro
 - `NOC_APPROVED` - NOC approvals
 - `USER_LOGOUT` - Logout actions
 
-### **👨‍💼 Admin Actions**  
+### **👨‍💼 Admin Actions**
+
 - `ADMIN_LOGIN_SUCCESS/FAILED` - Admin authentication
 - `ADMIN_DASHBOARD_ACCESSED` - Dashboard access
 - `ADMIN_TAB_NAVIGATION` - Tab switching
@@ -27,6 +30,7 @@ The audit log system now captures actions from **ALL user types** across the pro
 - `ADMIN_LOGOUT` - Logout actions
 
 ### **🏢 Company User Actions**
+
 - `COMPANY_REGISTRATION_SUBMITTED` - Company registration
 - `COMPANY_LOGIN_SUCCESS/FAILED` - Company authentication
 - `COMPANY_DASHBOARD_ACCESSED` - Dashboard access
@@ -35,7 +39,8 @@ The audit log system now captures actions from **ALL user types** across the pro
 - `COMPANY_LOGOUT` - Logout actions
 
 ### **🏛️ Ministry User Actions**
-- `MINISTRY_LOGIN_SUCCESS/FAILED` - Ministry authentication  
+
+- `MINISTRY_LOGIN_SUCCESS/FAILED` - Ministry authentication
 - `MINISTRY_DASHBOARD_ACCESSED` - Dashboard access
 - `NOC_REQUEST_SUBMITTED` - NOC requests
 - `TENDER_AWARDED_BY_MINISTRY` - Tender awards
@@ -46,6 +51,7 @@ The audit log system now captures actions from **ALL user types** across the pro
 ### **Step 1: Test Company User Actions**
 
 #### **A. Company Registration:**
+
 1. Go to `/company-registration`
 2. Fill out registration form with all details
 3. Upload required documents
@@ -53,11 +59,13 @@ The audit log system now captures actions from **ALL user types** across the pro
    - Should log: `COMPANY_REGISTRATION_SUBMITTED`
 
 #### **B. Company Login:**
+
 1. Go to `/company-login`
 2. Try **invalid credentials** - should log `COMPANY_LOGIN_FAILED`
 3. Use **valid credentials** - should log `COMPANY_LOGIN_SUCCESS`
 
 #### **C. Company Dashboard:**
+
 1. Access company dashboard - should log `COMPANY_DASHBOARD_ACCESSED`
 2. **Express interest** in tenders - should log `TENDER_INTEREST_EXPRESSED`
 3. **Submit bids** - should log `BID_SUBMITTED`
@@ -66,11 +74,13 @@ The audit log system now captures actions from **ALL user types** across the pro
 ### **Step 2: Test Ministry User Actions**
 
 #### **A. Ministry Login:**
+
 1. Go to `/ministry-login`
 2. Try **invalid credentials** - should log `MINISTRY_LOGIN_FAILED`
 3. Use **valid credentials** (ministry/ministry123) - should log `MINISTRY_LOGIN_SUCCESS`
 
 #### **B. Ministry Dashboard:**
+
 1. Access ministry dashboard - should log `MINISTRY_DASHBOARD_ACCESSED`
 2. **Submit NOC requests** - should log `NOC_REQUEST_SUBMITTED`
 3. **Award tenders** - should log `TENDER_AWARDED_BY_MINISTRY`
@@ -79,11 +89,13 @@ The audit log system now captures actions from **ALL user types** across the pro
 ### **Step 3: Test Admin User Actions**
 
 #### **A. Admin Login:**
+
 1. Go to `/admin-login`
 2. Try **invalid credentials** - should log `ADMIN_LOGIN_FAILED`
 3. Use **valid credentials** - should log `ADMIN_LOGIN_SUCCESS`
 
 #### **B. Admin Dashboard:**
+
 1. Access admin dashboard - should log `ADMIN_DASHBOARD_ACCESSED`
 2. **Navigate between tabs** - should log `ADMIN_TAB_NAVIGATION`
 3. **Approve/suspend companies** - should log `COMPANY_APPROVED/SUSPENDED/BLACKLISTED`
@@ -93,6 +105,7 @@ The audit log system now captures actions from **ALL user types** across the pro
 ### **Step 4: Test SuperUser Actions**
 
 #### **A. SuperUser Dashboard:**
+
 1. Access SuperUser dashboard - should log `DASHBOARD_ACCESSED`
 2. **Navigate between tabs** - should log `TAB_NAVIGATION`
 3. **Change company statuses** - should log `COMPANY_APPROVED/SUSPENDED/BLACKLISTED`
@@ -104,6 +117,7 @@ The audit log system now captures actions from **ALL user types** across the pro
 
 1. **Go to SuperUser Dashboard → Audit Logs tab**
 2. **Look for all user types**:
+
    - Company Users: Email-based usernames, role: "company_user"
    - Ministry Users: "MinistryUser", role: "ministry_user"
    - Admin Users: "AdminUser", role: "admin"
@@ -119,15 +133,15 @@ The audit log system now captures actions from **ALL user types** across the pro
 
 ```javascript
 // Test all audit log types
-testAuditLogs();              // SuperUser logs
-testAdminAuditLogs();         // Admin logs
+testAuditLogs(); // SuperUser logs
+testAdminAuditLogs(); // Admin logs
 
 // View comprehensive statistics
 showAuditStats();
 
 // Test status changes
-adminTestStatusChange();      // Admin approvals
-testSuperUserApproval();      // SuperUser approvals
+adminTestStatusChange(); // Admin approvals
+testSuperUserApproval(); // SuperUser approvals
 
 // Clear all logs (careful!)
 clearAuditLogs();
@@ -136,10 +150,11 @@ clearAuditLogs();
 ## Expected Log Entries by User Type
 
 ### **Company User Log Example:**
+
 ```json
 {
   "user": "company@example.com",
-  "userRole": "company_user", 
+  "userRole": "company_user",
   "action": "BID_SUBMITTED",
   "entity": "Hospital Equipment Supply",
   "severity": "HIGH",
@@ -148,11 +163,12 @@ clearAuditLogs();
 ```
 
 ### **Ministry User Log Example:**
+
 ```json
 {
   "user": "MinistryUser",
   "userRole": "ministry_user",
-  "action": "NOC_REQUEST_SUBMITTED", 
+  "action": "NOC_REQUEST_SUBMITTED",
   "entity": "Road Construction Project",
   "severity": "HIGH",
   "details": "Ministry of Works submitted NOC request for project: Road Construction"
@@ -160,9 +176,10 @@ clearAuditLogs();
 ```
 
 ### **Admin User Log Example:**
+
 ```json
 {
-  "user": "AdminUser", 
+  "user": "AdminUser",
   "userRole": "admin",
   "action": "COMPANY_APPROVED",
   "entity": "TechSolutions Ltd",
@@ -172,10 +189,11 @@ clearAuditLogs();
 ```
 
 ### **SuperUser Log Example:**
+
 ```json
 {
   "user": "SuperUser",
-  "userRole": "super_admin", 
+  "userRole": "super_admin",
   "action": "TENDER_AWARDED",
   "entity": "ICT Infrastructure Upgrade",
   "severity": "CRITICAL",
@@ -195,15 +213,16 @@ clearAuditLogs();
 ✅ **Filtering works across all user types**  
 ✅ **Export functionality includes all log types**  
 ✅ **Severity levels properly assigned**  
-✅ **Real-time updates work for all actions**  
+✅ **Real-time updates work for all actions**
 
 ## User Role Identification
 
 The audit system distinguishes users by:
+
 - **User Field**: Actual usernames/emails
-- **UserRole Field**: 
+- **UserRole Field**:
   - `company_user` - Company users
-  - `ministry_user` - Ministry users  
+  - `ministry_user` - Ministry users
   - `admin` - Admin users
   - `super_admin` - SuperUser
   - `anonymous` - Failed login attempts
@@ -211,8 +230,9 @@ The audit system distinguishes users by:
 ## Complete Accountability
 
 The system now provides **end-to-end audit trails** for:
+
 - 🏢 **Company Lifecycle**: Registration → Approval → Bidding → Awards
-- 🏛️ **Ministry Operations**: Login → Tender Creation → NOC Requests → Awards  
+- 🏛️ **Ministry Operations**: Login → Tender Creation → NOC Requests → Awards
 - 👨‍💼 **Admin Activities**: Login → Company Management → Data Operations
 - 🔐 **SuperUser Actions**: All high-level system operations
 

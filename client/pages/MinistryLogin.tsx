@@ -93,8 +93,8 @@ export default function MinistryLogin() {
               loginTime: new Date().toISOString(),
               userAgent: navigator.userAgent,
               loginMethod: "credentials",
-              username: formData.username
-            }
+              username: formData.username,
+            },
           );
 
           navigate("/ministry/dashboard");
@@ -112,8 +112,8 @@ export default function MinistryLogin() {
               attemptTime: new Date().toISOString(),
               userAgent: navigator.userAgent,
               username: formData.username,
-              ipAddress: "127.0.0.1"
-            }
+              ipAddress: "127.0.0.1",
+            },
           );
 
           setErrors({

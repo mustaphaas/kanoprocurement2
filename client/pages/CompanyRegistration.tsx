@@ -513,11 +513,11 @@ export default function CompanyRegistration() {
             taxClearance: !!uploadedFiles.taxClearance,
             companyProfile: !!uploadedFiles.companyProfile,
             cacForm: !!uploadedFiles.cacForm,
-            otherDocuments: uploadedFiles.otherDocuments.length
+            otherDocuments: uploadedFiles.otherDocuments.length,
           },
           extractionStatus,
-          registrationTimestamp: new Date().toISOString()
-        }
+          registrationTimestamp: new Date().toISOString(),
+        },
       );
 
       console.log("Registration Data Saved:", registrationData);

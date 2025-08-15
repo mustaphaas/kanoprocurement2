@@ -8,17 +8,19 @@ import { logUserAction } from "./auditLogStorage";
  * Integrates new MDAs with existing ministry functionality
  */
 class DynamicMDACreationService {
-  
   /**
    * Create MDA with full ministry-like functionality
    */
-  async createFullyFunctionalMDA(data: CreateMDARequest, createdBy: string): Promise<MDA> {
+  async createFullyFunctionalMDA(
+    data: CreateMDARequest,
+    createdBy: string,
+  ): Promise<MDA> {
     // Create the MDA using the existing service
     const newMDA = await mdaLocalStorageService.createMDA(data, createdBy);
-    
+
     // Add ministry-like functionality
     await this.setupMinistryFunctionality(newMDA);
-    
+
     // Log the creation
     logUserAction(
       createdBy,
@@ -34,10 +36,10 @@ class DynamicMDACreationService {
         headOfMDA: newMDA.headOfMDA,
         totalBudget: newMDA.settings.totalBudget,
         allowedCategories: newMDA.settings.allowedCategories,
-        creationTimestamp: new Date().toISOString()
-      }
+        creationTimestamp: new Date().toISOString(),
+      },
     );
-    
+
     return newMDA;
   }
 
@@ -47,16 +49,16 @@ class DynamicMDACreationService {
   private async setupMinistryFunctionality(mda: MDA): Promise<void> {
     // 1. Create login credentials for the MDA
     this.createMDACredentials(mda);
-    
+
     // 2. Setup dashboard configuration
     this.setupMDADashboard(mda);
-    
+
     // 3. Initialize tender management
     this.initializeTenderManagement(mda);
-    
+
     // 4. Setup procurement categories
     this.setupProcurementCategories(mda);
-    
+
     // 5. Create initial administrative structure
     this.createInitialAdminStructure(mda);
   }
@@ -69,11 +71,13 @@ class DynamicMDACreationService {
       id: mda.id,
       username: mda.id.toLowerCase(),
       password: "mda123", // Default password
-      type: mda.type
+      type: mda.type,
     };
 
     // Store credentials for MDA login
-    const existingCredentials = JSON.parse(localStorage.getItem("mdaCredentials") || "[]");
+    const existingCredentials = JSON.parse(
+      localStorage.getItem("mdaCredentials") || "[]",
+    );
     existingCredentials.push(credentials);
     localStorage.setItem("mdaCredentials", JSON.stringify(existingCredentials));
   }
@@ -96,15 +100,20 @@ class DynamicMDACreationService {
         reportGeneration: true,
         userManagement: true,
         nocRequests: true,
-        budgetTracking: true
+        budgetTracking: true,
       },
-      settings: mda.settings
+      settings: mda.settings,
     };
 
     // Store dashboard configuration
-    const existingConfigs = JSON.parse(localStorage.getItem("mdaDashboardConfigs") || "[]");
+    const existingConfigs = JSON.parse(
+      localStorage.getItem("mdaDashboardConfigs") || "[]",
+    );
     existingConfigs.push(dashboardConfig);
-    localStorage.setItem("mdaDashboardConfigs", JSON.stringify(existingConfigs));
+    localStorage.setItem(
+      "mdaDashboardConfigs",
+      JSON.stringify(existingConfigs),
+    );
   }
 
   /**
@@ -117,20 +126,31 @@ class DynamicMDACreationService {
       approvalThresholds: mda.settings.procurementThresholds,
       workflows: {
         standardTender: {
-          steps: ["preparation", "publication", "bidding", "evaluation", "award"],
-          approvals: ["head_approval", "technical_review", "financial_review"]
+          steps: [
+            "preparation",
+            "publication",
+            "bidding",
+            "evaluation",
+            "award",
+          ],
+          approvals: ["head_approval", "technical_review", "financial_review"],
         },
         smallValue: {
           steps: ["preparation", "quotation", "award"],
-          approvals: ["head_approval"]
-        }
-      }
+          approvals: ["head_approval"],
+        },
+      },
     };
 
     // Store tender configuration
-    const existingTenderConfigs = JSON.parse(localStorage.getItem("mdaTenderConfigs") || "[]");
+    const existingTenderConfigs = JSON.parse(
+      localStorage.getItem("mdaTenderConfigs") || "[]",
+    );
     existingTenderConfigs.push(tenderConfig);
-    localStorage.setItem("mdaTenderConfigs", JSON.stringify(existingTenderConfigs));
+    localStorage.setItem(
+      "mdaTenderConfigs",
+      JSON.stringify(existingTenderConfigs),
+    );
 
     // Initialize empty tender lists for this MDA
     localStorage.setItem(`${mda.id}_tenders`, JSON.stringify([]));
@@ -153,7 +173,7 @@ class DynamicMDACreationService {
         "General Supplies",
         "Professional Services",
         "Maintenance Services",
-        "Equipment Procurement"
+        "Equipment Procurement",
       ];
     } else {
       // For departments/agencies, use more specific categories
@@ -164,13 +184,18 @@ class DynamicMDACreationService {
       mdaId: mda.id,
       specializations: [...new Set(specializations)], // Remove duplicates
       departments: this.generateDepartments(mda),
-      capabilities: this.generateCapabilities(mda)
+      capabilities: this.generateCapabilities(mda),
     };
 
     // Store category configuration
-    const existingCategories = JSON.parse(localStorage.getItem("mdaCategoryConfigs") || "[]");
+    const existingCategories = JSON.parse(
+      localStorage.getItem("mdaCategoryConfigs") || "[]",
+    );
     existingCategories.push(categoryConfig);
-    localStorage.setItem("mdaCategoryConfigs", JSON.stringify(existingCategories));
+    localStorage.setItem(
+      "mdaCategoryConfigs",
+      JSON.stringify(existingCategories),
+    );
   }
 
   /**
@@ -190,8 +215,8 @@ class DynamicMDACreationService {
           "Procurement Officer",
           "Finance Officer",
           "Technical Officer",
-          "Administrative Officer"
-        ]
+          "Administrative Officer",
+        ],
       },
       budgetStructure: {
         totalBudget: mda.settings.totalBudget,
@@ -199,15 +224,20 @@ class DynamicMDACreationService {
         allocations: {
           personnel: Math.floor(mda.settings.totalBudget * 0.4),
           operations: Math.floor(mda.settings.totalBudget * 0.35),
-          capital: Math.floor(mda.settings.totalBudget * 0.25)
-        }
-      }
+          capital: Math.floor(mda.settings.totalBudget * 0.25),
+        },
+      },
     };
 
     // Store administrative structure
-    const existingStructures = JSON.parse(localStorage.getItem("mdaAdminStructures") || "[]");
+    const existingStructures = JSON.parse(
+      localStorage.getItem("mdaAdminStructures") || "[]",
+    );
     existingStructures.push(adminStructure);
-    localStorage.setItem("mdaAdminStructures", JSON.stringify(existingStructures));
+    localStorage.setItem(
+      "mdaAdminStructures",
+      JSON.stringify(existingStructures),
+    );
   }
 
   /**
@@ -216,7 +246,10 @@ class DynamicMDACreationService {
   private generateMDACode(name: string): string {
     const words = name.split(" ");
     if (words.length >= 2) {
-      return words.map(word => word.charAt(0).toUpperCase()).join("").slice(0, 4);
+      return words
+        .map((word) => word.charAt(0).toUpperCase())
+        .join("")
+        .slice(0, 4);
     }
     return name.substring(0, 3).toUpperCase();
   }
@@ -227,8 +260,8 @@ class DynamicMDACreationService {
   private generatePrimaryColor(type: string): string {
     const colorMap = {
       ministry: "#2563eb", // Blue
-      department: "#16a34a", // Green  
-      agency: "#dc2626" // Red
+      department: "#16a34a", // Green
+      agency: "#dc2626", // Red
     };
     return colorMap[type as keyof typeof colorMap] || "#6b7280";
   }
@@ -240,7 +273,7 @@ class DynamicMDACreationService {
     const colorMap = {
       ministry: "#dbeafe", // Light blue
       department: "#dcfce7", // Light green
-      agency: "#fecaca" // Light red
+      agency: "#fecaca", // Light red
     };
     return colorMap[type as keyof typeof colorMap] || "#f3f4f6";
   }
@@ -251,19 +284,22 @@ class DynamicMDACreationService {
   private generateDepartments(mda: MDA): string[] {
     const baseDepartments = [
       "Administration",
-      "Finance and Accounts", 
+      "Finance and Accounts",
       "Procurement",
       "Human Resources",
-      "Planning and Research"
+      "Planning and Research",
     ];
 
     // Add specialized departments based on MDA type and categories
     const specializedDepartments: string[] = [];
-    
-    mda.settings.allowedCategories.forEach(category => {
+
+    mda.settings.allowedCategories.forEach((category) => {
       switch (category.toLowerCase()) {
         case "construction":
-          specializedDepartments.push("Engineering and Construction", "Project Management");
+          specializedDepartments.push(
+            "Engineering and Construction",
+            "Project Management",
+          );
           break;
         case "healthcare":
         case "medical equipment":
@@ -271,7 +307,10 @@ class DynamicMDACreationService {
           break;
         case "education":
         case "educational technology":
-          specializedDepartments.push("Curriculum Development", "Teacher Training");
+          specializedDepartments.push(
+            "Curriculum Development",
+            "Teacher Training",
+          );
           break;
         case "ict equipment":
         case "technology":
@@ -294,12 +333,12 @@ class DynamicMDACreationService {
       "Budget Planning",
       "Contract Administration",
       "Supplier Management",
-      "Compliance Monitoring"
+      "Compliance Monitoring",
     ];
 
     const specializedCapabilities: string[] = [];
-    
-    mda.settings.allowedCategories.forEach(category => {
+
+    mda.settings.allowedCategories.forEach((category) => {
       specializedCapabilities.push(`${category} Procurement`);
     });
 
@@ -314,7 +353,8 @@ class DynamicMDACreationService {
       {
         name: "Ministry of Agriculture and Rural Development",
         type: "ministry" as const,
-        description: "Responsible for agricultural development, food security, and rural development initiatives in Kano State",
+        description:
+          "Responsible for agricultural development, food security, and rural development initiatives in Kano State",
         contactEmail: "agriculture@kanostate.gov.ng",
         contactPhone: "08012345681",
         address: "Agriculture Ministry Complex, Kano State Secretariat, Kano",
@@ -327,10 +367,10 @@ class DynamicMDACreationService {
           },
           allowedCategories: [
             "Agricultural Equipment",
-            "Seeds and Fertilizers", 
+            "Seeds and Fertilizers",
             "Irrigation Systems",
             "Agricultural Technology",
-            "Farm Machinery"
+            "Farm Machinery",
           ],
           customWorkflows: true,
           budgetYear: "2024",
@@ -338,9 +378,10 @@ class DynamicMDACreationService {
         },
       },
       {
-        name: "Kano State Urban Development Agency", 
+        name: "Kano State Urban Development Agency",
         type: "agency" as const,
-        description: "Urban planning, development control, and infrastructure management for Kano metropolis",
+        description:
+          "Urban planning, development control, and infrastructure management for Kano metropolis",
         contactEmail: "urban@kanostate.gov.ng",
         contactPhone: "08012345682",
         address: "Urban Development Agency, Independence Road, Kano",
@@ -356,17 +397,18 @@ class DynamicMDACreationService {
             "Infrastructure Development",
             "Building Materials",
             "Construction Equipment",
-            "Environmental Services"
+            "Environmental Services",
           ],
           customWorkflows: false,
-          budgetYear: "2024", 
+          budgetYear: "2024",
           totalBudget: 3500000000,
         },
       },
       {
         name: "Department of Information Technology",
         type: "department" as const,
-        description: "IT services, digital transformation, and technology infrastructure for Kano State government",
+        description:
+          "IT services, digital transformation, and technology infrastructure for Kano State government",
         parentMDA: "ministry3", // Under Ministry of Education for this example
         contactEmail: "it@kanostate.gov.ng",
         contactPhone: "08012345683",
@@ -381,9 +423,9 @@ class DynamicMDACreationService {
           allowedCategories: [
             "ICT Equipment",
             "Software Licenses",
-            "Network Infrastructure", 
+            "Network Infrastructure",
             "Cybersecurity Services",
-            "Digital Solutions"
+            "Digital Solutions",
           ],
           customWorkflows: true,
           budgetYear: "2024",
@@ -393,8 +435,9 @@ class DynamicMDACreationService {
       {
         name: "Ministry of Environment and Solid Waste Management",
         type: "ministry" as const,
-        description: "Environmental protection, waste management, and climate change initiatives in Kano State",
-        contactEmail: "environment@kanostate.gov.ng", 
+        description:
+          "Environmental protection, waste management, and climate change initiatives in Kano State",
+        contactEmail: "environment@kanostate.gov.ng",
         contactPhone: "08012345684",
         address: "Environment Ministry Complex, Kano State Secretariat, Kano",
         headOfMDA: "Dr. Aisha Garba",
@@ -409,13 +452,13 @@ class DynamicMDACreationService {
             "Waste Management Systems",
             "Pollution Control",
             "Renewable Energy",
-            "Environmental Monitoring"
+            "Environmental Monitoring",
           ],
           customWorkflows: true,
           budgetYear: "2024",
           totalBudget: 6000000000,
         },
-      }
+      },
     ];
 
     const createdMDAs: MDA[] = [];
@@ -445,7 +488,7 @@ class DynamicMDACreationService {
    */
   hasMDAFunctionality(mdaId: string): boolean {
     const configs = this.getMDAConfigurations();
-    return configs.some(config => config.mdaId === mdaId);
+    return configs.some((config) => config.mdaId === mdaId);
   }
 }
 

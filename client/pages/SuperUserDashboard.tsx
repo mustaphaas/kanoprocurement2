@@ -574,56 +574,80 @@ export default function SuperUserDashboard() {
   // MDA Testing functions
   const handleCreateSampleMDAs = async () => {
     try {
-      if (window.confirm('This will create 4 sample MDAs with full functionality. Continue?')) {
-        console.log('🚀 Creating sample MDAs...');
-        const createdMDAs = await dynamicMDACreationService.createSampleMDAs('SuperUser');
+      if (
+        window.confirm(
+          "This will create 4 sample MDAs with full functionality. Continue?",
+        )
+      ) {
+        console.log("🚀 Creating sample MDAs...");
+        const createdMDAs =
+          await dynamicMDACreationService.createSampleMDAs("SuperUser");
 
         // Update the MDA list
-        setMDAs(prev => [...prev, ...createdMDAs]);
+        setMDAs((prev) => [...prev, ...createdMDAs]);
 
-        alert(`Successfully created ${createdMDAs.length} sample MDAs with full ministry functionality!`);
-        console.log('✅ Sample MDAs created:', createdMDAs.map(m => m.name));
+        alert(
+          `Successfully created ${createdMDAs.length} sample MDAs with full ministry functionality!`,
+        );
+        console.log(
+          "✅ Sample MDAs created:",
+          createdMDAs.map((m) => m.name),
+        );
       }
     } catch (error) {
-      console.error('❌ Error creating sample MDAs:', error);
-      alert('Error creating sample MDAs. Please try again.');
+      console.error("❌ Error creating sample MDAs:", error);
+      alert("Error creating sample MDAs. Please try again.");
     }
   };
 
   const handleTestMDAFunctionality = (mda: MDA) => {
-    const hasFunctionality = dynamicMDACreationService.hasMDAFunctionality(mda.id);
+    const hasFunctionality = dynamicMDACreationService.hasMDAFunctionality(
+      mda.id,
+    );
     const configs = dynamicMDACreationService.getMDAConfigurations();
-    const mdaConfig = configs.find(c => c.mdaId === mda.id);
+    const mdaConfig = configs.find((c) => c.mdaId === mda.id);
 
     const testResults = {
       name: mda.name,
       type: mda.type,
       hasFunctionality,
-      features: mdaConfig?.features || 'No functionality configured',
-      tenderConfig: localStorage.getItem(`${mda.id}_tenders`) ? 'Configured' : 'Not configured',
-      dashboardConfig: mdaConfig ? 'Configured' : 'Not configured',
-      credentials: JSON.parse(localStorage.getItem('mdaCredentials') || '[]').find((c: any) => c.id === mda.id) ? 'Created' : 'Not created'
+      features: mdaConfig?.features || "No functionality configured",
+      tenderConfig: localStorage.getItem(`${mda.id}_tenders`)
+        ? "Configured"
+        : "Not configured",
+      dashboardConfig: mdaConfig ? "Configured" : "Not configured",
+      credentials: JSON.parse(
+        localStorage.getItem("mdaCredentials") || "[]",
+      ).find((c: any) => c.id === mda.id)
+        ? "Created"
+        : "Not created",
     };
 
-    console.log('🧪 MDA Functionality Test Results:', testResults);
-    alert(`MDA Functionality Test Results:\n\nMDA: ${testResults.name}\nType: ${testResults.type}\nFunctionality: ${testResults.hasFunctionality ? 'Enabled' : 'Disabled'}\nCredentials: ${testResults.credentials}\nDashboard: ${testResults.dashboardConfig}\nTender System: ${testResults.tenderConfig}`);
+    console.log("🧪 MDA Functionality Test Results:", testResults);
+    alert(
+      `MDA Functionality Test Results:\n\nMDA: ${testResults.name}\nType: ${testResults.type}\nFunctionality: ${testResults.hasFunctionality ? "Enabled" : "Disabled"}\nCredentials: ${testResults.credentials}\nDashboard: ${testResults.dashboardConfig}\nTender System: ${testResults.tenderConfig}`,
+    );
   };
 
   const handleClearAllMDAs = async () => {
-    if (window.confirm('This will delete ALL MDAs and their configurations. This action cannot be undone. Continue?')) {
+    if (
+      window.confirm(
+        "This will delete ALL MDAs and their configurations. This action cannot be undone. Continue?",
+      )
+    ) {
       try {
         // Clear all MDA-related localStorage
-        localStorage.removeItem('mdas');
-        localStorage.removeItem('mda_admins');
-        localStorage.removeItem('mda_users');
-        localStorage.removeItem('mdaCredentials');
-        localStorage.removeItem('mdaDashboardConfigs');
-        localStorage.removeItem('mdaTenderConfigs');
-        localStorage.removeItem('mdaCategoryConfigs');
-        localStorage.removeItem('mdaAdminStructures');
+        localStorage.removeItem("mdas");
+        localStorage.removeItem("mda_admins");
+        localStorage.removeItem("mda_users");
+        localStorage.removeItem("mdaCredentials");
+        localStorage.removeItem("mdaDashboardConfigs");
+        localStorage.removeItem("mdaTenderConfigs");
+        localStorage.removeItem("mdaCategoryConfigs");
+        localStorage.removeItem("mdaAdminStructures");
 
         // Clear individual MDA tender/bid data
-        mdas.forEach(mda => {
+        mdas.forEach((mda) => {
           localStorage.removeItem(`${mda.id}_tenders`);
           localStorage.removeItem(`${mda.id}_bids`);
           localStorage.removeItem(`${mda.id}_evaluations`);
@@ -634,23 +658,26 @@ export default function SuperUserDashboard() {
         setMDAAdmins([]);
         setMDAUsers([]);
 
-        alert('All MDAs and configurations have been cleared!');
-        console.log('����️ All MDA data cleared');
+        alert("All MDAs and configurations have been cleared!");
+        console.log("����️ All MDA data cleared");
       } catch (error) {
-        console.error('❌ Error clearing MDAs:', error);
-        alert('Error clearing MDAs. Please try again.');
+        console.error("❌ Error clearing MDAs:", error);
+        alert("Error clearing MDAs. Please try again.");
       }
     }
   };
 
   const handleMDAIntegrityCheck = () => {
     const mdaConfigs = dynamicMDACreationService.getMDAConfigurations();
-    const credentials = JSON.parse(localStorage.getItem('mdaCredentials') || '[]');
+    const credentials = JSON.parse(
+      localStorage.getItem("mdaCredentials") || "[]",
+    );
 
-    const integrityReport = mdas.map(mda => {
-      const hasConfig = mdaConfigs.some(c => c.mdaId === mda.id);
+    const integrityReport = mdas.map((mda) => {
+      const hasConfig = mdaConfigs.some((c) => c.mdaId === mda.id);
       const hasCredentials = credentials.some((c: any) => c.id === mda.id);
-      const hasTenderSystem = localStorage.getItem(`${mda.id}_tenders`) !== null;
+      const hasTenderSystem =
+        localStorage.getItem(`${mda.id}_tenders`) !== null;
 
       return {
         name: mda.name,
@@ -658,15 +685,19 @@ export default function SuperUserDashboard() {
         hasConfig,
         hasCredentials,
         hasTenderSystem,
-        isFullyFunctional: hasConfig && hasCredentials && hasTenderSystem
+        isFullyFunctional: hasConfig && hasCredentials && hasTenderSystem,
       };
     });
 
-    const fullyFunctional = integrityReport.filter(r => r.isFullyFunctional).length;
+    const fullyFunctional = integrityReport.filter(
+      (r) => r.isFullyFunctional,
+    ).length;
     const total = integrityReport.length;
 
-    console.log('🔍 MDA Integrity Check Report:', integrityReport);
-    alert(`MDA Integrity Check Complete:\n\nTotal MDAs: ${total}\nFully Functional: ${fullyFunctional}\nPartial/Broken: ${total - fullyFunctional}\n\nCheck console for detailed report.`);
+    console.log("🔍 MDA Integrity Check Report:", integrityReport);
+    alert(
+      `MDA Integrity Check Complete:\n\nTotal MDAs: ${total}\nFully Functional: ${fullyFunctional}\nPartial/Broken: ${total - fullyFunctional}\n\nCheck console for detailed report.`,
+    );
   };
 
   const handleCompanyStatusChange = useCallback(
@@ -2221,7 +2252,9 @@ The award letter has been:
           "SuperUser",
         );
         setMDAs((prev) => [...prev, newMDA]);
-        alert(`${newMDA.type.charAt(0).toUpperCase() + newMDA.type.slice(1)} "${newMDA.name}" created successfully with full ministry functionality!`);
+        alert(
+          `${newMDA.type.charAt(0).toUpperCase() + newMDA.type.slice(1)} "${newMDA.name}" created successfully with full ministry functionality!`,
+        );
       } else if (selectedMDA) {
         // Update existing MDA in localStorage
         await mdaLocalStorageService.updateMDA(
@@ -2464,7 +2497,11 @@ The award letter has been:
                   Functional MDAs
                 </p>
                 <p className="text-3xl font-bold text-green-600">
-                  {mdas.filter(mda => dynamicMDACreationService.hasMDAFunctionality(mda.id)).length}
+                  {
+                    mdas.filter((mda) =>
+                      dynamicMDACreationService.hasMDAFunctionality(mda.id),
+                    ).length
+                  }
                 </p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -2524,9 +2561,12 @@ The award letter has been:
 
           <button
             onClick={() => {
-              const mdaConfigs = dynamicMDACreationService.getMDAConfigurations();
-              console.log('🔍 MDA Configurations:', mdaConfigs);
-              alert(`Found ${mdaConfigs.length} MDA configurations. Check console for details.`);
+              const mdaConfigs =
+                dynamicMDACreationService.getMDAConfigurations();
+              console.log("🔍 MDA Configurations:", mdaConfigs);
+              alert(
+                `Found ${mdaConfigs.length} MDA configurations. Check console for details.`,
+              );
             }}
             className="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
           >
@@ -2566,7 +2606,8 @@ The award letter has been:
                       Sample MDA Creation
                     </h4>
                     <p className="text-sm text-green-800 mb-3">
-                      Automatically create 4 sample MDAs with full ministry functionality:
+                      Automatically create 4 sample MDAs with full ministry
+                      functionality:
                     </p>
                     <ul className="text-sm text-green-700 mb-3 space-y-1">
                       <li>• Ministry of Agriculture & Rural Development</li>
@@ -2587,7 +2628,8 @@ The award letter has been:
                       System Integrity Check
                     </h4>
                     <p className="text-sm text-blue-800 mb-3">
-                      Verify that all MDAs have proper configurations, credentials, and tender systems
+                      Verify that all MDAs have proper configurations,
+                      credentials, and tender systems
                     </p>
                     <button
                       onClick={handleMDAIntegrityCheck}
@@ -2624,17 +2666,28 @@ The award letter has been:
                     mdas.map((mda) => (
                       <div key={mda.id} className="border rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium text-gray-900">{mda.name}</h4>
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            dynamicMDACreationService.hasMDAFunctionality(mda.id)
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}>
-                            {dynamicMDACreationService.hasMDAFunctionality(mda.id) ? 'Functional' : 'Basic'}
+                          <h4 className="font-medium text-gray-900">
+                            {mda.name}
+                          </h4>
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              dynamicMDACreationService.hasMDAFunctionality(
+                                mda.id,
+                              )
+                                ? "bg-green-100 text-green-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {dynamicMDACreationService.hasMDAFunctionality(
+                              mda.id,
+                            )
+                              ? "Functional"
+                              : "Basic"}
                           </span>
                         </div>
                         <p className="text-sm text-gray-600 mb-3">
-                          Type: {mda.type.charAt(0).toUpperCase() + mda.type.slice(1)}
+                          Type:{" "}
+                          {mda.type.charAt(0).toUpperCase() + mda.type.slice(1)}
                         </p>
                         <button
                           onClick={() => handleTestMDAFunctionality(mda)}
@@ -2675,10 +2728,15 @@ The award letter has been:
                 <div>✅ Dynamic MDA Creation Service - Loaded</div>
                 <div>✅ Ministry Functionality Templates - Available</div>
                 <div>📊 Current MDAs: {mdas.length}</div>
-                <div>🔧 Active Configurations: {dynamicMDACreationService.getMDAConfigurations().length}</div>
+                <div>
+                  🔧 Active Configurations:{" "}
+                  {dynamicMDACreationService.getMDAConfigurations().length}
+                </div>
                 <div>💾 Storage: localStorage (Browser)</div>
                 <div>🚀 Status: Ready for testing</div>
-                <div className="text-yellow-400">💡 Use the actions above to test MDA functionality</div>
+                <div className="text-yellow-400">
+                  💡 Use the actions above to test MDA functionality
+                </div>
               </div>
             </div>
           </div>
@@ -2694,12 +2752,18 @@ The award letter has been:
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-900">Credentials Testing</h4>
+                <h4 className="font-medium text-gray-900">
+                  Credentials Testing
+                </h4>
                 <button
                   onClick={() => {
-                    const credentials = JSON.parse(localStorage.getItem('mdaCredentials') || '[]');
-                    console.log('🔐 MDA Credentials:', credentials);
-                    alert(`Found ${credentials.length} MDA credential sets. Check console for details.`);
+                    const credentials = JSON.parse(
+                      localStorage.getItem("mdaCredentials") || "[]",
+                    );
+                    console.log("🔐 MDA Credentials:", credentials);
+                    alert(
+                      `Found ${credentials.length} MDA credential sets. Check console for details.`,
+                    );
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
                 >
@@ -2711,9 +2775,13 @@ The award letter has been:
                 <h4 className="font-medium text-gray-900">Dashboard Testing</h4>
                 <button
                   onClick={() => {
-                    const dashboardConfigs = JSON.parse(localStorage.getItem('mdaDashboardConfigs') || '[]');
-                    console.log('📊 Dashboard Configs:', dashboardConfigs);
-                    alert(`Found ${dashboardConfigs.length} dashboard configurations. Check console for details.`);
+                    const dashboardConfigs = JSON.parse(
+                      localStorage.getItem("mdaDashboardConfigs") || "[]",
+                    );
+                    console.log("📊 Dashboard Configs:", dashboardConfigs);
+                    alert(
+                      `Found ${dashboardConfigs.length} dashboard configurations. Check console for details.`,
+                    );
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
                 >
@@ -2722,15 +2790,21 @@ The award letter has been:
               </div>
 
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-900">Tender System Testing</h4>
+                <h4 className="font-medium text-gray-900">
+                  Tender System Testing
+                </h4>
                 <button
                   onClick={() => {
-                    const tenderCounts = mdas.map(mda => ({
+                    const tenderCounts = mdas.map((mda) => ({
                       name: mda.name,
-                      tenders: JSON.parse(localStorage.getItem(`${mda.id}_tenders`) || '[]').length
+                      tenders: JSON.parse(
+                        localStorage.getItem(`${mda.id}_tenders`) || "[]",
+                      ).length,
                     }));
-                    console.log('📋 Tender Systems:', tenderCounts);
-                    alert(`Tender system status checked. See console for details.`);
+                    console.log("📋 Tender Systems:", tenderCounts);
+                    alert(
+                      `Tender system status checked. See console for details.`,
+                    );
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
                 >
