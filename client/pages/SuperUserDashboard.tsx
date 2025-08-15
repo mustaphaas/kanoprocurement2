@@ -1138,11 +1138,27 @@ export default function SuperUserDashboard() {
     // Refresh company data every 30 seconds to sync with AdminDashboard changes
     const interval = setInterval(loadCompanies, 30000);
 
+    // Global test function for company approval sync
+    (window as any).testSuperUserApproval = () => {
+      console.log("=== TESTING SUPERUSER COMPANY APPROVAL SYNC ===");
+      const pendingCompany = companies.find(c => c.email === "pending@company.com");
+      if (pendingCompany) {
+        console.log("📋 Found pending company:", pendingCompany);
+        console.log("📊 Current status:", pendingCompany.status);
+        console.log("🔄 Attempting to approve from SuperUser...");
+        handleCompanyStatusChange(pendingCompany.id, "Approved", "Test approval from superuser");
+      } else {
+        console.log("❌ pending@company.com not found");
+        console.log("📋 Available companies:", companies.map(c => ({ email: c.email, status: c.status })));
+      }
+    };
+
     return () => {
       clearInterval(interval);
       window.removeEventListener('persistentStorageChange', handleStorageChange);
+      delete (window as any).testSuperUserApproval;
     };
-  }, []);
+  }, [companies, handleCompanyStatusChange]);
 
   const handleLogout = () => {
     navigate("/");
