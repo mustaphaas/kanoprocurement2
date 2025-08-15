@@ -1134,6 +1134,9 @@ export default function SuperUserDashboard() {
     setMDAAdmins(mockMDAAdmins);
     setMDAUsers(mockMDAUsers);
 
+    // Initialize MDA system with static ministry configuration
+    initializeMDASystem();
+
     // Listen for localStorage changes (cross-tab sync)
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
