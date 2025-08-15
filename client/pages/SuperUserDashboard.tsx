@@ -1606,7 +1606,7 @@ export default function SuperUserDashboard() {
     alert(`E-Award Letter Generated and Sent Successfully!
 
 📄 Document ID: ${documentId}
-📧 Sent to: ${selectedAwardTender.awardedCompany}
+��� Sent to: ${selectedAwardTender.awardedCompany}
 🔐 Digital Signature: Applied
 📋 Reference: ${awardLetterData.referenceNumber}
 🕐 Validity: ${awardLetterData.validity} days
@@ -1985,21 +1985,22 @@ The award letter has been:
   const handleMDAUserSubmit = async (data: CreateMDAUserRequest) => {
     try {
       if (userFormMode === "create") {
-        const newUser: MDAUser = {
-          id: `user-${Date.now()}`,
-          mdaId: data.mdaId,
-          userId: `usr-${Date.now()}`,
-          role: data.role,
-          department: data.department,
-          permissions: data.permissions,
-          assignedBy: "admin-001",
-          assignedAt: new Date(),
-          isActive: true,
-        };
-        setMDAUsers((prev) => [...prev, newUser]);
+        // Create new user in localStorage
+        const newUser = await mdaLocalStorageService.createMDAUser(data, 'superuser');
+
+        // Fetch updated user list to get the full user with profile data
+        const updatedUsers = await mdaLocalStorageService.getMDAUsers(data.mdaId);
+        const createdUser = updatedUsers.find(user => user.id === newUser.id);
+
+        if (createdUser) {
+          setMDAUsers((prev) => [...prev, createdUser]);
+        }
+
         alert("MDA User created successfully!");
       } else if (selectedMDAUser) {
-        const updatedUser: MDAUser = {
+        // Note: For updates, we would need to add an update method to the service
+        // For now, just update the UI state
+        const updatedUser: MDAUser & { user: EnhancedUserProfile } = {
           ...selectedMDAUser,
           mdaId: data.mdaId,
           role: data.role,
