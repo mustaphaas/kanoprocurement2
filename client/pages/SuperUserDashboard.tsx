@@ -452,6 +452,39 @@ export default function SuperUserDashboard() {
     }
   }, []);
 
+  // Load audit logs based on current filters
+  const loadAuditLogs = useCallback(() => {
+    const filter: AuditLogFilter = {};
+
+    if (auditSearchTerm) filter.searchTerm = auditSearchTerm;
+    if (auditDateFilter) filter.startDate = auditDateFilter;
+    if (auditUserFilter && auditUserFilter !== "all") filter.user = auditUserFilter;
+    if (auditActionFilter && auditActionFilter !== "all") filter.action = auditActionFilter;
+    if (auditSeverityFilter && auditSeverityFilter !== "all") filter.severity = auditSeverityFilter;
+
+    const logs = auditLogStorage.getLogs(filter, 100);
+    setAuditLogs(logs);
+  }, [auditSearchTerm, auditDateFilter, auditUserFilter, auditActionFilter, auditSeverityFilter]);
+
+  // Update audit logs when filters change
+  useEffect(() => {
+    loadAuditLogs();
+  }, [loadAuditLogs]);
+
+  // Export audit logs
+  const handleExportAuditLogs = () => {
+    const csvData = auditLogStorage.exportLogs("csv");
+    const blob = new Blob([csvData], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `audit_logs_${new Date().toISOString().split("T")[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   const handleCompanyStatusChange = useCallback(
     (
       companyId: string,
@@ -500,6 +533,28 @@ export default function SuperUserDashboard() {
 
       // Debug the persistent storage state
       persistentStorage.debugInfo();
+
+      // Log the status change action
+      logUserAction(
+        "SuperUser",
+        "super_admin",
+        newStatus === "Approved" ? "COMPANY_APPROVED" :
+        newStatus === "Suspended" ? "COMPANY_SUSPENDED" : "COMPANY_BLACKLISTED",
+        company.companyName,
+        `Company status changed to ${newStatus}. Reason: ${reason}`,
+        newStatus === "Blacklisted" ? "HIGH" : "MEDIUM",
+        company.id,
+        {
+          previousStatus: company.status,
+          newStatus,
+          reason,
+          email: company.email,
+          actionTimestamp: new Date().toISOString()
+        }
+      );
+
+      // Reload audit logs to show the new entry
+      loadAuditLogs();
 
       // Reset form
       setActionReason("");
@@ -5310,7 +5365,7 @@ The award letter has been:
                                 {tender.nocApproved
                                   ? "✅ Approved"
                                   : tender.nocRequested
-                                    ? "�� Requested"
+                                    ? "⏳ Requested"
                                     : "❌ Not Requested"}
                               </span>
                             </div>
