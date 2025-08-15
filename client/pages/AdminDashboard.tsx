@@ -383,7 +383,24 @@ export default function AdminDashboard() {
       const { key, newValue } = event.detail;
       if (key && key.startsWith('userStatus_')) {
         console.log('🔄 Storage change detected in AdminDashboard:', key, newValue);
-        loadCompanies(); // Reload companies when status changes
+
+        // Extract email from storage key (remove 'userStatus_' prefix)
+        const email = key.replace('userStatus_', '');
+        console.log('🔍 Looking for company with email:', email);
+
+        // Update the specific company's status immediately
+        setCompanies(prevCompanies => {
+          const updatedCompanies = prevCompanies.map(company => {
+            if (company.email.toLowerCase() === email) {
+              console.log('✅ Updating company status:', company.companyName, 'from', company.status, 'to', newValue);
+              return { ...company, status: newValue };
+            }
+            return company;
+          });
+
+          console.log('📊 Updated companies:', updatedCompanies.map(c => ({ name: c.companyName, status: c.status })));
+          return updatedCompanies;
+        });
       }
     };
 
