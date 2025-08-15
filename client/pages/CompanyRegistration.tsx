@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   Upload,
@@ -488,6 +489,35 @@ export default function CompanyRegistration() {
       localStorage.setItem(
         `userStatus_${formData.contactPersonEmail.toLowerCase()}`,
         "Pending",
+      );
+
+      // Log company registration
+      logUserAction(
+        formData.contactPersonEmail.toLowerCase(),
+        "company_user",
+        "COMPANY_REGISTRATION_SUBMITTED",
+        formData.companyName,
+        `Company registration submitted: ${formData.companyName} (${formData.registrationNumber})`,
+        "MEDIUM",
+        registrationData.id,
+        {
+          companyName: formData.companyName,
+          registrationNumber: formData.registrationNumber,
+          businessType: formData.businessType,
+          contactPerson: formData.contactPersonName,
+          email: formData.contactPersonEmail.toLowerCase(),
+          phone: formData.phoneNumber,
+          address: formData.address,
+          documentsUploaded: {
+            incorporation: !!uploadedFiles.incorporation,
+            taxClearance: !!uploadedFiles.taxClearance,
+            companyProfile: !!uploadedFiles.companyProfile,
+            cacForm: !!uploadedFiles.cacForm,
+            otherDocuments: uploadedFiles.otherDocuments.length
+          },
+          extractionStatus,
+          registrationTimestamp: new Date().toISOString()
+        }
       );
 
       console.log("Registration Data Saved:", registrationData);
