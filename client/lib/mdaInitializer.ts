@@ -1,7 +1,6 @@
 import { MINISTRIES, getAllMinistries, MinistryConfig } from "@shared/ministries";
 import { MDA, MDAAdmin, MDAUser, MDASettings } from "@shared/api";
-import { mdaFirestoreService } from "./mdaFirestore";
-import { hasFirebaseConfig } from "./firebase";
+import { mdaLocalStorageService } from "./mdaLocalStorage";
 
 /**
  * MDA Initialization Service
