@@ -649,10 +649,30 @@ export default function AdminDashboard() {
       window.dispatchEvent(event);
     };
 
+    // Test admin audit logging
+    (window as any).testAdminAuditLogs = () => {
+      console.log("=== TESTING ADMIN AUDIT LOGS ===");
+
+      // Test admin action log
+      logUserAction(
+        "TestAdmin",
+        "admin",
+        "TEST_ADMIN_ACTION",
+        "Test Admin Entity",
+        "This is a test admin audit log entry",
+        "MEDIUM",
+        "test-admin-123",
+        { testData: "admin test metadata" }
+      );
+
+      console.log("✅ Test admin audit log added");
+    };
+
     return () => {
       delete (window as any).adminTestLocalStorage;
       delete (window as any).adminTestStatusChange;
       delete (window as any).testApproval;
+      delete (window as any).testAdminAuditLogs;
     };
   }, [companies, handleStatusChange]);
 
