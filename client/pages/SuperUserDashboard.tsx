@@ -6382,7 +6382,15 @@ The award letter has been:
                           {company.status === "Pending" && (
                             <button
                               onClick={() => {
+                                console.log("🔄 SUPERUSER APPROVE BUTTON CLICKED");
+                                console.log("Company ID:", company.id);
+                                console.log("Company Email:", company.email);
+                                console.log("Company Name:", company.companyName);
+
                                 handleCompanyStatusChange(company.id, "Approved", "Approved by superuser");
+
+                                // Show success message
+                                alert(`✅ ${company.companyName} has been approved successfully!`);
                               }}
                               className="text-green-600 hover:text-green-900 ml-3"
                             >
