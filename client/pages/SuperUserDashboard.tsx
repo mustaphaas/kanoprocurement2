@@ -504,7 +504,52 @@ export default function SuperUserDashboard() {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+
+    // Log the export action
+    logUserAction(
+      "SuperUser",
+      "super_admin",
+      "AUDIT_LOGS_EXPORTED",
+      "Audit Log System",
+      "Audit logs exported to CSV file",
+      "MEDIUM",
+      undefined,
+      {
+        exportFormat: "CSV",
+        exportTime: new Date().toISOString(),
+        totalRecords: auditLogs.length
+      }
+    );
   };
+
+  // Clear audit logs (for testing/maintenance)
+  const handleClearAuditLogs = () => {
+    if (window.confirm("Are you sure you want to clear all audit logs? This action cannot be undone.")) {
+      auditLogStorage.clearAllLogs();
+      loadAuditLogs();
+
+      // Log the clear action (this will be the only log left)
+      logUserAction(
+        "SuperUser",
+        "super_admin",
+        "AUDIT_LOGS_CLEARED",
+        "Audit Log System",
+        "All audit logs have been cleared by SuperUser",
+        "CRITICAL",
+        undefined,
+        {
+          clearTime: new Date().toISOString(),
+          reason: "Manual admin action"
+        }
+      );
+
+      loadAuditLogs();
+      alert("All audit logs have been cleared.");
+    }
+  };
+
+  // Get audit log statistics
+  const auditStats = auditLogStorage.getLogStats();
 
   const handleCompanyStatusChange = useCallback(
     (
@@ -3474,6 +3519,13 @@ The award letter has been:
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Export
+                    </button>
+                    <button
+                      onClick={handleClearAuditLogs}
+                      className="flex items-center px-3 py-2 text-sm border border-red-300 text-red-600 rounded-md hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Clear All
                     </button>
                   </div>
                 </div>
