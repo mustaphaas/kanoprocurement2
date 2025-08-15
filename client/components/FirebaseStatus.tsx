@@ -1,5 +1,4 @@
-import { hasFirebaseConfig } from "@/lib/firebase";
-import { CheckCircle, AlertTriangle, Info } from "lucide-react";
+import { CheckCircle, Database, Info } from "lucide-react";
 
 interface FirebaseStatusProps {
   variant?: "banner" | "badge" | "inline";
