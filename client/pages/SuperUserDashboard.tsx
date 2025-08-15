@@ -417,9 +417,9 @@ export default function SuperUserDashboard() {
   const navigate = useNavigate();
 
   // Initialize MDA system with localStorage
-  const initializeMDASystem = async () => {
+  const initializeMDASystem = useCallback(async () => {
     try {
-      console.log('🚀 Initializing MDA system with localStorage...');
+      console.log('���� Initializing MDA system with localStorage...');
 
       // Initialize MDAs from static ministries if not already done
       await mdaInitializer.initialize();
@@ -448,7 +448,7 @@ export default function SuperUserDashboard() {
       const fallbackMDAs = mdaInitializer.getMinistryMDAs();
       setMDAs(fallbackMDAs);
     }
-  };
+  }, []);
 
   const handleCompanyStatusChange = useCallback((
     companyId: string,
