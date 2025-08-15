@@ -680,6 +680,21 @@ export default function AdminDashboard() {
   };
 
   const handleLogout = () => {
+    // Log admin logout
+    logUserAction(
+      "AdminUser",
+      "admin",
+      "ADMIN_LOGOUT",
+      "Admin Portal",
+      "Admin user logged out of the system",
+      "LOW",
+      undefined,
+      {
+        logoutTime: new Date().toISOString(),
+        sessionDuration: "N/A" // Could calculate actual session duration
+      }
+    );
+
     navigate("/");
   };
 
@@ -691,6 +706,23 @@ export default function AdminDashboard() {
     link.href = url;
     link.download = "company_registrations.json";
     link.click();
+
+    // Log the export action
+    logUserAction(
+      "AdminUser",
+      "admin",
+      "DATA_EXPORTED",
+      "Company Registration Data",
+      `Admin exported ${filteredCompanies.length} company records as JSON`,
+      "MEDIUM",
+      undefined,
+      {
+        exportFormat: "JSON",
+        recordCount: filteredCompanies.length,
+        exportTime: new Date().toISOString(),
+        fileName: "company_registrations.json"
+      }
+    );
   };
 
   if (viewMode === "details" && selectedCompany) {
