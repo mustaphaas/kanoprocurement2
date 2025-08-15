@@ -54,6 +54,19 @@ class MDAFirestoreService {
 
   // MDA Operations
   async createMDA(data: CreateMDARequest, createdBy: string): Promise<MDA> {
+    if (!this.checkFirebaseAvailability()) {
+      // Return a mock MDA for demo purposes
+      const mockMDA: MDA = {
+        id: `demo-${Date.now()}`,
+        ...data,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isActive: true,
+      };
+      this.handleFirebaseUnavailable('createMDA');
+      return mockMDA;
+    }
+
     try {
       const mdaId = doc(collection(db, "mdas")).id;
       const mda: MDA = {
