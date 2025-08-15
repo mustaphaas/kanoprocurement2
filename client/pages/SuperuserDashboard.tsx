@@ -23,6 +23,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import {
+  persistentStorage,
   MDA,
   MDAAdmin,
   SuperuserDashboardStats,
@@ -33,14 +34,15 @@ interface SuperuserDashboardProps {}
 
 export default function SuperuserDashboard({}: SuperuserDashboardProps) {
   const [currentView, setCurrentView] = useState<
-    "overview" | "mdas" | "admins" | "createMDA" | "createAdmin"
+    "overview" | "mdas" | "admins" | "companies" | "createMDA" | "createAdmin"
   >("overview");
   const [mdas, setMDAs] = useState<MDA[]>([]);
   const [mdaAdmins, setMDAAdmins] = useState<
-    (MDAAdmin & { user: EnhancedUserProfile; mda: MDA })[]
+    (MDAAdmin & { user: EnhancedUserProfile; mda?: MDA })[] // mda might be undefined if not found
   >([]);
   const [stats, setStats] = useState<SuperuserDashboardStats | null>(null);
   const [selectedMDA, setSelectedMDA] = useState<MDA | null>(null);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<
     "all" | "ministry" | "department" | "agency"
@@ -49,8 +51,26 @@ export default function SuperuserDashboard({}: SuperuserDashboardProps) {
   const navigate = useNavigate();
 
   // Mock data
+  const handleCompanyStatusChange = (
+    email: string,
+    newStatus: "Approved" | "Suspended" | "Blacklisted",
+  ) => {
+    // Update local state
+    setCompanies((prev) =>
+      prev.map((company) =>
+        company.email.toLowerCase() === email.toLowerCase()
+          ? { ...company, status: newStatus }
+          : company,
+      ),
+    );
+
+    // Update persistent storage
+    persistentStorage.setItem(`userStatus_${email.toLowerCase()}`, newStatus);
+  };
+
+  // Initial mock data loading and polling setup, and persistent storage listeners
   useEffect(() => {
-    const mockMDAs: MDA[] = [
+    const loadMockData = () => {
       {
         id: "mda-001",
         name: "Ministry of Health",
@@ -136,7 +156,7 @@ export default function SuperuserDashboard({}: SuperuserDashboardProps) {
         },
       },
     ];
-
+  
     const mockAdmins: (MDAAdmin & { user: EnhancedUserProfile; mda: MDA })[] = [
       {
         id: "admin-001",
@@ -233,10 +253,81 @@ export default function SuperuserDashboard({}: SuperuserDashboardProps) {
       ],
     };
 
-    setMDAs(mockMDAs);
-    setMDAAdmins(mockAdmins);
-    setStats(mockStats);
+      setMDAs(mockMDAs);
+      // Link admins to MDAs, filter out admins without matching MDAs (shouldn't happen with good data)
+      const adminsWithMDA = mockAdmins
+      .map(loadedCompany => {
+        const mockCompany = mockCompanies.find(mc => mc.email.toLowerCase() === loadedCompany.email.toLowerCase());
+        return mockCompany ? { ...mockCompany, status: loadedCompany.status } : loadedCompany as Company;
+      });;
+      setCompanies(loadedCompanies.filter((c) => c.status !== null && c.status !== undefined)); // Filter out any null/undefined statuses
+    };
+
+    loadMockData(); // Load MDA and Admin mock data
+    loadCompanyStatuses(); // Load company statuses from persistent storage
+
+    // Listen for localStorage changes from other tabs/windows
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
+        const email = event.key.replace("userStatus_", "");
+        console.log(`Superuser Dashboard: Storage change detected for ${email}, updating status to ${event.newValue}`);
+        .map((admin) => {
+          const mda = mockMDAs.find((m) => m.id === admin.mdaId);
+          if (!mda) {
+            console.warn(`MDA not found for admin: ${admin.id}`);
+            return null;
+          }
+          return { ...admin, mda };
+        })
+        .filter(
+          (admin): admin is MDAAdmin & { user: EnhancedUserProfile; mda: MDA } =>
+            admin !== null,
+        );
+      setMDAAdmins(adminsWithMDA);
+      setStats(mockStats);
+    };
+
+    // Set up polling for mock data (if needed later, currently just loads once)
+    // const interval = setInterval(loadMockData, 60000); // Example: refresh every 60 seconds
+    // return () => clearInterval(interval);
   }, []);
+
+  // Effect to load companies and listen for status changes
+  useEffect(() => {
+    window.addEventListener("storage", handleStorageChange);
+
+    // Set up polling for mock data (if needed later, currently just loads once)
+    // const interval = setInterval(loadMockData, 60000); // Example: refresh every 60 seconds
+
+    return () => {
+      // clearInterval(interval);
+      window.removeEventListener("storage", handleStorageChange);
+    }; // Make sure this function is defined within or accessible by useEffect
+  }, []); // Empty dependency array means this runs once on mount and cleanup on unmount
+
+  // Handle storage changes from other tabs/windows
+  const handleStorageChange = (event: StorageEvent) => {
+    if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
+      const email = event.key.replace("userStatus_", "");
+      console.log(
+        `Superuser Dashboard: Storage change detected for ${email}, updating status to ${event.newValue}`,
+      );
+      setCompanies((prevCompanies) => {
+        // Create a copy of the array to avoid direct mutation
+        const updatedCompanies = [...prevCompanies];
+        const companyIndex = updatedCompanies.findIndex(
+          (company) => company.email.toLowerCase() === email.toLowerCase(),
+        );
+
+        if (companyIndex !== -1) {
+          // Update the company object in the copied array
+          updatedCompanies[companyIndex] = { ...updatedCompanies[companyIndex], status: event.newValue as Company['status'] };
+        }
+        return updatedCompanies; // Return the new array
+      });
+    }
+  };
+  
 
   const filteredMDAs = mdas.filter((mda) => {
     const matchesSearch =
@@ -692,6 +783,74 @@ export default function SuperuserDashboard({}: SuperuserDashboardProps) {
     </div>
   );
 
+  const renderCompanyList = () => (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Company Status</h2>
+          <p className="text-gray-600">Manage registered company statuses</p>
+        </div>
+        {/* Add filters/search here later if needed */}
+      </div>
+
+      {/* Company List */}
+      <div className="bg-white rounded-lg shadow-sm border">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Company Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Current Status
+                </th>
+                {/* Add columns for other potential company details here */}
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200 text-sm text-gray-700">
+              {companies.map((company) => (
+                <tr key={company.email} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {company.email}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          company.status === "Pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : company.status === "Approved"
+                              ? "bg-green-100 text-green-800"
+                              : company.status === "Suspended"
+                                ? "bg-orange-100 text-orange-800"
+                                : "bg-red-100 text-red-800"
+                        }`}
+                    >
+                       {company.status === "Pending" && <Clock className="h-3 w-3 mr-1 inline" />}
+                       {company.status === "Approved" && <CheckCircle className="h-3 w-3 mr-1 inline" />}
+                       {company.status === "Suspended" && <AlertTriangle className="h-3 w-3 mr-1 inline" />}
+                       {company.status === "Blacklisted" && <XCircle className="h-3 w-3 mr-1 inline" />}
+
+                      {company.status}
+                    </span>
+
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    {/* Add buttons/actions for managing status here */}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -715,30 +874,41 @@ export default function SuperuserDashboard({}: SuperuserDashboardProps) {
             <nav className="hidden md:flex items-center space-x-8">
               <button
                 onClick={() => setCurrentView("overview")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   currentView === "overview"
                     ? "text-green-700 bg-green-50"
                     : "text-gray-700 hover:text-green-700"
                 }`}
               >
                 <BarChart3 className="h-4 w-4" />
-                <span>Overview</span>
-              </button>
+                <span>System Overview</span>
+              </button>{""}
               <button
                 onClick={() => setCurrentView("mdas")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   currentView === "mdas"
                     ? "text-green-700 bg-green-50"
                     : "text-gray-700 hover:text-green-700"
                 }`}
               >
                 <Building2 className="h-4 w-4" />
-                <span>MDAs</span>
-              </button>
+                <span>Manage MDAs</span>
+              </button>{""}
               <button
                 onClick={() => setCurrentView("admins")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   currentView === "admins"
+                    ? "text-green-700 bg-green-50"
+                    : "text-gray-700 hover:text-green-700"
+                }`}
+              >
+                <Users className="h-4 w-4" />
+                <span>Manage Admins</span>
+              </button>
+              <button
+                onClick={() => setCurrentView("companies")}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  currentView === "companies"
                     ? "text-green-700 bg-green-50"
                     : "text-gray-700 hover:text-green-700"
                 }`}
@@ -779,6 +949,7 @@ export default function SuperuserDashboard({}: SuperuserDashboardProps) {
         {currentView === "overview" && renderOverview()}
         {currentView === "mdas" && renderMDAList()}
         {currentView === "admins" && renderAdminList()}
+        {currentView === "companies" && renderCompanyList()}
         {currentView === "createMDA" && (
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <div className="flex items-center justify-between mb-6">
