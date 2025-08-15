@@ -1244,6 +1244,7 @@ export default function SuperUserDashboard() {
 
     return () => {
       clearInterval(interval);
+      clearInterval(syncInterval);
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('persistentStorageChange', handleCustomStorageChange);
       delete (window as any).testSuperUserApproval;
