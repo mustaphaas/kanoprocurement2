@@ -1264,7 +1264,7 @@ export default function SuperUserDashboard() {
 
         if (hasChanges) {
           console.log(
-            "✅ SuperUserDashboard: Updated company statuses via polling",
+            "��� SuperUserDashboard: Updated company statuses via polling",
           );
         }
 
@@ -2028,9 +2028,17 @@ The award letter has been:
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               MDA Management
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-2">
               Create and manage Ministries, Departments, and Agencies
             </p>
+            <div className="flex items-center space-x-2 text-sm">
+              <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                <span className="w-2 h-2 bg-green-600 rounded-full mr-1"></span>
+                3 Pre-configured Ministries Active
+              </span>
+              <span className="text-gray-500">•</span>
+              <span className="text-gray-600">Ready to create new MDAs</span>
+            </div>
           </div>
           <button
             onClick={handleCreateMDA}
