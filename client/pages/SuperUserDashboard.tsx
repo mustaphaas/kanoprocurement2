@@ -1815,19 +1815,26 @@ The award letter has been:
     setShowEditMDAModal(true);
   };
 
-  const handleDeleteMDA = (mda: MDA) => {
+  const handleDeleteMDA = async (mda: MDA) => {
     if (
       window.confirm(
         `Are you sure you want to delete ${mda.name}? This action cannot be undone.`,
       )
     ) {
-      // Remove all administrators associated with this MDA
-      setMDAAdmins((prev) => prev.filter((admin) => admin.mdaId !== mda.id));
+      try {
+        // Delete MDA from localStorage (this also removes associated admins and users)
+        await mdaLocalStorageService.deleteMDA(mda.id);
 
-      // Remove the MDA
-      setMDAs((prev) => prev.filter((m) => m.id !== mda.id));
+        // Update UI state
+        setMDAs((prev) => prev.filter((m) => m.id !== mda.id));
+        setMDAAdmins((prev) => prev.filter((admin) => admin.mdaId !== mda.id));
+        setMDAUsers((prev) => prev.filter((user) => user.mdaId !== mda.id));
 
-      alert(`${mda.name} has been deleted successfully!`);
+        alert(`${mda.name} has been deleted successfully!`);
+      } catch (error) {
+        console.error("Error deleting MDA:", error);
+        alert("Error deleting MDA. Please try again.");
+      }
     }
   };
 
