@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import { mdaInitializer } from "@/lib/mdaInitializer";
-import { hasFirebaseConfig } from "@/lib/firebase";
+import { mdaLocalStorageService } from "@/lib/mdaLocalStorage";
 import FirebaseStatus from "@/components/FirebaseStatus";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import MDAForm from "@/components/MDAForm";
