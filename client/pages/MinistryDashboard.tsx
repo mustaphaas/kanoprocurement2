@@ -4,6 +4,7 @@ import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MDAUserForm from "@/components/MDAUserForm";
 import { formatCurrency } from "@/lib/utils";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   Users,
@@ -3190,6 +3191,25 @@ export default function MinistryDashboard() {
   }, [tenderSubView]);
 
   const handleLogout = () => {
+    const { ministry } = getMinistryMockData();
+
+    // Log ministry logout
+    logUserAction(
+      "MinistryUser",
+      "ministry_user",
+      "MINISTRY_LOGOUT",
+      "Ministry Portal",
+      `Ministry user from ${ministry.name} logged out of the system`,
+      "LOW",
+      undefined,
+      {
+        logoutTime: new Date().toISOString(),
+        ministryName: ministry.name,
+        ministryCode: ministry.code,
+        sessionDuration: "N/A"
+      }
+    );
+
     localStorage.removeItem("ministryUser");
     navigate("/");
   };
@@ -3474,6 +3494,31 @@ export default function MinistryDashboard() {
       contactEmail: "",
     });
     setShowNOCRequest(false);
+    // Log NOC request submission
+    logUserAction(
+      "MinistryUser",
+      "ministry_user",
+      "NOC_REQUEST_SUBMITTED",
+      newNOCRequest.projectTitle,
+      `Ministry ${ministry.name} submitted NOC request for project: ${newNOCRequest.projectTitle}`,
+      "HIGH",
+      requestId,
+      {
+        nocRequestId: requestId,
+        projectTitle: newNOCRequest.projectTitle,
+        projectValue: newNOCRequest.projectValue,
+        contractorName: newNOCRequest.contractorName,
+        category: newNOCRequest.category,
+        procuringEntity: newNOCRequest.procuringEntity,
+        expectedDuration: newNOCRequest.expectedDuration,
+        ministryName: ministry.name,
+        ministryCode: ministry.code,
+        contactPerson: newNOCRequest.contactPerson,
+        contactEmail: newNOCRequest.contactEmail,
+        submissionTimestamp: new Date().toISOString()
+      }
+    );
+
     alert(
       "NOC Request submitted successfully! It will be reviewed by the superuser.",
     );
