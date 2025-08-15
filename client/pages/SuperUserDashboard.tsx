@@ -415,28 +415,37 @@ export default function SuperUserDashboard() {
 
   const navigate = useNavigate();
 
-  // Initialize MDA system with static ministries
+  // Initialize MDA system with localStorage
   const initializeMDASystem = async () => {
     try {
-      console.log('🚀 Initializing MDA system with static ministries...');
+      console.log('🚀 Initializing MDA system with localStorage...');
 
-      // Use fallback MDAs for immediate UI display
-      const fallbackMDAs = mdaInitializer.getMinistryMDAs();
-      setMDAs(fallbackMDAs);
+      // Initialize MDAs from static ministries if not already done
+      await mdaInitializer.initialize();
 
-      // Initialize Firebase MDAs in background (if Firebase is available)
-      if (typeof window !== 'undefined') {
-        mdaInitializer.initialize()
-          .then(() => {
-            console.log('✅ MDA system initialized successfully');
-            // Optionally reload MDAs from Firebase here
-          })
-          .catch((error) => {
-            console.warn('⚠️ Firebase MDA initialization failed, using static data:', error);
-          });
+      // Load MDAs from localStorage
+      const loadedMDAs = await mdaLocalStorageService.getAllMDAs();
+      setMDAs(loadedMDAs);
+
+      // Load MDA admins
+      const loadedAdmins = await mdaLocalStorageService.getMDAAdmins();
+      setMDAAdmins(loadedAdmins);
+
+      // Load MDA users
+      const allUsers: (MDAUser & { user: EnhancedUserProfile })[] = [];
+      for (const mda of loadedMDAs) {
+        const mdaUsers = await mdaLocalStorageService.getMDAUsers(mda.id);
+        allUsers.push(...mdaUsers);
       }
+      setMDAUsers(allUsers);
+
+      console.log('✅ MDA system initialized successfully with localStorage');
+      console.log(`📊 Loaded: ${loadedMDAs.length} MDAs, ${loadedAdmins.length} admins, ${allUsers.length} users`);
     } catch (error) {
       console.error('❌ MDA system initialization error:', error);
+      // Fallback to static data
+      const fallbackMDAs = mdaInitializer.getMinistryMDAs();
+      setMDAs(fallbackMDAs);
     }
   };
 
