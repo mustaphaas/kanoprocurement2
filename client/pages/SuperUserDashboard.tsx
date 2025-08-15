@@ -1606,7 +1606,7 @@ export default function SuperUserDashboard() {
     alert(`E-Award Letter Generated and Sent Successfully!
 
 📄 Document ID: ${documentId}
-��� Sent to: ${selectedAwardTender.awardedCompany}
+📧 Sent to: ${selectedAwardTender.awardedCompany}
 🔐 Digital Signature: Applied
 📋 Reference: ${awardLetterData.referenceNumber}
 🕐 Validity: ${awardLetterData.validity} days
@@ -2060,7 +2060,7 @@ The award letter has been:
               <span className="text-gray-500">•</span>
               <FirebaseStatus variant="badge" />
               <span className="text-gray-500">•</span>
-              <span className="text-gray-600">Ready to create new MDAs</span>
+              <span className="text-gray-600">Data stored in browser localStorage</span>
             </div>
           </div>
           <button
