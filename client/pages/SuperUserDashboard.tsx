@@ -4,6 +4,7 @@ import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import { mdaInitializer } from "@/lib/mdaInitializer";
 import { mdaLocalStorageService } from "@/lib/mdaLocalStorage";
+import { dynamicMDACreationService } from "@/lib/dynamicMDACreation";
 import {
   auditLogStorage,
   logUserAction,
@@ -108,7 +109,8 @@ type ActiveTab =
   | "settings"
   | "feedback"
   | "no-objection-certificate"
-  | "mda-management";
+  | "mda-management"
+  | "mda-testing";
 
 interface DashboardStats {
   newRegistrationsPending: number;
@@ -2115,13 +2117,13 @@ The award letter has been:
   const handleMDASubmit = async (data: CreateMDARequest) => {
     try {
       if (mdaFormMode === "create") {
-        // Create new MDA in localStorage
-        const newMDA = await mdaLocalStorageService.createMDA(
+        // Create new MDA with full ministry functionality
+        const newMDA = await dynamicMDACreationService.createFullyFunctionalMDA(
           data,
-          "superuser",
+          "SuperUser",
         );
         setMDAs((prev) => [...prev, newMDA]);
-        alert("MDA created successfully!");
+        alert(`${newMDA.type.charAt(0).toUpperCase() + newMDA.type.slice(1)} "${newMDA.name}" created successfully with full ministry functionality!`);
       } else if (selectedMDA) {
         // Update existing MDA in localStorage
         await mdaLocalStorageService.updateMDA(
