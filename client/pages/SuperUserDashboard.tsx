@@ -4,6 +4,7 @@ import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import { mdaInitializer } from "@/lib/mdaInitializer";
 import { mdaLocalStorageService } from "@/lib/mdaLocalStorage";
+import { auditLogStorage, logUserAction, AuditLogEntry, AuditLogFilter } from "@/lib/auditLogStorage";
 import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
@@ -140,14 +141,7 @@ interface Company {
   blacklistReason?: string;
 }
 
-interface AuditLog {
-  id: string;
-  timestamp: string;
-  user: string;
-  action: string;
-  entity: string;
-  details: string;
-}
+// AuditLogEntry is now imported from auditLogStorage
 
 interface AIRecommendation {
   id: string;
@@ -289,7 +283,13 @@ interface TenderForm {
 export default function SuperUserDashboard() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("dashboard");
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
+  const [auditLogFilter, setAuditLogFilter] = useState<AuditLogFilter>({});
+  const [auditSearchTerm, setAuditSearchTerm] = useState("");
+  const [auditDateFilter, setAuditDateFilter] = useState("");
+  const [auditUserFilter, setAuditUserFilter] = useState("");
+  const [auditActionFilter, setAuditActionFilter] = useState("");
+  const [auditSeverityFilter, setAuditSeverityFilter] = useState("");
   const [aiRecommendations, setAIRecommendations] = useState<
     AIRecommendation[]
   >([]);
@@ -586,32 +586,11 @@ export default function SuperUserDashboard() {
       },
     ];
 
-    const mockAuditLogs: AuditLog[] = [
-      {
-        id: "1",
-        timestamp: "2024-01-22 14:30:00",
-        user: "SuperUser",
-        action: "Company Approved",
-        entity: "TechSolutions Nigeria",
-        details: "Company registration approved after document verification",
-      },
-      {
-        id: "2",
-        timestamp: "2024-01-22 13:15:00",
-        user: "Admin",
-        action: "Document Upload",
-        entity: "Northern Construction Ltd",
-        details: "New tax clearance certificate uploaded",
-      },
-      {
-        id: "3",
-        timestamp: "2024-01-22 11:45:00",
-        user: "SuperUser",
-        action: "Tender Created",
-        entity: "KS-2024-015",
-        details: "New tender published: Hospital Equipment Supply",
-      },
-    ];
+    // Initialize audit log system with sample data
+    auditLogStorage.initializeSampleData();
+
+    // Load initial audit logs
+    loadAuditLogs();
 
     const mockAIRecommendations: AIRecommendation[] = [
       {
@@ -1172,8 +1151,7 @@ export default function SuperUserDashboard() {
 
     loadCompanies();
 
-    // Set other mock data
-    setAuditLogs(mockAuditLogs);
+    // Note: Audit logs are now loaded separately using loadAuditLogs()
     setAIRecommendations(mockAIRecommendations);
     setTenders(mockTenders);
     setTenderEvaluations(mockTenderEvaluations);
@@ -5332,7 +5310,7 @@ The award letter has been:
                                 {tender.nocApproved
                                   ? "✅ Approved"
                                   : tender.nocRequested
-                                    ? "⏳ Requested"
+                                    ? "�� Requested"
                                     : "❌ Not Requested"}
                               </span>
                             </div>
