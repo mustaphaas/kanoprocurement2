@@ -1,6 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { persistentStorage } from "@/lib/persistentStorage";
+import { MINISTRIES, getAllMinistries } from "@shared/ministries";
+import { mdaInitializer } from "@/lib/mdaInitializer";
+import { mdaLocalStorageService } from "@/lib/mdaLocalStorage";
+import FirebaseStatus from "@/components/FirebaseStatus";
+import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import MDAForm from "@/components/MDAForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
@@ -411,60 +416,99 @@ export default function SuperUserDashboard() {
 
   const navigate = useNavigate();
 
-  const handleCompanyStatusChange = (
-    companyId: string,
-    newStatus: "Approved" | "Suspended" | "Blacklisted",
-    reason: string,
-  ) => {
-    console.log("🚀 SuperUser handleCompanyStatusChange CALLED");
-    console.log("📥 Parameters:", { companyId, newStatus, reason });
+  // Initialize MDA system with localStorage
+  const initializeMDASystem = useCallback(async () => {
+    try {
+      console.log("���� Initializing MDA system with localStorage...");
 
-    // Find the company first
-    const company = companies.find((c) => c.id === companyId);
-    if (!company) {
-      console.error(`❌ Company with ID ${companyId} not found!`);
-      return;
-    }
+      // Initialize MDAs from static ministries if not already done
+      await mdaInitializer.initialize();
 
-    console.log(`=== SUPERUSER STATUS CHANGE ===`);
-    console.log(`Company: ${company.companyName}`);
-    console.log(`Original Email: ${company.email}`);
-    console.log(`Normalized Email: ${company.email.toLowerCase()}`);
-    console.log(`New status: ${newStatus}`);
+      // Load MDAs from localStorage
+      const loadedMDAs = await mdaLocalStorageService.getAllMDAs();
+      setMDAs(loadedMDAs);
 
-    // Update the company status in the local state FIRST
-    setCompanies((prev) =>
-      prev.map((c) => (c.id === companyId ? { ...c, status: newStatus } : c)),
-    );
+      // Load MDA admins
+      const loadedAdmins = await mdaLocalStorageService.getMDAAdmins();
+      setMDAAdmins(loadedAdmins);
 
-    // Store the status change using persistent storage
-    const storageKey = `userStatus_${company.email.toLowerCase()}`;
-    const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
+      // Load MDA users
+      const allUsers: (MDAUser & { user: EnhancedUserProfile })[] = [];
+      for (const mda of loadedMDAs) {
+        const mdaUsers = await mdaLocalStorageService.getMDAUsers(mda.id);
+        allUsers.push(...mdaUsers);
+      }
+      setMDAUsers(allUsers);
 
-    console.log(`📦 Setting storage key: ${storageKey} = ${newStatus}`);
-
-    persistentStorage.setItem(storageKey, newStatus);
-    persistentStorage.setItem(reasonKey, reason);
-
-    // Verify the storage was set correctly
-    const verifyValue = persistentStorage.getItem(storageKey);
-    console.log(`✅ Verification - stored value: ${verifyValue}`);
-
-    if (verifyValue !== newStatus) {
-      console.error(
-        `❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`,
+      console.log("✅ MDA system initialized successfully with localStorage");
+      console.log(
+        `📊 Loaded: ${loadedMDAs.length} MDAs, ${loadedAdmins.length} admins, ${allUsers.length} users`,
       );
+    } catch (error) {
+      console.error("❌ MDA system initialization error:", error);
+      // Fallback to static data
+      const fallbackMDAs = mdaInitializer.getMinistryMDAs();
+      setMDAs(fallbackMDAs);
     }
+  }, []);
 
-    // Debug the persistent storage state
-    persistentStorage.debugInfo();
+  const handleCompanyStatusChange = useCallback(
+    (
+      companyId: string,
+      newStatus: "Approved" | "Suspended" | "Blacklisted",
+      reason: string,
+    ) => {
+      console.log("���� SuperUser handleCompanyStatusChange CALLED");
+      console.log("📥 Parameters:", { companyId, newStatus, reason });
 
-    // Reset form
-    setActionReason("");
-    setApprovalDecision("");
-    setSelectedCompanyForApproval(null);
-    setViewMode("list");
-  };
+      // Find the company first
+      const company = companies.find((c) => c.id === companyId);
+      if (!company) {
+        console.error(`❌ Company with ID ${companyId} not found!`);
+        return;
+      }
+
+      console.log(`=== SUPERUSER STATUS CHANGE ===`);
+      console.log(`Company: ${company.companyName}`);
+      console.log(`Original Email: ${company.email}`);
+      console.log(`Normalized Email: ${company.email.toLowerCase()}`);
+      console.log(`New status: ${newStatus}`);
+
+      // Update the company status in the local state FIRST
+      setCompanies((prev) =>
+        prev.map((c) => (c.id === companyId ? { ...c, status: newStatus } : c)),
+      );
+
+      // Store the status change using persistent storage
+      const storageKey = `userStatus_${company.email.toLowerCase()}`;
+      const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
+
+      console.log(`📦 Setting storage key: ${storageKey} = ${newStatus}`);
+
+      persistentStorage.setItem(storageKey, newStatus);
+      persistentStorage.setItem(reasonKey, reason);
+
+      // Verify the storage was set correctly
+      const verifyValue = persistentStorage.getItem(storageKey);
+      console.log(`✅ Verification - stored value: ${verifyValue}`);
+
+      if (verifyValue !== newStatus) {
+        console.error(
+          `❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`,
+        );
+      }
+
+      // Debug the persistent storage state
+      persistentStorage.debugInfo();
+
+      // Reset form
+      setActionReason("");
+      setApprovalDecision("");
+      setSelectedCompanyForApproval(null);
+      setViewMode("list");
+    },
+    [companies],
+  );
 
   const dashboardStats: DashboardStats = {
     newRegistrationsPending: 4, // Including pending@company.com + 3 other mock companies
@@ -774,17 +818,23 @@ export default function SuperUserDashboard() {
       },
     ];
 
-    // Mock MDA data
-    const mockMDAs: MDA[] = [
-      {
-        id: "mda-001",
-        name: "Ministry of Health",
-        type: "ministry",
-        description: "Responsible for healthcare policy and administration",
-        contactEmail: "info@health.kano.gov.ng",
-        contactPhone: "+234 64 123 4567",
-        address: "Health Ministry Complex, Kano",
-        headOfMDA: "Dr. Amina Kano",
+    // Initialize MDAs from static ministry configuration
+    const initializeMDAFromMinistries = (): MDA[] => {
+      const ministries = getAllMinistries();
+      return ministries.map((ministry, index) => ({
+        id: ministry.id,
+        name: ministry.name,
+        type: "ministry" as const,
+        description: ministry.description,
+        contactEmail: ministry.contactEmail,
+        contactPhone: ministry.contactPhone,
+        address: ministry.address,
+        headOfMDA:
+          index === 0
+            ? "Dr. Amina Kano"
+            : index === 1
+              ? "Engr. Musa Abdullahi"
+              : "Prof. Muhammad Usman",
         createdAt: new Date("2024-01-01"),
         updatedAt: new Date("2024-01-15"),
         isActive: true,
@@ -794,78 +844,21 @@ export default function SuperUserDashboard() {
             level2: 25000000,
             level3: 100000000,
           },
-          allowedCategories: [
-            "Medical Equipment",
-            "Pharmaceuticals",
-            "Healthcare Services",
-          ],
+          allowedCategories: ministry.specializations,
           customWorkflows: true,
           budgetYear: "2024",
-          totalBudget: 5000000000,
+          totalBudget:
+            index === 0 ? 5000000000 : index === 1 ? 8500000000 : 8000000000, // Different budgets per ministry
         },
-      },
-      {
-        id: "mda-002",
-        name: "Ministry of Education",
-        type: "ministry",
-        description: "Manages education policy and school administration",
-        contactEmail: "info@education.kano.gov.ng",
-        contactPhone: "+234 64 123 4568",
-        address: "Education Ministry, Kano",
-        headOfMDA: "Prof. Muhammad Usman",
-        createdAt: new Date("2024-01-01"),
-        updatedAt: new Date("2024-01-15"),
-        isActive: true,
-        settings: {
-          procurementThresholds: {
-            level1: 5000000,
-            level2: 25000000,
-            level3: 100000000,
-          },
-          allowedCategories: [
-            "Educational Materials",
-            "School Infrastructure",
-            "ICT Equipment",
-          ],
-          customWorkflows: false,
-          budgetYear: "2024",
-          totalBudget: 8000000000,
-        },
-      },
-      {
-        id: "mda-003",
-        name: "Kano State Urban Development Board",
-        type: "agency",
-        description: "Urban planning and development coordination",
-        contactEmail: "info@ksudb.kano.gov.ng",
-        contactPhone: "+234 64 123 4569",
-        address: "KSUDB Complex, Kano",
-        headOfMDA: "Engr. Fatima Aliyu",
-        createdAt: new Date("2024-01-05"),
-        updatedAt: new Date("2024-01-20"),
-        isActive: true,
-        settings: {
-          procurementThresholds: {
-            level1: 3000000,
-            level2: 15000000,
-            level3: 50000000,
-          },
-          allowedCategories: [
-            "Construction",
-            "Urban Planning",
-            "Infrastructure",
-          ],
-          customWorkflows: true,
-          budgetYear: "2024",
-          totalBudget: 3000000000,
-        },
-      },
-    ];
+      }));
+    };
+
+    const mockMDAs: MDA[] = initializeMDAFromMinistries();
 
     const mockMDAAdmins: MDAAdmin[] = [
       {
         id: "admin-001",
-        mdaId: "mda-001",
+        mdaId: "ministry", // Ministry of Health
         userId: "user-001",
         role: "mda_super_admin",
         permissions: {
@@ -882,7 +875,7 @@ export default function SuperUserDashboard() {
       },
       {
         id: "admin-002",
-        mdaId: "mda-002",
+        mdaId: "ministry2", // Ministry of Works and Infrastructure
         userId: "user-002",
         role: "mda_admin",
         permissions: {
@@ -897,15 +890,32 @@ export default function SuperUserDashboard() {
         assignedAt: new Date("2024-01-03"),
         isActive: true,
       },
+      {
+        id: "admin-003",
+        mdaId: "ministry3", // Ministry of Education
+        userId: "user-003",
+        role: "mda_admin",
+        permissions: {
+          canCreateUsers: true,
+          canManageTenders: true,
+          canApproveContracts: false,
+          canViewReports: true,
+          canManageSettings: false,
+          maxApprovalAmount: 15000000,
+        },
+        assignedBy: "superuser-001",
+        assignedAt: new Date("2024-01-04"),
+        isActive: true,
+      },
     ];
 
     const mockMDAUsers: MDAUser[] = [
       {
         id: "mdauser-001",
-        mdaId: "mda-001",
+        mdaId: "ministry", // Ministry of Health
         userId: "usr-001",
         role: "procurement_officer",
-        department: "Procurement Department",
+        department: "Medical Services",
         permissions: {
           canCreateTenders: true,
           canEvaluateBids: true,
@@ -919,10 +929,10 @@ export default function SuperUserDashboard() {
       },
       {
         id: "mdauser-002",
-        mdaId: "mda-001",
+        mdaId: "ministry", // Ministry of Health
         userId: "usr-002",
         role: "evaluator",
-        department: "Technical Evaluation",
+        department: "Public Health",
         permissions: {
           canCreateTenders: false,
           canEvaluateBids: true,
@@ -936,19 +946,36 @@ export default function SuperUserDashboard() {
       },
       {
         id: "mdauser-003",
-        mdaId: "mda-002",
+        mdaId: "ministry2", // Ministry of Works and Infrastructure
         userId: "usr-003",
-        role: "accountant",
-        department: "Finance Department",
+        role: "procurement_officer",
+        department: "Road Construction",
         permissions: {
-          canCreateTenders: false,
-          canEvaluateBids: false,
+          canCreateTenders: true,
+          canEvaluateBids: true,
           canViewFinancials: true,
           canGenerateReports: true,
-          accessLevel: "read",
+          accessLevel: "write",
         },
         assignedBy: "admin-002",
         assignedAt: new Date("2024-01-07"),
+        isActive: true,
+      },
+      {
+        id: "mdauser-004",
+        mdaId: "ministry3", // Ministry of Education
+        userId: "usr-004",
+        role: "procurement_officer",
+        department: "Basic Education",
+        permissions: {
+          canCreateTenders: true,
+          canEvaluateBids: true,
+          canViewFinancials: true,
+          canGenerateReports: true,
+          accessLevel: "write",
+        },
+        assignedBy: "admin-003",
+        assignedAt: new Date("2024-01-08"),
         isActive: true,
       },
     ];
@@ -1155,6 +1182,8 @@ export default function SuperUserDashboard() {
     setMDAAdmins(mockMDAAdmins);
     setMDAUsers(mockMDAUsers);
 
+    // Note: MDA system initialization moved to separate useEffect for better dependency management
+
     // Listen for localStorage changes (cross-tab sync)
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
@@ -1328,7 +1357,20 @@ export default function SuperUserDashboard() {
       delete (window as any).testSuperUserApproval;
       delete (window as any).testNorthernApproval;
     };
-  }, [companies, handleCompanyStatusChange]);
+  }, [handleCompanyStatusChange]);
+
+  // Separate useEffect for MDA system initialization
+  useEffect(() => {
+    const initMDASystem = async () => {
+      try {
+        await initializeMDASystem();
+      } catch (error) {
+        console.error("Failed to initialize MDA system:", error);
+      }
+    };
+
+    initMDASystem();
+  }, []); // Empty dependency array - run only once
 
   const handleLogout = () => {
     navigate("/");
@@ -1797,19 +1839,26 @@ The award letter has been:
     setShowEditMDAModal(true);
   };
 
-  const handleDeleteMDA = (mda: MDA) => {
+  const handleDeleteMDA = async (mda: MDA) => {
     if (
       window.confirm(
         `Are you sure you want to delete ${mda.name}? This action cannot be undone.`,
       )
     ) {
-      // Remove all administrators associated with this MDA
-      setMDAAdmins((prev) => prev.filter((admin) => admin.mdaId !== mda.id));
+      try {
+        // Delete MDA from localStorage (this also removes associated admins and users)
+        await mdaLocalStorageService.deleteMDA(mda.id);
 
-      // Remove the MDA
-      setMDAs((prev) => prev.filter((m) => m.id !== mda.id));
+        // Update UI state
+        setMDAs((prev) => prev.filter((m) => m.id !== mda.id));
+        setMDAAdmins((prev) => prev.filter((admin) => admin.mdaId !== mda.id));
+        setMDAUsers((prev) => prev.filter((user) => user.mdaId !== mda.id));
 
-      alert(`${mda.name} has been deleted successfully!`);
+        alert(`${mda.name} has been deleted successfully!`);
+      } catch (error) {
+        console.error("Error deleting MDA:", error);
+        alert("Error deleting MDA. Please try again.");
+      }
     }
   };
 
@@ -1842,16 +1891,20 @@ The award letter has been:
   const handleMDASubmit = async (data: CreateMDARequest) => {
     try {
       if (mdaFormMode === "create") {
-        const newMDA: MDA = {
-          id: `mda-${Date.now()}`,
-          ...data,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          isActive: true,
-        };
+        // Create new MDA in localStorage
+        const newMDA = await mdaLocalStorageService.createMDA(
+          data,
+          "superuser",
+        );
         setMDAs((prev) => [...prev, newMDA]);
         alert("MDA created successfully!");
       } else if (selectedMDA) {
+        // Update existing MDA in localStorage
+        await mdaLocalStorageService.updateMDA(
+          selectedMDA.id,
+          data,
+          "superuser",
+        );
         const updatedMDA: MDA = {
           ...selectedMDA,
           ...data,
@@ -1874,25 +1927,35 @@ The award letter has been:
   const handleMDAAdminSubmit = async (data: CreateMDAAdminRequest) => {
     try {
       if (adminFormMode === "create") {
-        const newAdmin: MDAAdmin = {
-          id: `admin-${Date.now()}`,
-          mdaId: data.mdaId,
-          userId: `user-${Date.now()}`,
-          role: data.role,
-          permissions: data.permissions,
-          assignedBy: "superuser-001",
-          assignedAt: new Date(),
-          isActive: true,
-        };
-        setMDAAdmins((prev) => [...prev, newAdmin]);
+        // Create new admin in localStorage
+        const newAdmin = await mdaLocalStorageService.createMDAAdmin(
+          data,
+          "superuser",
+        );
+
+        // Fetch updated admin list to get the full admin with user data
+        const updatedAdmins = await mdaLocalStorageService.getMDAAdmins(
+          data.mdaId,
+        );
+        const createdAdmin = updatedAdmins.find(
+          (admin) => admin.id === newAdmin.id,
+        );
+
+        if (createdAdmin) {
+          setMDAAdmins((prev) => [...prev, createdAdmin]);
+        }
+
         alert("MDA Administrator created successfully!");
       } else if (selectedMDAAdmin) {
-        const updatedAdmin: MDAAdmin = {
-          ...selectedMDAAdmin,
-          mdaId: data.mdaId,
-          role: data.role,
-          permissions: data.permissions,
-        };
+        // Note: For updates, we would need to add an update method to the service
+        // For now, just update the UI state
+        const updatedAdmin: MDAAdmin & { user: EnhancedUserProfile; mda: MDA } =
+          {
+            ...selectedMDAAdmin,
+            mdaId: data.mdaId,
+            role: data.role,
+            permissions: data.permissions,
+          };
         setMDAAdmins((prev) =>
           prev.map((a) => (a.id === selectedMDAAdmin.id ? updatedAdmin : a)),
         );
@@ -1961,21 +2024,27 @@ The award letter has been:
   const handleMDAUserSubmit = async (data: CreateMDAUserRequest) => {
     try {
       if (userFormMode === "create") {
-        const newUser: MDAUser = {
-          id: `user-${Date.now()}`,
-          mdaId: data.mdaId,
-          userId: `usr-${Date.now()}`,
-          role: data.role,
-          department: data.department,
-          permissions: data.permissions,
-          assignedBy: "admin-001",
-          assignedAt: new Date(),
-          isActive: true,
-        };
-        setMDAUsers((prev) => [...prev, newUser]);
+        // Create new user in localStorage
+        const newUser = await mdaLocalStorageService.createMDAUser(
+          data,
+          "superuser",
+        );
+
+        // Fetch updated user list to get the full user with profile data
+        const updatedUsers = await mdaLocalStorageService.getMDAUsers(
+          data.mdaId,
+        );
+        const createdUser = updatedUsers.find((user) => user.id === newUser.id);
+
+        if (createdUser) {
+          setMDAUsers((prev) => [...prev, createdUser]);
+        }
+
         alert("MDA User created successfully!");
       } else if (selectedMDAUser) {
-        const updatedUser: MDAUser = {
+        // Note: For updates, we would need to add an update method to the service
+        // For now, just update the UI state
+        const updatedUser: MDAUser & { user: EnhancedUserProfile } = {
           ...selectedMDAUser,
           mdaId: data.mdaId,
           role: data.role,
@@ -2015,15 +2084,30 @@ The award letter has been:
   const renderMDAManagement = () => {
     return (
       <div className="space-y-8">
+        {/* Firebase Status Banner */}
+        <FirebaseStatus variant="banner" showDetails={true} />
+
         {/* MDA Management Header */}
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               MDA Management
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-2">
               Create and manage Ministries, Departments, and Agencies
             </p>
+            <div className="flex items-center space-x-2 text-sm">
+              <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                <span className="w-2 h-2 bg-green-600 rounded-full mr-1"></span>
+                3 Pre-configured Ministries Active
+              </span>
+              <span className="text-gray-500">•</span>
+              <FirebaseStatus variant="badge" />
+              <span className="text-gray-500">•</span>
+              <span className="text-gray-600">
+                Data stored in browser localStorage
+              </span>
+            </div>
           </div>
           <button
             onClick={handleCreateMDA}
@@ -7138,6 +7222,9 @@ The award letter has been:
                 administrative settings
               </p>
             </div>
+
+            {/* Data Management Section */}
+            <DataManagement />
 
             {/* Quick Settings Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
