@@ -436,6 +436,9 @@ export default function SuperUserDashboard() {
       console.log(`New status: ${newStatus}`);
       console.log(`Storage key: ${storageKey}`);
       console.log(`Value stored: ${persistentStorage.getItem(storageKey)}`);
+
+      // Debug the persistent storage state
+      persistentStorage.debugInfo();
     }
 
     // Reset form
