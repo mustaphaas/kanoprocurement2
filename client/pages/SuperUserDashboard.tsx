@@ -4,6 +4,7 @@ import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import { mdaInitializer } from "@/lib/mdaInitializer";
 import { hasFirebaseConfig } from "@/lib/firebase";
+import FirebaseStatus from "@/components/FirebaseStatus";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import MDAForm from "@/components/MDAForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
