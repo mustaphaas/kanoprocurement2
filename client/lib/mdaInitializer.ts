@@ -190,9 +190,13 @@ class MDAInitializationService {
    */
   async initialize(): Promise<void> {
     try {
+      if (!mdaLocalStorageService.isAvailable()) {
+        throw new Error('localStorage is not available');
+      }
+
       await this.initializeMDAsFromMinistries();
       await this.initializeDefaultAdmins();
-      console.log('🎉 Complete MDA system initialization finished');
+      console.log('🎉 Complete MDA system initialization finished with localStorage');
     } catch (error) {
       console.error('❌ MDA initialization failed:', error);
       throw error;
