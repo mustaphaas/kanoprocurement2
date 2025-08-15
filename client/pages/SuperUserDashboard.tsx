@@ -1183,6 +1183,21 @@ export default function SuperUserDashboard() {
       }
     };
 
+    // Test Northern Construction approval
+    (window as any).testNorthernApproval = () => {
+      console.log("=== TESTING NORTHERN CONSTRUCTION APPROVAL ===");
+      const northernCompany = companies.find(c => c.email === "ahmad@northernconstruction.com");
+      if (northernCompany) {
+        console.log("📋 Found Northern Construction:", northernCompany);
+        console.log("📊 Current status:", northernCompany.status);
+        console.log("🔄 Attempting to approve from SuperUser...");
+        handleCompanyStatusChange(northernCompany.id, "Approved", "Test approval from superuser");
+      } else {
+        console.log("❌ Northern Construction not found");
+        console.log("📋 Available companies:", companies.map(c => ({ email: c.email, name: c.companyName, status: c.status })));
+      }
+    };
+
     return () => {
       clearInterval(interval);
       window.removeEventListener('persistentStorageChange', handleStorageChange);
