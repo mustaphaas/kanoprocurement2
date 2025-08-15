@@ -545,6 +545,26 @@ export default function CompanyDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Log dashboard access
+  useEffect(() => {
+    logUserAction(
+      companyData.email.toLowerCase(),
+      "company_user",
+      "COMPANY_DASHBOARD_ACCESSED",
+      "Company Dashboard",
+      `Company user ${companyData.name} accessed the company dashboard`,
+      "LOW",
+      undefined,
+      {
+        accessTime: new Date().toISOString(),
+        companyName: companyData.name,
+        companyEmail: companyData.email,
+        companyStatus: companyData.status,
+        userAgent: navigator.userAgent
+      }
+    );
+  }, []); // Run only once on component mount
+
   const [contracts, setContracts] = useState<Contract[]>([
     {
       id: "CON-2024-001",
