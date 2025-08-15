@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/StaticAuthContext";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   User,
@@ -67,8 +68,42 @@ export default function AdminLogin() {
 
     try {
       await signIn(formData.username, formData.password);
+
+      // Log successful admin login
+      logUserAction(
+        formData.username,
+        "admin",
+        "ADMIN_LOGIN_SUCCESS",
+        "Admin Portal",
+        `Admin user ${formData.username} successfully logged in`,
+        "MEDIUM",
+        undefined,
+        {
+          loginTime: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          loginMethod: "credentials"
+        }
+      );
+
       navigate("/admin/dashboard");
     } catch (error) {
+      // Log failed admin login attempt
+      logUserAction(
+        formData.username || "Unknown",
+        "anonymous",
+        "ADMIN_LOGIN_FAILED",
+        "Admin Portal",
+        `Failed admin login attempt for user: ${formData.username}`,
+        "HIGH",
+        undefined,
+        {
+          attemptTime: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          errorMessage: error instanceof Error ? error.message : "Login failed",
+          ipAddress: "127.0.0.1" // In real app, this would be actual IP
+        }
+      );
+
       setErrors({ general: error instanceof Error ? error.message : "Login failed. Please try again." });
     } finally {
       setIsLoading(false);
