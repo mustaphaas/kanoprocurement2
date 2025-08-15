@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { persistentStorage } from "@/lib/persistentStorage";
+import { logUserAction } from "@/lib/auditLogStorage";
 import {
   Building2,
   Users,
@@ -117,6 +118,26 @@ export default function AdminDashboard() {
 
     // Debug the persistent storage
     persistentStorage.debugInfo();
+
+    // Log the admin action
+    logUserAction(
+      "AdminUser",
+      "admin",
+      newStatus === "Approved" ? "COMPANY_APPROVED" :
+      newStatus === "Suspended" ? "COMPANY_SUSPENDED" : "COMPANY_BLACKLISTED",
+      company.companyName,
+      `Admin changed company status to ${newStatus}. Reason: ${reason}`,
+      newStatus === "Blacklisted" ? "HIGH" : "MEDIUM",
+      company.id,
+      {
+        previousStatus: company.status,
+        newStatus,
+        reason,
+        email: company.email,
+        adminAction: true,
+        actionTimestamp: new Date().toISOString()
+      }
+    );
 
     // Reset form
     setActionReason("");
@@ -538,7 +559,7 @@ export default function AdminDashboard() {
         (c) => c.email === "approved@company.com",
       );
       if (testCompany) {
-        console.log("🧪 Found test company:", testCompany);
+        console.log("���� Found test company:", testCompany);
         handleStatusChange(testCompany.id, "Blacklisted", "Manual admin test");
       } else {
         console.log("❌ No test company found with email approved@company.com");
