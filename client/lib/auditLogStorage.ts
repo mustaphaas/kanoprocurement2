@@ -46,11 +46,13 @@ class AuditLogStorage {
   private saveLogs(logs: AuditLogEntry[]): void {
     try {
       // Keep only the most recent logs if we exceed the maximum
-      const logsToSave = logs.length > this.MAX_LOGS 
-        ? logs.slice(-this.MAX_LOGS) 
-        : logs;
+      const logsToSave =
+        logs.length > this.MAX_LOGS ? logs.slice(-this.MAX_LOGS) : logs;
 
-      persistentStorage.setItem(this.AUDIT_LOGS_KEY, JSON.stringify(logsToSave));
+      persistentStorage.setItem(
+        this.AUDIT_LOGS_KEY,
+        JSON.stringify(logsToSave),
+      );
     } catch (error) {
       console.error("Error saving audit logs:", error);
     }
@@ -70,10 +72,13 @@ class AuditLogStorage {
 
     const logs = this.getAllLogs();
     logs.push(newEntry);
-    
+
     // Sort by timestamp (newest first)
-    logs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    
+    logs.sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    );
+
     this.saveLogs(logs);
 
     console.log("🔍 Audit log added:", {
@@ -81,7 +86,7 @@ class AuditLogStorage {
       action: entry.action,
       entity: entry.entity,
       user: entry.user,
-      severity: entry.severity
+      severity: entry.severity,
     });
 
     return id;
@@ -93,46 +98,47 @@ class AuditLogStorage {
     // Apply filters
     if (filter) {
       if (filter.user) {
-        logs = logs.filter(log => 
-          log.user.toLowerCase().includes(filter.user!.toLowerCase())
+        logs = logs.filter((log) =>
+          log.user.toLowerCase().includes(filter.user!.toLowerCase()),
         );
       }
 
       if (filter.action) {
-        logs = logs.filter(log => 
-          log.action.toLowerCase().includes(filter.action!.toLowerCase())
+        logs = logs.filter((log) =>
+          log.action.toLowerCase().includes(filter.action!.toLowerCase()),
         );
       }
 
       if (filter.severity) {
-        logs = logs.filter(log => log.severity === filter.severity);
+        logs = logs.filter((log) => log.severity === filter.severity);
       }
 
       if (filter.entity) {
-        logs = logs.filter(log => 
-          log.entity.toLowerCase().includes(filter.entity!.toLowerCase())
+        logs = logs.filter((log) =>
+          log.entity.toLowerCase().includes(filter.entity!.toLowerCase()),
         );
       }
 
       if (filter.searchTerm) {
         const searchTerm = filter.searchTerm.toLowerCase();
-        logs = logs.filter(log => 
-          log.user.toLowerCase().includes(searchTerm) ||
-          log.action.toLowerCase().includes(searchTerm) ||
-          log.entity.toLowerCase().includes(searchTerm) ||
-          log.details.toLowerCase().includes(searchTerm)
+        logs = logs.filter(
+          (log) =>
+            log.user.toLowerCase().includes(searchTerm) ||
+            log.action.toLowerCase().includes(searchTerm) ||
+            log.entity.toLowerCase().includes(searchTerm) ||
+            log.details.toLowerCase().includes(searchTerm),
         );
       }
 
       if (filter.startDate) {
         const startDate = new Date(filter.startDate);
-        logs = logs.filter(log => new Date(log.timestamp) >= startDate);
+        logs = logs.filter((log) => new Date(log.timestamp) >= startDate);
       }
 
       if (filter.endDate) {
         const endDate = new Date(filter.endDate);
         endDate.setHours(23, 59, 59, 999); // End of day
-        logs = logs.filter(log => new Date(log.timestamp) <= endDate);
+        logs = logs.filter((log) => new Date(log.timestamp) <= endDate);
       }
     }
 
@@ -146,7 +152,7 @@ class AuditLogStorage {
 
   public getLogById(id: string): AuditLogEntry | null {
     const logs = this.getAllLogs();
-    return logs.find(log => log.id === id) || null;
+    return logs.find((log) => log.id === id) || null;
   }
 
   public getLogsByUser(user: string, limit?: number): AuditLogEntry[] {
@@ -157,7 +163,10 @@ class AuditLogStorage {
     return this.getLogs({ action }, limit);
   }
 
-  public getLogsBySeverity(severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL", limit?: number): AuditLogEntry[] {
+  public getLogsBySeverity(
+    severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL",
+    limit?: number,
+  ): AuditLogEntry[] {
     return this.getLogs({ severity }, limit);
   }
 
@@ -170,25 +179,36 @@ class AuditLogStorage {
 
     if (format === "csv") {
       const headers = [
-        "ID", "Timestamp", "User", "User Role", "Action", "Entity", "Entity ID", 
-        "Details", "Severity", "IP Address", "User Agent"
+        "ID",
+        "Timestamp",
+        "User",
+        "User Role",
+        "Action",
+        "Entity",
+        "Entity ID",
+        "Details",
+        "Severity",
+        "IP Address",
+        "User Agent",
       ];
-      
+
       const csvLines = [
         headers.join(","),
-        ...logs.map(log => [
-          log.id,
-          log.timestamp,
-          `"${log.user}"`,
-          `"${log.userRole}"`,
-          `"${log.action}"`,
-          `"${log.entity}"`,
-          log.entityId || "",
-          `"${log.details.replace(/"/g, '""')}"`,
-          log.severity,
-          log.ipAddress || "",
-          `"${(log.userAgent || "").replace(/"/g, '""')}"`
-        ].join(","))
+        ...logs.map((log) =>
+          [
+            log.id,
+            log.timestamp,
+            `"${log.user}"`,
+            `"${log.userRole}"`,
+            `"${log.action}"`,
+            `"${log.entity}"`,
+            log.entityId || "",
+            `"${log.details.replace(/"/g, '""')}"`,
+            log.severity,
+            log.ipAddress || "",
+            `"${(log.userAgent || "").replace(/"/g, '""')}"`,
+          ].join(","),
+        ),
       ];
 
       return csvLines.join("\n");
@@ -211,7 +231,7 @@ class AuditLogStorage {
     newestLog?: string;
   } {
     const logs = this.getAllLogs();
-    
+
     const stats = {
       totalLogs: logs.length,
       logsBySeverity: {} as Record<string, number>,
@@ -225,15 +245,17 @@ class AuditLogStorage {
       stats.newestLog = logs[0].timestamp;
       stats.oldestLog = logs[logs.length - 1].timestamp;
 
-      logs.forEach(log => {
+      logs.forEach((log) => {
         // Count by severity
-        stats.logsBySeverity[log.severity] = (stats.logsBySeverity[log.severity] || 0) + 1;
-        
+        stats.logsBySeverity[log.severity] =
+          (stats.logsBySeverity[log.severity] || 0) + 1;
+
         // Count by user
         stats.logsByUser[log.user] = (stats.logsByUser[log.user] || 0) + 1;
-        
+
         // Count by action
-        stats.logsByAction[log.action] = (stats.logsByAction[log.action] || 0) + 1;
+        stats.logsByAction[log.action] =
+          (stats.logsByAction[log.action] || 0) + 1;
       });
     }
 
@@ -253,7 +275,10 @@ class AuditLogStorage {
           entityId: "comp-001",
           details: "Company registration approved after document verification",
           severity: "MEDIUM",
-          metadata: { documentType: "CAC Certificate", verificationResult: "PASSED" }
+          metadata: {
+            documentType: "CAC Certificate",
+            verificationResult: "PASSED",
+          },
         },
         {
           user: "AdminUser",
@@ -263,7 +288,7 @@ class AuditLogStorage {
           entityId: "comp-002",
           details: "New tax clearance certificate uploaded",
           severity: "LOW",
-          metadata: { documentType: "Tax Clearance", fileSize: "2.3MB" }
+          metadata: { documentType: "Tax Clearance", fileSize: "2.3MB" },
         },
         {
           user: "SuperUser",
@@ -273,7 +298,7 @@ class AuditLogStorage {
           entityId: "KS-2024-015",
           details: "New tender published: Hospital Equipment Supply",
           severity: "MEDIUM",
-          metadata: { estimatedValue: "₦850M", category: "Healthcare" }
+          metadata: { estimatedValue: "₦850M", category: "Healthcare" },
         },
         {
           user: "EvaluationCommittee",
@@ -283,7 +308,11 @@ class AuditLogStorage {
           entityId: "KS-2024-002",
           details: "Bid evaluation completed for Northern Construction Ltd",
           severity: "MEDIUM",
-          metadata: { bidAmount: "₦2.3B", technicalScore: 85, financialScore: 90 }
+          metadata: {
+            bidAmount: "₦2.3B",
+            technicalScore: 85,
+            financialScore: 90,
+          },
         },
         {
           user: "SystemAdmin",
@@ -292,7 +321,7 @@ class AuditLogStorage {
           entity: "SuperUser Dashboard",
           details: "SuperUser logged into the system",
           severity: "LOW",
-          metadata: { loginMethod: "credentials", sessionId: "sess_12345" }
+          metadata: { loginMethod: "credentials", sessionId: "sess_12345" },
         },
         {
           user: "SuperUser",
@@ -302,7 +331,10 @@ class AuditLogStorage {
           entityId: "comp-003",
           details: "Company suspended due to expired compliance documents",
           severity: "HIGH",
-          metadata: { suspensionReason: "Expired documents", documentsAffected: ["Tax Clearance"] }
+          metadata: {
+            suspensionReason: "Expired documents",
+            documentsAffected: ["Tax Clearance"],
+          },
         },
         {
           user: "SuperUser",
@@ -312,11 +344,14 @@ class AuditLogStorage {
           entityId: "KS-2024-003",
           details: "No Objection Certificate approved for contract award",
           severity: "HIGH",
-          metadata: { contractValue: "₦1.1B", awardedTo: "TechSolutions Nigeria" }
-        }
+          metadata: {
+            contractValue: "₦1.1B",
+            awardedTo: "TechSolutions Nigeria",
+          },
+        },
       ];
 
-      sampleLogs.forEach(log => this.addLog(log));
+      sampleLogs.forEach((log) => this.addLog(log));
       console.log("🔍 Initialized audit logs with sample data");
     }
   }
@@ -334,7 +369,7 @@ export const logUserAction = (
   details: string,
   severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" = "LOW",
   entityId?: string,
-  metadata?: Record<string, any>
+  metadata?: Record<string, any>,
 ): string => {
   return auditLogStorage.addLog({
     user,
@@ -353,16 +388,34 @@ export const logSystemAction = (
   entity: string,
   details: string,
   severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" = "LOW",
-  metadata?: Record<string, any>
+  metadata?: Record<string, any>,
 ): string => {
-  return logUserAction("SYSTEM", "system", action, entity, details, severity, undefined, metadata);
+  return logUserAction(
+    "SYSTEM",
+    "system",
+    action,
+    entity,
+    details,
+    severity,
+    undefined,
+    metadata,
+  );
 };
 
 export const logSecurityEvent = (
   user: string,
   action: string,
   details: string,
-  metadata?: Record<string, any>
+  metadata?: Record<string, any>,
 ): string => {
-  return logUserAction(user, "security", action, "Security Event", details, "CRITICAL", undefined, metadata);
+  return logUserAction(
+    user,
+    "security",
+    action,
+    "Security Event",
+    details,
+    "CRITICAL",
+    undefined,
+    metadata,
+  );
 };

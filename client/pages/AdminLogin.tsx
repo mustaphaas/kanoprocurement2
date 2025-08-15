@@ -9,7 +9,7 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  ArrowLeft
+  ArrowLeft,
 } from "lucide-react";
 
 interface LoginData {
@@ -20,7 +20,7 @@ interface LoginData {
 export default function AdminLogin() {
   const [formData, setFormData] = useState<LoginData>({
     username: "",
-    password: ""
+    password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -30,16 +30,16 @@ export default function AdminLogin() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
@@ -81,8 +81,8 @@ export default function AdminLogin() {
         {
           loginTime: new Date().toISOString(),
           userAgent: navigator.userAgent,
-          loginMethod: "credentials"
-        }
+          loginMethod: "credentials",
+        },
       );
 
       navigate("/admin/dashboard");
@@ -100,11 +100,16 @@ export default function AdminLogin() {
           attemptTime: new Date().toISOString(),
           userAgent: navigator.userAgent,
           errorMessage: error instanceof Error ? error.message : "Login failed",
-          ipAddress: "127.0.0.1" // In real app, this would be actual IP
-        }
+          ipAddress: "127.0.0.1", // In real app, this would be actual IP
+        },
       );
 
-      setErrors({ general: error instanceof Error ? error.message : "Login failed. Please try again." });
+      setErrors({
+        general:
+          error instanceof Error
+            ? error.message
+            : "Login failed. Please try again.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -124,7 +129,7 @@ export default function AdminLogin() {
             </div>
           </div>
         </Link>
-        
+
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Admin Login
         </h2>
@@ -150,7 +155,10 @@ export default function AdminLogin() {
             )}
 
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <div className="mt-1 relative">
@@ -166,7 +174,7 @@ export default function AdminLogin() {
                   value={formData.username}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                    errors.username ? 'border-red-500' : 'border-gray-300'
+                    errors.username ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter your username"
                 />
@@ -180,7 +188,10 @@ export default function AdminLogin() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
@@ -196,7 +207,7 @@ export default function AdminLogin() {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                    errors.password ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter your password"
                 />
@@ -224,7 +235,10 @@ export default function AdminLogin() {
 
             <div className="flex items-center justify-between">
               <div className="text-sm">
-                <a href="#" className="font-medium text-green-600 hover:text-green-500">
+                <a
+                  href="#"
+                  className="font-medium text-green-600 hover:text-green-500"
+                >
                   Forgot your password?
                 </a>
               </div>
@@ -254,7 +268,9 @@ export default function AdminLogin() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Other access</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Other access
+                </span>
               </div>
             </div>
 
@@ -283,9 +299,12 @@ export default function AdminLogin() {
       {/* Demo Credentials */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-blue-800 mb-2">Demo Credentials</h3>
+          <h3 className="text-sm font-medium text-blue-800 mb-2">
+            Demo Credentials
+          </h3>
           <p className="text-sm text-blue-700">
-            Username: <code className="bg-blue-100 px-1 rounded">admin</code><br />
+            Username: <code className="bg-blue-100 px-1 rounded">admin</code>
+            <br />
             Password: <code className="bg-blue-100 px-1 rounded">password</code>
           </p>
         </div>

@@ -81,8 +81,8 @@ export default function AdminDashboard() {
         {
           previousTab: activeTab,
           newTab,
-          navigationTime: new Date().toISOString()
-        }
+          navigationTime: new Date().toISOString(),
+        },
       );
     }
     setActiveTab(newTab);
@@ -144,8 +144,11 @@ export default function AdminDashboard() {
     logUserAction(
       "AdminUser",
       "admin",
-      newStatus === "Approved" ? "COMPANY_APPROVED" :
-      newStatus === "Suspended" ? "COMPANY_SUSPENDED" : "COMPANY_BLACKLISTED",
+      newStatus === "Approved"
+        ? "COMPANY_APPROVED"
+        : newStatus === "Suspended"
+          ? "COMPANY_SUSPENDED"
+          : "COMPANY_BLACKLISTED",
       company.companyName,
       `Admin changed company status to ${newStatus}. Reason: ${reason}`,
       newStatus === "Blacklisted" ? "HIGH" : "MEDIUM",
@@ -156,8 +159,8 @@ export default function AdminDashboard() {
         reason,
         email: company.email,
         adminAction: true,
-        actionTimestamp: new Date().toISOString()
-      }
+        actionTimestamp: new Date().toISOString(),
+      },
     );
 
     // Reset form
@@ -366,8 +369,8 @@ export default function AdminDashboard() {
       undefined,
       {
         accessTime: new Date().toISOString(),
-        userAgent: navigator.userAgent
-      }
+        userAgent: navigator.userAgent,
+      },
     );
 
     // Refresh company list every 30 seconds to pick up new registrations
@@ -662,7 +665,7 @@ export default function AdminDashboard() {
         "This is a test admin audit log entry",
         "MEDIUM",
         "test-admin-123",
-        { testData: "admin test metadata" }
+        { testData: "admin test metadata" },
       );
 
       console.log("✅ Test admin audit log added");
@@ -747,8 +750,8 @@ export default function AdminDashboard() {
       undefined,
       {
         logoutTime: new Date().toISOString(),
-        sessionDuration: "N/A" // Could calculate actual session duration
-      }
+        sessionDuration: "N/A", // Could calculate actual session duration
+      },
     );
 
     navigate("/");
@@ -776,8 +779,8 @@ export default function AdminDashboard() {
         exportFormat: "JSON",
         recordCount: filteredCompanies.length,
         exportTime: new Date().toISOString(),
-        fileName: "company_registrations.json"
-      }
+        fileName: "company_registrations.json",
+      },
     );
   };
 

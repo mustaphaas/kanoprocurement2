@@ -91,7 +91,8 @@ export default function MDAAdminForm({
       await onSubmit(formData);
 
       // Log MDA admin creation/edit
-      const selectedMDAName = mdas.find(mda => mda.id === formData.mdaId)?.name || "Unknown MDA";
+      const selectedMDAName =
+        mdas.find((mda) => mda.id === formData.mdaId)?.name || "Unknown MDA";
       logUserAction(
         "SuperUser",
         "super_admin",
@@ -108,8 +109,8 @@ export default function MDAAdminForm({
           mdaName: selectedMDAName,
           permissions: formData.permissions,
           actionMode: mode,
-          actionTimestamp: new Date().toISOString()
-        }
+          actionTimestamp: new Date().toISOString(),
+        },
       );
 
       onClose();

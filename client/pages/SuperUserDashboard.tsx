@@ -4,7 +4,12 @@ import { persistentStorage } from "@/lib/persistentStorage";
 import { MINISTRIES, getAllMinistries } from "@shared/ministries";
 import { mdaInitializer } from "@/lib/mdaInitializer";
 import { mdaLocalStorageService } from "@/lib/mdaLocalStorage";
-import { auditLogStorage, logUserAction, AuditLogEntry, AuditLogFilter } from "@/lib/auditLogStorage";
+import {
+  auditLogStorage,
+  logUserAction,
+  AuditLogEntry,
+  AuditLogFilter,
+} from "@/lib/auditLogStorage";
 import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
@@ -297,8 +302,8 @@ export default function SuperUserDashboard() {
         {
           previousTab: activeTab,
           newTab,
-          navigationTime: new Date().toISOString()
-        }
+          navigationTime: new Date().toISOString(),
+        },
       );
     }
     setActiveTab(newTab);
@@ -479,13 +484,22 @@ export default function SuperUserDashboard() {
 
     if (auditSearchTerm) filter.searchTerm = auditSearchTerm;
     if (auditDateFilter) filter.startDate = auditDateFilter;
-    if (auditUserFilter && auditUserFilter !== "all") filter.user = auditUserFilter;
-    if (auditActionFilter && auditActionFilter !== "all") filter.action = auditActionFilter;
-    if (auditSeverityFilter && auditSeverityFilter !== "all") filter.severity = auditSeverityFilter;
+    if (auditUserFilter && auditUserFilter !== "all")
+      filter.user = auditUserFilter;
+    if (auditActionFilter && auditActionFilter !== "all")
+      filter.action = auditActionFilter;
+    if (auditSeverityFilter && auditSeverityFilter !== "all")
+      filter.severity = auditSeverityFilter;
 
     const logs = auditLogStorage.getLogs(filter, 100);
     setAuditLogs(logs);
-  }, [auditSearchTerm, auditDateFilter, auditUserFilter, auditActionFilter, auditSeverityFilter]);
+  }, [
+    auditSearchTerm,
+    auditDateFilter,
+    auditUserFilter,
+    auditActionFilter,
+    auditSeverityFilter,
+  ]);
 
   // Update audit logs when filters change
   useEffect(() => {
@@ -517,14 +531,18 @@ export default function SuperUserDashboard() {
       {
         exportFormat: "CSV",
         exportTime: new Date().toISOString(),
-        totalRecords: auditLogs.length
-      }
+        totalRecords: auditLogs.length,
+      },
     );
   };
 
   // Clear audit logs (for testing/maintenance)
   const handleClearAuditLogs = () => {
-    if (window.confirm("Are you sure you want to clear all audit logs? This action cannot be undone.")) {
+    if (
+      window.confirm(
+        "Are you sure you want to clear all audit logs? This action cannot be undone.",
+      )
+    ) {
       auditLogStorage.clearAllLogs();
       loadAuditLogs();
 
@@ -539,8 +557,8 @@ export default function SuperUserDashboard() {
         undefined,
         {
           clearTime: new Date().toISOString(),
-          reason: "Manual admin action"
-        }
+          reason: "Manual admin action",
+        },
       );
 
       loadAuditLogs();
@@ -604,8 +622,11 @@ export default function SuperUserDashboard() {
       logUserAction(
         "SuperUser",
         "super_admin",
-        newStatus === "Approved" ? "COMPANY_APPROVED" :
-        newStatus === "Suspended" ? "COMPANY_SUSPENDED" : "COMPANY_BLACKLISTED",
+        newStatus === "Approved"
+          ? "COMPANY_APPROVED"
+          : newStatus === "Suspended"
+            ? "COMPANY_SUSPENDED"
+            : "COMPANY_BLACKLISTED",
         company.companyName,
         `Company status changed to ${newStatus}. Reason: ${reason}`,
         newStatus === "Blacklisted" ? "HIGH" : "MEDIUM",
@@ -615,8 +636,8 @@ export default function SuperUserDashboard() {
           newStatus,
           reason,
           email: company.email,
-          actionTimestamp: new Date().toISOString()
-        }
+          actionTimestamp: new Date().toISOString(),
+        },
       );
 
       // Reload audit logs to show the new entry
@@ -721,8 +742,8 @@ export default function SuperUserDashboard() {
       undefined,
       {
         accessTime: new Date().toISOString(),
-        userAgent: navigator.userAgent
-      }
+        userAgent: navigator.userAgent,
+      },
     );
 
     // Load initial audit logs
@@ -1421,7 +1442,7 @@ export default function SuperUserDashboard() {
         "This is a test audit log entry",
         "HIGH",
         "test-entity-123",
-        { testData: "sample metadata" }
+        { testData: "sample metadata" },
       );
 
       console.log("✅ Test audit log added");
@@ -1538,8 +1559,8 @@ export default function SuperUserDashboard() {
       undefined,
       {
         logoutTime: new Date().toISOString(),
-        sessionDuration: "N/A" // Could calculate actual session duration
-      }
+        sessionDuration: "N/A", // Could calculate actual session duration
+      },
     );
 
     navigate("/");
@@ -1653,8 +1674,8 @@ export default function SuperUserDashboard() {
         contractDuration: awardFormData.contractDuration,
         notifyWinner: awardFormData.notifyWinner,
         notifyUnsuccessful: awardFormData.notifyUnsuccessful,
-        publishOCDS: awardFormData.publishOCDS
-      }
+        publishOCDS: awardFormData.publishOCDS,
+      },
     );
 
     // Reload audit logs
@@ -1686,7 +1707,7 @@ export default function SuperUserDashboard() {
       selectedAwardTender.title,
       "Tender award process completed successfully. Notifications sent and OCDS published.",
       "MEDIUM",
-      selectedAwardTender.id
+      selectedAwardTender.id,
     );
   };
 
@@ -3525,36 +3546,54 @@ The award letter has been:
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex items-center">
                     <Activity className="h-5 w-5 text-blue-600 mr-2" />
-                    <span className="text-sm font-medium text-blue-900">Total Logs</span>
+                    <span className="text-sm font-medium text-blue-900">
+                      Total Logs
+                    </span>
                   </div>
-                  <p className="text-2xl font-bold text-blue-900 mt-1">{auditStats.totalLogs}</p>
+                  <p className="text-2xl font-bold text-blue-900 mt-1">
+                    {auditStats.totalLogs}
+                  </p>
                 </div>
 
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                   <div className="flex items-center">
                     <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
-                    <span className="text-sm font-medium text-red-900">Critical</span>
+                    <span className="text-sm font-medium text-red-900">
+                      Critical
+                    </span>
                   </div>
-                  <p className="text-2xl font-bold text-red-900 mt-1">{auditStats.logsBySeverity.CRITICAL || 0}</p>
+                  <p className="text-2xl font-bold text-red-900 mt-1">
+                    {auditStats.logsBySeverity.CRITICAL || 0}
+                  </p>
                 </div>
 
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
                   <div className="flex items-center">
                     <AlertCircle className="h-5 w-5 text-orange-600 mr-2" />
-                    <span className="text-sm font-medium text-orange-900">High</span>
+                    <span className="text-sm font-medium text-orange-900">
+                      High
+                    </span>
                   </div>
-                  <p className="text-2xl font-bold text-orange-900 mt-1">{auditStats.logsBySeverity.HIGH || 0}</p>
+                  <p className="text-2xl font-bold text-orange-900 mt-1">
+                    {auditStats.logsBySeverity.HIGH || 0}
+                  </p>
                 </div>
 
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
-                    <span className="text-sm font-medium text-green-900">Today's Logs</span>
+                    <span className="text-sm font-medium text-green-900">
+                      Today's Logs
+                    </span>
                   </div>
                   <p className="text-2xl font-bold text-green-900 mt-1">
-                    {auditLogs.filter(log =>
-                      new Date(log.timestamp).toDateString() === new Date().toDateString()
-                    ).length}
+                    {
+                      auditLogs.filter(
+                        (log) =>
+                          new Date(log.timestamp).toDateString() ===
+                          new Date().toDateString(),
+                      ).length
+                    }
                   </p>
                 </div>
               </div>
@@ -3574,8 +3613,12 @@ The award letter has been:
                     >
                       <option value="all">All Actions</option>
                       <option value="COMPANY_APPROVED">Company Approved</option>
-                      <option value="COMPANY_SUSPENDED">Company Suspended</option>
-                      <option value="COMPANY_BLACKLISTED">Company Blacklisted</option>
+                      <option value="COMPANY_SUSPENDED">
+                        Company Suspended
+                      </option>
+                      <option value="COMPANY_BLACKLISTED">
+                        Company Blacklisted
+                      </option>
                       <option value="TENDER_CREATED">Tender Created</option>
                       <option value="BID_EVALUATED">Bid Evaluated</option>
                       <option value="NOC_APPROVED">NOC Approved</option>
@@ -3632,7 +3675,9 @@ The award letter has been:
                     <option value="SuperUser">SuperUser</option>
                     <option value="AdminUser">Admin</option>
                     <option value="SYSTEM">System</option>
-                    <option value="EvaluationCommittee">Evaluation Committee</option>
+                    <option value="EvaluationCommittee">
+                      Evaluation Committee
+                    </option>
                     <option value="SystemAdmin">System Admin</option>
                   </select>
                 </div>
@@ -3673,11 +3718,15 @@ The award letter has been:
                               {log.details}
                             </p>
                             <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                              <span>User: {log.user} ({log.userRole})</span>
+                              <span>
+                                User: {log.user} ({log.userRole})
+                              </span>
                               <span>•</span>
                               <span>Severity: {log.severity}</span>
                               <span>•</span>
-                              <span>{new Date(log.timestamp).toLocaleString()}</span>
+                              <span>
+                                {new Date(log.timestamp).toLocaleString()}
+                              </span>
                             </div>
                           </div>
                         </div>
