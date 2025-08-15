@@ -414,32 +414,45 @@ export default function SuperUserDashboard() {
     console.log("🚀 SuperUser handleCompanyStatusChange CALLED");
     console.log("📥 Parameters:", { companyId, newStatus, reason });
 
-    // Update the company status in the local state
+    // Find the company first
+    const company = companies.find((c) => c.id === companyId);
+    if (!company) {
+      console.error(`❌ Company with ID ${companyId} not found!`);
+      return;
+    }
+
+    console.log(`=== SUPERUSER STATUS CHANGE ===`);
+    console.log(`Company: ${company.companyName}`);
+    console.log(`Original Email: ${company.email}`);
+    console.log(`Normalized Email: ${company.email.toLowerCase()}`);
+    console.log(`New status: ${newStatus}`);
+
+    // Update the company status in the local state FIRST
     setCompanies((prev) =>
-      prev.map((company) =>
-        company.id === companyId ? { ...company, status: newStatus } : company,
+      prev.map((c) =>
+        c.id === companyId ? { ...c, status: newStatus } : c,
       ),
     );
 
-    // Store the status change using persistent storage for sync with admin dashboard
-    const company = companies.find((c) => c.id === companyId);
-    if (company) {
-      const storageKey = `userStatus_${company.email.toLowerCase()}`;
-      const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
+    // Store the status change using persistent storage
+    const storageKey = `userStatus_${company.email.toLowerCase()}`;
+    const reasonKey = `userStatusReason_${company.email.toLowerCase()}`;
 
-      persistentStorage.setItem(storageKey, newStatus);
-      persistentStorage.setItem(reasonKey, reason);
+    console.log(`📦 Setting storage key: ${storageKey} = ${newStatus}`);
 
-      console.log(`=== SUPERUSER STATUS CHANGE ===`);
-      console.log(`Company: ${company.companyName}`);
-      console.log(`Email: ${company.email.toLowerCase()}`);
-      console.log(`New status: ${newStatus}`);
-      console.log(`Storage key: ${storageKey}`);
-      console.log(`Value stored: ${persistentStorage.getItem(storageKey)}`);
+    persistentStorage.setItem(storageKey, newStatus);
+    persistentStorage.setItem(reasonKey, reason);
 
-      // Debug the persistent storage state
-      persistentStorage.debugInfo();
+    // Verify the storage was set correctly
+    const verifyValue = persistentStorage.getItem(storageKey);
+    console.log(`✅ Verification - stored value: ${verifyValue}`);
+
+    if (verifyValue !== newStatus) {
+      console.error(`❌ Storage verification failed! Expected: ${newStatus}, Got: ${verifyValue}`);
     }
+
+    // Debug the persistent storage state
+    persistentStorage.debugInfo();
 
     // Reset form
     setActionReason("");
