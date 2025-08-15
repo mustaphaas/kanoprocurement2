@@ -3479,6 +3479,45 @@ The award letter has been:
                 Detailed logging of all user actions for accountability and
                 security auditing.
               </p>
+
+              {/* Audit Log Statistics */}
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <Activity className="h-5 w-5 text-blue-600 mr-2" />
+                    <span className="text-sm font-medium text-blue-900">Total Logs</span>
+                  </div>
+                  <p className="text-2xl font-bold text-blue-900 mt-1">{auditStats.totalLogs}</p>
+                </div>
+
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+                    <span className="text-sm font-medium text-red-900">Critical</span>
+                  </div>
+                  <p className="text-2xl font-bold text-red-900 mt-1">{auditStats.logsBySeverity.CRITICAL || 0}</p>
+                </div>
+
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <AlertCircle className="h-5 w-5 text-orange-600 mr-2" />
+                    <span className="text-sm font-medium text-orange-900">High</span>
+                  </div>
+                  <p className="text-2xl font-bold text-orange-900 mt-1">{auditStats.logsBySeverity.HIGH || 0}</p>
+                </div>
+
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                    <span className="text-sm font-medium text-green-900">Today's Logs</span>
+                  </div>
+                  <p className="text-2xl font-bold text-green-900 mt-1">
+                    {auditLogs.filter(log =>
+                      new Date(log.timestamp).toDateString() === new Date().toDateString()
+                    ).length}
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="bg-white rounded-lg shadow-sm border">
@@ -8441,7 +8480,7 @@ The award letter has been:
                       Northern Construction Ltd (��2.3B - Score: 87.5)
                     </option>
                     <option value="BuildRight Engineering (₦2.6B - Score: 76.5)">
-                      BuildRight Engineering (₦2.6B - Score: 76.5)
+                      BuildRight Engineering (��2.6B - Score: 76.5)
                     </option>
                     <option value="Kano Infrastructure Corp (₦2.1B - Score: 82.0)">
                       Kano Infrastructure Corp (₦2.1B - Score: 82.0)
