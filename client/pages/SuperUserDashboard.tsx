@@ -1408,6 +1408,43 @@ export default function SuperUserDashboard() {
       });
     }, 3000); // Check every 3 seconds
 
+    // Global test functions for audit logs
+    (window as any).testAuditLogs = () => {
+      console.log("=== TESTING AUDIT LOG SYSTEM ===");
+
+      // Add a test log entry
+      logUserAction(
+        "TestUser",
+        "admin",
+        "TEST_ACTION",
+        "Test Entity",
+        "This is a test audit log entry",
+        "HIGH",
+        "test-entity-123",
+        { testData: "sample metadata" }
+      );
+
+      console.log("✅ Test audit log added");
+      loadAuditLogs();
+
+      // Show stats
+      const stats = auditLogStorage.getLogStats();
+      console.log("📊 Audit log statistics:", stats);
+    };
+
+    (window as any).clearAuditLogs = () => {
+      if (window.confirm("Clear all audit logs?")) {
+        auditLogStorage.clearAllLogs();
+        loadAuditLogs();
+        console.log("🗑️ All audit logs cleared");
+      }
+    };
+
+    (window as any).showAuditStats = () => {
+      const stats = auditLogStorage.getLogStats();
+      console.log("📊 Current audit log statistics:", stats);
+    };
+
     // Global test function for company approval sync
     (window as any).testSuperUserApproval = () => {
       console.log("=== TESTING SUPERUSER COMPANY APPROVAL SYNC ===");
