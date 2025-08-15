@@ -378,22 +378,21 @@ export default function AdminDashboard() {
       }
     };
 
-    // Listen for storage changes from SuperUser dashboard
-    const handleStorageChange = (event: any) => {
-      const { key, newValue } = event.detail;
-      if (key && key.startsWith('userStatus_')) {
-        console.log('🔄 Storage change detected in AdminDashboard:', key, newValue);
+    // Listen for localStorage changes (cross-tab sync)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key && event.key.startsWith('userStatus_') && event.newValue) {
+        console.log('🔄 localStorage change detected in AdminDashboard:', event.key, event.newValue);
 
         // Extract email from storage key (remove 'userStatus_' prefix)
-        const email = key.replace('userStatus_', '');
+        const email = event.key.replace('userStatus_', '');
         console.log('🔍 Looking for company with email:', email);
 
         // Update the specific company's status immediately
         setCompanies(prevCompanies => {
           const updatedCompanies = prevCompanies.map(company => {
             if (company.email.toLowerCase() === email) {
-              console.log('✅ Updating company status:', company.companyName, 'from', company.status, 'to', newValue);
-              return { ...company, status: newValue };
+              console.log('✅ Updating company status:', company.companyName, 'from', company.status, 'to', event.newValue);
+              return { ...company, status: event.newValue };
             }
             return company;
           });
@@ -404,7 +403,29 @@ export default function AdminDashboard() {
       }
     };
 
-    window.addEventListener('persistentStorageChange', handleStorageChange);
+    // Listen for localStorage changes from other tabs/windows
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also listen for custom events within the same tab
+    const handleCustomStorageChange = (event: any) => {
+      const { key, newValue } = event.detail;
+      if (key && key.startsWith('userStatus_')) {
+        console.log('🔄 Custom storage change detected in AdminDashboard:', key, newValue);
+
+        const email = key.replace('userStatus_', '');
+        setCompanies(prevCompanies => {
+          return prevCompanies.map(company => {
+            if (company.email.toLowerCase() === email) {
+              console.log('✅ Updating company status via custom event:', company.companyName, 'to', newValue);
+              return { ...company, status: newValue };
+            }
+            return company;
+          });
+        });
+      }
+    };
+
+    window.addEventListener('persistentStorageChange', handleCustomStorageChange);
 
     return () => {
       clearInterval(interval);
