@@ -191,7 +191,9 @@ export default function Login() {
             const mdas = JSON.parse(localStorage.getItem("mdas") || "[]");
 
             // Simplified MDA login: just check if it's an MDA ID with mda123 password
-            const mda = mdas.find((m: any) => m.id.toLowerCase() === identifier.toLowerCase());
+            const mda = mdas.find(
+              (m: any) => m.id.toLowerCase() === identifier.toLowerCase(),
+            );
 
             if (mda && formData.password === "mda123") {
               localStorage.setItem(

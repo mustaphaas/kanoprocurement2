@@ -375,8 +375,12 @@ export default function CompanyDashboard() {
     // If not found in hardcoded data, get from registered companies
     if (!details) {
       try {
-        const registeredCompanies = JSON.parse(localStorage.getItem("registeredCompanies") || "[]");
-        const registeredCompany = registeredCompanies.find((company: any) => company.email === userEmail);
+        const registeredCompanies = JSON.parse(
+          localStorage.getItem("registeredCompanies") || "[]",
+        );
+        const registeredCompany = registeredCompanies.find(
+          (company: any) => company.email === userEmail,
+        );
 
         if (registeredCompany) {
           details = {

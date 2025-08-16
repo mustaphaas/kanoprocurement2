@@ -2608,8 +2608,8 @@ The award letter has been:
                       Sample MDA Creation
                     </h4>
                     <p className="text-sm text-green-800 mb-3">
-                      Click below to automatically create 4 sample MDAs with full ministry
-                      functionality:
+                      Click below to automatically create 4 sample MDAs with
+                      full ministry functionality:
                     </p>
                     <ul className="text-sm text-green-700 mb-3 space-y-1">
                       <li>• Ministry of Agriculture & Rural Development</li>
@@ -2859,19 +2859,28 @@ The award letter has been:
 
         {/* MDA Credentials Viewer */}
         <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">🔐 MDA Login Credentials</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            🔐 MDA Login Credentials
+          </h3>
           <div className="space-y-3">
             {mdas.map((mda) => (
-              <div key={mda.id} className="border border-gray-200 rounded-lg p-4">
+              <div
+                key={mda.id}
+                className="border border-gray-200 rounded-lg p-4"
+              >
                 <h4 className="font-medium text-gray-900 mb-2">{mda.name}</h4>
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Username:</span>
-                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">{mda.id.toLowerCase()}</code>
+                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      {mda.id.toLowerCase()}
+                    </code>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Password:</span>
-                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">mda123</code>
+                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      mda123
+                    </code>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Type:</span>
