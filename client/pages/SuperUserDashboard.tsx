@@ -2251,7 +2251,11 @@ The award letter has been:
           data,
           "SuperUser",
         );
-        setMDAs((prev) => [...prev, newMDA]);
+
+        // Reload all MDAs from localStorage to ensure consistency
+        const updatedMDAs = await mdaLocalStorageService.getAllMDAs();
+        setMDAs(updatedMDAs);
+
         alert(
           `${newMDA.type.charAt(0).toUpperCase() + newMDA.type.slice(1)} "${newMDA.name}" created successfully with full ministry functionality!`,
         );
@@ -2262,14 +2266,11 @@ The award letter has been:
           data,
           "superuser",
         );
-        const updatedMDA: MDA = {
-          ...selectedMDA,
-          ...data,
-          updatedAt: new Date(),
-        };
-        setMDAs((prev) =>
-          prev.map((m) => (m.id === selectedMDA.id ? updatedMDA : m)),
-        );
+
+        // Reload all MDAs from localStorage to ensure consistency
+        const updatedMDAs = await mdaLocalStorageService.getAllMDAs();
+        setMDAs(updatedMDAs);
+
         alert("MDA updated successfully!");
       }
       setShowCreateMDAModal(false);
