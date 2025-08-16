@@ -576,7 +576,7 @@ export default function SuperUserDashboard() {
     try {
       if (
         window.confirm(
-          "This will create 4 sample MDAs with full functionality. Continue?",
+          "This will create 4 sample MDAs with full functionality (Ministry of Agriculture, Urban Development Agency, IT Department, and Environment Ministry). Continue?",
         )
       ) {
         console.log("🚀 Creating sample MDAs...");
@@ -1444,9 +1444,10 @@ export default function SuperUserDashboard() {
     setTenders(mockTenders);
     setTenderEvaluations(mockTenderEvaluations);
     setVendorPerformances(mockVendorPerformances);
-    setMDAs(mockMDAs);
-    setMDAAdmins(mockMDAAdmins);
-    setMDAUsers(mockMDAUsers);
+    // Note: MDA data is loaded from localStorage in separate useEffect, not from mock data
+    // setMDAs(mockMDAs); // REMOVED: Conflicts with localStorage MDA system
+    // setMDAAdmins(mockMDAAdmins); // REMOVED: Conflicts with localStorage MDA system
+    // setMDAUsers(mockMDAUsers); // REMOVED: Conflicts with localStorage MDA system
 
     // Note: MDA system initialization moved to separate useEffect for better dependency management
 
@@ -2251,7 +2252,11 @@ The award letter has been:
           data,
           "SuperUser",
         );
-        setMDAs((prev) => [...prev, newMDA]);
+
+        // Reload all MDAs from localStorage to ensure consistency
+        const updatedMDAs = await mdaLocalStorageService.getAllMDAs();
+        setMDAs(updatedMDAs);
+
         alert(
           `${newMDA.type.charAt(0).toUpperCase() + newMDA.type.slice(1)} "${newMDA.name}" created successfully with full ministry functionality!`,
         );
@@ -2262,14 +2267,11 @@ The award letter has been:
           data,
           "superuser",
         );
-        const updatedMDA: MDA = {
-          ...selectedMDA,
-          ...data,
-          updatedAt: new Date(),
-        };
-        setMDAs((prev) =>
-          prev.map((m) => (m.id === selectedMDA.id ? updatedMDA : m)),
-        );
+
+        // Reload all MDAs from localStorage to ensure consistency
+        const updatedMDAs = await mdaLocalStorageService.getAllMDAs();
+        setMDAs(updatedMDAs);
+
         alert("MDA updated successfully!");
       }
       setShowCreateMDAModal(false);
@@ -2548,7 +2550,7 @@ The award letter has been:
             className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Plus className="h-5 w-5 mr-2" />
-            Create Sample MDAs
+            Create 4 Sample MDAs
           </button>
 
           <button
@@ -2606,8 +2608,8 @@ The award letter has been:
                       Sample MDA Creation
                     </h4>
                     <p className="text-sm text-green-800 mb-3">
-                      Automatically create 4 sample MDAs with full ministry
-                      functionality:
+                      Click below to automatically create 4 sample MDAs with
+                      full ministry functionality:
                     </p>
                     <ul className="text-sm text-green-700 mb-3 space-y-1">
                       <li>• Ministry of Agriculture & Rural Development</li>
@@ -2619,7 +2621,7 @@ The award letter has been:
                       onClick={handleCreateSampleMDAs}
                       className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                     >
-                      Create Sample MDAs
+                      Create 4 Sample MDAs
                     </button>
                   </div>
 
@@ -2853,6 +2855,41 @@ The award letter has been:
             <Plus className="h-4 w-4 mr-2" />
             Create MDA
           </button>
+        </div>
+
+        {/* MDA Credentials Viewer */}
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            🔐 MDA Login Credentials
+          </h3>
+          <div className="space-y-3">
+            {mdas.map((mda) => (
+              <div
+                key={mda.id}
+                className="border border-gray-200 rounded-lg p-4"
+              >
+                <h4 className="font-medium text-gray-900 mb-2">{mda.name}</h4>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Username:</span>
+                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      {mda.id.toLowerCase()}
+                    </code>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Password:</span>
+                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      mda123
+                    </code>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Type:</span>
+                    <span className="text-gray-900 capitalize">{mda.type}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* MDA Statistics */}

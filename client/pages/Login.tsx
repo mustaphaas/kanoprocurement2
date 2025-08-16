@@ -187,9 +187,32 @@ export default function Login() {
             );
             navigate(currentConfig.navigation);
           } else {
-            setErrors({
-              general: `Invalid credentials. Available accounts: ministry, ministry2, ministry3 (all with password: ministry123)`,
-            });
+            // Check for dynamic MDA credentials
+            const mdas = JSON.parse(localStorage.getItem("mdas") || "[]");
+
+            // Simplified MDA login: just check if it's an MDA ID with mda123 password
+            const mda = mdas.find(
+              (m: any) => m.id.toLowerCase() === identifier.toLowerCase(),
+            );
+
+            if (mda && formData.password === "mda123") {
+              localStorage.setItem(
+                "ministryUser",
+                JSON.stringify({
+                  username: identifier,
+                  role: "mda",
+                  ministryId: mda.id,
+                  ministryName: mda.name,
+                  ministryCode: mda.id.toUpperCase(),
+                  mdaType: mda.type,
+                }),
+              );
+              navigate(currentConfig.navigation);
+            } else {
+              setErrors({
+                general: `Invalid credentials. Available accounts: ministry, ministry2, ministry3 (password: ministry123) OR use your MDA ID with password: mda123`,
+              });
+            }
           }
           setIsLoading(false);
         }, 1000);
