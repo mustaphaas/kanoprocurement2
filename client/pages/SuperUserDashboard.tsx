@@ -576,7 +576,7 @@ export default function SuperUserDashboard() {
     try {
       if (
         window.confirm(
-          "This will create 4 sample MDAs with full functionality. Continue?",
+          "This will create 4 sample MDAs with full functionality (Ministry of Agriculture, Urban Development Agency, IT Department, and Environment Ministry). Continue?",
         )
       ) {
         console.log("🚀 Creating sample MDAs...");
