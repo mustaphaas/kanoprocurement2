@@ -2550,7 +2550,7 @@ The award letter has been:
             className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Plus className="h-5 w-5 mr-2" />
-            Create Sample MDAs
+            Create 4 Sample MDAs
           </button>
 
           <button
@@ -2614,7 +2614,7 @@ The award letter has been:
                     <ul className="text-sm text-green-700 mb-3 space-y-1">
                       <li>• Ministry of Agriculture & Rural Development</li>
                       <li>• Ministry of Urban Development & Planning</li>
-                      <li>• Ministry of Information Technology</li>
+                      <li>��� Ministry of Information Technology</li>
                       <li>• Ministry of Environment & Climate</li>
                     </ul>
                     <button
