@@ -2614,14 +2614,14 @@ The award letter has been:
                     <ul className="text-sm text-green-700 mb-3 space-y-1">
                       <li>• Ministry of Agriculture & Rural Development</li>
                       <li>• Ministry of Urban Development & Planning</li>
-                      <li>��� Ministry of Information Technology</li>
+                      <li>• Ministry of Information Technology</li>
                       <li>• Ministry of Environment & Climate</li>
                     </ul>
                     <button
                       onClick={handleCreateSampleMDAs}
                       className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                     >
-                      Create Sample MDAs
+                      Create 4 Sample MDAs
                     </button>
                   </div>
 
