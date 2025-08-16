@@ -191,12 +191,20 @@ export default function Login() {
             const mdaCredentials = JSON.parse(localStorage.getItem("mdaCredentials") || "[]");
             const mdas = JSON.parse(localStorage.getItem("mdas") || "[]");
 
+            console.log("🔍 MDA Login Debug:");
+            console.log("Trying to login with:", identifier, formData.password);
+            console.log("Available MDA credentials:", mdaCredentials);
+            console.log("Available MDAs:", mdas);
+
             const matchingCredential = mdaCredentials.find(
               (cred: any) => cred.username === identifier && cred.password === formData.password
             );
 
+            console.log("Matching credential found:", matchingCredential);
+
             if (matchingCredential) {
               const mda = mdas.find((m: any) => m.id === matchingCredential.id);
+              console.log("Matching MDA found:", mda);
 
               if (mda) {
                 localStorage.setItem(
@@ -210,16 +218,36 @@ export default function Login() {
                     mdaType: mda.type,
                   }),
                 );
+                console.log("✅ MDA login successful, navigating...");
                 navigate(currentConfig.navigation);
               } else {
                 setErrors({
-                  general: `MDA not found. Please contact administrator.`,
+                  general: `MDA not found for credential ID: ${matchingCredential.id}`,
                 });
               }
             } else {
-              setErrors({
-                general: `Invalid credentials. Available accounts: ministry, ministry2, ministry3 (all with password: ministry123) OR use your MDA credentials.`,
-              });
+              // Simplified login: just check if it's an MDA ID with mda123 password
+              const mda = mdas.find((m: any) => m.id.toLowerCase() === identifier.toLowerCase());
+
+              if (mda && formData.password === "mda123") {
+                localStorage.setItem(
+                  "ministryUser",
+                  JSON.stringify({
+                    username: identifier,
+                    role: "mda",
+                    ministryId: mda.id,
+                    ministryName: mda.name,
+                    ministryCode: mda.id.toUpperCase(),
+                    mdaType: mda.type,
+                  }),
+                );
+                console.log("✅ Direct MDA login successful, navigating...");
+                navigate(currentConfig.navigation);
+              } else {
+                setErrors({
+                  general: `Invalid credentials. Available accounts: ministry, ministry2, ministry3 (password: ministry123) OR MDA credentials. Found ${mdaCredentials.length} MDA credentials in storage.`,
+                });
+              }
             }
           }
           setIsLoading(false);
