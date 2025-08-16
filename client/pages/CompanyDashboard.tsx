@@ -369,17 +369,50 @@ export default function CompanyDashboard() {
       },
     };
 
-    const details = companyDetails[
-      userEmail as keyof typeof companyDetails
-    ] || {
-      name: "Northern Construction Ltd",
-      email: "contact@northernconstruction.com",
-      totalAdverts: 150,
-      bidsExpressedInterest: 25,
-      activeBids: 10,
-      notActiveBids: 15,
-      totalContractValue: "₦2.3B",
-    };
+    // Try to get details from hardcoded data first
+    let details = companyDetails[userEmail as keyof typeof companyDetails];
+
+    // If not found in hardcoded data, get from registered companies
+    if (!details) {
+      try {
+        const registeredCompanies = JSON.parse(localStorage.getItem("registeredCompanies") || "[]");
+        const registeredCompany = registeredCompanies.find((company: any) => company.email === userEmail);
+
+        if (registeredCompany) {
+          details = {
+            name: registeredCompany.companyName,
+            email: registeredCompany.email,
+            totalAdverts: 0, // New company starts with 0
+            bidsExpressedInterest: 0,
+            activeBids: 0,
+            notActiveBids: 0,
+            totalContractValue: "₦0",
+          };
+        } else {
+          // Final fallback if nothing found
+          details = {
+            name: "Company Not Found",
+            email: userEmail,
+            totalAdverts: 0,
+            bidsExpressedInterest: 0,
+            activeBids: 0,
+            notActiveBids: 0,
+            totalContractValue: "₦0",
+          };
+        }
+      } catch (error) {
+        console.error("Error loading registered company data:", error);
+        details = {
+          name: "Unknown Company",
+          email: userEmail,
+          totalAdverts: 0,
+          bidsExpressedInterest: 0,
+          activeBids: 0,
+          notActiveBids: 0,
+          totalContractValue: "₦0",
+        };
+      }
+    }
 
     return {
       ...details,
