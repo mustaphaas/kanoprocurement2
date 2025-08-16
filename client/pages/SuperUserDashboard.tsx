@@ -2857,6 +2857,32 @@ The award letter has been:
           </button>
         </div>
 
+        {/* MDA Credentials Viewer */}
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">🔐 MDA Login Credentials</h3>
+          <div className="space-y-3">
+            {mdas.map((mda) => (
+              <div key={mda.id} className="border border-gray-200 rounded-lg p-4">
+                <h4 className="font-medium text-gray-900 mb-2">{mda.name}</h4>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Username:</span>
+                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">{mda.id.toLowerCase()}</code>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Password:</span>
+                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">mda123</code>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Type:</span>
+                    <span className="text-gray-900 capitalize">{mda.type}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* MDA Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-lg shadow-sm p-6 border">
