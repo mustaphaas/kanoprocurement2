@@ -2608,7 +2608,7 @@ The award letter has been:
                       Sample MDA Creation
                     </h4>
                     <p className="text-sm text-green-800 mb-3">
-                      Automatically create 4 sample MDAs with full ministry
+                      Click below to automatically create 4 sample MDAs with full ministry
                       functionality:
                     </p>
                     <ul className="text-sm text-green-700 mb-3 space-y-1">
