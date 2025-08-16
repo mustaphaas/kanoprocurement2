@@ -1444,9 +1444,10 @@ export default function SuperUserDashboard() {
     setTenders(mockTenders);
     setTenderEvaluations(mockTenderEvaluations);
     setVendorPerformances(mockVendorPerformances);
-    setMDAs(mockMDAs);
-    setMDAAdmins(mockMDAAdmins);
-    setMDAUsers(mockMDAUsers);
+    // Note: MDA data is loaded from localStorage in separate useEffect, not from mock data
+    // setMDAs(mockMDAs); // REMOVED: Conflicts with localStorage MDA system
+    // setMDAAdmins(mockMDAAdmins); // REMOVED: Conflicts with localStorage MDA system
+    // setMDAUsers(mockMDAUsers); // REMOVED: Conflicts with localStorage MDA system
 
     // Note: MDA system initialization moved to separate useEffect for better dependency management
 
