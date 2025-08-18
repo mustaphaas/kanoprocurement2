@@ -4885,11 +4885,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Company Registry (View Only)
+          Company Registry
         </h1>
         <div className="flex items-center space-x-2">
           <p className="text-gray-600">
-            View registered companies with real-time updates from Admin/SuperUser approvals
+            View registered companies with real-time updates
           </p>
           <div className="flex items-center bg-blue-50 px-2 py-1 rounded-md">
             <RefreshCw className="h-4 w-4 text-blue-600 mr-1" />
@@ -9576,7 +9576,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           htmlFor="autoExecution"
                           className="text-sm font-medium text-gray-900 cursor-pointer"
                         >
-                          ��� Smart Contract Auto-Execution
+                          🤖 Smart Contract Auto-Execution
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
                           Automated milestone verification and payment triggers
