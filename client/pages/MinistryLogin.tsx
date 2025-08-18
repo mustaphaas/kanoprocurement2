@@ -66,18 +66,45 @@ export default function MinistryLogin() {
     setIsLoading(true);
 
     try {
-      // Simulate authentication
-      setTimeout(() => {
-        if (
-          formData.username === "ministry" &&
-          formData.password === "ministry123"
-        ) {
+      // Try MDA authentication first
+      const authResult = mdaAuthService.authenticateAdmin(formData.username, formData.password);
+
+      if (authResult.success && authResult.user) {
+        const user = authResult.user;
+        const mda = mdaAuthService.getCurrentMDA();
+
+        // Log successful MDA admin login
+        logUserAction(
+          user.displayName,
+          "ministry_admin",
+          "MDA_ADMIN_LOGIN_SUCCESS",
+          mda?.name || "Ministry Portal",
+          `MDA Administrator ${user.displayName} (${user.email}) successfully logged in to ${mda?.name}`,
+          "MEDIUM",
+          user.mdaId,
+          {
+            loginTime: user.loginTime,
+            userAgent: navigator.userAgent,
+            loginMethod: "mda_credentials",
+            mdaId: user.mdaId,
+            mdaName: mda?.name,
+            adminRole: user.role,
+            email: user.email,
+          },
+        );
+
+        setIsLoading(false);
+        navigate("/ministry/dashboard");
+      } else {
+        // Fallback to old demo authentication for backward compatibility
+        if (formData.username === "ministry" && formData.password === "ministry123") {
           // Store ministry info in localStorage for demo
           localStorage.setItem(
             "ministryUser",
             JSON.stringify({
               username: formData.username,
               role: "ministry",
+              ministryId: "ministry", // Default ministry ID
             }),
           );
 
@@ -87,43 +114,45 @@ export default function MinistryLogin() {
             "ministry_user",
             "MINISTRY_LOGIN_SUCCESS",
             "Ministry Portal",
-            `Ministry user ${formData.username} successfully logged in`,
+            `Ministry user ${formData.username} successfully logged in (legacy mode)`,
             "MEDIUM",
             undefined,
             {
               loginTime: new Date().toISOString(),
               userAgent: navigator.userAgent,
-              loginMethod: "credentials",
+              loginMethod: "legacy_credentials",
               username: formData.username,
             },
           );
 
+          setIsLoading(false);
           navigate("/ministry/dashboard");
         } else {
-          // Log failed ministry login attempt
+          // Log failed login attempt
           logUserAction(
             formData.username || "Unknown",
             "anonymous",
             "MINISTRY_LOGIN_FAILED",
             "Ministry Portal",
-            `Failed ministry login attempt for user: ${formData.username}`,
+            `Failed login attempt for ${formData.username}`,
             "HIGH",
             undefined,
             {
+              failureReason: authResult.error || "Invalid credentials",
               attemptTime: new Date().toISOString(),
               userAgent: navigator.userAgent,
               username: formData.username,
-              ipAddress: "127.0.0.1",
             },
           );
 
           setErrors({
-            general: "Invalid credentials. Use: ministry / ministry123",
+            general: authResult.error || "Invalid credentials",
           });
+          setIsLoading(false);
         }
-        setIsLoading(false);
-      }, 1000);
+      }
     } catch (error) {
+      console.error("Login error:", error);
       setErrors({
         general:
           error instanceof Error
