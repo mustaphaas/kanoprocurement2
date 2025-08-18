@@ -86,6 +86,8 @@ export interface MDAUser {
   id: string;
   mdaId: string;
   userId: string;
+  email?: string; // Email for login credentials
+  displayName?: string; // Full name for display
   role: "procurement_officer" | "evaluator" | "accountant" | "viewer";
   department: string;
   permissions: MDAUserPermissions;
