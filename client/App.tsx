@@ -46,6 +46,7 @@ const App = () => (
               path="/ministry/login"
               element={<Navigate to="/login" replace />}
             />
+            <Route path="/user/login" element={<UserLogin />} />
             <Route
               path="/company/dashboard"
               element={
