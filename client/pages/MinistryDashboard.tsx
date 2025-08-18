@@ -2624,7 +2624,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "Kano Construction Ltd",
-          bidAmount: "���14,800,000,000",
+          bidAmount: "₦14,800,000,000",
           technicalScore: 90,
           financialScore: 87,
           totalScore: 88.5,
@@ -3663,9 +3663,33 @@ export default function MinistryDashboard() {
   };
 
   const toggleUserStatus = (user: MDAUser) => {
-    setMDAUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, isActive: !u.isActive } : u)),
+    const updatedUsers = mdaUsers.map((u) =>
+      u.id === user.id ? { ...u, isActive: !u.isActive } : u
     );
+    setMDAUsers(updatedUsers);
+    saveUsersToStorage(updatedUsers);
+
+    const ministryInfo = getMinistryInfo();
+    const newStatus = !user.isActive;
+
+    // Log the status change
+    logUserAction(
+      "MinistryAdmin",
+      "ministry_admin",
+      newStatus ? "MDA_USER_ACTIVATED" : "MDA_USER_DEACTIVATED",
+      user.role,
+      `${newStatus ? "Activated" : "Deactivated"} user ${user.role} in department ${user.department}`,
+      "LOW",
+      user.id,
+      {
+        mdaId: user.mdaId,
+        ministryName: ministryInfo.name,
+        userRole: user.role,
+        department: user.department,
+        newStatus: newStatus,
+      },
+    );
+
     alert(`User has been ${user.isActive ? "deactivated" : "activated"}!`);
   };
 
@@ -8660,7 +8684,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {contract.projectTitle}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {contract.id} • {contract.contractorName}
+                      {contract.id} ��� {contract.contractorName}
                     </p>
                     <p className="text-sm text-green-600 font-medium">
                       {contract.contractValue}
