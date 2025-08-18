@@ -5,6 +5,7 @@ import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MDAUserForm from "@/components/MDAUserForm";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
+import { persistentStorage } from "@/lib/persistentStorage";
 import {
   Building2,
   Users,
