@@ -48,6 +48,7 @@ const App = () => (
               element={<Navigate to="/login" replace />}
             />
             <Route path="/user/login" element={<UserLogin />} />
+            <Route path="/user/dashboard" element={<UserDashboard />} />
             <Route
               path="/company/dashboard"
               element={
