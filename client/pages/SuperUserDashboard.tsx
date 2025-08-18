@@ -9992,20 +9992,34 @@ The award letter has been:
       )}
 
       {/* MDA Management Modals */}
-      <MDAForm
-        isOpen={showCreateMDAModal || showEditMDAModal}
-        onClose={() => {
-          setShowCreateMDAModal(false);
-          setShowEditMDAModal(false);
-          setSelectedMDA(null);
-        }}
-        onSubmit={handleMDASubmit}
-        mode={mdaFormMode}
-        initialData={selectedMDA}
-        parentMDAs={mdas
-          .filter((m) => m.type === "ministry")
-          .map((m) => ({ id: m.id, name: m.name, type: m.type }))}
-      />
+      {mdaFormMode === "create" ? (
+        <MDAWithAdminForm
+          isOpen={showCreateMDAModal}
+          onClose={() => {
+            setShowCreateMDAModal(false);
+            setSelectedMDA(null);
+          }}
+          onSubmit={handleMDAWithAdminSubmit}
+          mode={mdaFormMode}
+          parentMDAs={mdas
+            .filter((m) => m.type === "ministry")
+            .map((m) => ({ id: m.id, name: m.name, type: m.type }))}
+        />
+      ) : (
+        <MDAForm
+          isOpen={showEditMDAModal}
+          onClose={() => {
+            setShowEditMDAModal(false);
+            setSelectedMDA(null);
+          }}
+          onSubmit={handleMDASubmit}
+          mode={mdaFormMode}
+          initialData={selectedMDA}
+          parentMDAs={mdas
+            .filter((m) => m.type === "ministry")
+            .map((m) => ({ id: m.id, name: m.name, type: m.type }))}
+        />
+      )}
 
       <MDAAdminForm
         isOpen={showCreateAdminModal || showEditAdminModal}
