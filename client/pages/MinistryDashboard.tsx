@@ -2239,6 +2239,9 @@ export default function MinistryDashboard() {
     // Initialize synchronized companies
     loadSynchronizedCompanies();
 
+    // Load users for this MDA
+    loadMDAUsers();
+
     // Set up real-time synchronization with Admin/SuperUser dashboards
     const syncInterval = setInterval(() => {
       console.log(
@@ -8684,7 +8687,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {contract.projectTitle}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {contract.id} ��� {contract.contractorName}
+                      {contract.id} • {contract.contractorName}
                     </p>
                     <p className="text-sm text-green-600 font-medium">
                       {contract.contractValue}
