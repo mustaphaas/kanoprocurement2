@@ -1246,7 +1246,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "���255,000,000",
+            amount: "�����255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -2229,7 +2229,7 @@ export default function MinistryDashboard() {
       });
 
       console.log(
-        "���� Ministry Dashboard: Loaded",
+        "🔄 Ministry Dashboard: Loaded",
         allCompanies.length,
         "synchronized companies",
       );
@@ -3593,6 +3593,8 @@ export default function MinistryDashboard() {
           id: `user-${Date.now()}`,
           mdaId: mdaId,
           userId: `usr-${Date.now()}`,
+          email: data.email, // Store email for login credentials
+          displayName: data.displayName, // Store display name
           role: data.role,
           department: data.department,
           permissions: data.permissions,
@@ -9756,7 +9758,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       ⚡ Automation Benefits
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
-                      <li>������� 90% faster processing</li>
+                      <li>����� 90% faster processing</li>
                       <li>��� Reduced human errors</li>
                       <li>• Real-time notifications</li>
                       <li>��� Automatic compliance checks</li>
