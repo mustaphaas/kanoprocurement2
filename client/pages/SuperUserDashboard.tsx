@@ -2924,7 +2924,7 @@ The award letter has been:
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             <Plus className="h-4 w-4 mr-2" />
-            Create MDA
+            Create MDA with Administrator
           </button>
         </div>
 
