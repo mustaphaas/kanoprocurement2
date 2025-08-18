@@ -67,7 +67,10 @@ export default function MinistryLogin() {
 
     try {
       // Try MDA authentication first
-      const authResult = mdaAuthService.authenticateAdmin(formData.username, formData.password);
+      const authResult = mdaAuthService.authenticateAdmin(
+        formData.username,
+        formData.password,
+      );
 
       if (authResult.success && authResult.user) {
         const user = authResult.user;
@@ -97,7 +100,10 @@ export default function MinistryLogin() {
         navigate("/ministry/dashboard");
       } else {
         // Fallback to old demo authentication for backward compatibility
-        if (formData.username === "ministry" && formData.password === "ministry123") {
+        if (
+          formData.username === "ministry" &&
+          formData.password === "ministry123"
+        ) {
           // Store ministry info in localStorage for demo
           localStorage.setItem(
             "ministryUser",

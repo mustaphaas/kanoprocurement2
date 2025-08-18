@@ -3566,7 +3566,9 @@ export default function MinistryDashboard() {
     const mdaId = getCurrentMDAId();
 
     // Remove users for this MDA and add the updated ones
-    const otherMDAUsers = allUsers.filter((user: MDAUser) => user.mdaId !== mdaId);
+    const otherMDAUsers = allUsers.filter(
+      (user: MDAUser) => user.mdaId !== mdaId,
+    );
     const updatedAllUsers = [...otherMDAUsers, ...users];
 
     localStorage.setItem("mda_users", JSON.stringify(updatedAllUsers));
@@ -3625,7 +3627,9 @@ export default function MinistryDashboard() {
           },
         );
 
-        alert(`User "${data.displayName}" created successfully for ${ministryInfo.name}!`);
+        alert(
+          `User "${data.displayName}" created successfully for ${ministryInfo.name}!`,
+        );
       } else if (selectedUser) {
         const updatedUser: MDAUser = {
           ...selectedUser,
@@ -3634,7 +3638,9 @@ export default function MinistryDashboard() {
           permissions: data.permissions,
         };
 
-        const updatedUsers = mdaUsers.map((u) => (u.id === selectedUser.id ? updatedUser : u));
+        const updatedUsers = mdaUsers.map((u) =>
+          u.id === selectedUser.id ? updatedUser : u,
+        );
         setMDAUsers(updatedUsers);
         saveUsersToStorage(updatedUsers);
 
@@ -3669,7 +3675,7 @@ export default function MinistryDashboard() {
 
   const toggleUserStatus = (user: MDAUser) => {
     const updatedUsers = mdaUsers.map((u) =>
-      u.id === user.id ? { ...u, isActive: !u.isActive } : u
+      u.id === user.id ? { ...u, isActive: !u.isActive } : u,
     );
     setMDAUsers(updatedUsers);
     saveUsersToStorage(updatedUsers);

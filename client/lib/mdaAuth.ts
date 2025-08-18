@@ -18,7 +18,13 @@ export interface MDACredential {
 export interface MDALoginData {
   mdaId: string;
   email: string;
-  role: "mda_admin" | "mda_super_admin" | "procurement_officer" | "evaluator" | "accountant" | "viewer";
+  role:
+    | "mda_admin"
+    | "mda_super_admin"
+    | "procurement_officer"
+    | "evaluator"
+    | "accountant"
+    | "viewer";
   displayName: string;
   permissions: any;
   loginTime: string;
@@ -46,16 +52,23 @@ class MDAAuthService {
    */
   findMDAByEmail(email: string): MDACredential | null {
     const credentials = this.getAllCredentials();
-    return credentials.find(cred => cred.adminEmail.toLowerCase() === email.toLowerCase()) || null;
+    return (
+      credentials.find(
+        (cred) => cred.adminEmail.toLowerCase() === email.toLowerCase(),
+      ) || null
+    );
   }
 
   /**
    * Authenticate MDA administrator
    */
-  authenticateAdmin(email: string, password: string): { success: boolean; user?: MDALoginData; error?: string } {
+  authenticateAdmin(
+    email: string,
+    password: string,
+  ): { success: boolean; user?: MDALoginData; error?: string } {
     try {
       const mda = this.findMDAByEmail(email);
-      
+
       if (!mda) {
         return { success: false, error: "Invalid email or password" };
       }
@@ -84,15 +97,20 @@ class MDAAuthService {
       };
 
       // Store current user session
-      localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify({
-        ministryId: mda.id,
-        email: email,
-        name: mda.adminName,
-        role: mda.adminRole,
-        loginTime: loginData.loginTime,
-      }));
+      localStorage.setItem(
+        this.CURRENT_USER_KEY,
+        JSON.stringify({
+          ministryId: mda.id,
+          email: email,
+          name: mda.adminName,
+          role: mda.adminRole,
+          loginTime: loginData.loginTime,
+        }),
+      );
 
-      console.log(`✅ MDA Admin logged in: ${mda.adminName} (${email}) for ${mda.name}`);
+      console.log(
+        `✅ MDA Admin logged in: ${mda.adminName} (${email}) for ${mda.name}`,
+      );
 
       return { success: true, user: loginData };
     } catch (error) {
@@ -122,7 +140,7 @@ class MDAAuthService {
     if (!user) return null;
 
     const credentials = this.getAllCredentials();
-    return credentials.find(cred => cred.id === user.ministryId) || null;
+    return credentials.find((cred) => cred.id === user.ministryId) || null;
   }
 
   /**
@@ -146,7 +164,7 @@ class MDAAuthService {
     // Get admin permissions from localStorage
     const allAdmins = JSON.parse(localStorage.getItem("mda_admins") || "[]");
     const admin = allAdmins.find((a: any) => a.mdaId === user.ministryId);
-    
+
     if (!admin) return false;
 
     // Check specific permissions

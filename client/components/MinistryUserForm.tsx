@@ -41,28 +41,34 @@ export default function MinistryUserForm({
     mdaId: mdaId,
     email: initialData?.email || "",
     displayName: initialData?.displayName || "",
-    role: initialData?.role || ("procurement_officer" as
-      | "procurement_officer"
-      | "evaluator"
-      | "accountant"
-      | "viewer"),
+    role:
+      initialData?.role ||
+      ("procurement_officer" as
+        | "procurement_officer"
+        | "evaluator"
+        | "accountant"
+        | "viewer"),
     department: initialData?.department || "",
-    permissions: initialData?.permissions || ({
-      canCreateTenders: true,
-      canEvaluateBids: true,
-      canViewFinancials: false,
-      canGenerateReports: true,
-      accessLevel: "write",
-    } as MDAUserPermissions),
+    permissions:
+      initialData?.permissions ||
+      ({
+        canCreateTenders: true,
+        canEvaluateBids: true,
+        canViewFinancials: false,
+        canGenerateReports: true,
+        accessLevel: "write",
+      } as MDAUserPermissions),
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const roleDescriptions = {
-    procurement_officer: "Can create tenders, manage procurement processes, and evaluate bids",
+    procurement_officer:
+      "Can create tenders, manage procurement processes, and evaluate bids",
     evaluator: "Can evaluate bids and provide technical assessments",
-    accountant: "Can view financials, generate reports, and track budget allocations",
+    accountant:
+      "Can view financials, generate reports, and track budget allocations",
     viewer: "Read-only access to view tenders and reports",
   };
 
@@ -104,7 +110,7 @@ export default function MinistryUserForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsSubmitting(true);
@@ -117,8 +123,11 @@ export default function MinistryUserForm({
     }
   };
 
-  const updatePermissions = (field: keyof MDAUserPermissions, value: boolean | string) => {
-    setFormData(prev => ({
+  const updatePermissions = (
+    field: keyof MDAUserPermissions,
+    value: boolean | string,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       permissions: {
         ...prev.permissions,
@@ -172,7 +181,7 @@ export default function MinistryUserForm({
         return;
     }
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       role: newRole,
       permissions: defaultPermissions,
@@ -191,10 +200,9 @@ export default function MinistryUserForm({
               {mode === "create" ? "Add New User" : "Edit User"}
             </h2>
             <p className="text-sm text-gray-600">
-              {mode === "create" 
+              {mode === "create"
                 ? "Create a new user account for this ministry"
-                : "Update user information and permissions"
-              }
+                : "Update user information and permissions"}
             </p>
           </div>
         </div>
@@ -216,7 +224,9 @@ export default function MinistryUserForm({
             <input
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, email: e.target.value }))
+              }
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.email ? "border-red-500" : "border-gray-300"
               }`}
@@ -226,7 +236,8 @@ export default function MinistryUserForm({
               <p className="mt-1 text-sm text-red-600">{errors.email}</p>
             )}
             <p className="mt-1 text-xs text-gray-500">
-              This email will be used for login credentials. User can login at /user/login
+              This email will be used for login credentials. User can login at
+              /user/login
             </p>
           </div>
 
@@ -237,7 +248,12 @@ export default function MinistryUserForm({
             <input
               type="text"
               value={formData.displayName}
-              onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  displayName: e.target.value,
+                }))
+              }
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.displayName ? "border-red-500" : "border-gray-300"
               }`}
@@ -257,7 +273,9 @@ export default function MinistryUserForm({
             </label>
             <select
               value={formData.role}
-              onChange={(e) => handleRoleChange(e.target.value as typeof formData.role)}
+              onChange={(e) =>
+                handleRoleChange(e.target.value as typeof formData.role)
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="procurement_officer">Procurement Officer</option>
@@ -276,14 +294,18 @@ export default function MinistryUserForm({
             </label>
             <select
               value={formData.department}
-              onChange={(e) => setFormData(prev => ({ ...prev, department: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, department: e.target.value }))
+              }
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.department ? "border-red-500" : "border-gray-300"
               }`}
             >
               <option value="">Select Department</option>
-              {departmentOptions.map(dept => (
-                <option key={dept} value={dept}>{dept}</option>
+              {departmentOptions.map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
+                </option>
               ))}
             </select>
             {errors.department && (
@@ -303,12 +325,18 @@ export default function MinistryUserForm({
                 <input
                   type="checkbox"
                   checked={formData.permissions.canCreateTenders}
-                  onChange={(e) => updatePermissions("canCreateTenders", e.target.checked)}
+                  onChange={(e) =>
+                    updatePermissions("canCreateTenders", e.target.checked)
+                  }
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <div className="ml-3">
-                  <span className="text-sm font-medium text-gray-700">Create Tenders</span>
-                  <p className="text-xs text-gray-500">Can create and publish new tenders</p>
+                  <span className="text-sm font-medium text-gray-700">
+                    Create Tenders
+                  </span>
+                  <p className="text-xs text-gray-500">
+                    Can create and publish new tenders
+                  </p>
                 </div>
               </label>
 
@@ -316,12 +344,18 @@ export default function MinistryUserForm({
                 <input
                   type="checkbox"
                   checked={formData.permissions.canEvaluateBids}
-                  onChange={(e) => updatePermissions("canEvaluateBids", e.target.checked)}
+                  onChange={(e) =>
+                    updatePermissions("canEvaluateBids", e.target.checked)
+                  }
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <div className="ml-3">
-                  <span className="text-sm font-medium text-gray-700">Evaluate Bids</span>
-                  <p className="text-xs text-gray-500">Can review and score bid submissions</p>
+                  <span className="text-sm font-medium text-gray-700">
+                    Evaluate Bids
+                  </span>
+                  <p className="text-xs text-gray-500">
+                    Can review and score bid submissions
+                  </p>
                 </div>
               </label>
 
@@ -329,12 +363,18 @@ export default function MinistryUserForm({
                 <input
                   type="checkbox"
                   checked={formData.permissions.canViewFinancials}
-                  onChange={(e) => updatePermissions("canViewFinancials", e.target.checked)}
+                  onChange={(e) =>
+                    updatePermissions("canViewFinancials", e.target.checked)
+                  }
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <div className="ml-3">
-                  <span className="text-sm font-medium text-gray-700">View Financials</span>
-                  <p className="text-xs text-gray-500">Can access budget and financial data</p>
+                  <span className="text-sm font-medium text-gray-700">
+                    View Financials
+                  </span>
+                  <p className="text-xs text-gray-500">
+                    Can access budget and financial data
+                  </p>
                 </div>
               </label>
 
@@ -342,12 +382,18 @@ export default function MinistryUserForm({
                 <input
                   type="checkbox"
                   checked={formData.permissions.canGenerateReports}
-                  onChange={(e) => updatePermissions("canGenerateReports", e.target.checked)}
+                  onChange={(e) =>
+                    updatePermissions("canGenerateReports", e.target.checked)
+                  }
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <div className="ml-3">
-                  <span className="text-sm font-medium text-gray-700">Generate Reports</span>
-                  <p className="text-xs text-gray-500">Can create and export reports</p>
+                  <span className="text-sm font-medium text-gray-700">
+                    Generate Reports
+                  </span>
+                  <p className="text-xs text-gray-500">
+                    Can create and export reports
+                  </p>
                 </div>
               </label>
             </div>
@@ -358,7 +404,9 @@ export default function MinistryUserForm({
               </label>
               <select
                 value={formData.permissions.accessLevel}
-                onChange={(e) => updatePermissions("accessLevel", e.target.value)}
+                onChange={(e) =>
+                  updatePermissions("accessLevel", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="read">Read Only</option>

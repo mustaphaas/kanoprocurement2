@@ -73,14 +73,18 @@ export default function UserLogin() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const authenticateUser = (email: string, password: string): { success: boolean; user?: MDAUser; error?: string } => {
+  const authenticateUser = (
+    email: string,
+    password: string,
+  ): { success: boolean; user?: MDAUser; error?: string } => {
     try {
       // Get all MDA users
       const allUsers = JSON.parse(localStorage.getItem("mda_users") || "[]");
-      
+
       // Find user by email
-      const user = allUsers.find((u: MDAUser) => 
-        u.email?.toLowerCase() === email.toLowerCase() && u.isActive
+      const user = allUsers.find(
+        (u: MDAUser) =>
+          u.email?.toLowerCase() === email.toLowerCase() && u.isActive,
       );
 
       if (!user) {
@@ -114,17 +118,20 @@ export default function UserLogin() {
         const user = authResult.user;
 
         // Store user session
-        localStorage.setItem("currentUser", JSON.stringify({
-          id: user.id,
-          email: user.email,
-          displayName: user.displayName,
-          role: user.role,
-          department: user.department,
-          mdaId: user.mdaId,
-          permissions: user.permissions,
-          loginTime: new Date().toISOString(),
-          userType: "mda_user",
-        }));
+        localStorage.setItem(
+          "currentUser",
+          JSON.stringify({
+            id: user.id,
+            email: user.email,
+            displayName: user.displayName,
+            role: user.role,
+            department: user.department,
+            mdaId: user.mdaId,
+            permissions: user.permissions,
+            loginTime: new Date().toISOString(),
+            userType: "mda_user",
+          }),
+        );
 
         // Get MDA information
         const allMDAs = JSON.parse(localStorage.getItem("mdas") || "[]");
@@ -226,7 +233,10 @@ export default function UserLogin() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email Address
               </label>
               <div className="mt-1 relative">
@@ -253,7 +263,10 @@ export default function UserLogin() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
@@ -322,7 +335,8 @@ export default function UserLogin() {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Contact your MDA administrator for login credentials or technical support.
+                Contact your MDA administrator for login credentials or
+                technical support.
               </p>
             </div>
           </div>

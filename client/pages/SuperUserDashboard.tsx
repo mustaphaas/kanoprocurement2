@@ -2246,7 +2246,10 @@ The award letter has been:
   };
 
   // Handler for combined MDA + Admin creation
-  const handleMDAWithAdminSubmit = async (data: { mda: CreateMDARequest; admin: CreateMDAAdminRequest }) => {
+  const handleMDAWithAdminSubmit = async (data: {
+    mda: CreateMDARequest;
+    admin: CreateMDAAdminRequest;
+  }) => {
     try {
       console.log("🚀 Creating MDA with Administrator...", data);
 
@@ -2262,7 +2265,10 @@ The award letter has been:
         mdaId: newMDA.id, // Use the newly created MDA ID
       };
 
-      const newAdmin = await mdaLocalStorageService.createMDAAdmin(adminData, "SuperUser");
+      const newAdmin = await mdaLocalStorageService.createMDAAdmin(
+        adminData,
+        "SuperUser",
+      );
 
       // Step 3: Update the state
       setMDAs((prev) => [...prev, newMDA]);
@@ -2271,7 +2277,9 @@ The award letter has been:
       }
 
       // Step 4: Create login credentials for the admin
-      const credentials = JSON.parse(localStorage.getItem("mdaCredentials") || "[]");
+      const credentials = JSON.parse(
+        localStorage.getItem("mdaCredentials") || "[]",
+      );
       const newCredential = {
         id: newMDA.id,
         name: newMDA.name,
@@ -2308,7 +2316,6 @@ The award letter has been:
       );
 
       setShowCreateMDAModal(false);
-
     } catch (error) {
       console.error("❌ Error creating MDA with administrator:", error);
       alert("Error creating MDA with administrator. Please try again.");

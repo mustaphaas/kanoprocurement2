@@ -17,7 +17,12 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-import { CreateMDARequest, MDASettings, CreateMDAAdminRequest, MDAPermissions } from "@shared/api";
+import {
+  CreateMDARequest,
+  MDASettings,
+  CreateMDAAdminRequest,
+  MDAPermissions,
+} from "@shared/api";
 
 interface MDAWithAdminData {
   mda: CreateMDARequest;
@@ -44,39 +49,47 @@ export default function MDAWithAdminForm({
   const [currentStep, setCurrentStep] = useState(1);
   const [mdaFormData, setMDAFormData] = useState({
     name: initialData?.mda?.name || "",
-    type: initialData?.mda?.type || ("ministry" as "ministry" | "department" | "agency"),
+    type:
+      initialData?.mda?.type ||
+      ("ministry" as "ministry" | "department" | "agency"),
     description: initialData?.mda?.description || "",
     parentMDA: initialData?.mda?.parentMDA || "",
     contactEmail: initialData?.mda?.contactEmail || "",
     contactPhone: initialData?.mda?.contactPhone || "",
     address: initialData?.mda?.address || "",
     headOfMDA: initialData?.mda?.headOfMDA || "",
-    settings: initialData?.mda?.settings || ({
-      procurementThresholds: {
-        level1: 5000000,
-        level2: 25000000,
-        level3: 100000000,
-      },
-      allowedCategories: [""],
-      customWorkflows: false,
-      budgetYear: new Date().getFullYear().toString(),
-      totalBudget: 0,
-    } as MDASettings),
+    settings:
+      initialData?.mda?.settings ||
+      ({
+        procurementThresholds: {
+          level1: 5000000,
+          level2: 25000000,
+          level3: 100000000,
+        },
+        allowedCategories: [""],
+        customWorkflows: false,
+        budgetYear: new Date().getFullYear().toString(),
+        totalBudget: 0,
+      } as MDASettings),
   });
 
   const [adminFormData, setAdminFormData] = useState({
     mdaId: "", // Will be set when MDA is created
     email: initialData?.admin?.email || "",
     displayName: initialData?.admin?.displayName || "",
-    role: initialData?.admin?.role || ("mda_admin" as "mda_admin" | "mda_super_admin"),
-    permissions: initialData?.admin?.permissions || ({
-      canCreateUsers: true,
-      canManageTenders: true,
-      canApproveContracts: false,
-      canViewReports: true,
-      canManageSettings: false,
-      maxApprovalAmount: 10000000,
-    } as MDAPermissions),
+    role:
+      initialData?.admin?.role ||
+      ("mda_admin" as "mda_admin" | "mda_super_admin"),
+    permissions:
+      initialData?.admin?.permissions ||
+      ({
+        canCreateUsers: true,
+        canManageTenders: true,
+        canApproveContracts: false,
+        canViewReports: true,
+        canManageSettings: false,
+        maxApprovalAmount: 10000000,
+      } as MDAPermissions),
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -138,8 +151,12 @@ export default function MDAWithAdminForm({
       newErrors.totalBudget = "Total budget must be greater than 0";
     }
 
-    if (mdaFormData.settings.allowedCategories.filter(cat => cat.trim()).length === 0) {
-      newErrors.allowedCategories = "At least one procurement category is required";
+    if (
+      mdaFormData.settings.allowedCategories.filter((cat) => cat.trim())
+        .length === 0
+    ) {
+      newErrors.allowedCategories =
+        "At least one procurement category is required";
     }
 
     setErrors(newErrors);
@@ -160,7 +177,8 @@ export default function MDAWithAdminForm({
     }
 
     if (adminFormData.permissions.maxApprovalAmount <= 0) {
-      newErrors.maxApprovalAmount = "Maximum approval amount must be greater than 0";
+      newErrors.maxApprovalAmount =
+        "Maximum approval amount must be greater than 0";
     }
 
     setErrors(newErrors);
@@ -181,7 +199,7 @@ export default function MDAWithAdminForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (currentStep === 1) {
       handleNext();
       return;
@@ -190,7 +208,7 @@ export default function MDAWithAdminForm({
     if (!validateAdminForm()) return;
 
     setIsSubmitting(true);
-    
+
     try {
       const mdaData: MDAWithAdminData = {
         mda: mdaFormData,
@@ -199,7 +217,7 @@ export default function MDAWithAdminForm({
           mdaId: "", // Will be set by the handler after MDA creation
         },
       };
-      
+
       await onSubmit(mdaData);
       onClose();
     } catch (error) {
@@ -211,7 +229,7 @@ export default function MDAWithAdminForm({
   };
 
   const addCategory = () => {
-    setMDAFormData(prev => ({
+    setMDAFormData((prev) => ({
       ...prev,
       settings: {
         ...prev.settings,
@@ -221,11 +239,13 @@ export default function MDAWithAdminForm({
   };
 
   const removeCategory = (index: number) => {
-    setMDAFormData(prev => ({
+    setMDAFormData((prev) => ({
       ...prev,
       settings: {
         ...prev.settings,
-        allowedCategories: prev.settings.allowedCategories.filter((_, i) => i !== index),
+        allowedCategories: prev.settings.allowedCategories.filter(
+          (_, i) => i !== index,
+        ),
       },
     }));
   };
@@ -240,10 +260,15 @@ export default function MDAWithAdminForm({
             <Building2 className="h-6 w-6 text-blue-600" />
             <div>
               <h2 className="text-xl font-bold text-gray-900">
-                {mode === "create" ? "Create New MDA with Administrator" : "Edit MDA"}
+                {mode === "create"
+                  ? "Create New MDA with Administrator"
+                  : "Edit MDA"}
               </h2>
               <p className="text-sm text-gray-600">
-                Step {currentStep} of 2: {currentStep === 1 ? "MDA Information" : "Administrator Assignment"}
+                Step {currentStep} of 2:{" "}
+                {currentStep === 1
+                  ? "MDA Information"
+                  : "Administrator Assignment"}
               </p>
             </div>
           </div>
@@ -258,15 +283,25 @@ export default function MDAWithAdminForm({
         {/* Progress Bar */}
         <div className="px-6 py-3 bg-gray-50">
           <div className="flex items-center">
-            <div className={`flex items-center ${currentStep >= 1 ? "text-blue-600" : "text-gray-400"}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 1 ? "bg-blue-600 text-white" : "bg-gray-200"}`}>
+            <div
+              className={`flex items-center ${currentStep >= 1 ? "text-blue-600" : "text-gray-400"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 1 ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              >
                 1
               </div>
               <span className="ml-2 text-sm font-medium">MDA Details</span>
             </div>
-            <div className={`flex-1 h-1 mx-4 ${currentStep >= 2 ? "bg-blue-600" : "bg-gray-200"}`}></div>
-            <div className={`flex items-center ${currentStep >= 2 ? "text-blue-600" : "text-gray-400"}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 2 ? "bg-blue-600 text-white" : "bg-gray-200"}`}>
+            <div
+              className={`flex-1 h-1 mx-4 ${currentStep >= 2 ? "bg-blue-600" : "bg-gray-200"}`}
+            ></div>
+            <div
+              className={`flex items-center ${currentStep >= 2 ? "text-blue-600" : "text-gray-400"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 2 ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              >
                 2
               </div>
               <span className="ml-2 text-sm font-medium">Administrator</span>
@@ -286,7 +321,12 @@ export default function MDAWithAdminForm({
                   <input
                     type="text"
                     value={mdaFormData.name}
-                    onChange={(e) => setMDAFormData(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setMDAFormData((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.name ? "border-red-500" : "border-gray-300"
                     }`}
@@ -303,10 +343,15 @@ export default function MDAWithAdminForm({
                   </label>
                   <select
                     value={mdaFormData.type}
-                    onChange={(e) => setMDAFormData(prev => ({ 
-                      ...prev, 
-                      type: e.target.value as "ministry" | "department" | "agency"
-                    }))}
+                    onChange={(e) =>
+                      setMDAFormData((prev) => ({
+                        ...prev,
+                        type: e.target.value as
+                          | "ministry"
+                          | "department"
+                          | "agency",
+                      }))
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="ministry">Ministry</option>
@@ -322,7 +367,12 @@ export default function MDAWithAdminForm({
                 </label>
                 <textarea
                   value={mdaFormData.description}
-                  onChange={(e) => setMDAFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) =>
+                    setMDAFormData((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
                   rows={3}
                   className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     errors.description ? "border-red-500" : "border-gray-300"
@@ -330,7 +380,9 @@ export default function MDAWithAdminForm({
                   placeholder="Brief description of the MDA's purpose and responsibilities"
                 />
                 {errors.description && (
-                  <p className="mt-1 text-sm text-red-600">{errors.description}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.description}
+                  </p>
                 )}
               </div>
 
@@ -343,14 +395,21 @@ export default function MDAWithAdminForm({
                   <input
                     type="email"
                     value={mdaFormData.contactEmail}
-                    onChange={(e) => setMDAFormData(prev => ({ ...prev, contactEmail: e.target.value }))}
+                    onChange={(e) =>
+                      setMDAFormData((prev) => ({
+                        ...prev,
+                        contactEmail: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.contactEmail ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="contact@ministry.gov.ng"
                   />
                   {errors.contactEmail && (
-                    <p className="mt-1 text-sm text-red-600">{errors.contactEmail}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.contactEmail}
+                    </p>
                   )}
                 </div>
 
@@ -361,14 +420,21 @@ export default function MDAWithAdminForm({
                   <input
                     type="tel"
                     value={mdaFormData.contactPhone}
-                    onChange={(e) => setMDAFormData(prev => ({ ...prev, contactPhone: e.target.value }))}
+                    onChange={(e) =>
+                      setMDAFormData((prev) => ({
+                        ...prev,
+                        contactPhone: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.contactPhone ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="+234 xxx xxx xxxx"
                   />
                   {errors.contactPhone && (
-                    <p className="mt-1 text-sm text-red-600">{errors.contactPhone}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.contactPhone}
+                    </p>
                   )}
                 </div>
               </div>
@@ -381,14 +447,21 @@ export default function MDAWithAdminForm({
                   <input
                     type="text"
                     value={mdaFormData.address}
-                    onChange={(e) => setMDAFormData(prev => ({ ...prev, address: e.target.value }))}
+                    onChange={(e) =>
+                      setMDAFormData((prev) => ({
+                        ...prev,
+                        address: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.address ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Official address"
                   />
                   {errors.address && (
-                    <p className="mt-1 text-sm text-red-600">{errors.address}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.address}
+                    </p>
                   )}
                 </div>
 
@@ -399,14 +472,21 @@ export default function MDAWithAdminForm({
                   <input
                     type="text"
                     value={mdaFormData.headOfMDA}
-                    onChange={(e) => setMDAFormData(prev => ({ ...prev, headOfMDA: e.target.value }))}
+                    onChange={(e) =>
+                      setMDAFormData((prev) => ({
+                        ...prev,
+                        headOfMDA: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.headOfMDA ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Name of the head/minister/director"
                   />
                   {errors.headOfMDA && (
-                    <p className="mt-1 text-sm text-red-600">{errors.headOfMDA}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.headOfMDA}
+                    </p>
                   )}
                 </div>
               </div>
@@ -420,10 +500,15 @@ export default function MDAWithAdminForm({
                   <input
                     type="text"
                     value={mdaFormData.settings.budgetYear}
-                    onChange={(e) => setMDAFormData(prev => ({
-                      ...prev,
-                      settings: { ...prev.settings, budgetYear: e.target.value }
-                    }))}
+                    onChange={(e) =>
+                      setMDAFormData((prev) => ({
+                        ...prev,
+                        settings: {
+                          ...prev.settings,
+                          budgetYear: e.target.value,
+                        },
+                      }))
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="2024"
                   />
@@ -436,17 +521,24 @@ export default function MDAWithAdminForm({
                   <input
                     type="number"
                     value={mdaFormData.settings.totalBudget}
-                    onChange={(e) => setMDAFormData(prev => ({
-                      ...prev,
-                      settings: { ...prev.settings, totalBudget: Number(e.target.value) }
-                    }))}
+                    onChange={(e) =>
+                      setMDAFormData((prev) => ({
+                        ...prev,
+                        settings: {
+                          ...prev.settings,
+                          totalBudget: Number(e.target.value),
+                        },
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.totalBudget ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="0"
                   />
                   {errors.totalBudget && (
-                    <p className="mt-1 text-sm text-red-600">{errors.totalBudget}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.totalBudget}
+                    </p>
                   )}
                 </div>
               </div>
@@ -457,34 +549,43 @@ export default function MDAWithAdminForm({
                   Allowed Procurement Categories *
                 </label>
                 <div className="space-y-2">
-                  {mdaFormData.settings.allowedCategories.map((category, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <select
-                        value={category}
-                        onChange={(e) => {
-                          const newCategories = [...mdaFormData.settings.allowedCategories];
-                          newCategories[index] = e.target.value;
-                          setMDAFormData(prev => ({
-                            ...prev,
-                            settings: { ...prev.settings, allowedCategories: newCategories }
-                          }));
-                        }}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="">Select a category</option>
-                        {procurementCategories.map(cat => (
-                          <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                      </select>
-                      <button
-                        type="button"
-                        onClick={() => removeCategory(index)}
-                        className="p-2 text-red-600 hover:text-red-800"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
+                  {mdaFormData.settings.allowedCategories.map(
+                    (category, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <select
+                          value={category}
+                          onChange={(e) => {
+                            const newCategories = [
+                              ...mdaFormData.settings.allowedCategories,
+                            ];
+                            newCategories[index] = e.target.value;
+                            setMDAFormData((prev) => ({
+                              ...prev,
+                              settings: {
+                                ...prev.settings,
+                                allowedCategories: newCategories,
+                              },
+                            }));
+                          }}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select a category</option>
+                          {procurementCategories.map((cat) => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => removeCategory(index)}
+                          className="p-2 text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ),
+                  )}
                   <button
                     type="button"
                     onClick={addCategory}
@@ -495,7 +596,9 @@ export default function MDAWithAdminForm({
                   </button>
                 </div>
                 {errors.allowedCategories && (
-                  <p className="mt-1 text-sm text-red-600">{errors.allowedCategories}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.allowedCategories}
+                  </p>
                 )}
               </div>
             </div>
@@ -506,10 +609,13 @@ export default function MDAWithAdminForm({
               <div className="bg-blue-50 p-4 rounded-lg">
                 <div className="flex items-center">
                   <Shield className="h-5 w-5 text-blue-600 mr-2" />
-                  <h3 className="text-lg font-medium text-blue-900">Administrator Assignment</h3>
+                  <h3 className="text-lg font-medium text-blue-900">
+                    Administrator Assignment
+                  </h3>
                 </div>
                 <p className="text-sm text-blue-700 mt-1">
-                  Assign an administrator who will manage users and operations for this MDA.
+                  Assign an administrator who will manage users and operations
+                  for this MDA.
                 </p>
               </div>
 
@@ -521,14 +627,21 @@ export default function MDAWithAdminForm({
                   <input
                     type="email"
                     value={adminFormData.email}
-                    onChange={(e) => setAdminFormData(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setAdminFormData((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.adminEmail ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="admin@ministry.gov.ng"
                   />
                   {errors.adminEmail && (
-                    <p className="mt-1 text-sm text-red-600">{errors.adminEmail}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.adminEmail}
+                    </p>
                   )}
                 </div>
 
@@ -539,14 +652,21 @@ export default function MDAWithAdminForm({
                   <input
                     type="text"
                     value={adminFormData.displayName}
-                    onChange={(e) => setAdminFormData(prev => ({ ...prev, displayName: e.target.value }))}
+                    onChange={(e) =>
+                      setAdminFormData((prev) => ({
+                        ...prev,
+                        displayName: e.target.value,
+                      }))
+                    }
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.displayName ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="John Doe"
                   />
                   {errors.displayName && (
-                    <p className="mt-1 text-sm text-red-600">{errors.displayName}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.displayName}
+                    </p>
                   )}
                 </div>
               </div>
@@ -557,18 +677,23 @@ export default function MDAWithAdminForm({
                 </label>
                 <select
                   value={adminFormData.role}
-                  onChange={(e) => setAdminFormData(prev => ({ 
-                    ...prev, 
-                    role: e.target.value as "mda_admin" | "mda_super_admin"
-                  }))}
+                  onChange={(e) =>
+                    setAdminFormData((prev) => ({
+                      ...prev,
+                      role: e.target.value as "mda_admin" | "mda_super_admin",
+                    }))
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="mda_admin">MDA Administrator</option>
-                  <option value="mda_super_admin">MDA Super Administrator</option>
+                  <option value="mda_super_admin">
+                    MDA Super Administrator
+                  </option>
                 </select>
                 <p className="mt-1 text-xs text-gray-500">
-                  MDA Administrator: Can create users and manage tenders. 
-                  MDA Super Administrator: Full permissions including settings management.
+                  MDA Administrator: Can create users and manage tenders. MDA
+                  Super Administrator: Full permissions including settings
+                  management.
                 </p>
               </div>
 
@@ -579,17 +704,26 @@ export default function MDAWithAdminForm({
                 <input
                   type="number"
                   value={adminFormData.permissions.maxApprovalAmount}
-                  onChange={(e) => setAdminFormData(prev => ({
-                    ...prev,
-                    permissions: { ...prev.permissions, maxApprovalAmount: Number(e.target.value) }
-                  }))}
+                  onChange={(e) =>
+                    setAdminFormData((prev) => ({
+                      ...prev,
+                      permissions: {
+                        ...prev.permissions,
+                        maxApprovalAmount: Number(e.target.value),
+                      },
+                    }))
+                  }
                   className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.maxApprovalAmount ? "border-red-500" : "border-gray-300"
+                    errors.maxApprovalAmount
+                      ? "border-red-500"
+                      : "border-gray-300"
                   }`}
                   placeholder="10000000"
                 />
                 {errors.maxApprovalAmount && (
-                  <p className="mt-1 text-sm text-red-600">{errors.maxApprovalAmount}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.maxApprovalAmount}
+                  </p>
                 )}
               </div>
 
@@ -602,65 +736,100 @@ export default function MDAWithAdminForm({
                     <input
                       type="checkbox"
                       checked={adminFormData.permissions.canCreateUsers}
-                      onChange={(e) => setAdminFormData(prev => ({
-                        ...prev,
-                        permissions: { ...prev.permissions, canCreateUsers: e.target.checked }
-                      }))}
+                      onChange={(e) =>
+                        setAdminFormData((prev) => ({
+                          ...prev,
+                          permissions: {
+                            ...prev.permissions,
+                            canCreateUsers: e.target.checked,
+                          },
+                        }))
+                      }
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Can create and manage users</span>
+                    <span className="ml-2 text-sm text-gray-700">
+                      Can create and manage users
+                    </span>
                   </label>
 
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={adminFormData.permissions.canManageTenders}
-                      onChange={(e) => setAdminFormData(prev => ({
-                        ...prev,
-                        permissions: { ...prev.permissions, canManageTenders: e.target.checked }
-                      }))}
+                      onChange={(e) =>
+                        setAdminFormData((prev) => ({
+                          ...prev,
+                          permissions: {
+                            ...prev.permissions,
+                            canManageTenders: e.target.checked,
+                          },
+                        }))
+                      }
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Can manage tenders and procurement</span>
+                    <span className="ml-2 text-sm text-gray-700">
+                      Can manage tenders and procurement
+                    </span>
                   </label>
 
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={adminFormData.permissions.canApproveContracts}
-                      onChange={(e) => setAdminFormData(prev => ({
-                        ...prev,
-                        permissions: { ...prev.permissions, canApproveContracts: e.target.checked }
-                      }))}
+                      onChange={(e) =>
+                        setAdminFormData((prev) => ({
+                          ...prev,
+                          permissions: {
+                            ...prev.permissions,
+                            canApproveContracts: e.target.checked,
+                          },
+                        }))
+                      }
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Can approve contracts</span>
+                    <span className="ml-2 text-sm text-gray-700">
+                      Can approve contracts
+                    </span>
                   </label>
 
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={adminFormData.permissions.canViewReports}
-                      onChange={(e) => setAdminFormData(prev => ({
-                        ...prev,
-                        permissions: { ...prev.permissions, canViewReports: e.target.checked }
-                      }))}
+                      onChange={(e) =>
+                        setAdminFormData((prev) => ({
+                          ...prev,
+                          permissions: {
+                            ...prev.permissions,
+                            canViewReports: e.target.checked,
+                          },
+                        }))
+                      }
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Can view reports and analytics</span>
+                    <span className="ml-2 text-sm text-gray-700">
+                      Can view reports and analytics
+                    </span>
                   </label>
 
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={adminFormData.permissions.canManageSettings}
-                      onChange={(e) => setAdminFormData(prev => ({
-                        ...prev,
-                        permissions: { ...prev.permissions, canManageSettings: e.target.checked }
-                      }))}
+                      onChange={(e) =>
+                        setAdminFormData((prev) => ({
+                          ...prev,
+                          permissions: {
+                            ...prev.permissions,
+                            canManageSettings: e.target.checked,
+                          },
+                        }))
+                      }
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Can manage MDA settings</span>
+                    <span className="ml-2 text-sm text-gray-700">
+                      Can manage MDA settings
+                    </span>
                   </label>
                 </div>
               </div>

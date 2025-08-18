@@ -41,7 +41,9 @@ interface MDA {
 export default function UserDashboard() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [currentMDA, setCurrentMDA] = useState<MDA | null>(null);
-  const [activeTab, setActiveTab] = useState<"overview" | "tenders" | "reports">("overview");
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "tenders" | "reports"
+  >("overview");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -120,11 +122,16 @@ export default function UserDashboard() {
 
   const getRoleDisplayName = (role: string) => {
     switch (role) {
-      case "procurement_officer": return "Procurement Officer";
-      case "evaluator": return "Evaluator";
-      case "accountant": return "Accountant";
-      case "viewer": return "Viewer";
-      default: return role;
+      case "procurement_officer":
+        return "Procurement Officer";
+      case "evaluator":
+        return "Evaluator";
+      case "accountant":
+        return "Accountant";
+      case "viewer":
+        return "Viewer";
+      default:
+        return role;
     }
   };
 
@@ -160,7 +167,9 @@ export default function UserDashboard() {
               <Bell className="h-5 w-5 text-gray-600" />
               <div className="flex items-center space-x-2">
                 <User className="h-5 w-5 text-gray-600" />
-                <span className="text-sm text-gray-700">{currentUser.displayName}</span>
+                <span className="text-sm text-gray-700">
+                  {currentUser.displayName}
+                </span>
               </div>
               <button
                 onClick={handleLogout}
@@ -205,7 +214,8 @@ export default function UserDashboard() {
                 Welcome, {currentUser.displayName}!
               </h1>
               <p className="text-gray-600">
-                {getRoleDisplayName(currentUser.role)} • {currentUser.department}
+                {getRoleDisplayName(currentUser.role)} •{" "}
+                {currentUser.department}
               </p>
             </div>
 
@@ -227,7 +237,9 @@ export default function UserDashboard() {
                 <div className="flex items-center">
                   <Building2 className="h-8 w-8 text-green-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Department</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Department
+                    </p>
                     <p className="text-lg font-bold text-gray-900">
                       {currentUser.department}
                     </p>
@@ -239,7 +251,9 @@ export default function UserDashboard() {
                 <div className="flex items-center">
                   <Settings className="h-8 w-8 text-purple-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-600">Access Level</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Access Level
+                    </p>
                     <p className="text-lg font-bold text-gray-900">
                       {currentUser.permissions.accessLevel || "Read"}
                     </p>
@@ -260,12 +274,16 @@ export default function UserDashboard() {
                   {getPermissionSummary().map((permission, index) => (
                     <div key={index} className="flex items-center">
                       <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
-                      <span className="text-sm text-gray-700">{permission}</span>
+                      <span className="text-sm text-gray-700">
+                        {permission}
+                      </span>
                     </div>
                   ))}
                 </div>
                 {getPermissionSummary().length === 0 && (
-                  <p className="text-sm text-gray-500">No specific permissions configured.</p>
+                  <p className="text-sm text-gray-500">
+                    No specific permissions configured.
+                  </p>
                 )}
               </div>
             </div>
@@ -282,21 +300,27 @@ export default function UserDashboard() {
                   {currentUser.permissions.canCreateTenders && (
                     <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                       <Plus className="h-5 w-5 text-blue-600 mr-3" />
-                      <span className="text-sm font-medium text-gray-700">Create New Tender</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Create New Tender
+                      </span>
                     </button>
                   )}
-                  
+
                   {currentUser.permissions.canEvaluateBids && (
                     <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                       <FileText className="h-5 w-5 text-green-600 mr-3" />
-                      <span className="text-sm font-medium text-gray-700">Evaluate Bids</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Evaluate Bids
+                      </span>
                     </button>
                   )}
-                  
+
                   {currentUser.permissions.canGenerateReports && (
                     <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                       <BarChart3 className="h-5 w-5 text-purple-600 mr-3" />
-                      <span className="text-sm font-medium text-gray-700">Generate Report</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Generate Report
+                      </span>
                     </button>
                   )}
                 </div>
@@ -313,7 +337,8 @@ export default function UserDashboard() {
             <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">
-                Tender management functionality will be implemented based on your role permissions.
+                Tender management functionality will be implemented based on
+                your role permissions.
               </p>
             </div>
           </div>
@@ -327,10 +352,9 @@ export default function UserDashboard() {
             <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
               <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">
-                {currentUser.permissions.canGenerateReports 
+                {currentUser.permissions.canGenerateReports
                   ? "Report generation tools will be available here."
-                  : "You don't have permission to generate reports."
-                }
+                  : "You don't have permission to generate reports."}
               </p>
             </div>
           </div>
