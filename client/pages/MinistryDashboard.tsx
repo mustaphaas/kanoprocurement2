@@ -2100,7 +2100,256 @@ export default function MinistryDashboard() {
       },
     ];
 
-    setCompanies(mockCompanies);
+    // Load companies with real-time synchronization to Admin/SuperUser dashboards
+    const loadSynchronizedCompanies = () => {
+      // Load registered companies from localStorage (where CompanyRegistration saves them)
+      const registeredCompanies = JSON.parse(
+        localStorage.getItem("registeredCompanies") || "[]",
+      );
+
+      // Convert registered companies to ministry dashboard format
+      const formattedRegisteredCompanies = registeredCompanies.map(
+        (reg: any, index: number) => ({
+          id: reg.id || `reg-${index}`,
+          companyName: reg.companyName || "Unknown Company",
+          contactPerson: reg.contactPerson || "Unknown Contact",
+          email: reg.email || "",
+          phone: reg.phone || "",
+          registrationDate:
+            reg.registrationDate || new Date().toISOString().split("T")[0],
+          status:
+            (persistentStorage.getItem(
+              `userStatus_${reg.email?.toLowerCase()}`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Pending",
+          businessType: reg.businessType || "Limited Liability Company",
+          address: reg.address || "",
+          lastActivity: reg.lastActivity || new Date().toISOString().split("T")[0],
+        }),
+      );
+
+      // Test companies that sync with AdminDashboard and SuperUserDashboard
+      const testCompanies = [
+        {
+          id: "test-1",
+          companyName: "Northern Construction Ltd",
+          contactPerson: "Ahmad Mahmoud",
+          email: "ahmad@northernconstruction.com",
+          phone: "+234 803 123 4567",
+          registrationDate: "2024-01-15",
+          status:
+            (persistentStorage.getItem(
+              `userStatus_ahmad@northernconstruction.com`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Pending",
+          businessType: "Construction & Infrastructure",
+          address: "123 Ahmadu Bello Way, Kano",
+          lastActivity: "2024-02-01",
+        },
+        {
+          id: "test-2",
+          companyName: "Premier Construction Company",
+          contactPerson: "Muhammad Ali",
+          email: "approved@company.com",
+          phone: "+234 805 987 6543",
+          registrationDate: "2024-01-13",
+          status:
+            (persistentStorage.getItem(`userStatus_approved@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Approved",
+          businessType: "Limited Liability Company",
+          address: "78 Independence Road, Kano",
+          lastActivity: "2024-02-02",
+        },
+        {
+          id: "test-3",
+          companyName: "Omega Engineering Services",
+          contactPerson: "Sani Abdullahi",
+          email: "suspended@company.com",
+          phone: "+234 809 111 2222",
+          registrationDate: "2024-01-10",
+          status:
+            (persistentStorage.getItem(`userStatus_suspended@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Suspended",
+          businessType: "Limited Liability Company",
+          address: "12 Engineering Close, Kano",
+          lastActivity: "2024-01-18",
+        },
+        {
+          id: "test-4",
+          companyName: "Restricted Corp Ltd",
+          contactPerson: "Ahmed Musa",
+          email: "blacklisted@company.com",
+          phone: "+234 806 333 4444",
+          registrationDate: "2024-01-05",
+          status:
+            (persistentStorage.getItem(`userStatus_blacklisted@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Blacklisted",
+          businessType: "Limited Liability Company",
+          address: "56 Industrial Layout, Kano",
+          lastActivity: "2024-01-17",
+        },
+        {
+          id: "test-5",
+          companyName: "New Ventures Construction Ltd",
+          contactPerson: "Amina Suleiman",
+          email: "pending@company.com",
+          phone: "+234 807 444 5555",
+          registrationDate: "2024-01-20",
+          status:
+            (persistentStorage.getItem(`userStatus_pending@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Pending",
+          businessType: "Limited Liability Company",
+          address: "90 New GRA, Kano",
+          lastActivity: "2024-01-29",
+        },
+      ];
+
+      // Combine registered companies with test companies (avoid duplicates by email)
+      const allCompanies = [...formattedRegisteredCompanies];
+      testCompanies.forEach((testCompany) => {
+        const existsInRegistered = formattedRegisteredCompanies.find(
+          (reg) => reg.email.toLowerCase() === testCompany.email.toLowerCase(),
+        );
+        if (!existsInRegistered) {
+          allCompanies.push(testCompany);
+        }
+      });
+
+      console.log(
+        "🔄 Ministry Dashboard: Loaded",
+        allCompanies.length,
+        "synchronized companies",
+      );
+      setCompanies(allCompanies);
+    };
+
+    // Initialize synchronized companies
+    loadSynchronizedCompanies();
+
+    // Set up real-time synchronization with Admin/SuperUser dashboards
+    const syncInterval = setInterval(() => {
+      console.log("🔄 Ministry Dashboard: Checking for company status changes...");
+      setCompanies((prevCompanies) => {
+        let hasChanges = false;
+        const updatedCompanies = prevCompanies.map((company) => {
+          const currentStatus = persistentStorage.getItem(
+            `userStatus_${company.email.toLowerCase()}`,
+          );
+          if (currentStatus && currentStatus !== company.status) {
+            console.log(
+              `🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`,
+            );
+            hasChanges = true;
+            return { ...company, status: currentStatus };
+          }
+          return company;
+        });
+
+        if (hasChanges) {
+          console.log(
+            "✅ Ministry Dashboard: Updated company statuses via polling",
+          );
+        }
+
+        return hasChanges ? updatedCompanies : prevCompanies;
+      });
+    }, 3000); // Check every 3 seconds for real-time updates
+
+    // Listen for localStorage changes (cross-tab sync)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
+        console.log(
+          "🔄 localStorage change detected in Ministry Dashboard:",
+          event.key,
+          event.newValue,
+        );
+
+        // Extract email from storage key (remove 'userStatus_' prefix)
+        const email = event.key.replace("userStatus_", "");
+        console.log("🔍 Looking for company with email:", email);
+
+        // Update the specific company's status immediately
+        setCompanies((prevCompanies) => {
+          const updatedCompanies = prevCompanies.map((company) => {
+            if (company.email.toLowerCase() === email) {
+              console.log(
+                "✅ Updating company status:",
+                company.companyName,
+                "from",
+                company.status,
+                "to",
+                event.newValue,
+              );
+              return { ...company, status: event.newValue };
+            }
+            return company;
+          });
+
+          return updatedCompanies;
+        });
+      }
+    };
+
+    // Listen for localStorage changes from other tabs/windows
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also listen for custom events within the same tab
+    const handleCustomStorageChange = (event: any) => {
+      const { key, newValue } = event.detail;
+      if (key && key.startsWith("userStatus_")) {
+        console.log(
+          "🔄 Custom storage change detected in Ministry Dashboard:",
+          key,
+          newValue,
+        );
+
+        const email = key.replace("userStatus_", "");
+        setCompanies((prevCompanies) => {
+          return prevCompanies.map((company) => {
+            if (company.email.toLowerCase() === email) {
+              console.log(
+                "✅ Updating company status via custom event:",
+                company.companyName,
+                "to",
+                newValue,
+              );
+              return { ...company, status: newValue };
+            }
+            return company;
+          });
+        });
+      }
+    };
+
+    window.addEventListener(
+      "persistentStorageChange",
+      handleCustomStorageChange,
+    );
+
+    // Cleanup function to remove event listeners and intervals
+    const cleanupSync = () => {
+      clearInterval(syncInterval);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "persistentStorageChange",
+        handleCustomStorageChange,
+      );
+    };
+
+    // Store cleanup function for later use
+    (window as any).ministryDashboardCleanup = cleanupSync;
 
     // Load tenders from localStorage if available, otherwise use mock data
     const storedTenders = localStorage.getItem("ministryTenders");
