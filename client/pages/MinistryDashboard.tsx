@@ -2624,7 +2624,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "Kano Construction Ltd",
-          bidAmount: "₦14,800,000,000",
+          bidAmount: "���14,800,000,000",
           technicalScore: 90,
           financialScore: 87,
           totalScore: 88.5,
@@ -3515,7 +3515,29 @@ export default function MinistryDashboard() {
         `Are you sure you want to remove ${user.role} from ${user.department}?`,
       )
     ) {
-      setMDAUsers((prev) => prev.filter((u) => u.id !== user.id));
+      const updatedUsers = mdaUsers.filter((u) => u.id !== user.id);
+      setMDAUsers(updatedUsers);
+      saveUsersToStorage(updatedUsers);
+
+      const ministryInfo = getMinistryInfo();
+
+      // Log the user deletion
+      logUserAction(
+        "MinistryAdmin",
+        "ministry_admin",
+        "MDA_USER_DELETED",
+        user.role,
+        `Deleted user ${user.role} from department ${user.department}`,
+        "HIGH",
+        user.id,
+        {
+          mdaId: user.mdaId,
+          ministryName: ministryInfo.name,
+          deletedUserRole: user.role,
+          department: user.department,
+        },
+      );
+
       alert("User removed successfully!");
     }
   };
