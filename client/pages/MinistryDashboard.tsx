@@ -5042,10 +5042,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </span>
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900">
-                      <Eye className="h-4 w-4 inline mr-1" />
-                      View Details
-                    </button>
+                    <div className="flex items-center space-x-2">
+                      <button className="text-blue-600 hover:text-blue-900">
+                        <Eye className="h-4 w-4 inline mr-1" />
+                        View Details
+                      </button>
+                      <span className="text-xs text-gray-500">(Read Only)</span>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -9573,7 +9576,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           htmlFor="autoExecution"
                           className="text-sm font-medium text-gray-900 cursor-pointer"
                         >
-                          🤖 Smart Contract Auto-Execution
+                          ��� Smart Contract Auto-Execution
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
                           Automated milestone verification and payment triggers
