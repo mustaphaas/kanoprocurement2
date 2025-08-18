@@ -2124,7 +2124,8 @@ export default function MinistryDashboard() {
             "Pending",
           businessType: reg.businessType || "Limited Liability Company",
           address: reg.address || "",
-          lastActivity: reg.lastActivity || new Date().toISOString().split("T")[0],
+          lastActivity:
+            reg.lastActivity || new Date().toISOString().split("T")[0],
         }),
       );
 
@@ -2240,7 +2241,9 @@ export default function MinistryDashboard() {
 
     // Set up real-time synchronization with Admin/SuperUser dashboards
     const syncInterval = setInterval(() => {
-      console.log("🔄 Ministry Dashboard: Checking for company status changes...");
+      console.log(
+        "🔄 Ministry Dashboard: Checking for company status changes...",
+      );
       setCompanies((prevCompanies) => {
         let hasChanges = false;
         const updatedCompanies = prevCompanies.map((company) => {
