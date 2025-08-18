@@ -225,6 +225,9 @@ export default function MinistryUserForm({
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">{errors.email}</p>
             )}
+            <p className="mt-1 text-xs text-gray-500">
+              This email will be used for login credentials. User can login at /user/login
+            </p>
           </div>
 
           <div>
