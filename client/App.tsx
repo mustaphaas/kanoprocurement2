@@ -17,6 +17,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
 import UserLogin from "./pages/UserLogin";
+import UserDashboard from "./pages/UserDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
 
 const queryClient = new QueryClient();
