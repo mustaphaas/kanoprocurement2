@@ -2229,7 +2229,7 @@ export default function MinistryDashboard() {
       });
 
       console.log(
-        "🔄 Ministry Dashboard: Loaded",
+        "���� Ministry Dashboard: Loaded",
         allCompanies.length,
         "synchronized companies",
       );
@@ -9756,7 +9756,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       ⚡ Automation Benefits
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
-                      <li>����� 90% faster processing</li>
+                      <li>������� 90% faster processing</li>
                       <li>��� Reduced human errors</li>
                       <li>• Real-time notifications</li>
                       <li>��� Automatic compliance checks</li>
@@ -12073,7 +12073,7 @@ Blockchain Timestamp: ${Date.now()}
       {showEditUserModal && selectedUser && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-            <MDAUserForm
+            <MinistryUserForm
               mode="edit"
               mdaId={selectedUser.mdaId}
               initialData={{
@@ -12082,7 +12082,6 @@ Blockchain Timestamp: ${Date.now()}
                 role: selectedUser.role,
                 department: selectedUser.department,
                 permissions: selectedUser.permissions,
-                mdaId: selectedUser.mdaId,
               }}
               onSubmit={handleUserSubmit}
               onCancel={() => {
