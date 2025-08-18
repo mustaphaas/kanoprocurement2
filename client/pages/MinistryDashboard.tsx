@@ -12061,7 +12061,7 @@ Blockchain Timestamp: ${Date.now()}
           <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
             <MDAUserForm
               mode="create"
-              mdaId="mda-001"
+              mdaId={getCurrentMDAId()}
               onSubmit={handleUserSubmit}
               onCancel={() => setShowCreateUserModal(false)}
             />
