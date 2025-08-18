@@ -3520,22 +3520,85 @@ export default function MinistryDashboard() {
     }
   };
 
+  // Get current ministry's MDA ID
+  const getCurrentMDAId = (): string => {
+    const { ministryId } = getMinistryMockData();
+    return ministryId; // This is the MDA ID for this ministry
+  };
+
+  // Load users for the current MDA
+  const loadMDAUsers = () => {
+    const mdaId = getCurrentMDAId();
+    const allUsers = JSON.parse(localStorage.getItem("mda_users") || "[]");
+    const mdaUsers = allUsers.filter((user: MDAUser) => user.mdaId === mdaId);
+    setMDAUsers(mdaUsers);
+    console.log(`📋 Loaded ${mdaUsers.length} users for MDA: ${mdaId}`);
+  };
+
+  // Save users to localStorage
+  const saveUsersToStorage = (users: MDAUser[]) => {
+    const allUsers = JSON.parse(localStorage.getItem("mda_users") || "[]");
+    const mdaId = getCurrentMDAId();
+
+    // Remove users for this MDA and add the updated ones
+    const otherMDAUsers = allUsers.filter((user: MDAUser) => user.mdaId !== mdaId);
+    const updatedAllUsers = [...otherMDAUsers, ...users];
+
+    localStorage.setItem("mda_users", JSON.stringify(updatedAllUsers));
+  };
+
   const handleUserSubmit = async (data: CreateMDAUserRequest) => {
     try {
+      const mdaId = getCurrentMDAId();
+      const ministryInfo = getMinistryInfo();
+      const currentAdmin = localStorage.getItem("ministryUser");
+      let assignedBy = "admin-001";
+
+      if (currentAdmin) {
+        try {
+          const adminData = JSON.parse(currentAdmin);
+          assignedBy = adminData.email || adminData.id || "admin-001";
+        } catch (e) {
+          console.warn("Could not parse ministry user data");
+        }
+      }
+
       if (userFormMode === "create") {
         const newUser: MDAUser = {
           id: `user-${Date.now()}`,
-          mdaId: "mda-001", // Current ministry MDA ID
+          mdaId: mdaId,
           userId: `usr-${Date.now()}`,
           role: data.role,
           department: data.department,
           permissions: data.permissions,
-          assignedBy: "admin-001",
+          assignedBy: assignedBy,
           assignedAt: new Date(),
           isActive: true,
         };
-        setMDAUsers((prev) => [...prev, newUser]);
-        alert("User created successfully!");
+
+        const updatedUsers = [...mdaUsers, newUser];
+        setMDAUsers(updatedUsers);
+        saveUsersToStorage(updatedUsers);
+
+        // Log the user creation
+        logUserAction(
+          "MinistryAdmin",
+          "ministry_admin",
+          "MDA_USER_CREATED",
+          newUser.role,
+          `Created user ${data.displayName} (${data.email}) with role ${data.role} in department ${data.department}`,
+          "MEDIUM",
+          newUser.id,
+          {
+            mdaId: mdaId,
+            ministryName: ministryInfo.name,
+            userRole: data.role,
+            department: data.department,
+            permissions: data.permissions,
+          },
+        );
+
+        alert(`User "${data.displayName}" created successfully for ${ministryInfo.name}!`);
       } else if (selectedUser) {
         const updatedUser: MDAUser = {
           ...selectedUser,
@@ -3543,10 +3606,30 @@ export default function MinistryDashboard() {
           department: data.department,
           permissions: data.permissions,
         };
-        setMDAUsers((prev) =>
-          prev.map((u) => (u.id === selectedUser.id ? updatedUser : u)),
+
+        const updatedUsers = mdaUsers.map((u) => (u.id === selectedUser.id ? updatedUser : u));
+        setMDAUsers(updatedUsers);
+        saveUsersToStorage(updatedUsers);
+
+        // Log the user update
+        logUserAction(
+          "MinistryAdmin",
+          "ministry_admin",
+          "MDA_USER_UPDATED",
+          updatedUser.role,
+          `Updated user ${data.displayName} (${data.email}) role to ${data.role} in department ${data.department}`,
+          "MEDIUM",
+          updatedUser.id,
+          {
+            mdaId: mdaId,
+            ministryName: ministryInfo.name,
+            previousRole: selectedUser.role,
+            newRole: data.role,
+            permissions: data.permissions,
+          },
         );
-        alert("User updated successfully!");
+
+        alert(`User "${data.displayName}" updated successfully!`);
       }
       setShowCreateUserModal(false);
       setShowEditUserModal(false);
