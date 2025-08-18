@@ -2535,6 +2535,15 @@ export default function MinistryDashboard() {
         companiesLoaded: companies.length,
       },
     );
+
+    // Cleanup function for the useEffect
+    return () => {
+      // Clean up synchronization if it exists
+      if ((window as any).ministryDashboardCleanup) {
+        (window as any).ministryDashboardCleanup();
+        delete (window as any).ministryDashboardCleanup;
+      }
+    };
   }, []);
 
   // Function to load bids from localStorage for selected tender
