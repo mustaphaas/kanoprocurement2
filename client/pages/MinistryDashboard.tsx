@@ -1106,7 +1106,7 @@ export default function MinistryDashboard() {
               status: "Awarded" as any,
               publishDate: "2024-02-05",
               awardedCompany: "Professional Development Institute",
-              awardAmount: "��880,000,000",
+              awardAmount: "₦880,000,000",
               awardDate: "2024-03-15",
               closeDate: "2024-03-15",
               bidsReceived: 4,
@@ -3058,7 +3058,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "�������1,450,000,000",
+          bidAmount: "�����1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,
@@ -5031,7 +5031,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           ? "bg-green-100 text-green-800"
                           : company.status === "Pending"
                             ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
+                            : company.status === "Suspended"
+                              ? "bg-orange-100 text-orange-800"
+                              : company.status === "Blacklisted"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-gray-100 text-gray-800"
                       }`}
                     >
                       {company.status}
