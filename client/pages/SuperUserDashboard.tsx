@@ -2245,6 +2245,76 @@ The award letter has been:
     }
   };
 
+  // Handler for combined MDA + Admin creation
+  const handleMDAWithAdminSubmit = async (data: { mda: CreateMDARequest; admin: CreateMDAAdminRequest }) => {
+    try {
+      console.log("🚀 Creating MDA with Administrator...", data);
+
+      // Step 1: Create the MDA first
+      const newMDA = await dynamicMDACreationService.createFullyFunctionalMDA(
+        data.mda,
+        "SuperUser",
+      );
+
+      // Step 2: Create the administrator for this MDA
+      const adminData = {
+        ...data.admin,
+        mdaId: newMDA.id, // Use the newly created MDA ID
+      };
+
+      const newAdmin = await mdaLocalStorageService.createMDAAdmin(adminData, "SuperUser");
+
+      // Step 3: Update the state
+      setMDAs((prev) => [...prev, newMDA]);
+      if (newAdmin) {
+        setMDAAdmins((prev) => [...prev, newAdmin]);
+      }
+
+      // Step 4: Create login credentials for the admin
+      const credentials = JSON.parse(localStorage.getItem("mdaCredentials") || "[]");
+      const newCredential = {
+        id: newMDA.id,
+        name: newMDA.name,
+        type: newMDA.type,
+        adminEmail: adminData.email,
+        adminName: adminData.displayName,
+        adminRole: adminData.role,
+        loginUrl: "/ministry/login",
+        createdAt: new Date().toISOString(),
+        createdBy: "SuperUser",
+      };
+      credentials.push(newCredential);
+      localStorage.setItem("mdaCredentials", JSON.stringify(credentials));
+
+      // Log the creation
+      logUserAction(
+        "SuperUser",
+        "super_admin",
+        "MDA_WITH_ADMIN_CREATED",
+        newMDA.name,
+        `Created ${newMDA.type} "${newMDA.name}" with administrator ${adminData.displayName} (${adminData.email})`,
+        "MEDIUM",
+        newMDA.id,
+        {
+          mdaType: newMDA.type,
+          adminEmail: adminData.email,
+          adminRole: adminData.role,
+          permissions: adminData.permissions,
+        },
+      );
+
+      alert(
+        `${newMDA.type.charAt(0).toUpperCase() + newMDA.type.slice(1)} "${newMDA.name}" created successfully!\n\nAdministrator "${adminData.displayName}" has been assigned.\nThey can now log in using: ${adminData.email}`,
+      );
+
+      setShowCreateMDAModal(false);
+
+    } catch (error) {
+      console.error("❌ Error creating MDA with administrator:", error);
+      alert("Error creating MDA with administrator. Please try again.");
+    }
+  };
+
   const handleMDASubmit = async (data: CreateMDARequest) => {
     try {
       if (mdaFormMode === "create") {
