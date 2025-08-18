@@ -16,6 +16,8 @@ import CompanyDashboard from "./pages/CompanyDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
+import UserLogin from "./pages/UserLogin";
+import UserDashboard from "./pages/UserDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
 
 const queryClient = new QueryClient();
@@ -45,6 +47,8 @@ const App = () => (
               path="/ministry/login"
               element={<Navigate to="/login" replace />}
             />
+            <Route path="/user/login" element={<UserLogin />} />
+            <Route path="/user/dashboard" element={<UserDashboard />} />
             <Route
               path="/company/dashboard"
               element={

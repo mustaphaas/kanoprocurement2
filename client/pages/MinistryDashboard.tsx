@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
-import MDAUserForm from "@/components/MDAUserForm";
+import MinistryUserForm from "@/components/MinistryUserForm";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
+import { persistentStorage } from "@/lib/persistentStorage";
 import {
   Building2,
   Users,
@@ -1245,7 +1246,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "���255,000,000",
+            amount: "�����255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -2099,7 +2100,262 @@ export default function MinistryDashboard() {
       },
     ];
 
-    setCompanies(mockCompanies);
+    // Load companies with real-time synchronization to Admin/SuperUser dashboards
+    const loadSynchronizedCompanies = () => {
+      // Load registered companies from localStorage (where CompanyRegistration saves them)
+      const registeredCompanies = JSON.parse(
+        localStorage.getItem("registeredCompanies") || "[]",
+      );
+
+      // Convert registered companies to ministry dashboard format
+      const formattedRegisteredCompanies = registeredCompanies.map(
+        (reg: any, index: number) => ({
+          id: reg.id || `reg-${index}`,
+          companyName: reg.companyName || "Unknown Company",
+          contactPerson: reg.contactPerson || "Unknown Contact",
+          email: reg.email || "",
+          phone: reg.phone || "",
+          registrationDate:
+            reg.registrationDate || new Date().toISOString().split("T")[0],
+          status:
+            (persistentStorage.getItem(
+              `userStatus_${reg.email?.toLowerCase()}`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Pending",
+          businessType: reg.businessType || "Limited Liability Company",
+          address: reg.address || "",
+          lastActivity:
+            reg.lastActivity || new Date().toISOString().split("T")[0],
+        }),
+      );
+
+      // Test companies that sync with AdminDashboard and SuperUserDashboard
+      const testCompanies = [
+        {
+          id: "test-1",
+          companyName: "Northern Construction Ltd",
+          contactPerson: "Ahmad Mahmoud",
+          email: "ahmad@northernconstruction.com",
+          phone: "+234 803 123 4567",
+          registrationDate: "2024-01-15",
+          status:
+            (persistentStorage.getItem(
+              `userStatus_ahmad@northernconstruction.com`,
+            ) as "Pending" | "Approved" | "Suspended" | "Blacklisted") ||
+            "Pending",
+          businessType: "Construction & Infrastructure",
+          address: "123 Ahmadu Bello Way, Kano",
+          lastActivity: "2024-02-01",
+        },
+        {
+          id: "test-2",
+          companyName: "Premier Construction Company",
+          contactPerson: "Muhammad Ali",
+          email: "approved@company.com",
+          phone: "+234 805 987 6543",
+          registrationDate: "2024-01-13",
+          status:
+            (persistentStorage.getItem(`userStatus_approved@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Approved",
+          businessType: "Limited Liability Company",
+          address: "78 Independence Road, Kano",
+          lastActivity: "2024-02-02",
+        },
+        {
+          id: "test-3",
+          companyName: "Omega Engineering Services",
+          contactPerson: "Sani Abdullahi",
+          email: "suspended@company.com",
+          phone: "+234 809 111 2222",
+          registrationDate: "2024-01-10",
+          status:
+            (persistentStorage.getItem(`userStatus_suspended@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Suspended",
+          businessType: "Limited Liability Company",
+          address: "12 Engineering Close, Kano",
+          lastActivity: "2024-01-18",
+        },
+        {
+          id: "test-4",
+          companyName: "Restricted Corp Ltd",
+          contactPerson: "Ahmed Musa",
+          email: "blacklisted@company.com",
+          phone: "+234 806 333 4444",
+          registrationDate: "2024-01-05",
+          status:
+            (persistentStorage.getItem(`userStatus_blacklisted@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Blacklisted",
+          businessType: "Limited Liability Company",
+          address: "56 Industrial Layout, Kano",
+          lastActivity: "2024-01-17",
+        },
+        {
+          id: "test-5",
+          companyName: "New Ventures Construction Ltd",
+          contactPerson: "Amina Suleiman",
+          email: "pending@company.com",
+          phone: "+234 807 444 5555",
+          registrationDate: "2024-01-20",
+          status:
+            (persistentStorage.getItem(`userStatus_pending@company.com`) as
+              | "Pending"
+              | "Approved"
+              | "Suspended"
+              | "Blacklisted") || "Pending",
+          businessType: "Limited Liability Company",
+          address: "90 New GRA, Kano",
+          lastActivity: "2024-01-29",
+        },
+      ];
+
+      // Combine registered companies with test companies (avoid duplicates by email)
+      const allCompanies = [...formattedRegisteredCompanies];
+      testCompanies.forEach((testCompany) => {
+        const existsInRegistered = formattedRegisteredCompanies.find(
+          (reg) => reg.email.toLowerCase() === testCompany.email.toLowerCase(),
+        );
+        if (!existsInRegistered) {
+          allCompanies.push(testCompany);
+        }
+      });
+
+      console.log(
+        "🔄 Ministry Dashboard: Loaded",
+        allCompanies.length,
+        "synchronized companies",
+      );
+      setCompanies(allCompanies);
+    };
+
+    // Initialize synchronized companies
+    loadSynchronizedCompanies();
+
+    // Load users for this MDA
+    loadMDAUsers();
+
+    // Set up real-time synchronization with Admin/SuperUser dashboards
+    const syncInterval = setInterval(() => {
+      console.log(
+        "🔄 Ministry Dashboard: Checking for company status changes...",
+      );
+      setCompanies((prevCompanies) => {
+        let hasChanges = false;
+        const updatedCompanies = prevCompanies.map((company) => {
+          const currentStatus = persistentStorage.getItem(
+            `userStatus_${company.email.toLowerCase()}`,
+          );
+          if (currentStatus && currentStatus !== company.status) {
+            console.log(
+              `🔄 Status change detected for ${company.companyName}: ${company.status} -> ${currentStatus}`,
+            );
+            hasChanges = true;
+            return { ...company, status: currentStatus };
+          }
+          return company;
+        });
+
+        if (hasChanges) {
+          console.log(
+            "✅ Ministry Dashboard: Updated company statuses via polling",
+          );
+        }
+
+        return hasChanges ? updatedCompanies : prevCompanies;
+      });
+    }, 3000); // Check every 3 seconds for real-time updates
+
+    // Listen for localStorage changes (cross-tab sync)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key && event.key.startsWith("userStatus_") && event.newValue) {
+        console.log(
+          "🔄 localStorage change detected in Ministry Dashboard:",
+          event.key,
+          event.newValue,
+        );
+
+        // Extract email from storage key (remove 'userStatus_' prefix)
+        const email = event.key.replace("userStatus_", "");
+        console.log("🔍 Looking for company with email:", email);
+
+        // Update the specific company's status immediately
+        setCompanies((prevCompanies) => {
+          const updatedCompanies = prevCompanies.map((company) => {
+            if (company.email.toLowerCase() === email) {
+              console.log(
+                "✅ Updating company status:",
+                company.companyName,
+                "from",
+                company.status,
+                "to",
+                event.newValue,
+              );
+              return { ...company, status: event.newValue };
+            }
+            return company;
+          });
+
+          return updatedCompanies;
+        });
+      }
+    };
+
+    // Listen for localStorage changes from other tabs/windows
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also listen for custom events within the same tab
+    const handleCustomStorageChange = (event: any) => {
+      const { key, newValue } = event.detail;
+      if (key && key.startsWith("userStatus_")) {
+        console.log(
+          "🔄 Custom storage change detected in Ministry Dashboard:",
+          key,
+          newValue,
+        );
+
+        const email = key.replace("userStatus_", "");
+        setCompanies((prevCompanies) => {
+          return prevCompanies.map((company) => {
+            if (company.email.toLowerCase() === email) {
+              console.log(
+                "✅ Updating company status via custom event:",
+                company.companyName,
+                "to",
+                newValue,
+              );
+              return { ...company, status: newValue };
+            }
+            return company;
+          });
+        });
+      }
+    };
+
+    window.addEventListener(
+      "persistentStorageChange",
+      handleCustomStorageChange,
+    );
+
+    // Cleanup function to remove event listeners and intervals
+    const cleanupSync = () => {
+      clearInterval(syncInterval);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "persistentStorageChange",
+        handleCustomStorageChange,
+      );
+    };
+
+    // Store cleanup function for later use
+    (window as any).ministryDashboardCleanup = cleanupSync;
 
     // Load tenders from localStorage if available, otherwise use mock data
     const storedTenders = localStorage.getItem("ministryTenders");
@@ -2285,6 +2541,15 @@ export default function MinistryDashboard() {
         companiesLoaded: companies.length,
       },
     );
+
+    // Cleanup function for the useEffect
+    return () => {
+      // Clean up synchronization if it exists
+      if ((window as any).ministryDashboardCleanup) {
+        (window as any).ministryDashboardCleanup();
+        delete (window as any).ministryDashboardCleanup;
+      }
+    };
   }, []);
 
   // Function to load bids from localStorage for selected tender
@@ -3253,27 +3518,118 @@ export default function MinistryDashboard() {
         `Are you sure you want to remove ${user.role} from ${user.department}?`,
       )
     ) {
-      setMDAUsers((prev) => prev.filter((u) => u.id !== user.id));
+      const updatedUsers = mdaUsers.filter((u) => u.id !== user.id);
+      setMDAUsers(updatedUsers);
+      saveUsersToStorage(updatedUsers);
+
+      const ministryInfo = getMinistryInfo();
+
+      // Log the user deletion
+      logUserAction(
+        "MinistryAdmin",
+        "ministry_admin",
+        "MDA_USER_DELETED",
+        user.role,
+        `Deleted user ${user.role} from department ${user.department}`,
+        "HIGH",
+        user.id,
+        {
+          mdaId: user.mdaId,
+          ministryName: ministryInfo.name,
+          deletedUserRole: user.role,
+          department: user.department,
+        },
+      );
+
       alert("User removed successfully!");
     }
   };
 
+  // Get current ministry's MDA ID
+  const getCurrentMDAId = (): string => {
+    const { ministryId } = getMinistryMockData();
+    return ministryId; // This is the MDA ID for this ministry
+  };
+
+  // Load users for the current MDA
+  const loadMDAUsers = () => {
+    const mdaId = getCurrentMDAId();
+    const allUsers = JSON.parse(localStorage.getItem("mda_users") || "[]");
+    const mdaUsers = allUsers.filter((user: MDAUser) => user.mdaId === mdaId);
+    setMDAUsers(mdaUsers);
+    console.log(`📋 Loaded ${mdaUsers.length} users for MDA: ${mdaId}`);
+  };
+
+  // Save users to localStorage
+  const saveUsersToStorage = (users: MDAUser[]) => {
+    const allUsers = JSON.parse(localStorage.getItem("mda_users") || "[]");
+    const mdaId = getCurrentMDAId();
+
+    // Remove users for this MDA and add the updated ones
+    const otherMDAUsers = allUsers.filter(
+      (user: MDAUser) => user.mdaId !== mdaId,
+    );
+    const updatedAllUsers = [...otherMDAUsers, ...users];
+
+    localStorage.setItem("mda_users", JSON.stringify(updatedAllUsers));
+  };
+
   const handleUserSubmit = async (data: CreateMDAUserRequest) => {
     try {
+      const mdaId = getCurrentMDAId();
+      const ministryInfo = getMinistryInfo();
+      const currentAdmin = localStorage.getItem("ministryUser");
+      let assignedBy = "admin-001";
+
+      if (currentAdmin) {
+        try {
+          const adminData = JSON.parse(currentAdmin);
+          assignedBy = adminData.email || adminData.id || "admin-001";
+        } catch (e) {
+          console.warn("Could not parse ministry user data");
+        }
+      }
+
       if (userFormMode === "create") {
         const newUser: MDAUser = {
           id: `user-${Date.now()}`,
-          mdaId: "mda-001", // Current ministry MDA ID
+          mdaId: mdaId,
           userId: `usr-${Date.now()}`,
+          email: data.email, // Store email for login credentials
+          displayName: data.displayName, // Store display name
           role: data.role,
           department: data.department,
           permissions: data.permissions,
-          assignedBy: "admin-001",
+          assignedBy: assignedBy,
           assignedAt: new Date(),
           isActive: true,
         };
-        setMDAUsers((prev) => [...prev, newUser]);
-        alert("User created successfully!");
+
+        const updatedUsers = [...mdaUsers, newUser];
+        setMDAUsers(updatedUsers);
+        saveUsersToStorage(updatedUsers);
+
+        // Log the user creation
+        logUserAction(
+          "MinistryAdmin",
+          "ministry_admin",
+          "MDA_USER_CREATED",
+          newUser.role,
+          `Created user ${data.displayName} (${data.email}) with role ${data.role} in department ${data.department}`,
+          "MEDIUM",
+          newUser.id,
+          {
+            mdaId: mdaId,
+            ministryName: ministryInfo.name,
+            userRole: data.role,
+            department: data.department,
+            permissions: data.permissions,
+          },
+        );
+
+        alert(
+          `User "${data.displayName}" created successfully for ${ministryInfo.name}!`,
+        );
       } else if (selectedUser) {
         const updatedUser: MDAUser = {
           ...selectedUser,
@@ -3281,10 +3637,32 @@ export default function MinistryDashboard() {
           department: data.department,
           permissions: data.permissions,
         };
-        setMDAUsers((prev) =>
-          prev.map((u) => (u.id === selectedUser.id ? updatedUser : u)),
+
+        const updatedUsers = mdaUsers.map((u) =>
+          u.id === selectedUser.id ? updatedUser : u,
         );
-        alert("User updated successfully!");
+        setMDAUsers(updatedUsers);
+        saveUsersToStorage(updatedUsers);
+
+        // Log the user update
+        logUserAction(
+          "MinistryAdmin",
+          "ministry_admin",
+          "MDA_USER_UPDATED",
+          updatedUser.role,
+          `Updated user ${data.displayName} (${data.email}) role to ${data.role} in department ${data.department}`,
+          "MEDIUM",
+          updatedUser.id,
+          {
+            mdaId: mdaId,
+            ministryName: ministryInfo.name,
+            previousRole: selectedUser.role,
+            newRole: data.role,
+            permissions: data.permissions,
+          },
+        );
+
+        alert(`User "${data.displayName}" updated successfully!`);
       }
       setShowCreateUserModal(false);
       setShowEditUserModal(false);
@@ -3296,9 +3674,33 @@ export default function MinistryDashboard() {
   };
 
   const toggleUserStatus = (user: MDAUser) => {
-    setMDAUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, isActive: !u.isActive } : u)),
+    const updatedUsers = mdaUsers.map((u) =>
+      u.id === user.id ? { ...u, isActive: !u.isActive } : u,
     );
+    setMDAUsers(updatedUsers);
+    saveUsersToStorage(updatedUsers);
+
+    const ministryInfo = getMinistryInfo();
+    const newStatus = !user.isActive;
+
+    // Log the status change
+    logUserAction(
+      "MinistryAdmin",
+      "ministry_admin",
+      newStatus ? "MDA_USER_ACTIVATED" : "MDA_USER_DEACTIVATED",
+      user.role,
+      `${newStatus ? "Activated" : "Deactivated"} user ${user.role} in department ${user.department}`,
+      "LOW",
+      user.id,
+      {
+        mdaId: user.mdaId,
+        ministryName: ministryInfo.name,
+        userRole: user.role,
+        department: user.department,
+        newStatus: newStatus,
+      },
+    );
+
     alert(`User has been ${user.isActive ? "deactivated" : "activated"}!`);
   };
 
@@ -4626,11 +5028,17 @@ Penalty Clause: 0.5% per week for delayed completion`,
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Company Approvals
+          Company Registry
         </h1>
-        <p className="text-gray-600">
-          View registered companies (read-only access)
-        </p>
+        <div className="flex items-center space-x-2">
+          <p className="text-gray-600">
+            View registered companies with real-time updates
+          </p>
+          <div className="flex items-center bg-blue-50 px-2 py-1 rounded-md">
+            <RefreshCw className="h-4 w-4 text-blue-600 mr-1" />
+            <span className="text-xs text-blue-600 font-medium">Live Sync</span>
+          </div>
+        </div>
       </div>
 
       {/* Statistics */}
@@ -4702,7 +5110,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 <option value="all">All Status</option>
                 <option value="Pending">Pending</option>
                 <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
+                <option value="Suspended">Suspended</option>
+                <option value="Blacklisted">Blacklisted</option>
               </select>
             </div>
           </div>
@@ -4765,17 +5174,24 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           ? "bg-green-100 text-green-800"
                           : company.status === "Pending"
                             ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
+                            : company.status === "Suspended"
+                              ? "bg-orange-100 text-orange-800"
+                              : company.status === "Blacklisted"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-gray-100 text-gray-800"
                       }`}
                     >
                       {company.status}
                     </span>
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900">
-                      <Eye className="h-4 w-4 inline mr-1" />
-                      View Details
-                    </button>
+                    <div className="flex items-center space-x-2">
+                      <button className="text-blue-600 hover:text-blue-900">
+                        <Eye className="h-4 w-4 inline mr-1" />
+                        View Details
+                      </button>
+                      <span className="text-xs text-gray-500">(Read Only)</span>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -11651,9 +12067,9 @@ Blockchain Timestamp: ${Date.now()}
       {showCreateUserModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-            <MDAUserForm
+            <MinistryUserForm
               mode="create"
-              mdaId="mda-001"
+              mdaId={getCurrentMDAId()}
               onSubmit={handleUserSubmit}
               onCancel={() => setShowCreateUserModal(false)}
             />
@@ -11665,7 +12081,7 @@ Blockchain Timestamp: ${Date.now()}
       {showEditUserModal && selectedUser && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-            <MDAUserForm
+            <MinistryUserForm
               mode="edit"
               mdaId={selectedUser.mdaId}
               initialData={{
@@ -11674,7 +12090,6 @@ Blockchain Timestamp: ${Date.now()}
                 role: selectedUser.role,
                 department: selectedUser.department,
                 permissions: selectedUser.permissions,
-                mdaId: selectedUser.mdaId,
               }}
               onSubmit={handleUserSubmit}
               onCancel={() => {
