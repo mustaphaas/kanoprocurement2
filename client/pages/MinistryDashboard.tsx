@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
-import MDAUserForm from "@/components/MDAUserForm";
+import MinistryUserForm from "@/components/MinistryUserForm";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
