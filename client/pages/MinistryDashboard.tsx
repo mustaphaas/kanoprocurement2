@@ -3824,125 +3824,6 @@ export default function MinistryDashboard() {
     alert(`Tender ${isDraft ? "saved as draft" : "published"} successfully!`);
   };
 
-  // NOC Request Functions
-  const handleSubmitNOCRequest = () => {
-    if (
-      !newNOCRequest.projectTitle ||
-      !newNOCRequest.contractorName ||
-      !newNOCRequest.projectValue ||
-      !newNOCRequest.category ||
-      !newNOCRequest.procuringEntity ||
-      !newNOCRequest.contactPerson ||
-      !newNOCRequest.contactEmail
-    ) {
-      alert("Please fill in all required fields");
-      return;
-    }
-
-    const { ministryId, ministry } = getMinistryMockData();
-    const requestId = `NOC-CENTRAL-${Date.now()}`;
-
-    // Create centralized NOC request
-    const centralNOCRequest = {
-      id: requestId,
-      projectTitle: newNOCRequest.projectTitle,
-      requestDate: new Date().toISOString().split("T")[0],
-      status: "Pending" as const,
-      projectValue: newNOCRequest.projectValue,
-      contractorName: newNOCRequest.contractorName,
-      expectedDuration: newNOCRequest.expectedDuration,
-      requestingMinistry: ministry.name,
-      ministryCode: ministry.code,
-      projectDescription: newNOCRequest.projectDescription,
-      justification: newNOCRequest.justification,
-      category: newNOCRequest.category,
-      procuringEntity: newNOCRequest.procuringEntity,
-      contactPerson: newNOCRequest.contactPerson,
-      contactEmail: newNOCRequest.contactEmail,
-      attachments: [],
-    };
-
-    // Add to centralized NOC requests
-    const existingCentralNOCs = localStorage.getItem("centralNOCRequests");
-    const centralNOCs = existingCentralNOCs
-      ? JSON.parse(existingCentralNOCs)
-      : [];
-    centralNOCs.unshift(centralNOCRequest);
-    localStorage.setItem("centralNOCRequests", JSON.stringify(centralNOCs));
-
-    // Debug logging
-    console.log("Ministry NOC Request Submitted:", centralNOCRequest);
-    console.log("Total Central NOCs after submission:", centralNOCs.length);
-    console.log(
-      "Central NOCs in localStorage:",
-      JSON.parse(localStorage.getItem("centralNOCRequests") || "[]"),
-    );
-
-    // Create local ministry NOC record (showing as pending)
-    const ministryNOCRequest: NOCRequest = {
-      id: requestId,
-      projectTitle: newNOCRequest.projectTitle,
-      requestDate: new Date().toISOString().split("T")[0],
-      status: "Pending",
-      projectValue: newNOCRequest.projectValue,
-      contractorName: newNOCRequest.contractorName,
-      expectedDuration: newNOCRequest.expectedDuration,
-    };
-
-    setNOCRequests((prev) => [ministryNOCRequest, ...prev]);
-
-    // Also store in ministry-specific localStorage for persistence
-    const ministryNOCKey = `${ministry.code}_NOCRequests`;
-    const existingMinistryNOCs = localStorage.getItem(ministryNOCKey);
-    const ministryNOCs = existingMinistryNOCs
-      ? JSON.parse(existingMinistryNOCs)
-      : [];
-    ministryNOCs.unshift(ministryNOCRequest);
-    localStorage.setItem(ministryNOCKey, JSON.stringify(ministryNOCs));
-
-    // Reset form
-    setNewNOCRequest({
-      projectTitle: "",
-      projectValue: "",
-      contractorName: "",
-      expectedDuration: "",
-      projectDescription: "",
-      justification: "",
-      category: "",
-      procuringEntity: "",
-      contactPerson: "",
-      contactEmail: "",
-    });
-    setShowNOCRequest(false);
-    // Log NOC request submission
-    logUserAction(
-      "MinistryUser",
-      "ministry_user",
-      "NOC_REQUEST_SUBMITTED",
-      newNOCRequest.projectTitle,
-      `Ministry ${ministry.name} submitted NOC request for project: ${newNOCRequest.projectTitle}`,
-      "HIGH",
-      requestId,
-      {
-        nocRequestId: requestId,
-        projectTitle: newNOCRequest.projectTitle,
-        projectValue: newNOCRequest.projectValue,
-        contractorName: newNOCRequest.contractorName,
-        category: newNOCRequest.category,
-        procuringEntity: newNOCRequest.procuringEntity,
-        expectedDuration: newNOCRequest.expectedDuration,
-        ministryName: ministry.name,
-        ministryCode: ministry.code,
-        contactPerson: newNOCRequest.contactPerson,
-        contactEmail: newNOCRequest.contactEmail,
-        submissionTimestamp: new Date().toISOString(),
-      },
-    );
-
-    alert(
-      "NOC Request submitted successfully! It will be reviewed by the superuser.",
-    );
-  };
 
   // Helper functions for evaluation scoring
   const updateEvaluationScore = (
@@ -8439,7 +8320,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         <li>�� Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
-                          ���� Previous contracts executed in the last 2 years
+                          ����� Previous contracts executed in the last 2 years
                         </li>
                       </ul>
                     </div>
