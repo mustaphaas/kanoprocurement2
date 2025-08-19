@@ -18,6 +18,8 @@ import {
   UserMinus,
   Search,
   Filter,
+  DollarSign,
+  Scale,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,6 +51,9 @@ import {
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BudgetAllocation from "./BudgetAllocation";
+import EvaluationCommitteeManagement from "./EvaluationCommitteeManagement";
+import ScoringMatrixImplementation from "./ScoringMatrixImplementation";
 
 // Types
 interface ProcurementPlan {
