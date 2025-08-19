@@ -10701,6 +10701,7 @@ Blockchain Timestamp: ${Date.now()}
               { key: "companies", label: "Companies", icon: Building2 },
               { key: "tenders", label: "Tenders", icon: FileText },
               { key: "contracts", label: "Contracts", icon: FileCheck },
+              { key: "procurement-planning", label: "Procurement Planning", icon: Target },
               { key: "users", label: "User Management", icon: Users },
               { key: "reports", label: "Reports", icon: TrendingUp },
               { key: "noc", label: "NOC Requests", icon: Send },
