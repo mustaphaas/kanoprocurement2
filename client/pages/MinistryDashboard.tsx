@@ -298,7 +298,6 @@ export default function MinistryDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showCreateTender, setShowCreateTender] = useState(false);
-  const [showNOCRequest, setShowNOCRequest] = useState(false);
   const [newTender, setNewTender] = useState({
     title: "",
     category: "",
