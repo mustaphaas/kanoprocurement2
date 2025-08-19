@@ -78,7 +78,8 @@ type CurrentView =
   | "contracts"
   | "reports"
   | "noc"
-  | "users";
+  | "users"
+  | "procurement-planning";
 
 type TenderSubView =
   | "list"
