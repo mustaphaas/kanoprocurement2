@@ -132,6 +132,24 @@ interface GovernanceRule {
   penalty: string;
 }
 
+interface AuditTrail {
+  createdBy: string;
+  createdDate: string;
+  approvedBy?: string;
+  approvedDate?: string;
+  lastModifiedBy: string;
+  lastModifiedDate: string;
+  versionHistory: VersionHistory[];
+}
+
+interface VersionHistory {
+  version: number;
+  modifiedBy: string;
+  modifiedDate: string;
+  changes: string;
+  reason: string;
+}
+
 const STORAGE_KEY = "committeeTemplates";
 
 export default function CommitteeTemplates() {
