@@ -8175,6 +8175,9 @@ The award letter has been:
       case "mda-testing":
         return renderMDATesting();
 
+      case "noc-requests":
+        return <NOCRequestsTab />;
+
       case "settings":
         return (
           <div className="space-y-8">
