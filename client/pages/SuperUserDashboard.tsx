@@ -1667,7 +1667,7 @@ export default function SuperUserDashboard() {
       delete (window as any).testSuperUserApproval;
       delete (window as any).testNorthernApproval;
     };
-  }, [handleCompanyStatusChange]);
+  }, []); // Remove handleCompanyStatusChange dependency to prevent infinite loop
 
   // Separate useEffect for MDA system initialization
   useEffect(() => {
