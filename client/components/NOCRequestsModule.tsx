@@ -41,7 +41,7 @@ interface NOCRequest {
   tenderTitle?: string;
   projectTitle: string;
   requestDate: string;
-  status: "Draft" | "Submitted" | "Under Review" | "Clarification Requested" | "Approved" | "Rejected";
+  status: "Draft" | "Submitted" | "Under Review" | "Clarification Requested" | "Approved" | "Rejected" | "Pending";
   projectValue: string;
   contractorName: string;
   expectedDuration: string;
