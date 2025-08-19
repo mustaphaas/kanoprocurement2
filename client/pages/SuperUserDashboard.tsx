@@ -8708,6 +8708,11 @@ The award letter has been:
                 label: "MDA Testing",
                 icon: RefreshCw,
               },
+              {
+                key: "noc-requests",
+                label: "NOC Requests",
+                icon: Send,
+              },
               { key: "settings", label: "Settings", icon: Settings },
               { key: "feedback", label: "Feedback", icon: MessageSquare },
             ].map((tab) => (
