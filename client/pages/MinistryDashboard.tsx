@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MinistryUserForm from "@/components/MinistryUserForm";
+import ProcurementPlanning from "@/components/ProcurementPlanning";
+import BudgetAllocation from "@/components/BudgetAllocation";
+import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManagement";
+import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
@@ -78,7 +82,8 @@ type CurrentView =
   | "contracts"
   | "reports"
   | "noc"
-  | "users";
+  | "users"
+  | "procurement-planning";
 
 type TenderSubView =
   | "list"
@@ -8237,7 +8242,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ����� Evaluation Report - {selectedTenderForDetails.title}
+                  ������ Evaluation Report - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
@@ -10642,6 +10647,8 @@ Blockchain Timestamp: ${Date.now()}
       return renderNOCRequests();
     } else if (currentView === "users") {
       return renderUserManagement();
+    } else if (currentView === "procurement-planning") {
+      return <ProcurementPlanning />;
     }
     return null;
   };
@@ -10694,6 +10701,11 @@ Blockchain Timestamp: ${Date.now()}
               { key: "companies", label: "Companies", icon: Building2 },
               { key: "tenders", label: "Tenders", icon: FileText },
               { key: "contracts", label: "Contracts", icon: FileCheck },
+              {
+                key: "procurement-planning",
+                label: "Procurement Planning",
+                icon: Target,
+              },
               { key: "users", label: "User Management", icon: Users },
               { key: "reports", label: "Reports", icon: TrendingUp },
               { key: "noc", label: "NOC Requests", icon: Send },
@@ -10746,6 +10758,44 @@ Blockchain Timestamp: ${Date.now()}
                   <span>{tab.label}</span>
                 </button>
               ))}
+            </div>
+          </div>
+        </nav>
+      )}
+
+      {/* Procurement Planning Sub-Navigation */}
+      {currentView === "procurement-planning" && (
+        <nav className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex space-x-1 overflow-x-auto py-2">
+              <div className="flex items-center space-x-4 text-sm text-gray-600">
+                <div className="flex items-center space-x-1">
+                  <Target className="h-4 w-4 text-green-600" />
+                  <span className="font-medium text-green-600">
+                    Procurement Planning Module
+                  </span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center space-x-1">
+                  <Calendar className="h-4 w-4" />
+                  <span>Annual Planning</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center space-x-1">
+                  <DollarSign className="h-4 w-4" />
+                  <span>Budget Allocation</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center space-x-1">
+                  <Users className="h-4 w-4" />
+                  <span>Committee Management</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center space-x-1">
+                  <Calculator className="h-4 w-4" />
+                  <span>Scoring Matrix</span>
+                </div>
+              </div>
             </div>
           </div>
         </nav>
