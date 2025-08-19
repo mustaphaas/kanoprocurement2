@@ -53,7 +53,8 @@ interface CommitteeRoleTemplate {
   requiredExpertise: string[];
   minimumExperience: number;
   mandatoryRole: boolean;
-  maxConflictScore: number; // Scale 1-10 for acceptable conflict levels
+  conflictOfInterestAllowed: boolean; // Binary: true = allowed, false = strictly prohibited
+  minimumRequired: number; // Minimum number of this role required
 }
 
 interface CommitteeTemplate {
