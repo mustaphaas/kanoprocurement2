@@ -649,567 +649,242 @@ const TenderManagement = () => {
 
         {/* Evaluation */}
         <TabsContent value="evaluation" className="space-y-6">
-          {/* Committee Assignment */}
+          {/* Tender Summary Card */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <p className="text-sm text-gray-600">Tender ID</p>
+                  <p className="font-semibold">MOH-2024-001</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Title</p>
+                  <p className="font-semibold">Hospital Equipment Supply</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Status</p>
+                  <Badge className="bg-blue-100 text-blue-800">Committee Setup</Badge>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Progress</p>
+                  <p className="font-semibold">Step 1 of 3</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Stepper Navigation */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                {/* Step 1: Committee Assignment */}
+                <div className="flex items-center">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-semibold">
+                    1
+                  </div>
+                  <div className="ml-3">
+                    <p className="font-semibold text-blue-600">Committee Assignment</p>
+                    <p className="text-sm text-gray-600">Active</p>
+                  </div>
+                </div>
+
+                <div className="flex-1 mx-4">
+                  <div className="h-1 bg-gray-200 rounded-full">
+                    <div className="h-1 bg-blue-600 rounded-full w-0"></div>
+                  </div>
+                </div>
+
+                {/* Step 2: COI Declaration */}
+                <div className="flex items-center">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                    2
+                  </div>
+                  <div className="ml-3">
+                    <p className="font-semibold text-gray-400">COI Declaration</p>
+                    <p className="text-sm text-gray-400">Locked</p>
+                  </div>
+                </div>
+
+                <div className="flex-1 mx-4">
+                  <div className="h-1 bg-gray-200 rounded-full">
+                    <div className="h-1 bg-gray-200 rounded-full w-0"></div>
+                  </div>
+                </div>
+
+                {/* Step 3: QCBS Scoring */}
+                <div className="flex items-center">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                    3
+                  </div>
+                  <div className="ml-3">
+                    <p className="font-semibold text-gray-400">QCBS Scoring</p>
+                    <p className="text-sm text-gray-400">Locked</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Step 1: Committee Assignment (Officer Only) */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm">
+                  1
+                </div>
                 Committee Assignment
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    <strong>Note:</strong> Procurement Planning builds the team, Tender Management confirms and activates them for this specific tender.
-                  </p>
-                </div>
-
-                <div className="grid gap-4">
-                  {/* Assigned Members */}
-                  <div>
-                    <h3 className="font-medium mb-3">Assigned Committee Members (From Procurement Planning)</h3>
-                    <div className="space-y-3">
-                      {[
-                        { name: "Dr. Amina Hassan", role: "Chairperson", department: "Primary Healthcare", status: "Active", coi: "Declared - No Conflict" },
-                        { name: "Engr. Usman Kano", role: "Technical Secretary", department: "Infrastructure", status: "Active", coi: "Pending Declaration" },
-                        { name: "Mrs. Fatima Aliyu", role: "Technical Evaluator", department: "Procurement", status: "Active", coi: "Declared - No Conflict" },
-                        { name: "Mr. Ibrahim Garba", role: "Financial Evaluator", department: "Finance", status: "Inactive", coi: "Conflict Declared" },
-                        { name: "Dr. Aisha Mohammed", role: "Technical Evaluator", department: "Medical Services", status: "Active", coi: "Declared - No Conflict" },
-                      ].map((member, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3">
-                              <div>
-                                <p className="font-medium">{member.name}</p>
-                                <p className="text-sm text-gray-600">{member.role} • {member.department}</p>
-                                <p className="text-xs text-gray-500">COI Status: {member.coi}</p>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <Badge className={
-                              member.status === "Active" ? "bg-green-100 text-green-800" :
-                              member.status === "Inactive" ? "bg-red-100 text-red-800" :
-                              "bg-yellow-100 text-yellow-800"
-                            }>
-                              {member.status}
-                            </Badge>
-
-                            <div className="flex gap-1">
-                              {member.status === "Inactive" && (
-                                <Button size="sm" variant="outline">
-                                  Replace
-                                </Button>
-                              )}
-                              <Button
-                                size="sm"
-                                variant={member.status === "Active" ? "destructive" : "default"}
-                              >
-                                {member.status === "Active" ? "Deactivate" : "Activate"}
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button className="bg-primary">
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Confirm Committee Active
-                    </Button>
-                    <Button variant="outline">
-                      <Users className="h-4 w-4 mr-2" />
-                      Replace Member
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* COI Declaration */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Conflict of Interest (COI) Declaration
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-yellow-800">Mandatory Declaration Required</p>
-                      <p className="text-sm text-yellow-700 mt-1">
-                        All committee members must complete COI declaration before evaluation begins. This ensures compliance with Kano's governance rules.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="font-medium">Individual COI Declarations</h3>
-
-                  {[
-                    { name: "Dr. Amina Hassan", role: "Chairperson", status: "Completed", hasConflict: false, details: null },
-                    { name: "Engr. Usman Kano", role: "Technical Secretary", status: "Pending", hasConflict: null, details: null },
-                    { name: "Mrs. Fatima Aliyu", role: "Technical Evaluator", status: "Completed", hasConflict: false, details: null },
-                    { name: "Mr. Ibrahim Garba", role: "Financial Evaluator", status: "Conflict Declared", hasConflict: true, details: "Has business relationship with MedEquip Solutions Ltd - Medium severity" },
-                    { name: "Dr. Aisha Mohammed", role: "Technical Evaluator", status: "Completed", hasConflict: false, details: null },
-                  ].map((member, index) => (
-                    <div key={index} className="border rounded-lg p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <p className="font-medium">{member.name}</p>
-                          <p className="text-sm text-gray-600">{member.role}</p>
-                        </div>
-                        <Badge className={
-                          member.status === "Completed" && !member.hasConflict ? "bg-green-100 text-green-800" :
-                          member.status === "Conflict Declared" ? "bg-red-100 text-red-800" :
-                          "bg-yellow-100 text-yellow-800"
-                        }>
-                          {member.status}
-                        </Badge>
-                      </div>
-
-                      {member.status === "Pending" && (
-                        <div className="space-y-3 bg-gray-50 p-3 rounded-lg">
-                          <div className="space-y-2">
-                            <Label className="text-sm font-medium">Declaration</Label>
-                            <div className="space-y-2">
-                              <div className="flex items-center space-x-2">
-                                <Checkbox id={`no-conflict-${index}`} />
-                                <Label htmlFor={`no-conflict-${index}`} className="text-sm">
-                                  I declare I have no financial/professional interest in participating companies
-                                </Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <Checkbox id={`has-conflict-${index}`} />
-                                <Label htmlFor={`has-conflict-${index}`} className="text-sm">
-                                  I declare a potential conflict of interest (details below)
-                                </Label>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div>
-                            <Label htmlFor={`conflict-details-${index}`} className="text-sm font-medium">
-                              Conflict Details (if applicable)
-                            </Label>
-                            <Textarea
-                              id={`conflict-details-${index}`}
-                              placeholder="Please provide company name, nature of relationship, and severity level..."
-                              className="mt-1"
-                              rows={3}
-                            />
-                          </div>
-
-                          <Button size="sm">Submit Declaration</Button>
-                        </div>
-                      )}
-
-                      {member.hasConflict && member.details && (
-                        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                          <p className="text-sm font-medium text-red-800">Conflict Details:</p>
-                          <p className="text-sm text-red-700 mt-1">{member.details}</p>
-                          <div className="flex gap-2 mt-2">
-                            <Button size="sm" variant="outline">Approve with Mitigation</Button>
-                            <Button size="sm" variant="destructive">Replace Evaluator</Button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-green-800">COI Declaration Status</p>
-                      <p className="text-sm text-green-700">4 of 5 declarations completed • 1 conflict requires resolution</p>
-                    </div>
-                    <Button disabled className="bg-gray-400">
-                      <Shield className="h-4 w-4 mr-2" />
-                      Proceed to Scoring (Blocked)
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* QCBS Scoring */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Scale className="h-5 w-5" />
-                QCBS Scoring Engine (Technical + Financial)
+                <Badge className="bg-blue-100 text-blue-800">Officer Only</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {/* Scoring Overview */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 border rounded-lg bg-blue-50">
-                    <h3 className="font-medium text-blue-900">Technical Weight</h3>
-                    <p className="text-2xl font-bold text-blue-800">70%</p>
-                    <p className="text-sm text-blue-700">Minimum Threshold: 70 points</p>
-                  </div>
-                  <div className="p-4 border rounded-lg bg-green-50">
-                    <h3 className="font-medium text-green-900">Financial Weight</h3>
-                    <p className="text-2xl font-bold text-green-800">30%</p>
-                    <p className="text-sm text-green-700">Lowest Bid = 100 points</p>
-                  </div>
-                  <div className="p-4 border rounded-lg bg-purple-50">
-                    <h3 className="font-medium text-purple-900">Total Bidders</h3>
-                    <p className="text-2xl font-bold text-purple-800">5</p>
-                    <p className="text-sm text-purple-700">Technical evaluation first</p>
-                  </div>
-                </div>
-
-                {/* Technical Scoring Interface */}
+                {/* Assignment Table */}
                 <div>
-                  <h3 className="font-medium mb-4">Technical Scoring (Individual → Consensus)</h3>
-
-                  <Tabs defaultValue="individual" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="individual">Individual Scoring</TabsTrigger>
-                      <TabsTrigger value="consensus">Consensus Building</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="individual" className="space-y-4">
-                      <div className="p-4 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-700 mb-3">
-                          <strong>Instructions:</strong> Each evaluator scores independently based on the criteria from Procurement Planning.
-                        </p>
-
-                        <div className="overflow-x-auto">
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Criteria</TableHead>
-                                <TableHead>Weight</TableHead>
-                                <TableHead>Max Score</TableHead>
-                                <TableHead>Bidder A</TableHead>
-                                <TableHead>Bidder B</TableHead>
-                                <TableHead>Bidder C</TableHead>
-                                <TableHead>Bidder D</TableHead>
-                                <TableHead>Bidder E</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell className="font-medium">Technical Capability</TableCell>
-                                <TableCell>30%</TableCell>
-                                <TableCell>30</TableCell>
-                                <TableCell><Input type="number" placeholder="0-30" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-30" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-30" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-30" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-30" className="w-20" /></TableCell>
-                              </TableRow>
-                              <TableRow>
-                                <TableCell className="font-medium">Experience & Track Record</TableCell>
-                                <TableCell>25%</TableCell>
-                                <TableCell>25</TableCell>
-                                <TableCell><Input type="number" placeholder="0-25" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-25" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-25" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-25" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-25" className="w-20" /></TableCell>
-                              </TableRow>
-                              <TableRow>
-                                <TableCell className="font-medium">Methodology & Approach</TableCell>
-                                <TableCell>20%</TableCell>
-                                <TableCell>20</TableCell>
-                                <TableCell><Input type="number" placeholder="0-20" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-20" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-20" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-20" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-20" className="w-20" /></TableCell>
-                              </TableRow>
-                              <TableRow>
-                                <TableCell className="font-medium">Key Personnel Qualifications</TableCell>
-                                <TableCell>15%</TableCell>
-                                <TableCell>15</TableCell>
-                                <TableCell><Input type="number" placeholder="0-15" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-15" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-15" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-15" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-15" className="w-20" /></TableCell>
-                              </TableRow>
-                              <TableRow>
-                                <TableCell className="font-medium">Local Content & Capacity</TableCell>
-                                <TableCell>10%</TableCell>
-                                <TableCell>10</TableCell>
-                                <TableCell><Input type="number" placeholder="0-10" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-10" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-10" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-10" className="w-20" /></TableCell>
-                                <TableCell><Input type="number" placeholder="0-10" className="w-20" /></TableCell>
-                              </TableRow>
-                              <TableRow className="font-bold bg-gray-50">
-                                <TableCell>TOTAL TECHNICAL SCORE</TableCell>
-                                <TableCell>100%</TableCell>
-                                <TableCell>100</TableCell>
-                                <TableCell>85</TableCell>
-                                <TableCell>78</TableCell>
-                                <TableCell>72</TableCell>
-                                <TableCell>68</TableCell>
-                                <TableCell>82</TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </div>
-
-                        <div className="flex justify-between items-center mt-4">
-                          <p className="text-sm text-gray-600">Evaluator: Dr. Amina Hassan (Chairperson)</p>
-                          <Button>Save Individual Scores</Button>
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="consensus" className="space-y-4">
-                      <div className="p-4 bg-blue-50 rounded-lg">
-                        <h4 className="font-medium text-blue-900 mb-2">Consensus Building Workspace</h4>
-                        <p className="text-sm text-blue-700">
-                          Compare individual evaluator scores and build consensus. System highlights variances &gt;20 points for discussion.
-                        </p>
-                      </div>
-
-                      <div className="overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Bidder</TableHead>
-                              <TableHead>Dr. Amina Hassan</TableHead>
-                              <TableHead>Mrs. Fatima Aliyu</TableHead>
-                              <TableHead>Dr. Aisha Mohammed</TableHead>
-                              <TableHead>Variance</TableHead>
-                              <TableHead>Consensus Score</TableHead>
-                              <TableHead>Status</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell className="font-medium">Northern Construction Ltd</TableCell>
-                              <TableCell>85</TableCell>
-                              <TableCell>83</TableCell>
-                              <TableCell>87</TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-100 text-green-800">4 pts</Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Input type="number" defaultValue="85" className="w-20" />
-                              </TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-100 text-green-800">Qualified</Badge>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">MedEquip Solutions Ltd</TableCell>
-                              <TableCell>78</TableCell>
-                              <TableCell>75</TableCell>
-                              <TableCell>82</TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-100 text-green-800">7 pts</Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Input type="number" defaultValue="78" className="w-20" />
-                              </TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-100 text-green-800">Qualified</Badge>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">Kano Engineering Works</TableCell>
-                              <TableCell>72</TableCell>
-                              <TableCell>69</TableCell>
-                              <TableCell>75</TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-100 text-green-800">6 pts</Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Input type="number" defaultValue="72" className="w-20" />
-                              </TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-100 text-green-800">Qualified</Badge>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">Sahel Construction Co</TableCell>
-                              <TableCell>68</TableCell>
-                              <TableCell>45</TableCell>
-                              <TableCell>71</TableCell>
-                              <TableCell>
-                                <Badge className="bg-red-100 text-red-800">26 pts ⚠️</Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Input type="number" defaultValue="61" className="w-20" />
-                              </TableCell>
-                              <TableCell>
-                                <Badge className="bg-red-100 text-red-800">Disqualified</Badge>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">Arewa Infrastructure Ltd</TableCell>
-                              <TableCell>82</TableCell>
-                              <TableCell>79</TableCell>
-                              <TableCell>84</TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-100 text-green-800">5 pts</Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Input type="number" defaultValue="82" className="w-20" />
-                              </TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-100 text-green-800">Qualified</Badge>
-                              </TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm text-gray-600">
-                          <strong>Technical Qualification:</strong> 4 bidders qualified (≥70 points), 1 disqualified
-                        </p>
-                        <Button className="bg-primary">
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Finalize Technical Scores
-                        </Button>
-                      </div>
-                    </TabsContent>
-                  </Tabs>
-                </div>
-
-                {/* Financial Scoring */}
-                <div>
-                  <h3 className="font-medium mb-4">Financial Scoring (Auto-Calculated)</h3>
-
-                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-4">
-                    <div className="flex items-start gap-2">
-                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                      <div>
-                        <p className="font-medium text-yellow-800">Financial Envelopes Opening</p>
-                        <p className="text-sm text-yellow-700 mt-1">
-                          Only qualified bidders' financial proposals will be opened. Disqualified bidders remain sealed.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
+                  <h3 className="font-medium mb-4">Assignment Table</h3>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Bidder</TableHead>
-                          <TableHead>Technical Status</TableHead>
-                          <TableHead>Bid Amount (₦)</TableHead>
-                          <TableHead>Financial Score</TableHead>
-                          <TableHead>Technical Score</TableHead>
-                          <TableHead>Combined Score</TableHead>
-                          <TableHead>Rank</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Role</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>COI</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        <TableRow className="bg-green-50">
-                          <TableCell className="font-medium">MedEquip Solutions Ltd</TableCell>
+                        <TableRow>
+                          <TableCell className="font-medium">Dr. Amina Hassan</TableCell>
+                          <TableCell>Chairperson</TableCell>
                           <TableCell>
-                            <Badge className="bg-green-100 text-green-800">Qualified</Badge>
+                            <Badge className="bg-yellow-100 text-yellow-800">Pending COI</Badge>
                           </TableCell>
-                          <TableCell>₦180,000,000</TableCell>
-                          <TableCell className="font-bold">100.0</TableCell>
-                          <TableCell>78.0</TableCell>
-                          <TableCell className="font-bold text-green-600">84.6</TableCell>
+                          <TableCell>—</TableCell>
                           <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">🥇 1st</Badge>
+                            <Button size="sm" variant="outline">Replace</Button>
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-medium">Northern Construction Ltd</TableCell>
+                          <TableCell className="font-medium">Eng. Musa Ibrahim</TableCell>
+                          <TableCell>Technical Secretary</TableCell>
                           <TableCell>
-                            <Badge className="bg-green-100 text-green-800">Qualified</Badge>
+                            <Badge className="bg-yellow-100 text-yellow-800">Pending COI</Badge>
                           </TableCell>
-                          <TableCell>₦195,000,000</TableCell>
-                          <TableCell>92.3</TableCell>
-                          <TableCell>85.0</TableCell>
-                          <TableCell className="font-bold">87.2</TableCell>
+                          <TableCell>—</TableCell>
                           <TableCell>
-                            <Badge className="bg-gray-100 text-gray-800">🥈 2nd</Badge>
+                            <Button size="sm" variant="outline">Replace</Button>
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-medium">Arewa Infrastructure Ltd</TableCell>
+                          <TableCell className="font-medium">Dr. Fatima Yusuf</TableCell>
+                          <TableCell>Clinical Evaluator</TableCell>
                           <TableCell>
-                            <Badge className="bg-green-100 text-green-800">Qualified</Badge>
+                            <Badge className="bg-red-100 text-red-800">COI Declared</Badge>
                           </TableCell>
-                          <TableCell>₦210,000,000</TableCell>
-                          <TableCell>85.7</TableCell>
-                          <TableCell>82.0</TableCell>
-                          <TableCell className="font-bold">83.1</TableCell>
                           <TableCell>
-                            <Badge className="bg-gray-100 text-gray-800">🥉 3rd</Badge>
+                            <AlertTriangle className="h-4 w-4 text-red-600" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-1">
+                              <Button size="sm" variant="outline">Review</Button>
+                              <Button size="sm" variant="outline">Replace</Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-medium">Kano Engineering Works</TableCell>
+                          <TableCell className="font-medium">Bala Ahmed</TableCell>
+                          <TableCell>Financial Analyst</TableCell>
                           <TableCell>
-                            <Badge className="bg-green-100 text-green-800">Qualified</Badge>
+                            <Badge className="bg-yellow-100 text-yellow-800">Pending COI</Badge>
                           </TableCell>
-                          <TableCell>₦225,000,000</TableCell>
-                          <TableCell>80.0</TableCell>
-                          <TableCell>72.0</TableCell>
-                          <TableCell className="font-bold">74.4</TableCell>
-                          <TableCell>
-                            <Badge className="bg-gray-100 text-gray-800">4th</Badge>
-                          </TableCell>
+                          <TableCell>—</TableCell>
+                          <TableCell>—</TableCell>
                         </TableRow>
-                        <TableRow className="opacity-50">
-                          <TableCell className="font-medium">Sahel Construction Co</TableCell>
+                        <TableRow>
+                          <TableCell className="font-medium">Mary Luka</TableCell>
+                          <TableCell>Procurement Expert</TableCell>
                           <TableCell>
-                            <Badge className="bg-red-100 text-red-800">Disqualified</Badge>
+                            <Badge className="bg-yellow-100 text-yellow-800">Pending COI</Badge>
                           </TableCell>
-                          <TableCell className="text-gray-400">Sealed</TableCell>
-                          <TableCell className="text-gray-400">N/A</TableCell>
-                          <TableCell>61.0</TableCell>
-                          <TableCell className="text-gray-400">N/A</TableCell>
-                          <TableCell>
-                            <Badge className="bg-red-100 text-red-800">Disqualified</Badge>
-                          </TableCell>
+                          <TableCell>—</TableCell>
+                          <TableCell>—</TableCell>
                         </TableRow>
                       </TableBody>
                     </Table>
                   </div>
                 </div>
 
-                {/* Final Actions */}
-                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <div className="flex items-center justify-between">
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <Button variant="outline">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Member
+                  </Button>
+                  <Button variant="outline">
+                    <Users className="h-4 w-4 mr-2" />
+                    Replace Member
+                  </Button>
+                  <Button className="bg-primary" disabled>
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Confirm Assignment
+                  </Button>
+                </div>
+
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                     <div>
-                      <p className="font-medium text-green-800">QCBS Evaluation Complete</p>
-                      <p className="text-sm text-green-700">
-                        Recommended Award: <strong>MedEquip Solutions Ltd</strong> (Combined Score: 84.6)
+                      <p className="font-medium text-yellow-800">Assignment Incomplete</p>
+                      <p className="text-sm text-yellow-700 mt-1">
+                        Resolve COI conflict for Dr. Fatima Yusuf before proceeding to Step 2.
                       </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline">
-                        <Download className="h-4 w-4 mr-2" />
-                        Export Report
-                      </Button>
-                      <Button className="bg-primary">
-                        <Award className="h-4 w-4 mr-2" />
-                        Generate Award Recommendation
-                      </Button>
                     </div>
                   </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Step 2: COI Declaration (Locked) */}
+          <Card className="opacity-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold text-sm">
+                  2
+                </div>
+                COI Declaration
+                <Badge className="bg-gray-100 text-gray-600">Locked</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8">
+                <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 font-medium">Complete Step 1 to unlock</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Committee assignment must be confirmed before COI declarations can begin
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Step 3: QCBS Scoring (Locked) */}
+          <Card className="opacity-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold text-sm">
+                  3
+                </div>
+                QCBS Scoring
+                <Badge className="bg-gray-100 text-gray-600">Locked</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8">
+                <Scale className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 font-medium">Complete Steps 1 & 2 to unlock</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  All COI declarations must be resolved before scoring can begin
+                </p>
               </div>
             </CardContent>
           </Card>
