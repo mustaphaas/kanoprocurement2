@@ -14,6 +14,7 @@ import {
 import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
+import NOCRequestsTab from "@/components/NOCRequestsTab";
 import MDAForm from "@/components/MDAForm";
 import MDAWithAdminForm from "@/components/MDAWithAdminForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
