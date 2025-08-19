@@ -219,7 +219,8 @@ const TenderManagement = () => {
         {
           id: "T001",
           title: "Construction of Primary Healthcare Centers",
-          description: "Construction of 5 primary healthcare centers across rural communities",
+          description:
+            "Construction of 5 primary healthcare centers across rural communities",
           budget: 250000000,
           status: "Published",
           createdDate: "2024-01-15",
@@ -248,7 +249,8 @@ const TenderManagement = () => {
         {
           id: "T002",
           title: "Supply of Medical Equipment",
-          description: "Procurement of modern medical equipment for state hospitals",
+          description:
+            "Procurement of modern medical equipment for state hospitals",
           budget: 150000000,
           status: "Open",
           createdDate: "2024-01-10",
@@ -274,7 +276,7 @@ const TenderManagement = () => {
           timeline: [],
         },
       ];
-      
+
       setTenders(mockTenders);
       saveToStorage(STORAGE_KEYS.TENDERS, mockTenders);
     }
@@ -291,7 +293,12 @@ const TenderManagement = () => {
       ministry: "Current Ministry", // This would come from auth context
       department: "Current Department",
       tenderType: tenderForm.tenderType as "Open" | "Selective" | "Limited",
-      procurementMethod: tenderForm.procurementMethod as "NCB" | "ICB" | "QCBS" | "CQS" | "SSS",
+      procurementMethod: tenderForm.procurementMethod as
+        | "NCB"
+        | "ICB"
+        | "QCBS"
+        | "CQS"
+        | "SSS",
       closingDate: tenderForm.closingDate,
       documents: [],
       amendments: [],
@@ -312,7 +319,7 @@ const TenderManagement = () => {
     const updatedTenders = [...tenders, newTender];
     setTenders(updatedTenders);
     saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
-    
+
     setTenderForm({
       title: "",
       description: "",
@@ -370,9 +377,7 @@ const TenderManagement = () => {
       Awarded: "bg-purple-100 text-purple-800",
     };
     return (
-      <Badge className={colors[status as keyof typeof colors]}>
-        {status}
-      </Badge>
+      <Badge className={colors[status as keyof typeof colors]}>{status}</Badge>
     );
   };
 
@@ -407,7 +412,10 @@ const TenderManagement = () => {
             <FileText className="h-4 w-4" />
             Creation
           </TabsTrigger>
-          <TabsTrigger value="administration" className="flex items-center gap-2">
+          <TabsTrigger
+            value="administration"
+            className="flex items-center gap-2"
+          >
             <Settings className="h-4 w-4" />
             Administration
           </TabsTrigger>
@@ -467,7 +475,10 @@ const TenderManagement = () => {
 
           <div className="grid gap-4">
             {filteredTenders.map((tender) => (
-              <Card key={tender.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={tender.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -481,7 +492,8 @@ const TenderManagement = () => {
                         <span>Type: {tender.tenderType}</span>
                         {tender.closingDate && (
                           <span>
-                            Days Remaining: {getDaysRemaining(tender.closingDate)}
+                            Days Remaining:{" "}
+                            {getDaysRemaining(tender.closingDate)}
                           </span>
                         )}
                       </div>
@@ -536,7 +548,7 @@ const TenderManagement = () => {
                     Create Amendment
                   </Button>
                 </div>
-                
+
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div>
                     <h3 className="font-medium">Timeline Tracker</h3>
@@ -549,7 +561,7 @@ const TenderManagement = () => {
                     View Timeline
                   </Button>
                 </div>
-                
+
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div>
                     <h3 className="font-medium">Audit Trail</h3>
@@ -585,7 +597,7 @@ const TenderManagement = () => {
                       </div>
                     </div>
                   </Card>
-                  
+
                   <Card className="p-4">
                     <div className="flex items-center gap-2">
                       <MessageSquare className="h-5 w-5 text-green-600" />
@@ -595,7 +607,7 @@ const TenderManagement = () => {
                       </div>
                     </div>
                   </Card>
-                  
+
                   <Card className="p-4">
                     <div className="flex items-center gap-2">
                       <Users className="h-5 w-5 text-purple-600" />
@@ -605,7 +617,7 @@ const TenderManagement = () => {
                       </div>
                     </div>
                   </Card>
-                  
+
                   <Card className="p-4">
                     <div className="flex items-center gap-2">
                       <FileText className="h-5 w-5 text-orange-600" />
@@ -630,23 +642,26 @@ const TenderManagement = () => {
             <CardContent>
               <div className="space-y-4">
                 <div className="p-4 border rounded-lg bg-blue-50">
-                  <h3 className="font-medium text-blue-900">QCBS Two-Envelope System</h3>
+                  <h3 className="font-medium text-blue-900">
+                    QCBS Two-Envelope System
+                  </h3>
                   <p className="text-sm text-blue-700 mt-1">
-                    Technical proposals opened first, financial proposals remain sealed
+                    Technical proposals opened first, financial proposals remain
+                    sealed
                   </p>
                 </div>
-                
+
                 <div className="grid gap-4">
                   <Button className="justify-start" size="lg">
                     <Clock className="h-5 w-5 mr-2" />
                     Generate Opening Report
                   </Button>
-                  
+
                   <Button variant="outline" className="justify-start" size="lg">
                     <FileText className="h-5 w-5 mr-2" />
                     Log Received Bids
                   </Button>
-                  
+
                   <Button variant="outline" className="justify-start" size="lg">
                     <Shield className="h-5 w-5 mr-2" />
                     Verify Submission Times
@@ -673,7 +688,9 @@ const TenderManagement = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Status</p>
-                  <Badge className="bg-blue-100 text-blue-800">Committee Setup</Badge>
+                  <Badge className="bg-blue-100 text-blue-800">
+                    Committee Setup
+                  </Badge>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Progress</p>
@@ -689,92 +706,133 @@ const TenderManagement = () => {
               <div className="flex items-center justify-between">
                 {/* Step 1: Committee Assignment */}
                 <div className="flex items-center">
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
-                    currentStep === 1
-                      ? "bg-blue-600 text-white"
-                      : stepStatus.step1.completed
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-300 text-gray-600"
-                  }`}>
+                  <div
+                    className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
+                      currentStep === 1
+                        ? "bg-blue-600 text-white"
+                        : stepStatus.step1.completed
+                          ? "bg-green-600 text-white"
+                          : "bg-gray-300 text-gray-600"
+                    }`}
+                  >
                     {stepStatus.step1.completed ? "✅" : "1"}
                   </div>
                   <div className="ml-3">
-                    <p className={`font-semibold ${
-                      currentStep === 1 ? "text-blue-600" :
-                      stepStatus.step1.completed ? "text-green-600" : "text-gray-400"
-                    }`}>
+                    <p
+                      className={`font-semibold ${
+                        currentStep === 1
+                          ? "text-blue-600"
+                          : stepStatus.step1.completed
+                            ? "text-green-600"
+                            : "text-gray-400"
+                      }`}
+                    >
                       Committee Assignment
                     </p>
                     <p className="text-sm text-gray-600">
-                      {currentStep === 1 ? "Active" : stepStatus.step1.completed ? "Completed" : "Pending"}
+                      {currentStep === 1
+                        ? "Active"
+                        : stepStatus.step1.completed
+                          ? "Completed"
+                          : "Pending"}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex-1 mx-4">
                   <div className="h-1 bg-gray-200 rounded-full">
-                    <div className={`h-1 rounded-full transition-all duration-300 ${
-                      stepStatus.step1.completed ? "w-full bg-green-600" : "w-0 bg-blue-600"
-                    }`}></div>
+                    <div
+                      className={`h-1 rounded-full transition-all duration-300 ${
+                        stepStatus.step1.completed
+                          ? "w-full bg-green-600"
+                          : "w-0 bg-blue-600"
+                      }`}
+                    ></div>
                   </div>
                 </div>
 
                 {/* Step 2: COI Declaration */}
                 <div className="flex items-center">
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
-                    currentStep === 2
-                      ? "bg-blue-600 text-white"
-                      : stepStatus.step2.completed
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-300 text-gray-600"
-                  }`}>
+                  <div
+                    className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
+                      currentStep === 2
+                        ? "bg-blue-600 text-white"
+                        : stepStatus.step2.completed
+                          ? "bg-green-600 text-white"
+                          : "bg-gray-300 text-gray-600"
+                    }`}
+                  >
                     {stepStatus.step2.completed ? "✅" : "2"}
                   </div>
                   <div className="ml-3">
-                    <p className={`font-semibold ${
-                      currentStep === 2 ? "text-blue-600" :
-                      stepStatus.step2.completed ? "text-green-600" : "text-gray-400"
-                    }`}>
+                    <p
+                      className={`font-semibold ${
+                        currentStep === 2
+                          ? "text-blue-600"
+                          : stepStatus.step2.completed
+                            ? "text-green-600"
+                            : "text-gray-400"
+                      }`}
+                    >
                       COI Declaration
                     </p>
                     <p className="text-sm text-gray-600">
-                      {stepStatus.step2.locked ? "Locked" :
-                       currentStep === 2 ? "Active" :
-                       stepStatus.step2.completed ? "Completed" : "Pending"}
+                      {stepStatus.step2.locked
+                        ? "Locked"
+                        : currentStep === 2
+                          ? "Active"
+                          : stepStatus.step2.completed
+                            ? "Completed"
+                            : "Pending"}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex-1 mx-4">
                   <div className="h-1 bg-gray-200 rounded-full">
-                    <div className={`h-1 rounded-full transition-all duration-300 ${
-                      stepStatus.step2.completed ? "w-full bg-green-600" : "w-0 bg-gray-200"
-                    }`}></div>
+                    <div
+                      className={`h-1 rounded-full transition-all duration-300 ${
+                        stepStatus.step2.completed
+                          ? "w-full bg-green-600"
+                          : "w-0 bg-gray-200"
+                      }`}
+                    ></div>
                   </div>
                 </div>
 
                 {/* Step 3: QCBS Scoring */}
                 <div className="flex items-center">
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
-                    currentStep === 3
-                      ? "bg-blue-600 text-white"
-                      : stepStatus.step3.completed
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-300 text-gray-600"
-                  }`}>
+                  <div
+                    className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
+                      currentStep === 3
+                        ? "bg-blue-600 text-white"
+                        : stepStatus.step3.completed
+                          ? "bg-green-600 text-white"
+                          : "bg-gray-300 text-gray-600"
+                    }`}
+                  >
                     {stepStatus.step3.completed ? "✅" : "3"}
                   </div>
                   <div className="ml-3">
-                    <p className={`font-semibold ${
-                      currentStep === 3 ? "text-blue-600" :
-                      stepStatus.step3.completed ? "text-green-600" : "text-gray-400"
-                    }`}>
+                    <p
+                      className={`font-semibold ${
+                        currentStep === 3
+                          ? "text-blue-600"
+                          : stepStatus.step3.completed
+                            ? "text-green-600"
+                            : "text-gray-400"
+                      }`}
+                    >
                       QCBS Scoring
                     </p>
                     <p className="text-sm text-gray-600">
-                      {stepStatus.step3.locked ? "Locked" :
-                       currentStep === 3 ? "Active" :
-                       stepStatus.step3.completed ? "Completed" : "Pending"}
+                      {stepStatus.step3.locked
+                        ? "Locked"
+                        : currentStep === 3
+                          ? "Active"
+                          : stepStatus.step3.completed
+                            ? "Completed"
+                            : "Pending"}
                     </p>
                   </div>
                 </div>
@@ -790,7 +848,9 @@ const TenderManagement = () => {
                   1
                 </div>
                 Committee Assignment
-                <Badge className="bg-blue-100 text-blue-800">Officer Only</Badge>
+                <Badge className="bg-blue-100 text-blue-800">
+                  Officer Only
+                </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -811,57 +871,85 @@ const TenderManagement = () => {
                       </TableHeader>
                       <TableBody>
                         <TableRow>
-                          <TableCell className="font-medium">Dr. Amina Hassan</TableCell>
+                          <TableCell className="font-medium">
+                            Dr. Amina Hassan
+                          </TableCell>
                           <TableCell>Chairperson</TableCell>
                           <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">Pending COI</Badge>
+                            <Badge className="bg-yellow-100 text-yellow-800">
+                              Pending COI
+                            </Badge>
                           </TableCell>
                           <TableCell>—</TableCell>
                           <TableCell>
-                            <Button size="sm" variant="outline">Replace</Button>
+                            <Button size="sm" variant="outline">
+                              Replace
+                            </Button>
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-medium">Eng. Musa Ibrahim</TableCell>
+                          <TableCell className="font-medium">
+                            Eng. Musa Ibrahim
+                          </TableCell>
                           <TableCell>Technical Secretary</TableCell>
                           <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">Pending COI</Badge>
+                            <Badge className="bg-yellow-100 text-yellow-800">
+                              Pending COI
+                            </Badge>
                           </TableCell>
                           <TableCell>—</TableCell>
                           <TableCell>
-                            <Button size="sm" variant="outline">Replace</Button>
+                            <Button size="sm" variant="outline">
+                              Replace
+                            </Button>
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-medium">Dr. Fatima Yusuf</TableCell>
+                          <TableCell className="font-medium">
+                            Dr. Fatima Yusuf
+                          </TableCell>
                           <TableCell>Clinical Evaluator</TableCell>
                           <TableCell>
-                            <Badge className="bg-red-100 text-red-800">COI Declared</Badge>
+                            <Badge className="bg-red-100 text-red-800">
+                              COI Declared
+                            </Badge>
                           </TableCell>
                           <TableCell>
                             <AlertTriangle className="h-4 w-4 text-red-600" />
                           </TableCell>
                           <TableCell>
                             <div className="flex gap-1">
-                              <Button size="sm" variant="outline">Review</Button>
-                              <Button size="sm" variant="outline">Replace</Button>
+                              <Button size="sm" variant="outline">
+                                Review
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                Replace
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-medium">Bala Ahmed</TableCell>
+                          <TableCell className="font-medium">
+                            Bala Ahmed
+                          </TableCell>
                           <TableCell>Financial Analyst</TableCell>
                           <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">Pending COI</Badge>
+                            <Badge className="bg-yellow-100 text-yellow-800">
+                              Pending COI
+                            </Badge>
                           </TableCell>
                           <TableCell>—</TableCell>
                           <TableCell>—</TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-medium">Mary Luka</TableCell>
+                          <TableCell className="font-medium">
+                            Mary Luka
+                          </TableCell>
                           <TableCell>Procurement Expert</TableCell>
                           <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">Pending COI</Badge>
+                            <Badge className="bg-yellow-100 text-yellow-800">
+                              Pending COI
+                            </Badge>
                           </TableCell>
                           <TableCell>—</TableCell>
                           <TableCell>—</TableCell>
@@ -885,10 +973,10 @@ const TenderManagement = () => {
                     className="bg-primary"
                     onClick={() => {
                       setCommitteeAssigned(true);
-                      setStepStatus(prev => ({
+                      setStepStatus((prev) => ({
                         ...prev,
                         step1: { completed: true, locked: false },
-                        step2: { completed: false, locked: false }
+                        step2: { completed: false, locked: false },
                       }));
                       setCurrentStep(2);
                     }}
@@ -903,9 +991,12 @@ const TenderManagement = () => {
                     <div className="flex items-start gap-2">
                       <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                       <div>
-                        <p className="font-medium text-yellow-800">Assignment Required</p>
+                        <p className="font-medium text-yellow-800">
+                          Assignment Required
+                        </p>
                         <p className="text-sm text-yellow-700 mt-1">
-                          Click "Confirm Assignment" to proceed to COI Declaration step.
+                          Click "Confirm Assignment" to proceed to COI
+                          Declaration step.
                         </p>
                       </div>
                     </div>
@@ -924,7 +1015,9 @@ const TenderManagement = () => {
                     2
                   </div>
                   COI Declaration
-                  <Badge className="bg-blue-100 text-blue-800">Evaluator View</Badge>
+                  <Badge className="bg-blue-100 text-blue-800">
+                    Evaluator View
+                  </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -967,23 +1060,56 @@ const TenderManagement = () => {
                     <h3 className="font-medium">Individual COI Declarations</h3>
 
                     {[
-                      { name: "Dr. Amina Hassan", role: "Chairperson", status: "Completed", conflict: false },
-                      { name: "Eng. Musa Ibrahim", role: "Technical Secretary", status: "Completed", conflict: false },
-                      { name: "Dr. Fatima Yusuf", role: "Clinical Evaluator", status: "Conflict Declared", conflict: true, details: "Financial relationship with Vendor B - Medium severity" },
-                      { name: "Bala Ahmed", role: "Financial Analyst", status: "Pending", conflict: null },
-                      { name: "Mary Luka", role: "Procurement Expert", status: "Completed", conflict: false },
+                      {
+                        name: "Dr. Amina Hassan",
+                        role: "Chairperson",
+                        status: "Completed",
+                        conflict: false,
+                      },
+                      {
+                        name: "Eng. Musa Ibrahim",
+                        role: "Technical Secretary",
+                        status: "Completed",
+                        conflict: false,
+                      },
+                      {
+                        name: "Dr. Fatima Yusuf",
+                        role: "Clinical Evaluator",
+                        status: "Conflict Declared",
+                        conflict: true,
+                        details:
+                          "Financial relationship with Vendor B - Medium severity",
+                      },
+                      {
+                        name: "Bala Ahmed",
+                        role: "Financial Analyst",
+                        status: "Pending",
+                        conflict: null,
+                      },
+                      {
+                        name: "Mary Luka",
+                        role: "Procurement Expert",
+                        status: "Completed",
+                        conflict: false,
+                      },
                     ].map((member, index) => (
                       <Card key={index} className="p-4">
                         <div className="flex items-start justify-between mb-3">
                           <div>
                             <p className="font-medium">{member.name}</p>
-                            <p className="text-sm text-gray-600">{member.role}</p>
+                            <p className="text-sm text-gray-600">
+                              {member.role}
+                            </p>
                           </div>
-                          <Badge className={
-                            member.status === "Completed" && !member.conflict ? "bg-green-100 text-green-800" :
-                            member.status === "Conflict Declared" ? "bg-red-100 text-red-800" :
-                            "bg-yellow-100 text-yellow-800"
-                          }>
+                          <Badge
+                            className={
+                              member.status === "Completed" && !member.conflict
+                                ? "bg-green-100 text-green-800"
+                                : member.status === "Conflict Declared"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-yellow-100 text-yellow-800"
+                            }
+                          >
                             {member.status}
                           </Badge>
                         </div>
@@ -991,17 +1117,25 @@ const TenderManagement = () => {
                         {member.status === "Pending" && (
                           <div className="space-y-3 bg-gray-50 p-3 rounded-lg">
                             <div className="space-y-2">
-                              <Label className="text-sm font-medium">Declaration</Label>
+                              <Label className="text-sm font-medium">
+                                Declaration
+                              </Label>
                               <div className="space-y-2">
                                 <div className="flex items-center space-x-2">
                                   <Checkbox id={`no-conflict-${index}`} />
-                                  <Label htmlFor={`no-conflict-${index}`} className="text-sm">
+                                  <Label
+                                    htmlFor={`no-conflict-${index}`}
+                                    className="text-sm"
+                                  >
                                     ✅ I declare no conflict of interest
                                   </Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <Checkbox id={`has-conflict-${index}`} />
-                                  <Label htmlFor={`has-conflict-${index}`} className="text-sm">
+                                  <Label
+                                    htmlFor={`has-conflict-${index}`}
+                                    className="text-sm"
+                                  >
                                     ❌ Conflict Exists
                                   </Label>
                                 </div>
@@ -1009,14 +1143,20 @@ const TenderManagement = () => {
                             </div>
 
                             <div>
-                              <Label className="text-sm font-medium">Conflict Type & Details</Label>
+                              <Label className="text-sm font-medium">
+                                Conflict Type & Details
+                              </Label>
                               <Select>
                                 <SelectTrigger className="mt-1">
                                   <SelectValue placeholder="Select conflict type" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="financial">Financial</SelectItem>
-                                  <SelectItem value="professional">Professional</SelectItem>
+                                  <SelectItem value="financial">
+                                    Financial
+                                  </SelectItem>
+                                  <SelectItem value="professional">
+                                    Professional
+                                  </SelectItem>
                                   <SelectItem value="other">Other</SelectItem>
                                 </SelectContent>
                               </Select>
@@ -1033,11 +1173,19 @@ const TenderManagement = () => {
 
                         {member.conflict && member.details && (
                           <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-sm font-medium text-red-800">Conflict Details:</p>
-                            <p className="text-sm text-red-700 mt-1">{member.details}</p>
+                            <p className="text-sm font-medium text-red-800">
+                              Conflict Details:
+                            </p>
+                            <p className="text-sm text-red-700 mt-1">
+                              {member.details}
+                            </p>
                             <div className="flex gap-2 mt-2">
-                              <Button size="sm" variant="outline">Approve with Mitigation</Button>
-                              <Button size="sm" variant="destructive">Replace Evaluator</Button>
+                              <Button size="sm" variant="outline">
+                                Approve with Mitigation
+                              </Button>
+                              <Button size="sm" variant="destructive">
+                                Replace Evaluator
+                              </Button>
                             </div>
                           </div>
                         )}
@@ -1047,12 +1195,18 @@ const TenderManagement = () => {
 
                   {/* Officer Review Panel */}
                   <Card className="p-4 bg-blue-50">
-                    <h3 className="font-medium text-blue-900 mb-3">Officer Review Panel</h3>
+                    <h3 className="font-medium text-blue-900 mb-3">
+                      Officer Review Panel
+                    </h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
                         <div>
-                          <p className="font-medium">Dr. Fatima Yusuf - Conflict Review</p>
-                          <p className="text-sm text-gray-600">Financial relationship with participating vendor</p>
+                          <p className="font-medium">
+                            Dr. Fatima Yusuf - Conflict Review
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Financial relationship with participating vendor
+                          </p>
                         </div>
                         <div className="flex gap-2">
                           <Button
@@ -1062,8 +1216,12 @@ const TenderManagement = () => {
                           >
                             Approve with Mitigation
                           </Button>
-                          <Button size="sm" variant="destructive">Replace Evaluator</Button>
-                          <Button size="sm" variant="outline">Block Participation</Button>
+                          <Button size="sm" variant="destructive">
+                            Replace Evaluator
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            Block Participation
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -1075,10 +1233,10 @@ const TenderManagement = () => {
                       className="bg-primary px-8"
                       onClick={() => {
                         setCoiResolved(true);
-                        setStepStatus(prev => ({
+                        setStepStatus((prev) => ({
                           ...prev,
                           step2: { completed: true, locked: false },
-                          step3: { completed: false, locked: false }
+                          step3: { completed: false, locked: false },
                         }));
                         setCurrentStep(3);
                       }}
@@ -1105,9 +1263,12 @@ const TenderManagement = () => {
               <CardContent>
                 <div className="text-center py-8">
                   <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 font-medium">Complete Step 1 to unlock</p>
+                  <p className="text-gray-600 font-medium">
+                    Complete Step 1 to unlock
+                  </p>
                   <p className="text-sm text-gray-500 mt-1">
-                    Committee assignment must be confirmed before COI declarations can begin
+                    Committee assignment must be confirmed before COI
+                    declarations can begin
                   </p>
                 </div>
               </CardContent>
@@ -1123,7 +1284,9 @@ const TenderManagement = () => {
                     3
                   </div>
                   QCBS Scoring
-                  <Badge className="bg-blue-100 text-blue-800">Committee Workspace</Badge>
+                  <Badge className="bg-blue-100 text-blue-800">
+                    Committee Workspace
+                  </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -1131,16 +1294,26 @@ const TenderManagement = () => {
                   {/* Tabs inside workspace */}
                   <Tabs defaultValue="technical" className="w-full">
                     <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="technical">🔸 Technical Evaluation</TabsTrigger>
-                      <TabsTrigger value="financial">🔸 Financial Evaluation</TabsTrigger>
-                      <TabsTrigger value="final">🔸 Final QCBS Ranking</TabsTrigger>
+                      <TabsTrigger value="technical">
+                        🔸 Technical Evaluation
+                      </TabsTrigger>
+                      <TabsTrigger value="financial">
+                        🔸 Financial Evaluation
+                      </TabsTrigger>
+                      <TabsTrigger value="final">
+                        🔸 Final QCBS Ranking
+                      </TabsTrigger>
                     </TabsList>
 
                     {/* Technical Evaluation Tab */}
                     <TabsContent value="technical" className="space-y-4">
                       <div className="p-4 bg-blue-50 rounded-lg">
                         <p className="text-sm text-blue-800">
-                          <strong>Criteria auto-loaded from scoring matrix</strong> - Each evaluator scores independently, system calculates weighted averages.
+                          <strong>
+                            Criteria auto-loaded from scoring matrix
+                          </strong>{" "}
+                          - Each evaluator scores independently, system
+                          calculates weighted averages.
                         </p>
                       </div>
 
@@ -1156,31 +1329,41 @@ const TenderManagement = () => {
                           </TableHeader>
                           <TableBody>
                             <TableRow>
-                              <TableCell className="font-medium">Equipment Quality</TableCell>
+                              <TableCell className="font-medium">
+                                Equipment Quality
+                              </TableCell>
                               <TableCell>40%</TableCell>
                               <TableCell>82.5</TableCell>
                               <TableCell className="font-bold">33.0</TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-medium">Vendor Experience</TableCell>
+                              <TableCell className="font-medium">
+                                Vendor Experience
+                              </TableCell>
                               <TableCell>20%</TableCell>
                               <TableCell>72.5</TableCell>
                               <TableCell className="font-bold">14.5</TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-medium">Delivery & Training Plan</TableCell>
+                              <TableCell className="font-medium">
+                                Delivery & Training Plan
+                              </TableCell>
                               <TableCell>10%</TableCell>
                               <TableCell>87.5</TableCell>
                               <TableCell className="font-bold">8.8</TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-medium">Technical Support</TableCell>
+                              <TableCell className="font-medium">
+                                Technical Support
+                              </TableCell>
                               <TableCell>15%</TableCell>
                               <TableCell>78.0</TableCell>
                               <TableCell className="font-bold">11.7</TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-medium">Local Content</TableCell>
+                              <TableCell className="font-medium">
+                                Local Content
+                              </TableCell>
                               <TableCell>15%</TableCell>
                               <TableCell>65.0</TableCell>
                               <TableCell className="font-bold">9.8</TableCell>
@@ -1197,7 +1380,10 @@ const TenderManagement = () => {
 
                       <div className="p-4 bg-green-50 rounded-lg">
                         <p className="text-sm text-green-800">
-                          <strong>System Auto-calculates Technical Score:</strong> All vendors passed minimum threshold (≥75%)
+                          <strong>
+                            System Auto-calculates Technical Score:
+                          </strong>{" "}
+                          All vendors passed minimum threshold (≥75%)
                         </p>
                       </div>
                     </TabsContent>
@@ -1206,7 +1392,11 @@ const TenderManagement = () => {
                     <TabsContent value="financial" className="space-y-4">
                       <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <p className="text-sm text-yellow-800">
-                          <strong>Only unlocked if Technical Passing Score ≥ 75%</strong> - Financial envelopes opened for qualified vendors only.
+                          <strong>
+                            Only unlocked if Technical Passing Score ≥ 75%
+                          </strong>{" "}
+                          - Financial envelopes opened for qualified vendors
+                          only.
                         </p>
                       </div>
 
@@ -1225,7 +1415,9 @@ const TenderManagement = () => {
                               <TableCell className="font-medium">A</TableCell>
                               <TableCell>1,000,000</TableCell>
                               <TableCell className="font-bold">100</TableCell>
-                              <TableCell className="font-bold text-green-600">30.0</TableCell>
+                              <TableCell className="font-bold text-green-600">
+                                30.0
+                              </TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell className="font-medium">B</TableCell>
@@ -1248,7 +1440,8 @@ const TenderManagement = () => {
                     <TabsContent value="final" className="space-y-4">
                       <div className="p-4 bg-purple-50 rounded-lg">
                         <p className="text-sm text-purple-800">
-                          <strong>Final QCBS Ranking:</strong> Technical (70%) + Financial (30%) = Combined Score
+                          <strong>Final QCBS Ranking:</strong> Technical (70%) +
+                          Financial (30%) = Combined Score
                         </p>
                       </div>
 
@@ -1268,9 +1461,13 @@ const TenderManagement = () => {
                               <TableCell className="font-medium">A</TableCell>
                               <TableCell>72.5</TableCell>
                               <TableCell>30.0</TableCell>
-                              <TableCell className="font-bold text-yellow-600">102.5</TableCell>
+                              <TableCell className="font-bold text-yellow-600">
+                                102.5
+                              </TableCell>
                               <TableCell>
-                                <Badge className="bg-yellow-100 text-yellow-800">🥇 1</Badge>
+                                <Badge className="bg-yellow-100 text-yellow-800">
+                                  🥇 1
+                                </Badge>
                               </TableCell>
                             </TableRow>
                             <TableRow className="bg-gray-50">
@@ -1279,7 +1476,9 @@ const TenderManagement = () => {
                               <TableCell>24.9</TableCell>
                               <TableCell className="font-bold">94.9</TableCell>
                               <TableCell>
-                                <Badge className="bg-gray-100 text-gray-800">🥈 2</Badge>
+                                <Badge className="bg-gray-100 text-gray-800">
+                                  🥈 2
+                                </Badge>
                               </TableCell>
                             </TableRow>
                             <TableRow>
@@ -1288,7 +1487,9 @@ const TenderManagement = () => {
                               <TableCell>20.1</TableCell>
                               <TableCell className="font-bold">85.1</TableCell>
                               <TableCell>
-                                <Badge className="bg-gray-100 text-gray-800">🥉 3</Badge>
+                                <Badge className="bg-gray-100 text-gray-800">
+                                  🥉 3
+                                </Badge>
                               </TableCell>
                             </TableRow>
                           </TableBody>
@@ -1301,9 +1502,12 @@ const TenderManagement = () => {
                   <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-green-800">QCBS Evaluation Complete</p>
+                        <p className="font-medium text-green-800">
+                          QCBS Evaluation Complete
+                        </p>
                         <p className="text-sm text-green-700">
-                          Recommended Award: <strong>Vendor A</strong> (Final Score: 102.5)
+                          Recommended Award: <strong>Vendor A</strong> (Final
+                          Score: 102.5)
                         </p>
                       </div>
                       <div className="flex gap-2">
@@ -1339,9 +1543,12 @@ const TenderManagement = () => {
               <CardContent>
                 <div className="text-center py-8">
                   <Scale className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 font-medium">Complete Steps 1 & 2 to unlock</p>
+                  <p className="text-gray-600 font-medium">
+                    Complete Steps 1 & 2 to unlock
+                  </p>
                   <p className="text-sm text-gray-500 mt-1">
-                    All COI declarations must be resolved before scoring can begin
+                    All COI declarations must be resolved before scoring can
+                    begin
                   </p>
                 </div>
               </CardContent>
@@ -1367,7 +1574,7 @@ const TenderManagement = () => {
                     Generate Report
                   </Button>
                 </div>
-                
+
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-medium">Approval Workflow</h3>
                   <p className="text-sm text-gray-600 mt-1">
@@ -1392,7 +1599,9 @@ const TenderManagement = () => {
             <CardContent>
               <div className="grid gap-4">
                 <div className="p-4 border rounded-lg bg-green-50">
-                  <h3 className="font-medium text-green-900">Successful Bidder Notification</h3>
+                  <h3 className="font-medium text-green-900">
+                    Successful Bidder Notification
+                  </h3>
                   <p className="text-sm text-green-700 mt-1">
                     Notify winning bidder(s) of award decision
                   </p>
@@ -1401,18 +1610,21 @@ const TenderManagement = () => {
                     Send Award Notice
                   </Button>
                 </div>
-                
+
                 <div className="p-4 border rounded-lg bg-blue-50">
-                  <h3 className="font-medium text-blue-900">Unsuccessful Bidder Feedback</h3>
+                  <h3 className="font-medium text-blue-900">
+                    Unsuccessful Bidder Feedback
+                  </h3>
                   <p className="text-sm text-blue-700 mt-1">
-                    Provide feedback to unsuccessful bidders as per procurement law
+                    Provide feedback to unsuccessful bidders as per procurement
+                    law
                   </p>
                   <Button className="mt-2" size="sm" variant="outline">
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Send Feedback
                   </Button>
                 </div>
-                
+
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-medium">Public Award Notice</h3>
                   <p className="text-sm text-gray-600 mt-1">
@@ -1446,7 +1658,7 @@ const TenderManagement = () => {
                     Create Draft Contract
                   </Button>
                 </div>
-                
+
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-medium">Contract Execution</h3>
                   <p className="text-sm text-gray-600 mt-1">
@@ -1481,7 +1693,7 @@ const TenderManagement = () => {
                 placeholder="Enter tender title"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="description">Description</Label>
               <Textarea
@@ -1494,7 +1706,7 @@ const TenderManagement = () => {
                 rows={3}
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="budget">Budget (₦)</Label>
@@ -1508,7 +1720,7 @@ const TenderManagement = () => {
                   placeholder="0"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="closingDate">Closing Date</Label>
                 <Input
@@ -1516,12 +1728,15 @@ const TenderManagement = () => {
                   type="date"
                   value={tenderForm.closingDate}
                   onChange={(e) =>
-                    setTenderForm({ ...tenderForm, closingDate: e.target.value })
+                    setTenderForm({
+                      ...tenderForm,
+                      closingDate: e.target.value,
+                    })
                   }
                 />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="tenderType">Tender Type</Label>
@@ -1541,7 +1756,7 @@ const TenderManagement = () => {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="procurementMethod">Procurement Method</Label>
                 <Select
@@ -1554,16 +1769,24 @@ const TenderManagement = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="NCB">National Competitive Bidding</SelectItem>
-                    <SelectItem value="ICB">International Competitive Bidding</SelectItem>
-                    <SelectItem value="QCBS">Quality & Cost Based Selection</SelectItem>
-                    <SelectItem value="CQS">Consultant Quality Selection</SelectItem>
+                    <SelectItem value="NCB">
+                      National Competitive Bidding
+                    </SelectItem>
+                    <SelectItem value="ICB">
+                      International Competitive Bidding
+                    </SelectItem>
+                    <SelectItem value="QCBS">
+                      Quality & Cost Based Selection
+                    </SelectItem>
+                    <SelectItem value="CQS">
+                      Consultant Quality Selection
+                    </SelectItem>
                     <SelectItem value="SSS">Single Source Selection</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            
+
             <div className="flex justify-end gap-2">
               <Button
                 variant="outline"

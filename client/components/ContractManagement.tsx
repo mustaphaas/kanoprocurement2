@@ -134,7 +134,11 @@ interface Variation {
   id: string;
   title: string;
   description: string;
-  type: "Scope Change" | "Price Adjustment" | "Time Extension" | "Quantity Change";
+  type:
+    | "Scope Change"
+    | "Price Adjustment"
+    | "Time Extension"
+    | "Quantity Change";
   originalValue: number;
   newValue: number;
   impactDays: number;
@@ -147,7 +151,14 @@ interface Variation {
 interface ContractDocument {
   id: string;
   name: string;
-  type: "Contract" | "Guarantee" | "Insurance" | "Performance Bond" | "Variation Order" | "Certificate" | "Other";
+  type:
+    | "Contract"
+    | "Guarantee"
+    | "Insurance"
+    | "Performance Bond"
+    | "Variation Order"
+    | "Certificate"
+    | "Other";
   uploadDate: string;
   expiryDate?: string;
   size: string;
@@ -187,7 +198,12 @@ interface Dispute {
 interface ComplianceItem {
   id: string;
   requirement: string;
-  type: "Tax Clearance" | "Insurance" | "License" | "Performance Bond" | "Other";
+  type:
+    | "Tax Clearance"
+    | "Insurance"
+    | "License"
+    | "Performance Bond"
+    | "Other";
   status: "Compliant" | "Non-Compliant" | "Expiring" | "Pending";
   dueDate?: string;
   lastChecked: string;
@@ -215,7 +231,9 @@ const STORAGE_KEYS = {
 const ContractManagement = () => {
   const [activeTab, setActiveTab] = useState("contracts");
   const [contracts, setContracts] = useState<Contract[]>([]);
-  const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
+  const [selectedContract, setSelectedContract] = useState<Contract | null>(
+    null,
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showContractModal, setShowContractModal] = useState(false);
@@ -281,7 +299,8 @@ const ContractManagement = () => {
           id: "C001",
           contractNumber: "KS/CNT/2024/001",
           title: "Construction of Primary Healthcare Centers",
-          description: "Construction of 5 primary healthcare centers across rural communities in Kano North LGA",
+          description:
+            "Construction of 5 primary healthcare centers across rural communities in Kano North LGA",
           contractValue: 250000000,
           status: "Active",
           startDate: "2024-02-01",
@@ -309,17 +328,23 @@ const ContractManagement = () => {
               dueDate: "2024-03-15",
               completionDate: "2024-03-10",
               status: "Completed",
-              deliverables: ["Site clearance certificate", "Environmental impact assessment"],
+              deliverables: [
+                "Site clearance certificate",
+                "Environmental impact assessment",
+              ],
               percentage: 20,
               paymentTrigger: true,
             },
             {
-              id: "M002", 
+              id: "M002",
               title: "Foundation Work",
               description: "Complete foundation work for all 5 centers",
               dueDate: "2024-05-30",
               status: "In Progress",
-              deliverables: ["Foundation completion certificate", "Quality test reports"],
+              deliverables: [
+                "Foundation completion certificate",
+                "Quality test reports",
+              ],
               percentage: 35,
               paymentTrigger: true,
             },
@@ -406,7 +431,8 @@ const ContractManagement = () => {
           id: "C002",
           contractNumber: "KS/CNT/2024/002",
           title: "Supply of Medical Equipment",
-          description: "Procurement and installation of modern medical equipment for state hospitals",
+          description:
+            "Procurement and installation of modern medical equipment for state hospitals",
           contractValue: 150000000,
           status: "Active",
           startDate: "2024-01-15",
@@ -434,7 +460,10 @@ const ContractManagement = () => {
               dueDate: "2024-04-15",
               status: "Completed",
               completionDate: "2024-04-10",
-              deliverables: ["Equipment delivery receipt", "Quality certificates"],
+              deliverables: [
+                "Equipment delivery receipt",
+                "Quality certificates",
+              ],
               percentage: 60,
               paymentTrigger: true,
             },
@@ -444,7 +473,10 @@ const ContractManagement = () => {
               description: "Install equipment and train medical staff",
               dueDate: "2024-06-30",
               status: "In Progress",
-              deliverables: ["Installation certificates", "Training completion reports"],
+              deliverables: [
+                "Installation certificates",
+                "Training completion reports",
+              ],
               percentage: 30,
               paymentTrigger: true,
             },
@@ -466,7 +498,8 @@ const ContractManagement = () => {
             {
               id: "V001",
               title: "Additional MRI Scanner",
-              description: "Add one additional MRI scanner to the original scope",
+              description:
+                "Add one additional MRI scanner to the original scope",
               type: "Scope Change",
               originalValue: 150000000,
               newValue: 180000000,
@@ -474,7 +507,8 @@ const ContractManagement = () => {
               status: "Approved",
               requestDate: "2024-03-15",
               approvalDate: "2024-03-22",
-              justification: "Increased patient demand requires additional capacity",
+              justification:
+                "Increased patient demand requires additional capacity",
             },
           ],
           documents: [],
@@ -497,7 +531,7 @@ const ContractManagement = () => {
           },
         },
       ];
-      
+
       setContracts(mockContracts);
       saveToStorage(STORAGE_KEYS.CONTRACTS, mockContracts);
     }
@@ -515,7 +549,11 @@ const ContractManagement = () => {
       endDate: contractForm.endDate,
       ministry: "Current Ministry",
       department: "Current Department",
-      contractType: contractForm.contractType as "Construction" | "Supply" | "Services" | "Consultancy",
+      contractType: contractForm.contractType as
+        | "Construction"
+        | "Supply"
+        | "Services"
+        | "Consultancy",
       contractor: {
         id: contractForm.contractorId,
         companyName: "Sample Contractor",
@@ -553,7 +591,7 @@ const ContractManagement = () => {
     const updatedContracts = [...contracts, newContract];
     setContracts(updatedContracts);
     saveToStorage(STORAGE_KEYS.CONTRACTS, updatedContracts);
-    
+
     setContractForm({
       title: "",
       description: "",
@@ -566,7 +604,10 @@ const ContractManagement = () => {
     setShowContractModal(false);
   };
 
-  const updateContractStatus = (contractId: string, status: Contract["status"]) => {
+  const updateContractStatus = (
+    contractId: string,
+    status: Contract["status"],
+  ) => {
     const updatedContracts = contracts.map((contract) =>
       contract.id === contractId ? { ...contract, status } : contract,
     );
@@ -579,7 +620,9 @@ const ContractManagement = () => {
     const matchesSearch =
       contract.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contract.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contract.contractor.companyName.toLowerCase().includes(searchTerm.toLowerCase());
+      contract.contractor.companyName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
     const matchesFilter =
       filterStatus === "all" || contract.status === filterStatus;
     return matchesSearch && matchesFilter;
@@ -594,9 +637,7 @@ const ContractManagement = () => {
       Suspended: "bg-yellow-100 text-yellow-800",
     };
     return (
-      <Badge className={colors[status as keyof typeof colors]}>
-        {status}
-      </Badge>
+      <Badge className={colors[status as keyof typeof colors]}>{status}</Badge>
     );
   };
 
@@ -697,12 +738,17 @@ const ContractManagement = () => {
 
           <div className="grid gap-4">
             {filteredContracts.map((contract) => (
-              <Card key={contract.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={contract.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <CardTitle className="text-lg">{contract.title}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {contract.title}
+                        </CardTitle>
                         {getStatusBadge(contract.status)}
                       </div>
                       <p className="text-sm text-gray-600 mb-2">
@@ -715,18 +761,21 @@ const ContractManagement = () => {
                         </div>
                         <div>
                           <span className="font-medium">Contractor:</span>
-                          <br />{contract.contractor.companyName}
+                          <br />
+                          {contract.contractor.companyName}
                         </div>
                         <div>
                           <span className="font-medium">Duration:</span>
-                          <br />{contract.startDate} to {contract.endDate}
+                          <br />
+                          {contract.startDate} to {contract.endDate}
                         </div>
                         <div>
                           <span className="font-medium">Days Remaining:</span>
-                          <br />{calculateDaysRemaining(contract.endDate)} days
+                          <br />
+                          {calculateDaysRemaining(contract.endDate)} days
                         </div>
                       </div>
-                      
+
                       {/* Progress Bar */}
                       <div className="mt-3">
                         <div className="flex items-center justify-between mb-1">
@@ -735,13 +784,13 @@ const ContractManagement = () => {
                             {contract.financials.completionPercentage}%
                           </span>
                         </div>
-                        <Progress 
-                          value={contract.financials.completionPercentage} 
+                        <Progress
+                          value={contract.financials.completionPercentage}
                           className="h-2"
                         />
                       </div>
                     </div>
-                    
+
                     <div className="flex flex-col gap-2 ml-4">
                       <Button
                         variant="outline"
@@ -750,11 +799,13 @@ const ContractManagement = () => {
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      
+
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => {/* Handle edit */}}
+                        onClick={() => {
+                          /* Handle edit */
+                        }}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -774,13 +825,15 @@ const ContractManagement = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {contracts.flatMap(contract => 
-                  contract.milestones.map(milestone => (
+                {contracts.flatMap((contract) =>
+                  contract.milestones.map((milestone) => (
                     <div key={milestone.id} className="p-4 border rounded-lg">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h3 className="font-medium">{milestone.title}</h3>
-                          <p className="text-sm text-gray-600 mt-1">{milestone.description}</p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {milestone.description}
+                          </p>
                           <div className="flex gap-4 mt-2 text-sm">
                             <span>Due: {milestone.dueDate}</span>
                             <span>Progress: {milestone.percentage}%</span>
@@ -789,32 +842,44 @@ const ContractManagement = () => {
                             )}
                           </div>
                         </div>
-                        <Badge className={
-                          milestone.status === "Completed" ? "bg-green-100 text-green-800" :
-                          milestone.status === "In Progress" ? "bg-blue-100 text-blue-800" :
-                          milestone.status === "Overdue" ? "bg-red-100 text-red-800" :
-                          "bg-gray-100 text-gray-800"
-                        }>
+                        <Badge
+                          className={
+                            milestone.status === "Completed"
+                              ? "bg-green-100 text-green-800"
+                              : milestone.status === "In Progress"
+                                ? "bg-blue-100 text-blue-800"
+                                : milestone.status === "Overdue"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-800"
+                          }
+                        >
                           {milestone.status}
                         </Badge>
                       </div>
-                      
+
                       <div className="mt-3">
-                        <Progress value={milestone.percentage} className="h-2" />
+                        <Progress
+                          value={milestone.percentage}
+                          className="h-2"
+                        />
                       </div>
-                      
+
                       {milestone.deliverables.length > 0 && (
                         <div className="mt-3">
-                          <h4 className="text-sm font-medium mb-2">Deliverables:</h4>
+                          <h4 className="text-sm font-medium mb-2">
+                            Deliverables:
+                          </h4>
                           <ul className="text-sm text-gray-600 list-disc list-inside">
-                            {milestone.deliverables.map((deliverable, index) => (
-                              <li key={index}>{deliverable}</li>
-                            ))}
+                            {milestone.deliverables.map(
+                              (deliverable, index) => (
+                                <li key={index}>{deliverable}</li>
+                              ),
+                            )}
                           </ul>
                         </div>
                       )}
                     </div>
-                  ))
+                  )),
                 )}
               </div>
             </CardContent>
@@ -830,7 +895,7 @@ const ContractManagement = () => {
               Process Payment
             </Button>
           </div>
-          
+
           <div className="grid gap-4">
             <Card>
               <CardHeader>
@@ -844,43 +909,67 @@ const ContractManagement = () => {
                       <div>
                         <p className="text-sm text-gray-600">Total Paid</p>
                         <p className="text-xl font-bold">
-                          ₦{contracts.reduce((sum, c) => sum + c.financials.paidAmount, 0).toLocaleString()}
+                          ₦
+                          {contracts
+                            .reduce(
+                              (sum, c) => sum + c.financials.paidAmount,
+                              0,
+                            )
+                            .toLocaleString()}
                         </p>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="p-4 border rounded-lg">
                     <div className="flex items-center gap-2">
                       <Clock className="h-5 w-5 text-yellow-600" />
                       <div>
                         <p className="text-sm text-gray-600">Pending</p>
                         <p className="text-xl font-bold">
-                          ₦{contracts.reduce((sum, c) => sum + c.financials.pendingAmount, 0).toLocaleString()}
+                          ₦
+                          {contracts
+                            .reduce(
+                              (sum, c) => sum + c.financials.pendingAmount,
+                              0,
+                            )
+                            .toLocaleString()}
                         </p>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="p-4 border rounded-lg">
                     <div className="flex items-center gap-2">
                       <Shield className="h-5 w-5 text-blue-600" />
                       <div>
                         <p className="text-sm text-gray-600">Retention</p>
                         <p className="text-xl font-bold">
-                          ₦{contracts.reduce((sum, c) => sum + c.financials.retentionAmount, 0).toLocaleString()}
+                          ₦
+                          {contracts
+                            .reduce(
+                              (sum, c) => sum + c.financials.retentionAmount,
+                              0,
+                            )
+                            .toLocaleString()}
                         </p>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="p-4 border rounded-lg">
                     <div className="flex items-center gap-2">
                       <TrendingUp className="h-5 w-5 text-purple-600" />
                       <div>
                         <p className="text-sm text-gray-600">Advance</p>
                         <p className="text-xl font-bold">
-                          ₦{contracts.reduce((sum, c) => sum + c.financials.advanceAmount, 0).toLocaleString()}
+                          ₦
+                          {contracts
+                            .reduce(
+                              (sum, c) => sum + c.financials.advanceAmount,
+                              0,
+                            )
+                            .toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -906,20 +995,29 @@ const ContractManagement = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {contracts.flatMap(contract =>
-                      contract.payments.map(payment => (
+                    {contracts.flatMap((contract) =>
+                      contract.payments.map((payment) => (
                         <TableRow key={payment.id}>
-                          <TableCell>{payment.invoiceNumber || "N/A"}</TableCell>
+                          <TableCell>
+                            {payment.invoiceNumber || "N/A"}
+                          </TableCell>
                           <TableCell>{payment.type}</TableCell>
-                          <TableCell>₦{payment.amount.toLocaleString()}</TableCell>
+                          <TableCell>
+                            ₦{payment.amount.toLocaleString()}
+                          </TableCell>
                           <TableCell>{payment.dueDate}</TableCell>
                           <TableCell>
-                            <Badge className={
-                              payment.status === "Paid" ? "bg-green-100 text-green-800" :
-                              payment.status === "Approved" ? "bg-blue-100 text-blue-800" :
-                              payment.status === "Overdue" ? "bg-red-100 text-red-800" :
-                              "bg-yellow-100 text-yellow-800"
-                            }>
+                            <Badge
+                              className={
+                                payment.status === "Paid"
+                                  ? "bg-green-100 text-green-800"
+                                  : payment.status === "Approved"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : payment.status === "Overdue"
+                                      ? "bg-red-100 text-red-800"
+                                      : "bg-yellow-100 text-yellow-800"
+                              }
+                            >
                               {payment.status}
                             </Badge>
                           </TableCell>
@@ -929,7 +1027,7 @@ const ContractManagement = () => {
                             </Button>
                           </TableCell>
                         </TableRow>
-                      ))
+                      )),
                     )}
                   </TableBody>
                 </Table>
@@ -941,29 +1039,40 @@ const ContractManagement = () => {
         {/* Variations & Amendments */}
         <TabsContent value="variations" className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Variation Orders & Change Management</h3>
+            <h3 className="text-lg font-semibold">
+              Variation Orders & Change Management
+            </h3>
             <Button onClick={() => setShowVariationModal(true)}>
               <Plus className="h-4 w-4 mr-2" />
               New Variation
             </Button>
           </div>
-          
+
           <div className="grid gap-4">
-            {contracts.flatMap(contract =>
-              contract.variations.map(variation => (
+            {contracts.flatMap((contract) =>
+              contract.variations.map((variation) => (
                 <Card key={variation.id}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="text-lg">{variation.title}</CardTitle>
-                        <p className="text-sm text-gray-600 mt-1">{variation.description}</p>
+                        <CardTitle className="text-lg">
+                          {variation.title}
+                        </CardTitle>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {variation.description}
+                        </p>
                       </div>
-                      <Badge className={
-                        variation.status === "Approved" ? "bg-green-100 text-green-800" :
-                        variation.status === "Rejected" ? "bg-red-100 text-red-800" :
-                        variation.status === "Implemented" ? "bg-blue-100 text-blue-800" :
-                        "bg-yellow-100 text-yellow-800"
-                      }>
+                      <Badge
+                        className={
+                          variation.status === "Approved"
+                            ? "bg-green-100 text-green-800"
+                            : variation.status === "Rejected"
+                              ? "bg-red-100 text-red-800"
+                              : variation.status === "Implemented"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-yellow-100 text-yellow-800"
+                        }
+                      >
                         {variation.status}
                       </Badge>
                     </div>
@@ -972,32 +1081,42 @@ const ContractManagement = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
                         <span className="font-medium">Type:</span>
-                        <br />{variation.type}
+                        <br />
+                        {variation.type}
                       </div>
                       <div>
                         <span className="font-medium">Value Change:</span>
-                        <br />₦{(variation.newValue - variation.originalValue).toLocaleString()}
+                        <br />₦
+                        {(
+                          variation.newValue - variation.originalValue
+                        ).toLocaleString()}
                       </div>
                       <div>
                         <span className="font-medium">Time Impact:</span>
-                        <br />{variation.impactDays} days
+                        <br />
+                        {variation.impactDays} days
                       </div>
                       <div>
                         <span className="font-medium">Request Date:</span>
-                        <br />{variation.requestDate}
+                        <br />
+                        {variation.requestDate}
                       </div>
                     </div>
-                    
+
                     <div className="mt-4">
                       <h4 className="font-medium mb-2">Justification:</h4>
-                      <p className="text-sm text-gray-600">{variation.justification}</p>
+                      <p className="text-sm text-gray-600">
+                        {variation.justification}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
-              ))
+              )),
             )}
-            
-            {contracts.every(contract => contract.variations.length === 0) && (
+
+            {contracts.every(
+              (contract) => contract.variations.length === 0,
+            ) && (
               <Card>
                 <CardContent className="text-center py-8">
                   <PenTool className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -1011,13 +1130,15 @@ const ContractManagement = () => {
         {/* Disputes & Claims */}
         <TabsContent value="disputes" className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Dispute & Claim Management</h3>
+            <h3 className="text-lg font-semibold">
+              Dispute & Claim Management
+            </h3>
             <Button onClick={() => setShowDisputeModal(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Log Dispute
             </Button>
           </div>
-          
+
           <Card>
             <CardContent className="text-center py-8">
               <Gavel className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -1037,35 +1158,46 @@ const ContractManagement = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {contracts.map(contract => (
+                {contracts.map((contract) => (
                   <div key={contract.id} className="border rounded-lg p-4">
                     <h3 className="font-medium mb-3">{contract.title}</h3>
-                    
+
                     <div className="grid gap-3">
-                      {contract.documents.map(doc => (
-                        <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      {contract.documents.map((doc) => (
+                        <div
+                          key={doc.id}
+                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        >
                           <div className="flex items-center gap-3">
                             <FileText className="h-5 w-5 text-blue-600" />
                             <div>
                               <p className="font-medium">{doc.name}</p>
                               <p className="text-sm text-gray-600">
                                 Type: {doc.type} | Size: {doc.size}
-                                {doc.expiryDate && ` | Expires: ${doc.expiryDate}`}
+                                {doc.expiryDate &&
+                                  ` | Expires: ${doc.expiryDate}`}
                               </p>
                             </div>
                           </div>
-                          <Badge className={
-                            doc.status === "Valid" ? "bg-green-100 text-green-800" :
-                            doc.status === "Expired" ? "bg-red-100 text-red-800" :
-                            "bg-yellow-100 text-yellow-800"
-                          }>
+                          <Badge
+                            className={
+                              doc.status === "Valid"
+                                ? "bg-green-100 text-green-800"
+                                : doc.status === "Expired"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-yellow-100 text-yellow-800"
+                            }
+                          >
                             {doc.status}
                           </Badge>
                         </div>
                       ))}
-                      
-                      {contract.compliance.map(item => (
-                        <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+
+                      {contract.compliance.map((item) => (
+                        <div
+                          key={item.id}
+                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        >
                           <div className="flex items-center gap-3">
                             <Shield className="h-5 w-5 text-green-600" />
                             <div>
@@ -1076,12 +1208,17 @@ const ContractManagement = () => {
                               </p>
                             </div>
                           </div>
-                          <Badge className={
-                            item.status === "Compliant" ? "bg-green-100 text-green-800" :
-                            item.status === "Non-Compliant" ? "bg-red-100 text-red-800" :
-                            item.status === "Expiring" ? "bg-yellow-100 text-yellow-800" :
-                            "bg-gray-100 text-gray-800"
-                          }>
+                          <Badge
+                            className={
+                              item.status === "Compliant"
+                                ? "bg-green-100 text-green-800"
+                                : item.status === "Non-Compliant"
+                                  ? "bg-red-100 text-red-800"
+                                  : item.status === "Expiring"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-gray-100 text-gray-800"
+                            }
+                          >
                             {item.status}
                           </Badge>
                         </div>
@@ -1102,76 +1239,112 @@ const ContractManagement = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {contracts.filter(c => c.status === "Completed").map(contract => (
-                  <div key={contract.id} className="border rounded-lg p-6">
-                    <h3 className="font-semibold text-lg mb-4">{contract.title}</h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div>
-                        <h4 className="font-medium mb-2">Performance Metrics</h4>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <span>Timeliness:</span>
-                            <span className="font-medium">{contract.performance.timelinessScore}%</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Quality:</span>
-                            <span className="font-medium">{contract.performance.qualityScore}%</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Compliance:</span>
-                            <span className="font-medium">{contract.performance.complianceScore}%</span>
-                          </div>
-                          <div className="flex justify-between font-semibold pt-2 border-t">
-                            <span>Overall Rating:</span>
-                            <span>{contract.performance.overallRating}/5.0</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-medium mb-2">Financial Summary</h4>
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span>Contract Value:</span>
-                            <span>₦{contract.financials.totalContractValue.toLocaleString()}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Total Paid:</span>
-                            <span>₦{contract.financials.paidAmount.toLocaleString()}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Retention Released:</span>
-                            <span>₦{contract.financials.retentionAmount.toLocaleString()}</span>
+                {contracts
+                  .filter((c) => c.status === "Completed")
+                  .map((contract) => (
+                    <div key={contract.id} className="border rounded-lg p-6">
+                      <h3 className="font-semibold text-lg mb-4">
+                        {contract.title}
+                      </h3>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                          <h4 className="font-medium mb-2">
+                            Performance Metrics
+                          </h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span>Timeliness:</span>
+                              <span className="font-medium">
+                                {contract.performance.timelinessScore}%
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Quality:</span>
+                              <span className="font-medium">
+                                {contract.performance.qualityScore}%
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Compliance:</span>
+                              <span className="font-medium">
+                                {contract.performance.complianceScore}%
+                              </span>
+                            </div>
+                            <div className="flex justify-between font-semibold pt-2 border-t">
+                              <span>Overall Rating:</span>
+                              <span>
+                                {contract.performance.overallRating}/5.0
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-medium mb-2">Actions</h4>
-                        <div className="space-y-2">
-                          <Button className="w-full" size="sm">
-                            <Award className="h-4 w-4 mr-2" />
-                            Generate Certificate
-                          </Button>
-                          <Button variant="outline" className="w-full" size="sm">
-                            <Download className="h-4 w-4 mr-2" />
-                            Final Report
-                          </Button>
-                          <Button variant="outline" className="w-full" size="sm">
-                            <Archive className="h-4 w-4 mr-2" />
-                            Archive Contract
-                          </Button>
+
+                        <div>
+                          <h4 className="font-medium mb-2">
+                            Financial Summary
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span>Contract Value:</span>
+                              <span>
+                                ₦
+                                {contract.financials.totalContractValue.toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Total Paid:</span>
+                              <span>
+                                ₦
+                                {contract.financials.paidAmount.toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Retention Released:</span>
+                              <span>
+                                ₦
+                                {contract.financials.retentionAmount.toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 className="font-medium mb-2">Actions</h4>
+                          <div className="space-y-2">
+                            <Button className="w-full" size="sm">
+                              <Award className="h-4 w-4 mr-2" />
+                              Generate Certificate
+                            </Button>
+                            <Button
+                              variant="outline"
+                              className="w-full"
+                              size="sm"
+                            >
+                              <Download className="h-4 w-4 mr-2" />
+                              Final Report
+                            </Button>
+                            <Button
+                              variant="outline"
+                              className="w-full"
+                              size="sm"
+                            >
+                              <Archive className="h-4 w-4 mr-2" />
+                              Archive Contract
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-                
-                {contracts.filter(c => c.status === "Completed").length === 0 && (
+                  ))}
+
+                {contracts.filter((c) => c.status === "Completed").length ===
+                  0 && (
                   <div className="text-center py-8">
                     <Archive className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">No completed contracts ready for closeout</p>
+                    <p className="text-gray-600">
+                      No completed contracts ready for closeout
+                    </p>
                   </div>
                 )}
               </div>
@@ -1193,7 +1366,7 @@ const ContractManagement = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2">
@@ -1201,13 +1374,13 @@ const ContractManagement = () => {
                   <div>
                     <p className="text-sm text-gray-600">Active Contracts</p>
                     <p className="text-2xl font-bold">
-                      {contracts.filter(c => c.status === "Active").length}
+                      {contracts.filter((c) => c.status === "Active").length}
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2">
@@ -1215,13 +1388,16 @@ const ContractManagement = () => {
                   <div>
                     <p className="text-sm text-gray-600">Total Value</p>
                     <p className="text-2xl font-bold">
-                      ₦{contracts.reduce((sum, c) => sum + c.contractValue, 0).toLocaleString()}
+                      ₦
+                      {contracts
+                        .reduce((sum, c) => sum + c.contractValue, 0)
+                        .toLocaleString()}
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2">
@@ -1229,45 +1405,67 @@ const ContractManagement = () => {
                   <div>
                     <p className="text-sm text-gray-600">Avg Performance</p>
                     <p className="text-2xl font-bold">
-                      {(contracts.reduce((sum, c) => sum + c.performance.overallRating, 0) / contracts.length || 0).toFixed(1)}
+                      {(
+                        contracts.reduce(
+                          (sum, c) => sum + c.performance.overallRating,
+                          0,
+                        ) / contracts.length || 0
+                      ).toFixed(1)}
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Contract Performance Dashboard</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {contracts.map(contract => (
+                {contracts.map((contract) => (
                   <div key={contract.id} className="p-4 border rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-medium">{contract.title}</h3>
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-600">Rating:</span>
-                        <span className="font-bold">{contract.performance.overallRating}/5.0</span>
+                        <span className="font-bold">
+                          {contract.performance.overallRating}/5.0
+                        </span>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-3 gap-4 text-sm">
                       <div>
                         <span className="text-gray-600">Timeliness</span>
-                        <Progress value={contract.performance.timelinessScore} className="h-2 mt-1" />
-                        <span className="text-xs text-gray-500">{contract.performance.timelinessScore}%</span>
+                        <Progress
+                          value={contract.performance.timelinessScore}
+                          className="h-2 mt-1"
+                        />
+                        <span className="text-xs text-gray-500">
+                          {contract.performance.timelinessScore}%
+                        </span>
                       </div>
                       <div>
                         <span className="text-gray-600">Quality</span>
-                        <Progress value={contract.performance.qualityScore} className="h-2 mt-1" />
-                        <span className="text-xs text-gray-500">{contract.performance.qualityScore}%</span>
+                        <Progress
+                          value={contract.performance.qualityScore}
+                          className="h-2 mt-1"
+                        />
+                        <span className="text-xs text-gray-500">
+                          {contract.performance.qualityScore}%
+                        </span>
                       </div>
                       <div>
                         <span className="text-gray-600">Compliance</span>
-                        <Progress value={contract.performance.complianceScore} className="h-2 mt-1" />
-                        <span className="text-xs text-gray-500">{contract.performance.complianceScore}%</span>
+                        <Progress
+                          value={contract.performance.complianceScore}
+                          className="h-2 mt-1"
+                        />
+                        <span className="text-xs text-gray-500">
+                          {contract.performance.complianceScore}%
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -1296,20 +1494,23 @@ const ContractManagement = () => {
                 placeholder="Enter contract title"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
                 value={contractForm.description}
                 onChange={(e) =>
-                  setContractForm({ ...contractForm, description: e.target.value })
+                  setContractForm({
+                    ...contractForm,
+                    description: e.target.value,
+                  })
                 }
                 placeholder="Enter contract description"
                 rows={3}
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="contractValue">Contract Value (₦)</Label>
@@ -1318,12 +1519,15 @@ const ContractManagement = () => {
                   type="number"
                   value={contractForm.contractValue}
                   onChange={(e) =>
-                    setContractForm({ ...contractForm, contractValue: e.target.value })
+                    setContractForm({
+                      ...contractForm,
+                      contractValue: e.target.value,
+                    })
                   }
                   placeholder="0"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="contractType">Contract Type</Label>
                 <Select
@@ -1344,7 +1548,7 @@ const ContractManagement = () => {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="startDate">Start Date</Label>
@@ -1353,11 +1557,14 @@ const ContractManagement = () => {
                   type="date"
                   value={contractForm.startDate}
                   onChange={(e) =>
-                    setContractForm({ ...contractForm, startDate: e.target.value })
+                    setContractForm({
+                      ...contractForm,
+                      startDate: e.target.value,
+                    })
                   }
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="endDate">End Date</Label>
                 <Input
@@ -1365,12 +1572,15 @@ const ContractManagement = () => {
                   type="date"
                   value={contractForm.endDate}
                   onChange={(e) =>
-                    setContractForm({ ...contractForm, endDate: e.target.value })
+                    setContractForm({
+                      ...contractForm,
+                      endDate: e.target.value,
+                    })
                   }
                 />
               </div>
             </div>
-            
+
             <div className="flex justify-end gap-2">
               <Button
                 variant="outline"
