@@ -113,13 +113,62 @@ export default function NOCRequestsTab() {
   }, [nocRequests, searchTerm, statusFilter, ministryFilter]);
 
   const loadNOCRequests = () => {
-    // Load from central storage
-    const storedRequests = localStorage.getItem("centralNOCRequests");
-    if (storedRequests) {
-      const requests = JSON.parse(storedRequests);
-      setNOCRequests(requests);
-    } else {
-      // Initialize with mock data
+    // Load and synchronize NOC requests from all ministries
+    const allNOCRequests: NOCRequest[] = [];
+
+    // Load from all ministry storage keys
+    const ministryKeys = ["MOH_NOCRequests", "MOWI_NOCRequests", "MOE_NOCRequests"];
+    const ministryNames = {
+      "MOH": "Ministry of Health",
+      "MOWI": "Ministry of Works and Infrastructure",
+      "MOE": "Ministry of Education"
+    };
+
+    ministryKeys.forEach((key) => {
+      const ministryRequests = localStorage.getItem(key);
+      if (ministryRequests) {
+        const requests = JSON.parse(ministryRequests);
+        const ministryCode = key.split("_")[0];
+
+        // Convert ministry requests to central format
+        requests.forEach((req: any) => {
+          allNOCRequests.push({
+            ...req,
+            ministryCode,
+            ministryName: ministryNames[ministryCode as keyof typeof ministryNames] || ministryCode,
+            tenderId: req.tenderId || `TND-${ministryCode}-${req.id.split('-').pop()}`,
+            tenderTitle: req.tenderTitle || `${req.projectTitle} Tender`,
+            procuringEntity: `Kano State ${ministryNames[ministryCode as keyof typeof ministryNames]}`,
+            contactPerson: req.contactPerson || "Ministry Contact",
+            contactEmail: req.contactEmail || `contact@${ministryCode.toLowerCase()}.kano.gov.ng`,
+            projectDescription: req.projectDescription || `Procurement for ${req.projectTitle}`,
+            justification: req.justification || "Critical infrastructure development requirement",
+            category: req.category || "Infrastructure",
+            documents: req.documents || {},
+            timeline: req.timeline || {
+              dateSubmitted: req.requestDate,
+              ...(req.approvalDate && { approvalDate: req.approvalDate })
+            }
+          });
+        });
+      }
+    });
+
+    // Load any existing central requests (for backwards compatibility)
+    const storedCentralRequests = localStorage.getItem("centralNOCRequests");
+    if (storedCentralRequests) {
+      const centralRequests = JSON.parse(storedCentralRequests);
+      // Only add central requests that don't exist in ministry data
+      centralRequests.forEach((centralReq: NOCRequest) => {
+        const exists = allNOCRequests.find(req => req.id === centralReq.id);
+        if (!exists) {
+          allNOCRequests.push(centralReq);
+        }
+      });
+    }
+
+    // If no requests found, initialize with comprehensive mock data
+    if (allNOCRequests.length === 0) {
       const mockRequests: NOCRequest[] = [
         {
           id: "NOC-2024-001",
