@@ -80,9 +80,10 @@ interface CommitteeTemplate {
 
 interface EvaluationFramework {
   methodology: "QCBS" | "QBS" | "LCS" | "FBS";
-  technicalWeightPercent: number;
-  financialWeightPercent: number;
-  passingTechnicalScore: number;
+  defaultTechnicalWeight: number; // Default weight, can be adjusted per tender
+  defaultFinancialWeight: number; // Default weight, can be adjusted per tender
+  allowWeightCustomization: boolean; // Whether weights can be modified per tender
+  passingTechnicalScore: number; // Configurable threshold
   scoringScale: number; // e.g., 100 or 10
   evaluationCriteria: FrameworkCriteria[];
   consensusRules: ConsensusRule[];
