@@ -510,6 +510,7 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                     <SelectItem value="Clarification Requested">Clarification Requested</SelectItem>
                     <SelectItem value="Approved">Approved</SelectItem>
                     <SelectItem value="Rejected">Rejected</SelectItem>
+                    <SelectItem value="Pending">Pending</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
