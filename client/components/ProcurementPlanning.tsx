@@ -986,11 +986,15 @@ export default function ProcurementPlanning() {
         </TabsContent>
 
         <TabsContent value="committees" className="space-y-4">
-          <EvaluationCommitteeManagement />
+          <CommitteeTemplates />
         </TabsContent>
 
-        <TabsContent value="scoring" className="space-y-4">
-          <ScoringMatrixImplementation />
+        <TabsContent value="qcbs" className="space-y-4">
+          <QCBSFrameworkDefinition />
+        </TabsContent>
+
+        <TabsContent value="assignments" className="space-y-4">
+          <TenderCommitteeAssignment />
         </TabsContent>
 
         <TabsContent value="analysis" className="space-y-4">
