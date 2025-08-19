@@ -621,7 +621,7 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                             )}
                           </div>
                           <div className="text-right">
-                            <p className="text-sm text-gray-600">Submitted: {request.timeline.dateSubmitted}</p>
+                            <p className="text-sm text-gray-600">Submitted: {request.timeline?.dateSubmitted || request.requestDate}</p>
                             {request.status === "Approved" && request.certificateNumber && (
                               <Button
                                 variant="outline"
