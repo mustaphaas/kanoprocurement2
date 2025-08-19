@@ -10759,6 +10759,42 @@ Blockchain Timestamp: ${Date.now()}
         </nav>
       )}
 
+      {/* Procurement Planning Sub-Navigation */}
+      {currentView === "procurement-planning" && (
+        <nav className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex space-x-1 overflow-x-auto py-2">
+              <div className="flex items-center space-x-4 text-sm text-gray-600">
+                <div className="flex items-center space-x-1">
+                  <Target className="h-4 w-4 text-green-600" />
+                  <span className="font-medium text-green-600">Procurement Planning Module</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center space-x-1">
+                  <Calendar className="h-4 w-4" />
+                  <span>Annual Planning</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center space-x-1">
+                  <DollarSign className="h-4 w-4" />
+                  <span>Budget Allocation</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center space-x-1">
+                  <Users className="h-4 w-4" />
+                  <span>Committee Management</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center space-x-1">
+                  <Calculator className="h-4 w-4" />
+                  <span>Scoring Matrix</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      )}
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         {renderContent()}
