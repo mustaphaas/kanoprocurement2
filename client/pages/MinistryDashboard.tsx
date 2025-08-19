@@ -47,6 +47,7 @@ import {
   MessageSquare,
   Shield,
   Gavel,
+  Handshake,
   BookOpen,
   Clipboard,
   CheckSquare,
@@ -2300,7 +2301,7 @@ export default function MinistryDashboard() {
           const updatedCompanies = prevCompanies.map((company) => {
             if (company.email.toLowerCase() === email) {
               console.log(
-                "✅ Updating company status:",
+                "�� Updating company status:",
                 company.companyName,
                 "from",
                 company.status,
@@ -7670,7 +7671,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                 </div>
                                 <ul className="text-xs text-red-600 mt-1 space-y-1">
                                   {!workflowStatus?.registrationCompleted && (
-                                    <li>��� Company Registration</li>
+                                    <li>����� Company Registration</li>
                                   )}
                                   {!workflowStatus?.loginVerificationCompleted && (
                                     <li>• Login & Verification</li>
