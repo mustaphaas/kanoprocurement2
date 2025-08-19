@@ -10647,6 +10647,8 @@ Blockchain Timestamp: ${Date.now()}
       return renderNOCRequests();
     } else if (currentView === "users") {
       return renderUserManagement();
+    } else if (currentView === "procurement-planning") {
+      return <ProcurementPlanning />;
     }
     return null;
   };
