@@ -61,7 +61,13 @@ interface BudgetAllocation {
   remainingBudget: number;
   categories: BudgetCategory[];
   approvalWorkflow: ApprovalWorkflowStep[];
-  status: "Draft" | "Submitted" | "Under Review" | "Approved" | "Rejected" | "Revision Required";
+  status:
+    | "Draft"
+    | "Submitted"
+    | "Under Review"
+    | "Approved"
+    | "Rejected"
+    | "Revision Required";
   submittedDate?: string;
   approvedDate?: string;
   createdBy: string;
@@ -151,19 +157,24 @@ interface BudgetAllocationProps {
   onClose?: () => void;
 }
 
-export default function BudgetAllocation({ 
-  procurementPlanId, 
-  planTitle, 
+export default function BudgetAllocation({
+  procurementPlanId,
+  planTitle,
   totalBudget,
-  onClose 
+  onClose,
 }: BudgetAllocationProps) {
-  const [budgetAllocations, setBudgetAllocations] = useState<BudgetAllocation[]>([]);
-  const [selectedAllocation, setSelectedAllocation] = useState<BudgetAllocation | null>(null);
+  const [budgetAllocations, setBudgetAllocations] = useState<
+    BudgetAllocation[]
+  >([]);
+  const [selectedAllocation, setSelectedAllocation] =
+    useState<BudgetAllocation | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [viewMode, setViewMode] = useState<"list" | "workflow" | "analytics">("list");
+  const [viewMode, setViewMode] = useState<"list" | "workflow" | "analytics">(
+    "list",
+  );
 
   // Form states
   const [allocationForm, setAllocationForm] = useState({
@@ -196,16 +207,18 @@ export default function BudgetAllocation({
   useEffect(() => {
     if (procurementPlanId && totalBudget) {
       setShowCreateModal(true);
-      setAllocationForm(prev => ({ ...prev, totalBudget }));
+      setAllocationForm((prev) => ({ ...prev, totalBudget }));
     }
   }, [procurementPlanId, totalBudget]);
 
   const loadBudgetAllocations = () => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
-      
+
       const stored = localStorage.getItem(storageKey);
       if (stored) {
         setBudgetAllocations(JSON.parse(stored));
@@ -219,7 +232,9 @@ export default function BudgetAllocation({
     }
   };
 
-  const createSampleBudgetAllocations = (ministryCode: string): BudgetAllocation[] => {
+  const createSampleBudgetAllocations = (
+    ministryCode: string,
+  ): BudgetAllocation[] => {
     const baseAllocation: BudgetAllocation = {
       id: "BA-2024-001",
       procurementPlanId: "PP-2024-001",
@@ -233,12 +248,14 @@ export default function BudgetAllocation({
       createdBy: "Dr. Amina Hassan",
       createdDate: "2024-01-15",
       lastModified: "2024-01-25",
-      budgetJustification: "Critical medical equipment needed to improve healthcare delivery across Kano State health facilities.",
+      budgetJustification:
+        "Critical medical equipment needed to improve healthcare delivery across Kano State health facilities.",
       categories: [
         {
           id: "BC-001",
           name: "Diagnostic Equipment",
-          description: "X-ray machines, ultrasound equipment, and diagnostic tools",
+          description:
+            "X-ray machines, ultrasound equipment, and diagnostic tools",
           requestedAmount: 800000000,
           allocatedAmount: 750000000,
           priority: "Critical",
@@ -256,7 +273,8 @@ export default function BudgetAllocation({
           priority: "High",
           quarter: "Q3",
           department: "Surgery Department",
-          justification: "Required for surgical procedures and emergency operations",
+          justification:
+            "Required for surgical procedures and emergency operations",
           approvalStatus: "Approved",
         },
         {
@@ -268,7 +286,8 @@ export default function BudgetAllocation({
           priority: "High",
           quarter: "Q2",
           department: "Laboratory Services",
-          justification: "Necessary for accurate medical testing and diagnostics",
+          justification:
+            "Necessary for accurate medical testing and diagnostics",
           approvalStatus: "Approved",
         },
         {
@@ -280,7 +299,8 @@ export default function BudgetAllocation({
           priority: "Critical",
           quarter: "Q1",
           department: "Emergency Services",
-          justification: "Critical for emergency response and patient transport",
+          justification:
+            "Critical for emergency response and patient transport",
           approvalStatus: "Modified",
           modificationReason: "Budget constraints, reduced by 12.5%",
         },
@@ -334,7 +354,8 @@ export default function BudgetAllocation({
           approverEmail: "khadija.aliyu@health.kano.gov.ng",
           status: "Approved",
           actionDate: "2024-01-25",
-          comments: "Approved with minor modifications to emergency equipment budget",
+          comments:
+            "Approved with minor modifications to emergency equipment budget",
           requiredDocuments: ["Final budget document", "Risk assessment"],
           completedDocuments: ["Final budget document", "Risk assessment"],
           thresholdAmount: 2000000000,
@@ -346,7 +367,8 @@ export default function BudgetAllocation({
           stepId: "WF-003",
           author: "Dr. Khadija Aliyu",
           role: "Permanent Secretary",
-          comment: "Excellent planning. Minor adjustment needed for emergency equipment to optimize budget utilization.",
+          comment:
+            "Excellent planning. Minor adjustment needed for emergency equipment to optimize budget utilization.",
           date: "2024-01-25",
           type: "Approval",
         },
@@ -356,7 +378,8 @@ export default function BudgetAllocation({
         {
           id: "RA-001",
           category: "Budget Overrun",
-          riskDescription: "Potential cost increases due to market fluctuations",
+          riskDescription:
+            "Potential cost increases due to market fluctuations",
           impact: "Medium",
           probability: "Low",
           mitigation: "Include 5% contingency in each category",
@@ -365,10 +388,12 @@ export default function BudgetAllocation({
         {
           id: "RA-002",
           category: "Supplier Availability",
-          riskDescription: "Limited suppliers for specialized medical equipment",
+          riskDescription:
+            "Limited suppliers for specialized medical equipment",
           impact: "High",
           probability: "Medium",
-          mitigation: "Early market engagement and pre-qualification of suppliers",
+          mitigation:
+            "Early market engagement and pre-qualification of suppliers",
           owner: "Procurement Team",
         },
       ],
@@ -379,18 +404,21 @@ export default function BudgetAllocation({
       baseAllocation.planTitle = "Infrastructure Development Plan 2024";
       baseAllocation.totalBudget = 15000000000;
       baseAllocation.allocatedBudget = 14200000000;
-      baseAllocation.budgetJustification = "Critical infrastructure development to improve road networks and construction projects across Kano State.";
+      baseAllocation.budgetJustification =
+        "Critical infrastructure development to improve road networks and construction projects across Kano State.";
       baseAllocation.categories = [
         {
           id: "BC-001",
           name: "Road Construction",
-          description: "Highway rehabilitation and new road construction projects",
+          description:
+            "Highway rehabilitation and new road construction projects",
           requestedAmount: 8000000000,
           allocatedAmount: 7500000000,
           priority: "Critical",
           quarter: "Q2",
           department: "Road Construction",
-          justification: "Essential for improving transportation infrastructure",
+          justification:
+            "Essential for improving transportation infrastructure",
           approvalStatus: "Approved",
         },
         {
@@ -402,15 +430,18 @@ export default function BudgetAllocation({
           priority: "High",
           quarter: "Q3",
           department: "Bridge Engineering",
-          justification: "Critical for connecting communities and improving access",
+          justification:
+            "Critical for connecting communities and improving access",
           approvalStatus: "Approved",
         },
       ];
     } else if (ministryCode === "MOE") {
-      baseAllocation.planTitle = "Educational Infrastructure and Equipment Plan";
+      baseAllocation.planTitle =
+        "Educational Infrastructure and Equipment Plan";
       baseAllocation.totalBudget = 5000000000;
       baseAllocation.allocatedBudget = 4750000000;
-      baseAllocation.budgetJustification = "Essential educational infrastructure and equipment to improve learning outcomes in Kano State schools.";
+      baseAllocation.budgetJustification =
+        "Essential educational infrastructure and equipment to improve learning outcomes in Kano State schools.";
       baseAllocation.categories = [
         {
           id: "BC-001",
@@ -421,7 +452,8 @@ export default function BudgetAllocation({
           priority: "High",
           quarter: "Q1",
           department: "Basic Education",
-          justification: "Essential for creating conducive learning environments",
+          justification:
+            "Essential for creating conducive learning environments",
           approvalStatus: "Approved",
         },
         {
@@ -444,7 +476,9 @@ export default function BudgetAllocation({
 
   const saveBudgetAllocations = (allocations: BudgetAllocation[]) => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
       localStorage.setItem(storageKey, JSON.stringify(allocations));
@@ -469,7 +503,7 @@ export default function BudgetAllocation({
       approvalStatus: "Pending",
     };
 
-    setAllocationForm(prev => ({
+    setAllocationForm((prev) => ({
       ...prev,
       categories: [...prev.categories, newCategory],
     }));
@@ -486,8 +520,11 @@ export default function BudgetAllocation({
   };
 
   const createBudgetAllocation = () => {
-    const totalRequested = allocationForm.categories.reduce((sum, cat) => sum + cat.requestedAmount, 0);
-    
+    const totalRequested = allocationForm.categories.reduce(
+      (sum, cat) => sum + cat.requestedAmount,
+      0,
+    );
+
     const newAllocation: BudgetAllocation = {
       id: `BA-${Date.now()}`,
       procurementPlanId: procurementPlanId || "PP-NEW",
@@ -498,8 +535,8 @@ export default function BudgetAllocation({
       categories: allocationForm.categories,
       status: "Draft",
       createdBy: "Current User",
-      createdDate: new Date().toISOString().split('T')[0],
-      lastModified: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
+      lastModified: new Date().toISOString().split("T")[0],
       budgetJustification: allocationForm.budgetJustification,
       approvalWorkflow: createDefaultWorkflow(),
       comments: [],
@@ -559,31 +596,41 @@ export default function BudgetAllocation({
   ];
 
   const submitForApproval = (allocationId: string) => {
-    const updatedAllocations = budgetAllocations.map(allocation =>
+    const updatedAllocations = budgetAllocations.map((allocation) =>
       allocation.id === allocationId
-        ? { 
-            ...allocation, 
+        ? {
+            ...allocation,
             status: "Submitted" as const,
-            submittedDate: new Date().toISOString().split('T')[0],
-            lastModified: new Date().toISOString().split('T')[0],
+            submittedDate: new Date().toISOString().split("T")[0],
+            lastModified: new Date().toISOString().split("T")[0],
           }
-        : allocation
+        : allocation,
     );
 
     setBudgetAllocations(updatedAllocations);
     saveBudgetAllocations(updatedAllocations);
   };
 
-  const processApproval = (allocationId: string, stepId: string, action: "approve" | "reject" | "request_revision", comments: string) => {
-    const updatedAllocations = budgetAllocations.map(allocation => {
+  const processApproval = (
+    allocationId: string,
+    stepId: string,
+    action: "approve" | "reject" | "request_revision",
+    comments: string,
+  ) => {
+    const updatedAllocations = budgetAllocations.map((allocation) => {
       if (allocation.id === allocationId) {
-        const updatedWorkflow = allocation.approvalWorkflow.map(step => {
+        const updatedWorkflow = allocation.approvalWorkflow.map((step) => {
           if (step.id === stepId) {
-            const newStatus = action === "approve" ? "Approved" : action === "reject" ? "Rejected" : "Pending";
+            const newStatus =
+              action === "approve"
+                ? "Approved"
+                : action === "reject"
+                  ? "Rejected"
+                  : "Pending";
             return {
               ...step,
               status: newStatus as any,
-              actionDate: new Date().toISOString().split('T')[0],
+              actionDate: new Date().toISOString().split("T")[0],
               comments: comments,
             };
           }
@@ -592,8 +639,10 @@ export default function BudgetAllocation({
 
         // Update overall status based on workflow
         let newStatus = allocation.status;
-        const currentStepIndex = updatedWorkflow.findIndex(step => step.id === stepId);
-        
+        const currentStepIndex = updatedWorkflow.findIndex(
+          (step) => step.id === stepId,
+        );
+
         if (action === "reject") {
           newStatus = "Rejected";
         } else if (action === "request_revision") {
@@ -614,8 +663,13 @@ export default function BudgetAllocation({
           author: "Current User",
           role: "Approver",
           comment: comments,
-          date: new Date().toISOString().split('T')[0],
-          type: action === "approve" ? "Approval" : action === "reject" ? "Rejection" : "Query",
+          date: new Date().toISOString().split("T")[0],
+          type:
+            action === "approve"
+              ? "Approval"
+              : action === "reject"
+                ? "Rejection"
+                : "Query",
         };
 
         return {
@@ -623,8 +677,11 @@ export default function BudgetAllocation({
           status: newStatus as any,
           approvalWorkflow: updatedWorkflow,
           comments: [...allocation.comments, newComment],
-          lastModified: new Date().toISOString().split('T')[0],
-          approvedDate: newStatus === "Approved" ? new Date().toISOString().split('T')[0] : allocation.approvedDate,
+          lastModified: new Date().toISOString().split("T")[0],
+          approvedDate:
+            newStatus === "Approved"
+              ? new Date().toISOString().split("T")[0]
+              : allocation.approvedDate,
         };
       }
       return allocation;
@@ -664,31 +721,55 @@ export default function BudgetAllocation({
   };
 
   const calculateBudgetUtilization = (allocation: BudgetAllocation) => {
-    return Math.round((allocation.allocatedBudget / allocation.totalBudget) * 100);
+    return Math.round(
+      (allocation.allocatedBudget / allocation.totalBudget) * 100,
+    );
   };
 
   const getTotalRequestedAmount = () => {
-    return allocationForm.categories.reduce((sum, cat) => sum + cat.requestedAmount, 0);
+    return allocationForm.categories.reduce(
+      (sum, cat) => sum + cat.requestedAmount,
+      0,
+    );
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Budget Allocation & Approval</h2>
-          <p className="text-gray-600">Manage budget allocations and approval workflows</p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Budget Allocation & Approval
+          </h2>
+          <p className="text-gray-600">
+            Manage budget allocations and approval workflows
+          </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setViewMode("list")} className={viewMode === "list" ? "bg-primary text-white" : ""}>
+          <Button
+            variant="outline"
+            onClick={() => setViewMode("list")}
+            className={viewMode === "list" ? "bg-primary text-white" : ""}
+          >
             List View
           </Button>
-          <Button variant="outline" onClick={() => setViewMode("workflow")} className={viewMode === "workflow" ? "bg-primary text-white" : ""}>
+          <Button
+            variant="outline"
+            onClick={() => setViewMode("workflow")}
+            className={viewMode === "workflow" ? "bg-primary text-white" : ""}
+          >
             Workflow View
           </Button>
-          <Button variant="outline" onClick={() => setViewMode("analytics")} className={viewMode === "analytics" ? "bg-primary text-white" : ""}>
+          <Button
+            variant="outline"
+            onClick={() => setViewMode("analytics")}
+            className={viewMode === "analytics" ? "bg-primary text-white" : ""}
+          >
             Analytics
           </Button>
-          <Button onClick={() => setShowCreateModal(true)} className="bg-primary hover:bg-primary/90">
+          <Button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-primary hover:bg-primary/90"
+          >
             <Plus className="h-4 w-4 mr-2" />
             New Budget Allocation
           </Button>
@@ -698,32 +779,55 @@ export default function BudgetAllocation({
       {viewMode === "list" && (
         <div className="grid gap-4">
           {budgetAllocations.map((allocation) => (
-            <Card key={allocation.id} className="hover:shadow-md transition-shadow">
+            <Card
+              key={allocation.id}
+              className="hover:shadow-md transition-shadow"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       {getStatusIcon(allocation.status)}
-                      <CardTitle className="text-lg">{allocation.planTitle}</CardTitle>
+                      <CardTitle className="text-lg">
+                        {allocation.planTitle}
+                      </CardTitle>
                       {getStatusBadge(allocation.status)}
                     </div>
-                    <p className="text-sm text-gray-600 mb-3">{allocation.budgetJustification}</p>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {allocation.budgetJustification}
+                    </p>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div>
-                        <Label className="text-xs font-medium text-gray-500">Total Budget</Label>
-                        <p className="text-sm font-semibold">₦{allocation.totalBudget.toLocaleString()}</p>
+                        <Label className="text-xs font-medium text-gray-500">
+                          Total Budget
+                        </Label>
+                        <p className="text-sm font-semibold">
+                          ₦{allocation.totalBudget.toLocaleString()}
+                        </p>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-500">Allocated</Label>
-                        <p className="text-sm font-semibold">₦{allocation.allocatedBudget.toLocaleString()}</p>
+                        <Label className="text-xs font-medium text-gray-500">
+                          Allocated
+                        </Label>
+                        <p className="text-sm font-semibold">
+                          ₦{allocation.allocatedBudget.toLocaleString()}
+                        </p>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-500">Utilization</Label>
-                        <p className="text-sm font-semibold">{calculateBudgetUtilization(allocation)}%</p>
+                        <Label className="text-xs font-medium text-gray-500">
+                          Utilization
+                        </Label>
+                        <p className="text-sm font-semibold">
+                          {calculateBudgetUtilization(allocation)}%
+                        </p>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-500">Categories</Label>
-                        <p className="text-sm font-semibold">{allocation.categories.length}</p>
+                        <Label className="text-xs font-medium text-gray-500">
+                          Categories
+                        </Label>
+                        <p className="text-sm font-semibold">
+                          {allocation.categories.length}
+                        </p>
                       </div>
                     </div>
                     <div className="mt-3">
@@ -731,13 +835,16 @@ export default function BudgetAllocation({
                         <span>Budget Utilization</span>
                         <span>{calculateBudgetUtilization(allocation)}%</span>
                       </div>
-                      <Progress value={calculateBudgetUtilization(allocation)} className="h-2" />
+                      <Progress
+                        value={calculateBudgetUtilization(allocation)}
+                        className="h-2"
+                      />
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 ml-4">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => {
                         setSelectedAllocation(allocation);
                         setShowDetailsModal(true);
@@ -746,18 +853,18 @@ export default function BudgetAllocation({
                       <Eye className="h-4 w-4" />
                     </Button>
                     {allocation.status === "Draft" && (
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => submitForApproval(allocation.id)}
                       >
                         <Send className="h-4 w-4" />
                       </Button>
                     )}
                     {allocation.status === "Under Review" && (
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => {
                           setSelectedAllocation(allocation);
                           setShowApprovalModal(true);
@@ -790,41 +897,74 @@ export default function BudgetAllocation({
                   <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
                     <span>Workflow Progress</span>
                     <span>
-                      {allocation.approvalWorkflow.filter(step => step.status === "Approved").length} of {allocation.approvalWorkflow.length} completed
+                      {
+                        allocation.approvalWorkflow.filter(
+                          (step) => step.status === "Approved",
+                        ).length
+                      }{" "}
+                      of {allocation.approvalWorkflow.length} completed
                     </span>
                   </div>
-                  
+
                   <div className="relative">
                     {allocation.approvalWorkflow.map((step, index) => (
-                      <div key={step.id} className="flex items-center mb-6 last:mb-0">
-                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border-2 ${
-                          step.status === "Approved" ? "bg-green-100 border-green-500" :
-                          step.status === "Rejected" ? "bg-red-100 border-red-500" :
-                          step.status === "Pending" ? "bg-gray-100 border-gray-300" :
-                          "bg-yellow-100 border-yellow-500"
-                        }`}>
-                          {step.status === "Approved" && <CheckCircle className="h-4 w-4 text-green-600" />}
-                          {step.status === "Rejected" && <XCircle className="h-4 w-4 text-red-600" />}
-                          {step.status === "Pending" && <Clock className="h-4 w-4 text-gray-600" />}
+                      <div
+                        key={step.id}
+                        className="flex items-center mb-6 last:mb-0"
+                      >
+                        <div
+                          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border-2 ${
+                            step.status === "Approved"
+                              ? "bg-green-100 border-green-500"
+                              : step.status === "Rejected"
+                                ? "bg-red-100 border-red-500"
+                                : step.status === "Pending"
+                                  ? "bg-gray-100 border-gray-300"
+                                  : "bg-yellow-100 border-yellow-500"
+                          }`}
+                        >
+                          {step.status === "Approved" && (
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                          )}
+                          {step.status === "Rejected" && (
+                            <XCircle className="h-4 w-4 text-red-600" />
+                          )}
+                          {step.status === "Pending" && (
+                            <Clock className="h-4 w-4 text-gray-600" />
+                          )}
                         </div>
-                        
+
                         {index < allocation.approvalWorkflow.length - 1 && (
                           <div className="absolute left-4 mt-8 w-0.5 h-6 bg-gray-200"></div>
                         )}
-                        
+
                         <div className="ml-4 flex-1">
                           <div className="flex items-center justify-between">
                             <h4 className="font-medium">{step.stepName}</h4>
-                            <Badge variant={step.status === "Approved" ? "default" : step.status === "Rejected" ? "destructive" : "secondary"}>
+                            <Badge
+                              variant={
+                                step.status === "Approved"
+                                  ? "default"
+                                  : step.status === "Rejected"
+                                    ? "destructive"
+                                    : "secondary"
+                              }
+                            >
                               {step.status}
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600">{step.approverName} ({step.approverRole})</p>
+                          <p className="text-sm text-gray-600">
+                            {step.approverName} ({step.approverRole})
+                          </p>
                           {step.actionDate && (
-                            <p className="text-xs text-gray-500">{step.actionDate}</p>
+                            <p className="text-xs text-gray-500">
+                              {step.actionDate}
+                            </p>
                           )}
                           {step.comments && (
-                            <p className="text-sm text-gray-700 mt-1 italic">"{step.comments}"</p>
+                            <p className="text-sm text-gray-700 mt-1 italic">
+                              "{step.comments}"
+                            </p>
                           )}
                         </div>
                       </div>
@@ -842,12 +982,20 @@ export default function BudgetAllocation({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Budget Allocations</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total Budget Allocations
+                </CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  ₦{budgetAllocations.reduce((sum, allocation) => sum + allocation.totalBudget, 0).toLocaleString()}
+                  ₦
+                  {budgetAllocations
+                    .reduce(
+                      (sum, allocation) => sum + allocation.totalBudget,
+                      0,
+                    )
+                    .toLocaleString()}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Across {budgetAllocations.length} procurement plans
@@ -857,12 +1005,17 @@ export default function BudgetAllocation({
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Approved Budgets</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Approved Budgets
+                </CardTitle>
                 <CheckCircle className="h-4 w-4 text-green-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {budgetAllocations.filter(a => a.status === "Approved").length}
+                  {
+                    budgetAllocations.filter((a) => a.status === "Approved")
+                      .length
+                  }
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Out of {budgetAllocations.length} total allocations
@@ -872,12 +1025,21 @@ export default function BudgetAllocation({
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Average Utilization</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Average Utilization
+                </CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {Math.round(budgetAllocations.reduce((sum, allocation) => sum + calculateBudgetUtilization(allocation), 0) / budgetAllocations.length || 0)}%
+                  {Math.round(
+                    budgetAllocations.reduce(
+                      (sum, allocation) =>
+                        sum + calculateBudgetUtilization(allocation),
+                      0,
+                    ) / budgetAllocations.length || 0,
+                  )}
+                  %
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Budget utilization rate
@@ -892,12 +1054,27 @@ export default function BudgetAllocation({
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {["Draft", "Submitted", "Under Review", "Approved", "Rejected", "Revision Required"].map(status => {
-                  const count = budgetAllocations.filter(a => a.status === status).length;
-                  const percentage = budgetAllocations.length > 0 ? Math.round((count / budgetAllocations.length) * 100) : 0;
-                  
+                {[
+                  "Draft",
+                  "Submitted",
+                  "Under Review",
+                  "Approved",
+                  "Rejected",
+                  "Revision Required",
+                ].map((status) => {
+                  const count = budgetAllocations.filter(
+                    (a) => a.status === status,
+                  ).length;
+                  const percentage =
+                    budgetAllocations.length > 0
+                      ? Math.round((count / budgetAllocations.length) * 100)
+                      : 0;
+
                   return (
-                    <div key={status} className="flex items-center justify-between">
+                    <div
+                      key={status}
+                      className="flex items-center justify-between"
+                    >
                       <div className="flex items-center gap-2">
                         {getStatusBadge(status as any)}
                         <span className="text-sm">{status}</span>
@@ -907,7 +1084,9 @@ export default function BudgetAllocation({
                         <div className="w-20">
                           <Progress value={percentage} className="h-2" />
                         </div>
-                        <span className="text-xs text-gray-500 w-8">{percentage}%</span>
+                        <span className="text-xs text-gray-500 w-8">
+                          {percentage}%
+                        </span>
                       </div>
                     </div>
                   );
@@ -932,7 +1111,12 @@ export default function BudgetAllocation({
                   id="total-budget"
                   type="number"
                   value={allocationForm.totalBudget}
-                  onChange={(e) => setAllocationForm({...allocationForm, totalBudget: parseFloat(e.target.value) || 0})}
+                  onChange={(e) =>
+                    setAllocationForm({
+                      ...allocationForm,
+                      totalBudget: parseFloat(e.target.value) || 0,
+                    })
+                  }
                 />
               </div>
               <div>
@@ -948,7 +1132,12 @@ export default function BudgetAllocation({
               <Textarea
                 id="justification"
                 value={allocationForm.budgetJustification}
-                onChange={(e) => setAllocationForm({...allocationForm, budgetJustification: e.target.value})}
+                onChange={(e) =>
+                  setAllocationForm({
+                    ...allocationForm,
+                    budgetJustification: e.target.value,
+                  })
+                }
                 placeholder="Provide justification for this budget allocation"
                 rows={3}
               />
@@ -970,7 +1159,9 @@ export default function BudgetAllocation({
                   <Label>Category Name</Label>
                   <Input
                     value={categoryForm.name}
-                    onChange={(e) => setCategoryForm({...categoryForm, name: e.target.value})}
+                    onChange={(e) =>
+                      setCategoryForm({ ...categoryForm, name: e.target.value })
+                    }
                     placeholder="e.g., Medical Equipment"
                   />
                 </div>
@@ -979,13 +1170,23 @@ export default function BudgetAllocation({
                   <Input
                     type="number"
                     value={categoryForm.requestedAmount}
-                    onChange={(e) => setCategoryForm({...categoryForm, requestedAmount: e.target.value})}
+                    onChange={(e) =>
+                      setCategoryForm({
+                        ...categoryForm,
+                        requestedAmount: e.target.value,
+                      })
+                    }
                     placeholder="0"
                   />
                 </div>
                 <div>
                   <Label>Priority</Label>
-                  <Select value={categoryForm.priority} onValueChange={(value: any) => setCategoryForm({...categoryForm, priority: value})}>
+                  <Select
+                    value={categoryForm.priority}
+                    onValueChange={(value: any) =>
+                      setCategoryForm({ ...categoryForm, priority: value })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -999,7 +1200,12 @@ export default function BudgetAllocation({
                 </div>
                 <div>
                   <Label>Quarter</Label>
-                  <Select value={categoryForm.quarter} onValueChange={(value: any) => setCategoryForm({...categoryForm, quarter: value})}>
+                  <Select
+                    value={categoryForm.quarter}
+                    onValueChange={(value: any) =>
+                      setCategoryForm({ ...categoryForm, quarter: value })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -1015,7 +1221,12 @@ export default function BudgetAllocation({
                   <Label>Description</Label>
                   <Input
                     value={categoryForm.description}
-                    onChange={(e) => setCategoryForm({...categoryForm, description: e.target.value})}
+                    onChange={(e) =>
+                      setCategoryForm({
+                        ...categoryForm,
+                        description: e.target.value,
+                      })
+                    }
                     placeholder="Brief description of this category"
                   />
                 </div>
@@ -1023,7 +1234,12 @@ export default function BudgetAllocation({
                   <Label>Department</Label>
                   <Input
                     value={categoryForm.department}
-                    onChange={(e) => setCategoryForm({...categoryForm, department: e.target.value})}
+                    onChange={(e) =>
+                      setCategoryForm({
+                        ...categoryForm,
+                        department: e.target.value,
+                      })
+                    }
                     placeholder="Responsible department"
                   />
                 </div>
@@ -1031,7 +1247,12 @@ export default function BudgetAllocation({
                   <Label>Justification</Label>
                   <Input
                     value={categoryForm.justification}
-                    onChange={(e) => setCategoryForm({...categoryForm, justification: e.target.value})}
+                    onChange={(e) =>
+                      setCategoryForm({
+                        ...categoryForm,
+                        justification: e.target.value,
+                      })
+                    }
                     placeholder="Justification for this category"
                   />
                 </div>
@@ -1040,24 +1261,35 @@ export default function BudgetAllocation({
               {allocationForm.categories.length > 0 && (
                 <div className="space-y-2">
                   {allocationForm.categories.map((category, index) => (
-                    <div key={category.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div
+                      key={category.id}
+                      className="flex items-center justify-between p-3 border rounded-lg"
+                    >
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-medium">{category.name}</span>
                           <Badge variant="outline">{category.priority}</Badge>
                           <Badge variant="secondary">{category.quarter}</Badge>
                         </div>
-                        <p className="text-sm text-gray-600">{category.description}</p>
-                        <p className="text-sm font-medium">₦{category.requestedAmount.toLocaleString()}</p>
+                        <p className="text-sm text-gray-600">
+                          {category.description}
+                        </p>
+                        <p className="text-sm font-medium">
+                          ₦{category.requestedAmount.toLocaleString()}
+                        </p>
                       </div>
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => setAllocationForm({
-                          ...allocationForm,
-                          categories: allocationForm.categories.filter((_, i) => i !== index)
-                        })}
+                        onClick={() =>
+                          setAllocationForm({
+                            ...allocationForm,
+                            categories: allocationForm.categories.filter(
+                              (_, i) => i !== index,
+                            ),
+                          })
+                        }
                       >
                         Remove
                       </Button>
@@ -1068,10 +1300,16 @@ export default function BudgetAllocation({
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowCreateModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowCreateModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={createBudgetAllocation} disabled={allocationForm.categories.length === 0}>
+              <Button
+                onClick={createBudgetAllocation}
+                disabled={allocationForm.categories.length === 0}
+              >
                 Create Allocation
               </Button>
             </div>
@@ -1093,30 +1331,46 @@ export default function BudgetAllocation({
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Plan Title</Label>
-                  <p className="font-semibold">{selectedAllocation.planTitle}</p>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Plan Title
+                  </Label>
+                  <p className="font-semibold">
+                    {selectedAllocation.planTitle}
+                  </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Total Budget</Label>
-                  <p className="font-semibold">₦{selectedAllocation.totalBudget.toLocaleString()}</p>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Total Budget
+                  </Label>
+                  <p className="font-semibold">
+                    ₦{selectedAllocation.totalBudget.toLocaleString()}
+                  </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Created By</Label>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Created By
+                  </Label>
                   <p>{selectedAllocation.createdBy}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Created Date</Label>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Created Date
+                  </Label>
                   <p>{selectedAllocation.createdDate}</p>
                 </div>
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-600">Justification</Label>
+                <Label className="text-sm font-medium text-gray-600">
+                  Justification
+                </Label>
                 <p className="mt-1">{selectedAllocation.budgetJustification}</p>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-3">Budget Categories</h3>
+                <h3 className="text-lg font-semibold mb-3">
+                  Budget Categories
+                </h3>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -1134,7 +1388,9 @@ export default function BudgetAllocation({
                         <TableCell>
                           <div>
                             <div className="font-medium">{category.name}</div>
-                            <div className="text-sm text-gray-600">{category.description}</div>
+                            <div className="text-sm text-gray-600">
+                              {category.description}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -1150,12 +1406,17 @@ export default function BudgetAllocation({
                           ₦{category.allocatedAmount.toLocaleString()}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={
-                            category.approvalStatus === "Approved" ? "default" :
-                            category.approvalStatus === "Rejected" ? "destructive" :
-                            category.approvalStatus === "Modified" ? "secondary" :
-                            "outline"
-                          }>
+                          <Badge
+                            variant={
+                              category.approvalStatus === "Approved"
+                                ? "default"
+                                : category.approvalStatus === "Rejected"
+                                  ? "destructive"
+                                  : category.approvalStatus === "Modified"
+                                    ? "secondary"
+                                    : "outline"
+                            }
+                          >
                             {category.approvalStatus}
                           </Badge>
                         </TableCell>
@@ -1167,20 +1428,32 @@ export default function BudgetAllocation({
 
               {selectedAllocation.riskAssessment.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">Risk Assessment</h3>
+                  <h3 className="text-lg font-semibold mb-3">
+                    Risk Assessment
+                  </h3>
                   <div className="space-y-2">
                     {selectedAllocation.riskAssessment.map((risk) => (
                       <div key={risk.id} className="border rounded-lg p-3">
                         <div className="flex items-start justify-between mb-2">
                           <h4 className="font-medium">{risk.category}</h4>
                           <div className="flex gap-2">
-                            <Badge variant="outline">Impact: {risk.impact}</Badge>
-                            <Badge variant="outline">Probability: {risk.probability}</Badge>
+                            <Badge variant="outline">
+                              Impact: {risk.impact}
+                            </Badge>
+                            <Badge variant="outline">
+                              Probability: {risk.probability}
+                            </Badge>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-700 mb-2">{risk.riskDescription}</p>
-                        <p className="text-sm"><strong>Mitigation:</strong> {risk.mitigation}</p>
-                        <p className="text-xs text-gray-500">Owner: {risk.owner}</p>
+                        <p className="text-sm text-gray-700 mb-2">
+                          {risk.riskDescription}
+                        </p>
+                        <p className="text-sm">
+                          <strong>Mitigation:</strong> {risk.mitigation}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Owner: {risk.owner}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -1189,15 +1462,22 @@ export default function BudgetAllocation({
 
               {selectedAllocation.comments.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">Comments & Notes</h3>
+                  <h3 className="text-lg font-semibold mb-3">
+                    Comments & Notes
+                  </h3>
                   <div className="space-y-3">
                     {selectedAllocation.comments.map((comment) => (
-                      <div key={comment.id} className="border-l-4 border-blue-500 pl-4 py-2">
+                      <div
+                        key={comment.id}
+                        className="border-l-4 border-blue-500 pl-4 py-2"
+                      >
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-medium">{comment.author}</span>
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">{comment.type}</Badge>
-                            <span className="text-xs text-gray-500">{comment.date}</span>
+                            <span className="text-xs text-gray-500">
+                              {comment.date}
+                            </span>
                           </div>
                         </div>
                         <p className="text-sm">{comment.comment}</p>
@@ -1220,21 +1500,32 @@ export default function BudgetAllocation({
           {selectedAllocation && (
             <div className="space-y-4">
               <div>
-                <Label className="text-sm font-medium text-gray-600">Budget Allocation</Label>
+                <Label className="text-sm font-medium text-gray-600">
+                  Budget Allocation
+                </Label>
                 <p className="font-semibold">{selectedAllocation.planTitle}</p>
-                <p className="text-sm text-gray-600">₦{selectedAllocation.totalBudget.toLocaleString()}</p>
+                <p className="text-sm text-gray-600">
+                  ₦{selectedAllocation.totalBudget.toLocaleString()}
+                </p>
               </div>
 
               <div>
                 <Label>Action</Label>
-                <Select value={approvalForm.action} onValueChange={(value: any) => setApprovalForm({...approvalForm, action: value})}>
+                <Select
+                  value={approvalForm.action}
+                  onValueChange={(value: any) =>
+                    setApprovalForm({ ...approvalForm, action: value })
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="approve">Approve</SelectItem>
                     <SelectItem value="reject">Reject</SelectItem>
-                    <SelectItem value="request_revision">Request Revision</SelectItem>
+                    <SelectItem value="request_revision">
+                      Request Revision
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1244,21 +1535,37 @@ export default function BudgetAllocation({
                 <Textarea
                   id="approval-comments"
                   value={approvalForm.comments}
-                  onChange={(e) => setApprovalForm({...approvalForm, comments: e.target.value})}
+                  onChange={(e) =>
+                    setApprovalForm({
+                      ...approvalForm,
+                      comments: e.target.value,
+                    })
+                  }
                   placeholder="Add your comments here..."
                   rows={4}
                 />
               </div>
 
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowApprovalModal(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowApprovalModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button 
+                <Button
                   onClick={() => {
-                    const currentStep = selectedAllocation.approvalWorkflow.find(step => step.status === "Pending");
+                    const currentStep =
+                      selectedAllocation.approvalWorkflow.find(
+                        (step) => step.status === "Pending",
+                      );
                     if (currentStep) {
-                      processApproval(selectedAllocation.id, currentStep.id, approvalForm.action, approvalForm.comments);
+                      processApproval(
+                        selectedAllocation.id,
+                        currentStep.id,
+                        approvalForm.action,
+                        approvalForm.comments,
+                      );
                     }
                   }}
                 >

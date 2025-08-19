@@ -177,19 +177,28 @@ interface ScoringMatrix {
 
 const STORAGE_KEYS = {
   PROCUREMENT_PLANS: "procurementPlans",
-  EVALUATION_COMMITTEES: "evaluationCommittees", 
+  EVALUATION_COMMITTEES: "evaluationCommittees",
   SCORING_MATRICES: "scoringMatrices",
   MARKET_RESEARCH: "marketResearch",
 };
 
 export default function ProcurementPlanning() {
   const [activeTab, setActiveTab] = useState("plans");
-  const [procurementPlans, setProcurementPlans] = useState<ProcurementPlan[]>([]);
-  const [evaluationCommittees, setEvaluationCommittees] = useState<EvaluationCommittee[]>([]);
+  const [procurementPlans, setProcurementPlans] = useState<ProcurementPlan[]>(
+    [],
+  );
+  const [evaluationCommittees, setEvaluationCommittees] = useState<
+    EvaluationCommittee[]
+  >([]);
   const [scoringMatrices, setScoringMatrices] = useState<ScoringMatrix[]>([]);
-  const [selectedPlan, setSelectedPlan] = useState<ProcurementPlan | null>(null);
-  const [selectedCommittee, setSelectedCommittee] = useState<EvaluationCommittee | null>(null);
-  const [selectedMatrix, setSelectedMatrix] = useState<ScoringMatrix | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<ProcurementPlan | null>(
+    null,
+  );
+  const [selectedCommittee, setSelectedCommittee] =
+    useState<EvaluationCommittee | null>(null);
+  const [selectedMatrix, setSelectedMatrix] = useState<ScoringMatrix | null>(
+    null,
+  );
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [showCommitteeModal, setShowCommitteeModal] = useState(false);
   const [showMatrixModal, setShowMatrixModal] = useState(false);
@@ -220,7 +229,7 @@ export default function ProcurementPlanning() {
         phone: "",
         conflictOfInterest: false,
         expertise: [] as string[],
-      }
+      },
     ],
   });
 
@@ -238,9 +247,11 @@ export default function ProcurementPlanning() {
 
   const loadStoredData = () => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
-      
+
       const plansKey = `${ministryCode}_${STORAGE_KEYS.PROCUREMENT_PLANS}`;
       const committeesKey = `${ministryCode}_${STORAGE_KEYS.EVALUATION_COMMITTEES}`;
       const matricesKey = `${ministryCode}_${STORAGE_KEYS.SCORING_MATRICES}`;
@@ -280,7 +291,9 @@ export default function ProcurementPlanning() {
 
   const saveToStorage = (key: string, data: any) => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${key}`;
       localStorage.setItem(storageKey, JSON.stringify(data));
@@ -294,7 +307,8 @@ export default function ProcurementPlanning() {
       {
         id: "PP-2024-001",
         title: "Annual Medical Equipment Procurement",
-        description: "Comprehensive procurement plan for medical equipment across all health facilities",
+        description:
+          "Comprehensive procurement plan for medical equipment across all health facilities",
         budget: 2500000000,
         status: "Approved" as const,
         createdDate: "2024-01-15",
@@ -315,19 +329,19 @@ export default function ProcurementPlanning() {
             quarter: "Q2" as const,
           },
           {
-            id: "CAT-002", 
+            id: "CAT-002",
             name: "Surgical Equipment",
             description: "Operating room equipment and surgical instruments",
             estimatedBudget: 600000000,
             allocatedBudget: 580000000,
             priority: "High" as const,
             quarter: "Q3" as const,
-          }
+          },
         ],
         marketResearch: [],
         timeline: [],
         approvalWorkflow: [],
-      }
+      },
     ];
 
     if (ministryCode === "MOWI") {
@@ -335,7 +349,8 @@ export default function ProcurementPlanning() {
         ...plans[0],
         id: "PP-2024-001",
         title: "Infrastructure Development Plan 2024",
-        description: "Comprehensive infrastructure and road construction procurement plan",
+        description:
+          "Comprehensive infrastructure and road construction procurement plan",
         budget: 15000000000,
         ministry: "Ministry of Works and Infrastructure",
         department: "Road Construction",
@@ -351,13 +366,13 @@ export default function ProcurementPlanning() {
           },
           {
             id: "CAT-002",
-            name: "Bridge Construction", 
+            name: "Bridge Construction",
             description: "New bridge construction and bridge rehabilitation",
             estimatedBudget: 5000000000,
             allocatedBudget: 4800000000,
             priority: "High" as const,
             quarter: "Q3" as const,
-          }
+          },
         ],
       };
     } else if (ministryCode === "MOE") {
@@ -365,7 +380,8 @@ export default function ProcurementPlanning() {
         ...plans[0],
         id: "PP-2024-001",
         title: "Educational Infrastructure and Equipment Plan",
-        description: "Procurement plan for school furniture, educational technology, and learning materials",
+        description:
+          "Procurement plan for school furniture, educational technology, and learning materials",
         budget: 5000000000,
         ministry: "Ministry of Education",
         department: "Basic Education",
@@ -373,7 +389,8 @@ export default function ProcurementPlanning() {
           {
             id: "CAT-001",
             name: "School Furniture",
-            description: "Desks, chairs, and classroom furniture for all schools",
+            description:
+              "Desks, chairs, and classroom furniture for all schools",
             estimatedBudget: 2000000000,
             allocatedBudget: 1900000000,
             priority: "High" as const,
@@ -382,12 +399,13 @@ export default function ProcurementPlanning() {
           {
             id: "CAT-002",
             name: "Educational Technology",
-            description: "Computers, projectors, and digital learning equipment",
+            description:
+              "Computers, projectors, and digital learning equipment",
             estimatedBudget: 1800000000,
             allocatedBudget: 1750000000,
             priority: "Medium" as const,
             quarter: "Q2" as const,
-          }
+          },
         ],
       };
     }
@@ -395,7 +413,9 @@ export default function ProcurementPlanning() {
     return plans;
   };
 
-  const createSampleCommittees = (ministryCode: string): EvaluationCommittee[] => {
+  const createSampleCommittees = (
+    ministryCode: string,
+  ): EvaluationCommittee[] => {
     const committees = [
       {
         id: "EC-2024-001",
@@ -410,7 +430,11 @@ export default function ProcurementPlanning() {
             email: "amina.hassan@health.kano.gov.ng",
             phone: "08012345678",
             conflictOfInterest: false,
-            expertise: ["Medical Equipment", "Clinical Engineering", "Quality Assurance"],
+            expertise: [
+              "Medical Equipment",
+              "Clinical Engineering",
+              "Quality Assurance",
+            ],
           },
           {
             id: "MEM-002",
@@ -420,23 +444,31 @@ export default function ProcurementPlanning() {
             email: "musa.ibrahim@health.kano.gov.ng",
             phone: "08012345679",
             conflictOfInterest: false,
-            expertise: ["Biomedical Engineering", "Equipment Procurement", "Technical Evaluation"],
+            expertise: [
+              "Biomedical Engineering",
+              "Equipment Procurement",
+              "Technical Evaluation",
+            ],
           },
           {
             id: "MEM-003",
             name: "Dr. Fatima Yusuf",
             role: "Evaluator" as const,
             department: "Hospital Management",
-            email: "fatima.yusuf@health.kano.gov.ng", 
+            email: "fatima.yusuf@health.kano.gov.ng",
             phone: "08012345680",
             conflictOfInterest: false,
-            expertise: ["Hospital Management", "Healthcare Administration", "Budget Planning"],
-          }
+            expertise: [
+              "Hospital Management",
+              "Healthcare Administration",
+              "Budget Planning",
+            ],
+          },
         ],
         activeEvaluations: ["EVAL-2024-001"],
         createdDate: "2024-01-10",
         status: "Active" as const,
-      }
+      },
     ];
 
     if (ministryCode === "MOWI") {
@@ -444,7 +476,8 @@ export default function ProcurementPlanning() {
         ...committees[0],
         id: "EC-2024-001",
         name: "Infrastructure Evaluation Committee",
-        description: "Committee for evaluating construction and infrastructure projects",
+        description:
+          "Committee for evaluating construction and infrastructure projects",
         members: [
           {
             id: "MEM-001",
@@ -454,7 +487,11 @@ export default function ProcurementPlanning() {
             email: "ibrahim.mohammed@works.kano.gov.ng",
             phone: "08012345678",
             conflictOfInterest: false,
-            expertise: ["Civil Engineering", "Road Construction", "Project Management"],
+            expertise: [
+              "Civil Engineering",
+              "Road Construction",
+              "Project Management",
+            ],
           },
           {
             id: "MEM-002",
@@ -464,7 +501,11 @@ export default function ProcurementPlanning() {
             email: "aisha.garba@works.kano.gov.ng",
             phone: "08012345679",
             conflictOfInterest: false,
-            expertise: ["Architecture", "Urban Planning", "Building Construction"],
+            expertise: [
+              "Architecture",
+              "Urban Planning",
+              "Building Construction",
+            ],
           },
           {
             id: "MEM-003",
@@ -474,8 +515,12 @@ export default function ProcurementPlanning() {
             email: "usman.kano@works.kano.gov.ng",
             phone: "08012345680",
             conflictOfInterest: false,
-            expertise: ["Structural Engineering", "Bridge Construction", "Quality Control"],
-          }
+            expertise: [
+              "Structural Engineering",
+              "Bridge Construction",
+              "Quality Control",
+            ],
+          },
         ],
       };
     } else if (ministryCode === "MOE") {
@@ -483,7 +528,8 @@ export default function ProcurementPlanning() {
         ...committees[0],
         id: "EC-2024-001",
         name: "Educational Procurement Committee",
-        description: "Committee for evaluating educational equipment and materials procurement",
+        description:
+          "Committee for evaluating educational equipment and materials procurement",
         members: [
           {
             id: "MEM-001",
@@ -493,7 +539,11 @@ export default function ProcurementPlanning() {
             email: "aisha.garba@education.kano.gov.ng",
             phone: "08012345678",
             conflictOfInterest: false,
-            expertise: ["Educational Technology", "Curriculum Development", "Learning Materials"],
+            expertise: [
+              "Educational Technology",
+              "Curriculum Development",
+              "Learning Materials",
+            ],
           },
           {
             id: "MEM-002",
@@ -503,7 +553,11 @@ export default function ProcurementPlanning() {
             email: "bello.sani@education.kano.gov.ng",
             phone: "08012345679",
             conflictOfInterest: false,
-            expertise: ["School Administration", "Educational Planning", "Budget Management"],
+            expertise: [
+              "School Administration",
+              "Educational Planning",
+              "Budget Management",
+            ],
           },
           {
             id: "MEM-003",
@@ -513,8 +567,12 @@ export default function ProcurementPlanning() {
             email: "zainab.ibrahim@education.kano.gov.ng",
             phone: "08012345680",
             conflictOfInterest: false,
-            expertise: ["Teacher Training", "Educational Materials", "Quality Assurance"],
-          }
+            expertise: [
+              "Teacher Training",
+              "Educational Materials",
+              "Quality Assurance",
+            ],
+          },
         ],
       };
     }
@@ -537,8 +595,18 @@ export default function ProcurementPlanning() {
             weight: 40,
             maxScore: 100,
             subCriteria: [
-              { id: "SUB-001", name: "Equipment Quality", weight: 60, maxScore: 100 },
-              { id: "SUB-002", name: "Technical Support", weight: 40, maxScore: 100 },
+              {
+                id: "SUB-001",
+                name: "Equipment Quality",
+                weight: 60,
+                maxScore: 100,
+              },
+              {
+                id: "SUB-002",
+                name: "Technical Support",
+                weight: 40,
+                maxScore: 100,
+              },
             ],
           },
           {
@@ -548,8 +616,18 @@ export default function ProcurementPlanning() {
             weight: 30,
             maxScore: 100,
             subCriteria: [
-              { id: "SUB-003", name: "Competitive Pricing", weight: 70, maxScore: 100 },
-              { id: "SUB-004", name: "Payment Terms", weight: 30, maxScore: 100 },
+              {
+                id: "SUB-003",
+                name: "Competitive Pricing",
+                weight: 70,
+                maxScore: 100,
+              },
+              {
+                id: "SUB-004",
+                name: "Payment Terms",
+                weight: 30,
+                maxScore: 100,
+              },
             ],
           },
           {
@@ -559,7 +637,12 @@ export default function ProcurementPlanning() {
             weight: 20,
             maxScore: 100,
             subCriteria: [
-              { id: "SUB-005", name: "Relevant Experience", weight: 80, maxScore: 100 },
+              {
+                id: "SUB-005",
+                name: "Relevant Experience",
+                weight: 80,
+                maxScore: 100,
+              },
               { id: "SUB-006", name: "References", weight: 20, maxScore: 100 },
             ],
           },
@@ -570,7 +653,12 @@ export default function ProcurementPlanning() {
             weight: 10,
             maxScore: 100,
             subCriteria: [
-              { id: "SUB-007", name: "Delivery Schedule", weight: 100, maxScore: 100 },
+              {
+                id: "SUB-007",
+                name: "Delivery Schedule",
+                weight: 100,
+                maxScore: 100,
+              },
             ],
           },
         ],
@@ -586,7 +674,8 @@ export default function ProcurementPlanning() {
             },
             totalScore: 87.8,
             technicalCompliance: true,
-            comments: "Excellent technical specifications and strong track record",
+            comments:
+              "Excellent technical specifications and strong track record",
             evaluatorId: "MEM-001",
             evaluatorName: "Dr. Amina Hassan",
           },
@@ -614,7 +703,7 @@ export default function ProcurementPlanning() {
         status: "Completed" as const,
         createdDate: "2024-02-01",
         completedDate: "2024-02-15",
-      }
+      },
     ];
   };
 
@@ -625,7 +714,7 @@ export default function ProcurementPlanning() {
       description: planForm.description,
       budget: parseFloat(planForm.budget),
       status: "Draft",
-      createdDate: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
       ministry: planForm.ministry,
       department: planForm.department,
       financialYear: planForm.financialYear,
@@ -639,7 +728,7 @@ export default function ProcurementPlanning() {
     const updatedPlans = [...procurementPlans, newPlan];
     setProcurementPlans(updatedPlans);
     saveToStorage(STORAGE_KEYS.PROCUREMENT_PLANS, updatedPlans);
-    
+
     setPlanForm({
       title: "",
       description: "",
@@ -662,7 +751,7 @@ export default function ProcurementPlanning() {
         id: `MEM-${Date.now()}-${index}`,
       })),
       activeEvaluations: [],
-      createdDate: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
       status: "Active",
     };
 
@@ -673,15 +762,17 @@ export default function ProcurementPlanning() {
     setCommitteeForm({
       name: "",
       description: "",
-      members: [{
-        name: "",
-        role: "Evaluator",
-        department: "",
-        email: "",
-        phone: "",
-        conflictOfInterest: false,
-        expertise: [],
-      }],
+      members: [
+        {
+          name: "",
+          role: "Evaluator",
+          department: "",
+          email: "",
+          phone: "",
+          conflictOfInterest: false,
+          expertise: [],
+        },
+      ],
     });
     setShowCommitteeModal(false);
   };
@@ -691,16 +782,16 @@ export default function ProcurementPlanning() {
       id: `MR-${Date.now()}`,
       category: marketResearchForm.category,
       notes: marketResearchForm.notes,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       author: "Current User", // In real app, get from auth context
       findings: marketResearchForm.findings,
       recommendations: marketResearchForm.recommendations,
     };
 
-    const updatedPlans = procurementPlans.map(plan => 
-      plan.id === planId 
+    const updatedPlans = procurementPlans.map((plan) =>
+      plan.id === planId
         ? { ...plan, marketResearch: [...plan.marketResearch, newResearch] }
-        : plan
+        : plan,
     );
 
     setProcurementPlans(updatedPlans);
@@ -715,45 +806,62 @@ export default function ProcurementPlanning() {
     setShowMarketResearchModal(false);
   };
 
-  const updatePlanStatus = (planId: string, status: ProcurementPlan["status"]) => {
-    const updatedPlans = procurementPlans.map(plan =>
-      plan.id === planId 
-        ? { 
-            ...plan, 
+  const updatePlanStatus = (
+    planId: string,
+    status: ProcurementPlan["status"],
+  ) => {
+    const updatedPlans = procurementPlans.map((plan) =>
+      plan.id === planId
+        ? {
+            ...plan,
             status,
-            approvedDate: status === "Approved" ? new Date().toISOString().split('T')[0] : undefined,
+            approvedDate:
+              status === "Approved"
+                ? new Date().toISOString().split("T")[0]
+                : undefined,
             approvedBy: status === "Approved" ? "Current User" : undefined,
           }
-        : plan
+        : plan,
     );
 
     setProcurementPlans(updatedPlans);
     saveToStorage(STORAGE_KEYS.PROCUREMENT_PLANS, updatedPlans);
   };
 
-  const filteredPlans = procurementPlans.filter(plan => {
-    const matchesSearch = plan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         plan.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === "all" || plan.status === filterStatus;
+  const filteredPlans = procurementPlans.filter((plan) => {
+    const matchesSearch =
+      plan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      plan.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      filterStatus === "all" || plan.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
   const getStatusBadge = (status: string) => {
     const variants = {
       Draft: "secondary",
-      "Under Review": "outline", 
+      "Under Review": "outline",
       Approved: "default",
       Rejected: "destructive",
     };
-    return <Badge variant={variants[status as keyof typeof variants] as any}>{status}</Badge>;
+    return (
+      <Badge variant={variants[status as keyof typeof variants] as any}>
+        {status}
+      </Badge>
+    );
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Procurement Planning Module</h2>
+        <h2 className="text-2xl font-bold text-gray-900">
+          Procurement Planning Module
+        </h2>
         <div className="flex gap-2">
-          <Button onClick={() => setShowPlanModal(true)} className="bg-primary hover:bg-primary/90">
+          <Button
+            onClick={() => setShowPlanModal(true)}
+            className="bg-primary hover:bg-primary/90"
+          >
             <Plus className="h-4 w-4 mr-2" />
             New Procurement Plan
           </Button>
@@ -818,7 +926,9 @@ export default function ProcurementPlanning() {
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-lg">{plan.title}</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">{plan.description}</p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {plan.description}
+                      </p>
                       <div className="flex gap-4 mt-2 text-sm text-gray-500">
                         <span>Budget: ₦{plan.budget.toLocaleString()}</span>
                         <span>FY: {plan.financialYear}</span>
@@ -828,15 +938,31 @@ export default function ProcurementPlanning() {
                     <div className="flex flex-col items-end gap-2">
                       {getStatusBadge(plan.status)}
                       <div className="flex gap-1">
-                        <Button variant="outline" size="sm" onClick={() => setSelectedPlan(plan)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSelectedPlan(plan)}
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
                         {plan.status === "Draft" && (
                           <>
-                            <Button variant="outline" size="sm" onClick={() => updatePlanStatus(plan.id, "Under Review")}>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                updatePlanStatus(plan.id, "Under Review")
+                              }
+                            >
                               <CheckCircle className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="sm" onClick={() => updatePlanStatus(plan.id, "Approved")}>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                updatePlanStatus(plan.id, "Approved")
+                              }
+                            >
                               <CheckCircle className="h-4 w-4 text-green-600" />
                             </Button>
                           </>
@@ -867,12 +993,17 @@ export default function ProcurementPlanning() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Plans</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Active Plans
+                  </CardTitle>
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {procurementPlans.filter(p => p.status === "Approved").length}
+                    {
+                      procurementPlans.filter((p) => p.status === "Approved")
+                        .length
+                    }
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {procurementPlans.length} total plans
@@ -882,12 +1013,17 @@ export default function ProcurementPlanning() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Total Budget
+                  </CardTitle>
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    ₦{procurementPlans.reduce((sum, plan) => sum + plan.budget, 0).toLocaleString()}
+                    ₦
+                    {procurementPlans
+                      .reduce((sum, plan) => sum + plan.budget, 0)
+                      .toLocaleString()}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Across all procurement plans
@@ -897,12 +1033,17 @@ export default function ProcurementPlanning() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Committees</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Active Committees
+                  </CardTitle>
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {evaluationCommittees.filter(c => c.status === "Active").length}
+                    {
+                      evaluationCommittees.filter((c) => c.status === "Active")
+                        .length
+                    }
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {evaluationCommittees.length} total committees
@@ -912,12 +1053,17 @@ export default function ProcurementPlanning() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Completed Evaluations</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Completed Evaluations
+                  </CardTitle>
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {scoringMatrices.filter(m => m.status === "Completed").length}
+                    {
+                      scoringMatrices.filter((m) => m.status === "Completed")
+                        .length
+                    }
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {scoringMatrices.length} total matrices
@@ -933,25 +1079,43 @@ export default function ProcurementPlanning() {
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-medium mb-2">Plan Status Distribution</h4>
+                    <h4 className="font-medium mb-2">
+                      Plan Status Distribution
+                    </h4>
                     <div className="space-y-2">
-                      {["Draft", "Under Review", "Approved", "Rejected"].map(status => {
-                        const count = procurementPlans.filter(p => p.status === status).length;
-                        const percentage = procurementPlans.length > 0 ? Math.round((count / procurementPlans.length) * 100) : 0;
+                      {["Draft", "Under Review", "Approved", "Rejected"].map(
+                        (status) => {
+                          const count = procurementPlans.filter(
+                            (p) => p.status === status,
+                          ).length;
+                          const percentage =
+                            procurementPlans.length > 0
+                              ? Math.round(
+                                  (count / procurementPlans.length) * 100,
+                                )
+                              : 0;
 
-                        return (
-                          <div key={status} className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              {getStatusBadge(status)}
-                              <span className="text-sm">{status}</span>
+                          return (
+                            <div
+                              key={status}
+                              className="flex items-center justify-between"
+                            >
+                              <div className="flex items-center gap-2">
+                                {getStatusBadge(status)}
+                                <span className="text-sm">{status}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium">
+                                  {count}
+                                </span>
+                                <span className="text-xs text-gray-500 w-8">
+                                  {percentage}%
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium">{count}</span>
-                              <span className="text-xs text-gray-500 w-8">{percentage}%</span>
-                            </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        },
+                      )}
                     </div>
                   </div>
 
@@ -959,11 +1123,15 @@ export default function ProcurementPlanning() {
                     <h4 className="font-medium mb-2">Recent Activity</h4>
                     <div className="space-y-2">
                       {procurementPlans.slice(0, 5).map((plan) => (
-                        <div key={plan.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <div
+                          key={plan.id}
+                          className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                        >
                           <div>
                             <span className="font-medium">{plan.title}</span>
                             <div className="text-sm text-gray-600">
-                              Created: {plan.createdDate} • Budget: ₦{plan.budget.toLocaleString()}
+                              Created: {plan.createdDate} • Budget: ₦
+                              {plan.budget.toLocaleString()}
                             </div>
                           </div>
                           {getStatusBadge(plan.status)}
@@ -990,7 +1158,9 @@ export default function ProcurementPlanning() {
               <Input
                 id="plan-title"
                 value={planForm.title}
-                onChange={(e) => setPlanForm({...planForm, title: e.target.value})}
+                onChange={(e) =>
+                  setPlanForm({ ...planForm, title: e.target.value })
+                }
                 placeholder="Enter procurement plan title"
               />
             </div>
@@ -999,7 +1169,9 @@ export default function ProcurementPlanning() {
               <Textarea
                 id="plan-description"
                 value={planForm.description}
-                onChange={(e) => setPlanForm({...planForm, description: e.target.value})}
+                onChange={(e) =>
+                  setPlanForm({ ...planForm, description: e.target.value })
+                }
                 placeholder="Describe the procurement plan"
                 rows={3}
               />
@@ -1011,7 +1183,9 @@ export default function ProcurementPlanning() {
                   id="plan-budget"
                   type="number"
                   value={planForm.budget}
-                  onChange={(e) => setPlanForm({...planForm, budget: e.target.value})}
+                  onChange={(e) =>
+                    setPlanForm({ ...planForm, budget: e.target.value })
+                  }
                   placeholder="0"
                 />
               </div>
@@ -1020,7 +1194,9 @@ export default function ProcurementPlanning() {
                 <Input
                   id="plan-year"
                   value={planForm.financialYear}
-                  onChange={(e) => setPlanForm({...planForm, financialYear: e.target.value})}
+                  onChange={(e) =>
+                    setPlanForm({ ...planForm, financialYear: e.target.value })
+                  }
                   placeholder="2024"
                 />
               </div>
@@ -1031,7 +1207,9 @@ export default function ProcurementPlanning() {
                 <Input
                   id="plan-ministry"
                   value={planForm.ministry}
-                  onChange={(e) => setPlanForm({...planForm, ministry: e.target.value})}
+                  onChange={(e) =>
+                    setPlanForm({ ...planForm, ministry: e.target.value })
+                  }
                   placeholder="Ministry name"
                 />
               </div>
@@ -1040,14 +1218,21 @@ export default function ProcurementPlanning() {
                 <Input
                   id="plan-department"
                   value={planForm.department}
-                  onChange={(e) => setPlanForm({...planForm, department: e.target.value})}
+                  onChange={(e) =>
+                    setPlanForm({ ...planForm, department: e.target.value })
+                  }
                   placeholder="Department name"
                 />
               </div>
             </div>
             <div>
               <Label htmlFor="tender-strategy">Tender Strategy</Label>
-              <Select value={planForm.tenderStrategy} onValueChange={(value: any) => setPlanForm({...planForm, tenderStrategy: value})}>
+              <Select
+                value={planForm.tenderStrategy}
+                onValueChange={(value: any) =>
+                  setPlanForm({ ...planForm, tenderStrategy: value })
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -1062,9 +1247,7 @@ export default function ProcurementPlanning() {
               <Button variant="outline" onClick={() => setShowPlanModal(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleCreatePlan}>
-                Create Plan
-              </Button>
+              <Button onClick={handleCreatePlan}>Create Plan</Button>
             </div>
           </div>
         </DialogContent>
@@ -1082,7 +1265,9 @@ export default function ProcurementPlanning() {
               <Input
                 id="committee-name"
                 value={committeeForm.name}
-                onChange={(e) => setCommitteeForm({...committeeForm, name: e.target.value})}
+                onChange={(e) =>
+                  setCommitteeForm({ ...committeeForm, name: e.target.value })
+                }
                 placeholder="Enter committee name"
               />
             </div>
@@ -1091,7 +1276,12 @@ export default function ProcurementPlanning() {
               <Textarea
                 id="committee-description"
                 value={committeeForm.description}
-                onChange={(e) => setCommitteeForm({...committeeForm, description: e.target.value})}
+                onChange={(e) =>
+                  setCommitteeForm({
+                    ...committeeForm,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Describe the committee purpose"
                 rows={2}
               />
@@ -1103,18 +1293,23 @@ export default function ProcurementPlanning() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => setCommitteeForm({
-                    ...committeeForm,
-                    members: [...committeeForm.members, {
-                      name: "",
-                      role: "Evaluator",
-                      department: "",
-                      email: "",
-                      phone: "",
-                      conflictOfInterest: false,
-                      expertise: [],
-                    }]
-                  })}
+                  onClick={() =>
+                    setCommitteeForm({
+                      ...committeeForm,
+                      members: [
+                        ...committeeForm.members,
+                        {
+                          name: "",
+                          role: "Evaluator",
+                          department: "",
+                          email: "",
+                          phone: "",
+                          conflictOfInterest: false,
+                          expertise: [],
+                        },
+                      ],
+                    })
+                  }
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
                   Add Member
@@ -1130,10 +1325,14 @@ export default function ProcurementPlanning() {
                           type="button"
                           variant="outline"
                           size="sm"
-                          onClick={() => setCommitteeForm({
-                            ...committeeForm,
-                            members: committeeForm.members.filter((_, i) => i !== index)
-                          })}
+                          onClick={() =>
+                            setCommitteeForm({
+                              ...committeeForm,
+                              members: committeeForm.members.filter(
+                                (_, i) => i !== index,
+                              ),
+                            })
+                          }
                         >
                           <UserMinus className="h-4 w-4" />
                         </Button>
@@ -1147,19 +1346,25 @@ export default function ProcurementPlanning() {
                           onChange={(e) => {
                             const newMembers = [...committeeForm.members];
                             newMembers[index].name = e.target.value;
-                            setCommitteeForm({...committeeForm, members: newMembers});
+                            setCommitteeForm({
+                              ...committeeForm,
+                              members: newMembers,
+                            });
                           }}
                           placeholder="Member name"
                         />
                       </div>
                       <div>
                         <Label>Role</Label>
-                        <Select 
-                          value={member.role} 
+                        <Select
+                          value={member.role}
                           onValueChange={(value: any) => {
                             const newMembers = [...committeeForm.members];
                             newMembers[index].role = value;
-                            setCommitteeForm({...committeeForm, members: newMembers});
+                            setCommitteeForm({
+                              ...committeeForm,
+                              members: newMembers,
+                            });
                           }}
                         >
                           <SelectTrigger>
@@ -1179,7 +1384,10 @@ export default function ProcurementPlanning() {
                           onChange={(e) => {
                             const newMembers = [...committeeForm.members];
                             newMembers[index].department = e.target.value;
-                            setCommitteeForm({...committeeForm, members: newMembers});
+                            setCommitteeForm({
+                              ...committeeForm,
+                              members: newMembers,
+                            });
                           }}
                           placeholder="Department"
                         />
@@ -1191,7 +1399,10 @@ export default function ProcurementPlanning() {
                           onChange={(e) => {
                             const newMembers = [...committeeForm.members];
                             newMembers[index].email = e.target.value;
-                            setCommitteeForm({...committeeForm, members: newMembers});
+                            setCommitteeForm({
+                              ...committeeForm,
+                              members: newMembers,
+                            });
                           }}
                           placeholder="Email address"
                         />
@@ -1203,7 +1414,10 @@ export default function ProcurementPlanning() {
                           onChange={(e) => {
                             const newMembers = [...committeeForm.members];
                             newMembers[index].phone = e.target.value;
-                            setCommitteeForm({...committeeForm, members: newMembers});
+                            setCommitteeForm({
+                              ...committeeForm,
+                              members: newMembers,
+                            });
                           }}
                           placeholder="Phone number"
                         />
@@ -1214,11 +1428,18 @@ export default function ProcurementPlanning() {
                           checked={member.conflictOfInterest}
                           onCheckedChange={(checked) => {
                             const newMembers = [...committeeForm.members];
-                            newMembers[index].conflictOfInterest = checked as boolean;
-                            setCommitteeForm({...committeeForm, members: newMembers});
+                            newMembers[index].conflictOfInterest =
+                              checked as boolean;
+                            setCommitteeForm({
+                              ...committeeForm,
+                              members: newMembers,
+                            });
                           }}
                         />
-                        <Label htmlFor={`conflict-${index}`} className="text-sm">
+                        <Label
+                          htmlFor={`conflict-${index}`}
+                          className="text-sm"
+                        >
                           Conflict of Interest
                         </Label>
                       </div>
@@ -1228,19 +1449,23 @@ export default function ProcurementPlanning() {
               </div>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowCommitteeModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowCommitteeModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={handleCreateCommittee}>
-                Create Committee
-              </Button>
+              <Button onClick={handleCreateCommittee}>Create Committee</Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
       {/* Market Research Modal */}
-      <Dialog open={showMarketResearchModal} onOpenChange={setShowMarketResearchModal}>
+      <Dialog
+        open={showMarketResearchModal}
+        onOpenChange={setShowMarketResearchModal}
+      >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Add Market Research</DialogTitle>
@@ -1251,7 +1476,12 @@ export default function ProcurementPlanning() {
               <Input
                 id="research-category"
                 value={marketResearchForm.category}
-                onChange={(e) => setMarketResearchForm({...marketResearchForm, category: e.target.value})}
+                onChange={(e) =>
+                  setMarketResearchForm({
+                    ...marketResearchForm,
+                    category: e.target.value,
+                  })
+                }
                 placeholder="Procurement category"
               />
             </div>
@@ -1260,7 +1490,12 @@ export default function ProcurementPlanning() {
               <Textarea
                 id="research-notes"
                 value={marketResearchForm.notes}
-                onChange={(e) => setMarketResearchForm({...marketResearchForm, notes: e.target.value})}
+                onChange={(e) =>
+                  setMarketResearchForm({
+                    ...marketResearchForm,
+                    notes: e.target.value,
+                  })
+                }
                 placeholder="Enter research notes"
                 rows={3}
               />
@@ -1270,7 +1505,12 @@ export default function ProcurementPlanning() {
               <Textarea
                 id="research-findings"
                 value={marketResearchForm.findings}
-                onChange={(e) => setMarketResearchForm({...marketResearchForm, findings: e.target.value})}
+                onChange={(e) =>
+                  setMarketResearchForm({
+                    ...marketResearchForm,
+                    findings: e.target.value,
+                  })
+                }
                 placeholder="Enter key findings"
                 rows={3}
               />
@@ -1280,16 +1520,28 @@ export default function ProcurementPlanning() {
               <Textarea
                 id="research-recommendations"
                 value={marketResearchForm.recommendations}
-                onChange={(e) => setMarketResearchForm({...marketResearchForm, recommendations: e.target.value})}
+                onChange={(e) =>
+                  setMarketResearchForm({
+                    ...marketResearchForm,
+                    recommendations: e.target.value,
+                  })
+                }
                 placeholder="Enter recommendations"
                 rows={3}
               />
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowMarketResearchModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowMarketResearchModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={() => selectedPlan && addMarketResearch(selectedPlan.id)}>
+              <Button
+                onClick={() =>
+                  selectedPlan && addMarketResearch(selectedPlan.id)
+                }
+              >
                 Save Research
               </Button>
             </div>

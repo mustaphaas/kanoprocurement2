@@ -144,7 +144,13 @@ interface ScoringMatrix {
     startDate: string;
     endDate: string;
   };
-  status: "Setup" | "In Progress" | "Evaluation Complete" | "Review" | "Final" | "Cancelled";
+  status:
+    | "Setup"
+    | "In Progress"
+    | "Evaluation Complete"
+    | "Review"
+    | "Final"
+    | "Cancelled";
   createdDate: string;
   completedDate?: string;
   results: MatrixResults;
@@ -215,14 +221,21 @@ export default function ScoringMatrixImplementation() {
   const [activeTab, setActiveTab] = useState("rubrics");
   const [scoringRubrics, setScoringRubrics] = useState<ScoringRubric[]>([]);
   const [scoringMatrices, setScoringMatrices] = useState<ScoringMatrix[]>([]);
-  const [comparativeAnalyses, setComparativeAnalyses] = useState<ComparativeAnalysis[]>([]);
-  const [selectedRubric, setSelectedRubric] = useState<ScoringRubric | null>(null);
-  const [selectedMatrix, setSelectedMatrix] = useState<ScoringMatrix | null>(null);
+  const [comparativeAnalyses, setComparativeAnalyses] = useState<
+    ComparativeAnalysis[]
+  >([]);
+  const [selectedRubric, setSelectedRubric] = useState<ScoringRubric | null>(
+    null,
+  );
+  const [selectedMatrix, setSelectedMatrix] = useState<ScoringMatrix | null>(
+    null,
+  );
   const [showRubricModal, setShowRubricModal] = useState(false);
   const [showMatrixModal, setShowMatrixModal] = useState(false);
   const [showScoringModal, setShowScoringModal] = useState(false);
   const [showComparisonModal, setShowComparisonModal] = useState(false);
-  const [editingCriteria, setEditingCriteria] = useState<ScoringCriteria | null>(null);
+  const [editingCriteria, setEditingCriteria] =
+    useState<ScoringCriteria | null>(null);
 
   // Form states
   const [rubricForm, setRubricForm] = useState({
@@ -254,7 +267,9 @@ export default function ScoringMatrixImplementation() {
     endDate: "",
   });
 
-  const [vendorScoring, setVendorScoring] = useState<{ [criteriaId: string]: number }>({});
+  const [vendorScoring, setVendorScoring] = useState<{
+    [criteriaId: string]: number;
+  }>({});
   const [currentVendor, setCurrentVendor] = useState<string>("");
   const [evaluationComments, setEvaluationComments] = useState("");
 
@@ -264,9 +279,11 @@ export default function ScoringMatrixImplementation() {
 
   const loadData = () => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
-      
+
       // Load scoring rubrics
       const rubricsKey = `${ministryCode}_${STORAGE_KEYS.SCORING_RUBRICS}`;
       const storedRubrics = localStorage.getItem(rubricsKey);
@@ -302,7 +319,9 @@ export default function ScoringMatrixImplementation() {
 
   const saveData = (type: string, data: any) => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${type}`;
       localStorage.setItem(storageKey, JSON.stringify(data));
@@ -315,9 +334,14 @@ export default function ScoringMatrixImplementation() {
     const baseRubric: ScoringRubric = {
       id: "RUB-2024-001",
       name: "Medical Equipment Evaluation Rubric",
-      description: "Standardized evaluation criteria for medical equipment procurement",
+      description:
+        "Standardized evaluation criteria for medical equipment procurement",
       version: "2.1",
-      applicableCategories: ["Medical Equipment", "Healthcare Technology", "Laboratory Equipment"],
+      applicableCategories: [
+        "Medical Equipment",
+        "Healthcare Technology",
+        "Laboratory Equipment",
+      ],
       totalWeight: 100,
       passingThreshold: 70,
       createdDate: "2024-01-15",
@@ -328,7 +352,8 @@ export default function ScoringMatrixImplementation() {
         {
           id: "CRIT-001",
           name: "Technical Specifications",
-          description: "Evaluation of technical capabilities and specifications",
+          description:
+            "Evaluation of technical capabilities and specifications",
           weight: 30,
           maxScore: 100,
           type: "Numeric",
@@ -450,8 +475,13 @@ export default function ScoringMatrixImplementation() {
 
     if (ministryCode === "MOWI") {
       baseRubric.name = "Infrastructure Evaluation Rubric";
-      baseRubric.description = "Standardized evaluation criteria for infrastructure and construction projects";
-      baseRubric.applicableCategories = ["Road Construction", "Bridge Construction", "Building Construction"];
+      baseRubric.description =
+        "Standardized evaluation criteria for infrastructure and construction projects";
+      baseRubric.applicableCategories = [
+        "Road Construction",
+        "Bridge Construction",
+        "Building Construction",
+      ];
       baseRubric.criteria = [
         {
           ...baseRubric.criteria[0],
@@ -476,8 +506,13 @@ export default function ScoringMatrixImplementation() {
       ];
     } else if (ministryCode === "MOE") {
       baseRubric.name = "Educational Materials Evaluation Rubric";
-      baseRubric.description = "Standardized evaluation criteria for educational equipment and materials";
-      baseRubric.applicableCategories = ["Educational Technology", "School Furniture", "Learning Materials"];
+      baseRubric.description =
+        "Standardized evaluation criteria for educational equipment and materials";
+      baseRubric.applicableCategories = [
+        "Educational Technology",
+        "School Furniture",
+        "Learning Materials",
+      ];
       baseRubric.criteria = [
         {
           ...baseRubric.criteria[0],
@@ -532,7 +567,8 @@ export default function ScoringMatrixImplementation() {
             evaluatorName: "Dr. Amina Hassan",
             evaluationDate: "2024-02-15",
             timeSpent: 120,
-            comments: "Excellent technical specifications and competitive pricing",
+            comments:
+              "Excellent technical specifications and competitive pricing",
             attachments: [],
             reviewStatus: "Approved",
             criteriaScores: {
@@ -542,7 +578,8 @@ export default function ScoringMatrixImplementation() {
                 weight: 30,
                 weightedScore: 26.4,
                 compliance: true,
-                comments: "High-quality equipment with excellent specifications",
+                comments:
+                  "High-quality equipment with excellent specifications",
                 evidenceProvided: true,
               },
               "CRIT-002": {
@@ -589,14 +626,15 @@ export default function ScoringMatrixImplementation() {
             complianceIssues: [],
           },
           {
-            vendorId: "VEN-002", 
+            vendorId: "VEN-002",
             vendorName: "Falcon Diagnostics Ltd",
             companyRegistration: "RC789012",
             evaluatorId: "EVAL-001",
             evaluatorName: "Dr. Amina Hassan",
             evaluationDate: "2024-02-15",
             timeSpent: 115,
-            comments: "Good financial proposal with adequate technical capability",
+            comments:
+              "Good financial proposal with adequate technical capability",
             attachments: [],
             reviewStatus: "Approved",
             criteriaScores: {
@@ -606,7 +644,8 @@ export default function ScoringMatrixImplementation() {
                 weight: 30,
                 weightedScore: 24.6,
                 compliance: true,
-                comments: "Good technical capability, meets minimum requirements",
+                comments:
+                  "Good technical capability, meets minimum requirements",
                 evidenceProvided: true,
               },
               "CRIT-002": {
@@ -685,7 +724,8 @@ export default function ScoringMatrixImplementation() {
           alternativeOptions: ["VEN-002"],
           technicallyCompliant: 2,
           totalEvaluated: 2,
-          evaluationSummary: "Both vendors meet technical requirements. PrimeCare Medical Ltd offers superior technical specifications and experience, while Falcon Diagnostics Ltd provides more competitive pricing.",
+          evaluationSummary:
+            "Both vendors meet technical requirements. PrimeCare Medical Ltd offers superior technical specifications and experience, while Falcon Diagnostics Ltd provides more competitive pricing.",
         },
         auditTrail: [
           {
@@ -733,8 +773,8 @@ export default function ScoringMatrixImplementation() {
       criteria: [],
       totalWeight: 0,
       passingThreshold: rubricForm.passingThreshold,
-      createdDate: new Date().toISOString().split('T')[0],
-      lastModified: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
+      lastModified: new Date().toISOString().split("T")[0],
       status: "Draft",
       usageCount: 0,
     };
@@ -767,15 +807,18 @@ export default function ScoringMatrixImplementation() {
       passingScore: criteriaForm.passingScore,
     };
 
-    const updatedRubrics = scoringRubrics.map(rubric => {
+    const updatedRubrics = scoringRubrics.map((rubric) => {
       if (rubric.id === rubricId) {
         const updatedCriteria = [...rubric.criteria, newCriteria];
-        const totalWeight = updatedCriteria.reduce((sum, criteria) => sum + criteria.weight, 0);
+        const totalWeight = updatedCriteria.reduce(
+          (sum, criteria) => sum + criteria.weight,
+          0,
+        );
         return {
           ...rubric,
           criteria: updatedCriteria,
           totalWeight,
-          lastModified: new Date().toISOString().split('T')[0],
+          lastModified: new Date().toISOString().split("T")[0],
         };
       }
       return rubric;
@@ -803,7 +846,8 @@ export default function ScoringMatrixImplementation() {
       tenderId: matrixForm.tenderId,
       tenderTitle: matrixForm.tenderTitle,
       rubricId: matrixForm.rubricId,
-      rubricName: scoringRubrics.find(r => r.id === matrixForm.rubricId)?.name || "",
+      rubricName:
+        scoringRubrics.find((r) => r.id === matrixForm.rubricId)?.name || "",
       committeeId: matrixForm.committeeId,
       committeeName: "Evaluation Committee",
       vendors: [],
@@ -812,7 +856,7 @@ export default function ScoringMatrixImplementation() {
         endDate: matrixForm.endDate,
       },
       status: "Setup",
-      createdDate: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
       results: {
         rankings: [],
         consensusReached: false,
@@ -860,11 +904,14 @@ export default function ScoringMatrixImplementation() {
     setShowMatrixModal(false);
   };
 
-  const calculateWeightedScore = (rubric: ScoringRubric, scores: { [criteriaId: string]: number }): number => {
+  const calculateWeightedScore = (
+    rubric: ScoringRubric,
+    scores: { [criteriaId: string]: number },
+  ): number => {
     let totalWeightedScore = 0;
     let totalWeight = 0;
 
-    rubric.criteria.forEach(criteria => {
+    rubric.criteria.forEach((criteria) => {
       const score = scores[criteria.id] || 0;
       const weightedScore = (score * criteria.weight) / 100;
       totalWeightedScore += weightedScore;
@@ -874,7 +921,10 @@ export default function ScoringMatrixImplementation() {
     return totalWeight > 0 ? (totalWeightedScore / totalWeight) * 100 : 0;
   };
 
-  const getComplianceStatus = (score: number, passingScore: number): boolean => {
+  const getComplianceStatus = (
+    score: number,
+    passingScore: number,
+  ): boolean => {
     return score >= passingScore;
   };
 
@@ -890,7 +940,11 @@ export default function ScoringMatrixImplementation() {
       Final: "default",
       Cancelled: "destructive",
     };
-    return <Badge variant={variants[status as keyof typeof variants] as any}>{status}</Badge>;
+    return (
+      <Badge variant={variants[status as keyof typeof variants] as any}>
+        {status}
+      </Badge>
+    );
   };
 
   const getRecommendationBadge = (recommendation: string) => {
@@ -899,7 +953,11 @@ export default function ScoringMatrixImplementation() {
       Consider: "secondary",
       Reject: "destructive",
     };
-    return <Badge variant={variants[recommendation as keyof typeof variants] as any}>{recommendation}</Badge>;
+    return (
+      <Badge variant={variants[recommendation as keyof typeof variants] as any}>
+        {recommendation}
+      </Badge>
+    );
   };
 
   const exportMatrix = (matrix: ScoringMatrix) => {
@@ -907,18 +965,22 @@ export default function ScoringMatrixImplementation() {
       matrix: matrix.matrixName,
       tender: matrix.tenderTitle,
       evaluationDate: matrix.completedDate,
-      vendors: matrix.vendors.map(vendor => ({
+      vendors: matrix.vendors.map((vendor) => ({
         name: vendor.vendorName,
         totalScore: vendor.totalScore,
         technicalCompliance: vendor.technicalCompliance,
-        recommendation: matrix.results.rankings.find(r => r.vendorId === vendor.vendorId)?.recommendation,
+        recommendation: matrix.results.rankings.find(
+          (r) => r.vendorId === vendor.vendorId,
+        )?.recommendation,
       })),
       summary: matrix.results.evaluationSummary,
     };
 
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `${matrix.matrixName}_results.json`;
     a.click();
@@ -929,10 +991,18 @@ export default function ScoringMatrixImplementation() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Scoring Matrix Implementation</h2>
-          <p className="text-gray-600">Manage scoring rubrics, evaluation matrices, and comparative analysis</p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Scoring Matrix Implementation
+          </h2>
+          <p className="text-gray-600">
+            Manage scoring rubrics, evaluation matrices, and comparative
+            analysis
+          </p>
         </div>
-        <Button onClick={() => setShowRubricModal(true)} className="bg-primary hover:bg-primary/90">
+        <Button
+          onClick={() => setShowRubricModal(true)}
+          className="bg-primary hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4 mr-2" />
           New Scoring Rubric
         </Button>
@@ -961,7 +1031,10 @@ export default function ScoringMatrixImplementation() {
         <TabsContent value="rubrics" className="space-y-4">
           <div className="grid gap-4">
             {scoringRubrics.map((rubric) => (
-              <Card key={rubric.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={rubric.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -970,37 +1043,55 @@ export default function ScoringMatrixImplementation() {
                         {getStatusBadge(rubric.status)}
                         <Badge variant="outline">v{rubric.version}</Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">{rubric.description}</p>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {rubric.description}
+                      </p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Criteria</Label>
-                          <p className="text-sm font-semibold">{rubric.criteria.length}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Criteria
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {rubric.criteria.length}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Total Weight</Label>
-                          <p className="text-sm font-semibold">{rubric.totalWeight}%</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Total Weight
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {rubric.totalWeight}%
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Passing Threshold</Label>
-                          <p className="text-sm font-semibold">{rubric.passingThreshold}%</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Passing Threshold
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {rubric.passingThreshold}%
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Usage Count</Label>
-                          <p className="text-sm font-semibold">{rubric.usageCount}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Usage Count
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {rubric.usageCount}
+                          </p>
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => setSelectedRubric(rubric)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => {
                           setSelectedRubric(rubric);
                           setShowMatrixModal(true);
@@ -1039,22 +1130,37 @@ export default function ScoringMatrixImplementation() {
                       </div>
                       <div className="space-y-2">
                         {rubric.criteria.map((criteria) => (
-                          <div key={criteria.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div
+                            key={criteria.id}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                          >
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="font-medium">{criteria.name}</span>
-                                <Badge variant="outline">{criteria.weight}%</Badge>
-                                <Badge variant="secondary">{criteria.type}</Badge>
+                                <span className="font-medium">
+                                  {criteria.name}
+                                </span>
+                                <Badge variant="outline">
+                                  {criteria.weight}%
+                                </Badge>
+                                <Badge variant="secondary">
+                                  {criteria.type}
+                                </Badge>
                                 {criteria.mandatory && (
-                                  <Badge variant="destructive" className="text-xs">
+                                  <Badge
+                                    variant="destructive"
+                                    className="text-xs"
+                                  >
                                     Mandatory
                                   </Badge>
                                 )}
                               </div>
-                              <p className="text-sm text-gray-600">{criteria.description}</p>
+                              <p className="text-sm text-gray-600">
+                                {criteria.description}
+                              </p>
                               <div className="text-xs text-gray-500 mt-1">
-                                Max Score: {criteria.maxScore} • Passing: {criteria.passingScore}% • 
-                                Sub-criteria: {criteria.subCriteria.length}
+                                Max Score: {criteria.maxScore} • Passing:{" "}
+                                {criteria.passingScore}% • Sub-criteria:{" "}
+                                {criteria.subCriteria.length}
                               </div>
                             </div>
                             <div className="flex gap-1">
@@ -1085,10 +1191,14 @@ export default function ScoringMatrixImplementation() {
 
                     {rubric.applicableCategories.length > 0 && (
                       <div>
-                        <h4 className="font-medium mb-2">Applicable Categories</h4>
+                        <h4 className="font-medium mb-2">
+                          Applicable Categories
+                        </h4>
                         <div className="flex flex-wrap gap-2">
                           {rubric.applicableCategories.map((category) => (
-                            <Badge key={category} variant="outline">{category}</Badge>
+                            <Badge key={category} variant="outline">
+                              {category}
+                            </Badge>
                           ))}
                         </div>
                       </div>
@@ -1116,45 +1226,66 @@ export default function ScoringMatrixImplementation() {
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg">{matrix.matrixName}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {matrix.matrixName}
+                        </CardTitle>
                         {getStatusBadge(matrix.status)}
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">{matrix.tenderTitle}</p>
+                      <p className="text-sm text-gray-600 mb-2">
+                        {matrix.tenderTitle}
+                      </p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Vendors</Label>
-                          <p className="font-semibold">{matrix.vendors.length}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Vendors
+                          </Label>
+                          <p className="font-semibold">
+                            {matrix.vendors.length}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Rubric</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Rubric
+                          </Label>
                           <p className="font-semibold">{matrix.rubricName}</p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Period</Label>
-                          <p className="font-semibold">{matrix.evaluationPeriod.startDate} - {matrix.evaluationPeriod.endDate}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Period
+                          </Label>
+                          <p className="font-semibold">
+                            {matrix.evaluationPeriod.startDate} -{" "}
+                            {matrix.evaluationPeriod.endDate}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Progress</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Progress
+                          </Label>
                           <p className="font-semibold">
-                            {matrix.status === "Evaluation Complete" ? "100%" : 
-                             matrix.status === "In Progress" ? "65%" :
-                             matrix.status === "Setup" ? "0%" : "50%"}
+                            {matrix.status === "Evaluation Complete"
+                              ? "100%"
+                              : matrix.status === "In Progress"
+                                ? "65%"
+                                : matrix.status === "Setup"
+                                  ? "0%"
+                                  : "50%"}
                           </p>
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => setSelectedMatrix(matrix)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
                       {matrix.status === "Evaluation Complete" && (
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => exportMatrix(matrix)}
                         >
                           <FileSpreadsheet className="h-4 w-4" />
@@ -1164,40 +1295,55 @@ export default function ScoringMatrixImplementation() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {matrix.status === "Evaluation Complete" && matrix.results.rankings.length > 0 && (
-                    <div>
-                      <h4 className="font-medium mb-3">Final Rankings</h4>
-                      <div className="space-y-2">
-                        {matrix.results.rankings.map((ranking) => (
-                          <div key={ranking.vendorId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">
-                                {ranking.rank}
-                              </div>
-                              <div>
-                                <span className="font-medium">{ranking.vendorName}</span>
-                                <div className="text-sm text-gray-600">
-                                  Total Score: {ranking.totalScore.toFixed(1)} • 
-                                  {ranking.compliance ? " Compliant" : " Non-Compliant"}
+                  {matrix.status === "Evaluation Complete" &&
+                    matrix.results.rankings.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-3">Final Rankings</h4>
+                        <div className="space-y-2">
+                          {matrix.results.rankings.map((ranking) => (
+                            <div
+                              key={ranking.vendorId}
+                              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+                                  {ranking.rank}
+                                </div>
+                                <div>
+                                  <span className="font-medium">
+                                    {ranking.vendorName}
+                                  </span>
+                                  <div className="text-sm text-gray-600">
+                                    Total Score: {ranking.totalScore.toFixed(1)}{" "}
+                                    •
+                                    {ranking.compliance
+                                      ? " Compliant"
+                                      : " Non-Compliant"}
+                                  </div>
                                 </div>
                               </div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-lg">
+                                  {ranking.totalScore.toFixed(1)}
+                                </span>
+                                {getRecommendationBadge(ranking.recommendation)}
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-lg">{ranking.totalScore.toFixed(1)}</span>
-                              {getRecommendationBadge(ranking.recommendation)}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {matrix.results.evaluationSummary && (
-                        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                          <h5 className="font-medium text-blue-900 mb-1">Evaluation Summary</h5>
-                          <p className="text-sm text-blue-800">{matrix.results.evaluationSummary}</p>
+                          ))}
                         </div>
-                      )}
-                    </div>
-                  )}
+
+                        {matrix.results.evaluationSummary && (
+                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <h5 className="font-medium text-blue-900 mb-1">
+                              Evaluation Summary
+                            </h5>
+                            <p className="text-sm text-blue-800">
+                              {matrix.results.evaluationSummary}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                 </CardContent>
               </Card>
             ))}
@@ -1207,7 +1353,10 @@ export default function ScoringMatrixImplementation() {
         <TabsContent value="comparison" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Comparative Analysis</h3>
-            <Button onClick={() => setShowComparisonModal(true)} variant="outline">
+            <Button
+              onClick={() => setShowComparisonModal(true)}
+              variant="outline"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Generate Analysis
             </Button>
@@ -1215,11 +1364,13 @@ export default function ScoringMatrixImplementation() {
 
           <div className="grid gap-4">
             {scoringMatrices
-              .filter(matrix => matrix.status === "Evaluation Complete")
+              .filter((matrix) => matrix.status === "Evaluation Complete")
               .map((matrix) => (
                 <Card key={matrix.id}>
                   <CardHeader>
-                    <CardTitle className="text-lg">{matrix.tenderTitle} - Vendor Comparison</CardTitle>
+                    <CardTitle className="text-lg">
+                      {matrix.tenderTitle} - Vendor Comparison
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="overflow-x-auto">
@@ -1238,11 +1389,15 @@ export default function ScoringMatrixImplementation() {
                         <TableBody>
                           {matrix.results.rankings.map((ranking) => (
                             <TableRow key={ranking.vendorId}>
-                              <TableCell className="font-medium">{ranking.vendorName}</TableCell>
+                              <TableCell className="font-medium">
+                                {ranking.vendorName}
+                              </TableCell>
                               <TableCell>{ranking.technicalScore}</TableCell>
                               <TableCell>{ranking.financialScore}</TableCell>
                               <TableCell>{ranking.experienceScore}</TableCell>
-                              <TableCell className="font-bold">{ranking.totalScore.toFixed(1)}</TableCell>
+                              <TableCell className="font-bold">
+                                {ranking.totalScore.toFixed(1)}
+                              </TableCell>
                               <TableCell>
                                 {ranking.compliance ? (
                                   <CheckCircle className="h-4 w-4 text-green-600" />
@@ -1269,41 +1424,61 @@ export default function ScoringMatrixImplementation() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Rubrics</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Total Rubrics
+                  </CardTitle>
                   <FileSpreadsheet className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{scoringRubrics.length}</div>
+                  <div className="text-2xl font-bold">
+                    {scoringRubrics.length}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    {scoringRubrics.filter(r => r.status === "Active").length} active
+                    {scoringRubrics.filter((r) => r.status === "Active").length}{" "}
+                    active
                   </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Evaluation Matrices</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Evaluation Matrices
+                  </CardTitle>
                   <Calculator className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{scoringMatrices.length}</div>
+                  <div className="text-2xl font-bold">
+                    {scoringMatrices.length}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    {scoringMatrices.filter(m => m.status === "Evaluation Complete").length} completed
+                    {
+                      scoringMatrices.filter(
+                        (m) => m.status === "Evaluation Complete",
+                      ).length
+                    }{" "}
+                    completed
                   </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Average Score</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Average Score
+                  </CardTitle>
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {scoringMatrices.length > 0 
-                      ? (scoringMatrices.reduce((sum, matrix) => sum + matrix.results.averageScore, 0) / scoringMatrices.length).toFixed(1)
-                      : "0"
-                    }
+                    {scoringMatrices.length > 0
+                      ? (
+                          scoringMatrices.reduce(
+                            (sum, matrix) => sum + matrix.results.averageScore,
+                            0,
+                          ) / scoringMatrices.length
+                        ).toFixed(1)
+                      : "0"}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Across all evaluations
@@ -1313,16 +1488,29 @@ export default function ScoringMatrixImplementation() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Compliance Rate</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Compliance Rate
+                  </CardTitle>
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {scoringMatrices.length > 0 
-                      ? Math.round((scoringMatrices.reduce((sum, matrix) => sum + matrix.results.technicallyCompliant, 0) / 
-                          scoringMatrices.reduce((sum, matrix) => sum + matrix.results.totalEvaluated, 0)) * 100)
-                      : 0
-                    }%
+                    {scoringMatrices.length > 0
+                      ? Math.round(
+                          (scoringMatrices.reduce(
+                            (sum, matrix) =>
+                              sum + matrix.results.technicallyCompliant,
+                            0,
+                          ) /
+                            scoringMatrices.reduce(
+                              (sum, matrix) =>
+                                sum + matrix.results.totalEvaluated,
+                              0,
+                            )) *
+                            100,
+                        )
+                      : 0}
+                    %
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Technical compliance
@@ -1338,17 +1526,29 @@ export default function ScoringMatrixImplementation() {
               <CardContent>
                 <div className="space-y-4">
                   {scoringRubrics.map((rubric) => (
-                    <div key={rubric.id} className="flex items-center justify-between">
+                    <div
+                      key={rubric.id}
+                      className="flex items-center justify-between"
+                    >
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{rubric.name}</span>
                         {getStatusBadge(rubric.status)}
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-sm text-gray-600">{rubric.usageCount} uses</span>
+                        <span className="text-sm text-gray-600">
+                          {rubric.usageCount} uses
+                        </span>
                         <div className="w-32">
-                          <Progress 
-                            value={(rubric.usageCount / Math.max(...scoringRubrics.map(r => r.usageCount), 1)) * 100} 
-                            className="h-2" 
+                          <Progress
+                            value={
+                              (rubric.usageCount /
+                                Math.max(
+                                  ...scoringRubrics.map((r) => r.usageCount),
+                                  1,
+                                )) *
+                              100
+                            }
+                            className="h-2"
                           />
                         </div>
                       </div>
@@ -1373,7 +1573,9 @@ export default function ScoringMatrixImplementation() {
               <Input
                 id="rubric-name"
                 value={rubricForm.name}
-                onChange={(e) => setRubricForm({...rubricForm, name: e.target.value})}
+                onChange={(e) =>
+                  setRubricForm({ ...rubricForm, name: e.target.value })
+                }
                 placeholder="Enter rubric name"
               />
             </div>
@@ -1382,7 +1584,9 @@ export default function ScoringMatrixImplementation() {
               <Textarea
                 id="rubric-description"
                 value={rubricForm.description}
-                onChange={(e) => setRubricForm({...rubricForm, description: e.target.value})}
+                onChange={(e) =>
+                  setRubricForm({ ...rubricForm, description: e.target.value })
+                }
                 placeholder="Describe the rubric purpose and scope"
                 rows={3}
               />
@@ -1393,7 +1597,9 @@ export default function ScoringMatrixImplementation() {
                 <Input
                   id="rubric-version"
                   value={rubricForm.version}
-                  onChange={(e) => setRubricForm({...rubricForm, version: e.target.value})}
+                  onChange={(e) =>
+                    setRubricForm({ ...rubricForm, version: e.target.value })
+                  }
                   placeholder="1.0"
                 />
               </div>
@@ -1403,28 +1609,43 @@ export default function ScoringMatrixImplementation() {
                   id="passing-threshold"
                   type="number"
                   value={rubricForm.passingThreshold}
-                  onChange={(e) => setRubricForm({...rubricForm, passingThreshold: parseInt(e.target.value) || 70})}
+                  onChange={(e) =>
+                    setRubricForm({
+                      ...rubricForm,
+                      passingThreshold: parseInt(e.target.value) || 70,
+                    })
+                  }
                   min="0"
                   max="100"
                 />
               </div>
             </div>
             <div>
-              <Label htmlFor="applicable-categories">Applicable Categories (comma-separated)</Label>
+              <Label htmlFor="applicable-categories">
+                Applicable Categories (comma-separated)
+              </Label>
               <Input
                 id="applicable-categories"
                 value={rubricForm.applicableCategories.join(", ")}
-                onChange={(e) => setRubricForm({...rubricForm, applicableCategories: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setRubricForm({
+                    ...rubricForm,
+                    applicableCategories: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="e.g., Medical Equipment, IT Services"
               />
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowRubricModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowRubricModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={createRubric}>
-                Create Rubric
-              </Button>
+              <Button onClick={createRubric}>Create Rubric</Button>
             </div>
           </div>
         </DialogContent>
@@ -1442,7 +1663,9 @@ export default function ScoringMatrixImplementation() {
               <Input
                 id="matrix-name"
                 value={matrixForm.matrixName}
-                onChange={(e) => setMatrixForm({...matrixForm, matrixName: e.target.value})}
+                onChange={(e) =>
+                  setMatrixForm({ ...matrixForm, matrixName: e.target.value })
+                }
                 placeholder="Enter matrix name"
               />
             </div>
@@ -1452,7 +1675,9 @@ export default function ScoringMatrixImplementation() {
                 <Input
                   id="tender-id"
                   value={matrixForm.tenderId}
-                  onChange={(e) => setMatrixForm({...matrixForm, tenderId: e.target.value})}
+                  onChange={(e) =>
+                    setMatrixForm({ ...matrixForm, tenderId: e.target.value })
+                  }
                   placeholder="e.g., MOH-2024-001"
                 />
               </div>
@@ -1461,23 +1686,35 @@ export default function ScoringMatrixImplementation() {
                 <Input
                   id="tender-title"
                   value={matrixForm.tenderTitle}
-                  onChange={(e) => setMatrixForm({...matrixForm, tenderTitle: e.target.value})}
+                  onChange={(e) =>
+                    setMatrixForm({
+                      ...matrixForm,
+                      tenderTitle: e.target.value,
+                    })
+                  }
                   placeholder="Enter tender title"
                 />
               </div>
             </div>
             <div>
               <Label htmlFor="rubric-select">Scoring Rubric</Label>
-              <Select value={matrixForm.rubricId} onValueChange={(value) => setMatrixForm({...matrixForm, rubricId: value})}>
+              <Select
+                value={matrixForm.rubricId}
+                onValueChange={(value) =>
+                  setMatrixForm({ ...matrixForm, rubricId: value })
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a scoring rubric" />
                 </SelectTrigger>
                 <SelectContent>
-                  {scoringRubrics.filter(r => r.status === "Active").map((rubric) => (
-                    <SelectItem key={rubric.id} value={rubric.id}>
-                      {rubric.name} (v{rubric.version})
-                    </SelectItem>
-                  ))}
+                  {scoringRubrics
+                    .filter((r) => r.status === "Active")
+                    .map((rubric) => (
+                      <SelectItem key={rubric.id} value={rubric.id}>
+                        {rubric.name} (v{rubric.version})
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -1486,7 +1723,9 @@ export default function ScoringMatrixImplementation() {
               <Input
                 id="committee-id"
                 value={matrixForm.committeeId}
-                onChange={(e) => setMatrixForm({...matrixForm, committeeId: e.target.value})}
+                onChange={(e) =>
+                  setMatrixForm({ ...matrixForm, committeeId: e.target.value })
+                }
                 placeholder="e.g., EC-2024-001"
               />
             </div>
@@ -1497,7 +1736,9 @@ export default function ScoringMatrixImplementation() {
                   id="start-date"
                   type="date"
                   value={matrixForm.startDate}
-                  onChange={(e) => setMatrixForm({...matrixForm, startDate: e.target.value})}
+                  onChange={(e) =>
+                    setMatrixForm({ ...matrixForm, startDate: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -1506,17 +1747,20 @@ export default function ScoringMatrixImplementation() {
                   id="end-date"
                   type="date"
                   value={matrixForm.endDate}
-                  onChange={(e) => setMatrixForm({...matrixForm, endDate: e.target.value})}
+                  onChange={(e) =>
+                    setMatrixForm({ ...matrixForm, endDate: e.target.value })
+                  }
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowMatrixModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowMatrixModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={createScoringMatrix}>
-                Create Matrix
-              </Button>
+              <Button onClick={createScoringMatrix}>Create Matrix</Button>
             </div>
           </div>
         </DialogContent>

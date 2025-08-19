@@ -207,16 +207,22 @@ const STORAGE_KEYS = {
 export default function EvaluationCommitteeManagement() {
   const [activeTab, setActiveTab] = useState("committees");
   const [committees, setCommittees] = useState<EvaluationCommittee[]>([]);
-  const [evaluationSessions, setEvaluationSessions] = useState<EvaluationSession[]>([]);
+  const [evaluationSessions, setEvaluationSessions] = useState<
+    EvaluationSession[]
+  >([]);
   const [memberPool, setMemberPool] = useState<CommitteeMember[]>([]);
-  const [selectedCommittee, setSelectedCommittee] = useState<EvaluationCommittee | null>(null);
-  const [selectedSession, setSelectedSession] = useState<EvaluationSession | null>(null);
+  const [selectedCommittee, setSelectedCommittee] =
+    useState<EvaluationCommittee | null>(null);
+  const [selectedSession, setSelectedSession] =
+    useState<EvaluationSession | null>(null);
   const [showCommitteeModal, setShowCommitteeModal] = useState(false);
   const [showMemberModal, setShowMemberModal] = useState(false);
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [showScoringModal, setShowScoringModal] = useState(false);
   const [showConsensusModal, setShowConsensusModal] = useState(false);
-  const [editingMember, setEditingMember] = useState<CommitteeMember | null>(null);
+  const [editingMember, setEditingMember] = useState<CommitteeMember | null>(
+    null,
+  );
 
   // Form states
   const [committeeForm, setCommitteeForm] = useState({
@@ -241,7 +247,9 @@ export default function EvaluationCommitteeManagement() {
     conflictOfInterest: false,
   });
 
-  const [scoringData, setScoringData] = useState<{ [vendorId: string]: { [criteriaId: string]: number } }>({});
+  const [scoringData, setScoringData] = useState<{
+    [vendorId: string]: { [criteriaId: string]: number };
+  }>({});
   const [currentMemberScoring, setCurrentMemberScoring] = useState<string>("");
 
   useEffect(() => {
@@ -250,9 +258,11 @@ export default function EvaluationCommitteeManagement() {
 
   const loadData = () => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
-      
+
       // Load committees
       const committeesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEES}`;
       const storedCommittees = localStorage.getItem(committeesKey);
@@ -292,7 +302,9 @@ export default function EvaluationCommitteeManagement() {
 
   const saveData = (type: string, data: any) => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${type}`;
       localStorage.setItem(storageKey, JSON.stringify(data));
@@ -301,21 +313,34 @@ export default function EvaluationCommitteeManagement() {
     }
   };
 
-  const createSampleCommittees = (ministryCode: string): EvaluationCommittee[] => {
+  const createSampleCommittees = (
+    ministryCode: string,
+  ): EvaluationCommittee[] => {
     const baseCommittee: EvaluationCommittee = {
       id: "EC-2024-001",
       name: "Medical Equipment Evaluation Committee",
-      description: "Specialized committee for evaluating medical equipment procurement",
+      description:
+        "Specialized committee for evaluating medical equipment procurement",
       type: "Technical",
       chairperson: "MEM-001",
       secretary: "MEM-002",
       createdDate: "2024-01-10",
       status: "Active",
-      specialization: ["Medical Equipment", "Healthcare Technology", "Quality Assurance"],
+      specialization: [
+        "Medical Equipment",
+        "Healthcare Technology",
+        "Quality Assurance",
+      ],
       minimumMembers: 3,
       maximumMembers: 7,
       quorumRequirement: 3,
-      evaluationCriteria: ["Technical Specifications", "Quality Standards", "Price", "Delivery Timeline", "After Sales Support"],
+      evaluationCriteria: [
+        "Technical Specifications",
+        "Quality Standards",
+        "Price",
+        "Delivery Timeline",
+        "After Sales Support",
+      ],
       workload: 3,
       members: [
         {
@@ -326,7 +351,11 @@ export default function EvaluationCommitteeManagement() {
           email: "amina.hassan@health.kano.gov.ng",
           phone: "08012345678",
           conflictOfInterest: false,
-          expertise: ["Medical Equipment", "Clinical Engineering", "Quality Assurance"],
+          expertise: [
+            "Medical Equipment",
+            "Clinical Engineering",
+            "Quality Assurance",
+          ],
           availability: "Available",
           evaluationHistory: [
             {
@@ -341,7 +370,10 @@ export default function EvaluationCommitteeManagement() {
           performanceRating: 9.2,
           dateJoined: "2024-01-10",
           qualifications: ["MBBS", "MSc Medical Equipment Technology"],
-          certifications: ["Medical Equipment Certification", "Quality Management"],
+          certifications: [
+            "Medical Equipment Certification",
+            "Quality Management",
+          ],
         },
         {
           id: "MEM-002",
@@ -351,7 +383,11 @@ export default function EvaluationCommitteeManagement() {
           email: "musa.ibrahim@health.kano.gov.ng",
           phone: "08012345679",
           conflictOfInterest: false,
-          expertise: ["Biomedical Engineering", "Equipment Procurement", "Technical Evaluation"],
+          expertise: [
+            "Biomedical Engineering",
+            "Equipment Procurement",
+            "Technical Evaluation",
+          ],
           availability: "Available",
           evaluationHistory: [
             {
@@ -365,8 +401,14 @@ export default function EvaluationCommitteeManagement() {
           ],
           performanceRating: 8.8,
           dateJoined: "2024-01-10",
-          qualifications: ["BSc Biomedical Engineering", "MSc Engineering Management"],
-          certifications: ["Professional Engineer", "Biomedical Equipment Specialist"],
+          qualifications: [
+            "BSc Biomedical Engineering",
+            "MSc Engineering Management",
+          ],
+          certifications: [
+            "Professional Engineer",
+            "Biomedical Equipment Specialist",
+          ],
         },
         {
           id: "MEM-003",
@@ -376,7 +418,11 @@ export default function EvaluationCommitteeManagement() {
           email: "fatima.yusuf@health.kano.gov.ng",
           phone: "08012345680",
           conflictOfInterest: false,
-          expertise: ["Hospital Management", "Healthcare Administration", "Budget Planning"],
+          expertise: [
+            "Hospital Management",
+            "Healthcare Administration",
+            "Budget Planning",
+          ],
           availability: "Available",
           evaluationHistory: [
             {
@@ -417,24 +463,46 @@ export default function EvaluationCommitteeManagement() {
 
     if (ministryCode === "MOWI") {
       baseCommittee.name = "Infrastructure Evaluation Committee";
-      baseCommittee.description = "Specialized committee for evaluating construction and infrastructure projects";
-      baseCommittee.specialization = ["Civil Engineering", "Construction Management", "Infrastructure Development"];
-      baseCommittee.evaluationCriteria = ["Technical Capability", "Financial Proposal", "Project Timeline", "Safety Standards", "Environmental Compliance"];
+      baseCommittee.description =
+        "Specialized committee for evaluating construction and infrastructure projects";
+      baseCommittee.specialization = [
+        "Civil Engineering",
+        "Construction Management",
+        "Infrastructure Development",
+      ];
+      baseCommittee.evaluationCriteria = [
+        "Technical Capability",
+        "Financial Proposal",
+        "Project Timeline",
+        "Safety Standards",
+        "Environmental Compliance",
+      ];
       baseCommittee.members = [
         {
           ...baseCommittee.members[0],
           name: "Eng. Ibrahim Mohammed",
           department: "Road Construction",
           email: "ibrahim.mohammed@works.kano.gov.ng",
-          expertise: ["Civil Engineering", "Road Construction", "Project Management"],
-          qualifications: ["BSc Civil Engineering", "MSc Construction Management"],
+          expertise: [
+            "Civil Engineering",
+            "Road Construction",
+            "Project Management",
+          ],
+          qualifications: [
+            "BSc Civil Engineering",
+            "MSc Construction Management",
+          ],
         },
         {
           ...baseCommittee.members[1],
           name: "Arch. Aisha Garba",
           department: "Urban Planning",
           email: "aisha.garba@works.kano.gov.ng",
-          expertise: ["Architecture", "Urban Planning", "Building Construction"],
+          expertise: [
+            "Architecture",
+            "Urban Planning",
+            "Building Construction",
+          ],
           qualifications: ["BSc Architecture", "MSc Urban Planning"],
         },
         {
@@ -442,22 +510,44 @@ export default function EvaluationCommitteeManagement() {
           name: "Eng. Usman Kano",
           department: "Bridge Engineering",
           email: "usman.kano@works.kano.gov.ng",
-          expertise: ["Structural Engineering", "Bridge Construction", "Quality Control"],
-          qualifications: ["BSc Structural Engineering", "MSc Bridge Engineering"],
+          expertise: [
+            "Structural Engineering",
+            "Bridge Construction",
+            "Quality Control",
+          ],
+          qualifications: [
+            "BSc Structural Engineering",
+            "MSc Bridge Engineering",
+          ],
         },
       ];
     } else if (ministryCode === "MOE") {
       baseCommittee.name = "Educational Procurement Committee";
-      baseCommittee.description = "Specialized committee for evaluating educational equipment and materials";
-      baseCommittee.specialization = ["Educational Technology", "Learning Materials", "School Infrastructure"];
-      baseCommittee.evaluationCriteria = ["Educational Value", "Technical Quality", "Cost Effectiveness", "Age Appropriateness", "Maintenance Requirements"];
+      baseCommittee.description =
+        "Specialized committee for evaluating educational equipment and materials";
+      baseCommittee.specialization = [
+        "Educational Technology",
+        "Learning Materials",
+        "School Infrastructure",
+      ];
+      baseCommittee.evaluationCriteria = [
+        "Educational Value",
+        "Technical Quality",
+        "Cost Effectiveness",
+        "Age Appropriateness",
+        "Maintenance Requirements",
+      ];
       baseCommittee.members = [
         {
           ...baseCommittee.members[0],
           name: "Prof. Aisha Garba",
           department: "Curriculum Development",
           email: "aisha.garba@education.kano.gov.ng",
-          expertise: ["Educational Technology", "Curriculum Development", "Learning Materials"],
+          expertise: [
+            "Educational Technology",
+            "Curriculum Development",
+            "Learning Materials",
+          ],
           qualifications: ["PhD Education", "MSc Educational Technology"],
         },
         {
@@ -465,7 +555,11 @@ export default function EvaluationCommitteeManagement() {
           name: "Dr. Bello Sani",
           department: "School Administration",
           email: "bello.sani@education.kano.gov.ng",
-          expertise: ["School Administration", "Educational Planning", "Budget Management"],
+          expertise: [
+            "School Administration",
+            "Educational Planning",
+            "Budget Management",
+          ],
           qualifications: ["PhD Educational Administration", "MSc Management"],
         },
         {
@@ -473,7 +567,11 @@ export default function EvaluationCommitteeManagement() {
           name: "Mal. Zainab Ibrahim",
           department: "Teacher Training",
           email: "zainab.ibrahim@education.kano.gov.ng",
-          expertise: ["Teacher Training", "Educational Materials", "Quality Assurance"],
+          expertise: [
+            "Teacher Training",
+            "Educational Materials",
+            "Quality Assurance",
+          ],
           qualifications: ["MEd Teacher Training", "BSc Education"],
         },
       ];
@@ -499,7 +597,8 @@ export default function EvaluationCommitteeManagement() {
           "Discuss consensus",
           "Finalize recommendations",
         ],
-        minutes: "Committee reviewed 5 vendor proposals for hospital equipment supply. All vendors met basic technical requirements. Detailed scoring completed.",
+        minutes:
+          "Committee reviewed 5 vendor proposals for hospital equipment supply. All vendors met basic technical requirements. Detailed scoring completed.",
         decisions: [
           {
             id: "DEC-001",
@@ -511,7 +610,7 @@ export default function EvaluationCommitteeManagement() {
               abstain: 0,
               details: {
                 "MEM-001": "For",
-                "MEM-002": "For", 
+                "MEM-002": "For",
                 "MEM-003": "For",
               },
             },
@@ -527,13 +626,14 @@ export default function EvaluationCommitteeManagement() {
                 memberId: "MEM-001",
                 memberName: "Dr. Amina Hassan",
                 scores: {
-                  "technical": 88,
-                  "financial": 85,
-                  "experience": 92,
-                  "timeline": 90,
+                  technical: 88,
+                  financial: 85,
+                  experience: 92,
+                  timeline: 90,
                 },
                 totalScore: 87.8,
-                comments: "Excellent technical specifications and strong track record",
+                comments:
+                  "Excellent technical specifications and strong track record",
                 submissionDate: "2024-02-15",
                 timeSpent: 90,
               },
@@ -541,10 +641,10 @@ export default function EvaluationCommitteeManagement() {
                 memberId: "MEM-002",
                 memberName: "Eng. Musa Ibrahim",
                 scores: {
-                  "technical": 86,
-                  "financial": 87,
-                  "experience": 89,
-                  "timeline": 88,
+                  technical: 86,
+                  financial: 87,
+                  experience: 89,
+                  timeline: 88,
                 },
                 totalScore: 87.2,
                 comments: "Good technical quality, competitive pricing",
@@ -555,10 +655,10 @@ export default function EvaluationCommitteeManagement() {
                 memberId: "MEM-003",
                 memberName: "Dr. Fatima Yusuf",
                 scores: {
-                  "technical": 90,
-                  "financial": 83,
-                  "experience": 94,
-                  "timeline": 89,
+                  technical: 90,
+                  financial: 83,
+                  experience: 94,
+                  timeline: 89,
                 },
                 totalScore: 88.1,
                 comments: "Strong operational capability and experience",
@@ -569,7 +669,8 @@ export default function EvaluationCommitteeManagement() {
             consensusScore: 87.7,
             technicalCompliance: true,
             recommendedRanking: 1,
-            finalComments: "Top performer with consistent high scores across all criteria",
+            finalComments:
+              "Top performer with consistent high scores across all criteria",
             disputeFlags: [],
           },
           {
@@ -580,10 +681,10 @@ export default function EvaluationCommitteeManagement() {
                 memberId: "MEM-001",
                 memberName: "Dr. Amina Hassan",
                 scores: {
-                  "technical": 82,
-                  "financial": 88,
-                  "experience": 85,
-                  "timeline": 87,
+                  technical: 82,
+                  financial: 88,
+                  experience: 85,
+                  timeline: 87,
                 },
                 totalScore: 84.9,
                 comments: "Good financial proposal with competitive pricing",
@@ -594,10 +695,10 @@ export default function EvaluationCommitteeManagement() {
                 memberId: "MEM-002",
                 memberName: "Eng. Musa Ibrahim",
                 scores: {
-                  "technical": 84,
-                  "financial": 86,
-                  "experience": 83,
-                  "timeline": 85,
+                  technical: 84,
+                  financial: 86,
+                  experience: 83,
+                  timeline: 85,
                 },
                 totalScore: 84.3,
                 comments: "Adequate technical capability, good value",
@@ -608,10 +709,10 @@ export default function EvaluationCommitteeManagement() {
                 memberId: "MEM-003",
                 memberName: "Dr. Fatima Yusuf",
                 scores: {
-                  "technical": 80,
-                  "financial": 90,
-                  "experience": 86,
-                  "timeline": 84,
+                  technical: 80,
+                  financial: 90,
+                  experience: 86,
+                  timeline: 84,
                 },
                 totalScore: 84.8,
                 comments: "Excellent financial proposal, adequate technical",
@@ -622,7 +723,8 @@ export default function EvaluationCommitteeManagement() {
             consensusScore: 84.7,
             technicalCompliance: true,
             recommendedRanking: 2,
-            finalComments: "Strong financial proposal with good technical capability",
+            finalComments:
+              "Strong financial proposal with good technical capability",
             disputeFlags: [],
           },
         ],
@@ -655,13 +757,18 @@ export default function EvaluationCommitteeManagement() {
       chairperson: "",
       secretary: "",
       activeEvaluations: [],
-      createdDate: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
       status: "Active",
       specialization: committeeForm.specialization,
       minimumMembers: committeeForm.minimumMembers,
       maximumMembers: committeeForm.maximumMembers,
       quorumRequirement: committeeForm.quorumRequirement,
-      evaluationCriteria: ["Technical Capability", "Financial Proposal", "Experience", "Timeline"],
+      evaluationCriteria: [
+        "Technical Capability",
+        "Financial Proposal",
+        "Experience",
+        "Timeline",
+      ],
       workload: 0,
       performanceMetrics: {
         averageCompletionTime: 0,
@@ -675,7 +782,7 @@ export default function EvaluationCommitteeManagement() {
     const updatedCommittees = [...committees, newCommittee];
     setCommittees(updatedCommittees);
     saveData(STORAGE_KEYS.COMMITTEES, updatedCommittees);
-    
+
     setCommitteeForm({
       name: "",
       description: "",
@@ -701,15 +808,15 @@ export default function EvaluationCommitteeManagement() {
       availability: "Available",
       evaluationHistory: [],
       performanceRating: 0,
-      dateJoined: new Date().toISOString().split('T')[0],
+      dateJoined: new Date().toISOString().split("T")[0],
       qualifications: memberForm.qualifications,
       certifications: memberForm.certifications,
     };
 
-    const updatedCommittees = committees.map(committee => 
-      committee.id === committeeId 
+    const updatedCommittees = committees.map((committee) =>
+      committee.id === committeeId
         ? { ...committee, members: [...committee.members, newMember] }
-        : committee
+        : committee,
     );
 
     setCommittees(updatedCommittees);
@@ -730,10 +837,15 @@ export default function EvaluationCommitteeManagement() {
   };
 
   const removeMemberFromCommittee = (committeeId: string, memberId: string) => {
-    const updatedCommittees = committees.map(committee => 
-      committee.id === committeeId 
-        ? { ...committee, members: committee.members.filter(member => member.id !== memberId) }
-        : committee
+    const updatedCommittees = committees.map((committee) =>
+      committee.id === committeeId
+        ? {
+            ...committee,
+            members: committee.members.filter(
+              (member) => member.id !== memberId,
+            ),
+          }
+        : committee,
     );
 
     setCommittees(updatedCommittees);
@@ -742,17 +854,22 @@ export default function EvaluationCommitteeManagement() {
 
   const calculateConsensus = (vendorScores: IndividualScore[]): number => {
     if (vendorScores.length === 0) return 0;
-    
-    const totalScore = vendorScores.reduce((sum, score) => sum + score.totalScore, 0);
+
+    const totalScore = vendorScores.reduce(
+      (sum, score) => sum + score.totalScore,
+      0,
+    );
     return Math.round((totalScore / vendorScores.length) * 10) / 10;
   };
 
   const getVarianceLevel = (scores: number[]): "Low" | "Medium" | "High" => {
     if (scores.length < 2) return "Low";
-    
+
     const mean = scores.reduce((sum, score) => sum + score, 0) / scores.length;
-    const variance = scores.reduce((sum, score) => sum + Math.pow(score - mean, 2), 0) / scores.length;
-    
+    const variance =
+      scores.reduce((sum, score) => sum + Math.pow(score - mean, 2), 0) /
+      scores.length;
+
     if (variance < 25) return "Low";
     if (variance < 100) return "Medium";
     return "High";
@@ -768,7 +885,11 @@ export default function EvaluationCommitteeManagement() {
       Scheduled: "outline",
       Cancelled: "destructive",
     };
-    return <Badge variant={variants[status as keyof typeof variants] as any}>{status}</Badge>;
+    return (
+      <Badge variant={variants[status as keyof typeof variants] as any}>
+        {status}
+      </Badge>
+    );
   };
 
   const getRoleBadge = (role: CommitteeMember["role"]) => {
@@ -786,10 +907,17 @@ export default function EvaluationCommitteeManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Evaluation Committee Management</h2>
-          <p className="text-gray-600">Manage evaluation committees, members, and scoring processes</p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Evaluation Committee Management
+          </h2>
+          <p className="text-gray-600">
+            Manage evaluation committees, members, and scoring processes
+          </p>
         </div>
-        <Button onClick={() => setShowCommitteeModal(true)} className="bg-primary hover:bg-primary/90">
+        <Button
+          onClick={() => setShowCommitteeModal(true)}
+          className="bg-primary hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4 mr-2" />
           New Committee
         </Button>
@@ -818,46 +946,73 @@ export default function EvaluationCommitteeManagement() {
         <TabsContent value="committees" className="space-y-4">
           <div className="grid gap-4">
             {committees.map((committee) => (
-              <Card key={committee.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={committee.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg">{committee.name}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {committee.name}
+                        </CardTitle>
                         {getStatusBadge(committee.status)}
                         <Badge variant="outline">{committee.type}</Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">{committee.description}</p>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {committee.description}
+                      </p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Members</Label>
-                          <p className="text-sm font-semibold">{committee.members.length}/{committee.maximumMembers}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Members
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {committee.members.length}/
+                            {committee.maximumMembers}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Active Evaluations</Label>
-                          <p className="text-sm font-semibold">{committee.activeEvaluations.length}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Active Evaluations
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {committee.activeEvaluations.length}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Quality Score</Label>
-                          <p className="text-sm font-semibold">{committee.performanceMetrics.qualityScore.toFixed(1)}/10</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Quality Score
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {committee.performanceMetrics.qualityScore.toFixed(
+                              1,
+                            )}
+                            /10
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Completed</Label>
-                          <p className="text-sm font-semibold">{committee.performanceMetrics.evaluationsCompleted}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Completed
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {committee.performanceMetrics.evaluationsCompleted}
+                          </p>
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => setSelectedCommittee(committee)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => {
                           setSelectedCommittee(committee);
                           setShowMemberModal(true);
@@ -874,14 +1029,22 @@ export default function EvaluationCommitteeManagement() {
                       <h4 className="font-medium mb-2">Committee Members</h4>
                       <div className="space-y-2">
                         {committee.members.map((member) => (
-                          <div key={member.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                          <div
+                            key={member.id}
+                            className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                          >
                             <div className="flex items-center gap-3">
                               <div>
                                 <div className="flex items-center gap-2">
-                                  <span className="font-medium">{member.name}</span>
+                                  <span className="font-medium">
+                                    {member.name}
+                                  </span>
                                   {getRoleBadge(member.role)}
                                   {member.conflictOfInterest && (
-                                    <Badge variant="destructive" className="text-xs">
+                                    <Badge
+                                      variant="destructive"
+                                      className="text-xs"
+                                    >
                                       COI
                                     </Badge>
                                   )}
@@ -890,7 +1053,8 @@ export default function EvaluationCommitteeManagement() {
                                   {member.department} • {member.email}
                                 </div>
                                 <div className="text-xs text-gray-500">
-                                  Performance: {member.performanceRating.toFixed(1)}/10 • 
+                                  Performance:{" "}
+                                  {member.performanceRating.toFixed(1)}/10 •
                                   Expertise: {member.expertise.join(", ")}
                                 </div>
                               </div>
@@ -910,7 +1074,8 @@ export default function EvaluationCommitteeManagement() {
                                     expertise: member.expertise,
                                     qualifications: member.qualifications,
                                     certifications: member.certifications,
-                                    conflictOfInterest: member.conflictOfInterest,
+                                    conflictOfInterest:
+                                      member.conflictOfInterest,
                                   });
                                   setShowMemberModal(true);
                                 }}
@@ -920,7 +1085,12 @@ export default function EvaluationCommitteeManagement() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => removeMemberFromCommittee(committee.id, member.id)}
+                                onClick={() =>
+                                  removeMemberFromCommittee(
+                                    committee.id,
+                                    member.id,
+                                  )
+                                }
                               >
                                 <UserMinus className="h-4 w-4" />
                               </Button>
@@ -935,19 +1105,30 @@ export default function EvaluationCommitteeManagement() {
                         <h4 className="font-medium mb-2">Active Evaluations</h4>
                         <div className="space-y-2">
                           {committee.activeEvaluations.map((evaluation) => (
-                            <div key={evaluation.id} className="flex items-center justify-between p-2 bg-blue-50 rounded">
+                            <div
+                              key={evaluation.id}
+                              className="flex items-center justify-between p-2 bg-blue-50 rounded"
+                            >
                               <div>
                                 <div className="flex items-center gap-2">
-                                  <span className="font-medium">{evaluation.tenderTitle}</span>
+                                  <span className="font-medium">
+                                    {evaluation.tenderTitle}
+                                  </span>
                                   {getStatusBadge(evaluation.status)}
-                                  <Badge variant="outline">{evaluation.priority}</Badge>
+                                  <Badge variant="outline">
+                                    {evaluation.priority}
+                                  </Badge>
                                 </div>
                                 <div className="text-sm text-gray-600">
-                                  Deadline: {evaluation.deadline} • Progress: {evaluation.progress}%
+                                  Deadline: {evaluation.deadline} • Progress:{" "}
+                                  {evaluation.progress}%
                                 </div>
                               </div>
                               <div className="w-20">
-                                <Progress value={evaluation.progress} className="h-2" />
+                                <Progress
+                                  value={evaluation.progress}
+                                  className="h-2"
+                                />
                               </div>
                             </div>
                           ))}
@@ -977,31 +1158,44 @@ export default function EvaluationCommitteeManagement() {
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg">{session.tenderTitle}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {session.tenderTitle}
+                        </CardTitle>
                         {getStatusBadge(session.status)}
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Session Date</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Session Date
+                          </Label>
                           <p>{session.sessionDate}</p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Duration</Label>
-                          <p>{Math.floor(session.duration / 60)}h {session.duration % 60}m</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Duration
+                          </Label>
+                          <p>
+                            {Math.floor(session.duration / 60)}h{" "}
+                            {session.duration % 60}m
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Attendees</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Attendees
+                          </Label>
                           <p>{session.attendees.length}</p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Vendors</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Vendors
+                          </Label>
                           <p>{session.vendors.length}</p>
                         </div>
                       </div>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => setSelectedSession(session)}
                     >
                       <Eye className="h-4 w-4" />
@@ -1014,21 +1208,35 @@ export default function EvaluationCommitteeManagement() {
                       <h4 className="font-medium mb-2">Vendor Rankings</h4>
                       <div className="space-y-2">
                         {session.vendors
-                          .sort((a, b) => a.recommendedRanking - b.recommendedRanking)
+                          .sort(
+                            (a, b) =>
+                              a.recommendedRanking - b.recommendedRanking,
+                          )
                           .map((vendor, index) => (
-                            <div key={vendor.vendorId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <div
+                              key={vendor.vendorId}
+                              className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                            >
                               <div className="flex items-center gap-3">
-                                <span className="font-bold text-lg">#{index + 1}</span>
+                                <span className="font-bold text-lg">
+                                  #{index + 1}
+                                </span>
                                 <div>
-                                  <span className="font-medium">{vendor.vendorName}</span>
+                                  <span className="font-medium">
+                                    {vendor.vendorName}
+                                  </span>
                                   <div className="text-sm text-gray-600">
-                                    Consensus Score: {vendor.consensusScore} • 
-                                    {vendor.technicalCompliance ? " Compliant" : " Non-Compliant"}
+                                    Consensus Score: {vendor.consensusScore} •
+                                    {vendor.technicalCompliance
+                                      ? " Compliant"
+                                      : " Non-Compliant"}
                                   </div>
                                 </div>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">{vendor.consensusScore}</span>
+                                <span className="font-medium">
+                                  {vendor.consensusScore}
+                                </span>
                                 {vendor.technicalCompliance && (
                                   <CheckCircle className="h-4 w-4 text-green-600" />
                                 )}
@@ -1055,42 +1263,66 @@ export default function EvaluationCommitteeManagement() {
 
           <div className="grid gap-4">
             {evaluationSessions
-              .filter(session => session.status === "In Progress")
+              .filter((session) => session.status === "In Progress")
               .map((session) => (
                 <Card key={session.id}>
                   <CardHeader>
-                    <CardTitle className="text-lg">{session.tenderTitle}</CardTitle>
+                    <CardTitle className="text-lg">
+                      {session.tenderTitle}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {session.vendors.map((vendor) => (
-                        <div key={vendor.vendorId} className="border rounded-lg p-4">
-                          <h4 className="font-medium mb-3">{vendor.vendorName}</h4>
+                        <div
+                          key={vendor.vendorId}
+                          className="border rounded-lg p-4"
+                        >
+                          <h4 className="font-medium mb-3">
+                            {vendor.vendorName}
+                          </h4>
                           <div className="space-y-2">
                             {vendor.individualScores.map((score) => (
-                              <div key={score.memberId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                              <div
+                                key={score.memberId}
+                                className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                              >
                                 <div>
-                                  <span className="font-medium">{score.memberName}</span>
+                                  <span className="font-medium">
+                                    {score.memberName}
+                                  </span>
                                   <div className="text-sm text-gray-600">
-                                    Submitted: {score.submissionDate} • Time: {score.timeSpent}min
+                                    Submitted: {score.submissionDate} • Time:{" "}
+                                    {score.timeSpent}min
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  <span className="font-bold text-lg">{score.totalScore}</span>
+                                  <span className="font-bold text-lg">
+                                    {score.totalScore}
+                                  </span>
                                   <Badge variant="default">Submitted</Badge>
                                 </div>
                               </div>
                             ))}
                           </div>
-                          
+
                           {vendor.individualScores.length > 0 && (
                             <div className="mt-3 p-2 bg-blue-50 rounded">
                               <div className="flex justify-between items-center">
-                                <span className="font-medium">Consensus Score</span>
-                                <span className="font-bold text-lg">{calculateConsensus(vendor.individualScores)}</span>
+                                <span className="font-medium">
+                                  Consensus Score
+                                </span>
+                                <span className="font-bold text-lg">
+                                  {calculateConsensus(vendor.individualScores)}
+                                </span>
                               </div>
                               <div className="text-sm text-gray-600">
-                                Variance: {getVarianceLevel(vendor.individualScores.map(s => s.totalScore))}
+                                Variance:{" "}
+                                {getVarianceLevel(
+                                  vendor.individualScores.map(
+                                    (s) => s.totalScore,
+                                  ),
+                                )}
                               </div>
                             </div>
                           )}
@@ -1106,7 +1338,10 @@ export default function EvaluationCommitteeManagement() {
         <TabsContent value="consensus" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Consensus Builder</h3>
-            <Button onClick={() => setShowConsensusModal(true)} variant="outline">
+            <Button
+              onClick={() => setShowConsensusModal(true)}
+              variant="outline"
+            >
               <Scale className="h-4 w-4 mr-2" />
               Build Consensus
             </Button>
@@ -1114,29 +1349,49 @@ export default function EvaluationCommitteeManagement() {
 
           <div className="grid gap-4">
             {evaluationSessions
-              .filter(session => session.vendors.some(vendor => vendor.individualScores.length > 0))
+              .filter((session) =>
+                session.vendors.some(
+                  (vendor) => vendor.individualScores.length > 0,
+                ),
+              )
               .map((session) => (
                 <Card key={session.id}>
                   <CardHeader>
-                    <CardTitle className="text-lg">{session.tenderTitle}</CardTitle>
+                    <CardTitle className="text-lg">
+                      {session.tenderTitle}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="grid grid-cols-4 gap-4 text-sm">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Total Variance</Label>
-                          <p className="font-semibold">{session.consensusBuilder.totalVariance.toFixed(1)}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Total Variance
+                          </Label>
+                          <p className="font-semibold">
+                            {session.consensusBuilder.totalVariance.toFixed(1)}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Average Score</Label>
-                          <p className="font-semibold">{session.consensusBuilder.averageScore.toFixed(1)}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Average Score
+                          </Label>
+                          <p className="font-semibold">
+                            {session.consensusBuilder.averageScore.toFixed(1)}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Outliers</Label>
-                          <p className="font-semibold">{session.consensusBuilder.outliers.length}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Outliers
+                          </Label>
+                          <p className="font-semibold">
+                            {session.consensusBuilder.outliers.length}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Consensus</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Consensus
+                          </Label>
                           <div className="flex items-center gap-1">
                             {session.consensusBuilder.finalConsensusReached ? (
                               <CheckCircle className="h-4 w-4 text-green-600" />
@@ -1144,7 +1399,9 @@ export default function EvaluationCommitteeManagement() {
                               <XCircle className="h-4 w-4 text-red-600" />
                             )}
                             <span className="font-semibold">
-                              {session.consensusBuilder.finalConsensusReached ? "Reached" : "Pending"}
+                              {session.consensusBuilder.finalConsensusReached
+                                ? "Reached"
+                                : "Pending"}
                             </span>
                           </div>
                         </div>
@@ -1153,43 +1410,77 @@ export default function EvaluationCommitteeManagement() {
                       <Separator />
 
                       <div>
-                        <h4 className="font-medium mb-3">Vendor Consensus Analysis</h4>
+                        <h4 className="font-medium mb-3">
+                          Vendor Consensus Analysis
+                        </h4>
                         <div className="space-y-3">
                           {session.vendors.map((vendor) => {
-                            const scores = vendor.individualScores.map(s => s.totalScore);
+                            const scores = vendor.individualScores.map(
+                              (s) => s.totalScore,
+                            );
                             const variance = getVarianceLevel(scores);
-                            
+
                             return (
-                              <div key={vendor.vendorId} className="border rounded-lg p-3">
+                              <div
+                                key={vendor.vendorId}
+                                className="border rounded-lg p-3"
+                              >
                                 <div className="flex items-center justify-between mb-2">
-                                  <span className="font-medium">{vendor.vendorName}</span>
+                                  <span className="font-medium">
+                                    {vendor.vendorName}
+                                  </span>
                                   <div className="flex items-center gap-2">
-                                    <Badge variant={
-                                      variance === "Low" ? "default" :
-                                      variance === "Medium" ? "secondary" :
-                                      "destructive"
-                                    }>
+                                    <Badge
+                                      variant={
+                                        variance === "Low"
+                                          ? "default"
+                                          : variance === "Medium"
+                                            ? "secondary"
+                                            : "destructive"
+                                      }
+                                    >
                                       {variance} Variance
                                     </Badge>
-                                    <span className="font-bold">{vendor.consensusScore}</span>
+                                    <span className="font-bold">
+                                      {vendor.consensusScore}
+                                    </span>
                                   </div>
                                 </div>
-                                
+
                                 <div className="grid grid-cols-3 gap-4 text-sm">
                                   <div>
-                                    <Label className="text-xs text-gray-500">Individual Scores</Label>
+                                    <Label className="text-xs text-gray-500">
+                                      Individual Scores
+                                    </Label>
                                     <p>{scores.join(", ")}</p>
                                   </div>
                                   <div>
-                                    <Label className="text-xs text-gray-500">Range</Label>
-                                    <p>{Math.min(...scores)} - {Math.max(...scores)}</p>
+                                    <Label className="text-xs text-gray-500">
+                                      Range
+                                    </Label>
+                                    <p>
+                                      {Math.min(...scores)} -{" "}
+                                      {Math.max(...scores)}
+                                    </p>
                                   </div>
                                   <div>
-                                    <Label className="text-xs text-gray-500">Std Dev</Label>
-                                    <p>{Math.sqrt(scores.reduce((sum, score) => {
-                                      const mean = scores.reduce((s, sc) => s + sc, 0) / scores.length;
-                                      return sum + Math.pow(score - mean, 2);
-                                    }, 0) / scores.length).toFixed(1)}</p>
+                                    <Label className="text-xs text-gray-500">
+                                      Std Dev
+                                    </Label>
+                                    <p>
+                                      {Math.sqrt(
+                                        scores.reduce((sum, score) => {
+                                          const mean =
+                                            scores.reduce(
+                                              (s, sc) => s + sc,
+                                              0,
+                                            ) / scores.length;
+                                          return (
+                                            sum + Math.pow(score - mean, 2)
+                                          );
+                                        }, 0) / scores.length,
+                                      ).toFixed(1)}
+                                    </p>
                                   </div>
                                 </div>
 
@@ -1197,10 +1488,14 @@ export default function EvaluationCommitteeManagement() {
                                   <div className="mt-2 p-2 bg-yellow-50 rounded text-sm">
                                     <div className="flex items-center gap-1 text-yellow-700">
                                       <AlertTriangle className="h-3 w-3" />
-                                      <span className="font-medium">Requires Discussion</span>
+                                      <span className="font-medium">
+                                        Requires Discussion
+                                      </span>
                                     </div>
                                     <p className="text-yellow-600">
-                                      Significant variance in individual scores. Consider committee discussion to reach consensus.
+                                      Significant variance in individual scores.
+                                      Consider committee discussion to reach
+                                      consensus.
                                     </p>
                                   </div>
                                 )}
@@ -1229,7 +1524,9 @@ export default function EvaluationCommitteeManagement() {
               <Input
                 id="committee-name"
                 value={committeeForm.name}
-                onChange={(e) => setCommitteeForm({...committeeForm, name: e.target.value})}
+                onChange={(e) =>
+                  setCommitteeForm({ ...committeeForm, name: e.target.value })
+                }
                 placeholder="Enter committee name"
               />
             </div>
@@ -1238,7 +1535,12 @@ export default function EvaluationCommitteeManagement() {
               <Textarea
                 id="committee-description"
                 value={committeeForm.description}
-                onChange={(e) => setCommitteeForm({...committeeForm, description: e.target.value})}
+                onChange={(e) =>
+                  setCommitteeForm({
+                    ...committeeForm,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Describe the committee purpose"
                 rows={3}
               />
@@ -1246,7 +1548,12 @@ export default function EvaluationCommitteeManagement() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="committee-type">Committee Type</Label>
-                <Select value={committeeForm.type} onValueChange={(value: any) => setCommitteeForm({...committeeForm, type: value})}>
+                <Select
+                  value={committeeForm.type}
+                  onValueChange={(value: any) =>
+                    setCommitteeForm({ ...committeeForm, type: value })
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -1264,7 +1571,12 @@ export default function EvaluationCommitteeManagement() {
                   id="quorum"
                   type="number"
                   value={committeeForm.quorumRequirement}
-                  onChange={(e) => setCommitteeForm({...committeeForm, quorumRequirement: parseInt(e.target.value) || 3})}
+                  onChange={(e) =>
+                    setCommitteeForm({
+                      ...committeeForm,
+                      quorumRequirement: parseInt(e.target.value) || 3,
+                    })
+                  }
                   min="3"
                 />
               </div>
@@ -1276,7 +1588,12 @@ export default function EvaluationCommitteeManagement() {
                   id="min-members"
                   type="number"
                   value={committeeForm.minimumMembers}
-                  onChange={(e) => setCommitteeForm({...committeeForm, minimumMembers: parseInt(e.target.value) || 3})}
+                  onChange={(e) =>
+                    setCommitteeForm({
+                      ...committeeForm,
+                      minimumMembers: parseInt(e.target.value) || 3,
+                    })
+                  }
                   min="3"
                 />
               </div>
@@ -1286,18 +1603,24 @@ export default function EvaluationCommitteeManagement() {
                   id="max-members"
                   type="number"
                   value={committeeForm.maximumMembers}
-                  onChange={(e) => setCommitteeForm({...committeeForm, maximumMembers: parseInt(e.target.value) || 7})}
+                  onChange={(e) =>
+                    setCommitteeForm({
+                      ...committeeForm,
+                      maximumMembers: parseInt(e.target.value) || 7,
+                    })
+                  }
                   min="3"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowCommitteeModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowCommitteeModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={createCommittee}>
-                Create Committee
-              </Button>
+              <Button onClick={createCommittee}>Create Committee</Button>
             </div>
           </div>
         </DialogContent>
@@ -1307,7 +1630,9 @@ export default function EvaluationCommitteeManagement() {
       <Dialog open={showMemberModal} onOpenChange={setShowMemberModal}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{editingMember ? "Edit Member" : "Add New Member"}</DialogTitle>
+            <DialogTitle>
+              {editingMember ? "Edit Member" : "Add New Member"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -1316,13 +1641,20 @@ export default function EvaluationCommitteeManagement() {
                 <Input
                   id="member-name"
                   value={memberForm.name}
-                  onChange={(e) => setMemberForm({...memberForm, name: e.target.value})}
+                  onChange={(e) =>
+                    setMemberForm({ ...memberForm, name: e.target.value })
+                  }
                   placeholder="Member name"
                 />
               </div>
               <div>
                 <Label htmlFor="member-role">Role</Label>
-                <Select value={memberForm.role} onValueChange={(value: any) => setMemberForm({...memberForm, role: value})}>
+                <Select
+                  value={memberForm.role}
+                  onValueChange={(value: any) =>
+                    setMemberForm({ ...memberForm, role: value })
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -1330,7 +1662,9 @@ export default function EvaluationCommitteeManagement() {
                     <SelectItem value="Chair">Chair</SelectItem>
                     <SelectItem value="Secretary">Secretary</SelectItem>
                     <SelectItem value="Evaluator">Evaluator</SelectItem>
-                    <SelectItem value="Technical Expert">Technical Expert</SelectItem>
+                    <SelectItem value="Technical Expert">
+                      Technical Expert
+                    </SelectItem>
                     <SelectItem value="Observer">Observer</SelectItem>
                   </SelectContent>
                 </Select>
@@ -1342,7 +1676,9 @@ export default function EvaluationCommitteeManagement() {
                 <Input
                   id="member-department"
                   value={memberForm.department}
-                  onChange={(e) => setMemberForm({...memberForm, department: e.target.value})}
+                  onChange={(e) =>
+                    setMemberForm({ ...memberForm, department: e.target.value })
+                  }
                   placeholder="Department"
                 />
               </div>
@@ -1351,7 +1687,9 @@ export default function EvaluationCommitteeManagement() {
                 <Input
                   id="member-email"
                   value={memberForm.email}
-                  onChange={(e) => setMemberForm({...memberForm, email: e.target.value})}
+                  onChange={(e) =>
+                    setMemberForm({ ...memberForm, email: e.target.value })
+                  }
                   placeholder="Email address"
                 />
               </div>
@@ -1361,34 +1699,63 @@ export default function EvaluationCommitteeManagement() {
               <Input
                 id="member-phone"
                 value={memberForm.phone}
-                onChange={(e) => setMemberForm({...memberForm, phone: e.target.value})}
+                onChange={(e) =>
+                  setMemberForm({ ...memberForm, phone: e.target.value })
+                }
                 placeholder="Phone number"
               />
             </div>
             <div>
-              <Label htmlFor="member-expertise">Expertise (comma-separated)</Label>
+              <Label htmlFor="member-expertise">
+                Expertise (comma-separated)
+              </Label>
               <Input
                 id="member-expertise"
                 value={memberForm.expertise.join(", ")}
-                onChange={(e) => setMemberForm({...memberForm, expertise: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setMemberForm({
+                    ...memberForm,
+                    expertise: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="e.g., Medical Equipment, Quality Assurance"
               />
             </div>
             <div>
-              <Label htmlFor="member-qualifications">Qualifications (comma-separated)</Label>
+              <Label htmlFor="member-qualifications">
+                Qualifications (comma-separated)
+              </Label>
               <Input
                 id="member-qualifications"
                 value={memberForm.qualifications.join(", ")}
-                onChange={(e) => setMemberForm({...memberForm, qualifications: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setMemberForm({
+                    ...memberForm,
+                    qualifications: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="e.g., MBBS, MSc Engineering"
               />
             </div>
             <div>
-              <Label htmlFor="member-certifications">Certifications (comma-separated)</Label>
+              <Label htmlFor="member-certifications">
+                Certifications (comma-separated)
+              </Label>
               <Input
                 id="member-certifications"
                 value={memberForm.certifications.join(", ")}
-                onChange={(e) => setMemberForm({...memberForm, certifications: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setMemberForm({
+                    ...memberForm,
+                    certifications: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="e.g., Professional Engineer, Quality Management"
               />
             </div>
@@ -1396,23 +1763,35 @@ export default function EvaluationCommitteeManagement() {
               <Checkbox
                 id="conflict-interest"
                 checked={memberForm.conflictOfInterest}
-                onCheckedChange={(checked) => setMemberForm({...memberForm, conflictOfInterest: checked as boolean})}
+                onCheckedChange={(checked) =>
+                  setMemberForm({
+                    ...memberForm,
+                    conflictOfInterest: checked as boolean,
+                  })
+                }
               />
-              <Label htmlFor="conflict-interest">Has Conflict of Interest</Label>
+              <Label htmlFor="conflict-interest">
+                Has Conflict of Interest
+              </Label>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => {
-                setShowMemberModal(false);
-                setEditingMember(null);
-              }}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowMemberModal(false);
+                  setEditingMember(null);
+                }}
+              >
                 Cancel
               </Button>
-              <Button onClick={() => {
-                if (selectedCommittee) {
-                  addMemberToCommittee(selectedCommittee.id);
-                  setEditingMember(null);
-                }
-              }}>
+              <Button
+                onClick={() => {
+                  if (selectedCommittee) {
+                    addMemberToCommittee(selectedCommittee.id);
+                    setEditingMember(null);
+                  }
+                }}
+              >
                 {editingMember ? "Update Member" : "Add Member"}
               </Button>
             </div>

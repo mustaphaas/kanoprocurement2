@@ -10701,7 +10701,11 @@ Blockchain Timestamp: ${Date.now()}
               { key: "companies", label: "Companies", icon: Building2 },
               { key: "tenders", label: "Tenders", icon: FileText },
               { key: "contracts", label: "Contracts", icon: FileCheck },
-              { key: "procurement-planning", label: "Procurement Planning", icon: Target },
+              {
+                key: "procurement-planning",
+                label: "Procurement Planning",
+                icon: Target,
+              },
               { key: "users", label: "User Management", icon: Users },
               { key: "reports", label: "Reports", icon: TrendingUp },
               { key: "noc", label: "NOC Requests", icon: Send },
@@ -10767,7 +10771,9 @@ Blockchain Timestamp: ${Date.now()}
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <div className="flex items-center space-x-1">
                   <Target className="h-4 w-4 text-green-600" />
-                  <span className="font-medium text-green-600">Procurement Planning Module</span>
+                  <span className="font-medium text-green-600">
+                    Procurement Planning Module
+                  </span>
                 </div>
                 <span>•</span>
                 <div className="flex items-center space-x-1">
