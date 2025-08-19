@@ -89,6 +89,13 @@ export default function NOCRequestsTab() {
   // Load NOC requests on component mount
   useEffect(() => {
     loadNOCRequests();
+
+    // Set up interval to sync with ministry changes
+    const syncInterval = setInterval(() => {
+      loadNOCRequests();
+    }, 5000); // Sync every 5 seconds
+
+    return () => clearInterval(syncInterval);
   }, []);
 
   // Filter requests based on search and filters
