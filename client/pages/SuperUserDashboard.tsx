@@ -880,8 +880,7 @@ export default function SuperUserDashboard() {
       },
     );
 
-    // Load initial audit logs
-    loadAuditLogs();
+    // Note: Audit logs are loaded automatically by the dedicated useEffect with loadAuditLogs
 
     const mockAIRecommendations: AIRecommendation[] = [
       {
