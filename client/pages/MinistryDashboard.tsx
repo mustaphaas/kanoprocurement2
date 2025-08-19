@@ -2783,7 +2783,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Kano School Furniture Ltd",
-          bidAmount: "���2,050,000,000",
+          bidAmount: "₦2,050,000,000",
           technicalScore: 91,
           financialScore: 89,
           totalScore: 90,
@@ -10151,7 +10151,7 @@ Blockchain Timestamp: ${Date.now()}
               },
               {
                 category: "Laboratory Equipment",
-                amount: "���650M",
+                amount: "��650M",
                 percentage: 27,
               },
               {
@@ -10280,159 +10280,10 @@ Blockchain Timestamp: ${Date.now()}
   );
 
   const renderNOCRequests = () => (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            No Objection Certificate Requests
-          </h1>
-          <p className="text-gray-600">
-            Request NOC for awarded contracts and track approval status
-          </p>
-        </div>
-        <button
-          onClick={() => setShowNOCRequest(true)}
-          className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-        >
-          <Send className="h-4 w-4 mr-2" />
-          New NOC Request
-        </button>
-      </div>
-
-      {/* NOC Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <Send className="h-8 w-8 text-blue-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Total Requests
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {nocRequests.length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <CheckCircle className="h-8 w-8 text-green-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Approved</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {nocRequests.filter((r) => r.status === "Approved").length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <Clock className="h-8 w-8 text-orange-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {nocRequests.filter((r) => r.status === "Pending").length}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* NOC Requests List */}
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-4 py-2 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">
-            NOC Request History
-          </h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Project Details
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Contractor
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Value & Duration
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {nocRequests.map((request) => (
-                <tr key={request.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {request.projectTitle}
-                      </div>
-                      <div className="text-sm text-gray-500">{request.id}</div>
-                      <div className="text-sm text-gray-500">
-                        Requested:{" "}
-                        {new Date(request.requestDate).toLocaleDateString()}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {request.contractorName}
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {request.projectValue}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Duration: {request.expectedDuration}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        request.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : request.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {request.status}
-                    </span>
-                    {request.certificateNumber && (
-                      <div className="text-xs text-gray-500 mt-1">
-                        Cert: {request.certificateNumber}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900">
-                      <Eye className="h-4 w-4 inline mr-1" />
-                      View
-                    </button>
-                    {request.status === "Approved" && (
-                      <button className="text-green-600 hover:text-green-900">
-                        <Download className="h-4 w-4 inline mr-1" />
-                        Download Certificate
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <NOCRequestsModule
+      ministryCode={ministry.code}
+      ministryName={ministry.name}
+    />
   );
 
   const renderUserManagement = () => (
