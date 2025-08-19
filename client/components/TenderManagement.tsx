@@ -170,6 +170,16 @@ const TenderManagement = () => {
   const [showAmendmentModal, setShowAmendmentModal] = useState(false);
   const [showEvaluationModal, setShowEvaluationModal] = useState(false);
 
+  // Stepper state for evaluation workflow
+  const [currentStep, setCurrentStep] = useState(1);
+  const [stepStatus, setStepStatus] = useState({
+    step1: { completed: false, locked: false },
+    step2: { completed: false, locked: true },
+    step3: { completed: false, locked: true },
+  });
+  const [committeeAssigned, setCommitteeAssigned] = useState(false);
+  const [coiResolved, setCoiResolved] = useState(false);
+
   // Form states
   const [tenderForm, setTenderForm] = useState({
     title: "",
