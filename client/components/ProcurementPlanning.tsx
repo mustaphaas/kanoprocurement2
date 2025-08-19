@@ -761,18 +761,26 @@ export default function ProcurementPlanning() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="plans" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             Procurement Plans
           </TabsTrigger>
+          <TabsTrigger value="budget" className="flex items-center gap-2">
+            <DollarSign className="h-4 w-4" />
+            Budget Allocation
+          </TabsTrigger>
           <TabsTrigger value="committees" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            Evaluation Committees
+            Committees
           </TabsTrigger>
           <TabsTrigger value="scoring" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
-            Scoring Matrices
+            Scoring Matrix
+          </TabsTrigger>
+          <TabsTrigger value="analysis" className="flex items-center gap-2">
+            <Scale className="h-4 w-4" />
+            Analytics
           </TabsTrigger>
         </TabsList>
 
