@@ -870,10 +870,10 @@ export default function ProcurementPlanning() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="plans" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
-            Procurement Plans
+            Annual Plans
           </TabsTrigger>
           <TabsTrigger value="budget" className="flex items-center gap-2">
             <DollarSign className="h-4 w-4" />
@@ -881,14 +881,18 @@ export default function ProcurementPlanning() {
           </TabsTrigger>
           <TabsTrigger value="committees" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            Committees
+            Committee Templates
           </TabsTrigger>
-          <TabsTrigger value="scoring" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Scoring Matrix
-          </TabsTrigger>
-          <TabsTrigger value="analysis" className="flex items-center gap-2">
+          <TabsTrigger value="qcbs" className="flex items-center gap-2">
             <Scale className="h-4 w-4" />
+            QCBS Frameworks
+          </TabsTrigger>
+          <TabsTrigger value="assignments" className="flex items-center gap-2">
+            <Target className="h-4 w-4" />
+            Tender Assignments
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
             Analytics
           </TabsTrigger>
         </TabsList>
