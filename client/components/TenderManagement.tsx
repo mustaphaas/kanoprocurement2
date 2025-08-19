@@ -1108,27 +1108,239 @@ const TenderManagement = () => {
             </Card>
           )}
 
-          {/* Step 3: QCBS Scoring (Locked) */}
-          <Card className="opacity-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold text-sm">
-                  3
+          {/* Step 3: QCBS Scoring */}
+          {currentStep >= 3 && !stepStatus.step3.locked ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm">
+                    3
+                  </div>
+                  QCBS Scoring
+                  <Badge className="bg-blue-100 text-blue-800">Committee Workspace</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Tabs inside workspace */}
+                  <Tabs defaultValue="technical" className="w-full">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="technical">🔸 Technical Evaluation</TabsTrigger>
+                      <TabsTrigger value="financial">🔸 Financial Evaluation</TabsTrigger>
+                      <TabsTrigger value="final">🔸 Final QCBS Ranking</TabsTrigger>
+                    </TabsList>
+
+                    {/* Technical Evaluation Tab */}
+                    <TabsContent value="technical" className="space-y-4">
+                      <div className="p-4 bg-blue-50 rounded-lg">
+                        <p className="text-sm text-blue-800">
+                          <strong>Criteria auto-loaded from scoring matrix</strong> - Each evaluator scores independently, system calculates weighted averages.
+                        </p>
+                      </div>
+
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Criteria</TableHead>
+                              <TableHead>Weight</TableHead>
+                              <TableHead>Evaluator Avg.</TableHead>
+                              <TableHead>Weighted Score</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell className="font-medium">Equipment Quality</TableCell>
+                              <TableCell>40%</TableCell>
+                              <TableCell>82.5</TableCell>
+                              <TableCell className="font-bold">33.0</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">Vendor Experience</TableCell>
+                              <TableCell>20%</TableCell>
+                              <TableCell>72.5</TableCell>
+                              <TableCell className="font-bold">14.5</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">Delivery & Training Plan</TableCell>
+                              <TableCell>10%</TableCell>
+                              <TableCell>87.5</TableCell>
+                              <TableCell className="font-bold">8.8</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">Technical Support</TableCell>
+                              <TableCell>15%</TableCell>
+                              <TableCell>78.0</TableCell>
+                              <TableCell className="font-bold">11.7</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">Local Content</TableCell>
+                              <TableCell>15%</TableCell>
+                              <TableCell>65.0</TableCell>
+                              <TableCell className="font-bold">9.8</TableCell>
+                            </TableRow>
+                            <TableRow className="bg-blue-50 font-bold">
+                              <TableCell>TOTAL TECHNICAL SCORE</TableCell>
+                              <TableCell>100%</TableCell>
+                              <TableCell>—</TableCell>
+                              <TableCell>77.8</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      <div className="p-4 bg-green-50 rounded-lg">
+                        <p className="text-sm text-green-800">
+                          <strong>System Auto-calculates Technical Score:</strong> All vendors passed minimum threshold (≥75%)
+                        </p>
+                      </div>
+                    </TabsContent>
+
+                    {/* Financial Evaluation Tab */}
+                    <TabsContent value="financial" className="space-y-4">
+                      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-sm text-yellow-800">
+                          <strong>Only unlocked if Technical Passing Score ≥ 75%</strong> - Financial envelopes opened for qualified vendors only.
+                        </p>
+                      </div>
+
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Vendor</TableHead>
+                              <TableHead>Price (₦)</TableHead>
+                              <TableHead>Normalized Score</TableHead>
+                              <TableHead>Weighted Financial Score</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            <TableRow className="bg-green-50">
+                              <TableCell className="font-medium">A</TableCell>
+                              <TableCell>1,000,000</TableCell>
+                              <TableCell className="font-bold">100</TableCell>
+                              <TableCell className="font-bold text-green-600">30.0</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">B</TableCell>
+                              <TableCell>1,200,000</TableCell>
+                              <TableCell>83</TableCell>
+                              <TableCell className="font-bold">24.9</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">C</TableCell>
+                              <TableCell>1,500,000</TableCell>
+                              <TableCell>67</TableCell>
+                              <TableCell className="font-bold">20.1</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </TabsContent>
+
+                    {/* Final QCBS Ranking Tab */}
+                    <TabsContent value="final" className="space-y-4">
+                      <div className="p-4 bg-purple-50 rounded-lg">
+                        <p className="text-sm text-purple-800">
+                          <strong>Final QCBS Ranking:</strong> Technical (70%) + Financial (30%) = Combined Score
+                        </p>
+                      </div>
+
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Vendor</TableHead>
+                              <TableHead>Technical (70%)</TableHead>
+                              <TableHead>Financial (30%)</TableHead>
+                              <TableHead>Final Score</TableHead>
+                              <TableHead>Rank</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            <TableRow className="bg-yellow-50">
+                              <TableCell className="font-medium">A</TableCell>
+                              <TableCell>72.5</TableCell>
+                              <TableCell>30.0</TableCell>
+                              <TableCell className="font-bold text-yellow-600">102.5</TableCell>
+                              <TableCell>
+                                <Badge className="bg-yellow-100 text-yellow-800">🥇 1</Badge>
+                              </TableCell>
+                            </TableRow>
+                            <TableRow className="bg-gray-50">
+                              <TableCell className="font-medium">B</TableCell>
+                              <TableCell>70.0</TableCell>
+                              <TableCell>24.9</TableCell>
+                              <TableCell className="font-bold">94.9</TableCell>
+                              <TableCell>
+                                <Badge className="bg-gray-100 text-gray-800">🥈 2</Badge>
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">C</TableCell>
+                              <TableCell>65.0</TableCell>
+                              <TableCell>20.1</TableCell>
+                              <TableCell className="font-bold">85.1</TableCell>
+                              <TableCell>
+                                <Badge className="bg-gray-100 text-gray-800">🥉 3</Badge>
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+
+                  {/* Committee Actions */}
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-green-800">QCBS Evaluation Complete</p>
+                        <p className="text-sm text-green-700">
+                          Recommended Award: <strong>Vendor A</strong> (Final Score: 102.5)
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          <Download className="h-4 w-4 mr-2" />
+                          Save Draft Evaluation
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <FileText className="h-4 w-4 mr-2" />
+                          Generate Evaluation Report
+                        </Button>
+                        <Button className="bg-primary" size="sm">
+                          <Award className="h-4 w-4 mr-2" />
+                          Submit Final Recommendation
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                QCBS Scoring
-                <Badge className="bg-gray-100 text-gray-600">Locked</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Scale className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 font-medium">Complete Steps 1 & 2 to unlock</p>
-                <p className="text-sm text-gray-500 mt-1">
-                  All COI declarations must be resolved before scoring can begin
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="opacity-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold text-sm">
+                    3
+                  </div>
+                  QCBS Scoring
+                  <Badge className="bg-gray-100 text-gray-600">Locked</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <Scale className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 font-medium">Complete Steps 1 & 2 to unlock</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    All COI declarations must be resolved before scoring can begin
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         {/* Award Recommendation */}
