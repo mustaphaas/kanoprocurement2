@@ -9,6 +9,7 @@ import ContractManagement from "@/components/ContractManagement";
 import BudgetAllocation from "@/components/BudgetAllocation";
 import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManagement";
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
+import NOCRequestsModule from "@/components/NOCRequestsModule";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
@@ -2782,7 +2783,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Kano School Furniture Ltd",
-          bidAmount: "₦2,050,000,000",
+          bidAmount: "���2,050,000,000",
           technicalScore: 91,
           financialScore: 89,
           totalScore: 90,
@@ -10150,7 +10151,7 @@ Blockchain Timestamp: ${Date.now()}
               },
               {
                 category: "Laboratory Equipment",
-                amount: "��650M",
+                amount: "���650M",
                 percentage: 27,
               },
               {
