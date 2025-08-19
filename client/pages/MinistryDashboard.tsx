@@ -327,18 +327,6 @@ export default function MinistryDashboard() {
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<MDAUser | null>(null);
   const [userFormMode, setUserFormMode] = useState<"create" | "edit">("create");
-  const [newNOCRequest, setNewNOCRequest] = useState({
-    projectTitle: "",
-    projectValue: "",
-    contractorName: "",
-    expectedDuration: "",
-    projectDescription: "",
-    justification: "",
-    category: "",
-    procuringEntity: "",
-    contactPerson: "",
-    contactEmail: "",
-  });
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<BidEvaluation | null>(null);
   const [showContractModal, setShowContractModal] = useState(false);
@@ -1040,7 +1028,7 @@ export default function MinistryDashboard() {
               status: "Awarded" as any,
               publishDate: "2024-02-05",
               awardedCompany: "Heavy Machinery Solutions Ltd",
-              awardAmount: "₦4,200,000,000",
+              awardAmount: "��4,200,000,000",
               awardDate: "2024-03-15",
               closeDate: "2024-03-15",
               bidsReceived: 7,
