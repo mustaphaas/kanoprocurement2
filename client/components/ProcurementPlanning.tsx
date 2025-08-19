@@ -52,8 +52,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BudgetAllocation from "./BudgetAllocation";
-import EvaluationCommitteeManagement from "./EvaluationCommitteeManagement";
-import ScoringMatrixImplementation from "./ScoringMatrixImplementation";
+import CommitteeTemplates from "./CommitteeTemplates";
+import QCBSFrameworkDefinition from "./QCBSFrameworkDefinition";
+import TenderCommitteeAssignment from "./TenderCommitteeAssignment";
 
 // Types
 interface ProcurementPlan {
