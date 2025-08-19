@@ -689,46 +689,93 @@ const TenderManagement = () => {
               <div className="flex items-center justify-between">
                 {/* Step 1: Committee Assignment */}
                 <div className="flex items-center">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-semibold">
-                    1
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
+                    currentStep === 1
+                      ? "bg-blue-600 text-white"
+                      : stepStatus.step1.completed
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-300 text-gray-600"
+                  }`}>
+                    {stepStatus.step1.completed ? "✅" : "1"}
                   </div>
                   <div className="ml-3">
-                    <p className="font-semibold text-blue-600">Committee Assignment</p>
-                    <p className="text-sm text-gray-600">Active</p>
+                    <p className={`font-semibold ${
+                      currentStep === 1 ? "text-blue-600" :
+                      stepStatus.step1.completed ? "text-green-600" : "text-gray-400"
+                    }`}>
+                      Committee Assignment
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {currentStep === 1 ? "Active" : stepStatus.step1.completed ? "Completed" : "Pending"}
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex-1 mx-4">
                   <div className="h-1 bg-gray-200 rounded-full">
-                    <div className="h-1 bg-blue-600 rounded-full w-0"></div>
+                    <div className={`h-1 rounded-full transition-all duration-300 ${
+                      stepStatus.step1.completed ? "w-full bg-green-600" : "w-0 bg-blue-600"
+                    }`}></div>
                   </div>
                 </div>
 
                 {/* Step 2: COI Declaration */}
                 <div className="flex items-center">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
-                    2
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
+                    currentStep === 2
+                      ? "bg-blue-600 text-white"
+                      : stepStatus.step2.completed
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-300 text-gray-600"
+                  }`}>
+                    {stepStatus.step2.completed ? "✅" : "2"}
                   </div>
                   <div className="ml-3">
-                    <p className="font-semibold text-gray-400">COI Declaration</p>
-                    <p className="text-sm text-gray-400">Locked</p>
+                    <p className={`font-semibold ${
+                      currentStep === 2 ? "text-blue-600" :
+                      stepStatus.step2.completed ? "text-green-600" : "text-gray-400"
+                    }`}>
+                      COI Declaration
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {stepStatus.step2.locked ? "Locked" :
+                       currentStep === 2 ? "Active" :
+                       stepStatus.step2.completed ? "Completed" : "Pending"}
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex-1 mx-4">
                   <div className="h-1 bg-gray-200 rounded-full">
-                    <div className="h-1 bg-gray-200 rounded-full w-0"></div>
+                    <div className={`h-1 rounded-full transition-all duration-300 ${
+                      stepStatus.step2.completed ? "w-full bg-green-600" : "w-0 bg-gray-200"
+                    }`}></div>
                   </div>
                 </div>
 
                 {/* Step 3: QCBS Scoring */}
                 <div className="flex items-center">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
-                    3
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
+                    currentStep === 3
+                      ? "bg-blue-600 text-white"
+                      : stepStatus.step3.completed
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-300 text-gray-600"
+                  }`}>
+                    {stepStatus.step3.completed ? "✅" : "3"}
                   </div>
                   <div className="ml-3">
-                    <p className="font-semibold text-gray-400">QCBS Scoring</p>
-                    <p className="text-sm text-gray-400">Locked</p>
+                    <p className={`font-semibold ${
+                      currentStep === 3 ? "text-blue-600" :
+                      stepStatus.step3.completed ? "text-green-600" : "text-gray-400"
+                    }`}>
+                      QCBS Scoring
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {stepStatus.step3.locked ? "Locked" :
+                       currentStep === 3 ? "Active" :
+                       stepStatus.step3.completed ? "Completed" : "Pending"}
+                    </p>
                   </div>
                 </div>
               </div>
