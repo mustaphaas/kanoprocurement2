@@ -4,6 +4,7 @@ import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MinistryUserForm from "@/components/MinistryUserForm";
 import ProcurementPlanning from "@/components/ProcurementPlanning";
+import TenderManagement from "@/components/TenderManagement";
 import BudgetAllocation from "@/components/BudgetAllocation";
 import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManagement";
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
@@ -83,7 +84,8 @@ type CurrentView =
   | "reports"
   | "noc"
   | "users"
-  | "procurement-planning";
+  | "procurement-planning"
+  | "tender-management";
 
 type TenderSubView =
   | "list"
@@ -10649,6 +10651,8 @@ Blockchain Timestamp: ${Date.now()}
       return renderUserManagement();
     } else if (currentView === "procurement-planning") {
       return <ProcurementPlanning />;
+    } else if (currentView === "tender-management") {
+      return <TenderManagement />;
     }
     return null;
   };
@@ -10705,6 +10709,11 @@ Blockchain Timestamp: ${Date.now()}
                 key: "procurement-planning",
                 label: "Procurement Planning",
                 icon: Target,
+              },
+              {
+                key: "tender-management",
+                label: "Tender Management",
+                icon: Gavel,
               },
               { key: "users", label: "User Management", icon: Users },
               { key: "reports", label: "Reports", icon: TrendingUp },
