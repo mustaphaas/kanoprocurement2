@@ -909,13 +909,13 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                     <h4 className="font-medium text-gray-900">Timeline</h4>
                     <div className="mt-2 space-y-2 text-sm">
                       <p><span className="font-medium">Request Date:</span> {selectedRequest.requestDate}</p>
-                      {selectedRequest.timeline.dateSubmitted && (
+                      {selectedRequest.timeline?.dateSubmitted && (
                         <p><span className="font-medium">Submitted:</span> {selectedRequest.timeline.dateSubmitted}</p>
                       )}
-                      {selectedRequest.timeline.reviewStartDate && (
+                      {selectedRequest.timeline?.reviewStartDate && (
                         <p><span className="font-medium">Review Started:</span> {selectedRequest.timeline.reviewStartDate}</p>
                       )}
-                      {selectedRequest.timeline.approvalDate && (
+                      {selectedRequest.timeline?.approvalDate && (
                         <p><span className="font-medium">Approved:</span> {selectedRequest.timeline.approvalDate}</p>
                       )}
                     </div>
