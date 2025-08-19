@@ -111,7 +111,8 @@ type ActiveTab =
   | "feedback"
   | "no-objection-certificate"
   | "mda-management"
-  | "mda-testing";
+  | "mda-testing"
+  | "noc-requests";
 
 interface DashboardStats {
   newRegistrationsPending: number;
