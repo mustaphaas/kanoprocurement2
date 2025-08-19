@@ -163,7 +163,17 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
     const ministryNOCKey = `${ministryCode}_NOCRequests`;
     const storedNOCs = localStorage.getItem(ministryNOCKey);
     if (storedNOCs) {
-      setNOCRequests(JSON.parse(storedNOCs));
+      const requests = JSON.parse(storedNOCs);
+      // Migrate legacy requests that don't have timeline structure
+      const migratedRequests = requests.map((request: any) => ({
+        ...request,
+        timeline: request.timeline || {
+          dateSubmitted: request.requestDate
+        },
+        documents: request.documents || {},
+        version: request.version || 1
+      }));
+      setNOCRequests(migratedRequests);
     }
   };
 
