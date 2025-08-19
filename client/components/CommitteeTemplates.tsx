@@ -132,10 +132,12 @@ const STORAGE_KEY = "committeeTemplates";
 
 export default function CommitteeTemplates() {
   const [templates, setTemplates] = useState<CommitteeTemplate[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<CommitteeTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<CommitteeTemplate | null>(null);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const [editingTemplate, setEditingTemplate] = useState<CommitteeTemplate | null>(null);
+  const [editingTemplate, setEditingTemplate] =
+    useState<CommitteeTemplate | null>(null);
 
   // Form states
   const [templateForm, setTemplateForm] = useState({
@@ -169,10 +171,12 @@ export default function CommitteeTemplates() {
 
   const loadTemplates = () => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
-      
+
       const stored = localStorage.getItem(storageKey);
       if (stored) {
         setTemplates(JSON.parse(stored));
@@ -188,7 +192,9 @@ export default function CommitteeTemplates() {
 
   const saveTemplates = (updatedTemplates: CommitteeTemplate[]) => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
       localStorage.setItem(storageKey, JSON.stringify(updatedTemplates));
@@ -201,9 +207,14 @@ export default function CommitteeTemplates() {
     const baseTemplate: CommitteeTemplate = {
       id: "CT-2024-001",
       name: "Medical Equipment Procurement Committee",
-      description: "Template for evaluating medical equipment and healthcare technology procurement",
+      description:
+        "Template for evaluating medical equipment and healthcare technology procurement",
       category: "Medical Equipment",
-      applicableTypes: ["Medical Equipment", "Healthcare Technology", "Laboratory Equipment"],
+      applicableTypes: [
+        "Medical Equipment",
+        "Healthcare Technology",
+        "Laboratory Equipment",
+      ],
       minimumMembers: 5,
       maximumMembers: 7,
       quorumRequirement: 4,
@@ -215,22 +226,23 @@ export default function CommitteeTemplates() {
         {
           id: "ROLE-001",
           title: "Committee Chairperson",
-          description: "Senior medical professional responsible for leading evaluations",
+          description:
+            "Senior medical professional responsible for leading evaluations",
           responsibilities: [
             "Lead committee meetings and deliberations",
             "Ensure fair and transparent evaluation process",
             "Make final decisions in case of deadlocks",
-            "Sign off on final recommendations"
+            "Sign off on final recommendations",
           ],
           requiredQualifications: [
             "Medical degree (MBBS/MD) or equivalent",
             "Minimum 15 years clinical experience",
-            "Previous committee leadership experience"
+            "Previous committee leadership experience",
           ],
           requiredExpertise: [
             "Clinical Medicine",
             "Healthcare Administration",
-            "Medical Equipment Knowledge"
+            "Medical Equipment Knowledge",
           ],
           minimumExperience: 15,
           mandatoryRole: true,
@@ -239,22 +251,23 @@ export default function CommitteeTemplates() {
         {
           id: "ROLE-002",
           title: "Technical Secretary",
-          description: "Biomedical engineer responsible for technical evaluation and documentation",
+          description:
+            "Biomedical engineer responsible for technical evaluation and documentation",
           responsibilities: [
             "Coordinate technical evaluations",
             "Maintain evaluation documentation",
             "Provide technical analysis and reports",
-            "Ensure compliance with technical standards"
+            "Ensure compliance with technical standards",
           ],
           requiredQualifications: [
             "Engineering degree in Biomedical/Electrical/Mechanical",
             "Professional engineering certification",
-            "Minimum 10 years relevant experience"
+            "Minimum 10 years relevant experience",
           ],
           requiredExpertise: [
             "Biomedical Engineering",
             "Medical Device Technology",
-            "Quality Assurance"
+            "Quality Assurance",
           ],
           minimumExperience: 10,
           mandatoryRole: true,
@@ -263,22 +276,23 @@ export default function CommitteeTemplates() {
         {
           id: "ROLE-003",
           title: "Clinical Evaluator",
-          description: "Medical specialist with expertise in relevant clinical area",
+          description:
+            "Medical specialist with expertise in relevant clinical area",
           responsibilities: [
             "Evaluate clinical utility and safety",
             "Assess compatibility with clinical workflows",
             "Provide clinical perspective on equipment",
-            "Review user requirements and specifications"
+            "Review user requirements and specifications",
           ],
           requiredQualifications: [
             "Medical degree with specialization",
             "Minimum 8 years clinical practice",
-            "Experience with medical equipment"
+            "Experience with medical equipment",
           ],
           requiredExpertise: [
             "Clinical Practice",
             "Medical Equipment Usage",
-            "Patient Safety"
+            "Patient Safety",
           ],
           minimumExperience: 8,
           mandatoryRole: true,
@@ -292,17 +306,17 @@ export default function CommitteeTemplates() {
             "Analyze financial proposals",
             "Conduct cost-benefit analysis",
             "Evaluate payment terms and conditions",
-            "Assess budget impact and sustainability"
+            "Assess budget impact and sustainability",
           ],
           requiredQualifications: [
             "Degree in Finance, Accounting, or Economics",
             "Professional certification (CPA, CFA, etc.)",
-            "Minimum 7 years financial analysis experience"
+            "Minimum 7 years financial analysis experience",
           ],
           requiredExpertise: [
             "Financial Analysis",
             "Cost-Benefit Analysis",
-            "Budget Planning"
+            "Budget Planning",
           ],
           minimumExperience: 7,
           mandatoryRole: true,
@@ -311,22 +325,23 @@ export default function CommitteeTemplates() {
         {
           id: "ROLE-005",
           title: "Procurement Specialist",
-          description: "Procurement expert ensuring compliance with regulations",
+          description:
+            "Procurement expert ensuring compliance with regulations",
           responsibilities: [
             "Ensure procurement compliance",
             "Review contract terms and conditions",
             "Assess vendor qualifications",
-            "Monitor evaluation process integrity"
+            "Monitor evaluation process integrity",
           ],
           requiredQualifications: [
             "Degree in Business, Law, or related field",
             "Procurement certification",
-            "Minimum 8 years procurement experience"
+            "Minimum 8 years procurement experience",
           ],
           requiredExpertise: [
             "Procurement Regulations",
             "Contract Management",
-            "Vendor Assessment"
+            "Vendor Assessment",
           ],
           minimumExperience: 8,
           mandatoryRole: false,
@@ -354,21 +369,24 @@ export default function CommitteeTemplates() {
                 name: "Equipment Performance",
                 weight: 50,
                 description: "Technical performance and capabilities",
-                evaluationGuidelines: "Evaluate against specified performance parameters",
+                evaluationGuidelines:
+                  "Evaluate against specified performance parameters",
               },
               {
                 id: "SUB-002",
                 name: "Standards Compliance",
                 weight: 30,
                 description: "Compliance with international standards",
-                evaluationGuidelines: "Verify certifications and compliance documentation",
+                evaluationGuidelines:
+                  "Verify certifications and compliance documentation",
               },
               {
                 id: "SUB-003",
                 name: "Innovation and Technology",
                 weight: 20,
                 description: "Level of innovation and advanced technology",
-                evaluationGuidelines: "Assess technological advancement and future-proofing",
+                evaluationGuidelines:
+                  "Assess technological advancement and future-proofing",
               },
             ],
           },
@@ -386,14 +404,16 @@ export default function CommitteeTemplates() {
                 name: "Relevant Experience",
                 weight: 70,
                 description: "Experience in similar projects and equipment",
-                evaluationGuidelines: "Evaluate similar project portfolio and track record",
+                evaluationGuidelines:
+                  "Evaluate similar project portfolio and track record",
               },
               {
                 id: "SUB-005",
                 name: "References and Testimonials",
                 weight: 30,
                 description: "Quality of client references",
-                evaluationGuidelines: "Contact references and verify testimonials",
+                evaluationGuidelines:
+                  "Contact references and verify testimonials",
               },
             ],
           },
@@ -411,7 +431,8 @@ export default function CommitteeTemplates() {
                 name: "Legal Compliance",
                 weight: 100,
                 description: "All regulatory and legal requirements met",
-                evaluationGuidelines: "Verify all required licenses and certifications",
+                evaluationGuidelines:
+                  "Verify all required licenses and certifications",
               },
             ],
           },
@@ -434,10 +455,12 @@ export default function CommitteeTemplates() {
         {
           level: 1,
           title: "Committee Recommendation",
-          description: "Committee completes evaluation and provides recommendation",
+          description:
+            "Committee completes evaluation and provides recommendation",
           requiredRole: "Committee Chairperson",
           timeframe: 72,
-          escalationRules: "Escalate to Procurement Director if not completed within timeframe",
+          escalationRules:
+            "Escalate to Procurement Director if not completed within timeframe",
         },
         {
           level: 2,
@@ -445,7 +468,8 @@ export default function CommitteeTemplates() {
           description: "Technical director reviews methodology and findings",
           requiredRole: "Technical Director",
           timeframe: 48,
-          escalationRules: "Escalate to Permanent Secretary if significant issues found",
+          escalationRules:
+            "Escalate to Permanent Secretary if significant issues found",
         },
         {
           level: 3,
@@ -460,28 +484,32 @@ export default function CommitteeTemplates() {
         {
           id: "GOV-001",
           type: "COI",
-          description: "Committee members must declare any financial interest in participating companies",
+          description:
+            "Committee members must declare any financial interest in participating companies",
           enforcement: "Mandatory",
           penalty: "Immediate removal from committee",
         },
         {
           id: "GOV-002",
           type: "Independence",
-          description: "Members cannot have worked for participating companies in past 2 years",
+          description:
+            "Members cannot have worked for participating companies in past 2 years",
           enforcement: "Mandatory",
           penalty: "Disqualification from participation",
         },
         {
           id: "GOV-003",
           type: "Rotation",
-          description: "Committee membership should rotate every 3 evaluations to ensure freshness",
+          description:
+            "Committee membership should rotate every 3 evaluations to ensure freshness",
           enforcement: "Recommended",
           penalty: "Advisory warning",
         },
         {
           id: "GOV-004",
           type: "Experience",
-          description: "At least 60% of committee must have minimum required experience",
+          description:
+            "At least 60% of committee must have minimum required experience",
           enforcement: "Mandatory",
           penalty: "Committee reconstitution required",
         },
@@ -491,48 +519,60 @@ export default function CommitteeTemplates() {
     // Customize for different ministries
     if (ministryCode === "MOWI") {
       baseTemplate.name = "Infrastructure Procurement Committee";
-      baseTemplate.description = "Template for evaluating construction and infrastructure procurement";
+      baseTemplate.description =
+        "Template for evaluating construction and infrastructure procurement";
       baseTemplate.category = "Infrastructure";
-      baseTemplate.applicableTypes = ["Road Construction", "Bridge Construction", "Building Construction"];
-      
+      baseTemplate.applicableTypes = [
+        "Road Construction",
+        "Bridge Construction",
+        "Building Construction",
+      ];
+
       baseTemplate.roles = [
         {
           ...baseTemplate.roles[0],
           title: "Chief Engineer (Chair)",
-          description: "Senior civil engineer responsible for leading technical evaluations",
+          description:
+            "Senior civil engineer responsible for leading technical evaluations",
           requiredQualifications: [
             "Civil Engineering degree",
             "Professional Engineer certification",
-            "Minimum 15 years construction experience"
+            "Minimum 15 years construction experience",
           ],
           requiredExpertise: [
             "Civil Engineering",
             "Construction Management",
-            "Infrastructure Development"
+            "Infrastructure Development",
           ],
         },
         // ... other roles adapted for infrastructure
       ];
     } else if (ministryCode === "MOE") {
       baseTemplate.name = "Educational Procurement Committee";
-      baseTemplate.description = "Template for evaluating educational equipment and materials procurement";
+      baseTemplate.description =
+        "Template for evaluating educational equipment and materials procurement";
       baseTemplate.category = "Educational";
-      baseTemplate.applicableTypes = ["Educational Technology", "School Furniture", "Learning Materials"];
-      
+      baseTemplate.applicableTypes = [
+        "Educational Technology",
+        "School Furniture",
+        "Learning Materials",
+      ];
+
       baseTemplate.roles = [
         {
           ...baseTemplate.roles[0],
           title: "Education Director (Chair)",
-          description: "Senior education professional responsible for leading evaluations",
+          description:
+            "Senior education professional responsible for leading evaluations",
           requiredQualifications: [
             "Education degree (PhD preferred)",
             "Minimum 15 years education experience",
-            "Educational leadership experience"
+            "Educational leadership experience",
           ],
           requiredExpertise: [
             "Educational Administration",
             "Curriculum Development",
-            "Educational Technology"
+            "Educational Technology",
           ],
         },
         // ... other roles adapted for education
@@ -563,8 +603,8 @@ export default function CommitteeTemplates() {
         consensusRules: [],
       },
       approvalLevels: [],
-      createdDate: new Date().toISOString().split('T')[0],
-      lastModified: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
+      lastModified: new Date().toISOString().split("T")[0],
       status: "Draft",
       usageCount: 0,
       governanceRules: [],
@@ -603,10 +643,14 @@ export default function CommitteeTemplates() {
       maxConflictScore: roleForm.maxConflictScore,
     };
 
-    const updatedTemplates = templates.map(template =>
+    const updatedTemplates = templates.map((template) =>
       template.id === templateId
-        ? { ...template, roles: [...template.roles, newRole], lastModified: new Date().toISOString().split('T')[0] }
-        : template
+        ? {
+            ...template,
+            roles: [...template.roles, newRole],
+            lastModified: new Date().toISOString().split("T")[0],
+          }
+        : template,
     );
 
     setTemplates(updatedTemplates);
@@ -631,7 +675,11 @@ export default function CommitteeTemplates() {
       Active: "default",
       Archived: "outline",
     };
-    return <Badge variant={variants[status as keyof typeof variants] as any}>{status}</Badge>;
+    return (
+      <Badge variant={variants[status as keyof typeof variants] as any}>
+        {status}
+      </Badge>
+    );
   };
 
   const getMethodologyBadge = (methodology: string) => {
@@ -641,17 +689,28 @@ export default function CommitteeTemplates() {
       LCS: "outline",
       FBS: "destructive",
     };
-    return <Badge variant={variants[methodology as keyof typeof variants] as any}>{methodology}</Badge>;
+    return (
+      <Badge variant={variants[methodology as keyof typeof variants] as any}>
+        {methodology}
+      </Badge>
+    );
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Committee Templates</h2>
-          <p className="text-gray-600">Define committee structures and roles for procurement planning</p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Committee Templates
+          </h2>
+          <p className="text-gray-600">
+            Define committee structures and roles for procurement planning
+          </p>
         </div>
-        <Button onClick={() => setShowTemplateModal(true)} className="bg-primary hover:bg-primary/90">
+        <Button
+          onClick={() => setShowTemplateModal(true)}
+          className="bg-primary hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4 mr-2" />
           New Committee Template
         </Button>
@@ -666,39 +725,62 @@ export default function CommitteeTemplates() {
                   <div className="flex items-center gap-3 mb-2">
                     <CardTitle className="text-lg">{template.name}</CardTitle>
                     {getStatusBadge(template.status)}
-                    {getMethodologyBadge(template.evaluationFramework.methodology)}
+                    {getMethodologyBadge(
+                      template.evaluationFramework.methodology,
+                    )}
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">{template.description}</p>
+                  <p className="text-sm text-gray-600 mb-3">
+                    {template.description}
+                  </p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
-                      <Label className="text-xs font-medium text-gray-500">Roles Defined</Label>
-                      <p className="text-sm font-semibold">{template.roles.length}</p>
+                      <Label className="text-xs font-medium text-gray-500">
+                        Roles Defined
+                      </Label>
+                      <p className="text-sm font-semibold">
+                        {template.roles.length}
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-xs font-medium text-gray-500">Committee Size</Label>
-                      <p className="text-sm font-semibold">{template.minimumMembers}-{template.maximumMembers} members</p>
+                      <Label className="text-xs font-medium text-gray-500">
+                        Committee Size
+                      </Label>
+                      <p className="text-sm font-semibold">
+                        {template.minimumMembers}-{template.maximumMembers}{" "}
+                        members
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-xs font-medium text-gray-500">QCBS Weights</Label>
-                      <p className="text-sm font-semibold">T:{template.evaluationFramework.technicalWeightPercent}% / F:{template.evaluationFramework.financialWeightPercent}%</p>
+                      <Label className="text-xs font-medium text-gray-500">
+                        QCBS Weights
+                      </Label>
+                      <p className="text-sm font-semibold">
+                        T:{template.evaluationFramework.technicalWeightPercent}%
+                        / F:
+                        {template.evaluationFramework.financialWeightPercent}%
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-xs font-medium text-gray-500">Usage Count</Label>
-                      <p className="text-sm font-semibold">{template.usageCount}</p>
+                      <Label className="text-xs font-medium text-gray-500">
+                        Usage Count
+                      </Label>
+                      <p className="text-sm font-semibold">
+                        {template.usageCount}
+                      </p>
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => setSelectedTemplate(template)}
                   >
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => {
                       setSelectedTemplate(template);
                       setShowRoleModal(true);
@@ -718,7 +800,10 @@ export default function CommitteeTemplates() {
                   </h4>
                   <div className="space-y-2">
                     {template.roles.map((role) => (
-                      <div key={role.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div
+                        key={role.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-medium">{role.title}</span>
@@ -734,7 +819,9 @@ export default function CommitteeTemplates() {
                               COI ≤ {role.maxConflictScore}
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600">{role.description}</p>
+                          <p className="text-sm text-gray-600">
+                            {role.description}
+                          </p>
                           <div className="text-xs text-gray-500 mt-1">
                             Expertise: {role.requiredExpertise.join(", ")}
                           </div>
@@ -751,20 +838,36 @@ export default function CommitteeTemplates() {
                   </h4>
                   <div className="grid grid-cols-2 gap-4 p-3 bg-blue-50 rounded-lg">
                     <div>
-                      <Label className="text-xs font-medium text-blue-700">Technical Weight</Label>
-                      <p className="font-semibold text-blue-900">{template.evaluationFramework.technicalWeightPercent}%</p>
+                      <Label className="text-xs font-medium text-blue-700">
+                        Technical Weight
+                      </Label>
+                      <p className="font-semibold text-blue-900">
+                        {template.evaluationFramework.technicalWeightPercent}%
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-xs font-medium text-blue-700">Financial Weight</Label>
-                      <p className="font-semibold text-blue-900">{template.evaluationFramework.financialWeightPercent}%</p>
+                      <Label className="text-xs font-medium text-blue-700">
+                        Financial Weight
+                      </Label>
+                      <p className="font-semibold text-blue-900">
+                        {template.evaluationFramework.financialWeightPercent}%
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-xs font-medium text-blue-700">Passing Score</Label>
-                      <p className="font-semibold text-blue-900">{template.evaluationFramework.passingTechnicalScore}%</p>
+                      <Label className="text-xs font-medium text-blue-700">
+                        Passing Score
+                      </Label>
+                      <p className="font-semibold text-blue-900">
+                        {template.evaluationFramework.passingTechnicalScore}%
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-xs font-medium text-blue-700">Criteria</Label>
-                      <p className="font-semibold text-blue-900">{template.evaluationFramework.evaluationCriteria.length}</p>
+                      <Label className="text-xs font-medium text-blue-700">
+                        Criteria
+                      </Label>
+                      <p className="font-semibold text-blue-900">
+                        {template.evaluationFramework.evaluationCriteria.length}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -774,7 +877,9 @@ export default function CommitteeTemplates() {
                     <h4 className="font-medium mb-2">Applicable Types</h4>
                     <div className="flex flex-wrap gap-2">
                       {template.applicableTypes.map((type) => (
-                        <Badge key={type} variant="outline">{type}</Badge>
+                        <Badge key={type} variant="outline">
+                          {type}
+                        </Badge>
                       ))}
                     </div>
                   </div>
@@ -788,9 +893,19 @@ export default function CommitteeTemplates() {
                     </h4>
                     <div className="space-y-1">
                       {template.governanceRules.map((rule) => (
-                        <div key={rule.id} className="flex items-center justify-between text-sm p-2 bg-yellow-50 rounded">
+                        <div
+                          key={rule.id}
+                          className="flex items-center justify-between text-sm p-2 bg-yellow-50 rounded"
+                        >
                           <span>{rule.description}</span>
-                          <Badge variant={rule.enforcement === "Mandatory" ? "destructive" : "outline"} className="text-xs">
+                          <Badge
+                            variant={
+                              rule.enforcement === "Mandatory"
+                                ? "destructive"
+                                : "outline"
+                            }
+                            className="text-xs"
+                          >
                             {rule.enforcement}
                           </Badge>
                         </div>
@@ -816,7 +931,9 @@ export default function CommitteeTemplates() {
               <Input
                 id="template-name"
                 value={templateForm.name}
-                onChange={(e) => setTemplateForm({...templateForm, name: e.target.value})}
+                onChange={(e) =>
+                  setTemplateForm({ ...templateForm, name: e.target.value })
+                }
                 placeholder="e.g., Medical Equipment Committee"
               />
             </div>
@@ -825,7 +942,12 @@ export default function CommitteeTemplates() {
               <Textarea
                 id="template-description"
                 value={templateForm.description}
-                onChange={(e) => setTemplateForm({...templateForm, description: e.target.value})}
+                onChange={(e) =>
+                  setTemplateForm({
+                    ...templateForm,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Describe the purpose and scope of this committee template"
                 rows={3}
               />
@@ -836,21 +958,39 @@ export default function CommitteeTemplates() {
                 <Input
                   id="category"
                   value={templateForm.category}
-                  onChange={(e) => setTemplateForm({...templateForm, category: e.target.value})}
+                  onChange={(e) =>
+                    setTemplateForm({
+                      ...templateForm,
+                      category: e.target.value,
+                    })
+                  }
                   placeholder="e.g., Medical Equipment"
                 />
               </div>
               <div>
                 <Label htmlFor="methodology">Evaluation Methodology</Label>
-                <Select value={templateForm.methodology} onValueChange={(value: any) => setTemplateForm({...templateForm, methodology: value})}>
+                <Select
+                  value={templateForm.methodology}
+                  onValueChange={(value: any) =>
+                    setTemplateForm({ ...templateForm, methodology: value })
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="QCBS">Quality and Cost-Based Selection (QCBS)</SelectItem>
-                    <SelectItem value="QBS">Quality-Based Selection (QBS)</SelectItem>
-                    <SelectItem value="LCS">Least Cost Selection (LCS)</SelectItem>
-                    <SelectItem value="FBS">Fixed Budget Selection (FBS)</SelectItem>
+                    <SelectItem value="QCBS">
+                      Quality and Cost-Based Selection (QCBS)
+                    </SelectItem>
+                    <SelectItem value="QBS">
+                      Quality-Based Selection (QBS)
+                    </SelectItem>
+                    <SelectItem value="LCS">
+                      Least Cost Selection (LCS)
+                    </SelectItem>
+                    <SelectItem value="FBS">
+                      Fixed Budget Selection (FBS)
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -862,7 +1002,12 @@ export default function CommitteeTemplates() {
                   id="min-members"
                   type="number"
                   value={templateForm.minimumMembers}
-                  onChange={(e) => setTemplateForm({...templateForm, minimumMembers: parseInt(e.target.value) || 3})}
+                  onChange={(e) =>
+                    setTemplateForm({
+                      ...templateForm,
+                      minimumMembers: parseInt(e.target.value) || 3,
+                    })
+                  }
                   min="3"
                 />
               </div>
@@ -872,7 +1017,12 @@ export default function CommitteeTemplates() {
                   id="max-members"
                   type="number"
                   value={templateForm.maximumMembers}
-                  onChange={(e) => setTemplateForm({...templateForm, maximumMembers: parseInt(e.target.value) || 7})}
+                  onChange={(e) =>
+                    setTemplateForm({
+                      ...templateForm,
+                      maximumMembers: parseInt(e.target.value) || 7,
+                    })
+                  }
                   min="3"
                 />
               </div>
@@ -882,7 +1032,12 @@ export default function CommitteeTemplates() {
                   id="quorum"
                   type="number"
                   value={templateForm.quorumRequirement}
-                  onChange={(e) => setTemplateForm({...templateForm, quorumRequirement: parseInt(e.target.value) || 3})}
+                  onChange={(e) =>
+                    setTemplateForm({
+                      ...templateForm,
+                      quorumRequirement: parseInt(e.target.value) || 3,
+                    })
+                  }
                   min="3"
                 />
               </div>
@@ -900,9 +1055,9 @@ export default function CommitteeTemplates() {
                     onChange={(e) => {
                       const technical = parseInt(e.target.value) || 70;
                       setTemplateForm({
-                        ...templateForm, 
+                        ...templateForm,
                         technicalWeightPercent: technical,
-                        financialWeightPercent: 100 - technical
+                        financialWeightPercent: 100 - technical,
                       });
                     }}
                     min="0"
@@ -918,9 +1073,9 @@ export default function CommitteeTemplates() {
                     onChange={(e) => {
                       const financial = parseInt(e.target.value) || 30;
                       setTemplateForm({
-                        ...templateForm, 
+                        ...templateForm,
                         financialWeightPercent: financial,
-                        technicalWeightPercent: 100 - financial
+                        technicalWeightPercent: 100 - financial,
                       });
                     }}
                     min="0"
@@ -929,33 +1084,50 @@ export default function CommitteeTemplates() {
                 </div>
               </div>
               <div>
-                <Label htmlFor="passing-score">Minimum Technical Passing Score (%)</Label>
+                <Label htmlFor="passing-score">
+                  Minimum Technical Passing Score (%)
+                </Label>
                 <Input
                   id="passing-score"
                   type="number"
                   value={templateForm.passingTechnicalScore}
-                  onChange={(e) => setTemplateForm({...templateForm, passingTechnicalScore: parseInt(e.target.value) || 75})}
+                  onChange={(e) =>
+                    setTemplateForm({
+                      ...templateForm,
+                      passingTechnicalScore: parseInt(e.target.value) || 75,
+                    })
+                  }
                   min="0"
                   max="100"
                 />
               </div>
             </div>
             <div>
-              <Label htmlFor="applicable-types">Applicable Procurement Types (comma-separated)</Label>
+              <Label htmlFor="applicable-types">
+                Applicable Procurement Types (comma-separated)
+              </Label>
               <Input
                 id="applicable-types"
                 value={templateForm.applicableTypes.join(", ")}
-                onChange={(e) => setTemplateForm({...templateForm, applicableTypes: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setTemplateForm({
+                    ...templateForm,
+                    applicableTypes: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="e.g., Medical Equipment, Healthcare Technology"
               />
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowTemplateModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowTemplateModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={createTemplate}>
-                Create Template
-              </Button>
+              <Button onClick={createTemplate}>Create Template</Button>
             </div>
           </div>
         </DialogContent>
@@ -974,17 +1146,26 @@ export default function CommitteeTemplates() {
                 <Input
                   id="role-title"
                   value={roleForm.title}
-                  onChange={(e) => setRoleForm({...roleForm, title: e.target.value})}
+                  onChange={(e) =>
+                    setRoleForm({ ...roleForm, title: e.target.value })
+                  }
                   placeholder="e.g., Committee Chairperson"
                 />
               </div>
               <div>
-                <Label htmlFor="min-experience">Minimum Experience (years)</Label>
+                <Label htmlFor="min-experience">
+                  Minimum Experience (years)
+                </Label>
                 <Input
                   id="min-experience"
                   type="number"
                   value={roleForm.minimumExperience}
-                  onChange={(e) => setRoleForm({...roleForm, minimumExperience: parseInt(e.target.value) || 3})}
+                  onChange={(e) =>
+                    setRoleForm({
+                      ...roleForm,
+                      minimumExperience: parseInt(e.target.value) || 3,
+                    })
+                  }
                   min="0"
                 />
               </div>
@@ -994,37 +1175,66 @@ export default function CommitteeTemplates() {
               <Textarea
                 id="role-description"
                 value={roleForm.description}
-                onChange={(e) => setRoleForm({...roleForm, description: e.target.value})}
+                onChange={(e) =>
+                  setRoleForm({ ...roleForm, description: e.target.value })
+                }
                 placeholder="Describe the role and its purpose"
                 rows={2}
               />
             </div>
             <div>
-              <Label htmlFor="responsibilities">Responsibilities (comma-separated)</Label>
+              <Label htmlFor="responsibilities">
+                Responsibilities (comma-separated)
+              </Label>
               <Textarea
                 id="responsibilities"
                 value={roleForm.responsibilities.join(", ")}
-                onChange={(e) => setRoleForm({...roleForm, responsibilities: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setRoleForm({
+                    ...roleForm,
+                    responsibilities: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="Lead evaluations, Make decisions, etc."
                 rows={2}
               />
             </div>
             <div>
-              <Label htmlFor="qualifications">Required Qualifications (comma-separated)</Label>
+              <Label htmlFor="qualifications">
+                Required Qualifications (comma-separated)
+              </Label>
               <Textarea
                 id="qualifications"
                 value={roleForm.requiredQualifications.join(", ")}
-                onChange={(e) => setRoleForm({...roleForm, requiredQualifications: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setRoleForm({
+                    ...roleForm,
+                    requiredQualifications: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="Degree requirements, certifications, etc."
                 rows={2}
               />
             </div>
             <div>
-              <Label htmlFor="expertise">Required Expertise (comma-separated)</Label>
+              <Label htmlFor="expertise">
+                Required Expertise (comma-separated)
+              </Label>
               <Input
                 id="expertise"
                 value={roleForm.requiredExpertise.join(", ")}
-                onChange={(e) => setRoleForm({...roleForm, requiredExpertise: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setRoleForm({
+                    ...roleForm,
+                    requiredExpertise: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="Technical areas of expertise"
               />
             </div>
@@ -1034,18 +1244,30 @@ export default function CommitteeTemplates() {
                   type="checkbox"
                   id="mandatory-role"
                   checked={roleForm.mandatoryRole}
-                  onChange={(e) => setRoleForm({...roleForm, mandatoryRole: e.target.checked})}
+                  onChange={(e) =>
+                    setRoleForm({
+                      ...roleForm,
+                      mandatoryRole: e.target.checked,
+                    })
+                  }
                   className="rounded"
                 />
                 <Label htmlFor="mandatory-role">Mandatory Role</Label>
               </div>
               <div>
-                <Label htmlFor="conflict-score">Max Conflict Score (1-10)</Label>
+                <Label htmlFor="conflict-score">
+                  Max Conflict Score (1-10)
+                </Label>
                 <Input
                   id="conflict-score"
                   type="number"
                   value={roleForm.maxConflictScore}
-                  onChange={(e) => setRoleForm({...roleForm, maxConflictScore: parseInt(e.target.value) || 3})}
+                  onChange={(e) =>
+                    setRoleForm({
+                      ...roleForm,
+                      maxConflictScore: parseInt(e.target.value) || 3,
+                    })
+                  }
                   min="1"
                   max="10"
                 />
@@ -1055,7 +1277,11 @@ export default function CommitteeTemplates() {
               <Button variant="outline" onClick={() => setShowRoleModal(false)}>
                 Cancel
               </Button>
-              <Button onClick={() => selectedTemplate && addRoleToTemplate(selectedTemplate.id)}>
+              <Button
+                onClick={() =>
+                  selectedTemplate && addRoleToTemplate(selectedTemplate.id)
+                }
+              >
                 Add Role
               </Button>
             </div>

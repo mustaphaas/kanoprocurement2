@@ -122,7 +122,11 @@ interface EvaluationGuideline {
 }
 
 interface FinancialEvaluationMethod {
-  method: "Lowest Cost" | "Life Cycle Cost" | "Net Present Value" | "Cost Per Unit";
+  method:
+    | "Lowest Cost"
+    | "Life Cycle Cost"
+    | "Net Present Value"
+    | "Cost Per Unit";
   normalizationFormula: string;
   adjustmentFactors: AdjustmentFactor[];
   currencyHandling: string;
@@ -187,10 +191,12 @@ const STORAGE_KEY = "qcbsFrameworks";
 
 export default function QCBSFrameworkDefinition() {
   const [frameworks, setFrameworks] = useState<QCBSFramework[]>([]);
-  const [selectedFramework, setSelectedFramework] = useState<QCBSFramework | null>(null);
+  const [selectedFramework, setSelectedFramework] =
+    useState<QCBSFramework | null>(null);
   const [showFrameworkModal, setShowFrameworkModal] = useState(false);
   const [showCriteriaModal, setShowCriteriaModal] = useState(false);
-  const [editingFramework, setEditingFramework] = useState<QCBSFramework | null>(null);
+  const [editingFramework, setEditingFramework] =
+    useState<QCBSFramework | null>(null);
   const [activeTab, setActiveTab] = useState("frameworks");
 
   // Form states
@@ -224,10 +230,12 @@ export default function QCBSFrameworkDefinition() {
 
   const loadFrameworks = () => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
-      
+
       const stored = localStorage.getItem(storageKey);
       if (stored) {
         setFrameworks(JSON.parse(stored));
@@ -243,7 +251,9 @@ export default function QCBSFrameworkDefinition() {
 
   const saveFrameworks = (updatedFrameworks: QCBSFramework[]) => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
       localStorage.setItem(storageKey, JSON.stringify(updatedFrameworks));
@@ -256,9 +266,14 @@ export default function QCBSFrameworkDefinition() {
     const baseFramework: QCBSFramework = {
       id: "QCBS-2024-001",
       name: "Medical Equipment QCBS Framework",
-      description: "Quality and Cost-Based Selection framework for medical equipment procurement",
+      description:
+        "Quality and Cost-Based Selection framework for medical equipment procurement",
       category: "Medical Equipment",
-      applicableTypes: ["Medical Equipment", "Healthcare Technology", "Laboratory Equipment"],
+      applicableTypes: [
+        "Medical Equipment",
+        "Healthcare Technology",
+        "Laboratory Equipment",
+      ],
       methodology: "QCBS",
       technicalWeightPercent: 70,
       financialWeightPercent: 30,
@@ -274,7 +289,8 @@ export default function QCBSFrameworkDefinition() {
         {
           id: "EVAL-001",
           name: "Technical Specifications",
-          description: "Evaluation of equipment technical capabilities and performance",
+          description:
+            "Evaluation of equipment technical capabilities and performance",
           category: "Technical",
           weight: 40,
           maxScore: 100,
@@ -284,7 +300,8 @@ export default function QCBSFrameworkDefinition() {
             {
               id: "SUB-001",
               name: "Performance Parameters",
-              description: "Key performance indicators and technical specifications",
+              description:
+                "Key performance indicators and technical specifications",
               weight: 60,
               maxScore: 100,
               evaluationMethod: "Against specifications",
@@ -292,24 +309,32 @@ export default function QCBSFrameworkDefinition() {
                 {
                   score: 90,
                   description: "Exceeds all specified parameters",
-                  evidence: ["Test certificates", "Performance reports", "Compliance documentation"]
+                  evidence: [
+                    "Test certificates",
+                    "Performance reports",
+                    "Compliance documentation",
+                  ],
                 },
                 {
                   score: 75,
                   description: "Meets all specified parameters",
-                  evidence: ["Basic compliance documentation", "Standard test reports"]
+                  evidence: [
+                    "Basic compliance documentation",
+                    "Standard test reports",
+                  ],
                 },
                 {
                   score: 60,
                   description: "Meets minimum requirements",
-                  evidence: ["Minimum compliance documentation"]
-                }
-              ]
+                  evidence: ["Minimum compliance documentation"],
+                },
+              ],
             },
             {
               id: "SUB-002",
               name: "Quality Standards Compliance",
-              description: "Compliance with international and local quality standards",
+              description:
+                "Compliance with international and local quality standards",
               weight: 40,
               maxScore: 100,
               evaluationMethod: "Certification verification",
@@ -317,55 +342,82 @@ export default function QCBSFrameworkDefinition() {
                 {
                   score: 100,
                   description: "Full compliance with all required standards",
-                  evidence: ["ISO certifications", "FDA approvals", "Local regulatory approvals"]
+                  evidence: [
+                    "ISO certifications",
+                    "FDA approvals",
+                    "Local regulatory approvals",
+                  ],
                 },
                 {
                   score: 75,
                   description: "Compliance with essential standards",
-                  evidence: ["Basic certifications", "Essential regulatory approvals"]
-                }
-              ]
-            }
+                  evidence: [
+                    "Basic certifications",
+                    "Essential regulatory approvals",
+                  ],
+                },
+              ],
+            },
           ],
           evaluationGuidelines: [
             {
               step: 1,
-              instruction: "Review technical specifications against requirements",
+              instruction:
+                "Review technical specifications against requirements",
               considerations: ["Completeness", "Accuracy", "Feasibility"],
-              documentation: ["Technical evaluation sheet", "Compliance checklist"]
+              documentation: [
+                "Technical evaluation sheet",
+                "Compliance checklist",
+              ],
             },
             {
               step: 2,
               instruction: "Verify certification and compliance documentation",
               considerations: ["Validity", "Scope", "Authenticity"],
-              documentation: ["Certification verification report"]
-            }
+              documentation: ["Certification verification report"],
+            },
           ],
           scoringRubric: [
             {
               scoreRange: { min: 90, max: 100 },
               description: "Exceptional - Significantly exceeds requirements",
-              requirements: ["All parameters exceeded", "Premium quality features", "Advanced technology"],
-              examples: ["Latest generation equipment", "Superior performance metrics"]
+              requirements: [
+                "All parameters exceeded",
+                "Premium quality features",
+                "Advanced technology",
+              ],
+              examples: [
+                "Latest generation equipment",
+                "Superior performance metrics",
+              ],
             },
             {
               scoreRange: { min: 75, max: 89 },
               description: "Good - Meets all requirements with some advantages",
-              requirements: ["All parameters met", "Standard quality", "Proven technology"],
-              examples: ["Standard equipment", "Reliable performance"]
+              requirements: [
+                "All parameters met",
+                "Standard quality",
+                "Proven technology",
+              ],
+              examples: ["Standard equipment", "Reliable performance"],
             },
             {
               scoreRange: { min: 60, max: 74 },
               description: "Acceptable - Meets minimum requirements",
-              requirements: ["Minimum parameters met", "Basic quality", "Functional technology"],
-              examples: ["Entry-level equipment", "Basic functionality"]
-            }
-          ]
+              requirements: [
+                "Minimum parameters met",
+                "Basic quality",
+                "Functional technology",
+              ],
+              examples: ["Entry-level equipment", "Basic functionality"],
+            },
+          ],
         },
         {
           id: "EVAL-002",
           name: "Company Experience and Capability",
-          description: "Assessment of vendor experience and project implementation capability",
+          description:
+            "Assessment of vendor experience and project implementation capability",
           category: "Experience",
           weight: 30,
           maxScore: 100,
@@ -375,7 +427,8 @@ export default function QCBSFrameworkDefinition() {
             {
               id: "SUB-003",
               name: "Relevant Experience",
-              description: "Experience in similar projects and equipment supply",
+              description:
+                "Experience in similar projects and equipment supply",
               weight: 70,
               maxScore: 100,
               evaluationMethod: "Portfolio assessment",
@@ -383,24 +436,33 @@ export default function QCBSFrameworkDefinition() {
                 {
                   score: 95,
                   description: "Extensive experience with 15+ similar projects",
-                  evidence: ["Project portfolio", "Client testimonials", "Performance records"]
+                  evidence: [
+                    "Project portfolio",
+                    "Client testimonials",
+                    "Performance records",
+                  ],
                 },
                 {
                   score: 80,
                   description: "Good experience with 8-14 similar projects",
-                  evidence: ["Project list", "References", "Completion certificates"]
+                  evidence: [
+                    "Project list",
+                    "References",
+                    "Completion certificates",
+                  ],
                 },
                 {
                   score: 65,
                   description: "Adequate experience with 3-7 similar projects",
-                  evidence: ["Basic project history", "Client references"]
-                }
-              ]
+                  evidence: ["Basic project history", "Client references"],
+                },
+              ],
             },
             {
               id: "SUB-004",
               name: "Implementation Capability",
-              description: "Organizational capability and resource availability",
+              description:
+                "Organizational capability and resource availability",
               weight: 30,
               maxScore: 100,
               evaluationMethod: "Resource assessment",
@@ -408,49 +470,74 @@ export default function QCBSFrameworkDefinition() {
                 {
                   score: 90,
                   description: "Strong implementation team and resources",
-                  evidence: ["Organization chart", "Resource allocation plan", "Team CVs"]
+                  evidence: [
+                    "Organization chart",
+                    "Resource allocation plan",
+                    "Team CVs",
+                  ],
                 },
                 {
                   score: 75,
                   description: "Adequate implementation capability",
-                  evidence: ["Basic team structure", "Resource plan"]
-                }
-              ]
-            }
+                  evidence: ["Basic team structure", "Resource plan"],
+                },
+              ],
+            },
           ],
           evaluationGuidelines: [
             {
               step: 1,
               instruction: "Review project portfolio and experience",
-              considerations: ["Relevance", "Scale", "Complexity", "Success rate"],
-              documentation: ["Experience evaluation matrix"]
+              considerations: [
+                "Relevance",
+                "Scale",
+                "Complexity",
+                "Success rate",
+              ],
+              documentation: ["Experience evaluation matrix"],
             },
             {
               step: 2,
               instruction: "Assess implementation capability and resources",
-              considerations: ["Team qualifications", "Resource availability", "Methodology"],
-              documentation: ["Capability assessment report"]
-            }
+              considerations: [
+                "Team qualifications",
+                "Resource availability",
+                "Methodology",
+              ],
+              documentation: ["Capability assessment report"],
+            },
           ],
           scoringRubric: [
             {
               scoreRange: { min: 85, max: 100 },
               description: "Highly experienced with proven track record",
-              requirements: ["15+ relevant projects", "Excellent references", "Strong team"],
-              examples: ["Market leader", "Multiple successful implementations"]
+              requirements: [
+                "15+ relevant projects",
+                "Excellent references",
+                "Strong team",
+              ],
+              examples: [
+                "Market leader",
+                "Multiple successful implementations",
+              ],
             },
             {
               scoreRange: { min: 70, max: 84 },
               description: "Experienced with good capability",
-              requirements: ["8+ relevant projects", "Good references", "Qualified team"],
-              examples: ["Established provider", "Successful project history"]
-            }
-          ]
+              requirements: [
+                "8+ relevant projects",
+                "Good references",
+                "Qualified team",
+              ],
+              examples: ["Established provider", "Successful project history"],
+            },
+          ],
         },
         {
           id: "EVAL-003",
           name: "After-Sales Support and Maintenance",
-          description: "Quality and availability of after-sales support services",
+          description:
+            "Quality and availability of after-sales support services",
           category: "Technical",
           weight: 20,
           maxScore: 100,
@@ -468,19 +555,27 @@ export default function QCBSFrameworkDefinition() {
                 {
                   score: 95,
                   description: "Local service center with full capabilities",
-                  evidence: ["Service center details", "Technician qualifications", "Spare parts inventory"]
+                  evidence: [
+                    "Service center details",
+                    "Technician qualifications",
+                    "Spare parts inventory",
+                  ],
                 },
                 {
                   score: 80,
                   description: "Regional support with good coverage",
-                  evidence: ["Support network map", "Response time commitments"]
-                }
-              ]
+                  evidence: [
+                    "Support network map",
+                    "Response time commitments",
+                  ],
+                },
+              ],
             },
             {
               id: "SUB-006",
               name: "Warranty and Maintenance Terms",
-              description: "Comprehensiveness of warranty and maintenance offerings",
+              description:
+                "Comprehensiveness of warranty and maintenance offerings",
               weight: 40,
               maxScore: 100,
               evaluationMethod: "Terms comparison",
@@ -488,27 +583,38 @@ export default function QCBSFrameworkDefinition() {
                 {
                   score: 90,
                   description: "Comprehensive warranty with excellent terms",
-                  evidence: ["Warranty certificate", "Maintenance contract terms"]
-                }
-              ]
-            }
+                  evidence: [
+                    "Warranty certificate",
+                    "Maintenance contract terms",
+                  ],
+                },
+              ],
+            },
           ],
           evaluationGuidelines: [
             {
               step: 1,
               instruction: "Evaluate support infrastructure and capabilities",
-              considerations: ["Local presence", "Technical expertise", "Response times"],
-              documentation: ["Support evaluation form"]
-            }
+              considerations: [
+                "Local presence",
+                "Technical expertise",
+                "Response times",
+              ],
+              documentation: ["Support evaluation form"],
+            },
           ],
           scoringRubric: [
             {
               scoreRange: { min: 85, max: 100 },
               description: "Excellent support with local presence",
-              requirements: ["Local service center", "24/7 support", "Comprehensive warranty"],
-              examples: ["Full local support infrastructure"]
-            }
-          ]
+              requirements: [
+                "Local service center",
+                "24/7 support",
+                "Comprehensive warranty",
+              ],
+              examples: ["Full local support infrastructure"],
+            },
+          ],
         },
         {
           id: "EVAL-004",
@@ -531,65 +637,83 @@ export default function QCBSFrameworkDefinition() {
                 {
                   score: 100,
                   description: "Full regulatory compliance",
-                  evidence: ["All required licenses", "Regulatory certificates", "Compliance declarations"]
+                  evidence: [
+                    "All required licenses",
+                    "Regulatory certificates",
+                    "Compliance declarations",
+                  ],
                 },
                 {
                   score: 0,
                   description: "Non-compliance or missing documents",
-                  evidence: ["Missing certifications", "Expired licenses"]
-                }
-              ]
-            }
+                  evidence: ["Missing certifications", "Expired licenses"],
+                },
+              ],
+            },
           ],
           evaluationGuidelines: [
             {
               step: 1,
               instruction: "Verify all regulatory compliance requirements",
-              considerations: ["Document validity", "Scope coverage", "Expiration dates"],
-              documentation: ["Compliance checklist", "Verification report"]
-            }
+              considerations: [
+                "Document validity",
+                "Scope coverage",
+                "Expiration dates",
+              ],
+              documentation: ["Compliance checklist", "Verification report"],
+            },
           ],
           scoringRubric: [
             {
               scoreRange: { min: 100, max: 100 },
               description: "Fully compliant - All requirements met",
-              requirements: ["All documents valid", "Full regulatory compliance"],
-              examples: ["Complete documentation package"]
+              requirements: [
+                "All documents valid",
+                "Full regulatory compliance",
+              ],
+              examples: ["Complete documentation package"],
             },
             {
               scoreRange: { min: 0, max: 0 },
               description: "Non-compliant - Disqualified",
               requirements: ["Missing or invalid documents"],
-              examples: ["Incomplete submission", "Expired certifications"]
-            }
-          ]
-        }
+              examples: ["Incomplete submission", "Expired certifications"],
+            },
+          ],
+        },
       ],
       financialEvaluationMethod: {
         method: "Lowest Cost",
-        normalizationFormula: "Financial Score = (Lowest Price / Evaluated Price) × 100",
+        normalizationFormula:
+          "Financial Score = (Lowest Price / Evaluated Price) × 100",
         adjustmentFactors: [
           {
             type: "Tax",
             formula: "Price + (Tax Rate × Price)",
-            applicableConditions: ["Local suppliers", "Import duties"]
+            applicableConditions: ["Local suppliers", "Import duties"],
           },
           {
             type: "Currency",
             formula: "Price × Exchange Rate (Central Bank rate on bid opening)",
-            applicableConditions: ["Foreign currency bids"]
-          }
+            applicableConditions: ["Foreign currency bids"],
+          },
         ],
-        currencyHandling: "Convert to Naira using Central Bank rate on bid opening date",
-        taxConsiderations: "Include all applicable taxes and duties in evaluation"
+        currencyHandling:
+          "Convert to Naira using Central Bank rate on bid opening date",
+        taxConsiderations:
+          "Include all applicable taxes and duties in evaluation",
       },
       combinationFormula: {
-        formula: "Combined Score = (Technical Score × Technical Weight) + (Financial Score × Financial Weight)",
+        formula:
+          "Combined Score = (Technical Score × Technical Weight) + (Financial Score × Financial Weight)",
         technicalComponent: "Technical Score × 0.70",
         financialComponent: "Financial Score × 0.30",
-        adjustments: ["Only technically qualified bids (≥75%) are financially evaluated"],
+        adjustments: [
+          "Only technically qualified bids (≥75%) are financially evaluated",
+        ],
         roundingRule: "Round to 2 decimal places",
-        tieBreakingRule: "Higher technical score wins; if tied, lowest price wins"
+        tieBreakingRule:
+          "Higher technical score wins; if tied, lowest price wins",
       },
       qualificationCriteria: [
         {
@@ -598,8 +722,16 @@ export default function QCBSFrameworkDefinition() {
           description: "Valid business registration and tax clearance",
           mandatory: true,
           verificationMethod: "Document verification",
-          acceptableDocs: ["Certificate of Incorporation", "Tax Clearance Certificate", "VAT Registration"],
-          rejectionReasons: ["Expired documents", "Invalid registration", "Missing certificates"]
+          acceptableDocs: [
+            "Certificate of Incorporation",
+            "Tax Clearance Certificate",
+            "VAT Registration",
+          ],
+          rejectionReasons: [
+            "Expired documents",
+            "Invalid registration",
+            "Missing certificates",
+          ],
         },
         {
           id: "QUAL-002",
@@ -607,9 +739,17 @@ export default function QCBSFrameworkDefinition() {
           description: "Demonstrated financial capacity for project execution",
           mandatory: true,
           verificationMethod: "Financial statement analysis",
-          acceptableDocs: ["Audited Financial Statements", "Bank statements", "Credit references"],
-          rejectionReasons: ["Insufficient liquidity", "Poor financial health", "Missing financial data"]
-        }
+          acceptableDocs: [
+            "Audited Financial Statements",
+            "Bank statements",
+            "Credit references",
+          ],
+          rejectionReasons: [
+            "Insufficient liquidity",
+            "Poor financial health",
+            "Missing financial data",
+          ],
+        },
       ],
       consensusRules: [
         {
@@ -617,14 +757,14 @@ export default function QCBSFrameworkDefinition() {
           method: "Unanimous",
           conflictResolution: "Committee discussion until consensus reached",
           timeLimit: 24,
-          escalationTrigger: "No consensus after 24 hours"
+          escalationTrigger: "No consensus after 24 hours",
         },
         {
           stage: "Technical",
           method: "Individual",
           conflictResolution: "Individual scores averaged, outliers discussed",
           timeLimit: 72,
-          escalationTrigger: "Score variance >20 points"
+          escalationTrigger: "Score variance >20 points",
         },
         {
           stage: "Financial",
@@ -632,8 +772,8 @@ export default function QCBSFrameworkDefinition() {
           threshold: 60,
           conflictResolution: "Majority decision prevails",
           timeLimit: 24,
-          escalationTrigger: "No majority consensus"
-        }
+          escalationTrigger: "No majority consensus",
+        },
       ],
       escalationProcedures: [
         {
@@ -641,43 +781,69 @@ export default function QCBSFrameworkDefinition() {
           level: 1,
           authority: "Committee Chairperson",
           timeframe: 12,
-          actions: ["Facilitate discussion", "Seek clarification", "Request re-evaluation"],
-          documentation: ["Escalation report", "Resolution summary"]
+          actions: [
+            "Facilitate discussion",
+            "Seek clarification",
+            "Request re-evaluation",
+          ],
+          documentation: ["Escalation report", "Resolution summary"],
         },
         {
           trigger: "No consensus after time limit",
           level: 2,
           authority: "Procurement Director",
           timeframe: 24,
-          actions: ["Review evaluation", "Provide guidance", "Make final decision"],
-          documentation: ["Director's decision report"]
-        }
+          actions: [
+            "Review evaluation",
+            "Provide guidance",
+            "Make final decision",
+          ],
+          documentation: ["Director's decision report"],
+        },
       ],
       auditRequirements: [
         {
           stage: "Evaluation Process",
           frequency: "Every evaluation",
           auditor: "Internal Audit Department",
-          scope: ["Process compliance", "Documentation completeness", "Score accuracy"],
+          scope: [
+            "Process compliance",
+            "Documentation completeness",
+            "Score accuracy",
+          ],
           deliverables: ["Audit report", "Compliance certificate"],
-          compliance: ["All evaluation steps documented", "Scores properly calculated", "Consensus properly reached"]
-        }
-      ]
+          compliance: [
+            "All evaluation steps documented",
+            "Scores properly calculated",
+            "Consensus properly reached",
+          ],
+        },
+      ],
     };
 
     // Customize for different ministries
     if (ministryCode === "MOWI") {
       baseFramework.name = "Infrastructure QCBS Framework";
-      baseFramework.description = "Quality and Cost-Based Selection framework for infrastructure procurement";
+      baseFramework.description =
+        "Quality and Cost-Based Selection framework for infrastructure procurement";
       baseFramework.category = "Infrastructure";
-      baseFramework.applicableTypes = ["Road Construction", "Bridge Construction", "Building Construction"];
+      baseFramework.applicableTypes = [
+        "Road Construction",
+        "Bridge Construction",
+        "Building Construction",
+      ];
       baseFramework.technicalWeightPercent = 75;
       baseFramework.financialWeightPercent = 25;
     } else if (ministryCode === "MOE") {
       baseFramework.name = "Educational Materials QCBS Framework";
-      baseFramework.description = "Quality and Cost-Based Selection framework for educational procurement";
+      baseFramework.description =
+        "Quality and Cost-Based Selection framework for educational procurement";
       baseFramework.category = "Educational";
-      baseFramework.applicableTypes = ["Educational Technology", "School Furniture", "Learning Materials"];
+      baseFramework.applicableTypes = [
+        "Educational Technology",
+        "School Furniture",
+        "Learning Materials",
+      ];
       baseFramework.technicalWeightPercent = 65;
       baseFramework.financialWeightPercent = 35;
     }
@@ -701,25 +867,30 @@ export default function QCBSFrameworkDefinition() {
       evaluationCriteria: [],
       financialEvaluationMethod: {
         method: "Lowest Cost",
-        normalizationFormula: "Financial Score = (Lowest Price / Evaluated Price) × 100",
+        normalizationFormula:
+          "Financial Score = (Lowest Price / Evaluated Price) × 100",
         adjustmentFactors: [],
         currencyHandling: "Convert to Naira using Central Bank rate",
-        taxConsiderations: "Include all applicable taxes"
+        taxConsiderations: "Include all applicable taxes",
       },
       combinationFormula: {
-        formula: "Combined Score = (Technical Score × Technical Weight) + (Financial Score × Financial Weight)",
+        formula:
+          "Combined Score = (Technical Score × Technical Weight) + (Financial Score × Financial Weight)",
         technicalComponent: `Technical Score × ${frameworkForm.technicalWeightPercent / 100}`,
         financialComponent: `Financial Score × ${frameworkForm.financialWeightPercent / 100}`,
-        adjustments: [`Only technically qualified bids (≥${frameworkForm.technicalPassingScore}%) are financially evaluated`],
+        adjustments: [
+          `Only technically qualified bids (≥${frameworkForm.technicalPassingScore}%) are financially evaluated`,
+        ],
         roundingRule: "Round to 2 decimal places",
-        tieBreakingRule: "Higher technical score wins; if tied, lowest price wins"
+        tieBreakingRule:
+          "Higher technical score wins; if tied, lowest price wins",
       },
       qualificationCriteria: [],
       consensusRules: [],
       escalationProcedures: [],
       auditRequirements: [],
-      createdDate: new Date().toISOString().split('T')[0],
-      lastModified: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
+      lastModified: new Date().toISOString().split("T")[0],
       status: "Draft",
       version: frameworkForm.version,
       usageCount: 0,
@@ -751,17 +922,25 @@ export default function QCBSFrameworkDefinition() {
       Active: "default",
       Archived: "outline",
     };
-    return <Badge variant={variants[status as keyof typeof variants] as any}>{status}</Badge>;
+    return (
+      <Badge variant={variants[status as keyof typeof variants] as any}>
+        {status}
+      </Badge>
+    );
   };
 
   const getMethodologyBadge = (methodology: string) => {
     const variants = {
       QCBS: "default",
       QBS: "secondary",
-      LCS: "outline", 
+      LCS: "outline",
       FBS: "destructive",
     };
-    return <Badge variant={variants[methodology as keyof typeof variants] as any}>{methodology}</Badge>;
+    return (
+      <Badge variant={variants[methodology as keyof typeof variants] as any}>
+        {methodology}
+      </Badge>
+    );
   };
 
   const calculateTotalWeight = (criteria: EvaluationCriteria[]): number => {
@@ -772,10 +951,18 @@ export default function QCBSFrameworkDefinition() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">QCBS Framework Definition</h2>
-          <p className="text-gray-600">Define evaluation frameworks and scoring methods for procurement planning</p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            QCBS Framework Definition
+          </h2>
+          <p className="text-gray-600">
+            Define evaluation frameworks and scoring methods for procurement
+            planning
+          </p>
         </div>
-        <Button onClick={() => setShowFrameworkModal(true)} className="bg-primary hover:bg-primary/90">
+        <Button
+          onClick={() => setShowFrameworkModal(true)}
+          className="bg-primary hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4 mr-2" />
           New QCBS Framework
         </Button>
@@ -800,51 +987,78 @@ export default function QCBSFrameworkDefinition() {
         <TabsContent value="frameworks" className="space-y-4">
           <div className="grid gap-4">
             {frameworks.map((framework) => (
-              <Card key={framework.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={framework.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg">{framework.name}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {framework.name}
+                        </CardTitle>
                         {getStatusBadge(framework.status)}
                         {getMethodologyBadge(framework.methodology)}
                         <Badge variant="outline">v{framework.version}</Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">{framework.description}</p>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {framework.description}
+                      </p>
                       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Technical Weight</Label>
-                          <p className="text-sm font-semibold">{framework.technicalWeightPercent}%</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Technical Weight
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {framework.technicalWeightPercent}%
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Financial Weight</Label>
-                          <p className="text-sm font-semibold">{framework.financialWeightPercent}%</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Financial Weight
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {framework.financialWeightPercent}%
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Passing Score</Label>
-                          <p className="text-sm font-semibold">{framework.technicalPassingScore}%</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Passing Score
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {framework.technicalPassingScore}%
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Criteria</Label>
-                          <p className="text-sm font-semibold">{framework.evaluationCriteria.length}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Criteria
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {framework.evaluationCriteria.length}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Usage</Label>
-                          <p className="text-sm font-semibold">{framework.usageCount}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Usage
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {framework.usageCount}
+                          </p>
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => setSelectedFramework(framework)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => setEditingFramework(framework)}
                       >
                         <Edit className="h-4 w-4" />
@@ -863,16 +1077,26 @@ export default function QCBSFrameworkDefinition() {
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span>Technical Weight</span>
-                            <span className="font-medium">{framework.technicalWeightPercent}%</span>
+                            <span className="font-medium">
+                              {framework.technicalWeightPercent}%
+                            </span>
                           </div>
-                          <Progress value={framework.technicalWeightPercent} className="h-2" />
+                          <Progress
+                            value={framework.technicalWeightPercent}
+                            className="h-2"
+                          />
                         </div>
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span>Financial Weight</span>
-                            <span className="font-medium">{framework.financialWeightPercent}%</span>
+                            <span className="font-medium">
+                              {framework.financialWeightPercent}%
+                            </span>
                           </div>
-                          <Progress value={framework.financialWeightPercent} className="h-2" />
+                          <Progress
+                            value={framework.financialWeightPercent}
+                            className="h-2"
+                          />
                         </div>
                       </div>
                     </div>
@@ -880,32 +1104,54 @@ export default function QCBSFrameworkDefinition() {
                     <div>
                       <h4 className="font-medium mb-2 flex items-center gap-2">
                         <FileSpreadsheet className="h-4 w-4" />
-                        Evaluation Criteria ({framework.evaluationCriteria.length})
+                        Evaluation Criteria (
+                        {framework.evaluationCriteria.length})
                       </h4>
                       <div className="space-y-2">
-                        {framework.evaluationCriteria.slice(0, 3).map((criteria) => (
-                          <div key={criteria.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">{criteria.name}</span>
-                              <Badge variant="outline" className="text-xs">{criteria.category}</Badge>
+                        {framework.evaluationCriteria
+                          .slice(0, 3)
+                          .map((criteria) => (
+                            <div
+                              key={criteria.id}
+                              className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium">
+                                  {criteria.name}
+                                </span>
+                                <Badge variant="outline" className="text-xs">
+                                  {criteria.category}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium">
+                                  {criteria.weight}%
+                                </span>
+                                <Badge variant="secondary" className="text-xs">
+                                  Pass: {criteria.passingScore}%
+                                </Badge>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium">{criteria.weight}%</span>
-                              <Badge variant="secondary" className="text-xs">
-                                Pass: {criteria.passingScore}%
-                              </Badge>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
                         {framework.evaluationCriteria.length > 3 && (
                           <div className="text-sm text-gray-500 text-center py-1">
-                            +{framework.evaluationCriteria.length - 3} more criteria
+                            +{framework.evaluationCriteria.length - 3} more
+                            criteria
                           </div>
                         )}
                         <div className="flex justify-between items-center p-2 bg-blue-50 rounded font-medium">
                           <span>Total Weight</span>
-                          <span className={calculateTotalWeight(framework.evaluationCriteria) === 100 ? "text-green-600" : "text-red-600"}>
-                            {calculateTotalWeight(framework.evaluationCriteria)}%
+                          <span
+                            className={
+                              calculateTotalWeight(
+                                framework.evaluationCriteria,
+                              ) === 100
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }
+                          >
+                            {calculateTotalWeight(framework.evaluationCriteria)}
+                            %
                           </span>
                         </div>
                       </div>
@@ -916,7 +1162,9 @@ export default function QCBSFrameworkDefinition() {
                         <h4 className="font-medium mb-2">Applicable Types</h4>
                         <div className="flex flex-wrap gap-2">
                           {framework.applicableTypes.map((type) => (
-                            <Badge key={type} variant="outline">{type}</Badge>
+                            <Badge key={type} variant="outline">
+                              {type}
+                            </Badge>
                           ))}
                         </div>
                       </div>
@@ -946,31 +1194,52 @@ export default function QCBSFrameworkDefinition() {
                     </h4>
                     <div className="space-y-3">
                       <div className="flex items-start gap-3 p-3 bg-gray-50 rounded">
-                        <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">1</div>
+                        <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">
+                          1
+                        </div>
                         <div>
                           <div className="font-medium">Qualification</div>
-                          <div className="text-sm text-gray-600">Verify basic eligibility and mandatory requirements</div>
+                          <div className="text-sm text-gray-600">
+                            Verify basic eligibility and mandatory requirements
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-start gap-3 p-3 bg-gray-50 rounded">
-                        <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">2</div>
+                        <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">
+                          2
+                        </div>
                         <div>
-                          <div className="font-medium">Technical Evaluation</div>
-                          <div className="text-sm text-gray-600">Score technical proposals against defined criteria</div>
+                          <div className="font-medium">
+                            Technical Evaluation
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            Score technical proposals against defined criteria
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-start gap-3 p-3 bg-gray-50 rounded">
-                        <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">3</div>
+                        <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">
+                          3
+                        </div>
                         <div>
-                          <div className="font-medium">Financial Evaluation</div>
-                          <div className="text-sm text-gray-600">Evaluate only technically qualified proposals</div>
+                          <div className="font-medium">
+                            Financial Evaluation
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            Evaluate only technically qualified proposals
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-start gap-3 p-3 bg-gray-50 rounded">
-                        <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">4</div>
+                        <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">
+                          4
+                        </div>
                         <div>
                           <div className="font-medium">Combined Scoring</div>
-                          <div className="text-sm text-gray-600">Calculate weighted combination of technical and financial scores</div>
+                          <div className="text-sm text-gray-600">
+                            Calculate weighted combination of technical and
+                            financial scores
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -993,18 +1262,24 @@ export default function QCBSFrameworkDefinition() {
                           <div>FW = Financial Weight (e.g., 0.30)</div>
                         </div>
                       </div>
-                      
+
                       <div className="p-4 bg-green-50 rounded-lg">
-                        <div className="font-medium text-green-800 mb-2">Financial Score Calculation</div>
+                        <div className="font-medium text-green-800 mb-2">
+                          Financial Score Calculation
+                        </div>
                         <div className="font-mono text-sm text-green-700">
-                          Financial Score = (Lowest Price ÷ Evaluated Price) × 100
+                          Financial Score = (Lowest Price ÷ Evaluated Price) ×
+                          100
                         </div>
                       </div>
 
                       <div className="p-4 bg-orange-50 rounded-lg">
-                        <div className="font-medium text-orange-800 mb-2">Qualification Threshold</div>
+                        <div className="font-medium text-orange-800 mb-2">
+                          Qualification Threshold
+                        </div>
                         <div className="text-sm text-orange-700">
-                          Only bids scoring ≥75% technically proceed to financial evaluation
+                          Only bids scoring ≥75% technically proceed to
+                          financial evaluation
                         </div>
                       </div>
                     </div>
@@ -1020,21 +1295,28 @@ export default function QCBSFrameworkDefinition() {
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium mb-1">Technical Quality Focus</div>
+                      <div className="font-medium mb-1">
+                        Technical Quality Focus
+                      </div>
                       <div className="text-sm text-gray-600">
-                        Higher weight on technical evaluation ensures quality procurement
+                        Higher weight on technical evaluation ensures quality
+                        procurement
                       </div>
                     </div>
                     <div className="p-3 border rounded-lg">
                       <div className="font-medium mb-1">Two-Stage Process</div>
                       <div className="text-sm text-gray-600">
-                        Technical qualification before financial evaluation prevents low-quality bids
+                        Technical qualification before financial evaluation
+                        prevents low-quality bids
                       </div>
                     </div>
                     <div className="p-3 border rounded-lg">
-                      <div className="font-medium mb-1">Best Value Selection</div>
+                      <div className="font-medium mb-1">
+                        Best Value Selection
+                      </div>
                       <div className="text-sm text-gray-600">
-                        Combines quality and cost to achieve best value for money
+                        Combines quality and cost to achieve best value for
+                        money
                       </div>
                     </div>
                   </div>
@@ -1049,28 +1331,38 @@ export default function QCBSFrameworkDefinition() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Frameworks</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Total Frameworks
+                  </CardTitle>
                   <Scale className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{frameworks.length}</div>
                   <p className="text-xs text-muted-foreground">
-                    {frameworks.filter(f => f.status === "Active").length} active
+                    {frameworks.filter((f) => f.status === "Active").length}{" "}
+                    active
                   </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Avg Technical Weight</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Avg Technical Weight
+                  </CardTitle>
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {frameworks.length > 0 
-                      ? Math.round(frameworks.reduce((sum, f) => sum + f.technicalWeightPercent, 0) / frameworks.length)
-                      : 0
-                    }%
+                    {frameworks.length > 0
+                      ? Math.round(
+                          frameworks.reduce(
+                            (sum, f) => sum + f.technicalWeightPercent,
+                            0,
+                          ) / frameworks.length,
+                        )
+                      : 0}
+                    %
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Across all frameworks
@@ -1080,7 +1372,9 @@ export default function QCBSFrameworkDefinition() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Usage</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Total Usage
+                  </CardTitle>
                   <Hash className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -1095,15 +1389,21 @@ export default function QCBSFrameworkDefinition() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Avg Criteria</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Avg Criteria
+                  </CardTitle>
                   <FileSpreadsheet className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {frameworks.length > 0 
-                      ? Math.round(frameworks.reduce((sum, f) => sum + f.evaluationCriteria.length, 0) / frameworks.length)
-                      : 0
-                    }
+                    {frameworks.length > 0
+                      ? Math.round(
+                          frameworks.reduce(
+                            (sum, f) => sum + f.evaluationCriteria.length,
+                            0,
+                          ) / frameworks.length,
+                        )
+                      : 0}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Criteria per framework
@@ -1119,18 +1419,30 @@ export default function QCBSFrameworkDefinition() {
               <CardContent>
                 <div className="space-y-4">
                   {frameworks.map((framework) => (
-                    <div key={framework.id} className="flex items-center justify-between">
+                    <div
+                      key={framework.id}
+                      className="flex items-center justify-between"
+                    >
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{framework.name}</span>
                         {getStatusBadge(framework.status)}
                         {getMethodologyBadge(framework.methodology)}
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-sm text-gray-600">{framework.usageCount} uses</span>
+                        <span className="text-sm text-gray-600">
+                          {framework.usageCount} uses
+                        </span>
                         <div className="w-32">
-                          <Progress 
-                            value={(framework.usageCount / Math.max(...frameworks.map(f => f.usageCount), 1)) * 100} 
-                            className="h-2" 
+                          <Progress
+                            value={
+                              (framework.usageCount /
+                                Math.max(
+                                  ...frameworks.map((f) => f.usageCount),
+                                  1,
+                                )) *
+                              100
+                            }
+                            className="h-2"
                           />
                         </div>
                       </div>
@@ -1155,7 +1467,9 @@ export default function QCBSFrameworkDefinition() {
               <Input
                 id="framework-name"
                 value={frameworkForm.name}
-                onChange={(e) => setFrameworkForm({...frameworkForm, name: e.target.value})}
+                onChange={(e) =>
+                  setFrameworkForm({ ...frameworkForm, name: e.target.value })
+                }
                 placeholder="e.g., Medical Equipment QCBS Framework"
               />
             </div>
@@ -1164,7 +1478,12 @@ export default function QCBSFrameworkDefinition() {
               <Textarea
                 id="framework-description"
                 value={frameworkForm.description}
-                onChange={(e) => setFrameworkForm({...frameworkForm, description: e.target.value})}
+                onChange={(e) =>
+                  setFrameworkForm({
+                    ...frameworkForm,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Describe the framework purpose and scope"
                 rows={3}
               />
@@ -1175,21 +1494,39 @@ export default function QCBSFrameworkDefinition() {
                 <Input
                   id="category"
                   value={frameworkForm.category}
-                  onChange={(e) => setFrameworkForm({...frameworkForm, category: e.target.value})}
+                  onChange={(e) =>
+                    setFrameworkForm({
+                      ...frameworkForm,
+                      category: e.target.value,
+                    })
+                  }
                   placeholder="e.g., Medical Equipment"
                 />
               </div>
               <div>
                 <Label htmlFor="methodology">Methodology</Label>
-                <Select value={frameworkForm.methodology} onValueChange={(value: any) => setFrameworkForm({...frameworkForm, methodology: value})}>
+                <Select
+                  value={frameworkForm.methodology}
+                  onValueChange={(value: any) =>
+                    setFrameworkForm({ ...frameworkForm, methodology: value })
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="QCBS">Quality and Cost-Based Selection (QCBS)</SelectItem>
-                    <SelectItem value="QBS">Quality-Based Selection (QBS)</SelectItem>
-                    <SelectItem value="LCS">Least Cost Selection (LCS)</SelectItem>
-                    <SelectItem value="FBS">Fixed Budget Selection (FBS)</SelectItem>
+                    <SelectItem value="QCBS">
+                      Quality and Cost-Based Selection (QCBS)
+                    </SelectItem>
+                    <SelectItem value="QBS">
+                      Quality-Based Selection (QBS)
+                    </SelectItem>
+                    <SelectItem value="LCS">
+                      Least Cost Selection (LCS)
+                    </SelectItem>
+                    <SelectItem value="FBS">
+                      Fixed Budget Selection (FBS)
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1205,11 +1542,13 @@ export default function QCBSFrameworkDefinition() {
                   <div className="space-y-2">
                     <Slider
                       value={[frameworkForm.technicalWeightPercent]}
-                      onValueChange={(value) => setFrameworkForm({
-                        ...frameworkForm,
-                        technicalWeightPercent: value[0],
-                        financialWeightPercent: 100 - value[0]
-                      })}
+                      onValueChange={(value) =>
+                        setFrameworkForm({
+                          ...frameworkForm,
+                          technicalWeightPercent: value[0],
+                          financialWeightPercent: 100 - value[0],
+                        })
+                      }
                       max={100}
                       min={0}
                       step={5}
@@ -1217,7 +1556,9 @@ export default function QCBSFrameworkDefinition() {
                     />
                     <div className="flex justify-between text-xs text-gray-500">
                       <span>0%</span>
-                      <span className="font-medium">{frameworkForm.technicalWeightPercent}%</span>
+                      <span className="font-medium">
+                        {frameworkForm.technicalWeightPercent}%
+                      </span>
                       <span>100%</span>
                     </div>
                   </div>
@@ -1227,11 +1568,13 @@ export default function QCBSFrameworkDefinition() {
                   <div className="space-y-2">
                     <Slider
                       value={[frameworkForm.financialWeightPercent]}
-                      onValueChange={(value) => setFrameworkForm({
-                        ...frameworkForm,
-                        financialWeightPercent: value[0],
-                        technicalWeightPercent: 100 - value[0]
-                      })}
+                      onValueChange={(value) =>
+                        setFrameworkForm({
+                          ...frameworkForm,
+                          financialWeightPercent: value[0],
+                          technicalWeightPercent: 100 - value[0],
+                        })
+                      }
                       max={100}
                       min={0}
                       step={5}
@@ -1239,7 +1582,9 @@ export default function QCBSFrameworkDefinition() {
                     />
                     <div className="flex justify-between text-xs text-gray-500">
                       <span>0%</span>
-                      <span className="font-medium">{frameworkForm.financialWeightPercent}%</span>
+                      <span className="font-medium">
+                        {frameworkForm.financialWeightPercent}%
+                      </span>
                       <span>100%</span>
                     </div>
                   </div>
@@ -1247,19 +1592,34 @@ export default function QCBSFrameworkDefinition() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="passing-score">Technical Passing Score (%)</Label>
+                  <Label htmlFor="passing-score">
+                    Technical Passing Score (%)
+                  </Label>
                   <Input
                     id="passing-score"
                     type="number"
                     value={frameworkForm.technicalPassingScore}
-                    onChange={(e) => setFrameworkForm({...frameworkForm, technicalPassingScore: parseInt(e.target.value) || 75})}
+                    onChange={(e) =>
+                      setFrameworkForm({
+                        ...frameworkForm,
+                        technicalPassingScore: parseInt(e.target.value) || 75,
+                      })
+                    }
                     min="0"
                     max="100"
                   />
                 </div>
                 <div>
                   <Label htmlFor="scoring-scale">Scoring Scale</Label>
-                  <Select value={frameworkForm.scoringScale.toString()} onValueChange={(value) => setFrameworkForm({...frameworkForm, scoringScale: parseInt(value)})}>
+                  <Select
+                    value={frameworkForm.scoringScale.toString()}
+                    onValueChange={(value) =>
+                      setFrameworkForm({
+                        ...frameworkForm,
+                        scoringScale: parseInt(value),
+                      })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -1274,22 +1634,32 @@ export default function QCBSFrameworkDefinition() {
             </div>
 
             <div>
-              <Label htmlFor="applicable-types">Applicable Procurement Types (comma-separated)</Label>
+              <Label htmlFor="applicable-types">
+                Applicable Procurement Types (comma-separated)
+              </Label>
               <Input
                 id="applicable-types"
                 value={frameworkForm.applicableTypes.join(", ")}
-                onChange={(e) => setFrameworkForm({...frameworkForm, applicableTypes: e.target.value.split(", ").filter(s => s.trim())})}
+                onChange={(e) =>
+                  setFrameworkForm({
+                    ...frameworkForm,
+                    applicableTypes: e.target.value
+                      .split(", ")
+                      .filter((s) => s.trim()),
+                  })
+                }
                 placeholder="e.g., Medical Equipment, Healthcare Technology"
               />
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowFrameworkModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowFrameworkModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={createFramework}>
-                Create Framework
-              </Button>
+              <Button onClick={createFramework}>Create Framework</Button>
             </div>
           </div>
         </DialogContent>

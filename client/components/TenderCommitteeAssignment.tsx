@@ -70,7 +70,13 @@ interface TenderCommitteeAssignment {
     startDate: string;
     endDate: string;
   };
-  status: "Draft" | "Assigned" | "COI_Pending" | "Active" | "Completed" | "Suspended";
+  status:
+    | "Draft"
+    | "Assigned"
+    | "COI_Pending"
+    | "Active"
+    | "Completed"
+    | "Suspended";
   workspaceAccess: WorkspaceAccess;
   coiDeclarations: COIDeclaration[];
   assignmentNotes: string;
@@ -94,7 +100,13 @@ interface AssignedMember {
   expertise: string[];
   experience: number;
   assignmentDate: string;
-  status: "Invited" | "Accepted" | "Declined" | "COI_Declared" | "Disqualified" | "Active";
+  status:
+    | "Invited"
+    | "Accepted"
+    | "Declined"
+    | "COI_Declared"
+    | "Disqualified"
+    | "Active";
   invitationSent: boolean;
   responseDate?: string;
   replacementFor?: string;
@@ -200,9 +212,12 @@ const STORAGE_KEYS = {
 };
 
 export default function TenderCommitteeAssignment() {
-  const [assignments, setAssignments] = useState<TenderCommitteeAssignment[]>([]);
+  const [assignments, setAssignments] = useState<TenderCommitteeAssignment[]>(
+    [],
+  );
   const [memberPool, setMemberPool] = useState<MemberPool[]>([]);
-  const [selectedAssignment, setSelectedAssignment] = useState<TenderCommitteeAssignment | null>(null);
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<TenderCommitteeAssignment | null>(null);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [showCOIModal, setShowCOIModal] = useState(false);
   const [showMemberSearchModal, setShowMemberSearchModal] = useState(false);
@@ -235,9 +250,11 @@ export default function TenderCommitteeAssignment() {
 
   const loadData = () => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
-      
+
       // Load tender committee assignments
       const assignmentsKey = `${ministryCode}_${STORAGE_KEYS.TENDER_ASSIGNMENTS}`;
       const storedAssignments = localStorage.getItem(assignmentsKey);
@@ -266,7 +283,9 @@ export default function TenderCommitteeAssignment() {
 
   const saveData = (type: string, data: any) => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${type}`;
       localStorage.setItem(storageKey, JSON.stringify(data));
@@ -275,7 +294,9 @@ export default function TenderCommitteeAssignment() {
     }
   };
 
-  const createSampleAssignments = (ministryCode: string): TenderCommitteeAssignment[] => {
+  const createSampleAssignments = (
+    ministryCode: string,
+  ): TenderCommitteeAssignment[] => {
     const baseAssignment: TenderCommitteeAssignment = {
       id: "TCA-2024-001",
       tenderId: "MOH-2024-001",
@@ -290,7 +311,8 @@ export default function TenderCommitteeAssignment() {
         endDate: "2024-02-28",
       },
       status: "Active",
-      assignmentNotes: "Committee assigned for hospital equipment procurement evaluation",
+      assignmentNotes:
+        "Committee assigned for hospital equipment procurement evaluation",
       approvalRequired: true,
       approvedBy: "Permanent Secretary",
       approvedDate: "2024-02-12",
@@ -306,7 +328,11 @@ export default function TenderCommitteeAssignment() {
           memberPhone: "08012345678",
           department: "Medical Services",
           qualifications: ["MBBS", "MSc Medical Equipment Technology"],
-          expertise: ["Medical Equipment", "Clinical Engineering", "Quality Assurance"],
+          expertise: [
+            "Medical Equipment",
+            "Clinical Engineering",
+            "Quality Assurance",
+          ],
           experience: 18,
           assignmentDate: "2024-02-10",
           status: "Active",
@@ -336,8 +362,15 @@ export default function TenderCommitteeAssignment() {
           memberEmail: "musa.ibrahim@health.kano.gov.ng",
           memberPhone: "08012345679",
           department: "Biomedical Engineering",
-          qualifications: ["BSc Biomedical Engineering", "MSc Engineering Management"],
-          expertise: ["Biomedical Engineering", "Equipment Procurement", "Technical Evaluation"],
+          qualifications: [
+            "BSc Biomedical Engineering",
+            "MSc Engineering Management",
+          ],
+          expertise: [
+            "Biomedical Engineering",
+            "Equipment Procurement",
+            "Technical Evaluation",
+          ],
           experience: 12,
           assignmentDate: "2024-02-10",
           status: "Active",
@@ -368,7 +401,11 @@ export default function TenderCommitteeAssignment() {
           memberPhone: "08012345680",
           department: "Hospital Management",
           qualifications: ["MBBS", "MBA Healthcare Management"],
-          expertise: ["Hospital Management", "Healthcare Administration", "Budget Planning"],
+          expertise: [
+            "Hospital Management",
+            "Healthcare Administration",
+            "Budget Planning",
+          ],
           experience: 10,
           assignmentDate: "2024-02-10",
           status: "COI_Declared",
@@ -399,7 +436,11 @@ export default function TenderCommitteeAssignment() {
           memberPhone: "08012345681",
           department: "Finance Department",
           qualifications: ["BSc Accounting", "ACA", "MBA Finance"],
-          expertise: ["Financial Analysis", "Cost-Benefit Analysis", "Budget Planning"],
+          expertise: [
+            "Financial Analysis",
+            "Cost-Benefit Analysis",
+            "Budget Planning",
+          ],
           experience: 14,
           assignmentDate: "2024-02-10",
           status: "Active",
@@ -429,8 +470,15 @@ export default function TenderCommitteeAssignment() {
           memberEmail: "hauwa.musa@procurement.kano.gov.ng",
           memberPhone: "08012345682",
           department: "Procurement Department",
-          qualifications: ["BSc Business Administration", "Procurement Certification"],
-          expertise: ["Procurement Regulations", "Contract Management", "Vendor Assessment"],
+          qualifications: [
+            "BSc Business Administration",
+            "Procurement Certification",
+          ],
+          expertise: [
+            "Procurement Regulations",
+            "Contract Management",
+            "Vendor Assessment",
+          ],
           experience: 9,
           assignmentDate: "2024-02-10",
           status: "Active",
@@ -455,8 +503,16 @@ export default function TenderCommitteeAssignment() {
       workspaceAccess: {
         workspaceId: "WS-MOH-2024-001",
         accessLevel: "Evaluate",
-        documentsAccess: ["Tender Documents", "Bid Submissions", "Technical Specifications"],
-        evaluationAccess: ["Technical Evaluation", "Financial Evaluation", "Scoring Sheets"],
+        documentsAccess: [
+          "Tender Documents",
+          "Bid Submissions",
+          "Technical Specifications",
+        ],
+        evaluationAccess: [
+          "Technical Evaluation",
+          "Financial Evaluation",
+          "Scoring Sheets",
+        ],
         deadlines: {
           documentReview: "2024-02-18",
           evaluationSubmission: "2024-02-25",
@@ -465,7 +521,11 @@ export default function TenderCommitteeAssignment() {
         notifications: [
           {
             type: "Email",
-            events: ["Document Upload", "Deadline Reminder", "Committee Updates"],
+            events: [
+              "Document Upload",
+              "Deadline Reminder",
+              "Committee Updates",
+            ],
             enabled: true,
           },
           {
@@ -485,18 +545,23 @@ export default function TenderCommitteeAssignment() {
           conflictDetails: [
             {
               type: "Professional",
-              description: "Previously consulted for one of the bidding companies",
+              description:
+                "Previously consulted for one of the bidding companies",
               entity: "Golden Gates Healthcare",
               relationship: "Consultant",
               duration: "2022-2023",
               mitigation: "Recuse from evaluation of this specific bidder",
             },
           ],
-          supportingDocuments: ["Consulting Agreement Copy", "Declaration Letter"],
+          supportingDocuments: [
+            "Consulting Agreement Copy",
+            "Declaration Letter",
+          ],
           reviewStatus: "Approved",
           reviewedBy: "Ethics Committee",
           reviewDate: "2024-02-12",
-          reviewComments: "Conflict manageable through recusal from specific vendor evaluation",
+          reviewComments:
+            "Conflict manageable through recusal from specific vendor evaluation",
           mitigationMeasures: [
             "Recuse from Golden Gates Healthcare evaluation",
             "No access to Golden Gates Healthcare bid documents",
@@ -553,14 +618,25 @@ export default function TenderCommitteeAssignment() {
         phone: "08012345684",
         department: "Biomedical Engineering",
         position: "Senior Engineer",
-        qualifications: ["BSc Electrical Engineering", "MSc Biomedical Engineering"],
-        expertise: ["Medical Device Technology", "Equipment Maintenance", "Quality Control"],
+        qualifications: [
+          "BSc Electrical Engineering",
+          "MSc Biomedical Engineering",
+        ],
+        expertise: [
+          "Medical Device Technology",
+          "Equipment Maintenance",
+          "Quality Control",
+        ],
         experience: 15,
         availability: "Available",
         performanceRating: 8.9,
         recentAssignments: ["TCA-2023-006", "TCA-2023-009"],
         lastAssignment: "2024-01-20",
-        specializations: ["Medical Devices", "Biomedical Engineering", "Technical Standards"],
+        specializations: [
+          "Medical Devices",
+          "Biomedical Engineering",
+          "Technical Standards",
+        ],
         languages: ["English", "Hausa"],
         location: "Kano",
         clearanceLevel: "Senior",
@@ -579,7 +655,11 @@ export default function TenderCommitteeAssignment() {
         performanceRating: 8.7,
         recentAssignments: ["TCA-2024-001"],
         lastAssignment: "2024-02-10",
-        specializations: ["Government Accounting", "Financial Planning", "Budget Analysis"],
+        specializations: [
+          "Government Accounting",
+          "Financial Planning",
+          "Budget Analysis",
+        ],
         languages: ["English", "Hausa"],
         location: "Kano",
         clearanceLevel: "Senior",
@@ -592,7 +672,11 @@ export default function TenderCommitteeAssignment() {
         department: "Clinical Services",
         position: "Consultant Physician",
         qualifications: ["MBBS", "FMCP", "MSc Health Policy"],
-        expertise: ["Internal Medicine", "Clinical Research", "Health Technology Assessment"],
+        expertise: [
+          "Internal Medicine",
+          "Clinical Research",
+          "Health Technology Assessment",
+        ],
         experience: 18,
         availability: "Available",
         performanceRating: 9.3,
@@ -611,13 +695,21 @@ export default function TenderCommitteeAssignment() {
         department: "Procurement Department",
         position: "Procurement Officer",
         qualifications: ["BSc Business Administration", "MCIPS"],
-        expertise: ["Procurement Law", "Contract Administration", "Vendor Management"],
+        expertise: [
+          "Procurement Law",
+          "Contract Administration",
+          "Vendor Management",
+        ],
         experience: 8,
         availability: "Available",
         performanceRating: 8.4,
         recentAssignments: ["TCA-2023-010"],
         lastAssignment: "2023-10-15",
-        specializations: ["Procurement Regulations", "Contract Law", "Vendor Assessment"],
+        specializations: [
+          "Procurement Regulations",
+          "Contract Law",
+          "Vendor Assessment",
+        ],
         languages: ["English", "Hausa"],
         location: "Kano",
         clearanceLevel: "Mid-Level",
@@ -627,48 +719,64 @@ export default function TenderCommitteeAssignment() {
     // Customize for different ministries
     if (ministryCode === "MOWI") {
       // Add infrastructure-focused members
-      baseMemberPool.push(
-        {
-          id: "POOL-MOWI-001",
-          name: "Eng. Ahmad Tijjani",
-          email: "ahmad.tijjani@works.kano.gov.ng",
-          phone: "08012345688",
-          department: "Road Construction",
-          position: "Chief Engineer",
-          qualifications: ["BSc Civil Engineering", "MSc Construction Management", "MNSE"],
-          expertise: ["Road Construction", "Project Management", "Quality Control"],
-          experience: 22,
-          availability: "Available",
-          performanceRating: 9.4,
-          recentAssignments: [],
-          specializations: ["Highway Engineering", "Construction Management", "Quality Assurance"],
-          languages: ["English", "Hausa"],
-          location: "Kano",
-          clearanceLevel: "Senior",
-        }
-      );
+      baseMemberPool.push({
+        id: "POOL-MOWI-001",
+        name: "Eng. Ahmad Tijjani",
+        email: "ahmad.tijjani@works.kano.gov.ng",
+        phone: "08012345688",
+        department: "Road Construction",
+        position: "Chief Engineer",
+        qualifications: [
+          "BSc Civil Engineering",
+          "MSc Construction Management",
+          "MNSE",
+        ],
+        expertise: [
+          "Road Construction",
+          "Project Management",
+          "Quality Control",
+        ],
+        experience: 22,
+        availability: "Available",
+        performanceRating: 9.4,
+        recentAssignments: [],
+        specializations: [
+          "Highway Engineering",
+          "Construction Management",
+          "Quality Assurance",
+        ],
+        languages: ["English", "Hausa"],
+        location: "Kano",
+        clearanceLevel: "Senior",
+      });
     } else if (ministryCode === "MOE") {
       // Add education-focused members
-      baseMemberPool.push(
-        {
-          id: "POOL-MOE-001",
-          name: "Prof. Maryam Shehu",
-          email: "maryam.shehu@education.kano.gov.ng",
-          phone: "08012345689",
-          department: "Curriculum Development",
-          position: "Director of Education",
-          qualifications: ["PhD Education", "MEd Curriculum Studies"],
-          expertise: ["Educational Technology", "Curriculum Development", "Learning Materials"],
-          experience: 25,
-          availability: "Available",
-          performanceRating: 9.6,
-          recentAssignments: [],
-          specializations: ["Educational Technology", "Curriculum Design", "Learning Assessment"],
-          languages: ["English", "Hausa", "Arabic"],
-          location: "Kano",
-          clearanceLevel: "Senior",
-        }
-      );
+      baseMemberPool.push({
+        id: "POOL-MOE-001",
+        name: "Prof. Maryam Shehu",
+        email: "maryam.shehu@education.kano.gov.ng",
+        phone: "08012345689",
+        department: "Curriculum Development",
+        position: "Director of Education",
+        qualifications: ["PhD Education", "MEd Curriculum Studies"],
+        expertise: [
+          "Educational Technology",
+          "Curriculum Development",
+          "Learning Materials",
+        ],
+        experience: 25,
+        availability: "Available",
+        performanceRating: 9.6,
+        recentAssignments: [],
+        specializations: [
+          "Educational Technology",
+          "Curriculum Design",
+          "Learning Assessment",
+        ],
+        languages: ["English", "Hausa", "Arabic"],
+        location: "Kano",
+        clearanceLevel: "Senior",
+      });
     }
 
     return baseMemberPool;
@@ -683,7 +791,7 @@ export default function TenderCommitteeAssignment() {
       committeeTemplateId: assignmentForm.committeeTemplateId,
       templateName: "Committee Template",
       assignedMembers: [],
-      assignmentDate: new Date().toISOString().split('T')[0],
+      assignmentDate: new Date().toISOString().split("T")[0],
       assignedBy: "Current User",
       evaluationPeriod: {
         startDate: assignmentForm.evaluationStartDate,
@@ -728,8 +836,8 @@ export default function TenderCommitteeAssignment() {
     const newDeclaration: COIDeclaration = {
       id: `COI-${Date.now()}`,
       memberId: coiForm.memberId,
-      memberName: memberPool.find(m => m.id === coiForm.memberId)?.name || "",
-      declarationDate: new Date().toISOString().split('T')[0],
+      memberName: memberPool.find((m) => m.id === coiForm.memberId)?.name || "",
+      declarationDate: new Date().toISOString().split("T")[0],
       hasConflict: coiForm.hasConflict,
       conflictDetails: coiForm.conflictDetails,
       supportingDocuments: coiForm.supportingDocuments,
@@ -738,18 +846,23 @@ export default function TenderCommitteeAssignment() {
       riskLevel: coiForm.hasConflict ? "Medium" : "Low",
     };
 
-    const updatedAssignments = assignments.map(assignment =>
+    const updatedAssignments = assignments.map((assignment) =>
       assignment.id === assignmentId
-        ? { 
-            ...assignment, 
+        ? {
+            ...assignment,
             coiDeclarations: [...assignment.coiDeclarations, newDeclaration],
-            assignedMembers: assignment.assignedMembers.map(member =>
+            assignedMembers: assignment.assignedMembers.map((member) =>
               member.memberId === coiForm.memberId
-                ? { ...member, status: coiForm.hasConflict ? "COI_Declared" : "Active" as const }
-                : member
-            )
+                ? {
+                    ...member,
+                    status: coiForm.hasConflict
+                      ? "COI_Declared"
+                      : ("Active" as const),
+                  }
+                : member,
+            ),
           }
-        : assignment
+        : assignment,
     );
 
     setAssignments(updatedAssignments);
@@ -779,7 +892,11 @@ export default function TenderCommitteeAssignment() {
       COI_Declared: "outline",
       Disqualified: "destructive",
     };
-    return <Badge variant={variants[status as keyof typeof variants] as any}>{status}</Badge>;
+    return (
+      <Badge variant={variants[status as keyof typeof variants] as any}>
+        {status}
+      </Badge>
+    );
   };
 
   const getRiskBadge = (riskLevel: string) => {
@@ -789,13 +906,19 @@ export default function TenderCommitteeAssignment() {
       High: "destructive",
       Disqualifying: "destructive",
     };
-    return <Badge variant={variants[riskLevel as keyof typeof variants] as any}>{riskLevel}</Badge>;
+    return (
+      <Badge variant={variants[riskLevel as keyof typeof variants] as any}>
+        {riskLevel}
+      </Badge>
+    );
   };
 
-  const filteredAssignments = assignments.filter(assignment => {
-    const matchesSearch = assignment.tenderTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         assignment.tenderId.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === "all" || assignment.status === filterStatus;
+  const filteredAssignments = assignments.filter((assignment) => {
+    const matchesSearch =
+      assignment.tenderTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      assignment.tenderId.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      filterStatus === "all" || assignment.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
@@ -803,10 +926,17 @@ export default function TenderCommitteeAssignment() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Tender Committee Assignment</h2>
-          <p className="text-gray-600">Assign committee members to specific tenders with COI management</p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Tender Committee Assignment
+          </h2>
+          <p className="text-gray-600">
+            Assign committee members to specific tenders with COI management
+          </p>
         </div>
-        <Button onClick={() => setShowAssignmentModal(true)} className="bg-primary hover:bg-primary/90">
+        <Button
+          onClick={() => setShowAssignmentModal(true)}
+          className="bg-primary hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4 mr-2" />
           New Assignment
         </Button>
@@ -857,43 +987,66 @@ export default function TenderCommitteeAssignment() {
 
           <div className="grid gap-4">
             {filteredAssignments.map((assignment) => (
-              <Card key={assignment.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={assignment.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg">{assignment.tenderTitle}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {assignment.tenderTitle}
+                        </CardTitle>
                         {getStatusBadge(assignment.status)}
-                        <Badge variant="outline">{assignment.tenderCategory}</Badge>
+                        <Badge variant="outline">
+                          {assignment.tenderCategory}
+                        </Badge>
                       </div>
                       <p className="text-sm text-gray-600 mb-3">
-                        Tender ID: {assignment.tenderId} • Template: {assignment.templateName}
+                        Tender ID: {assignment.tenderId} • Template:{" "}
+                        {assignment.templateName}
                       </p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Members Assigned</Label>
-                          <p className="text-sm font-semibold">{assignment.assignedMembers.length}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Members Assigned
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {assignment.assignedMembers.length}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">COI Declarations</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            COI Declarations
+                          </Label>
                           <p className="text-sm font-semibold">
                             {assignment.coiDeclarations.length}
-                            {assignment.coiDeclarations.some(coi => coi.hasConflict) && (
+                            {assignment.coiDeclarations.some(
+                              (coi) => coi.hasConflict,
+                            ) && (
                               <AlertTriangle className="inline h-3 w-3 ml-1 text-yellow-600" />
                             )}
                           </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Evaluation Period</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Evaluation Period
+                          </Label>
                           <p className="text-sm font-semibold">
-                            {assignment.evaluationPeriod.startDate} to {assignment.evaluationPeriod.endDate}
+                            {assignment.evaluationPeriod.startDate} to{" "}
+                            {assignment.evaluationPeriod.endDate}
                           </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Conflicts</Label>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Conflicts
+                          </Label>
                           <p className="text-sm font-semibold">
                             {assignment.conflicts.length}
-                            {assignment.conflicts.some(c => c.severity === "Critical") && (
+                            {assignment.conflicts.some(
+                              (c) => c.severity === "Critical",
+                            ) && (
                               <XCircle className="inline h-3 w-3 ml-1 text-red-600" />
                             )}
                           </p>
@@ -901,17 +1054,17 @@ export default function TenderCommitteeAssignment() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => setSelectedAssignment(assignment)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
                       {assignment.status === "Assigned" && (
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => {
                             setSelectedAssignment(assignment);
                             setShowCOIModal(true);
@@ -928,29 +1081,40 @@ export default function TenderCommitteeAssignment() {
                     <div>
                       <h4 className="font-medium mb-2">Assigned Members</h4>
                       <div className="space-y-2">
-                        {assignment.assignedMembers.slice(0, 3).map((member) => (
-                          <div key={member.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <div className="flex items-center gap-2">
-                              <User className="h-4 w-4 text-gray-400" />
-                              <div>
-                                <span className="font-medium">{member.memberName}</span>
-                                <span className="text-sm text-gray-600 ml-2">({member.roleTitle})</span>
-                                <div className="text-xs text-gray-500">
-                                  {member.department} • {member.experience}+ years
+                        {assignment.assignedMembers
+                          .slice(0, 3)
+                          .map((member) => (
+                            <div
+                              key={member.id}
+                              className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                            >
+                              <div className="flex items-center gap-2">
+                                <User className="h-4 w-4 text-gray-400" />
+                                <div>
+                                  <span className="font-medium">
+                                    {member.memberName}
+                                  </span>
+                                  <span className="text-sm text-gray-600 ml-2">
+                                    ({member.roleTitle})
+                                  </span>
+                                  <div className="text-xs text-gray-500">
+                                    {member.department} • {member.experience}+
+                                    years
+                                  </div>
                                 </div>
                               </div>
+                              <div className="flex items-center gap-2">
+                                {getStatusBadge(member.status)}
+                                {member.status === "COI_Declared" && (
+                                  <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                                )}
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              {getStatusBadge(member.status)}
-                              {member.status === "COI_Declared" && (
-                                <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                              )}
-                            </div>
-                          </div>
-                        ))}
+                          ))}
                         {assignment.assignedMembers.length > 3 && (
                           <div className="text-sm text-gray-500 text-center py-1">
-                            +{assignment.assignedMembers.length - 3} more members
+                            +{assignment.assignedMembers.length - 3} more
+                            members
                           </div>
                         )}
                       </div>
@@ -964,21 +1128,37 @@ export default function TenderCommitteeAssignment() {
                         </h4>
                         <div className="space-y-2">
                           {assignment.coiDeclarations.map((coi) => (
-                            <div key={coi.id} className="flex items-center justify-between p-2 bg-yellow-50 rounded">
+                            <div
+                              key={coi.id}
+                              className="flex items-center justify-between p-2 bg-yellow-50 rounded"
+                            >
                               <div>
-                                <span className="font-medium">{coi.memberName}</span>
+                                <span className="font-medium">
+                                  {coi.memberName}
+                                </span>
                                 <span className="text-sm text-gray-600 ml-2">
-                                  {coi.hasConflict ? "Conflict Declared" : "No Conflict"}
+                                  {coi.hasConflict
+                                    ? "Conflict Declared"
+                                    : "No Conflict"}
                                 </span>
                                 {coi.hasConflict && (
                                   <div className="text-xs text-gray-500">
-                                    {coi.conflictDetails.map(detail => detail.type).join(", ")}
+                                    {coi.conflictDetails
+                                      .map((detail) => detail.type)
+                                      .join(", ")}
                                   </div>
                                 )}
                               </div>
                               <div className="flex items-center gap-2">
                                 {getRiskBadge(coi.riskLevel)}
-                                <Badge variant={coi.reviewStatus === "Approved" ? "default" : "outline"} className="text-xs">
+                                <Badge
+                                  variant={
+                                    coi.reviewStatus === "Approved"
+                                      ? "default"
+                                      : "outline"
+                                  }
+                                  className="text-xs"
+                                >
                                   {coi.reviewStatus}
                                 </Badge>
                               </div>
@@ -992,8 +1172,9 @@ export default function TenderCommitteeAssignment() {
                       <Alert>
                         <AlertTriangle className="h-4 w-4" />
                         <AlertDescription>
-                          {assignment.conflicts.length} conflict(s) require attention. 
-                          Review member assignments and COI declarations.
+                          {assignment.conflicts.length} conflict(s) require
+                          attention. Review member assignments and COI
+                          declarations.
                         </AlertDescription>
                       </Alert>
                     )}
@@ -1006,7 +1187,9 @@ export default function TenderCommitteeAssignment() {
 
         <TabsContent value="coi" className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Conflict of Interest Management</h3>
+            <h3 className="text-lg font-semibold">
+              Conflict of Interest Management
+            </h3>
             <Button onClick={() => setShowCOIModal(true)} variant="outline">
               <Shield className="h-4 w-4 mr-2" />
               New COI Declaration
@@ -1014,107 +1197,141 @@ export default function TenderCommitteeAssignment() {
           </div>
 
           <div className="grid gap-4">
-            {assignments.flatMap(assignment => 
-              assignment.coiDeclarations.map(coi => ({
-                ...coi,
-                tenderTitle: assignment.tenderTitle,
-                tenderId: assignment.tenderId,
-              }))
-            ).map((coi) => (
-              <Card key={coi.id}>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Shield className="h-5 w-5" />
-                        {coi.memberName}
-                      </CardTitle>
-                      <p className="text-sm text-gray-600">
-                        Tender: {coi.tenderTitle} ({coi.tenderId})
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {getRiskBadge(coi.riskLevel)}
-                      <Badge variant={coi.reviewStatus === "Approved" ? "default" : "outline"}>
-                        {coi.reviewStatus}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+            {assignments
+              .flatMap((assignment) =>
+                assignment.coiDeclarations.map((coi) => ({
+                  ...coi,
+                  tenderTitle: assignment.tenderTitle,
+                  tenderId: assignment.tenderId,
+                })),
+              )
+              .map((coi) => (
+                <Card key={coi.id}>
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
                       <div>
-                        <Label className="text-sm font-medium">Declaration Date</Label>
-                        <p className="text-sm">{coi.declarationDate}</p>
-                      </div>
-                      <div>
-                        <Label className="text-sm font-medium">Has Conflict</Label>
-                        <p className="text-sm flex items-center gap-1">
-                          {coi.hasConflict ? (
-                            <>
-                              <XCircle className="h-4 w-4 text-red-600" />
-                              Yes
-                            </>
-                          ) : (
-                            <>
-                              <CheckCircle className="h-4 w-4 text-green-600" />
-                              No
-                            </>
-                          )}
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <Shield className="h-5 w-5" />
+                          {coi.memberName}
+                        </CardTitle>
+                        <p className="text-sm text-gray-600">
+                          Tender: {coi.tenderTitle} ({coi.tenderId})
                         </p>
                       </div>
+                      <div className="flex items-center gap-2">
+                        {getRiskBadge(coi.riskLevel)}
+                        <Badge
+                          variant={
+                            coi.reviewStatus === "Approved"
+                              ? "default"
+                              : "outline"
+                          }
+                        >
+                          {coi.reviewStatus}
+                        </Badge>
+                      </div>
                     </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-sm font-medium">
+                            Declaration Date
+                          </Label>
+                          <p className="text-sm">{coi.declarationDate}</p>
+                        </div>
+                        <div>
+                          <Label className="text-sm font-medium">
+                            Has Conflict
+                          </Label>
+                          <p className="text-sm flex items-center gap-1">
+                            {coi.hasConflict ? (
+                              <>
+                                <XCircle className="h-4 w-4 text-red-600" />
+                                Yes
+                              </>
+                            ) : (
+                              <>
+                                <CheckCircle className="h-4 w-4 text-green-600" />
+                                No
+                              </>
+                            )}
+                          </p>
+                        </div>
+                      </div>
 
-                    {coi.hasConflict && coi.conflictDetails.length > 0 && (
-                      <div>
-                        <Label className="text-sm font-medium">Conflict Details</Label>
-                        <div className="space-y-2 mt-1">
-                          {coi.conflictDetails.map((detail, index) => (
-                            <div key={index} className="p-2 bg-red-50 rounded border-l-4 border-red-500">
-                              <div className="font-medium text-red-900">{detail.type} Conflict</div>
-                              <div className="text-sm text-red-800">{detail.description}</div>
-                              <div className="text-xs text-red-700">
-                                Entity: {detail.entity} • Relationship: {detail.relationship}
-                                {detail.duration && ` • Duration: ${detail.duration}`}
+                      {coi.hasConflict && coi.conflictDetails.length > 0 && (
+                        <div>
+                          <Label className="text-sm font-medium">
+                            Conflict Details
+                          </Label>
+                          <div className="space-y-2 mt-1">
+                            {coi.conflictDetails.map((detail, index) => (
+                              <div
+                                key={index}
+                                className="p-2 bg-red-50 rounded border-l-4 border-red-500"
+                              >
+                                <div className="font-medium text-red-900">
+                                  {detail.type} Conflict
+                                </div>
+                                <div className="text-sm text-red-800">
+                                  {detail.description}
+                                </div>
+                                <div className="text-xs text-red-700">
+                                  Entity: {detail.entity} • Relationship:{" "}
+                                  {detail.relationship}
+                                  {detail.duration &&
+                                    ` • Duration: ${detail.duration}`}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {coi.mitigationMeasures.length > 0 && (
-                      <div>
-                        <Label className="text-sm font-medium">Mitigation Measures</Label>
-                        <ul className="list-disc list-inside space-y-1 mt-1 text-sm">
-                          {coi.mitigationMeasures.map((measure, index) => (
-                            <li key={index} className="text-gray-700">{measure}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {coi.reviewComments && (
-                      <div>
-                        <Label className="text-sm font-medium">Review Comments</Label>
-                        <p className="text-sm text-gray-700 mt-1">{coi.reviewComments}</p>
-                        <div className="text-xs text-gray-500 mt-1">
-                          Reviewed by: {coi.reviewedBy} on {coi.reviewDate}
+                      {coi.mitigationMeasures.length > 0 && (
+                        <div>
+                          <Label className="text-sm font-medium">
+                            Mitigation Measures
+                          </Label>
+                          <ul className="list-disc list-inside space-y-1 mt-1 text-sm">
+                            {coi.mitigationMeasures.map((measure, index) => (
+                              <li key={index} className="text-gray-700">
+                                {measure}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                      )}
+
+                      {coi.reviewComments && (
+                        <div>
+                          <Label className="text-sm font-medium">
+                            Review Comments
+                          </Label>
+                          <p className="text-sm text-gray-700 mt-1">
+                            {coi.reviewComments}
+                          </p>
+                          <div className="text-xs text-gray-500 mt-1">
+                            Reviewed by: {coi.reviewedBy} on {coi.reviewDate}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </TabsContent>
 
         <TabsContent value="pool" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Member Pool</h3>
-            <Button onClick={() => setShowMemberSearchModal(true)} variant="outline">
+            <Button
+              onClick={() => setShowMemberSearchModal(true)}
+              variant="outline"
+            >
               <Search className="h-4 w-4 mr-2" />
               Search Members
             </Button>
@@ -1128,7 +1345,13 @@ export default function TenderCommitteeAssignment() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <CardTitle className="text-lg">{member.name}</CardTitle>
-                        <Badge variant={member.availability === "Available" ? "default" : "secondary"}>
+                        <Badge
+                          variant={
+                            member.availability === "Available"
+                              ? "default"
+                              : "secondary"
+                          }
+                        >
                           {member.availability}
                         </Badge>
                         <Badge variant="outline">{member.clearanceLevel}</Badge>
@@ -1138,20 +1361,36 @@ export default function TenderCommitteeAssignment() {
                       </p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Experience</Label>
-                          <p className="text-sm font-semibold">{member.experience} years</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Experience
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {member.experience} years
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Performance</Label>
-                          <p className="text-sm font-semibold">{member.performanceRating}/10</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Performance
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {member.performanceRating}/10
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Recent Assignments</Label>
-                          <p className="text-sm font-semibold">{member.recentAssignments.length}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Recent Assignments
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {member.recentAssignments.length}
+                          </p>
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">Last Assignment</Label>
-                          <p className="text-sm font-semibold">{member.lastAssignment || "Never"}</p>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Last Assignment
+                          </Label>
+                          <p className="text-sm font-semibold">
+                            {member.lastAssignment || "Never"}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1168,7 +1407,9 @@ export default function TenderCommitteeAssignment() {
                 <CardContent>
                   <div className="space-y-3">
                     <div>
-                      <Label className="text-sm font-medium">Contact Information</Label>
+                      <Label className="text-sm font-medium">
+                        Contact Information
+                      </Label>
                       <div className="flex items-center gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
                           <Mail className="h-3 w-3" />
@@ -1186,10 +1427,16 @@ export default function TenderCommitteeAssignment() {
                     </div>
 
                     <div>
-                      <Label className="text-sm font-medium">Expertise Areas</Label>
+                      <Label className="text-sm font-medium">
+                        Expertise Areas
+                      </Label>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {member.expertise.map((area) => (
-                          <Badge key={area} variant="outline" className="text-xs">
+                          <Badge
+                            key={area}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {area}
                           </Badge>
                         ))}
@@ -1197,10 +1444,16 @@ export default function TenderCommitteeAssignment() {
                     </div>
 
                     <div>
-                      <Label className="text-sm font-medium">Qualifications</Label>
+                      <Label className="text-sm font-medium">
+                        Qualifications
+                      </Label>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {member.qualifications.map((qual) => (
-                          <Badge key={qual} variant="secondary" className="text-xs">
+                          <Badge
+                            key={qual}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             {qual}
                           </Badge>
                         ))}
@@ -1209,7 +1462,9 @@ export default function TenderCommitteeAssignment() {
 
                     <div>
                       <Label className="text-sm font-medium">Languages</Label>
-                      <p className="text-sm text-gray-700">{member.languages.join(", ")}</p>
+                      <p className="text-sm text-gray-700">
+                        {member.languages.join(", ")}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -1232,7 +1487,12 @@ export default function TenderCommitteeAssignment() {
                 <Input
                   id="tender-id"
                   value={assignmentForm.tenderId}
-                  onChange={(e) => setAssignmentForm({...assignmentForm, tenderId: e.target.value})}
+                  onChange={(e) =>
+                    setAssignmentForm({
+                      ...assignmentForm,
+                      tenderId: e.target.value,
+                    })
+                  }
                   placeholder="e.g., MOH-2024-001"
                 />
               </div>
@@ -1241,7 +1501,12 @@ export default function TenderCommitteeAssignment() {
                 <Input
                   id="tender-category"
                   value={assignmentForm.tenderCategory}
-                  onChange={(e) => setAssignmentForm({...assignmentForm, tenderCategory: e.target.value})}
+                  onChange={(e) =>
+                    setAssignmentForm({
+                      ...assignmentForm,
+                      tenderCategory: e.target.value,
+                    })
+                  }
                   placeholder="e.g., Medical Equipment"
                 />
               </div>
@@ -1251,20 +1516,39 @@ export default function TenderCommitteeAssignment() {
               <Input
                 id="tender-title"
                 value={assignmentForm.tenderTitle}
-                onChange={(e) => setAssignmentForm({...assignmentForm, tenderTitle: e.target.value})}
+                onChange={(e) =>
+                  setAssignmentForm({
+                    ...assignmentForm,
+                    tenderTitle: e.target.value,
+                  })
+                }
                 placeholder="Enter tender title"
               />
             </div>
             <div>
               <Label htmlFor="committee-template">Committee Template</Label>
-              <Select value={assignmentForm.committeeTemplateId} onValueChange={(value) => setAssignmentForm({...assignmentForm, committeeTemplateId: value})}>
+              <Select
+                value={assignmentForm.committeeTemplateId}
+                onValueChange={(value) =>
+                  setAssignmentForm({
+                    ...assignmentForm,
+                    committeeTemplateId: value,
+                  })
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select committee template" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="CT-2024-001">Medical Equipment Committee</SelectItem>
-                  <SelectItem value="CT-2024-002">Infrastructure Committee</SelectItem>
-                  <SelectItem value="CT-2024-003">Educational Committee</SelectItem>
+                  <SelectItem value="CT-2024-001">
+                    Medical Equipment Committee
+                  </SelectItem>
+                  <SelectItem value="CT-2024-002">
+                    Infrastructure Committee
+                  </SelectItem>
+                  <SelectItem value="CT-2024-003">
+                    Educational Committee
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -1275,7 +1559,12 @@ export default function TenderCommitteeAssignment() {
                   id="eval-start"
                   type="date"
                   value={assignmentForm.evaluationStartDate}
-                  onChange={(e) => setAssignmentForm({...assignmentForm, evaluationStartDate: e.target.value})}
+                  onChange={(e) =>
+                    setAssignmentForm({
+                      ...assignmentForm,
+                      evaluationStartDate: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div>
@@ -1284,7 +1573,12 @@ export default function TenderCommitteeAssignment() {
                   id="eval-end"
                   type="date"
                   value={assignmentForm.evaluationEndDate}
-                  onChange={(e) => setAssignmentForm({...assignmentForm, evaluationEndDate: e.target.value})}
+                  onChange={(e) =>
+                    setAssignmentForm({
+                      ...assignmentForm,
+                      evaluationEndDate: e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -1293,18 +1587,24 @@ export default function TenderCommitteeAssignment() {
               <Textarea
                 id="assignment-notes"
                 value={assignmentForm.assignmentNotes}
-                onChange={(e) => setAssignmentForm({...assignmentForm, assignmentNotes: e.target.value})}
+                onChange={(e) =>
+                  setAssignmentForm({
+                    ...assignmentForm,
+                    assignmentNotes: e.target.value,
+                  })
+                }
                 placeholder="Add any special instructions or notes"
                 rows={3}
               />
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowAssignmentModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowAssignmentModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={createAssignment}>
-                Create Assignment
-              </Button>
+              <Button onClick={createAssignment}>Create Assignment</Button>
             </div>
           </div>
         </DialogContent>
@@ -1319,7 +1619,12 @@ export default function TenderCommitteeAssignment() {
           <div className="space-y-4">
             <div>
               <Label htmlFor="coi-member">Committee Member</Label>
-              <Select value={coiForm.memberId} onValueChange={(value) => setCOIForm({...coiForm, memberId: value})}>
+              <Select
+                value={coiForm.memberId}
+                onValueChange={(value) =>
+                  setCOIForm({ ...coiForm, memberId: value })
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select committee member" />
                 </SelectTrigger>
@@ -1337,9 +1642,13 @@ export default function TenderCommitteeAssignment() {
               <Checkbox
                 id="has-conflict"
                 checked={coiForm.hasConflict}
-                onCheckedChange={(checked) => setCOIForm({...coiForm, hasConflict: checked as boolean})}
+                onCheckedChange={(checked) =>
+                  setCOIForm({ ...coiForm, hasConflict: checked as boolean })
+                }
               />
-              <Label htmlFor="has-conflict">I declare that I have a conflict of interest</Label>
+              <Label htmlFor="has-conflict">
+                I declare that I have a conflict of interest
+              </Label>
             </div>
 
             {coiForm.hasConflict && (
@@ -1347,12 +1656,13 @@ export default function TenderCommitteeAssignment() {
                 <Separator />
                 <div className="space-y-4">
                   <h4 className="font-medium">Conflict Details</h4>
-                  
+
                   <Alert>
                     <AlertTriangle className="h-4 w-4" />
                     <AlertDescription>
-                      Please provide detailed information about your conflict of interest. 
-                      This information will be used to determine appropriate mitigation measures.
+                      Please provide detailed information about your conflict of
+                      interest. This information will be used to determine
+                      appropriate mitigation measures.
                     </AlertDescription>
                   </Alert>
 
@@ -1363,17 +1673,29 @@ export default function TenderCommitteeAssignment() {
                         <SelectValue placeholder="Select conflict type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Financial">Financial Interest</SelectItem>
-                        <SelectItem value="Personal">Personal Relationship</SelectItem>
-                        <SelectItem value="Professional">Professional Relationship</SelectItem>
-                        <SelectItem value="Contractual">Contractual Relationship</SelectItem>
-                        <SelectItem value="Family">Family Relationship</SelectItem>
+                        <SelectItem value="Financial">
+                          Financial Interest
+                        </SelectItem>
+                        <SelectItem value="Personal">
+                          Personal Relationship
+                        </SelectItem>
+                        <SelectItem value="Professional">
+                          Professional Relationship
+                        </SelectItem>
+                        <SelectItem value="Contractual">
+                          Contractual Relationship
+                        </SelectItem>
+                        <SelectItem value="Family">
+                          Family Relationship
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div>
-                    <Label htmlFor="conflict-description">Description of Conflict</Label>
+                    <Label htmlFor="conflict-description">
+                      Description of Conflict
+                    </Label>
                     <Textarea
                       id="conflict-description"
                       placeholder="Describe the nature of your conflict of interest"
@@ -1390,7 +1712,9 @@ export default function TenderCommitteeAssignment() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="conflict-relationship">Relationship</Label>
+                      <Label htmlFor="conflict-relationship">
+                        Relationship
+                      </Label>
                       <Input
                         id="conflict-relationship"
                         placeholder="e.g., Consultant, Shareholder, Employee"
@@ -1399,7 +1723,9 @@ export default function TenderCommitteeAssignment() {
                   </div>
 
                   <div>
-                    <Label htmlFor="mitigation-measures">Proposed Mitigation Measures</Label>
+                    <Label htmlFor="mitigation-measures">
+                      Proposed Mitigation Measures
+                    </Label>
                     <Textarea
                       id="mitigation-measures"
                       placeholder="How do you propose to manage this conflict?"
@@ -1414,7 +1740,12 @@ export default function TenderCommitteeAssignment() {
               <Button variant="outline" onClick={() => setShowCOIModal(false)}>
                 Cancel
               </Button>
-              <Button onClick={() => selectedAssignment && submitCOIDeclaration(selectedAssignment.id)}>
+              <Button
+                onClick={() =>
+                  selectedAssignment &&
+                  submitCOIDeclaration(selectedAssignment.id)
+                }
+              >
                 Submit Declaration
               </Button>
             </div>
