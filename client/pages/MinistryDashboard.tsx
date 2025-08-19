@@ -9,6 +9,7 @@ import ContractManagement from "@/components/ContractManagement";
 import BudgetAllocation from "@/components/BudgetAllocation";
 import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManagement";
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
+import NOCRequestsModule from "@/components/NOCRequestsModule";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
@@ -297,7 +298,6 @@ export default function MinistryDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showCreateTender, setShowCreateTender] = useState(false);
-  const [showNOCRequest, setShowNOCRequest] = useState(false);
   const [newTender, setNewTender] = useState({
     title: "",
     category: "",
@@ -327,18 +327,6 @@ export default function MinistryDashboard() {
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<MDAUser | null>(null);
   const [userFormMode, setUserFormMode] = useState<"create" | "edit">("create");
-  const [newNOCRequest, setNewNOCRequest] = useState({
-    projectTitle: "",
-    projectValue: "",
-    contractorName: "",
-    expectedDuration: "",
-    projectDescription: "",
-    justification: "",
-    category: "",
-    procuringEntity: "",
-    contactPerson: "",
-    contactEmail: "",
-  });
   const [selectedEvaluation, setSelectedEvaluation] =
     useState<BidEvaluation | null>(null);
   const [showContractModal, setShowContractModal] = useState(false);
@@ -2255,7 +2243,7 @@ export default function MinistryDashboard() {
     // Set up real-time synchronization with Admin/SuperUser dashboards
     const syncInterval = setInterval(() => {
       console.log(
-        "🔄 Ministry Dashboard: Checking for company status changes...",
+        "��� Ministry Dashboard: Checking for company status changes...",
       );
       setCompanies((prevCompanies) => {
         let hasChanges = false;
@@ -3834,126 +3822,6 @@ export default function MinistryDashboard() {
 
     setTenderSubView("list");
     alert(`Tender ${isDraft ? "saved as draft" : "published"} successfully!`);
-  };
-
-  // NOC Request Functions
-  const handleSubmitNOCRequest = () => {
-    if (
-      !newNOCRequest.projectTitle ||
-      !newNOCRequest.contractorName ||
-      !newNOCRequest.projectValue ||
-      !newNOCRequest.category ||
-      !newNOCRequest.procuringEntity ||
-      !newNOCRequest.contactPerson ||
-      !newNOCRequest.contactEmail
-    ) {
-      alert("Please fill in all required fields");
-      return;
-    }
-
-    const { ministryId, ministry } = getMinistryMockData();
-    const requestId = `NOC-CENTRAL-${Date.now()}`;
-
-    // Create centralized NOC request
-    const centralNOCRequest = {
-      id: requestId,
-      projectTitle: newNOCRequest.projectTitle,
-      requestDate: new Date().toISOString().split("T")[0],
-      status: "Pending" as const,
-      projectValue: newNOCRequest.projectValue,
-      contractorName: newNOCRequest.contractorName,
-      expectedDuration: newNOCRequest.expectedDuration,
-      requestingMinistry: ministry.name,
-      ministryCode: ministry.code,
-      projectDescription: newNOCRequest.projectDescription,
-      justification: newNOCRequest.justification,
-      category: newNOCRequest.category,
-      procuringEntity: newNOCRequest.procuringEntity,
-      contactPerson: newNOCRequest.contactPerson,
-      contactEmail: newNOCRequest.contactEmail,
-      attachments: [],
-    };
-
-    // Add to centralized NOC requests
-    const existingCentralNOCs = localStorage.getItem("centralNOCRequests");
-    const centralNOCs = existingCentralNOCs
-      ? JSON.parse(existingCentralNOCs)
-      : [];
-    centralNOCs.unshift(centralNOCRequest);
-    localStorage.setItem("centralNOCRequests", JSON.stringify(centralNOCs));
-
-    // Debug logging
-    console.log("Ministry NOC Request Submitted:", centralNOCRequest);
-    console.log("Total Central NOCs after submission:", centralNOCs.length);
-    console.log(
-      "Central NOCs in localStorage:",
-      JSON.parse(localStorage.getItem("centralNOCRequests") || "[]"),
-    );
-
-    // Create local ministry NOC record (showing as pending)
-    const ministryNOCRequest: NOCRequest = {
-      id: requestId,
-      projectTitle: newNOCRequest.projectTitle,
-      requestDate: new Date().toISOString().split("T")[0],
-      status: "Pending",
-      projectValue: newNOCRequest.projectValue,
-      contractorName: newNOCRequest.contractorName,
-      expectedDuration: newNOCRequest.expectedDuration,
-    };
-
-    setNOCRequests((prev) => [ministryNOCRequest, ...prev]);
-
-    // Also store in ministry-specific localStorage for persistence
-    const ministryNOCKey = `${ministry.code}_NOCRequests`;
-    const existingMinistryNOCs = localStorage.getItem(ministryNOCKey);
-    const ministryNOCs = existingMinistryNOCs
-      ? JSON.parse(existingMinistryNOCs)
-      : [];
-    ministryNOCs.unshift(ministryNOCRequest);
-    localStorage.setItem(ministryNOCKey, JSON.stringify(ministryNOCs));
-
-    // Reset form
-    setNewNOCRequest({
-      projectTitle: "",
-      projectValue: "",
-      contractorName: "",
-      expectedDuration: "",
-      projectDescription: "",
-      justification: "",
-      category: "",
-      procuringEntity: "",
-      contactPerson: "",
-      contactEmail: "",
-    });
-    setShowNOCRequest(false);
-    // Log NOC request submission
-    logUserAction(
-      "MinistryUser",
-      "ministry_user",
-      "NOC_REQUEST_SUBMITTED",
-      newNOCRequest.projectTitle,
-      `Ministry ${ministry.name} submitted NOC request for project: ${newNOCRequest.projectTitle}`,
-      "HIGH",
-      requestId,
-      {
-        nocRequestId: requestId,
-        projectTitle: newNOCRequest.projectTitle,
-        projectValue: newNOCRequest.projectValue,
-        contractorName: newNOCRequest.contractorName,
-        category: newNOCRequest.category,
-        procuringEntity: newNOCRequest.procuringEntity,
-        expectedDuration: newNOCRequest.expectedDuration,
-        ministryName: ministry.name,
-        ministryCode: ministry.code,
-        contactPerson: newNOCRequest.contactPerson,
-        contactEmail: newNOCRequest.contactEmail,
-        submissionTimestamp: new Date().toISOString(),
-      },
-    );
-
-    alert(
-      "NOC Request submitted successfully! It will be reviewed by the superuser.",
-    );
   };
 
   // Helper functions for evaluation scoring
@@ -8451,7 +8319,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         <li>�� Quality Standards</li>
                         <li>• Certifications</li>
                         <li>
-                          ���� Previous contracts executed in the last 2 years
+                          ����� Previous contracts executed in the last 2 years
                         </li>
                       </ul>
                     </div>
@@ -10278,161 +10146,15 @@ Blockchain Timestamp: ${Date.now()}
     </div>
   );
 
-  const renderNOCRequests = () => (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            No Objection Certificate Requests
-          </h1>
-          <p className="text-gray-600">
-            Request NOC for awarded contracts and track approval status
-          </p>
-        </div>
-        <button
-          onClick={() => setShowNOCRequest(true)}
-          className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-        >
-          <Send className="h-4 w-4 mr-2" />
-          New NOC Request
-        </button>
-      </div>
-
-      {/* NOC Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <Send className="h-8 w-8 text-blue-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Total Requests
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {nocRequests.length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <CheckCircle className="h-8 w-8 text-green-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Approved</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {nocRequests.filter((r) => r.status === "Approved").length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <Clock className="h-8 w-8 text-orange-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {nocRequests.filter((r) => r.status === "Pending").length}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* NOC Requests List */}
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-4 py-2 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">
-            NOC Request History
-          </h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Project Details
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Contractor
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Value & Duration
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {nocRequests.map((request) => (
-                <tr key={request.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {request.projectTitle}
-                      </div>
-                      <div className="text-sm text-gray-500">{request.id}</div>
-                      <div className="text-sm text-gray-500">
-                        Requested:{" "}
-                        {new Date(request.requestDate).toLocaleDateString()}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {request.contractorName}
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {request.projectValue}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Duration: {request.expectedDuration}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        request.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : request.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {request.status}
-                    </span>
-                    {request.certificateNumber && (
-                      <div className="text-xs text-gray-500 mt-1">
-                        Cert: {request.certificateNumber}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900">
-                      <Eye className="h-4 w-4 inline mr-1" />
-                      View
-                    </button>
-                    {request.status === "Approved" && (
-                      <button className="text-green-600 hover:text-green-900">
-                        <Download className="h-4 w-4 inline mr-1" />
-                        Download Certificate
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
+  const renderNOCRequests = () => {
+    const { ministry } = getMinistryMockData();
+    return (
+      <NOCRequestsModule
+        ministryCode={ministry.code}
+        ministryName={ministry.name}
+      />
+    );
+  };
 
   const renderUserManagement = () => (
     <div className="space-y-4">
@@ -11903,228 +11625,6 @@ Blockchain Timestamp: ${Date.now()}
                   className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Complete Workflow
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* NOC Request Modal */}
-      {showNOCRequest && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-            <div className="mt-3">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  New NOC Request
-                </h3>
-                <button
-                  onClick={() => setShowNOCRequest(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Project Title *
-                  </label>
-                  <input
-                    type="text"
-                    value={newNOCRequest.projectTitle}
-                    onChange={(e) =>
-                      setNewNOCRequest((prev) => ({
-                        ...prev,
-                        projectTitle: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter project title"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Project Value *
-                    </label>
-                    <input
-                      type="text"
-                      value={newNOCRequest.projectValue}
-                      onChange={(e) =>
-                        setNewNOCRequest((prev) => ({
-                          ...prev,
-                          projectValue: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., ₦500,000,000"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Expected Duration
-                    </label>
-                    <input
-                      type="text"
-                      value={newNOCRequest.expectedDuration}
-                      onChange={(e) =>
-                        setNewNOCRequest((prev) => ({
-                          ...prev,
-                          expectedDuration: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., 12 months"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Contractor Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={newNOCRequest.contractorName}
-                    onChange={(e) =>
-                      setNewNOCRequest((prev) => ({
-                        ...prev,
-                        contractorName: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter contractor/vendor name"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Category *
-                    </label>
-                    <input
-                      type="text"
-                      value={newNOCRequest.category}
-                      onChange={(e) =>
-                        setNewNOCRequest((prev) => ({
-                          ...prev,
-                          category: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., Medical Equipment, Construction"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Procuring Entity *
-                  </label>
-                  <input
-                    type="text"
-                    value={newNOCRequest.procuringEntity}
-                    onChange={(e) =>
-                      setNewNOCRequest((prev) => ({
-                        ...prev,
-                        procuringEntity: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter procuring entity name"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Contact Person *
-                    </label>
-                    <input
-                      type="text"
-                      value={newNOCRequest.contactPerson}
-                      onChange={(e) =>
-                        setNewNOCRequest((prev) => ({
-                          ...prev,
-                          contactPerson: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="Enter contact person name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Contact Email *
-                    </label>
-                    <input
-                      type="email"
-                      value={newNOCRequest.contactEmail}
-                      onChange={(e) =>
-                        setNewNOCRequest((prev) => ({
-                          ...prev,
-                          contactEmail: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="Enter contact email"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Project Description
-                  </label>
-                  <textarea
-                    value={newNOCRequest.projectDescription}
-                    onChange={(e) =>
-                      setNewNOCRequest((prev) => ({
-                        ...prev,
-                        projectDescription: e.target.value,
-                      }))
-                    }
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Brief description of the project"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Justification
-                  </label>
-                  <textarea
-                    value={newNOCRequest.justification}
-                    onChange={(e) =>
-                      setNewNOCRequest((prev) => ({
-                        ...prev,
-                        justification: e.target.value,
-                      }))
-                    }
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Justification for NOC request"
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowNOCRequest(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmitNOCRequest}
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                >
-                  Submit Request
                 </button>
               </div>
             </div>
