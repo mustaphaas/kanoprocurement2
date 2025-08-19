@@ -170,66 +170,241 @@ export default function NOCRequestsTab() {
     // If no requests found, initialize with comprehensive mock data
     if (allNOCRequests.length === 0) {
       const mockRequests: NOCRequest[] = [
+        // Ministry of Health NOC Requests
         {
-          id: "NOC-2024-001",
+          id: "NOC-MOH-001",
           tenderId: "TND-MOH-2024-001",
           tenderTitle: "Medical Equipment Procurement",
-          projectTitle: "Hospital Equipment Upgrade",
-          requestDate: "2024-01-15",
-          status: "Submitted",
-          projectValue: "₦125,000,000",
-          contractorName: "MedTech Solutions Ltd",
+          projectTitle: "Hospital Equipment Supply - Phase 1",
+          requestDate: "2024-01-25",
+          status: "Approved",
+          projectValue: "₦850,000,000",
+          contractorName: "PrimeCare Medical Ltd",
           expectedDuration: "6 months",
           ministryCode: "MOH",
           ministryName: "Ministry of Health",
           procuringEntity: "Kano State Ministry of Health",
           contactPerson: "Dr. Amina Suleiman",
           contactEmail: "amina.suleiman@kanostate.gov.ng",
-          projectDescription: "Procurement of advanced medical equipment for Kano General Hospital",
+          projectDescription: "Procurement of essential medical equipment for hospitals",
           justification: "Critical need for modern medical equipment to improve healthcare delivery",
           category: "Medical Equipment",
+          certificateNumber: "KNS/MOP/PNO/2024/001",
           evaluationResults: {
-            technicalScore: 85,
-            financialScore: 78,
-            totalScore: 81.5,
-            recommendation: "Award to MedTech Solutions Ltd - highest technical score"
+            technicalScore: 88,
+            financialScore: 82,
+            totalScore: 85,
+            recommendation: "Award to PrimeCare Medical Ltd - best technical proposal"
           },
           documents: {},
           timeline: {
-            dateSubmitted: "2024-01-15T10:30:00Z",
+            dateSubmitted: "2024-01-25T10:30:00Z",
             reviewerAssigned: "BPP-001",
-            reviewStartDate: "2024-01-16T09:00:00Z"
+            reviewStartDate: "2024-01-26T09:00:00Z",
+            approvalDate: "2024-01-28T15:20:00Z"
           }
         },
         {
-          id: "NOC-2024-002",
-          tenderId: "TND-MOWI-2024-003",
-          tenderTitle: "Infrastructure Development",
-          projectTitle: "Road Construction Project",
+          id: "NOC-MOH-002",
+          tenderId: "TND-MOH-2024-002",
+          tenderTitle: "Laboratory Equipment Installation",
+          projectTitle: "Medical Laboratory Equipment Installation",
+          requestDate: "2024-02-01",
+          status: "Pending",
+          projectValue: "₦650,000,000",
+          contractorName: "Golden Gates Healthcare",
+          expectedDuration: "4 months",
+          ministryCode: "MOH",
+          ministryName: "Ministry of Health",
+          procuringEntity: "Kano State Ministry of Health",
+          contactPerson: "Dr. Amina Suleiman",
+          contactEmail: "amina.suleiman@kanostate.gov.ng",
+          projectDescription: "Installation of modern laboratory equipment for diagnostic services",
+          justification: "Enhance laboratory diagnostic capabilities across state hospitals",
+          category: "Medical Equipment",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-01T11:15:00Z"
+          }
+        },
+        {
+          id: "NOC-MOH-003",
+          tenderId: "TND-MOH-2024-003",
+          tenderTitle: "Pharmaceutical Supply Contract",
+          projectTitle: "Pharmaceutical Supply Program",
+          requestDate: "2024-02-05",
+          status: "Approved",
+          projectValue: "₦1,200,000,000",
+          contractorName: "Falcon Diagnostics Ltd",
+          expectedDuration: "12 months",
+          ministryCode: "MOH",
+          ministryName: "Ministry of Health",
+          procuringEntity: "Kano State Ministry of Health",
+          contactPerson: "Dr. Amina Suleiman",
+          contactEmail: "amina.suleiman@kanostate.gov.ng",
+          projectDescription: "Long-term pharmaceutical supply for state health facilities",
+          justification: "Ensure continuous availability of essential medicines",
+          category: "Pharmaceuticals",
+          certificateNumber: "KNS/MOP/PNO/2024/002",
+          evaluationResults: {
+            technicalScore: 90,
+            financialScore: 87,
+            totalScore: 88.5,
+            recommendation: "Award to Falcon Diagnostics Ltd - competitive pricing"
+          },
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-05T14:30:00Z",
+            reviewerAssigned: "BPP-001",
+            reviewStartDate: "2024-02-06T09:00:00Z",
+            approvalDate: "2024-02-08T16:45:00Z"
+          }
+        },
+
+        // Ministry of Works and Infrastructure NOC Requests
+        {
+          id: "NOC-MOWI-001",
+          tenderId: "TND-MOWI-2024-001",
+          tenderTitle: "Highway Rehabilitation Project",
+          projectTitle: "Kano-Kaduna Highway Rehabilitation - Phase 1",
           requestDate: "2024-01-20",
-          status: "Under Review",
-          projectValue: "₦500,000,000",
-          contractorName: "BuildCorp Nigeria Ltd",
+          status: "Approved",
+          projectValue: "₦15,200,000,000",
+          contractorName: "Kano Construction Ltd",
           expectedDuration: "18 months",
           ministryCode: "MOWI",
           ministryName: "Ministry of Works and Infrastructure",
           procuringEntity: "Kano State Ministry of Works",
           contactPerson: "Eng. Muktar Ibrahim",
           contactEmail: "muktar.ibrahim@kanostate.gov.ng",
-          projectDescription: "Construction of 25km dual carriageway connecting major districts",
-          justification: "Improve transportation and economic activities in target areas",
+          projectDescription: "Comprehensive rehabilitation of the Kano-Kaduna highway",
+          justification: "Critical transportation infrastructure connecting major economic centers",
           category: "Infrastructure",
+          certificateNumber: "KNS/MOWI/PNO/2024/001",
+          evaluationResults: {
+            technicalScore: 95,
+            financialScore: 88,
+            totalScore: 91.5,
+            recommendation: "Award to Kano Construction Ltd - proven track record"
+          },
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-01-20T08:30:00Z",
+            reviewerAssigned: "BPP-002",
+            reviewStartDate: "2024-01-21T09:00:00Z",
+            approvalDate: "2024-01-25T17:00:00Z"
+          }
+        },
+        {
+          id: "NOC-MOWI-002",
+          tenderId: "TND-MOWI-2024-002",
+          tenderTitle: "Bridge Construction Contract",
+          projectTitle: "Bridge Construction Project - Phase 2",
+          requestDate: "2024-02-01",
+          status: "Pending",
+          projectValue: "₦8,500,000,000",
+          contractorName: "Sahel Bridge Builders",
+          expectedDuration: "12 months",
+          ministryCode: "MOWI",
+          ministryName: "Ministry of Works and Infrastructure",
+          procuringEntity: "Kano State Ministry of Works",
+          contactPerson: "Eng. Muktar Ibrahim",
+          contactEmail: "muktar.ibrahim@kanostate.gov.ng",
+          projectDescription: "Construction of strategic bridges across major waterways",
+          justification: "Improve connectivity and facilitate economic development",
+          category: "Infrastructure",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-01T10:20:00Z"
+          }
+        },
+        {
+          id: "NOC-MOWI-003",
+          tenderId: "TND-MOWI-2024-003",
+          tenderTitle: "Government Building Renovation",
+          projectTitle: "Government Secretariat Renovation",
+          requestDate: "2024-02-05",
+          status: "Approved",
+          projectValue: "₦6,800,000,000",
+          contractorName: "Northern Roads Nigeria",
+          expectedDuration: "10 months",
+          ministryCode: "MOWI",
+          ministryName: "Ministry of Works and Infrastructure",
+          procuringEntity: "Kano State Ministry of Works",
+          contactPerson: "Eng. Muktar Ibrahim",
+          contactEmail: "muktar.ibrahim@kanostate.gov.ng",
+          projectDescription: "Complete renovation of the state government secretariat",
+          justification: "Modernize government facilities and improve working conditions",
+          category: "Buildings",
+          certificateNumber: "KNS/MOWI/PNO/2024/002",
           evaluationResults: {
             technicalScore: 92,
             financialScore: 85,
             totalScore: 88.5,
-            recommendation: "Award to BuildCorp Nigeria Ltd - comprehensive proposal"
+            recommendation: "Award to Northern Roads Nigeria - comprehensive proposal"
           },
           documents: {},
           timeline: {
-            dateSubmitted: "2024-01-20T14:15:00Z",
+            dateSubmitted: "2024-02-05T13:15:00Z",
             reviewerAssigned: "BPP-002",
-            reviewStartDate: "2024-01-21T08:30:00Z"
+            reviewStartDate: "2024-02-06T09:00:00Z",
+            approvalDate: "2024-02-10T14:30:00Z"
+          }
+        },
+        {
+          id: "NOC-MOWI-004",
+          tenderId: "TND-MOWI-2024-004",
+          tenderTitle: "Urban Drainage Development",
+          projectTitle: "Urban Drainage System Development",
+          requestDate: "2024-02-08",
+          status: "Approved",
+          projectValue: "₦12,300,000,000",
+          contractorName: "Emirate Construction Co",
+          expectedDuration: "15 months",
+          ministryCode: "MOWI",
+          ministryName: "Ministry of Works and Infrastructure",
+          procuringEntity: "Kano State Ministry of Works",
+          contactPerson: "Eng. Muktar Ibrahim",
+          contactEmail: "muktar.ibrahim@kanostate.gov.ng",
+          projectDescription: "Development of comprehensive urban drainage systems",
+          justification: "Address flooding issues and improve urban infrastructure",
+          category: "Infrastructure",
+          certificateNumber: "KNS/MOWI/PNO/2024/003",
+          evaluationResults: {
+            technicalScore: 89,
+            financialScore: 91,
+            totalScore: 90,
+            recommendation: "Award to Emirate Construction Co - cost-effective solution"
+          },
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-08T09:45:00Z",
+            reviewerAssigned: "BPP-002",
+            reviewStartDate: "2024-02-09T09:00:00Z",
+            approvalDate: "2024-02-12T16:20:00Z"
+          }
+        },
+        {
+          id: "NOC-MOWI-005",
+          tenderId: "TND-MOWI-2024-005",
+          tenderTitle: "Heavy Equipment Procurement",
+          projectTitle: "Heavy Equipment Procurement & Installation",
+          requestDate: "2024-02-10",
+          status: "Pending",
+          projectValue: "₦4,750,000,000",
+          contractorName: "Federal Infrastructure Ltd",
+          expectedDuration: "8 months",
+          ministryCode: "MOWI",
+          ministryName: "Ministry of Works and Infrastructure",
+          procuringEntity: "Kano State Ministry of Works",
+          contactPerson: "Eng. Muktar Ibrahim",
+          contactEmail: "muktar.ibrahim@kanostate.gov.ng",
+          projectDescription: "Procurement of heavy construction equipment",
+          justification: "Enhance state capacity for infrastructure development",
+          category: "Equipment",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-10T11:30:00Z"
           }
         }
       ];
