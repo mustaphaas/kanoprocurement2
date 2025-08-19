@@ -915,27 +915,198 @@ const TenderManagement = () => {
             </CardContent>
           </Card>
 
-          {/* Step 2: COI Declaration (Locked) */}
-          <Card className="opacity-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold text-sm">
-                  2
+          {/* Step 2: COI Declaration */}
+          {currentStep >= 2 && !stepStatus.step2.locked ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm">
+                    2
+                  </div>
+                  COI Declaration
+                  <Badge className="bg-blue-100 text-blue-800">Evaluator View</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Evaluator Dashboard */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Card className="p-4">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <div>
+                          <p className="font-medium">Completed</p>
+                          <p className="text-2xl font-bold">3</p>
+                        </div>
+                      </div>
+                    </Card>
+
+                    <Card className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-5 w-5 text-yellow-600" />
+                        <div>
+                          <p className="font-medium">Pending</p>
+                          <p className="text-2xl font-bold">1</p>
+                        </div>
+                      </div>
+                    </Card>
+
+                    <Card className="p-4">
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle className="h-5 w-5 text-red-600" />
+                        <div>
+                          <p className="font-medium">Conflicts</p>
+                          <p className="text-2xl font-bold">1</p>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+
+                  {/* Declaration Forms */}
+                  <div className="space-y-4">
+                    <h3 className="font-medium">Individual COI Declarations</h3>
+
+                    {[
+                      { name: "Dr. Amina Hassan", role: "Chairperson", status: "Completed", conflict: false },
+                      { name: "Eng. Musa Ibrahim", role: "Technical Secretary", status: "Completed", conflict: false },
+                      { name: "Dr. Fatima Yusuf", role: "Clinical Evaluator", status: "Conflict Declared", conflict: true, details: "Financial relationship with Vendor B - Medium severity" },
+                      { name: "Bala Ahmed", role: "Financial Analyst", status: "Pending", conflict: null },
+                      { name: "Mary Luka", role: "Procurement Expert", status: "Completed", conflict: false },
+                    ].map((member, index) => (
+                      <Card key={index} className="p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <p className="font-medium">{member.name}</p>
+                            <p className="text-sm text-gray-600">{member.role}</p>
+                          </div>
+                          <Badge className={
+                            member.status === "Completed" && !member.conflict ? "bg-green-100 text-green-800" :
+                            member.status === "Conflict Declared" ? "bg-red-100 text-red-800" :
+                            "bg-yellow-100 text-yellow-800"
+                          }>
+                            {member.status}
+                          </Badge>
+                        </div>
+
+                        {member.status === "Pending" && (
+                          <div className="space-y-3 bg-gray-50 p-3 rounded-lg">
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">Declaration</Label>
+                              <div className="space-y-2">
+                                <div className="flex items-center space-x-2">
+                                  <Checkbox id={`no-conflict-${index}`} />
+                                  <Label htmlFor={`no-conflict-${index}`} className="text-sm">
+                                    ✅ I declare no conflict of interest
+                                  </Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <Checkbox id={`has-conflict-${index}`} />
+                                  <Label htmlFor={`has-conflict-${index}`} className="text-sm">
+                                    ❌ Conflict Exists
+                                  </Label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">Conflict Type & Details</Label>
+                              <Select>
+                                <SelectTrigger className="mt-1">
+                                  <SelectValue placeholder="Select conflict type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="financial">Financial</SelectItem>
+                                  <SelectItem value="professional">Professional</SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <Textarea
+                                placeholder="Provide details about the conflict..."
+                                className="mt-2"
+                                rows={3}
+                              />
+                            </div>
+
+                            <Button size="sm">Submit Declaration</Button>
+                          </div>
+                        )}
+
+                        {member.conflict && member.details && (
+                          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="text-sm font-medium text-red-800">Conflict Details:</p>
+                            <p className="text-sm text-red-700 mt-1">{member.details}</p>
+                            <div className="flex gap-2 mt-2">
+                              <Button size="sm" variant="outline">Approve with Mitigation</Button>
+                              <Button size="sm" variant="destructive">Replace Evaluator</Button>
+                            </div>
+                          </div>
+                        )}
+                      </Card>
+                    ))}
+                  </div>
+
+                  {/* Officer Review Panel */}
+                  <Card className="p-4 bg-blue-50">
+                    <h3 className="font-medium text-blue-900 mb-3">Officer Review Panel</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                        <div>
+                          <p className="font-medium">Dr. Fatima Yusuf - Conflict Review</p>
+                          <p className="text-sm text-gray-600">Financial relationship with participating vendor</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline">Approve with Mitigation</Button>
+                          <Button size="sm" variant="destructive">Replace Evaluator</Button>
+                          <Button size="sm" variant="outline">Block Participation</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* Action Button */}
+                  <div className="flex justify-center">
+                    <Button
+                      className="bg-primary px-8"
+                      onClick={() => {
+                        setCoiResolved(true);
+                        setStepStatus(prev => ({
+                          ...prev,
+                          step2: { completed: true, locked: false },
+                          step3: { completed: false, locked: false }
+                        }));
+                        setCurrentStep(3);
+                      }}
+                      disabled={!coiResolved}
+                    >
+                      <Shield className="h-4 w-4 mr-2" />
+                      Finalize COI Review
+                    </Button>
+                  </div>
                 </div>
-                COI Declaration
-                <Badge className="bg-gray-100 text-gray-600">Locked</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 font-medium">Complete Step 1 to unlock</p>
-                <p className="text-sm text-gray-500 mt-1">
-                  Committee assignment must be confirmed before COI declarations can begin
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="opacity-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold text-sm">
+                    2
+                  </div>
+                  COI Declaration
+                  <Badge className="bg-gray-100 text-gray-600">Locked</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 font-medium">Complete Step 1 to unlock</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Committee assignment must be confirmed before COI declarations can begin
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Step 3: QCBS Scoring (Locked) */}
           <Card className="opacity-50">
