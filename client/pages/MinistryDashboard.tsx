@@ -2243,7 +2243,7 @@ export default function MinistryDashboard() {
     // Set up real-time synchronization with Admin/SuperUser dashboards
     const syncInterval = setInterval(() => {
       console.log(
-        "🔄 Ministry Dashboard: Checking for company status changes...",
+        "��� Ministry Dashboard: Checking for company status changes...",
       );
       setCompanies((prevCompanies) => {
         let hasChanges = false;
@@ -10147,12 +10147,15 @@ Blockchain Timestamp: ${Date.now()}
     </div>
   );
 
-  const renderNOCRequests = () => (
-    <NOCRequestsModule
-      ministryCode={ministry.code}
-      ministryName={ministry.name}
-    />
-  );
+  const renderNOCRequests = () => {
+    const { ministry } = getMinistryMockData();
+    return (
+      <NOCRequestsModule
+        ministryCode={ministry.code}
+        ministryName={ministry.name}
+      />
+    );
+  };
 
   const renderUserManagement = () => (
     <div className="space-y-4">
