@@ -3824,7 +3824,6 @@ export default function MinistryDashboard() {
     alert(`Tender ${isDraft ? "saved as draft" : "published"} successfully!`);
   };
 
-
   // Helper functions for evaluation scoring
   const updateEvaluationScore = (
     bidderId: string,
@@ -11632,7 +11631,6 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
       )}
-
 
       {/* Create User Modal */}
       {showCreateUserModal && (

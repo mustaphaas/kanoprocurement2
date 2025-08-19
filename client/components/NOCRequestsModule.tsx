@@ -6,8 +6,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
@@ -31,7 +43,7 @@ import {
   FileCheck,
   History,
   Signature,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
 
 // Enhanced NOC Request interface
@@ -41,7 +53,14 @@ interface NOCRequest {
   tenderTitle?: string;
   projectTitle: string;
   requestDate: string;
-  status: "Draft" | "Submitted" | "Under Review" | "Clarification Requested" | "Approved" | "Rejected" | "Pending";
+  status:
+    | "Draft"
+    | "Submitted"
+    | "Under Review"
+    | "Clarification Requested"
+    | "Approved"
+    | "Rejected"
+    | "Pending";
   projectValue: string;
   contractorName: string;
   expectedDuration: string;
@@ -53,7 +72,7 @@ interface NOCRequest {
   projectDescription: string;
   justification: string;
   category: string;
-  
+
   // Enhanced fields for new functionality
   evaluationResults?: {
     technicalScore: number;
@@ -61,7 +80,7 @@ interface NOCRequest {
     totalScore: number;
     recommendation: string;
   };
-  
+
   // Document attachments
   documents: {
     evaluationReport?: File;
@@ -70,7 +89,7 @@ interface NOCRequest {
     recommendationForAward?: File;
     supportingDocuments?: File[];
   };
-  
+
   // Workflow tracking
   timeline: {
     dateSubmitted?: string;
@@ -80,7 +99,7 @@ interface NOCRequest {
     rejectionDate?: string;
     clarificationRequestDate?: string;
   };
-  
+
   // BPP decision information
   bppDecision?: {
     decision: "Approve" | "Reject" | "Request Clarification";
@@ -89,7 +108,7 @@ interface NOCRequest {
     digitalSignature?: string;
     decisionDate: string;
   };
-  
+
   // Version control for clarifications
   version: number;
   clarificationHistory?: {
@@ -99,7 +118,7 @@ interface NOCRequest {
     responseDate?: string;
     responseDocuments?: File[];
   }[];
-  
+
   approvalDate?: string;
   certificateNumber?: string;
 }
@@ -125,17 +144,26 @@ interface NOCRequestsModuleProps {
   ministryName: string;
 }
 
-export default function NOCRequestsModule({ ministryCode, ministryName }: NOCRequestsModuleProps) {
+export default function NOCRequestsModule({
+  ministryCode,
+  ministryName,
+}: NOCRequestsModuleProps) {
   const [activeTab, setActiveTab] = useState("new-request");
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
-  const [completedTenders, setCompletedTenders] = useState<TenderEvaluation[]>([]);
-  const [selectedTender, setSelectedTender] = useState<TenderEvaluation | null>(null);
+  const [completedTenders, setCompletedTenders] = useState<TenderEvaluation[]>(
+    [],
+  );
+  const [selectedTender, setSelectedTender] = useState<TenderEvaluation | null>(
+    null,
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showNewRequestDialog, setShowNewRequestDialog] = useState(false);
   const [showRequestDetails, setShowRequestDetails] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<NOCRequest | null>(null);
-  
+  const [selectedRequest, setSelectedRequest] = useState<NOCRequest | null>(
+    null,
+  );
+
   // New NOC Request form state
   const [newRequest, setNewRequest] = useState<Partial<NOCRequest>>({
     projectTitle: "",
@@ -150,7 +178,7 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
     category: "",
     documents: {},
     version: 1,
-    timeline: {}
+    timeline: {},
   });
 
   // Load data on component mount
@@ -168,10 +196,10 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
       const migratedRequests = requests.map((request: any) => ({
         ...request,
         timeline: request.timeline || {
-          dateSubmitted: request.requestDate
+          dateSubmitted: request.requestDate,
         },
         documents: request.documents || {},
-        version: request.version || 1
+        version: request.version || 1,
       }));
       setNOCRequests(migratedRequests);
     }
@@ -189,14 +217,14 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
           technicalScore: 85,
           financialScore: 92,
           totalScore: 88.5,
-          recommendation: "Recommended for Award"
+          recommendation: "Recommended for Award",
         },
         winningBidder: "HealthBuild Construction Ltd",
         projectValue: "₦45,000,000",
-        evaluationDate: "2024-01-15"
+        evaluationDate: "2024-01-15",
       },
       {
-        id: "TENDER_002", 
+        id: "TENDER_002",
         tenderTitle: "Road Rehabilitation Project - Phase 2",
         ministryCode,
         status: "Completed",
@@ -204,41 +232,45 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
           technicalScore: 78,
           financialScore: 95,
           totalScore: 86.5,
-          recommendation: "Recommended for Award"
+          recommendation: "Recommended for Award",
         },
         winningBidder: "Elite Infrastructure Nigeria",
         projectValue: "₦120,000,000",
-        evaluationDate: "2024-01-20"
-      }
+        evaluationDate: "2024-01-20",
+      },
     ];
     setCompletedTenders(mockCompletedTenders);
   };
 
   const handleTenderSelection = (tender: TenderEvaluation) => {
     setSelectedTender(tender);
-    setNewRequest(prev => ({
+    setNewRequest((prev) => ({
       ...prev,
       tenderId: tender.id,
       tenderTitle: tender.tenderTitle,
       projectTitle: tender.tenderTitle,
       projectValue: tender.projectValue,
       contractorName: tender.winningBidder,
-      evaluationResults: tender.evaluationResults
+      evaluationResults: tender.evaluationResults,
     }));
   };
 
   const handleFileUpload = (documentType: string, file: File) => {
-    setNewRequest(prev => ({
+    setNewRequest((prev) => ({
       ...prev,
       documents: {
         ...prev.documents,
-        [documentType]: file
-      }
+        [documentType]: file,
+      },
     }));
   };
 
   const handleSubmitNOCRequest = () => {
-    if (!newRequest.projectTitle || !newRequest.contractorName || !newRequest.projectValue) {
+    if (
+      !newRequest.projectTitle ||
+      !newRequest.contractorName ||
+      !newRequest.projectValue
+    ) {
       alert("Please fill in all required fields");
       return;
     }
@@ -267,9 +299,9 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
       evaluationResults: newRequest.evaluationResults,
       documents: newRequest.documents || {},
       timeline: {
-        dateSubmitted: currentDate
+        dateSubmitted: currentDate,
       },
-      version: 1
+      version: 1,
     };
 
     // Save to ministry-specific storage
@@ -292,10 +324,10 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
       nocRequest.projectTitle,
       `New NOC request created for ${nocRequest.projectTitle}`,
       "HIGH",
-      nocRequest
+      nocRequest,
     );
 
-    setNOCRequests(prev => [nocRequest, ...prev]);
+    setNOCRequests((prev) => [nocRequest, ...prev]);
     setShowNewRequestDialog(false);
     setNewRequest({
       projectTitle: "",
@@ -310,7 +342,7 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
       category: "",
       documents: {},
       version: 1,
-      timeline: {}
+      timeline: {},
     });
     setSelectedTender(null);
 
@@ -318,36 +350,41 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
   };
 
   const handleSubmitForReview = (requestId: string) => {
-    setNOCRequests(prev => prev.map(req => 
-      req.id === requestId 
-        ? { 
-            ...req, 
-            status: "Submitted",
-            timeline: {
-              ...req.timeline,
-              dateSubmitted: new Date().toISOString().split("T")[0]
+    setNOCRequests((prev) =>
+      prev.map((req) =>
+        req.id === requestId
+          ? {
+              ...req,
+              status: "Submitted",
+              timeline: {
+                ...req.timeline,
+                dateSubmitted: new Date().toISOString().split("T")[0],
+              },
             }
-          }
-        : req
-    ));
+          : req,
+      ),
+    );
 
     // Update central storage
     const centralNOCs = localStorage.getItem("centralNOCRequests");
     if (centralNOCs) {
       const centralList = JSON.parse(centralNOCs);
-      const updatedCentralList = centralList.map((req: NOCRequest) => 
-        req.id === requestId 
-          ? { 
-              ...req, 
+      const updatedCentralList = centralList.map((req: NOCRequest) =>
+        req.id === requestId
+          ? {
+              ...req,
               status: "Submitted",
               timeline: {
                 ...req.timeline,
-                dateSubmitted: new Date().toISOString().split("T")[0]
-              }
+                dateSubmitted: new Date().toISOString().split("T")[0],
+              },
             }
-          : req
+          : req,
       );
-      localStorage.setItem("centralNOCRequests", JSON.stringify(updatedCentralList));
+      localStorage.setItem(
+        "centralNOCRequests",
+        JSON.stringify(updatedCentralList),
+      );
     }
 
     alert("NOC Request submitted for review!");
@@ -355,14 +392,17 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
 
   const getStatusBadge = (status: NOCRequest["status"]) => {
     const statusConfig = {
-      "Draft": { color: "bg-gray-100 text-gray-800", icon: FileText },
-      "Submitted": { color: "bg-blue-100 text-blue-800", icon: Send },
+      Draft: { color: "bg-gray-100 text-gray-800", icon: FileText },
+      Submitted: { color: "bg-blue-100 text-blue-800", icon: Send },
       "Under Review": { color: "bg-yellow-100 text-yellow-800", icon: Clock },
-      "Clarification Requested": { color: "bg-orange-100 text-orange-800", icon: AlertTriangle },
-      "Approved": { color: "bg-green-100 text-green-800", icon: CheckCircle },
-      "Rejected": { color: "bg-red-100 text-red-800", icon: XCircle },
+      "Clarification Requested": {
+        color: "bg-orange-100 text-orange-800",
+        icon: AlertTriangle,
+      },
+      Approved: { color: "bg-green-100 text-green-800", icon: CheckCircle },
+      Rejected: { color: "bg-red-100 text-red-800", icon: XCircle },
       // Handle legacy status values
-      "Pending": { color: "bg-yellow-100 text-yellow-800", icon: Clock }
+      Pending: { color: "bg-yellow-100 text-yellow-800", icon: Clock },
     } as const;
 
     const config = statusConfig[status as keyof typeof statusConfig];
@@ -387,10 +427,12 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
     );
   };
 
-  const filteredRequests = nocRequests.filter(request => {
-    const matchesSearch = request.projectTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         request.contractorName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || request.status === statusFilter;
+  const filteredRequests = nocRequests.filter((request) => {
+    const matchesSearch =
+      request.projectTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      request.contractorName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || request.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -398,8 +440,13 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">NOC Requests Module</h2>
-          <p className="text-gray-600">Manage No Objection Certificate requests linked to tender evaluations</p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            NOC Requests Module
+          </h2>
+          <p className="text-gray-600">
+            Manage No Objection Certificate requests linked to tender
+            evaluations
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <Button
@@ -442,32 +489,48 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Alert>
                   <FileCheck className="h-4 w-4" />
                   <AlertDescription>
-                    NOC requests are linked to completed tender evaluations. Select a completed tender below to auto-populate details.
+                    NOC requests are linked to completed tender evaluations.
+                    Select a completed tender below to auto-populate details.
                   </AlertDescription>
                 </Alert>
 
                 {completedTenders.length > 0 && (
                   <div>
-                    <Label className="text-sm font-medium">Available Completed Tender Evaluations</Label>
+                    <Label className="text-sm font-medium">
+                      Available Completed Tender Evaluations
+                    </Label>
                     <div className="grid gap-3 mt-2">
                       {completedTenders.map((tender) => (
-                        <Card 
+                        <Card
                           key={tender.id}
                           className={`cursor-pointer transition-colors ${
-                            selectedTender?.id === tender.id ? 'ring-2 ring-green-500 bg-green-50' : 'hover:bg-gray-50'
+                            selectedTender?.id === tender.id
+                              ? "ring-2 ring-green-500 bg-green-50"
+                              : "hover:bg-gray-50"
                           }`}
                           onClick={() => handleTenderSelection(tender)}
                         >
                           <CardContent className="p-4">
                             <div className="flex justify-between items-start">
                               <div className="space-y-1">
-                                <h3 className="font-medium">{tender.tenderTitle}</h3>
-                                <p className="text-sm text-gray-600">Winning Bidder: {tender.winningBidder}</p>
-                                <p className="text-sm text-gray-600">Project Value: {tender.projectValue}</p>
+                                <h3 className="font-medium">
+                                  {tender.tenderTitle}
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  Winning Bidder: {tender.winningBidder}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Project Value: {tender.projectValue}
+                                </p>
                               </div>
                               <div className="text-right">
-                                <p className="text-sm font-medium">Overall Score: {tender.evaluationResults.totalScore}%</p>
-                                <p className="text-xs text-green-600">{tender.evaluationResults.recommendation}</p>
+                                <p className="text-sm font-medium">
+                                  Overall Score:{" "}
+                                  {tender.evaluationResults.totalScore}%
+                                </p>
+                                <p className="text-xs text-green-600">
+                                  {tender.evaluationResults.recommendation}
+                                </p>
                               </div>
                             </div>
                           </CardContent>
@@ -517,7 +580,9 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                     <SelectItem value="Draft">Draft</SelectItem>
                     <SelectItem value="Submitted">Submitted</SelectItem>
                     <SelectItem value="Under Review">Under Review</SelectItem>
-                    <SelectItem value="Clarification Requested">Clarification Requested</SelectItem>
+                    <SelectItem value="Clarification Requested">
+                      Clarification Requested
+                    </SelectItem>
                     <SelectItem value="Approved">Approved</SelectItem>
                     <SelectItem value="Rejected">Rejected</SelectItem>
                     <SelectItem value="Pending">Pending</SelectItem>
@@ -527,22 +592,41 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
 
               <div className="grid gap-4">
                 {filteredRequests.map((request) => (
-                  <Card key={request.id} className="hover:shadow-md transition-shadow">
+                  <Card
+                    key={request.id}
+                    className="hover:shadow-md transition-shadow"
+                  >
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start">
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <h3 className="font-medium">{request.projectTitle}</h3>
+                            <h3 className="font-medium">
+                              {request.projectTitle}
+                            </h3>
                             {getStatusBadge(request.status)}
                           </div>
                           <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                             <div>
-                              <p><span className="font-medium">Contractor:</span> {request.contractorName}</p>
-                              <p><span className="font-medium">Value:</span> {request.projectValue}</p>
+                              <p>
+                                <span className="font-medium">Contractor:</span>{" "}
+                                {request.contractorName}
+                              </p>
+                              <p>
+                                <span className="font-medium">Value:</span>{" "}
+                                {request.projectValue}
+                              </p>
                             </div>
                             <div>
-                              <p><span className="font-medium">Request Date:</span> {request.requestDate}</p>
-                              <p><span className="font-medium">Duration:</span> {request.expectedDuration}</p>
+                              <p>
+                                <span className="font-medium">
+                                  Request Date:
+                                </span>{" "}
+                                {request.requestDate}
+                              </p>
+                              <p>
+                                <span className="font-medium">Duration:</span>{" "}
+                                {request.expectedDuration}
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -598,55 +682,71 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Alert>
                   <FileCheck className="h-4 w-4" />
                   <AlertDescription>
-                    This section shows BPP's decision log for your submitted NOC requests. Decisions are digitally signed and securely logged.
+                    This section shows BPP's decision log for your submitted NOC
+                    requests. Decisions are digitally signed and securely
+                    logged.
                   </AlertDescription>
                 </Alert>
 
                 <div className="grid gap-4">
                   {nocRequests
-                    .filter(req => req.status !== "Draft")
+                    .filter((req) => req.status !== "Draft")
                     .map((request) => (
-                    <Card key={request.id}>
-                      <CardContent className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="space-y-2">
-                            <h3 className="font-medium">{request.projectTitle}</h3>
-                            <div className="flex items-center gap-2">
-                              {getStatusBadge(request.status)}
+                      <Card key={request.id}>
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-2">
+                              <h3 className="font-medium">
+                                {request.projectTitle}
+                              </h3>
+                              <div className="flex items-center gap-2">
+                                {getStatusBadge(request.status)}
+                                {request.bppDecision && (
+                                  <Badge variant="outline" className="text-xs">
+                                    Decision by:{" "}
+                                    {request.bppDecision.reviewerName}
+                                  </Badge>
+                                )}
+                              </div>
                               {request.bppDecision && (
-                                <Badge variant="outline" className="text-xs">
-                                  Decision by: {request.bppDecision.reviewerName}
-                                </Badge>
+                                <div className="bg-gray-50 p-3 rounded-md">
+                                  <p className="text-sm font-medium">
+                                    BPP Decision Comments:
+                                  </p>
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    {request.bppDecision.comments}
+                                  </p>
+                                  <p className="text-xs text-gray-500 mt-2">
+                                    Decision Date:{" "}
+                                    {request.bppDecision.decisionDate}
+                                    {request.bppDecision.digitalSignature &&
+                                      " • Digitally Signed"}
+                                  </p>
+                                </div>
                               )}
                             </div>
-                            {request.bppDecision && (
-                              <div className="bg-gray-50 p-3 rounded-md">
-                                <p className="text-sm font-medium">BPP Decision Comments:</p>
-                                <p className="text-sm text-gray-600 mt-1">{request.bppDecision.comments}</p>
-                                <p className="text-xs text-gray-500 mt-2">
-                                  Decision Date: {request.bppDecision.decisionDate}
-                                  {request.bppDecision.digitalSignature && " • Digitally Signed"}
-                                </p>
-                              </div>
-                            )}
+                            <div className="text-right">
+                              <p className="text-sm text-gray-600">
+                                Submitted:{" "}
+                                {request.timeline?.dateSubmitted ||
+                                  request.requestDate}
+                              </p>
+                              {request.status === "Approved" &&
+                                request.certificateNumber && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                  >
+                                    <Download className="h-4 w-4 mr-1" />
+                                    Download Certificate
+                                  </Button>
+                                )}
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm text-gray-600">Submitted: {request.timeline?.dateSubmitted || request.requestDate}</p>
-                            {request.status === "Approved" && request.certificateNumber && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="mt-2"
-                              >
-                                <Download className="h-4 w-4 mr-1" />
-                                Download Certificate
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    ))}
                 </div>
               </div>
             </CardContent>
@@ -655,25 +755,42 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
       </Tabs>
 
       {/* New NOC Request Dialog */}
-      <Dialog open={showNewRequestDialog} onOpenChange={setShowNewRequestDialog}>
+      <Dialog
+        open={showNewRequestDialog}
+        onOpenChange={setShowNewRequestDialog}
+      >
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create New NOC Request</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-6">
             {selectedTender && (
               <Card className="bg-blue-50 border-blue-200">
                 <CardContent className="p-4">
-                  <h4 className="font-medium text-blue-900 mb-2">Selected Tender Evaluation</h4>
+                  <h4 className="font-medium text-blue-900 mb-2">
+                    Selected Tender Evaluation
+                  </h4>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <p><span className="font-medium">Tender:</span> {selectedTender.tenderTitle}</p>
-                      <p><span className="font-medium">Winning Bidder:</span> {selectedTender.winningBidder}</p>
+                      <p>
+                        <span className="font-medium">Tender:</span>{" "}
+                        {selectedTender.tenderTitle}
+                      </p>
+                      <p>
+                        <span className="font-medium">Winning Bidder:</span>{" "}
+                        {selectedTender.winningBidder}
+                      </p>
                     </div>
                     <div>
-                      <p><span className="font-medium">Project Value:</span> {selectedTender.projectValue}</p>
-                      <p><span className="font-medium">Overall Score:</span> {selectedTender.evaluationResults.totalScore}%</p>
+                      <p>
+                        <span className="font-medium">Project Value:</span>{" "}
+                        {selectedTender.projectValue}
+                      </p>
+                      <p>
+                        <span className="font-medium">Overall Score:</span>{" "}
+                        {selectedTender.evaluationResults.totalScore}%
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -686,7 +803,12 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Input
                   id="projectTitle"
                   value={newRequest.projectTitle || ""}
-                  onChange={(e) => setNewRequest(prev => ({ ...prev, projectTitle: e.target.value }))}
+                  onChange={(e) =>
+                    setNewRequest((prev) => ({
+                      ...prev,
+                      projectTitle: e.target.value,
+                    }))
+                  }
                   placeholder="Enter project title"
                 />
               </div>
@@ -695,7 +817,12 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Input
                   id="contractorName"
                   value={newRequest.contractorName || ""}
-                  onChange={(e) => setNewRequest(prev => ({ ...prev, contractorName: e.target.value }))}
+                  onChange={(e) =>
+                    setNewRequest((prev) => ({
+                      ...prev,
+                      contractorName: e.target.value,
+                    }))
+                  }
                   placeholder="Enter contractor name"
                 />
               </div>
@@ -707,7 +834,12 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Input
                   id="projectValue"
                   value={newRequest.projectValue || ""}
-                  onChange={(e) => setNewRequest(prev => ({ ...prev, projectValue: e.target.value }))}
+                  onChange={(e) =>
+                    setNewRequest((prev) => ({
+                      ...prev,
+                      projectValue: e.target.value,
+                    }))
+                  }
                   placeholder="Enter project value"
                 />
               </div>
@@ -716,7 +848,12 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Input
                   id="expectedDuration"
                   value={newRequest.expectedDuration || ""}
-                  onChange={(e) => setNewRequest(prev => ({ ...prev, expectedDuration: e.target.value }))}
+                  onChange={(e) =>
+                    setNewRequest((prev) => ({
+                      ...prev,
+                      expectedDuration: e.target.value,
+                    }))
+                  }
                   placeholder="e.g., 12 months"
                 />
               </div>
@@ -728,7 +865,12 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Input
                   id="procuringEntity"
                   value={newRequest.procuringEntity || ""}
-                  onChange={(e) => setNewRequest(prev => ({ ...prev, procuringEntity: e.target.value }))}
+                  onChange={(e) =>
+                    setNewRequest((prev) => ({
+                      ...prev,
+                      procuringEntity: e.target.value,
+                    }))
+                  }
                   placeholder="Enter procuring entity"
                 />
               </div>
@@ -736,7 +878,9 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Label htmlFor="category">Category</Label>
                 <Select
                   value={newRequest.category || ""}
-                  onValueChange={(value) => setNewRequest(prev => ({ ...prev, category: value }))}
+                  onValueChange={(value) =>
+                    setNewRequest((prev) => ({ ...prev, category: value }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
@@ -757,7 +901,12 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <Input
                   id="contactPerson"
                   value={newRequest.contactPerson || ""}
-                  onChange={(e) => setNewRequest(prev => ({ ...prev, contactPerson: e.target.value }))}
+                  onChange={(e) =>
+                    setNewRequest((prev) => ({
+                      ...prev,
+                      contactPerson: e.target.value,
+                    }))
+                  }
                   placeholder="Enter contact person"
                 />
               </div>
@@ -767,7 +916,12 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                   id="contactEmail"
                   type="email"
                   value={newRequest.contactEmail || ""}
-                  onChange={(e) => setNewRequest(prev => ({ ...prev, contactEmail: e.target.value }))}
+                  onChange={(e) =>
+                    setNewRequest((prev) => ({
+                      ...prev,
+                      contactEmail: e.target.value,
+                    }))
+                  }
                   placeholder="Enter contact email"
                 />
               </div>
@@ -778,18 +932,30 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
               <Textarea
                 id="projectDescription"
                 value={newRequest.projectDescription || ""}
-                onChange={(e) => setNewRequest(prev => ({ ...prev, projectDescription: e.target.value }))}
+                onChange={(e) =>
+                  setNewRequest((prev) => ({
+                    ...prev,
+                    projectDescription: e.target.value,
+                  }))
+                }
                 placeholder="Provide detailed project description"
                 rows={3}
               />
             </div>
 
             <div>
-              <Label htmlFor="justification">Justification for NOC Request</Label>
+              <Label htmlFor="justification">
+                Justification for NOC Request
+              </Label>
               <Textarea
                 id="justification"
                 value={newRequest.justification || ""}
-                onChange={(e) => setNewRequest(prev => ({ ...prev, justification: e.target.value }))}
+                onChange={(e) =>
+                  setNewRequest((prev) => ({
+                    ...prev,
+                    justification: e.target.value,
+                  }))
+                }
                 placeholder="Provide justification for the NOC request"
                 rows={3}
               />
@@ -809,7 +975,7 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                         accept=".pdf,.doc,.docx"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
-                          if (file) handleFileUpload('evaluationReport', file);
+                          if (file) handleFileUpload("evaluationReport", file);
                         }}
                       />
                     </div>
@@ -822,13 +988,13 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                         accept=".pdf,.doc,.docx"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
-                          if (file) handleFileUpload('committeeMinutes', file);
+                          if (file) handleFileUpload("committeeMinutes", file);
                         }}
                       />
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Bid Comparison Sheet</Label>
@@ -838,7 +1004,8 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                         accept=".pdf,.xls,.xlsx"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
-                          if (file) handleFileUpload('bidComparisonSheet', file);
+                          if (file)
+                            handleFileUpload("bidComparisonSheet", file);
                         }}
                       />
                     </div>
@@ -851,7 +1018,8 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                         accept=".pdf,.doc,.docx"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
-                          if (file) handleFileUpload('recommendationForAward', file);
+                          if (file)
+                            handleFileUpload("recommendationForAward", file);
                         }}
                       />
                     </div>
@@ -884,32 +1052,59 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
           <DialogHeader>
             <DialogTitle>NOC Request Details</DialogTitle>
           </DialogHeader>
-          
+
           {selectedRequest && (
             <div className="space-y-6">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-medium">{selectedRequest.projectTitle}</h3>
+                <h3 className="text-lg font-medium">
+                  {selectedRequest.projectTitle}
+                </h3>
                 {getStatusBadge(selectedRequest.status)}
               </div>
 
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-medium text-gray-900">Project Information</h4>
+                    <h4 className="font-medium text-gray-900">
+                      Project Information
+                    </h4>
                     <div className="mt-2 space-y-2 text-sm">
-                      <p><span className="font-medium">Contractor:</span> {selectedRequest.contractorName}</p>
-                      <p><span className="font-medium">Value:</span> {selectedRequest.projectValue}</p>
-                      <p><span className="font-medium">Duration:</span> {selectedRequest.expectedDuration}</p>
-                      <p><span className="font-medium">Category:</span> {selectedRequest.category}</p>
+                      <p>
+                        <span className="font-medium">Contractor:</span>{" "}
+                        {selectedRequest.contractorName}
+                      </p>
+                      <p>
+                        <span className="font-medium">Value:</span>{" "}
+                        {selectedRequest.projectValue}
+                      </p>
+                      <p>
+                        <span className="font-medium">Duration:</span>{" "}
+                        {selectedRequest.expectedDuration}
+                      </p>
+                      <p>
+                        <span className="font-medium">Category:</span>{" "}
+                        {selectedRequest.category}
+                      </p>
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-gray-900">Contact Information</h4>
+                    <h4 className="font-medium text-gray-900">
+                      Contact Information
+                    </h4>
                     <div className="mt-2 space-y-2 text-sm">
-                      <p><span className="font-medium">Contact Person:</span> {selectedRequest.contactPerson}</p>
-                      <p><span className="font-medium">Email:</span> {selectedRequest.contactEmail}</p>
-                      <p><span className="font-medium">Procuring Entity:</span> {selectedRequest.procuringEntity}</p>
+                      <p>
+                        <span className="font-medium">Contact Person:</span>{" "}
+                        {selectedRequest.contactPerson}
+                      </p>
+                      <p>
+                        <span className="font-medium">Email:</span>{" "}
+                        {selectedRequest.contactEmail}
+                      </p>
+                      <p>
+                        <span className="font-medium">Procuring Entity:</span>{" "}
+                        {selectedRequest.procuringEntity}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -918,27 +1113,53 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                   <div>
                     <h4 className="font-medium text-gray-900">Timeline</h4>
                     <div className="mt-2 space-y-2 text-sm">
-                      <p><span className="font-medium">Request Date:</span> {selectedRequest.requestDate}</p>
+                      <p>
+                        <span className="font-medium">Request Date:</span>{" "}
+                        {selectedRequest.requestDate}
+                      </p>
                       {selectedRequest.timeline?.dateSubmitted && (
-                        <p><span className="font-medium">Submitted:</span> {selectedRequest.timeline.dateSubmitted}</p>
+                        <p>
+                          <span className="font-medium">Submitted:</span>{" "}
+                          {selectedRequest.timeline.dateSubmitted}
+                        </p>
                       )}
                       {selectedRequest.timeline?.reviewStartDate && (
-                        <p><span className="font-medium">Review Started:</span> {selectedRequest.timeline.reviewStartDate}</p>
+                        <p>
+                          <span className="font-medium">Review Started:</span>{" "}
+                          {selectedRequest.timeline.reviewStartDate}
+                        </p>
                       )}
                       {selectedRequest.timeline?.approvalDate && (
-                        <p><span className="font-medium">Approved:</span> {selectedRequest.timeline.approvalDate}</p>
+                        <p>
+                          <span className="font-medium">Approved:</span>{" "}
+                          {selectedRequest.timeline.approvalDate}
+                        </p>
                       )}
                     </div>
                   </div>
 
                   {selectedRequest.evaluationResults && (
                     <div>
-                      <h4 className="font-medium text-gray-900">Evaluation Results</h4>
+                      <h4 className="font-medium text-gray-900">
+                        Evaluation Results
+                      </h4>
                       <div className="mt-2 space-y-2 text-sm">
-                        <p><span className="font-medium">Technical Score:</span> {selectedRequest.evaluationResults.technicalScore}%</p>
-                        <p><span className="font-medium">Financial Score:</span> {selectedRequest.evaluationResults.financialScore}%</p>
-                        <p><span className="font-medium">Overall Score:</span> {selectedRequest.evaluationResults.totalScore}%</p>
-                        <p><span className="font-medium">Recommendation:</span> {selectedRequest.evaluationResults.recommendation}</p>
+                        <p>
+                          <span className="font-medium">Technical Score:</span>{" "}
+                          {selectedRequest.evaluationResults.technicalScore}%
+                        </p>
+                        <p>
+                          <span className="font-medium">Financial Score:</span>{" "}
+                          {selectedRequest.evaluationResults.financialScore}%
+                        </p>
+                        <p>
+                          <span className="font-medium">Overall Score:</span>{" "}
+                          {selectedRequest.evaluationResults.totalScore}%
+                        </p>
+                        <p>
+                          <span className="font-medium">Recommendation:</span>{" "}
+                          {selectedRequest.evaluationResults.recommendation}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -947,15 +1168,21 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
 
               {selectedRequest.projectDescription && (
                 <div>
-                  <h4 className="font-medium text-gray-900">Project Description</h4>
-                  <p className="mt-2 text-sm text-gray-600">{selectedRequest.projectDescription}</p>
+                  <h4 className="font-medium text-gray-900">
+                    Project Description
+                  </h4>
+                  <p className="mt-2 text-sm text-gray-600">
+                    {selectedRequest.projectDescription}
+                  </p>
                 </div>
               )}
 
               {selectedRequest.justification && (
                 <div>
                   <h4 className="font-medium text-gray-900">Justification</h4>
-                  <p className="mt-2 text-sm text-gray-600">{selectedRequest.justification}</p>
+                  <p className="mt-2 text-sm text-gray-600">
+                    {selectedRequest.justification}
+                  </p>
                 </div>
               )}
 
@@ -963,12 +1190,27 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
                 <div className="bg-gray-50 p-4 rounded-md">
                   <h4 className="font-medium text-gray-900">BPP Decision</h4>
                   <div className="mt-2 space-y-2 text-sm">
-                    <p><span className="font-medium">Decision:</span> {selectedRequest.bppDecision.decision}</p>
-                    <p><span className="font-medium">Reviewer:</span> {selectedRequest.bppDecision.reviewerName}</p>
-                    <p><span className="font-medium">Date:</span> {selectedRequest.bppDecision.decisionDate}</p>
-                    <p><span className="font-medium">Comments:</span> {selectedRequest.bppDecision.comments}</p>
+                    <p>
+                      <span className="font-medium">Decision:</span>{" "}
+                      {selectedRequest.bppDecision.decision}
+                    </p>
+                    <p>
+                      <span className="font-medium">Reviewer:</span>{" "}
+                      {selectedRequest.bppDecision.reviewerName}
+                    </p>
+                    <p>
+                      <span className="font-medium">Date:</span>{" "}
+                      {selectedRequest.bppDecision.decisionDate}
+                    </p>
+                    <p>
+                      <span className="font-medium">Comments:</span>{" "}
+                      {selectedRequest.bppDecision.comments}
+                    </p>
                     {selectedRequest.bppDecision.digitalSignature && (
-                      <p className="text-green-600"><span className="font-medium">Status:</span> Digitally Signed</p>
+                      <p className="text-green-600">
+                        <span className="font-medium">Status:</span> Digitally
+                        Signed
+                      </p>
                     )}
                   </div>
                 </div>
