@@ -5,6 +5,7 @@ import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MinistryUserForm from "@/components/MinistryUserForm";
 import ProcurementPlanning from "@/components/ProcurementPlanning";
 import TenderManagement from "@/components/TenderManagement";
+import ContractManagement from "@/components/ContractManagement";
 import BudgetAllocation from "@/components/BudgetAllocation";
 import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManagement";
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
@@ -85,7 +86,8 @@ type CurrentView =
   | "noc"
   | "users"
   | "procurement-planning"
-  | "tender-management";
+  | "tender-management"
+  | "contract-management";
 
 type TenderSubView =
   | "list"
@@ -2765,7 +2767,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-010",
           companyName: "EduTech Solutions Ltd",
-          bidAmount: "₦2,000,000,000",
+          bidAmount: "���2,000,000,000",
           technicalScore: 95,
           financialScore: 92,
           totalScore: 93.5,
@@ -10653,6 +10655,8 @@ Blockchain Timestamp: ${Date.now()}
       return <ProcurementPlanning />;
     } else if (currentView === "tender-management") {
       return <TenderManagement />;
+    } else if (currentView === "contract-management") {
+      return <ContractManagement />;
     }
     return null;
   };
@@ -10714,6 +10718,11 @@ Blockchain Timestamp: ${Date.now()}
                 key: "tender-management",
                 label: "Tender Management",
                 icon: Gavel,
+              },
+              {
+                key: "contract-management",
+                label: "Contract Management",
+                icon: Handshake,
               },
               { key: "users", label: "User Management", icon: Users },
               { key: "reports", label: "Reports", icon: TrendingUp },
