@@ -53,7 +53,8 @@ interface CommitteeRoleTemplate {
   requiredExpertise: string[];
   minimumExperience: number;
   mandatoryRole: boolean;
-  maxConflictScore: number; // Scale 1-10 for acceptable conflict levels
+  conflictOfInterestAllowed: boolean; // Binary: true = allowed, false = strictly prohibited
+  minimumRequired: number; // Minimum number of this role required
 }
 
 interface CommitteeTemplate {
@@ -73,13 +74,16 @@ interface CommitteeTemplate {
   status: "Draft" | "Active" | "Archived";
   usageCount: number;
   governanceRules: GovernanceRule[];
+  auditTrail: AuditTrail;
+  templateCategory: "Goods" | "Works" | "Services" | "Consultancy";
 }
 
 interface EvaluationFramework {
   methodology: "QCBS" | "QBS" | "LCS" | "FBS";
-  technicalWeightPercent: number;
-  financialWeightPercent: number;
-  passingTechnicalScore: number;
+  defaultTechnicalWeight: number; // Default weight, can be adjusted per tender
+  defaultFinancialWeight: number; // Default weight, can be adjusted per tender
+  allowWeightCustomization: boolean; // Whether weights can be modified per tender
+  passingTechnicalScore: number; // Configurable threshold
   scoringScale: number; // e.g., 100 or 10
   evaluationCriteria: FrameworkCriteria[];
   consensusRules: ConsensusRule[];
@@ -126,6 +130,24 @@ interface GovernanceRule {
   description: string;
   enforcement: "Mandatory" | "Recommended" | "Advisory";
   penalty: string;
+}
+
+interface AuditTrail {
+  createdBy: string;
+  createdDate: string;
+  approvedBy?: string;
+  approvedDate?: string;
+  lastModifiedBy: string;
+  lastModifiedDate: string;
+  versionHistory: VersionHistory[];
+}
+
+interface VersionHistory {
+  version: number;
+  modifiedBy: string;
+  modifiedDate: string;
+  changes: string;
+  reason: string;
 }
 
 const STORAGE_KEY = "committeeTemplates";

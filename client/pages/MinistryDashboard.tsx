@@ -4,6 +4,8 @@ import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MinistryUserForm from "@/components/MinistryUserForm";
 import ProcurementPlanning from "@/components/ProcurementPlanning";
+import TenderManagement from "@/components/TenderManagement";
+import ContractManagement from "@/components/ContractManagement";
 import BudgetAllocation from "@/components/BudgetAllocation";
 import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManagement";
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
@@ -45,6 +47,7 @@ import {
   MessageSquare,
   Shield,
   Gavel,
+  Handshake,
   BookOpen,
   Clipboard,
   CheckSquare,
@@ -83,7 +86,9 @@ type CurrentView =
   | "reports"
   | "noc"
   | "users"
-  | "procurement-planning";
+  | "procurement-planning"
+  | "tender-management"
+  | "contract-management";
 
 type TenderSubView =
   | "list"
@@ -2296,7 +2301,7 @@ export default function MinistryDashboard() {
           const updatedCompanies = prevCompanies.map((company) => {
             if (company.email.toLowerCase() === email) {
               console.log(
-                "✅ Updating company status:",
+                "�� Updating company status:",
                 company.companyName,
                 "from",
                 company.status,
@@ -2763,7 +2768,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-010",
           companyName: "EduTech Solutions Ltd",
-          bidAmount: "₦2,000,000,000",
+          bidAmount: "���2,000,000,000",
           technicalScore: 95,
           financialScore: 92,
           totalScore: 93.5,
@@ -7666,7 +7671,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                 </div>
                                 <ul className="text-xs text-red-600 mt-1 space-y-1">
                                   {!workflowStatus?.registrationCompleted && (
-                                    <li>��� Company Registration</li>
+                                    <li>����� Company Registration</li>
                                   )}
                                   {!workflowStatus?.loginVerificationCompleted && (
                                     <li>• Login & Verification</li>
@@ -10649,6 +10654,10 @@ Blockchain Timestamp: ${Date.now()}
       return renderUserManagement();
     } else if (currentView === "procurement-planning") {
       return <ProcurementPlanning />;
+    } else if (currentView === "tender-management") {
+      return <TenderManagement />;
+    } else if (currentView === "contract-management") {
+      return <ContractManagement />;
     }
     return null;
   };
@@ -10705,6 +10714,16 @@ Blockchain Timestamp: ${Date.now()}
                 key: "procurement-planning",
                 label: "Procurement Planning",
                 icon: Target,
+              },
+              {
+                key: "tender-management",
+                label: "Tender Management",
+                icon: Gavel,
+              },
+              {
+                key: "contract-management",
+                label: "Contract Management",
+                icon: Handshake,
               },
               { key: "users", label: "User Management", icon: Users },
               { key: "reports", label: "Reports", icon: TrendingUp },
