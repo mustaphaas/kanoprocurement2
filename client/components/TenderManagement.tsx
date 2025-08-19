@@ -1055,7 +1055,13 @@ const TenderManagement = () => {
                           <p className="text-sm text-gray-600">Financial relationship with participating vendor</p>
                         </div>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">Approve with Mitigation</Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setCoiResolved(true)}
+                          >
+                            Approve with Mitigation
+                          </Button>
                           <Button size="sm" variant="destructive">Replace Evaluator</Button>
                           <Button size="sm" variant="outline">Block Participation</Button>
                         </div>
