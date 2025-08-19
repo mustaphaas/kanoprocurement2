@@ -74,6 +74,8 @@ interface CommitteeTemplate {
   status: "Draft" | "Active" | "Archived";
   usageCount: number;
   governanceRules: GovernanceRule[];
+  auditTrail: AuditTrail;
+  templateCategory: "Goods" | "Works" | "Services" | "Consultancy";
 }
 
 interface EvaluationFramework {
