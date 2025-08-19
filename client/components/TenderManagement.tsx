@@ -881,23 +881,36 @@ const TenderManagement = () => {
                     <Users className="h-4 w-4 mr-2" />
                     Replace Member
                   </Button>
-                  <Button className="bg-primary" disabled>
+                  <Button
+                    className="bg-primary"
+                    onClick={() => {
+                      setCommitteeAssigned(true);
+                      setStepStatus(prev => ({
+                        ...prev,
+                        step1: { completed: true, locked: false },
+                        step2: { completed: false, locked: false }
+                      }));
+                      setCurrentStep(2);
+                    }}
+                  >
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Confirm Assignment
                   </Button>
                 </div>
 
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-yellow-800">Assignment Incomplete</p>
-                      <p className="text-sm text-yellow-700 mt-1">
-                        Resolve COI conflict for Dr. Fatima Yusuf before proceeding to Step 2.
-                      </p>
+                {!committeeAssigned && (
+                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                      <div>
+                        <p className="font-medium text-yellow-800">Assignment Required</p>
+                        <p className="text-sm text-yellow-700 mt-1">
+                          Click "Confirm Assignment" to proceed to COI Declaration step.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
