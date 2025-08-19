@@ -850,142 +850,130 @@ export default function ProcurementPlanning() {
           </div>
         </TabsContent>
 
-        <TabsContent value="committees" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Evaluation Committees</h3>
-            <Button onClick={() => setShowCommitteeModal(true)} variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              New Committee
-            </Button>
-          </div>
+        <TabsContent value="budget" className="space-y-4">
+          <BudgetAllocation />
+        </TabsContent>
 
-          <div className="grid gap-4">
-            {evaluationCommittees.map((committee) => (
-              <Card key={committee.id}>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{committee.name}</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">{committee.description}</p>
-                      <div className="flex gap-4 mt-2 text-sm text-gray-500">
-                        <span>Members: {committee.members.length}</span>
-                        <span>Active Evaluations: {committee.activeEvaluations.length}</span>
-                        <span>Created: {committee.createdDate}</span>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Badge variant={committee.status === "Active" ? "default" : "secondary"}>
-                        {committee.status}
-                      </Badge>
-                      <Button variant="outline" size="sm" onClick={() => setSelectedCommittee(committee)}>
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+        <TabsContent value="committees" className="space-y-4">
+          <EvaluationCommitteeManagement />
+        </TabsContent>
+
+        <TabsContent value="scoring" className="space-y-4">
+          <ScoringMatrixImplementation />
+        </TabsContent>
+
+        <TabsContent value="analysis" className="space-y-4">
+          <div className="grid gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Plans</CardTitle>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Committee Members:</h4>
-                    <div className="grid gap-2">
-                      {committee.members.map((member) => (
-                        <div key={member.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <div>
-                            <span className="font-medium">{member.name}</span>
-                            <span className="text-sm text-gray-600 ml-2">({member.role})</span>
-                            <span className="text-sm text-gray-500 ml-2">{member.department}</span>
+                  <div className="text-2xl font-bold">
+                    {procurementPlans.filter(p => p.status === "Approved").length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {procurementPlans.length} total plans
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    ₦{procurementPlans.reduce((sum, plan) => sum + plan.budget, 0).toLocaleString()}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Across all procurement plans
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Committees</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {evaluationCommittees.filter(c => c.status === "Active").length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {evaluationCommittees.length} total committees
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Completed Evaluations</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {scoringMatrices.filter(m => m.status === "Completed").length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {scoringMatrices.length} total matrices
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Procurement Planning Overview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-medium mb-2">Plan Status Distribution</h4>
+                    <div className="space-y-2">
+                      {["Draft", "Under Review", "Approved", "Rejected"].map(status => {
+                        const count = procurementPlans.filter(p => p.status === status).length;
+                        const percentage = procurementPlans.length > 0 ? Math.round((count / procurementPlans.length) * 100) : 0;
+
+                        return (
+                          <div key={status} className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              {getStatusBadge(status)}
+                              <span className="text-sm">{status}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium">{count}</span>
+                              <span className="text-xs text-gray-500 w-8">{percentage}%</span>
+                            </div>
                           </div>
-                          {member.conflictOfInterest && (
-                            <Badge variant="destructive" className="text-xs">
-                              Conflict of Interest
-                            </Badge>
-                          )}
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium mb-2">Recent Activity</h4>
+                    <div className="space-y-2">
+                      {procurementPlans.slice(0, 5).map((plan) => (
+                        <div key={plan.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                          <div>
+                            <span className="font-medium">{plan.title}</span>
+                            <div className="text-sm text-gray-600">
+                              Created: {plan.createdDate} • Budget: ₦{plan.budget.toLocaleString()}
+                            </div>
+                          </div>
+                          {getStatusBadge(plan.status)}
                         </div>
                       ))}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="scoring" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Scoring Matrices</h3>
-            <Button onClick={() => setShowMatrixModal(true)} variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              New Scoring Matrix
-            </Button>
-          </div>
-
-          <div className="grid gap-4">
-            {scoringMatrices.map((matrix) => (
-              <Card key={matrix.id}>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{matrix.tenderTitle}</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">Matrix ID: {matrix.id}</p>
-                      <div className="flex gap-4 mt-2 text-sm text-gray-500">
-                        <span>Criteria: {matrix.criteria.length}</span>
-                        <span>Vendors: {matrix.vendors.length}</span>
-                        <span>Created: {matrix.createdDate}</span>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Badge variant={matrix.status === "Completed" ? "default" : "secondary"}>
-                        {matrix.status}
-                      </Badge>
-                      <Button variant="outline" size="sm" onClick={() => setSelectedMatrix(matrix)}>
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium mb-2">Evaluation Criteria:</h4>
-                      <div className="grid gap-2">
-                        {matrix.criteria.map((criteria) => (
-                          <div key={criteria.id} className="flex justify-between p-2 bg-gray-50 rounded">
-                            <span>{criteria.name}</span>
-                            <span className="font-medium">{criteria.weight}%</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {matrix.status === "Completed" && (
-                      <div>
-                        <h4 className="font-medium mb-2">Final Rankings:</h4>
-                        <div className="space-y-1">
-                          {matrix.finalRanking.map((vendorId, index) => {
-                            const vendor = matrix.vendors.find(v => v.vendorId === vendorId);
-                            return (
-                              <div key={vendorId} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-bold text-lg">#{index + 1}</span>
-                                  <span>{vendor?.vendorName}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">{vendor?.totalScore.toFixed(1)}</span>
-                                  {vendor?.technicalCompliance && (
-                                    <Badge variant="default" className="text-xs">
-                                      Compliant
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
       </Tabs>
