@@ -350,10 +350,23 @@ export default function NOCRequestsModule({ ministryCode, ministryName }: NOCReq
       "Under Review": { color: "bg-yellow-100 text-yellow-800", icon: Clock },
       "Clarification Requested": { color: "bg-orange-100 text-orange-800", icon: AlertTriangle },
       "Approved": { color: "bg-green-100 text-green-800", icon: CheckCircle },
-      "Rejected": { color: "bg-red-100 text-red-800", icon: XCircle }
-    };
+      "Rejected": { color: "bg-red-100 text-red-800", icon: XCircle },
+      // Handle legacy status values
+      "Pending": { color: "bg-yellow-100 text-yellow-800", icon: Clock }
+    } as const;
 
-    const config = statusConfig[status];
+    const config = statusConfig[status as keyof typeof statusConfig];
+
+    // Fallback if status is not found
+    if (!config) {
+      return (
+        <Badge className="bg-gray-100 text-gray-800 flex items-center gap-1">
+          <AlertTriangle className="h-3 w-3" />
+          {status}
+        </Badge>
+      );
+    }
+
     const Icon = config.icon;
 
     return (
