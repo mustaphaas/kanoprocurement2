@@ -409,9 +409,12 @@ export default function NOCRequestsTab() {
         }
       ];
       
-      setNOCRequests(mockRequests);
-      localStorage.setItem("centralNOCRequests", JSON.stringify(mockRequests));
+      allNOCRequests.push(...mockRequests);
     }
+
+    // Update both central storage and state
+    setNOCRequests(allNOCRequests);
+    localStorage.setItem("centralNOCRequests", JSON.stringify(allNOCRequests));
   };
 
   const handleViewRequest = (request: NOCRequest) => {
