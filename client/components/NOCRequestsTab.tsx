@@ -551,6 +551,9 @@ export default function NOCRequestsTab() {
             : req
         );
         localStorage.setItem(ministryKey, JSON.stringify(updatedMinistryData));
+        console.log(`✅ Synced approval to ${ministryKey}:`, updatedMinistryData.find(r => r.id === selectedRequest.id));
+      } else {
+        console.error(`❌ Ministry storage ${ministryKey} not found for approval sync`);
       }
     }
 
