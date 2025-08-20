@@ -125,81 +125,79 @@ export default function NOCRequestsTab() {
 
     // Initialize ministry NOC data if not present
     const initializeMinistryData = () => {
-      // Ministry of Health NOC Requests
-      if (!localStorage.getItem("MOH_NOCRequests")) {
-        const mohRequests = [
-          {
-            id: "NOC-MOH-001",
-            projectTitle: "Hospital Equipment Supply - Phase 1",
-            requestDate: "2024-01-25",
-            status: "Approved",
-            projectValue: "₦850,000,000",
-            contractorName: "PrimeCare Medical Ltd",
-            expectedDuration: "6 months",
-            ministryCode: "MOH",
-            ministryName: "Ministry of Health",
-            procuringEntity: "Kano State Ministry of Health",
-            contactPerson: "Dr. Amina Suleiman",
-            contactEmail: "amina.suleiman@kanostate.gov.ng",
-            projectDescription: "Procurement of essential medical equipment for hospitals",
-            justification: "Critical need for modern medical equipment to improve healthcare delivery",
-            category: "Medical Equipment",
-            certificateNumber: "KNS/MOP/PNO/2024/001",
-            approvalDate: "2024-01-28",
-            documents: {},
-            timeline: {
-              dateSubmitted: "2024-01-25T10:30:00Z",
-              approvalDate: "2024-01-28T15:20:00Z"
-            }
-          },
-          {
-            id: "NOC-MOH-002",
-            projectTitle: "Medical Laboratory Equipment Installation",
-            requestDate: "2024-02-01",
-            status: "Pending",
-            projectValue: "₦650,000,000",
-            contractorName: "Golden Gates Healthcare",
-            expectedDuration: "4 months",
-            ministryCode: "MOH",
-            ministryName: "Ministry of Health",
-            procuringEntity: "Kano State Ministry of Health",
-            contactPerson: "Dr. Amina Suleiman",
-            contactEmail: "amina.suleiman@kanostate.gov.ng",
-            projectDescription: "Installation of modern laboratory equipment for diagnostic services",
-            justification: "Enhance laboratory diagnostic capabilities across state hospitals",
-            category: "Medical Equipment",
-            documents: {},
-            timeline: {
-              dateSubmitted: "2024-02-01T11:15:00Z"
-            }
-          },
-          {
-            id: "NOC-MOH-003",
-            projectTitle: "Pharmaceutical Supply Program",
-            requestDate: "2024-02-05",
-            status: "Approved",
-            projectValue: "₦1,200,000,000",
-            contractorName: "Falcon Diagnostics Ltd",
-            expectedDuration: "12 months",
-            ministryCode: "MOH",
-            ministryName: "Ministry of Health",
-            procuringEntity: "Kano State Ministry of Health",
-            contactPerson: "Dr. Amina Suleiman",
-            contactEmail: "amina.suleiman@kanostate.gov.ng",
-            projectDescription: "Long-term pharmaceutical supply for state health facilities",
-            justification: "Ensure continuous availability of essential medicines",
-            category: "Pharmaceuticals",
-            certificateNumber: "KNS/MOP/PNO/2024/002",
-            approvalDate: "2024-02-08",
-            documents: {},
-            timeline: {
-              dateSubmitted: "2024-02-05T14:30:00Z",
-              approvalDate: "2024-02-08T16:45:00Z"
-            }
+      // Ministry of Health NOC Requests - Force refresh to ensure only 3 requests
+      const mohRequests = [
+        {
+          id: "NOC-MOH-001",
+          projectTitle: "Hospital Equipment Supply - Phase 1",
+          requestDate: "2024-01-25",
+          status: "Approved",
+          projectValue: "₦850,000,000",
+          contractorName: "PrimeCare Medical Ltd",
+          expectedDuration: "6 months",
+          ministryCode: "MOH",
+          ministryName: "Ministry of Health",
+          procuringEntity: "Kano State Ministry of Health",
+          contactPerson: "Dr. Amina Suleiman",
+          contactEmail: "amina.suleiman@kanostate.gov.ng",
+          projectDescription: "Procurement of essential medical equipment for hospitals",
+          justification: "Critical need for modern medical equipment to improve healthcare delivery",
+          category: "Medical Equipment",
+          certificateNumber: "KNS/MOP/PNO/2024/001",
+          approvalDate: "2024-01-28",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-01-25T10:30:00Z",
+            approvalDate: "2024-01-28T15:20:00Z"
           }
-        ];
-        localStorage.setItem("MOH_NOCRequests", JSON.stringify(mohRequests));
-      }
+        },
+        {
+          id: "NOC-MOH-002",
+          projectTitle: "Medical Laboratory Equipment Installation",
+          requestDate: "2024-02-01",
+          status: "Pending",
+          projectValue: "₦650,000,000",
+          contractorName: "Golden Gates Healthcare",
+          expectedDuration: "4 months",
+          ministryCode: "MOH",
+          ministryName: "Ministry of Health",
+          procuringEntity: "Kano State Ministry of Health",
+          contactPerson: "Dr. Amina Suleiman",
+          contactEmail: "amina.suleiman@kanostate.gov.ng",
+          projectDescription: "Installation of modern laboratory equipment for diagnostic services",
+          justification: "Enhance laboratory diagnostic capabilities across state hospitals",
+          category: "Medical Equipment",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-01T11:15:00Z"
+          }
+        },
+        {
+          id: "NOC-MOH-003",
+          projectTitle: "Pharmaceutical Supply Program",
+          requestDate: "2024-02-05",
+          status: "Approved",
+          projectValue: "₦1,200,000,000",
+          contractorName: "Falcon Diagnostics Ltd",
+          expectedDuration: "12 months",
+          ministryCode: "MOH",
+          ministryName: "Ministry of Health",
+          procuringEntity: "Kano State Ministry of Health",
+          contactPerson: "Dr. Amina Suleiman",
+          contactEmail: "amina.suleiman@kanostate.gov.ng",
+          projectDescription: "Long-term pharmaceutical supply for state health facilities",
+          justification: "Ensure continuous availability of essential medicines",
+          category: "Pharmaceuticals",
+          certificateNumber: "KNS/MOP/PNO/2024/002",
+          approvalDate: "2024-02-08",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-05T14:30:00Z",
+            approvalDate: "2024-02-08T16:45:00Z"
+          }
+        }
+      ];
+      localStorage.setItem("MOH_NOCRequests", JSON.stringify(mohRequests));
 
       // Ministry of Works and Infrastructure NOC Requests
       if (!localStorage.getItem("MOWI_NOCRequests")) {
