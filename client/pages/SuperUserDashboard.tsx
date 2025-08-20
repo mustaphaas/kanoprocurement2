@@ -865,8 +865,7 @@ export default function SuperUserDashboard() {
       },
     ];
 
-    // Initialize audit log system with sample data
-    auditLogStorage.initializeSampleData();
+    // Note: Removed sample data initialization to use real audit logs only
 
     // Log dashboard access
     logUserAction(
