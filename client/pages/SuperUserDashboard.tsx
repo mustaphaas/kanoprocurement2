@@ -3504,6 +3504,41 @@ The award letter has been:
               onDrillDown={handleDrillDown}
               onFilterChange={handleFilterChange}
             />
+
+            {/* Recent System Activity Log */}
+            <div className="bg-white rounded-lg shadow-sm border">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Recent System Activity Log
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {auditLogs.slice(0, 5).map((log) => (
+                    <div
+                      key={log.id}
+                      className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
+                    >
+                      <Activity className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium text-gray-900">
+                            {log.action}
+                          </p>
+                          <span className="text-xs text-gray-500">
+                            {log.timestamp}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600">{log.details}</p>
+                        <p className="text-xs text-gray-500">
+                          by {log.user} on {log.entity}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         );
 
