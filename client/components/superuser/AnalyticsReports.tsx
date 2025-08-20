@@ -229,14 +229,19 @@ export function AnalyticsReports({ data, onDrillDown }: AnalyticsReportsProps) {
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
+                  innerRadius={0}
                   dataKey="percentage"
                   label={({ name, percentage }) => `${name}: ${percentage}%`}
+                  labelLine={false}
                 >
                   {spendData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                <Tooltip
+                  formatter={(value) => [`${value}%`, 'Percentage']}
+                  contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc' }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -257,7 +262,12 @@ export function AnalyticsReports({ data, onDrillDown }: AnalyticsReportsProps) {
         <CardContent>
           <ResponsiveContainer width="100%" height={400}>
             <AreaChart data={performanceData}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#e0e0e0"
+                horizontal={true}
+                vertical={true}
+              />
               <XAxis
                 dataKey="name"
                 angle={-45}
@@ -274,11 +284,13 @@ export function AnalyticsReports({ data, onDrillDown }: AnalyticsReportsProps) {
                 axisLine={true}
                 tickLine={true}
               />
-              <Tooltip 
+              <Tooltip
                 labelFormatter={(label) => {
                   const item = performanceData.find(d => d.name === label);
                   return item ? item.fullName : label;
                 }}
+                cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc' }}
               />
               <Area 
                 type="monotone" 
