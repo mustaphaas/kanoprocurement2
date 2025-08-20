@@ -866,8 +866,18 @@ export default function SuperUserDashboard() {
     ];
 
     // Clear any existing mock data and start with real audit logs only
-    // You can uncomment this line if you want to clear existing mock data:
-    // auditLogStorage.clearAllLogs();
+    // Check if we have mock data and clear it (this will run once)
+    const hasOnlyMockData = auditLogs.some(log =>
+      log.details.includes('TechSolutions Nigeria') ||
+      log.details.includes('Northern Construction Ltd') ||
+      log.action === 'COMPANY_APPROVED'
+    );
+
+    if (hasOnlyMockData) {
+      console.log('🗑️ Clearing mock audit data to start fresh with real logs');
+      auditLogStorage.clearAllLogs();
+      loadAuditLogs(); // Reload after clearing
+    }
 
     // Log dashboard access
     logUserAction(
