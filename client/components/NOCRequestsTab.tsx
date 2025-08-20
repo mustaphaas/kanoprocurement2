@@ -773,7 +773,7 @@ export default function NOCRequestsTab() {
                     >
                       <Eye className="h-4 w-4" />
                     </button>
-                    {(request.status === "Submitted" || request.status === "Under Review") && (
+                    {(request.status === "Submitted" || request.status === "Under Review" || request.status === "Pending") && (
                       <>
                         <button
                           onClick={() => handleApproveRequest(request)}
