@@ -982,10 +982,16 @@ export default function ProcurementPlanning() {
                       <SelectItem value="Draft" className="hover:bg-gray-50">
                         Draft
                       </SelectItem>
-                      <SelectItem value="Under Review" className="hover:bg-blue-50">
+                      <SelectItem
+                        value="Under Review"
+                        className="hover:bg-blue-50"
+                      >
                         Under Review
                       </SelectItem>
-                      <SelectItem value="Approved" className="hover:bg-green-50">
+                      <SelectItem
+                        value="Approved"
+                        className="hover:bg-green-50"
+                      >
                         Approved
                       </SelectItem>
                       <SelectItem value="Rejected" className="hover:bg-red-50">
