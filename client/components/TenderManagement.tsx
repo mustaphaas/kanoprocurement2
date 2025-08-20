@@ -842,75 +842,115 @@ const TenderManagement = () => {
           </TabsList>
         </div>
 
-        {/* Tender Creation & Publication */}
-        <TabsContent value="creation" className="space-y-4">
-          <div className="flex gap-2 mb-4">
-            <Button
-              onClick={() => setShowTenderModal(true)}
-              className="bg-primary hover:bg-primary/90"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Create New Tender
-            </Button>
-          </div>
-          <div className="flex gap-4 items-center">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Search tenders..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+        {/* Enhanced Tender Creation & Publication */}
+        <TabsContent value="creation" className="space-y-6">
+          {/* Quick Actions Bar */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-blue-100 shadow-md p-6">
+            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+              <div className="flex-1 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Input
+                    placeholder="Search by title, description, or ID..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-12 pr-4 py-3 border-gray-200 focus:border-blue-400 focus:ring-blue-400 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <Filter className="h-4 w-4 text-gray-500" />
+                  <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <SelectTrigger className="w-56 border-gray-200 focus:border-blue-400 focus:ring-blue-400 rounded-lg shadow-sm">
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-lg border-gray-200 shadow-lg">
+                      <SelectItem value="all" className="hover:bg-blue-50">All Status</SelectItem>
+                      <SelectItem value="Draft" className="hover:bg-gray-50">Draft</SelectItem>
+                      <SelectItem value="Published" className="hover:bg-green-50">Published</SelectItem>
+                      <SelectItem value="Open" className="hover:bg-blue-50">Open</SelectItem>
+                      <SelectItem value="Closed" className="hover:bg-yellow-50">Closed</SelectItem>
+                      <SelectItem value="Evaluated" className="hover:bg-purple-50">Evaluated</SelectItem>
+                      <SelectItem value="Awarded" className="hover:bg-emerald-50">Awarded</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <Button
+                onClick={() => setShowTenderModal(true)}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-lg"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create New Tender
+              </Button>
             </div>
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Draft">Draft</SelectItem>
-                <SelectItem value="Published">Published</SelectItem>
-                <SelectItem value="Open">Open</SelectItem>
-                <SelectItem value="Closed">Closed</SelectItem>
-                <SelectItem value="Evaluated">Evaluated</SelectItem>
-                <SelectItem value="Awarded">Awarded</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
-          <div className="grid gap-4">
+          {/* Enhanced Tender Grid */}
+          <div className="grid gap-6">
             {filteredTenders.map((tender) => (
               <Card
                 key={tender.id}
-                className="hover:shadow-md transition-shadow"
+                className="group hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm border border-gray-100 hover:border-blue-200 rounded-xl overflow-hidden"
               >
-                <CardHeader>
+                <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{tender.title}</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {tender.description}
-                      </p>
-                      <div className="flex gap-4 mt-2 text-sm text-gray-500">
-                        <span>Budget: ₦{tender.budget.toLocaleString()}</span>
-                        <span>Method: {tender.procurementMethod}</span>
-                        <span>Type: {tender.tenderType}</span>
+                    <div className="flex-1 space-y-4">
+                      <div className="flex items-start gap-4">
+                        <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg shadow-sm">
+                          <FileText className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-blue-800 transition-colors">
+                            {tender.title}
+                          </CardTitle>
+                          <p className="text-gray-600 mt-2 leading-relaxed">
+                            {tender.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+                          <DollarSign className="h-4 w-4 text-emerald-600" />
+                          <div>
+                            <p className="text-xs text-emerald-600 font-medium">Budget</p>
+                            <p className="text-sm font-bold text-emerald-800">₦{tender.budget.toLocaleString()}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+                          <Scale className="h-4 w-4 text-blue-600" />
+                          <div>
+                            <p className="text-xs text-blue-600 font-medium">Method</p>
+                            <p className="text-sm font-bold text-blue-800">{tender.procurementMethod}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 border border-purple-200 rounded-lg">
+                          <Target className="h-4 w-4 text-purple-600" />
+                          <div>
+                            <p className="text-xs text-purple-600 font-medium">Type</p>
+                            <p className="text-sm font-bold text-purple-800">{tender.tenderType}</p>
+                          </div>
+                        </div>
                         {tender.closingDate && (
-                          <span>
-                            Days Remaining:{" "}
-                            {getDaysRemaining(tender.closingDate)}
-                          </span>
+                          <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg">
+                            <Clock className="h-4 w-4 text-orange-600" />
+                            <div>
+                              <p className="text-xs text-orange-600 font-medium">Days Remaining</p>
+                              <p className="text-sm font-bold text-orange-800">{getDaysRemaining(tender.closingDate)}</p>
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
+
+                    <div className="flex flex-col items-end gap-3 ml-6">
                       {getStatusBadge(tender.status)}
-                      <div className="flex gap-1">
+                      <div className="flex gap-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => setSelectedTender(tender)}
+                          className="hover:bg-blue-50 hover:border-blue-300 transition-colors"
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -936,6 +976,7 @@ const TenderManagement = () => {
                                 updatedTenders,
                               );
                             }}
+                            className="hover:bg-green-50 hover:border-green-300 transition-colors"
                           >
                             <Upload className="h-4 w-4" />
                           </Button>
