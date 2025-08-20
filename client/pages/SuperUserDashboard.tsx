@@ -3473,156 +3473,37 @@ The award letter has been:
   const renderDashboardContent = () => {
     switch (activeTab) {
       case "dashboard":
+        const superUserData = generateMockSuperUserData();
+
+        const handleDrillDown = (mda: string) => {
+          logUserAction(`Drilled down into MDA: ${mda}`, 'mda_drilldown', 'SuperUser');
+          // Navigate to specific MDA details or set a filter
+          console.log('Drilling down into MDA:', mda);
+        };
+
+        const handleFilterChange = (filters: any) => {
+          logUserAction(`Applied filters: ${JSON.stringify(filters)}`, 'filter_applied', 'SuperUser');
+          console.log('Filters applied:', filters);
+        };
+
         return (
           <div className="space-y-8">
             {/* Welcome Message */}
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-foreground mb-2">
                 Welcome, Super User!
               </h1>
-              <p className="text-gray-600">
-                Comprehensive system overview and administrative controls.
+              <p className="text-muted-foreground">
+                Comprehensive system overview with enhanced MDA monitoring and analytics.
               </p>
             </div>
 
-            {/* Key Statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      New Registrations Pending
-                    </p>
-                    <p className="text-3xl font-bold text-yellow-600">
-                      {dashboardStats.newRegistrationsPending}
-                    </p>
-                  </div>
-                  <UserCheck className="h-8 w-8 text-yellow-600" />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Active Tenders
-                    </p>
-                    <p className="text-3xl font-bold text-blue-600">
-                      {dashboardStats.activeTenders}
-                    </p>
-                  </div>
-                  <FileText className="h-8 w-8 text-blue-600" />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Upcoming Deadlines
-                    </p>
-                    <p className="text-3xl font-bold text-orange-600">
-                      {dashboardStats.upcomingDeadlines}
-                    </p>
-                  </div>
-                  <Clock className="h-8 w-8 text-orange-600" />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Total Contract Value
-                    </p>
-                    <p className="text-3xl font-bold text-green-600">
-                      {dashboardStats.totalContractValue}
-                    </p>
-                  </div>
-                  <DollarSign className="h-8 w-8 text-green-600" />
-                </div>
-              </div>
-            </div>
-
-            {/* Awarded Contracts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Awarded Contracts Today
-                </h3>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-green-600 mb-2">
-                    {dashboardStats.awardedContractsToday}
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Contracts awarded today
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Awarded Contracts This Week
-                </h3>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">
-                    {dashboardStats.awardedContractsWeek}
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Contracts awarded this week
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Awarded Contracts This Month
-                </h3>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-purple-600 mb-2">
-                    {dashboardStats.awardedContractsMonth}
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Contracts awarded this month
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent System Activity */}
-            <div className="bg-white rounded-lg shadow-sm border">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Recent System Activity Log
-                </h2>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {auditLogs.slice(0, 5).map((log) => (
-                    <div
-                      key={log.id}
-                      className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
-                    >
-                      <Activity className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm font-medium text-gray-900">
-                            {log.action}
-                          </p>
-                          <span className="text-xs text-gray-500">
-                            {log.timestamp}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">{log.details}</p>
-                        <p className="text-xs text-gray-500">
-                          by {log.user} on {log.entity}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            {/* Enhanced SuperUser Overview */}
+            <EnhancedSuperUserOverview
+              data={superUserData}
+              onDrillDown={handleDrillDown}
+              onFilterChange={handleFilterChange}
+            />
           </div>
         );
 
