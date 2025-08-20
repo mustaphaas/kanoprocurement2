@@ -2405,6 +2405,10 @@ export default function MinistryDashboard() {
       setTenders(mockTenders);
       // Save initial mock tenders to localStorage
       localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
+
+      // Also save with ministry-specific key for NOC system access
+      const ministryTendersKey = `${ministry.code}_tenders`;
+      localStorage.setItem(ministryTendersKey, JSON.stringify(mockTenders));
     }
 
     // Sync any ministry tenders that might be missing from featured/recent tenders
