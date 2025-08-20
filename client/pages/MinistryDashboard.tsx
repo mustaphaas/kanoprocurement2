@@ -801,10 +801,60 @@ export default function MinistryDashboard() {
     }
   };
 
-  // Sync every 10 seconds (in real app, this would be event-driven or websocket-based)
+  // Handle real-time NOC status updates via browser events
   useEffect(() => {
-    const interval = setInterval(syncNOCUpdates, 10000);
-    return () => clearInterval(interval);
+    const handleNOCStatusUpdate = (event: CustomEvent) => {
+      const {
+        requestId,
+        status,
+        certificateNumber,
+        approvalDate,
+        rejectionDate,
+      } = event.detail;
+
+      setNOCRequests((prevRequests) => {
+        const updatedRequests = prevRequests.map((request) => {
+          if (request.id === requestId) {
+            return {
+              ...request,
+              status,
+              ...(status === "Approved" && {
+                approvalDate,
+                certificateNumber,
+              }),
+              ...(status === "Rejected" && {
+                rejectionDate,
+              }),
+            };
+          }
+          return request;
+        });
+
+        // Update localStorage for persistence
+        const { ministry } = getMinistryMockData();
+        const ministryNOCKey = `${ministry.code}_NOCRequests`;
+        localStorage.setItem(ministryNOCKey, JSON.stringify(updatedRequests));
+
+        return updatedRequests;
+      });
+    };
+
+    // Listen for NOC status updates
+    window.addEventListener(
+      "nocStatusUpdated",
+      handleNOCStatusUpdate as EventListener,
+    );
+
+    // Fallback: Sync every 30 seconds (reduced frequency since we have real-time updates)
+    const interval = setInterval(syncNOCUpdates, 30000);
+
+    return () => {
+      window.removeEventListener(
+        "nocStatusUpdated",
+        handleNOCStatusUpdate as EventListener,
+      );
+      clearInterval(interval);
+    };
   }, [nocRequests]);
 
   useEffect(() => {
@@ -1086,7 +1136,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of textbooks and library resources for all levels",
               category: "Educational Materials",
-              estimatedValue: "₦1,650,000,000",
+              estimatedValue: "��1,650,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1416,12 +1466,10 @@ export default function MinistryDashboard() {
               id: "NOC-MOWI-001",
               projectTitle: "Kano-Kaduna Highway Rehabilitation - Phase 1",
               requestDate: "2024-01-20",
-              status: "Approved",
+              status: "Pending",
               projectValue: "₦15,200,000,000",
               contractorName: "Kano Construction Ltd",
               expectedDuration: "18 months",
-              approvalDate: "2024-01-25",
-              certificateNumber: "KNS/MOWI/PNO/2024/001",
             },
             {
               id: "NOC-MOWI-002",
@@ -1436,23 +1484,19 @@ export default function MinistryDashboard() {
               id: "NOC-MOWI-003",
               projectTitle: "Government Secretariat Renovation",
               requestDate: "2024-02-05",
-              status: "Approved",
+              status: "Pending",
               projectValue: "₦6,800,000,000",
               contractorName: "Northern Roads Nigeria",
               expectedDuration: "10 months",
-              approvalDate: "2024-02-10",
-              certificateNumber: "KNS/MOWI/PNO/2024/002",
             },
             {
               id: "NOC-MOWI-004",
               projectTitle: "Urban Drainage System Development",
               requestDate: "2024-02-08",
-              status: "Approved",
+              status: "Pending",
               projectValue: "₦12,300,000,000",
               contractorName: "Emirate Construction Co",
               expectedDuration: "15 months",
-              approvalDate: "2024-02-12",
-              certificateNumber: "KNS/MOWI/PNO/2024/003",
             },
             {
               id: "NOC-MOWI-005",
@@ -2373,6 +2417,10 @@ export default function MinistryDashboard() {
       setTenders(mockTenders);
       // Save initial mock tenders to localStorage
       localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
+
+      // Also save with ministry-specific key for NOC system access
+      const ministryTendersKey = `${ministry.code}_tenders`;
+      localStorage.setItem(ministryTendersKey, JSON.stringify(mockTenders));
     }
 
     // Sync any ministry tenders that might be missing from featured/recent tenders

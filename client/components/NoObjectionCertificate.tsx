@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { dispatchNOCStatusUpdate } from "@/lib/nocEventUtils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -845,6 +846,14 @@ export default function NoObjectionCertificate({
     // Update the ministry-specific NOC data
     updateMinistryNOCData(selectedNOCRequest, "Approved", certificateNumber);
 
+    // Dispatch event to notify ministry dashboards of the update
+    dispatchNOCStatusUpdate({
+      requestId: selectedNOCRequest.id,
+      status: "Approved",
+      certificateNumber,
+      approvalDate: new Date().toISOString().split("T")[0],
+    });
+
     setShowApprovalModal(false);
     setApprovalComments("");
     setSelectedNOCRequest(null);
@@ -870,6 +879,13 @@ export default function NoObjectionCertificate({
 
     // Update the ministry-specific NOC data
     updateMinistryNOCData(selectedNOCRequest, "Rejected");
+
+    // Dispatch event to notify ministry dashboards of the update
+    dispatchNOCStatusUpdate({
+      requestId: selectedNOCRequest.id,
+      status: "Rejected",
+      rejectionDate: new Date().toISOString().split("T")[0],
+    });
 
     setShowRejectionModal(false);
     setRejectReason("");

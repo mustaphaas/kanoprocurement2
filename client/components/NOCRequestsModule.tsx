@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { debugNOCTenders } from "@/lib/debugNOCTenders";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -137,6 +138,11 @@ interface TenderEvaluation {
   winningBidder: string;
   projectValue: string;
   evaluationDate: string;
+  description?: string;
+  category?: string;
+  publishDate?: string;
+  closeDate?: string;
+  procuringEntity?: string;
 }
 
 interface NOCRequestsModuleProps {
@@ -181,10 +187,172 @@ export default function NOCRequestsModule({
     timeline: {},
   });
 
+  // Ensure ministry tenders are initialized
+  const ensureMinistryTendersInitialized = () => {
+    const ministryTendersKey = `${ministryCode}_tenders`;
+    const existingTenders = localStorage.getItem(ministryTendersKey);
+
+    if (!existingTenders) {
+      console.log(
+        `No tenders found for ${ministryCode}, initializing with default evaluated tenders...`,
+      );
+
+      // Create default evaluated tenders for the ministry
+      const defaultEvaluatedTenders = (() => {
+        switch (ministryCode) {
+          case "MOWI":
+            return [
+              {
+                id: "MOWI-2024-001",
+                title: "Kano-Kaduna Highway Rehabilitation",
+                description: "Complete rehabilitation of Kano-Kaduna highway",
+                category: "Road Construction",
+                estimatedValue: "₦15,200,000,000",
+                status: "Evaluated",
+                publishDate: "2024-01-20",
+                closeDate: "2024-02-20",
+                bidsReceived: 5,
+                ministry: "Ministry of Works & Infrastructure",
+                procuringEntity: "Kano State Road Maintenance Agency",
+              },
+              {
+                id: "MOWI-2024-002",
+                title: "Bridge Construction Project - Phase 2",
+                description: "Construction of strategic bridges",
+                category: "Bridge Construction",
+                estimatedValue: "₦8,500,000,000",
+                status: "Evaluated",
+                publishDate: "2024-02-01",
+                closeDate: "2024-03-01",
+                bidsReceived: 4,
+                ministry: "Ministry of Works & Infrastructure",
+                procuringEntity: "Kano State Ministry of Works",
+              },
+            ];
+          case "MOE":
+            return [
+              {
+                id: "MOE-2024-001",
+                title: "School Furniture Supply Program",
+                description: "Supply of furniture for 200 schools",
+                category: "Educational Furniture",
+                estimatedValue: "₦2,100,000,000",
+                status: "Evaluated",
+                publishDate: "2024-01-15",
+                closeDate: "2024-02-15",
+                bidsReceived: 8,
+                ministry: "Ministry of Education",
+                procuringEntity: "Kano State Universal Basic Education Board",
+              },
+            ];
+          default: // MOH
+            return [
+              {
+                id: "MOH-2024-001",
+                title: "Hospital Equipment Supply",
+                description:
+                  "Supply of medical equipment for healthcare centers",
+                category: "Medical Equipment",
+                estimatedValue: "₦850,000,000",
+                status: "Evaluated",
+                publishDate: "2024-01-15",
+                closeDate: "2024-02-15",
+                bidsReceived: 5,
+                ministry: "Ministry of Health",
+                procuringEntity:
+                  "Kano State Primary Healthcare Development Agency",
+              },
+              {
+                id: "MOH-2024-002",
+                title: "Pharmaceutical Supply Contract",
+                description: "Annual pharmaceutical supply for hospitals",
+                category: "Pharmaceuticals",
+                estimatedValue: "₦1,200,000,000",
+                status: "Evaluated",
+                publishDate: "2024-01-20",
+                closeDate: "2024-03-01",
+                bidsReceived: 5,
+                ministry: "Ministry of Health",
+                procuringEntity: "Kano State Hospital Management Board",
+              },
+            ];
+        }
+      })();
+
+      localStorage.setItem(
+        ministryTendersKey,
+        JSON.stringify(defaultEvaluatedTenders),
+      );
+      console.log(
+        `Initialized ${defaultEvaluatedTenders.length} default tenders for ${ministryCode}`,
+      );
+    }
+  };
+
   // Load data on component mount
   useEffect(() => {
+    ensureMinistryTendersInitialized();
     loadNOCRequests();
     loadCompletedTenders();
+  }, [ministryCode]);
+
+  // Handle real-time NOC status updates
+  useEffect(() => {
+    const handleNOCStatusUpdate = (event: CustomEvent) => {
+      const {
+        requestId,
+        status,
+        certificateNumber,
+        approvalDate,
+        rejectionDate,
+      } = event.detail;
+
+      setNOCRequests((prevRequests) => {
+        const updatedRequests = prevRequests.map((request) => {
+          if (request.id === requestId) {
+            return {
+              ...request,
+              status,
+              ...(status === "Approved" && {
+                approvalDate,
+                certificateNumber,
+                timeline: {
+                  ...request.timeline,
+                  dateApproved: approvalDate,
+                },
+              }),
+              ...(status === "Rejected" && {
+                rejectionDate,
+                timeline: {
+                  ...request.timeline,
+                  dateRejected: rejectionDate,
+                },
+              }),
+            };
+          }
+          return request;
+        });
+
+        // Update localStorage for persistence
+        const ministryNOCKey = `${ministryCode}_NOCRequests`;
+        localStorage.setItem(ministryNOCKey, JSON.stringify(updatedRequests));
+
+        return updatedRequests;
+      });
+    };
+
+    // Listen for NOC status updates
+    window.addEventListener(
+      "nocStatusUpdated",
+      handleNOCStatusUpdate as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "nocStatusUpdated",
+        handleNOCStatusUpdate as EventListener,
+      );
+    };
   }, [ministryCode]);
 
   const loadNOCRequests = () => {
@@ -206,40 +374,175 @@ export default function NOCRequestsModule({
   };
 
   const loadCompletedTenders = () => {
-    // Mock completed tender evaluations that can be used for NOC requests
-    const mockCompletedTenders: TenderEvaluation[] = [
-      {
-        id: "TENDER_001",
-        tenderTitle: "Construction of Primary Healthcare Center",
-        ministryCode,
-        status: "Completed",
-        evaluationResults: {
-          technicalScore: 85,
-          financialScore: 92,
-          totalScore: 88.5,
-          recommendation: "Recommended for Award",
-        },
-        winningBidder: "HealthBuild Construction Ltd",
-        projectValue: "₦45,000,000",
-        evaluationDate: "2024-01-15",
-      },
-      {
-        id: "TENDER_002",
-        tenderTitle: "Road Rehabilitation Project - Phase 2",
-        ministryCode,
-        status: "Completed",
-        evaluationResults: {
-          technicalScore: 78,
-          financialScore: 95,
-          totalScore: 86.5,
-          recommendation: "Recommended for Award",
-        },
-        winningBidder: "Elite Infrastructure Nigeria",
-        projectValue: "₦120,000,000",
-        evaluationDate: "2024-01-20",
-      },
-    ];
-    setCompletedTenders(mockCompletedTenders);
+    // Load actual evaluated tenders from the ministry's tender management system
+    try {
+      console.log(`Loading completed tenders for ministry: ${ministryCode}`);
+
+      // Get ministry-specific evaluated tenders
+      const ministryTendersKey = `${ministryCode}_tenders`;
+      const storedTenders = localStorage.getItem(ministryTendersKey);
+
+      console.log(
+        `Looking for tenders in localStorage key: ${ministryTendersKey}`,
+      );
+      console.log(`Found data:`, storedTenders ? "Yes" : "No");
+
+      let evaluatedTenders: TenderEvaluation[] = [];
+
+      if (storedTenders) {
+        const tenders = JSON.parse(storedTenders);
+        console.log(
+          `Found ${tenders.length} total tenders for ${ministryCode}`,
+        );
+        console.log(
+          "Tender statuses:",
+          tenders.map((t: any) => `${t.id}: ${t.status}`),
+        );
+
+        // Filter for evaluated tenders and convert to TenderEvaluation format
+        const filteredTenders = tenders.filter(
+          (tender: any) => tender.status === "Evaluated",
+        );
+        console.log(`Found ${filteredTenders.length} evaluated tenders`);
+
+        evaluatedTenders = filteredTenders.map((tender: any) => ({
+          id: tender.id,
+          tenderTitle: tender.title,
+          ministryCode,
+          status: "Completed" as const,
+          evaluationResults: {
+            technicalScore: 85, // Mock evaluation scores - in real app would come from evaluation data
+            financialScore: 90,
+            totalScore: 87.5,
+            recommendation: "Recommended for Award",
+          },
+          winningBidder: "Awaiting Final Award", // Would be set after evaluation
+          projectValue: tender.estimatedValue,
+          evaluationDate: new Date().toISOString().split("T")[0],
+          description: tender.description,
+          category: tender.category,
+          publishDate: tender.publishDate,
+          closeDate: tender.closeDate,
+          procuringEntity: tender.procuringEntity,
+        }));
+      }
+
+      // If no evaluated tenders found, load ministry-specific defaults
+      if (evaluatedTenders.length === 0) {
+        // Ministry-specific default tenders based on ministry type
+        const getDefaultTenders = () => {
+          switch (ministryCode) {
+            case "MOWI": // Ministry of Works
+              return [
+                {
+                  id: "MOWI-2024-001",
+                  tenderTitle: "Kano-Kaduna Highway Rehabilitation",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 88,
+                    financialScore: 92,
+                    totalScore: 90,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "Kano Construction Ltd",
+                  projectValue: "₦15,200,000,000",
+                  evaluationDate: "2024-01-20",
+                  description: "Complete rehabilitation of Kano-Kaduna highway",
+                  category: "Road Construction",
+                },
+                {
+                  id: "MOWI-2024-002",
+                  tenderTitle: "Bridge Construction Project - Phase 2",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 85,
+                    financialScore: 88,
+                    totalScore: 86.5,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "Sahel Bridge Builders",
+                  projectValue: "₦8,500,000,000",
+                  evaluationDate: "2024-02-01",
+                  description: "Construction of strategic bridges",
+                  category: "Bridge Construction",
+                },
+              ];
+            case "MOE": // Ministry of Education
+              return [
+                {
+                  id: "MOE-2024-001",
+                  tenderTitle: "School Furniture Supply Program",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 90,
+                    financialScore: 85,
+                    totalScore: 87.5,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "EduTech Solutions Ltd",
+                  projectValue: "₦2,100,000,000",
+                  evaluationDate: "2024-01-15",
+                  description: "Supply of furniture for 200 schools",
+                  category: "Educational Furniture",
+                },
+              ];
+            default: // Ministry of Health
+              return [
+                {
+                  id: "MOH-2024-001",
+                  tenderTitle: "Hospital Equipment Supply",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 92,
+                    financialScore: 88,
+                    totalScore: 90,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "PrimeCare Medical Ltd",
+                  projectValue: "₦850,000,000",
+                  evaluationDate: "2024-01-15",
+                  description:
+                    "Supply of medical equipment for healthcare centers",
+                  category: "Medical Equipment",
+                },
+                {
+                  id: "MOH-2024-002",
+                  tenderTitle: "Pharmaceutical Supply Contract",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 87,
+                    financialScore: 93,
+                    totalScore: 90,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "Falcon Diagnostics Ltd",
+                  projectValue: "₦1,200,000,000",
+                  evaluationDate: "2024-01-20",
+                  description: "Annual pharmaceutical supply for hospitals",
+                  category: "Pharmaceuticals",
+                },
+              ];
+          }
+        };
+
+        evaluatedTenders = getDefaultTenders();
+        console.log(`Using default tenders: ${evaluatedTenders.length} items`);
+      }
+
+      console.log(
+        `Final evaluated tenders for ${ministryCode}:`,
+        evaluatedTenders.map((t) => t.tenderTitle),
+      );
+      setCompletedTenders(evaluatedTenders);
+    } catch (error) {
+      console.error("Error loading completed tenders:", error);
+      setCompletedTenders([]);
+    }
   };
 
   const handleTenderSelection = (tender: TenderEvaluation) => {
@@ -465,6 +768,18 @@ export default function NOCRequestsModule({
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              debugNOCTenders();
+              console.log("=== Current Ministry Info ===");
+              console.log("Ministry Code:", ministryCode);
+              console.log("Ministry Name:", ministryName);
+              console.log("Completed Tenders:", completedTenders);
+            }}
+          >
+            🐛 Debug
           </Button>
         </div>
       </div>
