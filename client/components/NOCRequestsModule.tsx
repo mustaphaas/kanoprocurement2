@@ -642,6 +642,18 @@ export default function NOCRequestsModule({
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              debugNOCTenders();
+              console.log('=== Current Ministry Info ===');
+              console.log('Ministry Code:', ministryCode);
+              console.log('Ministry Name:', ministryName);
+              console.log('Completed Tenders:', completedTenders);
+            }}
+          >
+            🐛 Debug
+          </Button>
         </div>
       </div>
 
