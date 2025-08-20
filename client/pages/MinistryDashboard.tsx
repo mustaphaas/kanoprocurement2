@@ -7634,7 +7634,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                             })
                           }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="��0.00"
+                          placeholder="���0.00"
                         />
                       </div>
                       <div>
@@ -10478,7 +10478,6 @@ Blockchain Timestamp: ${Date.now()}
             {[
               { key: "overview", label: "Overview", icon: BarChart3 },
               { key: "companies", label: "Companies", icon: Building2 },
-              { key: "tenders", label: "Tenders", icon: FileText },
               { key: "contracts", label: "Contracts", icon: FileCheck },
               {
                 key: "procurement-planning",
@@ -10503,9 +10502,6 @@ Blockchain Timestamp: ${Date.now()}
                 key={tab.key}
                 onClick={() => {
                   setCurrentView(tab.key as CurrentView);
-                  if (tab.key === "tenders") {
-                    setTenderSubView("list");
-                  }
                 }}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
                   currentView === tab.key
