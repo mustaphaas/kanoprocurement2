@@ -260,9 +260,14 @@ export default function NOCRequestsModule({
   const loadCompletedTenders = () => {
     // Load actual evaluated tenders from the ministry's tender management system
     try {
+      console.log(`Loading completed tenders for ministry: ${ministryCode}`);
+
       // Get ministry-specific evaluated tenders
       const ministryTendersKey = `${ministryCode}_tenders`;
       const storedTenders = localStorage.getItem(ministryTendersKey);
+
+      console.log(`Looking for tenders in localStorage key: ${ministryTendersKey}`);
+      console.log(`Found data:`, storedTenders ? 'Yes' : 'No');
 
       let evaluatedTenders: TenderEvaluation[] = [];
 
