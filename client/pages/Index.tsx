@@ -35,6 +35,7 @@ import {
   Mail,
   BarChart3,
   Send,
+  Settings,
 } from "lucide-react";
 
 interface FeaturedTender {
@@ -759,7 +760,7 @@ export default function Index() {
                         Pre-bid Conference
                       </p>
                       <p className="text-xs text-gray-600">
-                        Feb 20, 2024 • 2:00 PM
+                        Feb 20, 2024 �� 2:00 PM
                       </p>
                     </div>
                     <div className="border-l-4 border-green-400 pl-4">
