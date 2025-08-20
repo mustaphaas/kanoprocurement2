@@ -849,9 +849,9 @@ export default function NoObjectionCertificate({
     // Dispatch event to notify ministry dashboards of the update
     dispatchNOCStatusUpdate({
       requestId: selectedNOCRequest.id,
-      status: 'Approved',
+      status: "Approved",
       certificateNumber,
-      approvalDate: new Date().toISOString().split("T")[0]
+      approvalDate: new Date().toISOString().split("T")[0],
     });
 
     setShowApprovalModal(false);
@@ -883,8 +883,8 @@ export default function NoObjectionCertificate({
     // Dispatch event to notify ministry dashboards of the update
     dispatchNOCStatusUpdate({
       requestId: selectedNOCRequest.id,
-      status: 'Rejected',
-      rejectionDate: new Date().toISOString().split("T")[0]
+      status: "Rejected",
+      rejectionDate: new Date().toISOString().split("T")[0],
     });
 
     setShowRejectionModal(false);

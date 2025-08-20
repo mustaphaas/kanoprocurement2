@@ -274,9 +274,9 @@ export default function SuperuserNOC() {
     // Dispatch event to notify ministry dashboards of the update
     dispatchNOCStatusUpdate({
       requestId: selectedRequest.id,
-      status: 'Approved',
+      status: "Approved",
       certificateNumber,
-      approvalDate: new Date().toISOString().split("T")[0]
+      approvalDate: new Date().toISOString().split("T")[0],
     });
 
     setShowApprovalModal(false);
@@ -308,8 +308,8 @@ export default function SuperuserNOC() {
     // Dispatch event to notify ministry dashboards of the update
     dispatchNOCStatusUpdate({
       requestId: selectedRequest.id,
-      status: 'Rejected',
-      rejectionDate: new Date().toISOString().split("T")[0]
+      status: "Rejected",
+      rejectionDate: new Date().toISOString().split("T")[0],
     });
 
     setShowRejectionModal(false);

@@ -804,21 +804,27 @@ export default function MinistryDashboard() {
   // Handle real-time NOC status updates via browser events
   useEffect(() => {
     const handleNOCStatusUpdate = (event: CustomEvent) => {
-      const { requestId, status, certificateNumber, approvalDate, rejectionDate } = event.detail;
+      const {
+        requestId,
+        status,
+        certificateNumber,
+        approvalDate,
+        rejectionDate,
+      } = event.detail;
 
-      setNOCRequests(prevRequests => {
-        const updatedRequests = prevRequests.map(request => {
+      setNOCRequests((prevRequests) => {
+        const updatedRequests = prevRequests.map((request) => {
           if (request.id === requestId) {
             return {
               ...request,
               status,
-              ...(status === 'Approved' && {
+              ...(status === "Approved" && {
                 approvalDate,
-                certificateNumber
+                certificateNumber,
               }),
-              ...(status === 'Rejected' && {
-                rejectionDate
-              })
+              ...(status === "Rejected" && {
+                rejectionDate,
+              }),
             };
           }
           return request;
@@ -834,13 +840,19 @@ export default function MinistryDashboard() {
     };
 
     // Listen for NOC status updates
-    window.addEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+    window.addEventListener(
+      "nocStatusUpdated",
+      handleNOCStatusUpdate as EventListener,
+    );
 
     // Fallback: Sync every 30 seconds (reduced frequency since we have real-time updates)
     const interval = setInterval(syncNOCUpdates, 30000);
 
     return () => {
-      window.removeEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+      window.removeEventListener(
+        "nocStatusUpdated",
+        handleNOCStatusUpdate as EventListener,
+      );
       clearInterval(interval);
     };
   }, [nocRequests]);

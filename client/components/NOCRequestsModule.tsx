@@ -193,7 +193,9 @@ export default function NOCRequestsModule({
     const existingTenders = localStorage.getItem(ministryTendersKey);
 
     if (!existingTenders) {
-      console.log(`No tenders found for ${ministryCode}, initializing with default evaluated tenders...`);
+      console.log(
+        `No tenders found for ${ministryCode}, initializing with default evaluated tenders...`,
+      );
 
       // Create default evaluated tenders for the ministry
       const defaultEvaluatedTenders = (() => {
@@ -248,7 +250,8 @@ export default function NOCRequestsModule({
               {
                 id: "MOH-2024-001",
                 title: "Hospital Equipment Supply",
-                description: "Supply of medical equipment for healthcare centers",
+                description:
+                  "Supply of medical equipment for healthcare centers",
                 category: "Medical Equipment",
                 estimatedValue: "₦850,000,000",
                 status: "Evaluated",
@@ -256,7 +259,8 @@ export default function NOCRequestsModule({
                 closeDate: "2024-02-15",
                 bidsReceived: 5,
                 ministry: "Ministry of Health",
-                procuringEntity: "Kano State Primary Healthcare Development Agency",
+                procuringEntity:
+                  "Kano State Primary Healthcare Development Agency",
               },
               {
                 id: "MOH-2024-002",
@@ -275,8 +279,13 @@ export default function NOCRequestsModule({
         }
       })();
 
-      localStorage.setItem(ministryTendersKey, JSON.stringify(defaultEvaluatedTenders));
-      console.log(`Initialized ${defaultEvaluatedTenders.length} default tenders for ${ministryCode}`);
+      localStorage.setItem(
+        ministryTendersKey,
+        JSON.stringify(defaultEvaluatedTenders),
+      );
+      console.log(
+        `Initialized ${defaultEvaluatedTenders.length} default tenders for ${ministryCode}`,
+      );
     }
   };
 
@@ -290,29 +299,35 @@ export default function NOCRequestsModule({
   // Handle real-time NOC status updates
   useEffect(() => {
     const handleNOCStatusUpdate = (event: CustomEvent) => {
-      const { requestId, status, certificateNumber, approvalDate, rejectionDate } = event.detail;
+      const {
+        requestId,
+        status,
+        certificateNumber,
+        approvalDate,
+        rejectionDate,
+      } = event.detail;
 
-      setNOCRequests(prevRequests => {
-        const updatedRequests = prevRequests.map(request => {
+      setNOCRequests((prevRequests) => {
+        const updatedRequests = prevRequests.map((request) => {
           if (request.id === requestId) {
             return {
               ...request,
               status,
-              ...(status === 'Approved' && {
+              ...(status === "Approved" && {
                 approvalDate,
                 certificateNumber,
                 timeline: {
                   ...request.timeline,
-                  dateApproved: approvalDate
-                }
+                  dateApproved: approvalDate,
+                },
               }),
-              ...(status === 'Rejected' && {
+              ...(status === "Rejected" && {
                 rejectionDate,
                 timeline: {
                   ...request.timeline,
-                  dateRejected: rejectionDate
-                }
-              })
+                  dateRejected: rejectionDate,
+                },
+              }),
             };
           }
           return request;
@@ -327,10 +342,16 @@ export default function NOCRequestsModule({
     };
 
     // Listen for NOC status updates
-    window.addEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+    window.addEventListener(
+      "nocStatusUpdated",
+      handleNOCStatusUpdate as EventListener,
+    );
 
     return () => {
-      window.removeEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+      window.removeEventListener(
+        "nocStatusUpdated",
+        handleNOCStatusUpdate as EventListener,
+      );
     };
   }, [ministryCode]);
 
@@ -361,41 +382,49 @@ export default function NOCRequestsModule({
       const ministryTendersKey = `${ministryCode}_tenders`;
       const storedTenders = localStorage.getItem(ministryTendersKey);
 
-      console.log(`Looking for tenders in localStorage key: ${ministryTendersKey}`);
-      console.log(`Found data:`, storedTenders ? 'Yes' : 'No');
+      console.log(
+        `Looking for tenders in localStorage key: ${ministryTendersKey}`,
+      );
+      console.log(`Found data:`, storedTenders ? "Yes" : "No");
 
       let evaluatedTenders: TenderEvaluation[] = [];
 
       if (storedTenders) {
         const tenders = JSON.parse(storedTenders);
-        console.log(`Found ${tenders.length} total tenders for ${ministryCode}`);
-        console.log('Tender statuses:', tenders.map((t: any) => `${t.id}: ${t.status}`));
+        console.log(
+          `Found ${tenders.length} total tenders for ${ministryCode}`,
+        );
+        console.log(
+          "Tender statuses:",
+          tenders.map((t: any) => `${t.id}: ${t.status}`),
+        );
 
         // Filter for evaluated tenders and convert to TenderEvaluation format
-        const filteredTenders = tenders.filter((tender: any) => tender.status === "Evaluated");
+        const filteredTenders = tenders.filter(
+          (tender: any) => tender.status === "Evaluated",
+        );
         console.log(`Found ${filteredTenders.length} evaluated tenders`);
 
-        evaluatedTenders = filteredTenders
-          .map((tender: any) => ({
-            id: tender.id,
-            tenderTitle: tender.title,
-            ministryCode,
-            status: "Completed" as const,
-            evaluationResults: {
-              technicalScore: 85, // Mock evaluation scores - in real app would come from evaluation data
-              financialScore: 90,
-              totalScore: 87.5,
-              recommendation: "Recommended for Award",
-            },
-            winningBidder: "Awaiting Final Award", // Would be set after evaluation
-            projectValue: tender.estimatedValue,
-            evaluationDate: new Date().toISOString().split('T')[0],
-            description: tender.description,
-            category: tender.category,
-            publishDate: tender.publishDate,
-            closeDate: tender.closeDate,
-            procuringEntity: tender.procuringEntity,
-          }));
+        evaluatedTenders = filteredTenders.map((tender: any) => ({
+          id: tender.id,
+          tenderTitle: tender.title,
+          ministryCode,
+          status: "Completed" as const,
+          evaluationResults: {
+            technicalScore: 85, // Mock evaluation scores - in real app would come from evaluation data
+            financialScore: 90,
+            totalScore: 87.5,
+            recommendation: "Recommended for Award",
+          },
+          winningBidder: "Awaiting Final Award", // Would be set after evaluation
+          projectValue: tender.estimatedValue,
+          evaluationDate: new Date().toISOString().split("T")[0],
+          description: tender.description,
+          category: tender.category,
+          publishDate: tender.publishDate,
+          closeDate: tender.closeDate,
+          procuringEntity: tender.procuringEntity,
+        }));
       }
 
       // If no evaluated tenders found, load ministry-specific defaults
@@ -476,7 +505,8 @@ export default function NOCRequestsModule({
                   winningBidder: "PrimeCare Medical Ltd",
                   projectValue: "₦850,000,000",
                   evaluationDate: "2024-01-15",
-                  description: "Supply of medical equipment for healthcare centers",
+                  description:
+                    "Supply of medical equipment for healthcare centers",
                   category: "Medical Equipment",
                 },
                 {
@@ -504,10 +534,13 @@ export default function NOCRequestsModule({
         console.log(`Using default tenders: ${evaluatedTenders.length} items`);
       }
 
-      console.log(`Final evaluated tenders for ${ministryCode}:`, evaluatedTenders.map(t => t.tenderTitle));
+      console.log(
+        `Final evaluated tenders for ${ministryCode}:`,
+        evaluatedTenders.map((t) => t.tenderTitle),
+      );
       setCompletedTenders(evaluatedTenders);
     } catch (error) {
-      console.error('Error loading completed tenders:', error);
+      console.error("Error loading completed tenders:", error);
       setCompletedTenders([]);
     }
   };
@@ -740,10 +773,10 @@ export default function NOCRequestsModule({
             variant="outline"
             onClick={() => {
               debugNOCTenders();
-              console.log('=== Current Ministry Info ===');
-              console.log('Ministry Code:', ministryCode);
-              console.log('Ministry Name:', ministryName);
-              console.log('Completed Tenders:', completedTenders);
+              console.log("=== Current Ministry Info ===");
+              console.log("Ministry Code:", ministryCode);
+              console.log("Ministry Name:", ministryName);
+              console.log("Completed Tenders:", completedTenders);
             }}
           >
             🐛 Debug
