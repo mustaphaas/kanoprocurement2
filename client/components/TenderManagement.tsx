@@ -1061,55 +1061,143 @@ const TenderManagement = () => {
           </div>
         </TabsContent>
 
-        {/* Tender Administration */}
-        <TabsContent value="administration" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Tender Administration</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Amendments & Addenda</h3>
-                    <p className="text-sm text-gray-600">
-                      Issue clarifications and updated documents
-                    </p>
+        {/* Enhanced Tender Administration */}
+        <TabsContent value="administration" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg">
+                    <MessageSquare className="h-6 w-6 text-white" />
                   </div>
-                  <Button onClick={() => setShowAmendmentModal(true)}>
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Create Amendment
-                  </Button>
+                  <div>
+                    <CardTitle className="text-xl text-amber-800">Amendments & Addenda</CardTitle>
+                    <p className="text-sm text-amber-600 mt-1">Issue clarifications and updates</p>
+                  </div>
                 </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-white/70 rounded-lg p-4 border border-amber-200">
+                    <p className="text-sm text-amber-700 mb-3">
+                      Manage tender modifications, clarifications, and document updates throughout the tender lifecycle.
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => setShowAmendmentModal(true)}
+                        className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-md"
+                        size="sm"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Amendment
+                      </Button>
+                      <Button variant="outline" size="sm" className="border-amber-300 text-amber-700 hover:bg-amber-50">
+                        View History
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Timeline Tracker</h3>
-                    <p className="text-sm text-gray-600">
-                      Monitor tender deadlines and milestones
-                    </p>
+            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl shadow-lg">
+                    <Calendar className="h-6 w-6 text-white" />
                   </div>
-                  <Button variant="outline">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    View Timeline
-                  </Button>
+                  <div>
+                    <CardTitle className="text-xl text-blue-800">Timeline Tracker</CardTitle>
+                    <p className="text-sm text-blue-600 mt-1">Monitor deadlines and milestones</p>
+                  </div>
                 </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-white/70 rounded-lg p-4 border border-blue-200">
+                    <p className="text-sm text-blue-700 mb-3">
+                      Track tender progress, deadlines, and critical milestones with automated alerts and notifications.
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Timeline
+                      </Button>
+                      <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-50">
+                        Set Alerts
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-medium">Audit Trail</h3>
-                    <p className="text-sm text-gray-600">
-                      Complete log of all tender activities
-                    </p>
+            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200">
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl shadow-lg">
+                    <Shield className="h-6 w-6 text-white" />
                   </div>
-                  <Button variant="outline">
-                    <Shield className="h-4 w-4 mr-2" />
-                    View Audit Log
-                  </Button>
+                  <div>
+                    <CardTitle className="text-xl text-emerald-800">Audit Trail</CardTitle>
+                    <p className="text-sm text-emerald-600 mt-1">Complete activity logging</p>
+                  </div>
                 </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-white/70 rounded-lg p-4 border border-emerald-200">
+                    <p className="text-sm text-emerald-700 mb-3">
+                      Comprehensive audit trail with timestamps, user actions, and system changes for compliance.
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        View Audit Log
+                      </Button>
+                      <Button variant="outline" size="sm" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+                        Export Report
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Stats Section */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-orange-100 shadow-lg p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Settings className="h-5 w-5 text-orange-600" />
+              Administration Overview
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                <div className="text-2xl font-bold text-orange-700">12</div>
+                <div className="text-sm text-orange-600">Active Amendments</div>
               </div>
-            </CardContent>
-          </Card>
+              <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                <div className="text-2xl font-bold text-blue-700">8</div>
+                <div className="text-sm text-blue-600">Pending Deadlines</div>
+              </div>
+              <div className="text-center p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200">
+                <div className="text-2xl font-bold text-emerald-700">156</div>
+                <div className="text-sm text-emerald-600">Audit Entries</div>
+              </div>
+              <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                <div className="text-2xl font-bold text-purple-700">98%</div>
+                <div className="text-sm text-purple-600">Compliance Rate</div>
+              </div>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Vendor Interaction */}
