@@ -801,10 +801,48 @@ export default function MinistryDashboard() {
     }
   };
 
-  // Sync every 10 seconds (in real app, this would be event-driven or websocket-based)
+  // Handle real-time NOC status updates via browser events
   useEffect(() => {
-    const interval = setInterval(syncNOCUpdates, 10000);
-    return () => clearInterval(interval);
+    const handleNOCStatusUpdate = (event: CustomEvent) => {
+      const { requestId, status, certificateNumber, approvalDate, rejectionDate } = event.detail;
+
+      setNOCRequests(prevRequests => {
+        const updatedRequests = prevRequests.map(request => {
+          if (request.id === requestId) {
+            return {
+              ...request,
+              status,
+              ...(status === 'Approved' && {
+                approvalDate,
+                certificateNumber
+              }),
+              ...(status === 'Rejected' && {
+                rejectionDate
+              })
+            };
+          }
+          return request;
+        });
+
+        // Update localStorage for persistence
+        const { ministry } = getMinistryMockData();
+        const ministryNOCKey = `${ministry.code}_NOCRequests`;
+        localStorage.setItem(ministryNOCKey, JSON.stringify(updatedRequests));
+
+        return updatedRequests;
+      });
+    };
+
+    // Listen for NOC status updates
+    window.addEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+
+    // Fallback: Sync every 30 seconds (reduced frequency since we have real-time updates)
+    const interval = setInterval(syncNOCUpdates, 30000);
+
+    return () => {
+      window.removeEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+      clearInterval(interval);
+    };
   }, [nocRequests]);
 
   useEffect(() => {
@@ -1086,7 +1124,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of textbooks and library resources for all levels",
               category: "Educational Materials",
-              estimatedValue: "₦1,650,000,000",
+              estimatedValue: "��1,650,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
