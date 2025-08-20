@@ -1956,7 +1956,18 @@ const TenderManagement = () => {
               >
                 Cancel
               </Button>
-              <Button onClick={handleCreateTender}>Create Tender</Button>
+              <Button
+                variant="outline"
+                onClick={() => handleCreateTender(true)}
+              >
+                Save as Draft
+              </Button>
+              <Button
+                onClick={() => handleCreateTender(false)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Publish Tender
+              </Button>
             </div>
           </div>
         </DialogContent>
