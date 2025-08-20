@@ -11,6 +11,7 @@ import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManag
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
 import NOCRequestsModule from "@/components/NOCRequestsModule";
 import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistryOverview";
+import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
