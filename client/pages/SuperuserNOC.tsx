@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { dispatchNOCStatusUpdate } from "@/lib/nocEventUtils";
 import {
   CheckCircle,
   XCircle,
@@ -271,14 +272,12 @@ export default function SuperuserNOC() {
     updateMinistryNOCData(selectedRequest, "Approved", certificateNumber);
 
     // Dispatch event to notify ministry dashboards of the update
-    window.dispatchEvent(new CustomEvent('nocStatusUpdated', {
-      detail: {
-        requestId: selectedRequest.id,
-        status: 'Approved',
-        certificateNumber,
-        approvalDate: new Date().toISOString().split("T")[0]
-      }
-    }));
+    dispatchNOCStatusUpdate({
+      requestId: selectedRequest.id,
+      status: 'Approved',
+      certificateNumber,
+      approvalDate: new Date().toISOString().split("T")[0]
+    });
 
     setShowApprovalModal(false);
     setApprovalComments("");
@@ -307,13 +306,11 @@ export default function SuperuserNOC() {
     updateMinistryNOCData(selectedRequest, "Rejected");
 
     // Dispatch event to notify ministry dashboards of the update
-    window.dispatchEvent(new CustomEvent('nocStatusUpdated', {
-      detail: {
-        requestId: selectedRequest.id,
-        status: 'Rejected',
-        rejectionDate: new Date().toISOString().split("T")[0]
-      }
-    }));
+    dispatchNOCStatusUpdate({
+      requestId: selectedRequest.id,
+      status: 'Rejected',
+      rejectionDate: new Date().toISOString().split("T")[0]
+    });
 
     setShowRejectionModal(false);
     setRejectReason("");
