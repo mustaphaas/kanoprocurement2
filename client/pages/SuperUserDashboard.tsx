@@ -11,6 +11,10 @@ import {
   AuditLogEntry,
   AuditLogFilter,
 } from "@/lib/auditLogStorage";
+import { EnhancedSuperUserOverview } from "@/components/superuser/EnhancedSuperUserOverview";
+import { SuperUserQuickActions } from "@/components/superuser/SuperUserQuickActions";
+import { generateMockSuperUserData } from "@/lib/superUserMockData";
+import { clearMockAuditData, getAuditDataInfo } from "@/lib/clearMockAuditData";
 import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
@@ -471,7 +475,7 @@ export default function SuperUserDashboard() {
       }
       setMDAUsers(allUsers);
 
-      console.log("✅ MDA system initialized successfully with localStorage");
+      console.log("��� MDA system initialized successfully with localStorage");
       console.log(
         `📊 Loaded: ${loadedMDAs.length} MDAs, ${loadedAdmins.length} admins, ${allUsers.length} users`,
       );
@@ -862,8 +866,16 @@ export default function SuperUserDashboard() {
       },
     ];
 
-    // Initialize audit log system with sample data
-    auditLogStorage.initializeSampleData();
+    // Clear any existing mock data and start with real audit logs only
+    const auditDataInfo = getAuditDataInfo();
+    if (auditDataInfo.hasMockData) {
+      console.log(
+        "🗑️ Found mock audit data, clearing it to start fresh with real logs",
+      );
+      console.log(`📊 Audit data info:`, auditDataInfo);
+      clearMockAuditData();
+      // Note: loadAuditLogs will be called by useEffect after this
+    }
 
     // Log dashboard access
     logUserAction(
@@ -2805,7 +2817,7 @@ The award letter has been:
           <div className="p-6">
             <div className="bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-lg overflow-auto max-h-64">
               <div className="space-y-1">
-                <div>🧪 MDA Testing Environment - Ready</div>
+                <div>�� MDA Testing Environment - Ready</div>
                 <div>✅ Dynamic MDA Creation Service - Loaded</div>
                 <div>✅ Ministry Functionality Templates - Available</div>
                 <div>📊 Current MDAs: {mdas.length}</div>
@@ -3471,123 +3483,215 @@ The award letter has been:
   const renderDashboardContent = () => {
     switch (activeTab) {
       case "dashboard":
+        const superUserData = generateMockSuperUserData();
+
+        const handleDrillDown = (mda: string) => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "MDA_DRILLDOWN",
+            mda,
+            `Drilled down into MDA: ${mda}`,
+            "LOW",
+          );
+          // Navigate to specific MDA details or set a filter
+          console.log("Drilling down into MDA:", mda);
+        };
+
+        const handleFilterChange = (filters: any) => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "FILTER_APPLIED",
+            "Dashboard Filters",
+            `Applied filters: ${JSON.stringify(filters)}`,
+            "LOW",
+          );
+          console.log("Filters applied:", filters);
+        };
+
+        // Quick Actions handlers
+        const handleCreateMDA = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "MDA_CREATE_INITIATED",
+            "MDA Management",
+            "Initiated MDA creation",
+            "MEDIUM",
+          );
+          setActiveTab("mda-management");
+        };
+
+        const handleManageUsers = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "USER_MANAGEMENT_ACCESSED",
+            "User Management",
+            "Accessed user management",
+            "LOW",
+          );
+          setActiveTab("users");
+        };
+
+        const handleSystemSettings = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "SYSTEM_SETTINGS_ACCESSED",
+            "System Settings",
+            "Accessed system settings",
+            "MEDIUM",
+          );
+          setActiveTab("settings");
+        };
+
+        const handleViewAuditLogs = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "AUDIT_LOGS_ACCESSED",
+            "Audit Logs",
+            "Accessed audit logs",
+            "MEDIUM",
+          );
+          setActiveTab("audit-logs");
+        };
+
+        const handleGenerateReport = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "REPORT_GENERATION_INITIATED",
+            "Reports",
+            "Initiated report generation",
+            "LOW",
+          );
+          setActiveTab("reports");
+        };
+
+        const handleManageCompanies = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "COMPANY_MANAGEMENT_ACCESSED",
+            "Company Management",
+            "Accessed company management",
+            "MEDIUM",
+          );
+          setActiveTab("companies");
+        };
+
+        const handleReviewNOCs = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "NOC_REVIEW_ACCESSED",
+            "NOC Requests",
+            "Accessed NOC review",
+            "MEDIUM",
+          );
+          setActiveTab("noc-requests");
+        };
+
+        const handleSystemHealth = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "SYSTEM_HEALTH_CHECK",
+            "System Health",
+            "Checked system health",
+            "LOW",
+          );
+          console.log("System health check initiated");
+        };
+
+        const handleBulkImport = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "BULK_IMPORT_INITIATED",
+            "Bulk Import",
+            "Initiated bulk import",
+            "MEDIUM",
+          );
+          console.log("Bulk import initiated");
+        };
+
+        const handleViewAnalytics = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "ANALYTICS_ACCESSED",
+            "Analytics",
+            "Accessed analytics",
+            "LOW",
+          );
+          setActiveTab("ai-insights");
+        };
+
+        const handleManagePermissions = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "PERMISSION_MANAGEMENT_ACCESSED",
+            "Permissions",
+            "Accessed permission management",
+            "HIGH",
+          );
+          console.log("Permission management accessed");
+        };
+
+        const handleBackupSystem = () => {
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "SYSTEM_BACKUP_INITIATED",
+            "System Backup",
+            "Initiated system backup",
+            "HIGH",
+          );
+          console.log("System backup initiated");
+        };
+
         return (
           <div className="space-y-8">
             {/* Welcome Message */}
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-foreground mb-2">
                 Welcome, Super User!
               </h1>
-              <p className="text-gray-600">
-                Comprehensive system overview and administrative controls.
+              <p className="text-muted-foreground">
+                Comprehensive system overview with enhanced MDA monitoring and
+                analytics.
               </p>
             </div>
 
-            {/* Key Statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      New Registrations Pending
-                    </p>
-                    <p className="text-3xl font-bold text-yellow-600">
-                      {dashboardStats.newRegistrationsPending}
-                    </p>
-                  </div>
-                  <UserCheck className="h-8 w-8 text-yellow-600" />
-                </div>
-              </div>
+            {/* Enhanced SuperUser Overview */}
+            <EnhancedSuperUserOverview
+              data={superUserData}
+              onDrillDown={handleDrillDown}
+              onFilterChange={handleFilterChange}
+            />
 
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Active Tenders
-                    </p>
-                    <p className="text-3xl font-bold text-blue-600">
-                      {dashboardStats.activeTenders}
-                    </p>
-                  </div>
-                  <FileText className="h-8 w-8 text-blue-600" />
-                </div>
-              </div>
+            {/* SuperUser Quick Actions */}
+            <SuperUserQuickActions
+              onCreateMDA={handleCreateMDA}
+              onManageUsers={handleManageUsers}
+              onSystemSettings={handleSystemSettings}
+              onViewAuditLogs={handleViewAuditLogs}
+              onGenerateReport={handleGenerateReport}
+              onManageCompanies={handleManageCompanies}
+              onReviewNOCs={handleReviewNOCs}
+              onSystemHealth={handleSystemHealth}
+              onBulkImport={handleBulkImport}
+              onViewAnalytics={handleViewAnalytics}
+              onManagePermissions={handleManagePermissions}
+              onBackupSystem={handleBackupSystem}
+            />
 
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Upcoming Deadlines
-                    </p>
-                    <p className="text-3xl font-bold text-orange-600">
-                      {dashboardStats.upcomingDeadlines}
-                    </p>
-                  </div>
-                  <Clock className="h-8 w-8 text-orange-600" />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Total Contract Value
-                    </p>
-                    <p className="text-3xl font-bold text-green-600">
-                      {dashboardStats.totalContractValue}
-                    </p>
-                  </div>
-                  <DollarSign className="h-8 w-8 text-green-600" />
-                </div>
-              </div>
-            </div>
-
-            {/* Awarded Contracts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Awarded Contracts Today
-                </h3>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-green-600 mb-2">
-                    {dashboardStats.awardedContractsToday}
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Contracts awarded today
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Awarded Contracts This Week
-                </h3>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">
-                    {dashboardStats.awardedContractsWeek}
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Contracts awarded this week
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Awarded Contracts This Month
-                </h3>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-purple-600 mb-2">
-                    {dashboardStats.awardedContractsMonth}
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Contracts awarded this month
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent System Activity */}
+            {/* Recent System Activity Log */}
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-900">
@@ -4264,6 +4368,29 @@ The award letter has been:
                       <option value="HIGH">High</option>
                       <option value="CRITICAL">Critical</option>
                     </select>
+                    <button
+                      onClick={() => {
+                        const auditDataInfo = getAuditDataInfo();
+                        if (auditDataInfo.hasMockData) {
+                          if (
+                            window.confirm(
+                              `Found ${auditDataInfo.mockDataCount} mock audit entries. Clear them to show only real audit logs?`,
+                            )
+                          ) {
+                            clearMockAuditData();
+                            loadAuditLogs();
+                          }
+                        } else {
+                          alert(
+                            "No mock data found. All audit logs appear to be real.",
+                          );
+                        }
+                      }}
+                      className="flex items-center px-3 py-2 text-sm border border-yellow-300 text-yellow-600 rounded-md hover:bg-yellow-50"
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Clear Mock Data
+                    </button>
                     <button
                       onClick={handleExportAuditLogs}
                       className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"

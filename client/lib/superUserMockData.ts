@@ -1,0 +1,385 @@
+// Mock data service for SuperUser Enhanced Dashboard
+
+export const generateMockSuperUserData = () => {
+  return {
+    // MDA Overview Data
+    mdaData: {
+      totalMDAs: 42,
+      activeMDAs: 38,
+      inactiveMDAs: 4,
+      recentlyAdded: [
+        {
+          id: "mda-001",
+          name: "Ministry of Digital Economy and Innovation",
+          activationDate: "2024-01-15",
+          status: "active" as const,
+        },
+        {
+          id: "mda-002",
+          name: "Federal Ministry of Youth and Sports Development",
+          activationDate: "2024-01-10",
+          status: "active" as const,
+        },
+        {
+          id: "mda-003",
+          name: "Nigeria Agricultural Insurance Corporation",
+          activationDate: "2024-01-08",
+          status: "pending" as const,
+        },
+        {
+          id: "mda-004",
+          name: "Federal Ministry of Environment",
+          activationDate: "2024-01-05",
+          status: "active" as const,
+        },
+        {
+          id: "mda-005",
+          name: "National Information Technology Development Agency",
+          activationDate: "2024-01-03",
+          status: "inactive" as const,
+        },
+      ],
+    },
+
+    // Procurement Activity Data
+    procurementData: {
+      totalTenders: 1247,
+      ongoingTenders: 284,
+      evaluatedTenders: 156,
+      awardedTenders: 189,
+      pendingNOC: 43,
+      approvedNOC: 178,
+      rejectedNOC: 12,
+      highValueContracts: [
+        {
+          id: "contract-001",
+          title: "National Broadband Infrastructure Development",
+          mda: "Ministry of Communications and Digital Economy",
+          value: "₦12.5B",
+          status: "Awarded",
+          dateAwarded: "2024-01-20",
+        },
+        {
+          id: "contract-002",
+          title: "Federal Road Infrastructure Upgrade Project",
+          mda: "Federal Ministry of Works and Housing",
+          value: "₦8.7B",
+          status: "Ongoing",
+          dateAwarded: "2024-01-18",
+        },
+        {
+          id: "contract-003",
+          title: "Healthcare Equipment Procurement",
+          mda: "Federal Ministry of Health",
+          value: "₦6.3B",
+          status: "Awarded",
+          dateAwarded: "2024-01-15",
+        },
+        {
+          id: "contract-004",
+          title: "Educational Infrastructure Development",
+          mda: "Federal Ministry of Education",
+          value: "₦5.9B",
+          status: "Ongoing",
+          dateAwarded: "2024-01-12",
+        },
+        {
+          id: "contract-005",
+          title: "Agricultural Modernization Initiative",
+          mda: "Federal Ministry of Agriculture",
+          value: "₦4.8B",
+          status: "Awarded",
+          dateAwarded: "2024-01-10",
+        },
+      ],
+    },
+
+    // Compliance & Oversight Data
+    complianceData: {
+      pendingProcurementPlans: 28,
+      delayedNOCRequests: 15,
+      flaggedTenders: 7,
+      contractsWithVariations: 12,
+      pendingApprovals: [
+        {
+          id: "approval-001",
+          type: "procurement_plan" as const,
+          mda: "Ministry of Transportation",
+          title: "Port Infrastructure Upgrade Plan",
+          daysOverdue: 23,
+        },
+        {
+          id: "approval-002",
+          type: "noc_request" as const,
+          mda: "Federal Ministry of Health",
+          title: "Medical Equipment Procurement NOC",
+          daysOverdue: 18,
+        },
+        {
+          id: "approval-003",
+          type: "contract_variation" as const,
+          mda: "Ministry of Power",
+          title: "Power Grid Expansion Contract Variation",
+          daysOverdue: 16,
+        },
+        {
+          id: "approval-004",
+          type: "procurement_plan" as const,
+          mda: "Ministry of Education",
+          title: "School Infrastructure Development Plan",
+          daysOverdue: 14,
+        },
+        {
+          id: "approval-005",
+          type: "noc_request" as const,
+          mda: "Ministry of Agriculture",
+          title: "Fertilizer Distribution NOC Request",
+          daysOverdue: 12,
+        },
+      ],
+    },
+
+    // User & Committee Activity Data
+    userActivityData: {
+      totalUsers: 892,
+      roleDistribution: {
+        procurementOfficers: 324,
+        accountants: 198,
+        evaluators: 256,
+        admins: 114,
+      },
+      activeCommittees: 67,
+      assignedMembers: 358,
+      committees: [
+        {
+          id: "committee-001",
+          name: "Technical Evaluation Committee",
+          mda: "Ministry of Communications",
+          memberCount: 8,
+          status: "active" as const,
+        },
+        {
+          id: "committee-002",
+          name: "Financial Evaluation Committee",
+          mda: "Ministry of Finance",
+          memberCount: 6,
+          status: "active" as const,
+        },
+        {
+          id: "committee-003",
+          name: "Infrastructure Assessment Committee",
+          mda: "Ministry of Works",
+          memberCount: 10,
+          status: "active" as const,
+        },
+        {
+          id: "committee-004",
+          name: "Healthcare Procurement Committee",
+          mda: "Ministry of Health",
+          memberCount: 7,
+          status: "inactive" as const,
+        },
+        {
+          id: "committee-005",
+          name: "Educational Equipment Committee",
+          mda: "Ministry of Education",
+          memberCount: 9,
+          status: "active" as const,
+        },
+      ],
+    },
+
+    // Notifications & Alerts Data
+    alertsData: {
+      tenderDelays: 23,
+      overdueNOCs: 15,
+      contractIssues: 8,
+      urgentAlerts: [
+        {
+          id: "alert-001",
+          type: "tender_delay" as const,
+          title: "Critical Tender Deadline Approaching",
+          description:
+            "Infrastructure development tender evaluation deadline is in 2 days with incomplete submissions.",
+          priority: "urgent" as const,
+          timestamp: "2024-01-21T10:30:00Z",
+          mda: "Ministry of Works",
+        },
+        {
+          id: "alert-002",
+          type: "overdue_noc" as const,
+          title: "NOC Request Overdue",
+          description:
+            "Healthcare equipment procurement NOC request is 18 days overdue.",
+          priority: "high" as const,
+          timestamp: "2024-01-21T09:15:00Z",
+          mda: "Ministry of Health",
+        },
+        {
+          id: "alert-003",
+          type: "contract_issue" as const,
+          title: "Contract Variation Threshold Exceeded",
+          description:
+            "Power grid expansion contract variation exceeds 20% threshold, requiring special approval.",
+          priority: "high" as const,
+          timestamp: "2024-01-21T08:45:00Z",
+          mda: "Ministry of Power",
+        },
+        {
+          id: "alert-004",
+          type: "system_alert" as const,
+          title: "Multiple Failed Login Attempts",
+          description:
+            "Unusual login activity detected from Ministry of Transportation account.",
+          priority: "medium" as const,
+          timestamp: "2024-01-21T07:20:00Z",
+          mda: "Ministry of Transportation",
+        },
+      ],
+      mdaMessages: [
+        {
+          id: "message-001",
+          from: "Dr. Ahmad Lawal",
+          mda: "Ministry of Health",
+          subject: "Urgent: Medical Equipment Procurement Clarification",
+          preview:
+            "We need clarification on the evaluation criteria for the medical equipment tender...",
+          timestamp: "2024-01-21T11:45:00Z",
+          isUnread: true,
+        },
+        {
+          id: "message-002",
+          from: "Eng. Sarah Okoro",
+          mda: "Ministry of Works",
+          subject: "Infrastructure Project Status Update",
+          preview:
+            "This is to update you on the current status of the road infrastructure project...",
+          timestamp: "2024-01-21T10:20:00Z",
+          isUnread: true,
+        },
+        {
+          id: "message-003",
+          from: "Prof. Ibrahim Hassan",
+          mda: "Ministry of Education",
+          subject: "School Infrastructure Procurement Approval",
+          preview:
+            "Request for approval of the revised procurement plan for school infrastructure...",
+          timestamp: "2024-01-21T09:30:00Z",
+          isUnread: false,
+        },
+        {
+          id: "message-004",
+          from: "Dr. Fatima Abdullahi",
+          mda: "Ministry of Agriculture",
+          subject: "Fertilizer Distribution Contract Query",
+          preview:
+            "We have some questions regarding the fertilizer distribution contract terms...",
+          timestamp: "2024-01-20T16:15:00Z",
+          isUnread: false,
+        },
+      ],
+    },
+
+    // Analytics & Reports Data
+    analyticsData: {
+      totalSpend: "₦847.3B",
+      spendByMDA: [
+        {
+          mda: "Ministry of Works and Housing",
+          spend: "₦156.8B",
+          percentage: 18.5,
+        },
+        { mda: "Ministry of Health", spend: "₦134.2B", percentage: 15.8 },
+        { mda: "Ministry of Education", spend: "₦98.7B", percentage: 11.6 },
+        { mda: "Ministry of Agriculture", spend: "₦87.4B", percentage: 10.3 },
+        { mda: "Ministry of Power", spend: "₦76.9B", percentage: 9.1 },
+        { mda: "Ministry of Transportation", spend: "₦65.3B", percentage: 7.7 },
+        { mda: "Ministry of Communications", spend: "₦54.8B", percentage: 6.5 },
+        { mda: "Other MDAs", spend: "₦173.2B", percentage: 20.5 },
+      ],
+      vendorPerformance: [
+        {
+          vendor: "Julius Berger Nigeria Plc",
+          contractsWon: 45,
+          completionRate: 94,
+          averageRating: 4.6,
+        },
+        {
+          vendor: "Dangote Industries Limited",
+          contractsWon: 38,
+          completionRate: 91,
+          averageRating: 4.4,
+        },
+        {
+          vendor: "Costain West Africa",
+          contractsWon: 32,
+          completionRate: 89,
+          averageRating: 4.3,
+        },
+        {
+          vendor: "Arab Contractors Nigeria",
+          contractsWon: 28,
+          completionRate: 87,
+          averageRating: 4.2,
+        },
+        {
+          vendor: "Reynolds Construction Company",
+          contractsWon: 24,
+          completionRate: 85,
+          averageRating: 4.1,
+        },
+      ],
+      mdaPerformance: [
+        {
+          mda: "Ministry of Communications",
+          timeliness: 94,
+          compliance: 96,
+          efficiency: 92,
+          status: "high" as const,
+        },
+        {
+          mda: "Ministry of Health",
+          timeliness: 87,
+          compliance: 91,
+          efficiency: 89,
+          status: "high" as const,
+        },
+        {
+          mda: "Ministry of Education",
+          timeliness: 82,
+          compliance: 88,
+          efficiency: 85,
+          status: "medium" as const,
+        },
+        {
+          mda: "Ministry of Agriculture",
+          timeliness: 79,
+          compliance: 84,
+          efficiency: 81,
+          status: "medium" as const,
+        },
+        {
+          mda: "Ministry of Power",
+          timeliness: 76,
+          compliance: 78,
+          efficiency: 74,
+          status: "medium" as const,
+        },
+        {
+          mda: "Ministry of Works",
+          timeliness: 68,
+          compliance: 72,
+          efficiency: 69,
+          status: "low" as const,
+        },
+        {
+          mda: "Ministry of Transportation",
+          timeliness: 64,
+          compliance: 67,
+          efficiency: 62,
+          status: "low" as const,
+        },
+      ],
+    },
+  };
+};

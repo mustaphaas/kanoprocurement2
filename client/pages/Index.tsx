@@ -485,7 +485,7 @@ export default function Index() {
                       {/* Progress bar */}
                       <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100">
                         <div
-                          className="h-full bg-green-700 transition-all duration-[4000ms] ease-linear"
+                          className="h-full bg-green-700 transition-all duration-&lsqb;4000ms&rsqb; ease-linear"
                           style={{
                             width: `${((currentTenderIndex + 1) / featuredTenders.length) * 100}%`,
                           }}
@@ -2885,7 +2885,7 @@ export default function Index() {
                           Continuous Improvement:
                         </h4>
                         <ul className="text-sm text-indigo-800 ml-4 space-y-1">
-                          <li>• Regular policy reviews and updates</li>
+                          <li>��� Regular policy reviews and updates</li>
                           <li>• Stakeholder feedback incorporation</li>
                           <li>• Best practice adoption and innovation</li>
                           <li>• Training and capacity building programs</li>
