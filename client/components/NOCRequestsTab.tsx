@@ -364,18 +364,8 @@ export default function NOCRequestsTab() {
       }
     });
 
-    // Load any existing central requests (for backwards compatibility)
-    const storedCentralRequests = localStorage.getItem("centralNOCRequests");
-    if (storedCentralRequests) {
-      const centralRequests = JSON.parse(storedCentralRequests);
-      // Only add central requests that don't exist in ministry data
-      centralRequests.forEach((centralReq: NOCRequest) => {
-        const exists = allNOCRequests.find(req => req.id === centralReq.id);
-        if (!exists) {
-          allNOCRequests.push(centralReq);
-        }
-      });
-    }
+    // Clear old central data to avoid duplicates - we now get everything from ministries
+    // Note: We prioritize ministry data over old central storage
 
     // If no requests found, initialize with comprehensive mock data
     if (allNOCRequests.length === 0) {
