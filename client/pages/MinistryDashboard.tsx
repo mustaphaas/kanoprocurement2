@@ -11,6 +11,10 @@ import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManag
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
 import NOCRequestsModule from "@/components/NOCRequestsModule";
 import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistryOverview";
+import { UserManagement } from "@/components/ministry/UserManagement";
+import { CommitteeAssignment } from "@/components/ministry/CommitteeAssignment";
+import { User, createUserSyncService } from "@shared/userManagement";
+import { UserMockDataGenerator } from "@/lib/userMockDataGenerator";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
@@ -441,6 +445,11 @@ export default function MinistryDashboard() {
   const [selectedTenderForLetter, setSelectedTenderForLetter] =
     useState<any>(null);
   const [awardLetterData, setAwardLetterData] = useState<any>(null);
+
+  // User Management state
+  const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [userSyncService, setUserSyncService] = useState<any>(null);
   const [bidders, setBidders] = useState([
     {
       id: "BID-001",
@@ -579,6 +588,43 @@ export default function MinistryDashboard() {
 
     return { ministryId, ministry: ministry || getMinistryById("ministry")! };
   };
+
+  // Initialize User Management and Sync Service
+  useEffect(() => {
+    const { ministryId } = getMinistryMockData();
+
+    // Initialize user sync service
+    const syncService = createUserSyncService(ministryId);
+    setUserSyncService(syncService);
+
+    // Load or generate user data
+    const usersKey = `ministry_users_${ministryId}`;
+    const storedUsers = localStorage.getItem(usersKey);
+
+    if (!storedUsers) {
+      // Generate initial mock data
+      UserMockDataGenerator.generateAndSave({
+        ministryId,
+        userCount: 10,
+        committeeCount: 3,
+        includeTestCommittee: true,
+        includeRealisticCOI: true,
+      });
+    }
+
+    // Load users
+    const userData = localStorage.getItem(usersKey);
+    if (userData) {
+      const loadedUsers: User[] = JSON.parse(userData);
+      setUsers(loadedUsers);
+
+      // Set current user (admin for demo)
+      const adminUser = loadedUsers.find(u => u.role.role_name.includes("Admin"));
+      if (adminUser) {
+        setCurrentUser(adminUser);
+      }
+    }
+  }, []);
 
   // Set ministry-specific bidders and workspace
   useEffect(() => {
@@ -4991,6 +5037,43 @@ Penalty Clause: 0.5% per week for delayed completion`,
           // Handle COI status click
         }}
       />
+    );
+  };
+
+  // Enhanced User Management with Committee Integration
+  const renderEnhancedUserManagement = () => {
+    if (!currentUser) {
+      return (
+        <div className="flex items-center justify-center py-8">
+          <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mr-2" />
+          Loading user management...
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        {/* User Management */}
+        <UserManagement
+          ministryId={ministryInfo.code}
+          currentUserId={currentUser.user_id}
+          currentUser={currentUser}
+        />
+
+        {/* Committee Assignment Integration */}
+        <div className="mt-8">
+          <CommitteeAssignment
+            ministryId={ministryInfo.code}
+            currentUserId={currentUser.user_id}
+            users={users}
+            tenders={tenders}
+            onCommitteeUpdate={(committee) => {
+              console.log("Committee updated:", committee);
+              // Could trigger notifications or updates
+            }}
+          />
+        </div>
+      </div>
     );
   };
 
@@ -10463,7 +10546,7 @@ Blockchain Timestamp: ${Date.now()}
     } else if (currentView === "noc") {
       return renderNOCRequests();
     } else if (currentView === "users") {
-      return renderUserManagement();
+      return renderEnhancedUserManagement();
     } else if (currentView === "procurement-planning") {
       return <ProcurementPlanning />;
     } else if (currentView === "tender-management") {
