@@ -270,6 +270,16 @@ export default function SuperuserNOC() {
     // Update the ministry-specific NOC data
     updateMinistryNOCData(selectedRequest, "Approved", certificateNumber);
 
+    // Dispatch event to notify ministry dashboards of the update
+    window.dispatchEvent(new CustomEvent('nocStatusUpdated', {
+      detail: {
+        requestId: selectedRequest.id,
+        status: 'Approved',
+        certificateNumber,
+        approvalDate: new Date().toISOString().split("T")[0]
+      }
+    }));
+
     setShowApprovalModal(false);
     setApprovalComments("");
     setSelectedRequest(null);
@@ -295,6 +305,15 @@ export default function SuperuserNOC() {
 
     // Update the ministry-specific NOC data
     updateMinistryNOCData(selectedRequest, "Rejected");
+
+    // Dispatch event to notify ministry dashboards of the update
+    window.dispatchEvent(new CustomEvent('nocStatusUpdated', {
+      detail: {
+        requestId: selectedRequest.id,
+        status: 'Rejected',
+        rejectionDate: new Date().toISOString().split("T")[0]
+      }
+    }));
 
     setShowRejectionModal(false);
     setRejectReason("");
