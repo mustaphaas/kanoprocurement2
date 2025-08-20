@@ -3487,6 +3487,67 @@ The award letter has been:
           console.log('Filters applied:', filters);
         };
 
+        // Quick Actions handlers
+        const handleCreateMDA = () => {
+          logUserAction('Initiated MDA creation', 'mda_create', 'SuperUser');
+          setActiveTab('mda-management');
+        };
+
+        const handleManageUsers = () => {
+          logUserAction('Accessed user management', 'user_management', 'SuperUser');
+          setActiveTab('users');
+        };
+
+        const handleSystemSettings = () => {
+          logUserAction('Accessed system settings', 'system_settings', 'SuperUser');
+          setActiveTab('settings');
+        };
+
+        const handleViewAuditLogs = () => {
+          logUserAction('Accessed audit logs', 'audit_logs', 'SuperUser');
+          setActiveTab('audit-logs');
+        };
+
+        const handleGenerateReport = () => {
+          logUserAction('Initiated report generation', 'report_generate', 'SuperUser');
+          setActiveTab('reports');
+        };
+
+        const handleManageCompanies = () => {
+          logUserAction('Accessed company management', 'company_management', 'SuperUser');
+          setActiveTab('companies');
+        };
+
+        const handleReviewNOCs = () => {
+          logUserAction('Accessed NOC review', 'noc_review', 'SuperUser');
+          setActiveTab('noc-requests');
+        };
+
+        const handleSystemHealth = () => {
+          logUserAction('Checked system health', 'system_health', 'SuperUser');
+          console.log('System health check initiated');
+        };
+
+        const handleBulkImport = () => {
+          logUserAction('Initiated bulk import', 'bulk_import', 'SuperUser');
+          console.log('Bulk import initiated');
+        };
+
+        const handleViewAnalytics = () => {
+          logUserAction('Accessed analytics', 'analytics_view', 'SuperUser');
+          setActiveTab('ai-insights');
+        };
+
+        const handleManagePermissions = () => {
+          logUserAction('Accessed permission management', 'permission_management', 'SuperUser');
+          console.log('Permission management accessed');
+        };
+
+        const handleBackupSystem = () => {
+          logUserAction('Initiated system backup', 'system_backup', 'SuperUser');
+          console.log('System backup initiated');
+        };
+
         return (
           <div className="space-y-8">
             {/* Welcome Message */}
@@ -5767,7 +5828,7 @@ The award letter has been:
                 onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
-                ��� Back to Tenders
+                ← Back to Tenders
               </button>
             </div>
 
