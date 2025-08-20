@@ -644,6 +644,9 @@ export default function NOCRequestsTab() {
     // Generate and download approval certificate
     generateApprovalCertificate(selectedRequest, certificateNumber);
 
+    // Auto-generate contract from approved NOC
+    autoGenerateContract(selectedRequest, certificateNumber);
+
     // Force reload data to ensure synchronization
     setTimeout(() => {
       loadNOCRequests();
