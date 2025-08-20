@@ -77,7 +77,7 @@ export default function NOCRequestsTab() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [ministryFilter, setMinistryFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<NOCRequest | null>(
-    null
+    null,
   );
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
@@ -128,75 +128,81 @@ export default function NOCRequestsTab() {
       // Ministry of Health NOC Requests - Only initialize if not exists to preserve status changes
       if (!localStorage.getItem("MOH_NOCRequests")) {
         const mohRequests = [
-        {
-          id: "NOC-MOH-001",
-          projectTitle: "Hospital Equipment Supply - Phase 1",
-          requestDate: "2024-01-25",
-          status: "Approved",
-          projectValue: "₦850,000,000",
-          contractorName: "PrimeCare Medical Ltd",
-          expectedDuration: "6 months",
-          ministryCode: "MOH",
-          ministryName: "Ministry of Health",
-          procuringEntity: "Kano State Ministry of Health",
-          contactPerson: "Dr. Amina Suleiman",
-          contactEmail: "amina.suleiman@kanostate.gov.ng",
-          projectDescription: "Procurement of essential medical equipment for hospitals",
-          justification: "Critical need for modern medical equipment to improve healthcare delivery",
-          category: "Medical Equipment",
-          certificateNumber: "KNS/MOP/PNO/2024/001",
-          approvalDate: "2024-01-28",
-          documents: {},
-          timeline: {
-            dateSubmitted: "2024-01-25T10:30:00Z",
-            approvalDate: "2024-01-28T15:20:00Z"
-          }
-        },
-        {
-          id: "NOC-MOH-002",
-          projectTitle: "Medical Laboratory Equipment Installation",
-          requestDate: "2024-02-01",
-          status: "Pending",
-          projectValue: "₦650,000,000",
-          contractorName: "Golden Gates Healthcare",
-          expectedDuration: "4 months",
-          ministryCode: "MOH",
-          ministryName: "Ministry of Health",
-          procuringEntity: "Kano State Ministry of Health",
-          contactPerson: "Dr. Amina Suleiman",
-          contactEmail: "amina.suleiman@kanostate.gov.ng",
-          projectDescription: "Installation of modern laboratory equipment for diagnostic services",
-          justification: "Enhance laboratory diagnostic capabilities across state hospitals",
-          category: "Medical Equipment",
-          documents: {},
-          timeline: {
-            dateSubmitted: "2024-02-01T11:15:00Z"
-          }
-        },
-        {
-          id: "NOC-MOH-003",
-          projectTitle: "Pharmaceutical Supply Program",
-          requestDate: "2024-02-05",
-          status: "Approved",
-          projectValue: "₦1,200,000,000",
-          contractorName: "Falcon Diagnostics Ltd",
-          expectedDuration: "12 months",
-          ministryCode: "MOH",
-          ministryName: "Ministry of Health",
-          procuringEntity: "Kano State Ministry of Health",
-          contactPerson: "Dr. Amina Suleiman",
-          contactEmail: "amina.suleiman@kanostate.gov.ng",
-          projectDescription: "Long-term pharmaceutical supply for state health facilities",
-          justification: "Ensure continuous availability of essential medicines",
-          category: "Pharmaceuticals",
-          certificateNumber: "KNS/MOP/PNO/2024/002",
-          approvalDate: "2024-02-08",
-          documents: {},
-          timeline: {
-            dateSubmitted: "2024-02-05T14:30:00Z",
-            approvalDate: "2024-02-08T16:45:00Z"
-          }
-        }
+          {
+            id: "NOC-MOH-001",
+            projectTitle: "Hospital Equipment Supply - Phase 1",
+            requestDate: "2024-01-25",
+            status: "Approved",
+            projectValue: "₦850,000,000",
+            contractorName: "PrimeCare Medical Ltd",
+            expectedDuration: "6 months",
+            ministryCode: "MOH",
+            ministryName: "Ministry of Health",
+            procuringEntity: "Kano State Ministry of Health",
+            contactPerson: "Dr. Amina Suleiman",
+            contactEmail: "amina.suleiman@kanostate.gov.ng",
+            projectDescription:
+              "Procurement of essential medical equipment for hospitals",
+            justification:
+              "Critical need for modern medical equipment to improve healthcare delivery",
+            category: "Medical Equipment",
+            certificateNumber: "KNS/MOP/PNO/2024/001",
+            approvalDate: "2024-01-28",
+            documents: {},
+            timeline: {
+              dateSubmitted: "2024-01-25T10:30:00Z",
+              approvalDate: "2024-01-28T15:20:00Z",
+            },
+          },
+          {
+            id: "NOC-MOH-002",
+            projectTitle: "Medical Laboratory Equipment Installation",
+            requestDate: "2024-02-01",
+            status: "Pending",
+            projectValue: "₦650,000,000",
+            contractorName: "Golden Gates Healthcare",
+            expectedDuration: "4 months",
+            ministryCode: "MOH",
+            ministryName: "Ministry of Health",
+            procuringEntity: "Kano State Ministry of Health",
+            contactPerson: "Dr. Amina Suleiman",
+            contactEmail: "amina.suleiman@kanostate.gov.ng",
+            projectDescription:
+              "Installation of modern laboratory equipment for diagnostic services",
+            justification:
+              "Enhance laboratory diagnostic capabilities across state hospitals",
+            category: "Medical Equipment",
+            documents: {},
+            timeline: {
+              dateSubmitted: "2024-02-01T11:15:00Z",
+            },
+          },
+          {
+            id: "NOC-MOH-003",
+            projectTitle: "Pharmaceutical Supply Program",
+            requestDate: "2024-02-05",
+            status: "Approved",
+            projectValue: "₦1,200,000,000",
+            contractorName: "Falcon Diagnostics Ltd",
+            expectedDuration: "12 months",
+            ministryCode: "MOH",
+            ministryName: "Ministry of Health",
+            procuringEntity: "Kano State Ministry of Health",
+            contactPerson: "Dr. Amina Suleiman",
+            contactEmail: "amina.suleiman@kanostate.gov.ng",
+            projectDescription:
+              "Long-term pharmaceutical supply for state health facilities",
+            justification:
+              "Ensure continuous availability of essential medicines",
+            category: "Pharmaceuticals",
+            certificateNumber: "KNS/MOP/PNO/2024/002",
+            approvalDate: "2024-02-08",
+            documents: {},
+            timeline: {
+              dateSubmitted: "2024-02-05T14:30:00Z",
+              approvalDate: "2024-02-08T16:45:00Z",
+            },
+          },
         ];
         localStorage.setItem("MOH_NOCRequests", JSON.stringify(mohRequests));
       }
@@ -217,16 +223,18 @@ export default function NOCRequestsTab() {
             procuringEntity: "Kano State Ministry of Works",
             contactPerson: "Eng. Muktar Ibrahim",
             contactEmail: "muktar.ibrahim@kanostate.gov.ng",
-            projectDescription: "Comprehensive rehabilitation of the Kano-Kaduna highway",
-            justification: "Critical transportation infrastructure connecting major economic centers",
+            projectDescription:
+              "Comprehensive rehabilitation of the Kano-Kaduna highway",
+            justification:
+              "Critical transportation infrastructure connecting major economic centers",
             category: "Infrastructure",
             certificateNumber: "KNS/MOWI/PNO/2024/001",
             approvalDate: "2024-01-25",
             documents: {},
             timeline: {
               dateSubmitted: "2024-01-20T08:30:00Z",
-              approvalDate: "2024-01-25T17:00:00Z"
-            }
+              approvalDate: "2024-01-25T17:00:00Z",
+            },
           },
           {
             id: "NOC-MOWI-002",
@@ -241,13 +249,15 @@ export default function NOCRequestsTab() {
             procuringEntity: "Kano State Ministry of Works",
             contactPerson: "Eng. Muktar Ibrahim",
             contactEmail: "muktar.ibrahim@kanostate.gov.ng",
-            projectDescription: "Construction of strategic bridges across major waterways",
-            justification: "Improve connectivity and facilitate economic development",
+            projectDescription:
+              "Construction of strategic bridges across major waterways",
+            justification:
+              "Improve connectivity and facilitate economic development",
             category: "Infrastructure",
             documents: {},
             timeline: {
-              dateSubmitted: "2024-02-01T10:20:00Z"
-            }
+              dateSubmitted: "2024-02-01T10:20:00Z",
+            },
           },
           {
             id: "NOC-MOWI-003",
@@ -262,16 +272,18 @@ export default function NOCRequestsTab() {
             procuringEntity: "Kano State Ministry of Works",
             contactPerson: "Eng. Muktar Ibrahim",
             contactEmail: "muktar.ibrahim@kanostate.gov.ng",
-            projectDescription: "Complete renovation of the state government secretariat",
-            justification: "Modernize government facilities and improve working conditions",
+            projectDescription:
+              "Complete renovation of the state government secretariat",
+            justification:
+              "Modernize government facilities and improve working conditions",
             category: "Buildings",
             certificateNumber: "KNS/MOWI/PNO/2024/002",
             approvalDate: "2024-02-10",
             documents: {},
             timeline: {
               dateSubmitted: "2024-02-05T13:15:00Z",
-              approvalDate: "2024-02-10T14:30:00Z"
-            }
+              approvalDate: "2024-02-10T14:30:00Z",
+            },
           },
           {
             id: "NOC-MOWI-004",
@@ -286,16 +298,18 @@ export default function NOCRequestsTab() {
             procuringEntity: "Kano State Ministry of Works",
             contactPerson: "Eng. Muktar Ibrahim",
             contactEmail: "muktar.ibrahim@kanostate.gov.ng",
-            projectDescription: "Development of comprehensive urban drainage systems",
-            justification: "Address flooding issues and improve urban infrastructure",
+            projectDescription:
+              "Development of comprehensive urban drainage systems",
+            justification:
+              "Address flooding issues and improve urban infrastructure",
             category: "Infrastructure",
             certificateNumber: "KNS/MOWI/PNO/2024/003",
             approvalDate: "2024-02-12",
             documents: {},
             timeline: {
               dateSubmitted: "2024-02-08T09:45:00Z",
-              approvalDate: "2024-02-12T16:20:00Z"
-            }
+              approvalDate: "2024-02-12T16:20:00Z",
+            },
           },
           {
             id: "NOC-MOWI-005",
@@ -311,13 +325,14 @@ export default function NOCRequestsTab() {
             contactPerson: "Eng. Muktar Ibrahim",
             contactEmail: "muktar.ibrahim@kanostate.gov.ng",
             projectDescription: "Procurement of heavy construction equipment",
-            justification: "Enhance state capacity for infrastructure development",
+            justification:
+              "Enhance state capacity for infrastructure development",
             category: "Equipment",
             documents: {},
             timeline: {
-              dateSubmitted: "2024-02-10T11:30:00Z"
-            }
-          }
+              dateSubmitted: "2024-02-10T11:30:00Z",
+            },
+          },
         ];
         localStorage.setItem("MOWI_NOCRequests", JSON.stringify(mowiRequests));
       }
@@ -337,16 +352,18 @@ export default function NOCRequestsTab() {
           procuringEntity: "Kano State Ministry of Education",
           contactPerson: "Dr. Hafsat Adamu",
           contactEmail: "hafsat.adamu@kanostate.gov.ng",
-          projectDescription: "Procurement of modern school furniture for public schools",
-          justification: "Improve learning environment and student comfort in schools",
+          projectDescription:
+            "Procurement of modern school furniture for public schools",
+          justification:
+            "Improve learning environment and student comfort in schools",
           category: "Educational Equipment",
           certificateNumber: "KNS/MOE/PNO/2024/001",
           approvalDate: "2024-01-22",
           documents: {},
           timeline: {
             dateSubmitted: "2024-01-18T09:15:00Z",
-            approvalDate: "2024-01-22T16:30:00Z"
-          }
+            approvalDate: "2024-01-22T16:30:00Z",
+          },
         },
         {
           id: "NOC-MOE-002",
@@ -361,16 +378,18 @@ export default function NOCRequestsTab() {
           procuringEntity: "Kano State Ministry of Education",
           contactPerson: "Dr. Hafsat Adamu",
           contactEmail: "hafsat.adamu@kanostate.gov.ng",
-          projectDescription: "Development of comprehensive digital learning platform for schools",
-          justification: "Modernize education delivery through technology integration",
+          projectDescription:
+            "Development of comprehensive digital learning platform for schools",
+          justification:
+            "Modernize education delivery through technology integration",
           category: "Educational Technology",
           certificateNumber: "KNS/MOE/PNO/2024/004",
           approvalDate: new Date().toISOString(),
           documents: {},
           timeline: {
             dateSubmitted: "2024-01-25T11:00:00Z",
-            approvalDate: new Date().toISOString()
-          }
+            approvalDate: new Date().toISOString(),
+          },
         },
         {
           id: "NOC-MOE-003",
@@ -385,16 +404,18 @@ export default function NOCRequestsTab() {
           procuringEntity: "Kano State Ministry of Education",
           contactPerson: "Dr. Hafsat Adamu",
           contactEmail: "hafsat.adamu@kanostate.gov.ng",
-          projectDescription: "Installation of modern science laboratory equipment in secondary schools",
-          justification: "Enhance practical science education and STEM learning",
+          projectDescription:
+            "Installation of modern science laboratory equipment in secondary schools",
+          justification:
+            "Enhance practical science education and STEM learning",
           category: "Educational Equipment",
           certificateNumber: "KNS/MOE/PNO/2024/002",
           approvalDate: "2024-02-06",
           documents: {},
           timeline: {
             dateSubmitted: "2024-02-02T10:45:00Z",
-            approvalDate: "2024-02-06T14:20:00Z"
-          }
+            approvalDate: "2024-02-06T14:20:00Z",
+          },
         },
         {
           id: "NOC-MOE-004",
@@ -409,17 +430,19 @@ export default function NOCRequestsTab() {
           procuringEntity: "Kano State Ministry of Education",
           contactPerson: "Dr. Hafsat Adamu",
           contactEmail: "hafsat.adamu@kanostate.gov.ng",
-          projectDescription: "Procurement and distribution of library books and educational resources",
-          justification: "Improve literacy and provide adequate learning materials",
+          projectDescription:
+            "Procurement and distribution of library books and educational resources",
+          justification:
+            "Improve literacy and provide adequate learning materials",
           category: "Educational Materials",
           certificateNumber: "KNS/MOE/PNO/2024/003",
           approvalDate: "2024-02-08",
           documents: {},
           timeline: {
             dateSubmitted: "2024-02-05T13:30:00Z",
-            approvalDate: "2024-02-08T15:45:00Z"
-          }
-        }
+            approvalDate: "2024-02-08T15:45:00Z",
+          },
+        },
       ];
       localStorage.setItem("MOE_NOCRequests", JSON.stringify(moeRequests));
     };
@@ -431,8 +454,13 @@ export default function NOCRequestsTab() {
 
       // Also check for any old-format NOC data and clear it
       const keysToCheck = Object.keys(localStorage);
-      keysToCheck.forEach(key => {
-        if (key.startsWith("noc") && key !== "MOH_NOCRequests" && key !== "MOWI_NOCRequests" && key !== "MOE_NOCRequests") {
+      keysToCheck.forEach((key) => {
+        if (
+          key.startsWith("noc") &&
+          key !== "MOH_NOCRequests" &&
+          key !== "MOWI_NOCRequests" &&
+          key !== "MOE_NOCRequests"
+        ) {
           localStorage.removeItem(key);
         }
       });
@@ -443,11 +471,15 @@ export default function NOCRequestsTab() {
     initializeMinistryData();
 
     // Load from all ministry storage keys
-    const ministryKeys = ["MOH_NOCRequests", "MOWI_NOCRequests", "MOE_NOCRequests"];
+    const ministryKeys = [
+      "MOH_NOCRequests",
+      "MOWI_NOCRequests",
+      "MOE_NOCRequests",
+    ];
     const ministryNames = {
-      "MOH": "Ministry of Health",
-      "MOWI": "Ministry of Works and Infrastructure",
-      "MOE": "Ministry of Education"
+      MOH: "Ministry of Health",
+      MOWI: "Ministry of Works and Infrastructure",
+      MOE: "Ministry of Education",
     };
 
     ministryKeys.forEach((key) => {
@@ -463,20 +495,29 @@ export default function NOCRequestsTab() {
             allNOCRequests.push({
               ...req,
               ministryCode,
-              ministryName: ministryNames[ministryCode as keyof typeof ministryNames] || ministryCode,
-              tenderId: req.tenderId || `TND-${ministryCode}-${req.id.split('-').pop()}`,
+              ministryName:
+                ministryNames[ministryCode as keyof typeof ministryNames] ||
+                ministryCode,
+              tenderId:
+                req.tenderId ||
+                `TND-${ministryCode}-${req.id.split("-").pop()}`,
               tenderTitle: req.tenderTitle || `${req.projectTitle} Tender`,
               procuringEntity: `Kano State ${ministryNames[ministryCode as keyof typeof ministryNames]}`,
               contactPerson: req.contactPerson || "Ministry Contact",
-              contactEmail: req.contactEmail || `contact@${ministryCode.toLowerCase()}.kano.gov.ng`,
-              projectDescription: req.projectDescription || `Procurement for ${req.projectTitle}`,
-              justification: req.justification || "Critical infrastructure development requirement",
+              contactEmail:
+                req.contactEmail ||
+                `contact@${ministryCode.toLowerCase()}.kano.gov.ng`,
+              projectDescription:
+                req.projectDescription || `Procurement for ${req.projectTitle}`,
+              justification:
+                req.justification ||
+                "Critical infrastructure development requirement",
               category: req.category || "Infrastructure",
               documents: req.documents || {},
               timeline: req.timeline || {
                 dateSubmitted: req.requestDate,
-                ...(req.approvalDate && { approvalDate: req.approvalDate })
-              }
+                ...(req.approvalDate && { approvalDate: req.approvalDate }),
+              },
             });
           }
         });
@@ -517,7 +558,7 @@ export default function NOCRequestsTab() {
     if (!selectedRequest) return;
 
     const certificateNumber = `KNS/NOC/${new Date().getFullYear()}/${String(
-      nocRequests.filter((r) => r.status === "Approved").length + 1
+      nocRequests.filter((r) => r.status === "Approved").length + 1,
     ).padStart(3, "0")}`;
 
     const updatedRequests = nocRequests.map((request) =>
@@ -531,7 +572,7 @@ export default function NOCRequestsTab() {
               approvalDate: new Date().toISOString(),
             },
           }
-        : request
+        : request,
     );
 
     setNOCRequests(updatedRequests);
@@ -551,12 +592,17 @@ export default function NOCRequestsTab() {
                 certificateNumber,
                 approvalDate: new Date().toISOString(),
               }
-            : req
+            : req,
         );
         localStorage.setItem(ministryKey, JSON.stringify(updatedMinistryData));
-        console.log(`✅ Synced approval to ${ministryKey}:`, updatedMinistryData.find(r => r.id === selectedRequest.id));
+        console.log(
+          `✅ Synced approval to ${ministryKey}:`,
+          updatedMinistryData.find((r) => r.id === selectedRequest.id),
+        );
       } else {
-        console.error(`❌ Ministry storage ${ministryKey} not found for approval sync`);
+        console.error(
+          `❌ Ministry storage ${ministryKey} not found for approval sync`,
+        );
       }
     }
 
@@ -586,7 +632,7 @@ export default function NOCRequestsTab() {
               rejectionDate: new Date().toISOString(),
             },
           }
-        : request
+        : request,
     );
 
     setNOCRequests(updatedRequests);
@@ -606,7 +652,7 @@ export default function NOCRequestsTab() {
                 rejectionReason,
                 rejectionDate: new Date().toISOString(),
               }
-            : req
+            : req,
         );
         localStorage.setItem(ministryKey, JSON.stringify(updatedMinistryData));
       }
@@ -631,7 +677,7 @@ export default function NOCRequestsTab() {
               clarificationRequestDate: new Date().toISOString(),
             },
           }
-        : request
+        : request,
     );
 
     setNOCRequests(updatedRequests);
@@ -651,7 +697,7 @@ export default function NOCRequestsTab() {
                 clarificationNotes,
                 clarificationDate: new Date().toISOString(),
               }
-            : req
+            : req,
         );
         localStorage.setItem(ministryKey, JSON.stringify(updatedMinistryData));
       }
@@ -662,7 +708,10 @@ export default function NOCRequestsTab() {
     setClarificationNotes("");
   };
 
-  const generateApprovalCertificate = (request: NOCRequest, certificateNumber: string) => {
+  const generateApprovalCertificate = (
+    request: NOCRequest,
+    certificateNumber: string,
+  ) => {
     // Create a simple PDF-like content for download
     const certificateContent = `
       NO OBJECTION CERTIFICATE
@@ -682,9 +731,9 @@ export default function NOCRequestsTab() {
       Kano State Government
     `;
 
-    const blob = new Blob([certificateContent], { type: 'text/plain' });
+    const blob = new Blob([certificateContent], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `NOC_${certificateNumber}.txt`;
     document.body.appendChild(a);
@@ -730,7 +779,8 @@ export default function NOCRequestsTab() {
               NOC Requests Management
             </h2>
             <p className="text-sm text-gray-600 mt-1">
-              Review and manage No Objection Certificate requests from ministries
+              Review and manage No Objection Certificate requests from
+              ministries
             </p>
           </div>
           <div className="flex items-center space-x-2">
@@ -762,7 +812,9 @@ export default function NOCRequestsTab() {
             <option value="Draft">Draft</option>
             <option value="Submitted">Submitted</option>
             <option value="Under Review">Under Review</option>
-            <option value="Clarification Requested">Clarification Requested</option>
+            <option value="Clarification Requested">
+              Clarification Requested
+            </option>
             <option value="Approved">Approved</option>
             <option value="Rejected">Rejected</option>
           </select>
@@ -873,7 +925,7 @@ export default function NOCRequestsTab() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-                        request.status
+                        request.status,
                       )}`}
                     >
                       {request.status}
@@ -887,7 +939,9 @@ export default function NOCRequestsTab() {
                     >
                       <Eye className="h-4 w-4" />
                     </button>
-                    {(request.status === "Submitted" || request.status === "Under Review" || request.status === "Pending") && (
+                    {(request.status === "Submitted" ||
+                      request.status === "Under Review" ||
+                      request.status === "Pending") && (
                       <>
                         <button
                           onClick={() => handleApproveRequest(request)}
@@ -940,41 +994,73 @@ export default function NOCRequestsTab() {
               {/* Left Column - Basic Information */}
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Basic Information</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Basic Information
+                  </h4>
                   <div className="bg-gray-50 p-4 rounded-lg space-y-2">
                     <div>
-                      <span className="text-sm font-medium text-gray-500">Request ID:</span>
-                      <p className="text-sm text-gray-900">{selectedRequest.id}</p>
+                      <span className="text-sm font-medium text-gray-500">
+                        Request ID:
+                      </span>
+                      <p className="text-sm text-gray-900">
+                        {selectedRequest.id}
+                      </p>
                     </div>
                     <div>
-                      <span className="text-sm font-medium text-gray-500">Ministry:</span>
-                      <p className="text-sm text-gray-900">{selectedRequest.ministryName}</p>
+                      <span className="text-sm font-medium text-gray-500">
+                        Ministry:
+                      </span>
+                      <p className="text-sm text-gray-900">
+                        {selectedRequest.ministryName}
+                      </p>
                     </div>
                     <div>
-                      <span className="text-sm font-medium text-gray-500">Project Title:</span>
-                      <p className="text-sm text-gray-900">{selectedRequest.projectTitle}</p>
+                      <span className="text-sm font-medium text-gray-500">
+                        Project Title:
+                      </span>
+                      <p className="text-sm text-gray-900">
+                        {selectedRequest.projectTitle}
+                      </p>
                     </div>
                     <div>
-                      <span className="text-sm font-medium text-gray-500">Project Value:</span>
-                      <p className="text-sm text-gray-900">{formatCurrency(selectedRequest.projectValue)}</p>
+                      <span className="text-sm font-medium text-gray-500">
+                        Project Value:
+                      </span>
+                      <p className="text-sm text-gray-900">
+                        {formatCurrency(selectedRequest.projectValue)}
+                      </p>
                     </div>
                     <div>
-                      <span className="text-sm font-medium text-gray-500">Contractor:</span>
-                      <p className="text-sm text-gray-900">{selectedRequest.contractorName}</p>
+                      <span className="text-sm font-medium text-gray-500">
+                        Contractor:
+                      </span>
+                      <p className="text-sm text-gray-900">
+                        {selectedRequest.contractorName}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Contact Information</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Contact Information
+                  </h4>
                   <div className="bg-gray-50 p-4 rounded-lg space-y-2">
                     <div>
-                      <span className="text-sm font-medium text-gray-500">Contact Person:</span>
-                      <p className="text-sm text-gray-900">{selectedRequest.contactPerson}</p>
+                      <span className="text-sm font-medium text-gray-500">
+                        Contact Person:
+                      </span>
+                      <p className="text-sm text-gray-900">
+                        {selectedRequest.contactPerson}
+                      </p>
                     </div>
                     <div>
-                      <span className="text-sm font-medium text-gray-500">Email:</span>
-                      <p className="text-sm text-gray-900">{selectedRequest.contactEmail}</p>
+                      <span className="text-sm font-medium text-gray-500">
+                        Email:
+                      </span>
+                      <p className="text-sm text-gray-900">
+                        {selectedRequest.contactEmail}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -984,39 +1070,65 @@ export default function NOCRequestsTab() {
               <div className="space-y-4">
                 {selectedRequest.evaluationResults && (
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Evaluation Results</h4>
+                    <h4 className="font-medium text-gray-900 mb-2">
+                      Evaluation Results
+                    </h4>
                     <div className="bg-gray-50 p-4 rounded-lg space-y-2">
                       <div>
-                        <span className="text-sm font-medium text-gray-500">Technical Score:</span>
-                        <p className="text-sm text-gray-900">{selectedRequest.evaluationResults.technicalScore}%</p>
+                        <span className="text-sm font-medium text-gray-500">
+                          Technical Score:
+                        </span>
+                        <p className="text-sm text-gray-900">
+                          {selectedRequest.evaluationResults.technicalScore}%
+                        </p>
                       </div>
                       <div>
-                        <span className="text-sm font-medium text-gray-500">Financial Score:</span>
-                        <p className="text-sm text-gray-900">{selectedRequest.evaluationResults.financialScore}%</p>
+                        <span className="text-sm font-medium text-gray-500">
+                          Financial Score:
+                        </span>
+                        <p className="text-sm text-gray-900">
+                          {selectedRequest.evaluationResults.financialScore}%
+                        </p>
                       </div>
                       <div>
-                        <span className="text-sm font-medium text-gray-500">Total Score:</span>
-                        <p className="text-sm text-gray-900">{selectedRequest.evaluationResults.totalScore}%</p>
+                        <span className="text-sm font-medium text-gray-500">
+                          Total Score:
+                        </span>
+                        <p className="text-sm text-gray-900">
+                          {selectedRequest.evaluationResults.totalScore}%
+                        </p>
                       </div>
                       <div>
-                        <span className="text-sm font-medium text-gray-500">Recommendation:</span>
-                        <p className="text-sm text-gray-900">{selectedRequest.evaluationResults.recommendation}</p>
+                        <span className="text-sm font-medium text-gray-500">
+                          Recommendation:
+                        </span>
+                        <p className="text-sm text-gray-900">
+                          {selectedRequest.evaluationResults.recommendation}
+                        </p>
                       </div>
                     </div>
                   </div>
                 )}
 
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Project Description</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Project Description
+                  </h4>
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-900">{selectedRequest.projectDescription}</p>
+                    <p className="text-sm text-gray-900">
+                      {selectedRequest.projectDescription}
+                    </p>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Justification</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Justification
+                  </h4>
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-900">{selectedRequest.justification}</p>
+                    <p className="text-sm text-gray-900">
+                      {selectedRequest.justification}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1029,7 +1141,9 @@ export default function NOCRequestsTab() {
               >
                 Close
               </button>
-              {(selectedRequest.status === "Submitted" || selectedRequest.status === "Under Review" || selectedRequest.status === "Pending") && (
+              {(selectedRequest.status === "Submitted" ||
+                selectedRequest.status === "Under Review" ||
+                selectedRequest.status === "Pending") && (
                 <>
                   <button
                     onClick={() => {
@@ -1075,8 +1189,10 @@ export default function NOCRequestsTab() {
                 Approve NOC Request
               </h3>
               <p className="text-sm text-gray-500 mt-2">
-                You are about to approve the NOC request for "{selectedRequest.projectTitle}" 
-                from {selectedRequest.ministryName}. This will generate an approval certificate.
+                You are about to approve the NOC request for "
+                {selectedRequest.projectTitle}" from{" "}
+                {selectedRequest.ministryName}. This will generate an approval
+                certificate.
               </p>
               <div className="mt-4 flex space-x-3">
                 <button
@@ -1107,8 +1223,9 @@ export default function NOCRequestsTab() {
                 Reject NOC Request
               </h3>
               <p className="text-sm text-gray-500 mt-2 text-center">
-                You are about to reject the NOC request for "{selectedRequest.projectTitle}" 
-                from {selectedRequest.ministryName}.
+                You are about to reject the NOC request for "
+                {selectedRequest.projectTitle}" from{" "}
+                {selectedRequest.ministryName}.
               </p>
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1121,12 +1238,22 @@ export default function NOCRequestsTab() {
                   required
                 >
                   <option value="">Select reason...</option>
-                  <option value="Non-compliance with procurement guidelines">Non-compliance with procurement guidelines</option>
+                  <option value="Non-compliance with procurement guidelines">
+                    Non-compliance with procurement guidelines
+                  </option>
                   <option value="Budget constraints">Budget constraints</option>
-                  <option value="Conflict of interest">Conflict of interest</option>
-                  <option value="Incomplete evaluation">Incomplete evaluation</option>
-                  <option value="Technical deficiencies">Technical deficiencies</option>
-                  <option value="Financial irregularities">Financial irregularities</option>
+                  <option value="Conflict of interest">
+                    Conflict of interest
+                  </option>
+                  <option value="Incomplete evaluation">
+                    Incomplete evaluation
+                  </option>
+                  <option value="Technical deficiencies">
+                    Technical deficiencies
+                  </option>
+                  <option value="Financial irregularities">
+                    Financial irregularities
+                  </option>
                   <option value="Other">Other</option>
                 </select>
               </div>
@@ -1163,8 +1290,9 @@ export default function NOCRequestsTab() {
                 Request Clarification
               </h3>
               <p className="text-sm text-gray-500 mt-2 text-center">
-                Request clarification for the NOC request "{selectedRequest.projectTitle}" 
-                from {selectedRequest.ministryName}.
+                Request clarification for the NOC request "
+                {selectedRequest.projectTitle}" from{" "}
+                {selectedRequest.ministryName}.
               </p>
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
