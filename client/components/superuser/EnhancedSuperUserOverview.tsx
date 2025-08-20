@@ -137,38 +137,28 @@ export function EnhancedSuperUserOverview({
   return (
     <div className="space-y-6">
       {/* MDA Overview Section */}
-      <MDAOverviewSection 
-        data={data.mdaData} 
-        onDrillDown={onDrillDown}
-      />
+      <MDAOverviewSection data={data.mdaData} onDrillDown={onDrillDown} />
 
       {/* Procurement Activity Summary */}
-      <ProcurementActivitySummary 
+      <ProcurementActivitySummary
         data={data.procurementData}
         onFilterChange={onFilterChange}
       />
 
       {/* Compliance & Oversight */}
-      <ComplianceOversightSection 
+      <ComplianceOversightSection
         data={data.complianceData}
         onFilterChange={onFilterChange}
       />
 
       {/* User & Committee Activity */}
-      <UserCommitteeActivity 
-        data={data.userActivityData}
-      />
+      <UserCommitteeActivity data={data.userActivityData} />
 
       {/* Notifications & Alerts */}
-      <NotificationsAlerts 
-        data={data.alertsData}
-      />
+      <NotificationsAlerts data={data.alertsData} />
 
       {/* Analytics & Reports */}
-      <AnalyticsReports 
-        data={data.analyticsData}
-        onDrillDown={onDrillDown}
-      />
+      <AnalyticsReports data={data.analyticsData} onDrillDown={onDrillDown} />
     </div>
   );
 }

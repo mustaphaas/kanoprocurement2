@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Bell, 
-  AlertTriangle, 
-  Clock, 
-  MessageSquare, 
+import {
+  Bell,
+  AlertTriangle,
+  Clock,
+  MessageSquare,
   Mail,
   Eye,
   MoreHorizontal,
@@ -15,7 +21,7 @@ import {
   AlertCircle,
   XCircle,
   Settings,
-  Filter
+  Filter,
 } from "lucide-react";
 
 interface AlertsData {
@@ -51,43 +57,63 @@ export function NotificationsAlerts({ data }: NotificationsAlertsProps) {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "urgent": return "bg-red-100 text-red-800 border-red-200";
-      case "high": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "medium": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "low": return "bg-blue-100 text-blue-800 border-blue-200";
-      default: return "bg-gray-100 text-gray-800 border-gray-200";
+      case "urgent":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "high":
+        return "bg-orange-100 text-orange-800 border-orange-200";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "low":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case "tender_delay": return <Clock className="h-4 w-4" />;
-      case "overdue_noc": return <AlertTriangle className="h-4 w-4" />;
-      case "contract_issue": return <XCircle className="h-4 w-4" />;
-      case "system_alert": return <AlertCircle className="h-4 w-4" />;
-      default: return <Bell className="h-4 w-4" />;
+      case "tender_delay":
+        return <Clock className="h-4 w-4" />;
+      case "overdue_noc":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "contract_issue":
+        return <XCircle className="h-4 w-4" />;
+      case "system_alert":
+        return <AlertCircle className="h-4 w-4" />;
+      default:
+        return <Bell className="h-4 w-4" />;
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "tender_delay": return "text-orange-600";
-      case "overdue_noc": return "text-red-600";
-      case "contract_issue": return "text-purple-600";
-      case "system_alert": return "text-blue-600";
-      default: return "text-gray-600";
+      case "tender_delay":
+        return "text-orange-600";
+      case "overdue_noc":
+        return "text-red-600";
+      case "contract_issue":
+        return "text-purple-600";
+      case "system_alert":
+        return "text-blue-600";
+      default:
+        return "text-gray-600";
     }
   };
 
-  const totalAlerts = data.tenderDelays + data.overdueNOCs + data.contractIssues;
-  const unreadMessages = data.mdaMessages.filter(msg => msg.isUnread).length;
+  const totalAlerts =
+    data.tenderDelays + data.overdueNOCs + data.contractIssues;
+  const unreadMessages = data.mdaMessages.filter((msg) => msg.isUnread).length;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Notifications & Alerts</h2>
-          <p className="text-muted-foreground">Real-time alerts and communication from MDAs</p>
+          <h2 className="text-2xl font-bold text-foreground">
+            Notifications & Alerts
+          </h2>
+          <p className="text-muted-foreground">
+            Real-time alerts and communication from MDAs
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-sm">
@@ -108,10 +134,10 @@ export function NotificationsAlerts({ data }: NotificationsAlertsProps) {
             <Clock className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{data.tenderDelays}</div>
-            <p className="text-xs text-orange-700">
-              Tenders behind schedule
-            </p>
+            <div className="text-2xl font-bold text-orange-600">
+              {data.tenderDelays}
+            </div>
+            <p className="text-xs text-orange-700">Tenders behind schedule</p>
           </CardContent>
         </Card>
 
@@ -121,36 +147,40 @@ export function NotificationsAlerts({ data }: NotificationsAlertsProps) {
             <AlertTriangle className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{data.overdueNOCs}</div>
-            <p className="text-xs text-red-700">
-              NOC requests overdue
-            </p>
+            <div className="text-2xl font-bold text-red-600">
+              {data.overdueNOCs}
+            </div>
+            <p className="text-xs text-red-700">NOC requests overdue</p>
           </CardContent>
         </Card>
 
         <Card className="border-purple-200 bg-purple-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Contract Issues</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Contract Issues
+            </CardTitle>
             <XCircle className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-600">{data.contractIssues}</div>
-            <p className="text-xs text-purple-700">
-              Contracts with issues
-            </p>
+            <div className="text-2xl font-bold text-purple-600">
+              {data.contractIssues}
+            </div>
+            <p className="text-xs text-purple-700">Contracts with issues</p>
           </CardContent>
         </Card>
 
         <Card className="border-blue-200 bg-blue-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unread Messages</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Unread Messages
+            </CardTitle>
             <Mail className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{unreadMessages}</div>
-            <p className="text-xs text-blue-700">
-              From MDAs to BPP
-            </p>
+            <div className="text-2xl font-bold text-blue-600">
+              {unreadMessages}
+            </div>
+            <p className="text-xs text-blue-700">From MDAs to BPP</p>
           </CardContent>
         </Card>
       </div>
@@ -160,21 +190,32 @@ export function NotificationsAlerts({ data }: NotificationsAlertsProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg font-semibold">Real-time Alerts & Messages</CardTitle>
-              <CardDescription>Monitor system alerts and MDA communications</CardDescription>
+              <CardTitle className="text-lg font-semibold">
+                Real-time Alerts & Messages
+              </CardTitle>
+              <CardDescription>
+                Monitor system alerts and MDA communications
+              </CardDescription>
             </div>
             <Bell className="h-5 w-5 text-muted-foreground" />
           </div>
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-4"
+          >
             <div className="flex items-center justify-between">
               <TabsList className="grid w-fit grid-cols-2">
                 <TabsTrigger value="alerts" className="flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4" />
                   System Alerts ({data.urgentAlerts.length})
                 </TabsTrigger>
-                <TabsTrigger value="messages" className="flex items-center gap-2">
+                <TabsTrigger
+                  value="messages"
+                  className="flex items-center gap-2"
+                >
                   <MessageSquare className="h-4 w-4" />
                   MDA Messages ({data.mdaMessages.length})
                 </TabsTrigger>
@@ -189,27 +230,35 @@ export function NotificationsAlerts({ data }: NotificationsAlertsProps) {
               {data.urgentAlerts.length > 0 ? (
                 <div className="space-y-3">
                   {data.urgentAlerts.map((alert) => (
-                    <div 
-                      key={alert.id} 
+                    <div
+                      key={alert.id}
                       className="flex items-start justify-between p-4 bg-muted/30 rounded-lg border border-border hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-start gap-4 flex-1">
-                        <div className={`p-2 rounded-full bg-white border ${getTypeColor(alert.type)}`}>
+                        <div
+                          className={`p-2 rounded-full bg-white border ${getTypeColor(alert.type)}`}
+                        >
                           {getTypeIcon(alert.type)}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-medium text-foreground">{alert.title}</h4>
-                            <Badge 
-                              variant="outline" 
+                            <h4 className="font-medium text-foreground">
+                              {alert.title}
+                            </h4>
+                            <Badge
+                              variant="outline"
                               className={getPriorityColor(alert.priority)}
                             >
                               {alert.priority}
                             </Badge>
                           </div>
-                          <p className="text-sm text-muted-foreground mb-2">{alert.description}</p>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            {alert.description}
+                          </p>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span>{new Date(alert.timestamp).toLocaleString()}</span>
+                            <span>
+                              {new Date(alert.timestamp).toLocaleString()}
+                            </span>
                             {alert.mda && (
                               <>
                                 <span>•</span>
@@ -242,21 +291,27 @@ export function NotificationsAlerts({ data }: NotificationsAlertsProps) {
               {data.mdaMessages.length > 0 ? (
                 <div className="space-y-3">
                   {data.mdaMessages.map((message) => (
-                    <div 
-                      key={message.id} 
+                    <div
+                      key={message.id}
                       className={`flex items-start justify-between p-4 rounded-lg border transition-colors ${
-                        message.isUnread 
-                          ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' 
-                          : 'bg-muted/30 border-border hover:bg-muted/50'
+                        message.isUnread
+                          ? "bg-blue-50 border-blue-200 hover:bg-blue-100"
+                          : "bg-muted/30 border-border hover:bg-muted/50"
                       }`}
                     >
                       <div className="flex items-start gap-4 flex-1">
-                        <div className={`p-2 rounded-full ${message.isUnread ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                          <Mail className={`h-4 w-4 ${message.isUnread ? 'text-blue-600' : 'text-gray-600'}`} />
+                        <div
+                          className={`p-2 rounded-full ${message.isUnread ? "bg-blue-100" : "bg-gray-100"}`}
+                        >
+                          <Mail
+                            className={`h-4 w-4 ${message.isUnread ? "text-blue-600" : "text-gray-600"}`}
+                          />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <h4 className={`font-medium ${message.isUnread ? 'text-blue-900' : 'text-foreground'}`}>
+                            <h4
+                              className={`font-medium ${message.isUnread ? "text-blue-900" : "text-foreground"}`}
+                            >
                               {message.subject}
                             </h4>
                             {message.isUnread && (
@@ -265,13 +320,17 @@ export function NotificationsAlerts({ data }: NotificationsAlertsProps) {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground mb-2">{message.preview}</p>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            {message.preview}
+                          </p>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span>From: {message.from}</span>
                             <span>•</span>
                             <span>MDA: {message.mda}</span>
                             <span>•</span>
-                            <span>{new Date(message.timestamp).toLocaleString()}</span>
+                            <span>
+                              {new Date(message.timestamp).toLocaleString()}
+                            </span>
                           </div>
                         </div>
                       </div>

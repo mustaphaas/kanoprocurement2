@@ -1,8 +1,21 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Building2, TrendingUp, Activity, Calendar, Eye, ExternalLink } from "lucide-react";
+import {
+  Building2,
+  TrendingUp,
+  Activity,
+  Calendar,
+  Eye,
+  ExternalLink,
+} from "lucide-react";
 
 interface MDAData {
   totalMDAs: number;
@@ -21,13 +34,20 @@ interface MDAOverviewSectionProps {
   onDrillDown?: (mda: string) => void;
 }
 
-export function MDAOverviewSection({ data, onDrillDown }: MDAOverviewSectionProps) {
+export function MDAOverviewSection({
+  data,
+  onDrillDown,
+}: MDAOverviewSectionProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-100 text-green-800 border-green-200";
-      case "inactive": return "bg-gray-100 text-gray-800 border-gray-200";
-      case "pending": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      default: return "bg-gray-100 text-gray-800 border-gray-200";
+      case "active":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "inactive":
+        return "bg-gray-100 text-gray-800 border-gray-200";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
@@ -37,8 +57,12 @@ export function MDAOverviewSection({ data, onDrillDown }: MDAOverviewSectionProp
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Total MDAs Overview</h2>
-          <p className="text-muted-foreground">Monitor all Ministry, Department and Agency activities</p>
+          <h2 className="text-2xl font-bold text-foreground">
+            Total MDAs Overview
+          </h2>
+          <p className="text-muted-foreground">
+            Monitor all Ministry, Department and Agency activities
+          </p>
         </div>
         <Button variant="outline" className="flex items-center gap-2">
           <Eye className="h-4 w-4" />
@@ -55,7 +79,9 @@ export function MDAOverviewSection({ data, onDrillDown }: MDAOverviewSectionProp
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{data.totalMDAs}</div>
+            <div className="text-2xl font-bold text-foreground">
+              {data.totalMDAs}
+            </div>
             <p className="text-xs text-muted-foreground">
               Registered ministries, departments and agencies
             </p>
@@ -69,11 +95,13 @@ export function MDAOverviewSection({ data, onDrillDown }: MDAOverviewSectionProp
             <Activity className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{data.activeMDAs}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {data.activeMDAs}
+            </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-green-600 h-2 rounded-full transition-all duration-300" 
+                <div
+                  className="bg-green-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${activePercentage}%` }}
                 />
               </div>
@@ -89,7 +117,9 @@ export function MDAOverviewSection({ data, onDrillDown }: MDAOverviewSectionProp
             <TrendingUp className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{data.inactiveMDAs}</div>
+            <div className="text-2xl font-bold text-orange-600">
+              {data.inactiveMDAs}
+            </div>
             <p className="text-xs text-muted-foreground">
               Requires activation or review
             </p>
@@ -102,8 +132,12 @@ export function MDAOverviewSection({ data, onDrillDown }: MDAOverviewSectionProp
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg font-semibold">Recently Added MDAs</CardTitle>
-              <CardDescription>Latest ministries, departments and agencies onboarded</CardDescription>
+              <CardTitle className="text-lg font-semibold">
+                Recently Added MDAs
+              </CardTitle>
+              <CardDescription>
+                Latest ministries, departments and agencies onboarded
+              </CardDescription>
             </div>
             <Calendar className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -112,8 +146,8 @@ export function MDAOverviewSection({ data, onDrillDown }: MDAOverviewSectionProp
           {data.recentlyAdded.length > 0 ? (
             <div className="space-y-4">
               {data.recentlyAdded.map((mda) => (
-                <div 
-                  key={mda.id} 
+                <div
+                  key={mda.id}
                   className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border border-border hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
@@ -121,15 +155,18 @@ export function MDAOverviewSection({ data, onDrillDown }: MDAOverviewSectionProp
                       <Building2 className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-foreground">{mda.name}</h4>
+                      <h4 className="font-medium text-foreground">
+                        {mda.name}
+                      </h4>
                       <p className="text-sm text-muted-foreground">
-                        Activated on {new Date(mda.activationDate).toLocaleDateString()}
+                        Activated on{" "}
+                        {new Date(mda.activationDate).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge 
-                      variant="outline" 
+                    <Badge
+                      variant="outline"
                       className={getStatusColor(mda.status)}
                     >
                       {mda.status}

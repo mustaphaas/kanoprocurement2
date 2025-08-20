@@ -48,39 +48,25 @@ CartesianGrid.displayName = "CartesianGrid";
 export const Tooltip = React.forwardRef<any, any>((props, ref) => (
   <RechartsTooltip
     ref={ref}
-    cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
-    contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc' }}
+    cursor={{ fill: "rgba(0, 0, 0, 0.1)" }}
+    contentStyle={{ backgroundColor: "white", border: "1px solid #ccc" }}
     {...props}
   />
 ));
 Tooltip.displayName = "Tooltip";
 
 export const Bar = React.forwardRef<any, any>((props, ref) => (
-  <RechartsBar
-    ref={ref}
-    radius={[2, 2, 0, 0]}
-    {...props}
-  />
+  <RechartsBar ref={ref} radius={[2, 2, 0, 0]} {...props} />
 ));
 Bar.displayName = "Bar";
 
 export const Area = React.forwardRef<any, any>((props, ref) => (
-  <RechartsArea
-    ref={ref}
-    connectNulls={false}
-    dot={false}
-    {...props}
-  />
+  <RechartsArea ref={ref} connectNulls={false} dot={false} {...props} />
 ));
 Area.displayName = "Area";
 
 export const Pie = React.forwardRef<any, any>((props, ref) => (
-  <RechartsPie
-    ref={ref}
-    innerRadius={0}
-    labelLine={false}
-    {...props}
-  />
+  <RechartsPie ref={ref} innerRadius={0} labelLine={false} {...props} />
 ));
 Pie.displayName = "Pie";
 
@@ -93,5 +79,5 @@ export {
   AreaChart,
   LineChart,
   Line,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from "recharts";

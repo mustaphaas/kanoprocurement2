@@ -264,13 +264,16 @@ export const SuperUserQuickActions: React.FC<SuperUserQuickActionsProps> = ({
     return colorMap[color as keyof typeof colorMap] || colorMap.blue;
   };
 
-  const groupedActions = quickActions.reduce((acc, action) => {
-    if (!acc[action.category]) {
-      acc[action.category] = [];
-    }
-    acc[action.category].push(action);
-    return acc;
-  }, {} as Record<string, QuickAction[]>);
+  const groupedActions = quickActions.reduce(
+    (acc, action) => {
+      if (!acc[action.category]) {
+        acc[action.category] = [];
+      }
+      acc[action.category].push(action);
+      return acc;
+    },
+    {} as Record<string, QuickAction[]>,
+  );
 
   const categoryNames = {
     system: "System Management",
@@ -305,8 +308,9 @@ export const SuperUserQuickActions: React.FC<SuperUserQuickActionsProps> = ({
       <CardContent>
         <div className="space-y-6">
           {Object.entries(groupedActions).map(([category, actions]) => {
-            const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons];
-            
+            const CategoryIcon =
+              categoryIcons[category as keyof typeof categoryIcons];
+
             return (
               <div key={category}>
                 <div className="flex items-center gap-2 mb-3">
@@ -316,7 +320,7 @@ export const SuperUserQuickActions: React.FC<SuperUserQuickActionsProps> = ({
                   </h3>
                   <div className="h-px bg-border flex-1 ml-2" />
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {actions.map((action) => {
                     const colors = getColorClasses(action.color);
@@ -326,7 +330,9 @@ export const SuperUserQuickActions: React.FC<SuperUserQuickActionsProps> = ({
                       <div
                         key={action.id}
                         className={`relative p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer ${colors.bg} ${colors.border} ${
-                          action.disabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-md"
+                          action.disabled
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:shadow-md"
                         }`}
                         onClick={() => !action.disabled && action.onClick()}
                       >
@@ -341,8 +347,12 @@ export const SuperUserQuickActions: React.FC<SuperUserQuickActionsProps> = ({
 
                         <div className="flex items-start gap-3">
                           {/* Action Icon */}
-                          <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center bg-white border ${colors.border}`}>
-                            <IconComponent className={`h-5 w-5 ${colors.icon}`} />
+                          <div
+                            className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center bg-white border ${colors.border}`}
+                          >
+                            <IconComponent
+                              className={`h-5 w-5 ${colors.icon}`}
+                            />
                           </div>
 
                           {/* Action Content */}
@@ -360,7 +370,7 @@ export const SuperUserQuickActions: React.FC<SuperUserQuickActionsProps> = ({
                                   {action.shortcut}
                                 </span>
                               )}
-                              
+
                               <Button
                                 size="sm"
                                 className={`${colors.button} text-white text-xs px-3 py-1 h-7 ml-auto`}
@@ -387,14 +397,18 @@ export const SuperUserQuickActions: React.FC<SuperUserQuickActionsProps> = ({
         {/* Quick Access Bar */}
         <div className="mt-6 pt-4 border-t border-border">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-semibold text-foreground">Most Used Actions</h4>
-            <span className="text-xs text-muted-foreground">Click to execute</span>
+            <h4 className="text-sm font-semibold text-foreground">
+              Most Used Actions
+            </h4>
+            <span className="text-xs text-muted-foreground">
+              Click to execute
+            </span>
           </div>
           <div className="flex flex-wrap gap-2">
             {quickActions.slice(0, 6).map((action) => {
               const colors = getColorClasses(action.color);
               const IconComponent = action.icon;
-              
+
               return (
                 <Button
                   key={action.id}

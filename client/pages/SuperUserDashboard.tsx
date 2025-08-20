@@ -869,7 +869,9 @@ export default function SuperUserDashboard() {
     // Clear any existing mock data and start with real audit logs only
     const auditDataInfo = getAuditDataInfo();
     if (auditDataInfo.hasMockData) {
-      console.log('🗑️ Found mock audit data, clearing it to start fresh with real logs');
+      console.log(
+        "🗑️ Found mock audit data, clearing it to start fresh with real logs",
+      );
       console.log(`📊 Audit data info:`, auditDataInfo);
       clearMockAuditData();
       // Note: loadAuditLogs will be called by useEffect after this
@@ -3484,75 +3486,173 @@ The award letter has been:
         const superUserData = generateMockSuperUserData();
 
         const handleDrillDown = (mda: string) => {
-          logUserAction('SuperUser', 'super_admin', 'MDA_DRILLDOWN', mda, `Drilled down into MDA: ${mda}`, 'LOW');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "MDA_DRILLDOWN",
+            mda,
+            `Drilled down into MDA: ${mda}`,
+            "LOW",
+          );
           // Navigate to specific MDA details or set a filter
-          console.log('Drilling down into MDA:', mda);
+          console.log("Drilling down into MDA:", mda);
         };
 
         const handleFilterChange = (filters: any) => {
-          logUserAction('SuperUser', 'super_admin', 'FILTER_APPLIED', 'Dashboard Filters', `Applied filters: ${JSON.stringify(filters)}`, 'LOW');
-          console.log('Filters applied:', filters);
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "FILTER_APPLIED",
+            "Dashboard Filters",
+            `Applied filters: ${JSON.stringify(filters)}`,
+            "LOW",
+          );
+          console.log("Filters applied:", filters);
         };
 
         // Quick Actions handlers
         const handleCreateMDA = () => {
-          logUserAction('SuperUser', 'super_admin', 'MDA_CREATE_INITIATED', 'MDA Management', 'Initiated MDA creation', 'MEDIUM');
-          setActiveTab('mda-management');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "MDA_CREATE_INITIATED",
+            "MDA Management",
+            "Initiated MDA creation",
+            "MEDIUM",
+          );
+          setActiveTab("mda-management");
         };
 
         const handleManageUsers = () => {
-          logUserAction('SuperUser', 'super_admin', 'USER_MANAGEMENT_ACCESSED', 'User Management', 'Accessed user management', 'LOW');
-          setActiveTab('users');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "USER_MANAGEMENT_ACCESSED",
+            "User Management",
+            "Accessed user management",
+            "LOW",
+          );
+          setActiveTab("users");
         };
 
         const handleSystemSettings = () => {
-          logUserAction('SuperUser', 'super_admin', 'SYSTEM_SETTINGS_ACCESSED', 'System Settings', 'Accessed system settings', 'MEDIUM');
-          setActiveTab('settings');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "SYSTEM_SETTINGS_ACCESSED",
+            "System Settings",
+            "Accessed system settings",
+            "MEDIUM",
+          );
+          setActiveTab("settings");
         };
 
         const handleViewAuditLogs = () => {
-          logUserAction('SuperUser', 'super_admin', 'AUDIT_LOGS_ACCESSED', 'Audit Logs', 'Accessed audit logs', 'MEDIUM');
-          setActiveTab('audit-logs');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "AUDIT_LOGS_ACCESSED",
+            "Audit Logs",
+            "Accessed audit logs",
+            "MEDIUM",
+          );
+          setActiveTab("audit-logs");
         };
 
         const handleGenerateReport = () => {
-          logUserAction('SuperUser', 'super_admin', 'REPORT_GENERATION_INITIATED', 'Reports', 'Initiated report generation', 'LOW');
-          setActiveTab('reports');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "REPORT_GENERATION_INITIATED",
+            "Reports",
+            "Initiated report generation",
+            "LOW",
+          );
+          setActiveTab("reports");
         };
 
         const handleManageCompanies = () => {
-          logUserAction('SuperUser', 'super_admin', 'COMPANY_MANAGEMENT_ACCESSED', 'Company Management', 'Accessed company management', 'MEDIUM');
-          setActiveTab('companies');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "COMPANY_MANAGEMENT_ACCESSED",
+            "Company Management",
+            "Accessed company management",
+            "MEDIUM",
+          );
+          setActiveTab("companies");
         };
 
         const handleReviewNOCs = () => {
-          logUserAction('SuperUser', 'super_admin', 'NOC_REVIEW_ACCESSED', 'NOC Requests', 'Accessed NOC review', 'MEDIUM');
-          setActiveTab('noc-requests');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "NOC_REVIEW_ACCESSED",
+            "NOC Requests",
+            "Accessed NOC review",
+            "MEDIUM",
+          );
+          setActiveTab("noc-requests");
         };
 
         const handleSystemHealth = () => {
-          logUserAction('SuperUser', 'super_admin', 'SYSTEM_HEALTH_CHECK', 'System Health', 'Checked system health', 'LOW');
-          console.log('System health check initiated');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "SYSTEM_HEALTH_CHECK",
+            "System Health",
+            "Checked system health",
+            "LOW",
+          );
+          console.log("System health check initiated");
         };
 
         const handleBulkImport = () => {
-          logUserAction('SuperUser', 'super_admin', 'BULK_IMPORT_INITIATED', 'Bulk Import', 'Initiated bulk import', 'MEDIUM');
-          console.log('Bulk import initiated');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "BULK_IMPORT_INITIATED",
+            "Bulk Import",
+            "Initiated bulk import",
+            "MEDIUM",
+          );
+          console.log("Bulk import initiated");
         };
 
         const handleViewAnalytics = () => {
-          logUserAction('SuperUser', 'super_admin', 'ANALYTICS_ACCESSED', 'Analytics', 'Accessed analytics', 'LOW');
-          setActiveTab('ai-insights');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "ANALYTICS_ACCESSED",
+            "Analytics",
+            "Accessed analytics",
+            "LOW",
+          );
+          setActiveTab("ai-insights");
         };
 
         const handleManagePermissions = () => {
-          logUserAction('SuperUser', 'super_admin', 'PERMISSION_MANAGEMENT_ACCESSED', 'Permissions', 'Accessed permission management', 'HIGH');
-          console.log('Permission management accessed');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "PERMISSION_MANAGEMENT_ACCESSED",
+            "Permissions",
+            "Accessed permission management",
+            "HIGH",
+          );
+          console.log("Permission management accessed");
         };
 
         const handleBackupSystem = () => {
-          logUserAction('SuperUser', 'super_admin', 'SYSTEM_BACKUP_INITIATED', 'System Backup', 'Initiated system backup', 'HIGH');
-          console.log('System backup initiated');
+          logUserAction(
+            "SuperUser",
+            "super_admin",
+            "SYSTEM_BACKUP_INITIATED",
+            "System Backup",
+            "Initiated system backup",
+            "HIGH",
+          );
+          console.log("System backup initiated");
         };
 
         return (
@@ -3563,7 +3663,8 @@ The award letter has been:
                 Welcome, Super User!
               </h1>
               <p className="text-muted-foreground">
-                Comprehensive system overview with enhanced MDA monitoring and analytics.
+                Comprehensive system overview with enhanced MDA monitoring and
+                analytics.
               </p>
             </div>
 
@@ -4271,12 +4372,18 @@ The award letter has been:
                       onClick={() => {
                         const auditDataInfo = getAuditDataInfo();
                         if (auditDataInfo.hasMockData) {
-                          if (window.confirm(`Found ${auditDataInfo.mockDataCount} mock audit entries. Clear them to show only real audit logs?`)) {
+                          if (
+                            window.confirm(
+                              `Found ${auditDataInfo.mockDataCount} mock audit entries. Clear them to show only real audit logs?`,
+                            )
+                          ) {
                             clearMockAuditData();
                             loadAuditLogs();
                           }
                         } else {
-                          alert('No mock data found. All audit logs appear to be real.');
+                          alert(
+                            "No mock data found. All audit logs appear to be real.",
+                          );
                         }
                       }}
                       className="flex items-center px-3 py-2 text-sm border border-yellow-300 text-yellow-600 rounded-md hover:bg-yellow-50"

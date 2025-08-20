@@ -15,7 +15,7 @@ export const generateMockSuperUserData = () => {
           status: "active" as const,
         },
         {
-          id: "mda-002", 
+          id: "mda-002",
           name: "Federal Ministry of Youth and Sports Development",
           activationDate: "2024-01-10",
           status: "active" as const,
@@ -199,7 +199,8 @@ export const generateMockSuperUserData = () => {
           id: "alert-001",
           type: "tender_delay" as const,
           title: "Critical Tender Deadline Approaching",
-          description: "Infrastructure development tender evaluation deadline is in 2 days with incomplete submissions.",
+          description:
+            "Infrastructure development tender evaluation deadline is in 2 days with incomplete submissions.",
           priority: "urgent" as const,
           timestamp: "2024-01-21T10:30:00Z",
           mda: "Ministry of Works",
@@ -208,7 +209,8 @@ export const generateMockSuperUserData = () => {
           id: "alert-002",
           type: "overdue_noc" as const,
           title: "NOC Request Overdue",
-          description: "Healthcare equipment procurement NOC request is 18 days overdue.",
+          description:
+            "Healthcare equipment procurement NOC request is 18 days overdue.",
           priority: "high" as const,
           timestamp: "2024-01-21T09:15:00Z",
           mda: "Ministry of Health",
@@ -217,7 +219,8 @@ export const generateMockSuperUserData = () => {
           id: "alert-003",
           type: "contract_issue" as const,
           title: "Contract Variation Threshold Exceeded",
-          description: "Power grid expansion contract variation exceeds 20% threshold, requiring special approval.",
+          description:
+            "Power grid expansion contract variation exceeds 20% threshold, requiring special approval.",
           priority: "high" as const,
           timestamp: "2024-01-21T08:45:00Z",
           mda: "Ministry of Power",
@@ -226,7 +229,8 @@ export const generateMockSuperUserData = () => {
           id: "alert-004",
           type: "system_alert" as const,
           title: "Multiple Failed Login Attempts",
-          description: "Unusual login activity detected from Ministry of Transportation account.",
+          description:
+            "Unusual login activity detected from Ministry of Transportation account.",
           priority: "medium" as const,
           timestamp: "2024-01-21T07:20:00Z",
           mda: "Ministry of Transportation",
@@ -238,7 +242,8 @@ export const generateMockSuperUserData = () => {
           from: "Dr. Ahmad Lawal",
           mda: "Ministry of Health",
           subject: "Urgent: Medical Equipment Procurement Clarification",
-          preview: "We need clarification on the evaluation criteria for the medical equipment tender...",
+          preview:
+            "We need clarification on the evaluation criteria for the medical equipment tender...",
           timestamp: "2024-01-21T11:45:00Z",
           isUnread: true,
         },
@@ -247,7 +252,8 @@ export const generateMockSuperUserData = () => {
           from: "Eng. Sarah Okoro",
           mda: "Ministry of Works",
           subject: "Infrastructure Project Status Update",
-          preview: "This is to update you on the current status of the road infrastructure project...",
+          preview:
+            "This is to update you on the current status of the road infrastructure project...",
           timestamp: "2024-01-21T10:20:00Z",
           isUnread: true,
         },
@@ -256,7 +262,8 @@ export const generateMockSuperUserData = () => {
           from: "Prof. Ibrahim Hassan",
           mda: "Ministry of Education",
           subject: "School Infrastructure Procurement Approval",
-          preview: "Request for approval of the revised procurement plan for school infrastructure...",
+          preview:
+            "Request for approval of the revised procurement plan for school infrastructure...",
           timestamp: "2024-01-21T09:30:00Z",
           isUnread: false,
         },
@@ -265,7 +272,8 @@ export const generateMockSuperUserData = () => {
           from: "Dr. Fatima Abdullahi",
           mda: "Ministry of Agriculture",
           subject: "Fertilizer Distribution Contract Query",
-          preview: "We have some questions regarding the fertilizer distribution contract terms...",
+          preview:
+            "We have some questions regarding the fertilizer distribution contract terms...",
           timestamp: "2024-01-20T16:15:00Z",
           isUnread: false,
         },
@@ -276,7 +284,11 @@ export const generateMockSuperUserData = () => {
     analyticsData: {
       totalSpend: "₦847.3B",
       spendByMDA: [
-        { mda: "Ministry of Works and Housing", spend: "₦156.8B", percentage: 18.5 },
+        {
+          mda: "Ministry of Works and Housing",
+          spend: "₦156.8B",
+          percentage: 18.5,
+        },
         { mda: "Ministry of Health", spend: "₦134.2B", percentage: 15.8 },
         { mda: "Ministry of Education", spend: "₦98.7B", percentage: 11.6 },
         { mda: "Ministry of Agriculture", spend: "₦87.4B", percentage: 10.3 },
