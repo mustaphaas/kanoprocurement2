@@ -187,8 +187,102 @@ export default function NOCRequestsModule({
     timeline: {},
   });
 
+  // Ensure ministry tenders are initialized
+  const ensureMinistryTendersInitialized = () => {
+    const ministryTendersKey = `${ministryCode}_tenders`;
+    const existingTenders = localStorage.getItem(ministryTendersKey);
+
+    if (!existingTenders) {
+      console.log(`No tenders found for ${ministryCode}, initializing with default evaluated tenders...`);
+
+      // Create default evaluated tenders for the ministry
+      const defaultEvaluatedTenders = (() => {
+        switch (ministryCode) {
+          case "MOWI":
+            return [
+              {
+                id: "MOWI-2024-001",
+                title: "Kano-Kaduna Highway Rehabilitation",
+                description: "Complete rehabilitation of Kano-Kaduna highway",
+                category: "Road Construction",
+                estimatedValue: "₦15,200,000,000",
+                status: "Evaluated",
+                publishDate: "2024-01-20",
+                closeDate: "2024-02-20",
+                bidsReceived: 5,
+                ministry: "Ministry of Works & Infrastructure",
+                procuringEntity: "Kano State Road Maintenance Agency",
+              },
+              {
+                id: "MOWI-2024-002",
+                title: "Bridge Construction Project - Phase 2",
+                description: "Construction of strategic bridges",
+                category: "Bridge Construction",
+                estimatedValue: "₦8,500,000,000",
+                status: "Evaluated",
+                publishDate: "2024-02-01",
+                closeDate: "2024-03-01",
+                bidsReceived: 4,
+                ministry: "Ministry of Works & Infrastructure",
+                procuringEntity: "Kano State Ministry of Works",
+              },
+            ];
+          case "MOE":
+            return [
+              {
+                id: "MOE-2024-001",
+                title: "School Furniture Supply Program",
+                description: "Supply of furniture for 200 schools",
+                category: "Educational Furniture",
+                estimatedValue: "₦2,100,000,000",
+                status: "Evaluated",
+                publishDate: "2024-01-15",
+                closeDate: "2024-02-15",
+                bidsReceived: 8,
+                ministry: "Ministry of Education",
+                procuringEntity: "Kano State Universal Basic Education Board",
+              },
+            ];
+          default: // MOH
+            return [
+              {
+                id: "MOH-2024-001",
+                title: "Hospital Equipment Supply",
+                description: "Supply of medical equipment for healthcare centers",
+                category: "Medical Equipment",
+                estimatedValue: "₦850,000,000",
+                status: "Evaluated",
+                publishDate: "2024-01-15",
+                closeDate: "2024-02-15",
+                bidsReceived: 5,
+                ministry: "Ministry of Health",
+                procuringEntity: "Kano State Primary Healthcare Development Agency",
+              },
+              {
+                id: "MOH-2024-002",
+                title: "Pharmaceutical Supply Contract",
+                description: "Annual pharmaceutical supply for hospitals",
+                category: "Pharmaceuticals",
+                estimatedValue: "₦1,200,000,000",
+                status: "Evaluated",
+                publishDate: "2024-01-20",
+                closeDate: "2024-03-01",
+                bidsReceived: 5,
+                ministry: "Ministry of Health",
+                procuringEntity: "Kano State Hospital Management Board",
+              },
+            ];
+        }
+      })();
+
+      localStorage.setItem(ministryTendersKey, JSON.stringify(defaultEvaluatedTenders));
+      console.log(`Initialized ${defaultEvaluatedTenders.length} default tenders for ${ministryCode}`);
+    }
+  };
+
   // Load data on component mount
   useEffect(() => {
+    ensureMinistryTendersInitialized();
     loadNOCRequests();
     loadCompletedTenders();
   }, [ministryCode]);
