@@ -319,6 +319,104 @@ export default function NOCRequestsTab() {
         ];
         localStorage.setItem("MOWI_NOCRequests", JSON.stringify(mowiRequests));
       }
+
+      // Ministry of Education NOC Requests
+      const moeRequests = [
+        {
+          id: "NOC-MOE-001",
+          projectTitle: "School Furniture Supply Program - Phase 1",
+          requestDate: "2024-01-18",
+          status: "Approved",
+          projectValue: "₦2,100,000,000",
+          contractorName: "EduTech Solutions Ltd",
+          expectedDuration: "8 months",
+          ministryCode: "MOE",
+          ministryName: "Ministry of Education",
+          procuringEntity: "Kano State Ministry of Education",
+          contactPerson: "Dr. Hafsat Adamu",
+          contactEmail: "hafsat.adamu@kanostate.gov.ng",
+          projectDescription: "Procurement of modern school furniture for public schools",
+          justification: "Improve learning environment and student comfort in schools",
+          category: "Educational Equipment",
+          certificateNumber: "KNS/MOE/PNO/2024/001",
+          approvalDate: "2024-01-22",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-01-18T09:15:00Z",
+            approvalDate: "2024-01-22T16:30:00Z"
+          }
+        },
+        {
+          id: "NOC-MOE-002",
+          projectTitle: "Digital Learning Platform Development",
+          requestDate: "2024-01-25",
+          status: "Pending",
+          projectValue: "₦1,800,000,000",
+          contractorName: "Kano School Furniture Ltd",
+          expectedDuration: "12 months",
+          ministryCode: "MOE",
+          ministryName: "Ministry of Education",
+          procuringEntity: "Kano State Ministry of Education",
+          contactPerson: "Dr. Hafsat Adamu",
+          contactEmail: "hafsat.adamu@kanostate.gov.ng",
+          projectDescription: "Development of comprehensive digital learning platform for schools",
+          justification: "Modernize education delivery through technology integration",
+          category: "Educational Technology",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-01-25T11:00:00Z"
+          }
+        },
+        {
+          id: "NOC-MOE-003",
+          projectTitle: "Science Laboratory Equipment Installation",
+          requestDate: "2024-02-02",
+          status: "Approved",
+          projectValue: "₦3,200,000,000",
+          contractorName: "Northern Educational Supplies",
+          expectedDuration: "6 months",
+          ministryCode: "MOE",
+          ministryName: "Ministry of Education",
+          procuringEntity: "Kano State Ministry of Education",
+          contactPerson: "Dr. Hafsat Adamu",
+          contactEmail: "hafsat.adamu@kanostate.gov.ng",
+          projectDescription: "Installation of modern science laboratory equipment in secondary schools",
+          justification: "Enhance practical science education and STEM learning",
+          category: "Educational Equipment",
+          certificateNumber: "KNS/MOE/PNO/2024/002",
+          approvalDate: "2024-02-06",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-02T10:45:00Z",
+            approvalDate: "2024-02-06T14:20:00Z"
+          }
+        },
+        {
+          id: "NOC-MOE-004",
+          projectTitle: "Library Books and Resources Distribution",
+          requestDate: "2024-02-05",
+          status: "Approved",
+          projectValue: "₦1,650,000,000",
+          contractorName: "Academic Furniture Nigeria",
+          expectedDuration: "5 months",
+          ministryCode: "MOE",
+          ministryName: "Ministry of Education",
+          procuringEntity: "Kano State Ministry of Education",
+          contactPerson: "Dr. Hafsat Adamu",
+          contactEmail: "hafsat.adamu@kanostate.gov.ng",
+          projectDescription: "Procurement and distribution of library books and educational resources",
+          justification: "Improve literacy and provide adequate learning materials",
+          category: "Educational Materials",
+          certificateNumber: "KNS/MOE/PNO/2024/003",
+          approvalDate: "2024-02-08",
+          documents: {},
+          timeline: {
+            dateSubmitted: "2024-02-05T13:30:00Z",
+            approvalDate: "2024-02-08T15:45:00Z"
+          }
+        }
+      ];
+      localStorage.setItem("MOE_NOCRequests", JSON.stringify(moeRequests));
     };
 
     // Clean up any old central data that might conflict
