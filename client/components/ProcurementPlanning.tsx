@@ -853,81 +853,166 @@ export default function ProcurementPlanning() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Procurement Planning Module
-        </h2>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setShowPlanModal(true)}
-            className="bg-primary hover:bg-primary/90"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Procurement Plan
-          </Button>
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-green-50 to-emerald-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-green-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 to-emerald-600/5"></div>
+        <div className="relative p-8">
+          <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg">
+                  <FileText className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-green-800 to-emerald-800 bg-clip-text text-transparent">
+                    Procurement Planning Module
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Strategic planning and budget allocation platform
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowPlanModal(true)}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                New Procurement Plan
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Enhanced Tabs Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="plans" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Annual Plans
-          </TabsTrigger>
-          <TabsTrigger value="budget" className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4" />
-            Budget Allocation
-          </TabsTrigger>
-          <TabsTrigger value="committees" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Committee Templates
-          </TabsTrigger>
-          <TabsTrigger value="qcbs" className="flex items-center gap-2">
-            <Scale className="h-4 w-4" />
-            QCBS Frameworks
-          </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex items-center gap-2">
-            <Target className="h-4 w-4" />
-            Tender Assignments
-          </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Analytics
-          </TabsTrigger>
-        </TabsList>
+        <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-green-100 shadow-lg p-2">
+          <TabsList className="grid w-full grid-cols-6 bg-transparent gap-1">
+            <TabsTrigger
+              value="plans"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-green-50 border border-transparent data-[state=active]:border-green-200"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="font-medium">Annual Plans</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="budget"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-amber-50 border border-transparent data-[state=active]:border-amber-200"
+            >
+              <DollarSign className="h-4 w-4" />
+              <span className="font-medium">Budget Allocation</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="committees"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50 border border-transparent data-[state=active]:border-purple-200"
+            >
+              <Users className="h-4 w-4" />
+              <span className="font-medium">Committee Templates</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="qcbs"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-rose-50 border border-transparent data-[state=active]:border-rose-200"
+            >
+              <Scale className="h-4 w-4" />
+              <span className="font-medium">QCBS Frameworks</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="assignments"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-cyan-50 border border-transparent data-[state=active]:border-cyan-200"
+            >
+              <Target className="h-4 w-4" />
+              <span className="font-medium">Tender Assignments</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="analytics"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-600 data-[state=active]:to-gray-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-slate-50 border border-transparent data-[state=active]:border-slate-200"
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span className="font-medium">Analytics</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
-        <TabsContent value="plans" className="space-y-4">
-          {/* Search and Filter */}
-          <div className="flex gap-4 items-center">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Search procurement plans..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+        <TabsContent value="plans" className="space-y-6">
+          {/* Enhanced Search and Filter */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-green-100 shadow-md p-6">
+            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+              <div className="flex-1 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Input
+                    placeholder="Search by title, description, or ID..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-12 pr-4 py-3 border-gray-200 focus:border-green-400 focus:ring-green-400 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <Filter className="h-4 w-4 text-gray-500" />
+                  <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <SelectTrigger className="w-56 border-gray-200 focus:border-green-400 focus:ring-green-400 rounded-lg shadow-sm">
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-lg border-gray-200 shadow-lg">
+                      <SelectItem value="all" className="hover:bg-green-50">
+                        All Status
+                      </SelectItem>
+                      <SelectItem value="Draft" className="hover:bg-gray-50">
+                        Draft
+                      </SelectItem>
+                      <SelectItem value="Under Review" className="hover:bg-blue-50">
+                        Under Review
+                      </SelectItem>
+                      <SelectItem value="Approved" className="hover:bg-green-50">
+                        Approved
+                      </SelectItem>
+                      <SelectItem value="Rejected" className="hover:bg-red-50">
+                        Rejected
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <Button
+                onClick={() => setShowPlanModal(true)}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-lg"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create New Plan
+              </Button>
             </div>
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Draft">Draft</SelectItem>
-                <SelectItem value="Under Review">Under Review</SelectItem>
-                <SelectItem value="Approved">Approved</SelectItem>
-                <SelectItem value="Rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
-          {/* Procurement Plans List */}
-          <div className="grid gap-4">
+          {/* Enhanced Procurement Plans Grid */}
+          <div className="grid gap-6">
             {filteredPlans.map((plan) => (
-              <Card key={plan.id} className="hover:shadow-md transition-shadow">
-                <CardHeader>
+              <Card
+                key={plan.id}
+                className="group hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm border border-gray-100 hover:border-green-200 rounded-xl overflow-hidden"
+              >
+                <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-lg">{plan.title}</CardTitle>
