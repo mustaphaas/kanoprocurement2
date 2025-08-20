@@ -323,8 +323,16 @@ export default function NOCRequestsTab() {
 
     // Clean up any old central data that might conflict
     const cleanupOldData = () => {
-      // Clear old central storage to start fresh
+      // Clear old central storage to start fresh and avoid duplicates
       localStorage.removeItem("centralNOCRequests");
+
+      // Also check for any old-format NOC data and clear it
+      const keysToCheck = Object.keys(localStorage);
+      keysToCheck.forEach(key => {
+        if (key.startsWith("noc") && key !== "MOH_NOCRequests" && key !== "MOWI_NOCRequests" && key !== "MOE_NOCRequests") {
+          localStorage.removeItem(key);
+        }
+      });
     };
 
     // Initialize ministry data first
