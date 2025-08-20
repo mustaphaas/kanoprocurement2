@@ -695,33 +695,104 @@ const TenderManagement = () => {
   });
 
   const getStatusBadge = (status: string) => {
-    const colors = {
-      // Original statuses
-      Draft: "bg-gray-100 text-gray-800",
-      Published: "bg-blue-100 text-blue-800",
-      Open: "bg-green-100 text-green-800",
-      Closed: "bg-red-100 text-red-800",
-      Evaluated: "bg-yellow-100 text-yellow-800",
-      Awarded: "bg-purple-100 text-purple-800",
+    const statusConfig = {
+      Draft: {
+        bg: "bg-gradient-to-r from-gray-100 to-slate-100",
+        text: "text-gray-700",
+        border: "border-gray-200",
+        icon: "📝"
+      },
+      Published: {
+        bg: "bg-gradient-to-r from-blue-100 to-indigo-100",
+        text: "text-blue-700",
+        border: "border-blue-200",
+        icon: "📢"
+      },
+      Open: {
+        bg: "bg-gradient-to-r from-green-100 to-emerald-100",
+        text: "text-green-700",
+        border: "border-green-200",
+        icon: "🟢"
+      },
+      Closed: {
+        bg: "bg-gradient-to-r from-red-100 to-rose-100",
+        text: "text-red-700",
+        border: "border-red-200",
+        icon: "🔴"
+      },
+      Evaluated: {
+        bg: "bg-gradient-to-r from-amber-100 to-yellow-100",
+        text: "text-amber-700",
+        border: "border-amber-200",
+        icon: "📊"
+      },
+      Awarded: {
+        bg: "bg-gradient-to-r from-purple-100 to-violet-100",
+        text: "text-purple-700",
+        border: "border-purple-200",
+        icon: "🏆"
+      },
 
       // NOC workflow statuses
-      "NOC Pending": "bg-orange-100 text-orange-800",
-      "NOC Approved": "bg-green-100 text-green-800",
-      "NOC Rejected": "bg-red-100 text-red-800",
+      "NOC Pending": {
+        bg: "bg-gradient-to-r from-orange-100 to-amber-100",
+        text: "text-orange-700",
+        border: "border-orange-200",
+        icon: "⏳"
+      },
+      "NOC Approved": {
+        bg: "bg-gradient-to-r from-green-100 to-emerald-100",
+        text: "text-green-700",
+        border: "border-green-200",
+        icon: "✅"
+      },
+      "NOC Rejected": {
+        bg: "bg-gradient-to-r from-red-100 to-rose-100",
+        text: "text-red-700",
+        border: "border-red-200",
+        icon: "❌"
+      },
 
       // Contract workflow statuses
-      "Contract Created": "bg-blue-100 text-blue-800",
-      "Contract Signed": "bg-purple-100 text-purple-800",
-      Implementation: "bg-indigo-100 text-indigo-800",
-      Completed: "bg-green-100 text-green-800",
+      "Contract Created": {
+        bg: "bg-gradient-to-r from-blue-100 to-cyan-100",
+        text: "text-blue-700",
+        border: "border-blue-200",
+        icon: "📋"
+      },
+      "Contract Signed": {
+        bg: "bg-gradient-to-r from-purple-100 to-pink-100",
+        text: "text-purple-700",
+        border: "border-purple-200",
+        icon: "✍️"
+      },
+      Implementation: {
+        bg: "bg-gradient-to-r from-indigo-100 to-blue-100",
+        text: "text-indigo-700",
+        border: "border-indigo-200",
+        icon: "🔧"
+      },
+      Completed: {
+        bg: "bg-gradient-to-r from-green-100 to-teal-100",
+        text: "text-green-700",
+        border: "border-green-200",
+        icon: "✨"
+      },
     };
+
+    const config = statusConfig[status as keyof typeof statusConfig] || {
+      bg: "bg-gradient-to-r from-gray-100 to-slate-100",
+      text: "text-gray-700",
+      border: "border-gray-200",
+      icon: "⚪"
+    };
+
     return (
       <Badge
-        className={
-          colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800"
-        }
+        className={`${config.bg} ${config.text} ${config.border} border shadow-sm font-medium px-3 py-1.5 rounded-lg flex items-center gap-1.5`}
       >
-        {status}
+        <span className="text-xs">{config.icon}</span>
+        <span>{status}</span>
       </Badge>
     );
   };
