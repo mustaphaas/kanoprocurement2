@@ -62,7 +62,19 @@ interface Tender {
   title: string;
   description: string;
   budget: number;
-  status: "Draft" | "Published" | "Open" | "Closed" | "Evaluated" | "NOC Pending" | "NOC Approved" | "NOC Rejected" | "Contract Created" | "Contract Signed" | "Implementation" | "Completed";
+  status:
+    | "Draft"
+    | "Published"
+    | "Open"
+    | "Closed"
+    | "Evaluated"
+    | "NOC Pending"
+    | "NOC Approved"
+    | "NOC Rejected"
+    | "Contract Created"
+    | "Contract Signed"
+    | "Implementation"
+    | "Completed";
   createdDate: string;
   publishedDate?: string;
   closingDate?: string;
@@ -85,7 +97,14 @@ interface Tender {
   contractStatus?: "Draft" | "Active" | "Completed" | "Terminated";
 
   // Workflow tracking
-  workflowStage?: "Planning" | "Procurement" | "Evaluation" | "NOC Review" | "Contract Award" | "Implementation" | "Closeout";
+  workflowStage?:
+    | "Planning"
+    | "Procurement"
+    | "Evaluation"
+    | "NOC Review"
+    | "Contract Award"
+    | "Implementation"
+    | "Closeout";
   lastUpdated?: string;
 }
 
@@ -219,7 +238,7 @@ const TenderManagement = () => {
     const loadSynchronizedTenders = () => {
       const rawTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
       const synchronizedTenders = rawTenders.map((tender: Tender) =>
-        synchronizeTenderStatus(tender)
+        synchronizeTenderStatus(tender),
       );
       return synchronizedTenders;
     };
@@ -237,24 +256,42 @@ const TenderManagement = () => {
       updateTenderFromContract(tenderId, contractId, contractData);
     };
 
-    window.addEventListener('nocStatusUpdated', handleNOCUpdate as EventListener);
-    window.addEventListener('contractCreated', handleContractUpdate as EventListener);
+    window.addEventListener(
+      "nocStatusUpdated",
+      handleNOCUpdate as EventListener,
+    );
+    window.addEventListener(
+      "contractCreated",
+      handleContractUpdate as EventListener,
+    );
 
     return () => {
-      window.removeEventListener('nocStatusUpdated', handleNOCUpdate as EventListener);
-      window.removeEventListener('contractCreated', handleContractUpdate as EventListener);
+      window.removeEventListener(
+        "nocStatusUpdated",
+        handleNOCUpdate as EventListener,
+      );
+      window.removeEventListener(
+        "contractCreated",
+        handleContractUpdate as EventListener,
+      );
     };
   }, []);
 
   // Synchronize tender status with NOC and contract data
   const synchronizeTenderStatus = (tender: Tender): Tender => {
     // Check NOC status
-    const nocRequests = JSON.parse(localStorage.getItem("centralNOCRequests") || "[]");
-    const relatedNOC = nocRequests.find((noc: any) => noc.tenderId === tender.id);
+    const nocRequests = JSON.parse(
+      localStorage.getItem("centralNOCRequests") || "[]",
+    );
+    const relatedNOC = nocRequests.find(
+      (noc: any) => noc.tenderId === tender.id,
+    );
 
     // Check contract status
     const contracts = JSON.parse(localStorage.getItem("contracts") || "[]");
-    const relatedContract = contracts.find((contract: any) => contract.tenderId === tender.id);
+    const relatedContract = contracts.find(
+      (contract: any) => contract.tenderId === tender.id,
+    );
 
     let updatedTender = { ...tender };
 
@@ -262,7 +299,10 @@ const TenderManagement = () => {
       // Contract exists - highest priority status
       updatedTender.contractId = relatedContract.id;
       updatedTender.contractStatus = relatedContract.status;
-      updatedTender.workflowStage = relatedContract.status === "Active" ? "Implementation" : "Contract Award";
+      updatedTender.workflowStage =
+        relatedContract.status === "Active"
+          ? "Implementation"
+          : "Contract Award";
 
       if (relatedContract.status === "Active") {
         updatedTender.status = "Contract Signed";
@@ -285,7 +325,10 @@ const TenderManagement = () => {
       } else {
         updatedTender.status = "NOC Pending";
       }
-    } else if (tender.evaluation?.status === "Complete" || tender.status === "Evaluated") {
+    } else if (
+      tender.evaluation?.status === "Complete" ||
+      tender.status === "Evaluated"
+    ) {
       // Evaluation complete but no NOC yet
       updatedTender.workflowStage = "Evaluation";
       if (tender.status !== "NOC Pending") {
@@ -297,40 +340,57 @@ const TenderManagement = () => {
     return updatedTender;
   };
 
-  const updateTenderFromNOC = (tenderId: string, nocId: string, status: string, certificateNumber?: string) => {
-    setTenders(prevTenders => {
-      const updatedTenders = prevTenders.map(tender =>
+  const updateTenderFromNOC = (
+    tenderId: string,
+    nocId: string,
+    status: string,
+    certificateNumber?: string,
+  ) => {
+    setTenders((prevTenders) => {
+      const updatedTenders = prevTenders.map((tender) =>
         tender.id === tenderId
           ? {
               ...tender,
               nocId,
               nocStatus: status as "Pending" | "Approved" | "Rejected",
               nocCertificateNumber: certificateNumber,
-              status: status === "Approved" ? "NOC Approved" :
-                     status === "Rejected" ? "NOC Rejected" : "NOC Pending",
+              status:
+                status === "Approved"
+                  ? "NOC Approved"
+                  : status === "Rejected"
+                    ? "NOC Rejected"
+                    : "NOC Pending",
               workflowStage: "NOC Review" as const,
               lastUpdated: new Date().toISOString(),
             }
-          : tender
+          : tender,
       );
       saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
       return updatedTenders;
     });
   };
 
-  const updateTenderFromContract = (tenderId: string, contractId: string, contractData: any) => {
-    setTenders(prevTenders => {
-      const updatedTenders = prevTenders.map(tender =>
+  const updateTenderFromContract = (
+    tenderId: string,
+    contractId: string,
+    contractData: any,
+  ) => {
+    setTenders((prevTenders) => {
+      const updatedTenders = prevTenders.map((tender) =>
         tender.id === tenderId
           ? {
               ...tender,
               contractId,
-              contractStatus: contractData.status as "Draft" | "Active" | "Completed" | "Terminated",
+              contractStatus: contractData.status as
+                | "Draft"
+                | "Active"
+                | "Completed"
+                | "Terminated",
               status: "Contract Created" as const,
               workflowStage: "Contract Award" as const,
               lastUpdated: new Date().toISOString(),
             }
-          : tender
+          : tender,
       );
       saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
       return updatedTenders;
@@ -448,7 +508,7 @@ const TenderManagement = () => {
   };
 
   const formatCurrency = (amount: string | number) => {
-    const num = typeof amount === 'string' ? parseFloat(amount) : amount;
+    const num = typeof amount === "string" ? parseFloat(amount) : amount;
     if (isNaN(num)) return amount;
     return `₦${num.toLocaleString()}`;
   };
@@ -479,7 +539,9 @@ const TenderManagement = () => {
       budget: parseFloat(tenderForm.budget),
       status: isDraft ? "Draft" : "Published",
       createdDate: new Date().toISOString().split("T")[0],
-      publishedDate: !isDraft ? new Date().toISOString().split("T")[0] : undefined,
+      publishedDate: !isDraft
+        ? new Date().toISOString().split("T")[0]
+        : undefined,
       closingDate: tenderForm.closingDate,
       ministry: ministryInfo.name,
       department: "Current Department",
@@ -654,7 +716,11 @@ const TenderManagement = () => {
       Completed: "bg-green-100 text-green-800",
     };
     return (
-      <Badge className={colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800"}>
+      <Badge
+        className={
+          colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800"
+        }
+      >
         {status}
       </Badge>
     );
@@ -806,12 +872,17 @@ const TenderManagement = () => {
                                   ? {
                                       ...t,
                                       status: "Published" as const,
-                                      publishedDate: new Date().toISOString().split("T")[0],
+                                      publishedDate: new Date()
+                                        .toISOString()
+                                        .split("T")[0],
                                     }
                                   : t,
                               );
                               setTenders(updatedTenders);
-                              saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+                              saveToStorage(
+                                STORAGE_KEYS.TENDERS,
+                                updatedTenders,
+                              );
                             }}
                           >
                             <Upload className="h-4 w-4" />
