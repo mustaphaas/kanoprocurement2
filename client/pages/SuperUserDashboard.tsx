@@ -14,6 +14,7 @@ import {
 import { EnhancedSuperUserOverview } from "@/components/superuser/EnhancedSuperUserOverview";
 import { SuperUserQuickActions } from "@/components/superuser/SuperUserQuickActions";
 import { generateMockSuperUserData } from "@/lib/superUserMockData";
+import { clearMockAuditData, getAuditDataInfo } from "@/lib/clearMockAuditData";
 import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
