@@ -1466,7 +1466,7 @@ export default function MinistryDashboard() {
               projectTitle: "Kano-Kaduna Highway Rehabilitation - Phase 1",
               requestDate: "2024-01-20",
               status: "Pending",
-              projectValue: "���15,200,000,000",
+              projectValue: "₦15,200,000,000",
               contractorName: "Kano Construction Ltd",
               expectedDuration: "18 months",
             },
@@ -10411,8 +10411,6 @@ Blockchain Timestamp: ${Date.now()}
       return renderOverview();
     } else if (currentView === "companies") {
       return renderCompanies();
-    } else if (currentView === "tenders") {
-      return renderTenders();
     } else if (currentView === "contracts") {
       return renderContracts();
     } else if (currentView === "reports") {
