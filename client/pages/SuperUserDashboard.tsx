@@ -117,7 +117,11 @@ type ActiveTab =
   | "no-objection-certificate"
   | "mda-management"
   | "mda-testing"
-  | "noc-requests";
+  | "noc-requests"
+  | "procurement-oversight"
+  | "contract-oversight"
+  | "notifications-center"
+  | "collaboration";
 
 interface DashboardStats {
   newRegistrationsPending: number;
@@ -969,7 +973,7 @@ export default function SuperUserDashboard() {
           "Upgrade of government ICT infrastructure and network systems",
         category: "Technology",
         ministry: "Ministry of Science and Technology",
-        estimatedValue: "₦1.2B",
+        estimatedValue: "��1.2B",
         status: "Awarded",
         workflowStatus: "Contract_Awarded",
         workflowStep: 6,
