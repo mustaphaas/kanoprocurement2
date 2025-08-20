@@ -660,10 +660,30 @@ export default function NOCRequestsTab() {
 
     setNOCRequests(updatedRequests);
     localStorage.setItem("centralNOCRequests", JSON.stringify(updatedRequests));
-    
+
+    // Sync approval back to ministry storage
+    if (selectedRequest.ministryCode) {
+      const ministryKey = `${selectedRequest.ministryCode}_NOCRequests`;
+      const ministryRequests = localStorage.getItem(ministryKey);
+      if (ministryRequests) {
+        const ministryData = JSON.parse(ministryRequests);
+        const updatedMinistryData = ministryData.map((req: any) =>
+          req.id === selectedRequest.id
+            ? {
+                ...req,
+                status: "Approved",
+                certificateNumber,
+                approvalDate: new Date().toISOString(),
+              }
+            : req
+        );
+        localStorage.setItem(ministryKey, JSON.stringify(updatedMinistryData));
+      }
+    }
+
     // Generate and download approval certificate
     generateApprovalCertificate(selectedRequest, certificateNumber);
-    
+
     setShowApprovalModal(false);
     setSelectedRequest(null);
   };
