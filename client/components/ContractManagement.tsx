@@ -848,6 +848,7 @@ const ContractManagement = () => {
                 <SelectItem value="Completed">Completed</SelectItem>
                 <SelectItem value="Terminated">Terminated</SelectItem>
                 <SelectItem value="Suspended">Suspended</SelectItem>
+                <SelectItem value="noc-linked">NOC-Linked Only</SelectItem>
               </SelectContent>
             </Select>
           </div>
