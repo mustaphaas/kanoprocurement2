@@ -187,6 +187,53 @@ export default function NOCRequestsModule({
     loadCompletedTenders();
   }, [ministryCode]);
 
+  // Handle real-time NOC status updates
+  useEffect(() => {
+    const handleNOCStatusUpdate = (event: CustomEvent) => {
+      const { requestId, status, certificateNumber, approvalDate, rejectionDate } = event.detail;
+
+      setNOCRequests(prevRequests => {
+        const updatedRequests = prevRequests.map(request => {
+          if (request.id === requestId) {
+            return {
+              ...request,
+              status,
+              ...(status === 'Approved' && {
+                approvalDate,
+                certificateNumber,
+                timeline: {
+                  ...request.timeline,
+                  dateApproved: approvalDate
+                }
+              }),
+              ...(status === 'Rejected' && {
+                rejectionDate,
+                timeline: {
+                  ...request.timeline,
+                  dateRejected: rejectionDate
+                }
+              })
+            };
+          }
+          return request;
+        });
+
+        // Update localStorage for persistence
+        const ministryNOCKey = `${ministryCode}_NOCRequests`;
+        localStorage.setItem(ministryNOCKey, JSON.stringify(updatedRequests));
+
+        return updatedRequests;
+      });
+    };
+
+    // Listen for NOC status updates
+    window.addEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+    };
+  }, [ministryCode]);
+
   const loadNOCRequests = () => {
     const ministryNOCKey = `${ministryCode}_NOCRequests`;
     const storedNOCs = localStorage.getItem(ministryNOCKey);
