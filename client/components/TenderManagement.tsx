@@ -62,7 +62,19 @@ interface Tender {
   title: string;
   description: string;
   budget: number;
-  status: "Draft" | "Published" | "Open" | "Closed" | "Evaluated" | "Awarded";
+  status:
+    | "Draft"
+    | "Published"
+    | "Open"
+    | "Closed"
+    | "Evaluated"
+    | "NOC Pending"
+    | "NOC Approved"
+    | "NOC Rejected"
+    | "Contract Created"
+    | "Contract Signed"
+    | "Implementation"
+    | "Completed";
   createdDate: string;
   publishedDate?: string;
   closingDate?: string;
@@ -76,6 +88,24 @@ interface Tender {
   bidders: Bidder[];
   evaluation: TenderEvaluation;
   timeline: TenderTimelineEvent[];
+
+  // NOC and Contract linking
+  nocId?: string;
+  nocStatus?: "Pending" | "Approved" | "Rejected";
+  nocCertificateNumber?: string;
+  contractId?: string;
+  contractStatus?: "Draft" | "Active" | "Completed" | "Terminated";
+
+  // Workflow tracking
+  workflowStage?:
+    | "Planning"
+    | "Procurement"
+    | "Evaluation"
+    | "NOC Review"
+    | "Contract Award"
+    | "Implementation"
+    | "Closeout";
+  lastUpdated?: string;
 }
 
 interface TenderDocument {
@@ -204,8 +234,168 @@ const TenderManagement = () => {
       return data ? JSON.parse(data) : [];
     };
 
-    setTenders(loadFromStorage(STORAGE_KEYS.TENDERS));
+    // Load and synchronize tenders with NOC and contract data
+    const loadSynchronizedTenders = () => {
+      const rawTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
+      const synchronizedTenders = rawTenders.map((tender: Tender) =>
+        synchronizeTenderStatus(tender),
+      );
+      return synchronizedTenders;
+    };
+
+    setTenders(loadSynchronizedTenders());
+
+    // Listen for NOC and contract updates
+    const handleNOCUpdate = (event: CustomEvent) => {
+      const { tenderId, nocId, status, certificateNumber } = event.detail;
+      updateTenderFromNOC(tenderId, nocId, status, certificateNumber);
+    };
+
+    const handleContractUpdate = (event: CustomEvent) => {
+      const { tenderId, contractId, contractData } = event.detail;
+      updateTenderFromContract(tenderId, contractId, contractData);
+    };
+
+    window.addEventListener(
+      "nocStatusUpdated",
+      handleNOCUpdate as EventListener,
+    );
+    window.addEventListener(
+      "contractCreated",
+      handleContractUpdate as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "nocStatusUpdated",
+        handleNOCUpdate as EventListener,
+      );
+      window.removeEventListener(
+        "contractCreated",
+        handleContractUpdate as EventListener,
+      );
+    };
   }, []);
+
+  // Synchronize tender status with NOC and contract data
+  const synchronizeTenderStatus = (tender: Tender): Tender => {
+    // Check NOC status
+    const nocRequests = JSON.parse(
+      localStorage.getItem("centralNOCRequests") || "[]",
+    );
+    const relatedNOC = nocRequests.find(
+      (noc: any) => noc.tenderId === tender.id,
+    );
+
+    // Check contract status
+    const contracts = JSON.parse(localStorage.getItem("contracts") || "[]");
+    const relatedContract = contracts.find(
+      (contract: any) => contract.tenderId === tender.id,
+    );
+
+    let updatedTender = { ...tender };
+
+    if (relatedContract) {
+      // Contract exists - highest priority status
+      updatedTender.contractId = relatedContract.id;
+      updatedTender.contractStatus = relatedContract.status;
+      updatedTender.workflowStage =
+        relatedContract.status === "Active"
+          ? "Implementation"
+          : "Contract Award";
+
+      if (relatedContract.status === "Active") {
+        updatedTender.status = "Contract Signed";
+      } else if (relatedContract.status === "Completed") {
+        updatedTender.status = "Completed";
+      } else {
+        updatedTender.status = "Contract Created";
+      }
+    } else if (relatedNOC) {
+      // NOC exists but no contract yet
+      updatedTender.nocId = relatedNOC.id;
+      updatedTender.nocStatus = relatedNOC.status;
+      updatedTender.nocCertificateNumber = relatedNOC.certificateNumber;
+      updatedTender.workflowStage = "NOC Review";
+
+      if (relatedNOC.status === "Approved") {
+        updatedTender.status = "NOC Approved";
+      } else if (relatedNOC.status === "Rejected") {
+        updatedTender.status = "NOC Rejected";
+      } else {
+        updatedTender.status = "NOC Pending";
+      }
+    } else if (
+      tender.evaluation?.status === "Complete" ||
+      tender.status === "Evaluated"
+    ) {
+      // Evaluation complete but no NOC yet
+      updatedTender.workflowStage = "Evaluation";
+      if (tender.status !== "NOC Pending") {
+        updatedTender.status = "Evaluated"; // Should trigger NOC request
+      }
+    }
+
+    updatedTender.lastUpdated = new Date().toISOString();
+    return updatedTender;
+  };
+
+  const updateTenderFromNOC = (
+    tenderId: string,
+    nocId: string,
+    status: string,
+    certificateNumber?: string,
+  ) => {
+    setTenders((prevTenders) => {
+      const updatedTenders = prevTenders.map((tender) =>
+        tender.id === tenderId
+          ? {
+              ...tender,
+              nocId,
+              nocStatus: status as "Pending" | "Approved" | "Rejected",
+              nocCertificateNumber: certificateNumber,
+              status:
+                status === "Approved"
+                  ? "NOC Approved"
+                  : status === "Rejected"
+                    ? "NOC Rejected"
+                    : "NOC Pending",
+              workflowStage: "NOC Review" as const,
+              lastUpdated: new Date().toISOString(),
+            }
+          : tender,
+      );
+      saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+      return updatedTenders;
+    });
+  };
+
+  const updateTenderFromContract = (
+    tenderId: string,
+    contractId: string,
+    contractData: any,
+  ) => {
+    setTenders((prevTenders) => {
+      const updatedTenders = prevTenders.map((tender) =>
+        tender.id === tenderId
+          ? {
+              ...tender,
+              contractId,
+              contractStatus: contractData.status as
+                | "Draft"
+                | "Active"
+                | "Completed"
+                | "Terminated",
+              status: "Contract Created" as const,
+              workflowStage: "Contract Award" as const,
+              lastUpdated: new Date().toISOString(),
+            }
+          : tender,
+      );
+      saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+      return updatedTenders;
+    });
+  };
 
   // Save to localStorage
   const saveToStorage = (key: string, data: any) => {
@@ -282,15 +472,78 @@ const TenderManagement = () => {
     }
   }, [tenders.length]);
 
-  const handleCreateTender = () => {
+  // Get ministry info from localStorage (same logic as MinistryDashboard)
+  const getMinistryInfo = () => {
+    const ministryUser = localStorage.getItem("ministryUser");
+    if (!ministryUser) {
+      return {
+        name: "Ministry of Health",
+        code: "MOH",
+        contactEmail: "health@kanostate.gov.ng",
+        contactPhone: "08012345678",
+        address: "Kano State Secretariat, Kano",
+      };
+    }
+
+    try {
+      const userData = JSON.parse(ministryUser);
+      // You would need to import getMinistryById function or implement similar logic here
+      return {
+        name: "Ministry of Health", // fallback for now
+        code: "MOH",
+        contactEmail: "health@kanostate.gov.ng",
+        contactPhone: "08012345678",
+        address: "Kano State Secretariat, Kano",
+      };
+    } catch (error) {
+      console.error("Error parsing ministry user data:", error);
+      return {
+        name: "Ministry of Health",
+        code: "MOH",
+        contactEmail: "health@kanostate.gov.ng",
+        contactPhone: "08012345678",
+        address: "Kano State Secretariat, Kano",
+      };
+    }
+  };
+
+  const formatCurrency = (amount: string | number) => {
+    const num = typeof amount === "string" ? parseFloat(amount) : amount;
+    if (isNaN(num)) return amount;
+    return `₦${num.toLocaleString()}`;
+  };
+
+  const getBidCountForTender = (tenderId: string) => {
+    return Math.floor(Math.random() * 8) + 3; // Random number between 3-10
+  };
+
+  const handleCreateTender = (isDraft = false) => {
+    if (
+      !tenderForm.title ||
+      !tenderForm.description ||
+      !tenderForm.budget ||
+      !tenderForm.closingDate
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const ministryInfo = getMinistryInfo();
+    const tenderId = `${ministryInfo.code}-${Date.now()}`;
+
+    // Create tender for TenderManagement local state
     const newTender: Tender = {
-      id: `T${String(tenders.length + 1).padStart(3, "0")}`,
+      id: tenderId,
       title: tenderForm.title,
       description: tenderForm.description,
       budget: parseFloat(tenderForm.budget),
-      status: "Draft",
+      status: isDraft ? "Draft" : "Published",
       createdDate: new Date().toISOString().split("T")[0],
-      ministry: "Current Ministry", // This would come from auth context
+      publishedDate: !isDraft
+        ? new Date().toISOString().split("T")[0]
+        : undefined,
+      closingDate: tenderForm.closingDate,
+      ministry: ministryInfo.name,
       department: "Current Department",
       tenderType: tenderForm.tenderType as "Open" | "Selective" | "Limited",
       procurementMethod: tenderForm.procurementMethod as
@@ -299,7 +552,6 @@ const TenderManagement = () => {
         | "QCBS"
         | "CQS"
         | "SSS",
-      closingDate: tenderForm.closingDate,
       documents: [],
       amendments: [],
       bidders: [],
@@ -320,6 +572,87 @@ const TenderManagement = () => {
     setTenders(updatedTenders);
     saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
 
+    // Also create tender for global app state (same as MinistryDashboard does)
+    const globalTender = {
+      id: tenderId,
+      title: tenderForm.title,
+      description: tenderForm.description,
+      category: "General", // Could be made configurable
+      estimatedValue: formatCurrency(tenderForm.budget),
+      status: isDraft ? "Draft" : "Published",
+      publishDate: new Date().toISOString().split("T")[0],
+      closeDate: tenderForm.closingDate,
+      bidsReceived: getBidCountForTender(tenderId),
+      ministry: ministryInfo.name,
+      procuringEntity: ministryInfo.name,
+    };
+
+    // Store in localStorage for cross-page access (same as MinistryDashboard)
+    const existingTenders = localStorage.getItem("featuredTenders") || "[]";
+    const tendersList = JSON.parse(existingTenders);
+    const featuredTender = {
+      id: globalTender.id,
+      title: globalTender.title,
+      description: globalTender.description,
+      value: globalTender.estimatedValue,
+      deadline: new Date(globalTender.closeDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      status: globalTender.status === "Published" ? "Open" : "Draft",
+      statusColor:
+        globalTender.status === "Published"
+          ? "bg-green-100 text-green-800"
+          : "bg-gray-100 text-gray-800",
+      category: "General",
+      ministry: ministryInfo.name,
+      createdAt: Date.now(),
+    };
+
+    tendersList.unshift(featuredTender);
+    const latestTenders = tendersList.slice(0, 5);
+    localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
+
+    // Also store in recentTenders
+    const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
+    const recentTendersList = JSON.parse(existingRecentTenders);
+    const recentTender = {
+      id: globalTender.id,
+      title: globalTender.title,
+      category: "General",
+      value: globalTender.estimatedValue,
+      deadline: globalTender.closeDate,
+      location: "Kano State",
+      views: 0,
+      status: globalTender.status === "Published" ? "Open" : "Draft",
+      description: globalTender.description,
+      publishDate: globalTender.publishDate,
+      closingDate: globalTender.closeDate,
+      tenderFee: formatCurrency(25000),
+      procuringEntity: ministryInfo.name,
+      duration: "12 months",
+      eligibility: "Qualified contractors with relevant experience",
+      requirements: [
+        "Valid CAC certificate",
+        "Tax clearance for last 3 years",
+        "Professional license",
+        "Evidence of similar projects",
+        "Financial capacity documentation",
+      ],
+      technicalSpecs: [
+        "Project specifications as detailed in tender document",
+        "Quality standards must meet government requirements",
+        "Timeline adherence is mandatory",
+      ],
+      createdAt: Date.now(),
+    };
+
+    recentTendersList.unshift(recentTender);
+    const latestRecentTenders = recentTendersList.slice(0, 10);
+    localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+
+    // Reset form
     setTenderForm({
       title: "",
       description: "",
@@ -329,7 +662,9 @@ const TenderManagement = () => {
       closingDate: "",
       documents: [],
     });
+
     setShowTenderModal(false);
+    alert(`Tender ${isDraft ? "saved as draft" : "published"} successfully!`);
   };
 
   const updateTenderStatus = (tenderId: string, status: Tender["status"]) => {
@@ -360,24 +695,34 @@ const TenderManagement = () => {
   });
 
   const getStatusBadge = (status: string) => {
-    const variants = {
-      Draft: "secondary",
-      Published: "outline",
-      Open: "default",
-      Closed: "destructive",
-      Evaluated: "default",
-      Awarded: "default",
-    };
     const colors = {
+      // Original statuses
       Draft: "bg-gray-100 text-gray-800",
       Published: "bg-blue-100 text-blue-800",
       Open: "bg-green-100 text-green-800",
       Closed: "bg-red-100 text-red-800",
       Evaluated: "bg-yellow-100 text-yellow-800",
       Awarded: "bg-purple-100 text-purple-800",
+
+      // NOC workflow statuses
+      "NOC Pending": "bg-orange-100 text-orange-800",
+      "NOC Approved": "bg-green-100 text-green-800",
+      "NOC Rejected": "bg-red-100 text-red-800",
+
+      // Contract workflow statuses
+      "Contract Created": "bg-blue-100 text-blue-800",
+      "Contract Signed": "bg-purple-100 text-purple-800",
+      Implementation: "bg-indigo-100 text-indigo-800",
+      Completed: "bg-green-100 text-green-800",
     };
     return (
-      <Badge className={colors[status as keyof typeof colors]}>{status}</Badge>
+      <Badge
+        className={
+          colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800"
+        }
+      >
+        {status}
+      </Badge>
     );
   };
 
@@ -447,6 +792,15 @@ const TenderManagement = () => {
 
         {/* Tender Creation & Publication */}
         <TabsContent value="creation" className="space-y-4">
+          <div className="flex gap-2 mb-4">
+            <Button
+              onClick={() => setShowTenderModal(true)}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create New Tender
+            </Button>
+          </div>
           <div className="flex gap-4 items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -512,9 +866,24 @@ const TenderManagement = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() =>
-                              updateTenderStatus(tender.id, "Published")
-                            }
+                            onClick={() => {
+                              const updatedTenders = tenders.map((t) =>
+                                t.id === tender.id
+                                  ? {
+                                      ...t,
+                                      status: "Published" as const,
+                                      publishedDate: new Date()
+                                        .toISOString()
+                                        .split("T")[0],
+                                    }
+                                  : t,
+                              );
+                              setTenders(updatedTenders);
+                              saveToStorage(
+                                STORAGE_KEYS.TENDERS,
+                                updatedTenders,
+                              );
+                            }}
                           >
                             <Upload className="h-4 w-4" />
                           </Button>
@@ -1794,7 +2163,18 @@ const TenderManagement = () => {
               >
                 Cancel
               </Button>
-              <Button onClick={handleCreateTender}>Create Tender</Button>
+              <Button
+                variant="outline"
+                onClick={() => handleCreateTender(true)}
+              >
+                Save as Draft
+              </Button>
+              <Button
+                onClick={() => handleCreateTender(false)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Publish Tender
+              </Button>
             </div>
           </div>
         </DialogContent>

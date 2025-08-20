@@ -19,6 +19,7 @@ import MinistryDashboard from "./pages/MinistryDashboard";
 import UserLogin from "./pages/UserLogin";
 import UserDashboard from "./pages/UserDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
+import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,10 @@ const App = () => (
               }
             />
             <Route path="/firebase-setup" element={<FirebaseSetup />} />
+            <Route
+              path="/validation"
+              element={<ProcurementWorkflowValidation />}
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

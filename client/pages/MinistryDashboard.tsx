@@ -82,7 +82,6 @@ import {
 type CurrentView =
   | "overview"
   | "companies"
-  | "tenders"
   | "contracts"
   | "reports"
   | "noc"
@@ -10412,8 +10411,6 @@ Blockchain Timestamp: ${Date.now()}
       return renderOverview();
     } else if (currentView === "companies") {
       return renderCompanies();
-    } else if (currentView === "tenders") {
-      return renderTenders();
     } else if (currentView === "contracts") {
       return renderContracts();
     } else if (currentView === "reports") {
@@ -10478,7 +10475,6 @@ Blockchain Timestamp: ${Date.now()}
             {[
               { key: "overview", label: "Overview", icon: BarChart3 },
               { key: "companies", label: "Companies", icon: Building2 },
-              { key: "tenders", label: "Tenders", icon: FileText },
               { key: "contracts", label: "Contracts", icon: FileCheck },
               {
                 key: "procurement-planning",
@@ -10503,9 +10499,6 @@ Blockchain Timestamp: ${Date.now()}
                 key={tab.key}
                 onClick={() => {
                   setCurrentView(tab.key as CurrentView);
-                  if (tab.key === "tenders") {
-                    setTenderSubView("list");
-                  }
                 }}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
                   currentView === tab.key
@@ -10520,37 +10513,6 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
       </nav>
-
-      {/* Tender Sub-Navigation */}
-      {currentView === "tenders" && (
-        <nav className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex space-x-1 overflow-x-auto py-2">
-              {[
-                { key: "list", label: "Tender List", icon: FileText },
-                { key: "create", label: "Create Tender", icon: Plus },
-                { key: "ai-management", label: "AI Management", icon: Bot },
-                { key: "bulk-upload", label: "Bulk Upload", icon: Upload },
-                { key: "evaluation", label: "Evaluation", icon: CheckSquare },
-                { key: "award", label: "Award Tenders", icon: Award },
-              ].map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setTenderSubView(tab.key as TenderSubView)}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
-                    tenderSubView === tab.key
-                      ? "text-green-700 bg-green-50 border border-green-200"
-                      : "text-gray-700 hover:text-green-700 hover:bg-green-50"
-                  }`}
-                >
-                  <tab.icon className="h-4 w-4" />
-                  <span>{tab.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </nav>
-      )}
 
       {/* Procurement Planning Sub-Navigation */}
       {currentView === "procurement-planning" && (

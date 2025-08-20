@@ -35,6 +35,7 @@ import {
   Mail,
   BarChart3,
   Send,
+  Settings,
 } from "lucide-react";
 
 interface FeaturedTender {
@@ -327,6 +328,14 @@ export default function Index() {
               <button className="hidden md:flex items-center px-3 py-2 text-gray-600 hover:text-green-700">
                 <Bell className="h-4 w-4" />
               </button>
+              <Link
+                to="/validation"
+                className="hidden sm:flex items-center px-3 py-2 text-purple-600 hover:text-purple-700 text-sm font-medium"
+                title="Workflow Validation Dashboard"
+              >
+                <Settings className="h-4 w-4 mr-1" />
+                Validation
+              </Link>
               <Link
                 to="/login"
                 className="hidden sm:flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:text-green-700"
