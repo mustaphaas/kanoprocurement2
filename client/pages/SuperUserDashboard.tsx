@@ -865,7 +865,9 @@ export default function SuperUserDashboard() {
       },
     ];
 
-    // Note: Removed sample data initialization to use real audit logs only
+    // Clear any existing mock data and start with real audit logs only
+    // You can uncomment this line if you want to clear existing mock data:
+    // auditLogStorage.clearAllLogs();
 
     // Log dashboard access
     logUserAction(
