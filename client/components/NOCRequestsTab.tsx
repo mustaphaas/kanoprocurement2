@@ -915,7 +915,7 @@ export default function NOCRequestsTab() {
               >
                 Close
               </button>
-              {(selectedRequest.status === "Submitted" || selectedRequest.status === "Under Review") && (
+              {(selectedRequest.status === "Submitted" || selectedRequest.status === "Under Review" || selectedRequest.status === "Pending") && (
                 <>
                   <button
                     onClick={() => {
