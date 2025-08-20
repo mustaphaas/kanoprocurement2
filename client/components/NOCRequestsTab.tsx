@@ -352,7 +352,7 @@ export default function NOCRequestsTab() {
           id: "NOC-MOE-002",
           projectTitle: "Digital Learning Platform Development",
           requestDate: "2024-01-25",
-          status: "Pending",
+          status: "Approved",
           projectValue: "₦1,800,000,000",
           contractorName: "Kano School Furniture Ltd",
           expectedDuration: "12 months",
@@ -364,9 +364,12 @@ export default function NOCRequestsTab() {
           projectDescription: "Development of comprehensive digital learning platform for schools",
           justification: "Modernize education delivery through technology integration",
           category: "Educational Technology",
+          certificateNumber: "KNS/MOE/PNO/2024/004",
+          approvalDate: new Date().toISOString(),
           documents: {},
           timeline: {
-            dateSubmitted: "2024-01-25T11:00:00Z"
+            dateSubmitted: "2024-01-25T11:00:00Z",
+            approvalDate: new Date().toISOString()
           }
         },
         {
