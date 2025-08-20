@@ -62,7 +62,7 @@ interface Tender {
   title: string;
   description: string;
   budget: number;
-  status: "Draft" | "Published" | "Open" | "Closed" | "Evaluated" | "Awarded";
+  status: "Draft" | "Published" | "Open" | "Closed" | "Evaluated" | "NOC Pending" | "NOC Approved" | "NOC Rejected" | "Contract Created" | "Contract Signed" | "Implementation" | "Completed";
   createdDate: string;
   publishedDate?: string;
   closingDate?: string;
@@ -76,6 +76,17 @@ interface Tender {
   bidders: Bidder[];
   evaluation: TenderEvaluation;
   timeline: TenderTimelineEvent[];
+
+  // NOC and Contract linking
+  nocId?: string;
+  nocStatus?: "Pending" | "Approved" | "Rejected";
+  nocCertificateNumber?: string;
+  contractId?: string;
+  contractStatus?: "Draft" | "Active" | "Completed" | "Terminated";
+
+  // Workflow tracking
+  workflowStage?: "Planning" | "Procurement" | "Evaluation" | "NOC Review" | "Contract Award" | "Implementation" | "Closeout";
+  lastUpdated?: string;
 }
 
 interface TenderDocument {
@@ -204,8 +215,127 @@ const TenderManagement = () => {
       return data ? JSON.parse(data) : [];
     };
 
-    setTenders(loadFromStorage(STORAGE_KEYS.TENDERS));
+    // Load and synchronize tenders with NOC and contract data
+    const loadSynchronizedTenders = () => {
+      const rawTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
+      const synchronizedTenders = rawTenders.map((tender: Tender) =>
+        synchronizeTenderStatus(tender)
+      );
+      return synchronizedTenders;
+    };
+
+    setTenders(loadSynchronizedTenders());
+
+    // Listen for NOC and contract updates
+    const handleNOCUpdate = (event: CustomEvent) => {
+      const { tenderId, nocId, status, certificateNumber } = event.detail;
+      updateTenderFromNOC(tenderId, nocId, status, certificateNumber);
+    };
+
+    const handleContractUpdate = (event: CustomEvent) => {
+      const { tenderId, contractId, contractData } = event.detail;
+      updateTenderFromContract(tenderId, contractId, contractData);
+    };
+
+    window.addEventListener('nocStatusUpdated', handleNOCUpdate as EventListener);
+    window.addEventListener('contractCreated', handleContractUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('nocStatusUpdated', handleNOCUpdate as EventListener);
+      window.removeEventListener('contractCreated', handleContractUpdate as EventListener);
+    };
   }, []);
+
+  // Synchronize tender status with NOC and contract data
+  const synchronizeTenderStatus = (tender: Tender): Tender => {
+    // Check NOC status
+    const nocRequests = JSON.parse(localStorage.getItem("centralNOCRequests") || "[]");
+    const relatedNOC = nocRequests.find((noc: any) => noc.tenderId === tender.id);
+
+    // Check contract status
+    const contracts = JSON.parse(localStorage.getItem("contracts") || "[]");
+    const relatedContract = contracts.find((contract: any) => contract.tenderId === tender.id);
+
+    let updatedTender = { ...tender };
+
+    if (relatedContract) {
+      // Contract exists - highest priority status
+      updatedTender.contractId = relatedContract.id;
+      updatedTender.contractStatus = relatedContract.status;
+      updatedTender.workflowStage = relatedContract.status === "Active" ? "Implementation" : "Contract Award";
+
+      if (relatedContract.status === "Active") {
+        updatedTender.status = "Contract Signed";
+      } else if (relatedContract.status === "Completed") {
+        updatedTender.status = "Completed";
+      } else {
+        updatedTender.status = "Contract Created";
+      }
+    } else if (relatedNOC) {
+      // NOC exists but no contract yet
+      updatedTender.nocId = relatedNOC.id;
+      updatedTender.nocStatus = relatedNOC.status;
+      updatedTender.nocCertificateNumber = relatedNOC.certificateNumber;
+      updatedTender.workflowStage = "NOC Review";
+
+      if (relatedNOC.status === "Approved") {
+        updatedTender.status = "NOC Approved";
+      } else if (relatedNOC.status === "Rejected") {
+        updatedTender.status = "NOC Rejected";
+      } else {
+        updatedTender.status = "NOC Pending";
+      }
+    } else if (tender.evaluation?.status === "Complete" || tender.status === "Evaluated") {
+      // Evaluation complete but no NOC yet
+      updatedTender.workflowStage = "Evaluation";
+      if (tender.status !== "NOC Pending") {
+        updatedTender.status = "Evaluated"; // Should trigger NOC request
+      }
+    }
+
+    updatedTender.lastUpdated = new Date().toISOString();
+    return updatedTender;
+  };
+
+  const updateTenderFromNOC = (tenderId: string, nocId: string, status: string, certificateNumber?: string) => {
+    setTenders(prevTenders => {
+      const updatedTenders = prevTenders.map(tender =>
+        tender.id === tenderId
+          ? {
+              ...tender,
+              nocId,
+              nocStatus: status as "Pending" | "Approved" | "Rejected",
+              nocCertificateNumber: certificateNumber,
+              status: status === "Approved" ? "NOC Approved" :
+                     status === "Rejected" ? "NOC Rejected" : "NOC Pending",
+              workflowStage: "NOC Review" as const,
+              lastUpdated: new Date().toISOString(),
+            }
+          : tender
+      );
+      saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+      return updatedTenders;
+    });
+  };
+
+  const updateTenderFromContract = (tenderId: string, contractId: string, contractData: any) => {
+    setTenders(prevTenders => {
+      const updatedTenders = prevTenders.map(tender =>
+        tender.id === tenderId
+          ? {
+              ...tender,
+              contractId,
+              contractStatus: contractData.status as "Draft" | "Active" | "Completed" | "Terminated",
+              status: "Contract Created" as const,
+              workflowStage: "Contract Award" as const,
+              lastUpdated: new Date().toISOString(),
+            }
+          : tender
+      );
+      saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+      return updatedTenders;
+    });
+  };
 
   // Save to localStorage
   const saveToStorage = (key: string, data: any) => {
@@ -318,7 +448,7 @@ const TenderManagement = () => {
   };
 
   const formatCurrency = (amount: string | number) => {
-    const num = typeof amount === "string" ? parseFloat(amount) : amount;
+    const num = typeof amount === 'string' ? parseFloat(amount) : amount;
     if (isNaN(num)) return amount;
     return `₦${num.toLocaleString()}`;
   };
@@ -349,9 +479,7 @@ const TenderManagement = () => {
       budget: parseFloat(tenderForm.budget),
       status: isDraft ? "Draft" : "Published",
       createdDate: new Date().toISOString().split("T")[0],
-      publishedDate: !isDraft
-        ? new Date().toISOString().split("T")[0]
-        : undefined,
+      publishedDate: !isDraft ? new Date().toISOString().split("T")[0] : undefined,
       closingDate: tenderForm.closingDate,
       ministry: ministryInfo.name,
       department: "Current Department",
@@ -672,17 +800,12 @@ const TenderManagement = () => {
                                   ? {
                                       ...t,
                                       status: "Published" as const,
-                                      publishedDate: new Date()
-                                        .toISOString()
-                                        .split("T")[0],
+                                      publishedDate: new Date().toISOString().split("T")[0],
                                     }
                                   : t,
                               );
                               setTenders(updatedTenders);
-                              saveToStorage(
-                                STORAGE_KEYS.TENDERS,
-                                updatedTenders,
-                              );
+                              saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
                             }}
                           >
                             <Upload className="h-4 w-4" />
