@@ -364,7 +364,11 @@ interface Contract {
 
 interface SuperUserAlert {
   id: string;
-  type: "tender_delay" | "noc_pending" | "contract_variation" | "committee_unassigned";
+  type:
+    | "tender_delay"
+    | "noc_pending"
+    | "contract_variation"
+    | "committee_unassigned";
   title: string;
   description: string;
   severity: "critical" | "high" | "medium" | "low";
@@ -555,7 +559,9 @@ export default function SuperUserDashboard() {
   const [sendNotification, setSendNotification] = useState(true);
 
   // New oversight features state
-  const [procurementPlans, setProcurementPlans] = useState<ProcurementPlan[]>([]);
+  const [procurementPlans, setProcurementPlans] = useState<ProcurementPlan[]>(
+    [],
+  );
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [superUserAlerts, setSuperUserAlerts] = useState<SuperUserAlert[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);

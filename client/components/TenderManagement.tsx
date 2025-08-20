@@ -700,37 +700,37 @@ const TenderManagement = () => {
         bg: "bg-gradient-to-r from-gray-100 to-slate-100",
         text: "text-gray-700",
         border: "border-gray-200",
-        icon: "📝"
+        icon: "📝",
       },
       Published: {
         bg: "bg-gradient-to-r from-blue-100 to-indigo-100",
         text: "text-blue-700",
         border: "border-blue-200",
-        icon: "📢"
+        icon: "📢",
       },
       Open: {
         bg: "bg-gradient-to-r from-green-100 to-emerald-100",
         text: "text-green-700",
         border: "border-green-200",
-        icon: "🟢"
+        icon: "🟢",
       },
       Closed: {
         bg: "bg-gradient-to-r from-red-100 to-rose-100",
         text: "text-red-700",
         border: "border-red-200",
-        icon: "🔴"
+        icon: "🔴",
       },
       Evaluated: {
         bg: "bg-gradient-to-r from-amber-100 to-yellow-100",
         text: "text-amber-700",
         border: "border-amber-200",
-        icon: "📊"
+        icon: "📊",
       },
       Awarded: {
         bg: "bg-gradient-to-r from-purple-100 to-violet-100",
         text: "text-purple-700",
         border: "border-purple-200",
-        icon: "🏆"
+        icon: "🏆",
       },
 
       // NOC workflow statuses
@@ -738,19 +738,19 @@ const TenderManagement = () => {
         bg: "bg-gradient-to-r from-orange-100 to-amber-100",
         text: "text-orange-700",
         border: "border-orange-200",
-        icon: "⏳"
+        icon: "⏳",
       },
       "NOC Approved": {
         bg: "bg-gradient-to-r from-green-100 to-emerald-100",
         text: "text-green-700",
         border: "border-green-200",
-        icon: "✅"
+        icon: "✅",
       },
       "NOC Rejected": {
         bg: "bg-gradient-to-r from-red-100 to-rose-100",
         text: "text-red-700",
         border: "border-red-200",
-        icon: "❌"
+        icon: "❌",
       },
 
       // Contract workflow statuses
@@ -758,25 +758,25 @@ const TenderManagement = () => {
         bg: "bg-gradient-to-r from-blue-100 to-cyan-100",
         text: "text-blue-700",
         border: "border-blue-200",
-        icon: "📋"
+        icon: "📋",
       },
       "Contract Signed": {
         bg: "bg-gradient-to-r from-purple-100 to-pink-100",
         text: "text-purple-700",
         border: "border-purple-200",
-        icon: "✍️"
+        icon: "✍️",
       },
       Implementation: {
         bg: "bg-gradient-to-r from-indigo-100 to-blue-100",
         text: "text-indigo-700",
         border: "border-indigo-200",
-        icon: "🔧"
+        icon: "🔧",
       },
       Completed: {
         bg: "bg-gradient-to-r from-green-100 to-teal-100",
         text: "text-green-700",
         border: "border-green-200",
-        icon: "✨"
+        icon: "✨",
       },
     };
 
@@ -784,7 +784,7 @@ const TenderManagement = () => {
       bg: "bg-gradient-to-r from-gray-100 to-slate-100",
       text: "text-gray-700",
       border: "border-gray-200",
-      icon: "⚪"
+      icon: "⚪",
     };
 
     return (
@@ -829,11 +829,20 @@ const TenderManagement = () => {
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-700 font-medium">System Active</span>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Calendar className="h-4 w-4" />
-                  <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
                 </div>
               </div>
             </div>
@@ -935,13 +944,36 @@ const TenderManagement = () => {
                       <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent className="rounded-lg border-gray-200 shadow-lg">
-                      <SelectItem value="all" className="hover:bg-blue-50">All Status</SelectItem>
-                      <SelectItem value="Draft" className="hover:bg-gray-50">Draft</SelectItem>
-                      <SelectItem value="Published" className="hover:bg-green-50">Published</SelectItem>
-                      <SelectItem value="Open" className="hover:bg-blue-50">Open</SelectItem>
-                      <SelectItem value="Closed" className="hover:bg-yellow-50">Closed</SelectItem>
-                      <SelectItem value="Evaluated" className="hover:bg-purple-50">Evaluated</SelectItem>
-                      <SelectItem value="Awarded" className="hover:bg-emerald-50">Awarded</SelectItem>
+                      <SelectItem value="all" className="hover:bg-blue-50">
+                        All Status
+                      </SelectItem>
+                      <SelectItem value="Draft" className="hover:bg-gray-50">
+                        Draft
+                      </SelectItem>
+                      <SelectItem
+                        value="Published"
+                        className="hover:bg-green-50"
+                      >
+                        Published
+                      </SelectItem>
+                      <SelectItem value="Open" className="hover:bg-blue-50">
+                        Open
+                      </SelectItem>
+                      <SelectItem value="Closed" className="hover:bg-yellow-50">
+                        Closed
+                      </SelectItem>
+                      <SelectItem
+                        value="Evaluated"
+                        className="hover:bg-purple-50"
+                      >
+                        Evaluated
+                      </SelectItem>
+                      <SelectItem
+                        value="Awarded"
+                        className="hover:bg-emerald-50"
+                      >
+                        Awarded
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -984,30 +1016,46 @@ const TenderManagement = () => {
                         <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
                           <DollarSign className="h-4 w-4 text-emerald-600" />
                           <div>
-                            <p className="text-xs text-emerald-600 font-medium">Budget</p>
-                            <p className="text-sm font-bold text-emerald-800">₦{tender.budget.toLocaleString()}</p>
+                            <p className="text-xs text-emerald-600 font-medium">
+                              Budget
+                            </p>
+                            <p className="text-sm font-bold text-emerald-800">
+                              ₦{tender.budget.toLocaleString()}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
                           <Scale className="h-4 w-4 text-blue-600" />
                           <div>
-                            <p className="text-xs text-blue-600 font-medium">Method</p>
-                            <p className="text-sm font-bold text-blue-800">{tender.procurementMethod}</p>
+                            <p className="text-xs text-blue-600 font-medium">
+                              Method
+                            </p>
+                            <p className="text-sm font-bold text-blue-800">
+                              {tender.procurementMethod}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 border border-purple-200 rounded-lg">
                           <Target className="h-4 w-4 text-purple-600" />
                           <div>
-                            <p className="text-xs text-purple-600 font-medium">Type</p>
-                            <p className="text-sm font-bold text-purple-800">{tender.tenderType}</p>
+                            <p className="text-xs text-purple-600 font-medium">
+                              Type
+                            </p>
+                            <p className="text-sm font-bold text-purple-800">
+                              {tender.tenderType}
+                            </p>
                           </div>
                         </div>
                         {tender.closingDate && (
                           <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg">
                             <Clock className="h-4 w-4 text-orange-600" />
                             <div>
-                              <p className="text-xs text-orange-600 font-medium">Days Remaining</p>
-                              <p className="text-sm font-bold text-orange-800">{getDaysRemaining(tender.closingDate)}</p>
+                              <p className="text-xs text-orange-600 font-medium">
+                                Days Remaining
+                              </p>
+                              <p className="text-sm font-bold text-orange-800">
+                                {getDaysRemaining(tender.closingDate)}
+                              </p>
                             </div>
                           </div>
                         )}
@@ -1071,8 +1119,12 @@ const TenderManagement = () => {
                     <MessageSquare className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <CardTitle className="text-xl text-amber-800">Amendments & Addenda</CardTitle>
-                    <p className="text-sm text-amber-600 mt-1">Issue clarifications and updates</p>
+                    <CardTitle className="text-xl text-amber-800">
+                      Amendments & Addenda
+                    </CardTitle>
+                    <p className="text-sm text-amber-600 mt-1">
+                      Issue clarifications and updates
+                    </p>
                   </div>
                 </div>
               </CardHeader>
@@ -1080,7 +1132,8 @@ const TenderManagement = () => {
                 <div className="space-y-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-amber-200">
                     <p className="text-sm text-amber-700 mb-3">
-                      Manage tender modifications, clarifications, and document updates throughout the tender lifecycle.
+                      Manage tender modifications, clarifications, and document
+                      updates throughout the tender lifecycle.
                     </p>
                     <div className="flex gap-2">
                       <Button
@@ -1091,7 +1144,11 @@ const TenderManagement = () => {
                         <Plus className="h-4 w-4 mr-2" />
                         Create Amendment
                       </Button>
-                      <Button variant="outline" size="sm" className="border-amber-300 text-amber-700 hover:bg-amber-50">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                      >
                         View History
                       </Button>
                     </div>
@@ -1107,8 +1164,12 @@ const TenderManagement = () => {
                     <Calendar className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <CardTitle className="text-xl text-blue-800">Timeline Tracker</CardTitle>
-                    <p className="text-sm text-blue-600 mt-1">Monitor deadlines and milestones</p>
+                    <CardTitle className="text-xl text-blue-800">
+                      Timeline Tracker
+                    </CardTitle>
+                    <p className="text-sm text-blue-600 mt-1">
+                      Monitor deadlines and milestones
+                    </p>
                   </div>
                 </div>
               </CardHeader>
@@ -1116,7 +1177,8 @@ const TenderManagement = () => {
                 <div className="space-y-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-blue-200">
                     <p className="text-sm text-blue-700 mb-3">
-                      Track tender progress, deadlines, and critical milestones with automated alerts and notifications.
+                      Track tender progress, deadlines, and critical milestones
+                      with automated alerts and notifications.
                     </p>
                     <div className="flex gap-2">
                       <Button
@@ -1127,7 +1189,11 @@ const TenderManagement = () => {
                         <Eye className="h-4 w-4 mr-2" />
                         View Timeline
                       </Button>
-                      <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-50">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                      >
                         Set Alerts
                       </Button>
                     </div>
@@ -1143,8 +1209,12 @@ const TenderManagement = () => {
                     <Shield className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <CardTitle className="text-xl text-emerald-800">Audit Trail</CardTitle>
-                    <p className="text-sm text-emerald-600 mt-1">Complete activity logging</p>
+                    <CardTitle className="text-xl text-emerald-800">
+                      Audit Trail
+                    </CardTitle>
+                    <p className="text-sm text-emerald-600 mt-1">
+                      Complete activity logging
+                    </p>
                   </div>
                 </div>
               </CardHeader>
@@ -1152,7 +1222,8 @@ const TenderManagement = () => {
                 <div className="space-y-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-emerald-200">
                     <p className="text-sm text-emerald-700 mb-3">
-                      Comprehensive audit trail with timestamps, user actions, and system changes for compliance.
+                      Comprehensive audit trail with timestamps, user actions,
+                      and system changes for compliance.
                     </p>
                     <div className="flex gap-2">
                       <Button
@@ -1163,7 +1234,11 @@ const TenderManagement = () => {
                         <FileText className="h-4 w-4 mr-2" />
                         View Audit Log
                       </Button>
-                      <Button variant="outline" size="sm" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                      >
                         Export Report
                       </Button>
                     </div>

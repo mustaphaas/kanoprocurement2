@@ -1,20 +1,62 @@
-import React, { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { 
-  BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
-} from 'recharts';
+import React, { useState, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  FileText, TrendingUp, CheckCircle, Clock, AlertTriangle, Users, 
-  Shield, Download, Send, Filter, Search, Calendar, DollarSign,
-  Award, Building, FileCheck, UserCheck, Activity, Flag
-} from 'lucide-react';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  FileText,
+  TrendingUp,
+  CheckCircle,
+  Clock,
+  AlertTriangle,
+  Users,
+  Shield,
+  Download,
+  Send,
+  Filter,
+  Search,
+  Calendar,
+  DollarSign,
+  Award,
+  Building,
+  FileCheck,
+  UserCheck,
+  Activity,
+  Flag,
+} from "lucide-react";
 
 // Mock data structures based on existing patterns
 interface ReportKPI {
@@ -28,10 +70,10 @@ interface ReportKPI {
 interface TenderReport {
   id: string;
   title: string;
-  status: 'draft' | 'active' | 'evaluating' | 'awarded' | 'cancelled';
+  status: "draft" | "active" | "evaluating" | "awarded" | "cancelled";
   bidders: number;
   evaluationDate: string;
-  nocStatus: 'submitted' | 'approved' | 'pending' | 'rejected';
+  nocStatus: "submitted" | "approved" | "pending" | "rejected";
   department: string;
 }
 
@@ -41,15 +83,15 @@ interface ContractReport {
   value: number;
   startDate: string;
   endDate: string;
-  status: 'active' | 'completed' | 'delayed' | 'terminated';
-  performance: 'excellent' | 'good' | 'satisfactory' | 'poor';
+  status: "active" | "completed" | "delayed" | "terminated";
+  performance: "excellent" | "good" | "satisfactory" | "poor";
 }
 
 interface NOCReport {
   tenderId: string;
   tenderTitle: string;
   submittedDate: string;
-  status: 'submitted' | 'approved' | 'pending' | 'rejected';
+  status: "submitted" | "approved" | "pending" | "rejected";
   daysDelayed: number;
 }
 
@@ -58,7 +100,7 @@ interface UserReport {
   name: string;
   role: string;
   department: string;
-  status: 'active' | 'inactive';
+  status: "active" | "inactive";
   lastLogin: string;
 }
 
@@ -67,7 +109,7 @@ interface CommitteeReport {
   tenderId: string;
   members: number;
   assignedRoles: string[];
-  status: 'assigned' | 'evaluating' | 'completed';
+  status: "assigned" | "evaluating" | "completed";
 }
 
 interface AuditActivity {
@@ -75,15 +117,19 @@ interface AuditActivity {
   activity: string;
   user: string;
   timestamp: string;
-  type: 'tender_created' | 'evaluation_submitted' | 'noc_requested' | 'contract_signed';
-  status: 'normal' | 'flagged' | 'delayed';
+  type:
+    | "tender_created"
+    | "evaluation_submitted"
+    | "noc_requested"
+    | "contract_signed";
+  status: "normal" | "flagged" | "delayed";
 }
 
 const MinistryReports: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState('overview');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [dateRange, setDateRange] = useState('30');
+  const [selectedTab, setSelectedTab] = useState("overview");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateRange, setDateRange] = useState("30");
 
   // Mock data
   const reportKPIs: ReportKPI = {
@@ -91,155 +137,155 @@ const MinistryReports: React.FC = () => {
     totalContracts: 89,
     totalNOCRequests: 134,
     avgEvaluationTime: 14.5,
-    complianceRate: 92.3
+    complianceRate: 92.3,
   };
 
   const tenderReports: TenderReport[] = [
     {
-      id: 'KS-2024-001',
-      title: 'Medical Equipment Procurement',
-      status: 'evaluating',
+      id: "KS-2024-001",
+      title: "Medical Equipment Procurement",
+      status: "evaluating",
       bidders: 8,
-      evaluationDate: '2024-01-15',
-      nocStatus: 'approved',
-      department: 'Health'
+      evaluationDate: "2024-01-15",
+      nocStatus: "approved",
+      department: "Health",
     },
     {
-      id: 'KS-2024-002',
-      title: 'Road Construction - Kano-Zaria',
-      status: 'active',
+      id: "KS-2024-002",
+      title: "Road Construction - Kano-Zaria",
+      status: "active",
       bidders: 12,
-      evaluationDate: '2024-01-20',
-      nocStatus: 'pending',
-      department: 'Works'
+      evaluationDate: "2024-01-20",
+      nocStatus: "pending",
+      department: "Works",
     },
     {
-      id: 'KS-2024-003',
-      title: 'School Building Renovation',
-      status: 'awarded',
+      id: "KS-2024-003",
+      title: "School Building Renovation",
+      status: "awarded",
       bidders: 6,
-      evaluationDate: '2024-01-10',
-      nocStatus: 'approved',
-      department: 'Education'
-    }
+      evaluationDate: "2024-01-10",
+      nocStatus: "approved",
+      department: "Education",
+    },
   ];
 
   const contractReports: ContractReport[] = [
     {
-      id: 'CT-2024-001',
-      vendorName: 'Greenfield Construction Ltd',
+      id: "CT-2024-001",
+      vendorName: "Greenfield Construction Ltd",
       value: 45000000,
-      startDate: '2024-01-01',
-      endDate: '2024-06-30',
-      status: 'active',
-      performance: 'good'
+      startDate: "2024-01-01",
+      endDate: "2024-06-30",
+      status: "active",
+      performance: "good",
     },
     {
-      id: 'CT-2024-002',
-      vendorName: 'Medtech Solutions',
+      id: "CT-2024-002",
+      vendorName: "Medtech Solutions",
       value: 12000000,
-      startDate: '2023-12-01',
-      endDate: '2024-03-31',
-      status: 'completed',
-      performance: 'excellent'
-    }
+      startDate: "2023-12-01",
+      endDate: "2024-03-31",
+      status: "completed",
+      performance: "excellent",
+    },
   ];
 
   const nocReports: NOCReport[] = [
     {
-      tenderId: 'KS-2024-004',
-      tenderTitle: 'IT Infrastructure Upgrade',
-      submittedDate: '2024-01-05',
-      status: 'pending',
-      daysDelayed: 7
+      tenderId: "KS-2024-004",
+      tenderTitle: "IT Infrastructure Upgrade",
+      submittedDate: "2024-01-05",
+      status: "pending",
+      daysDelayed: 7,
     },
     {
-      tenderId: 'KS-2024-005',
-      tenderTitle: 'Security Systems Installation',
-      submittedDate: '2024-01-03',
-      status: 'pending',
-      daysDelayed: 9
-    }
+      tenderId: "KS-2024-005",
+      tenderTitle: "Security Systems Installation",
+      submittedDate: "2024-01-03",
+      status: "pending",
+      daysDelayed: 9,
+    },
   ];
 
   const userReports: UserReport[] = [
     {
-      id: 'U001',
-      name: 'Dr. Amina Hassan',
-      role: 'Procurement Officer',
-      department: 'Health',
-      status: 'active',
-      lastLogin: '2024-01-15 14:30'
+      id: "U001",
+      name: "Dr. Amina Hassan",
+      role: "Procurement Officer",
+      department: "Health",
+      status: "active",
+      lastLogin: "2024-01-15 14:30",
     },
     {
-      id: 'U002',
-      name: 'Eng. Ibrahim Sule',
-      role: 'Technical Evaluator',
-      department: 'Works',
-      status: 'active',
-      lastLogin: '2024-01-15 09:15'
-    }
+      id: "U002",
+      name: "Eng. Ibrahim Sule",
+      role: "Technical Evaluator",
+      department: "Works",
+      status: "active",
+      lastLogin: "2024-01-15 09:15",
+    },
   ];
 
   const committeeReports: CommitteeReport[] = [
     {
-      id: 'EC-001',
-      tenderId: 'KS-2024-001',
+      id: "EC-001",
+      tenderId: "KS-2024-001",
       members: 5,
-      assignedRoles: ['Technical Lead', 'Financial Analyst', 'Legal Advisor'],
-      status: 'evaluating'
+      assignedRoles: ["Technical Lead", "Financial Analyst", "Legal Advisor"],
+      status: "evaluating",
     },
     {
-      id: 'EC-002',
-      tenderId: 'KS-2024-002',
+      id: "EC-002",
+      tenderId: "KS-2024-002",
       members: 4,
-      assignedRoles: ['Technical Lead', 'Financial Analyst'],
-      status: 'assigned'
-    }
+      assignedRoles: ["Technical Lead", "Financial Analyst"],
+      status: "assigned",
+    },
   ];
 
   const auditActivities: AuditActivity[] = [
     {
-      id: 'A001',
-      activity: 'Tender Created: Medical Equipment Procurement',
-      user: 'Dr. Amina Hassan',
-      timestamp: '2024-01-15 10:30',
-      type: 'tender_created',
-      status: 'normal'
+      id: "A001",
+      activity: "Tender Created: Medical Equipment Procurement",
+      user: "Dr. Amina Hassan",
+      timestamp: "2024-01-15 10:30",
+      type: "tender_created",
+      status: "normal",
     },
     {
-      id: 'A002',
-      activity: 'NOC Requested: Road Construction Project',
-      user: 'Eng. Ibrahim Sule',
-      timestamp: '2024-01-14 16:45',
-      type: 'noc_requested',
-      status: 'delayed'
-    }
+      id: "A002",
+      activity: "NOC Requested: Road Construction Project",
+      user: "Eng. Ibrahim Sule",
+      timestamp: "2024-01-14 16:45",
+      type: "noc_requested",
+      status: "delayed",
+    },
   ];
 
   // Chart data
   const tendersByDepartment = [
-    { department: 'Health', count: 45 },
-    { department: 'Education', count: 38 },
-    { department: 'Works', count: 32 },
-    { department: 'Agriculture', count: 25 },
-    { department: 'Environment', count: 16 }
+    { department: "Health", count: 45 },
+    { department: "Education", count: 38 },
+    { department: "Works", count: 32 },
+    { department: "Agriculture", count: 25 },
+    { department: "Environment", count: 16 },
   ];
 
   const contractsByStatus = [
-    { status: 'Active', count: 45, color: '#10b981' },
-    { status: 'Completed', count: 32, color: '#3b82f6' },
-    { status: 'Delayed', count: 8, color: '#f59e0b' },
-    { status: 'Terminated', count: 4, color: '#ef4444' }
+    { status: "Active", count: 45, color: "#10b981" },
+    { status: "Completed", count: 32, color: "#3b82f6" },
+    { status: "Delayed", count: 8, color: "#f59e0b" },
+    { status: "Terminated", count: 4, color: "#ef4444" },
   ];
 
   const monthlySpend = [
-    { month: 'Aug', amount: 120000000 },
-    { month: 'Sep', amount: 145000000 },
-    { month: 'Oct', amount: 135000000 },
-    { month: 'Nov', amount: 160000000 },
-    { month: 'Dec', amount: 150000000 },
-    { month: 'Jan', amount: 175000000 }
+    { month: "Aug", amount: 120000000 },
+    { month: "Sep", amount: 145000000 },
+    { month: "Oct", amount: 135000000 },
+    { month: "Nov", amount: 160000000 },
+    { month: "Dec", amount: 150000000 },
+    { month: "Jan", amount: 175000000 },
   ];
 
   const topContracts = contractReports
@@ -249,55 +295,55 @@ const MinistryReports: React.FC = () => {
   const nocSummary = {
     submitted: nocReports.length + 45,
     approved: 38,
-    pending: nocReports.filter(n => n.status === 'pending').length + 12
+    pending: nocReports.filter((n) => n.status === "pending").length + 12,
   };
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      active: 'bg-blue-100 text-blue-800',
-      completed: 'bg-green-100 text-green-800',
-      delayed: 'bg-yellow-100 text-yellow-800',
-      terminated: 'bg-red-100 text-red-800',
-      draft: 'bg-gray-100 text-gray-800',
-      evaluating: 'bg-orange-100 text-orange-800',
-      awarded: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800',
-      submitted: 'bg-blue-100 text-blue-800',
-      approved: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      rejected: 'bg-red-100 text-red-800',
-      normal: 'bg-green-100 text-green-800',
-      flagged: 'bg-red-100 text-red-800',
-      excellent: 'bg-green-100 text-green-800',
-      good: 'bg-blue-100 text-blue-800',
-      satisfactory: 'bg-yellow-100 text-yellow-800',
-      poor: 'bg-red-100 text-red-800'
+      active: "bg-blue-100 text-blue-800",
+      completed: "bg-green-100 text-green-800",
+      delayed: "bg-yellow-100 text-yellow-800",
+      terminated: "bg-red-100 text-red-800",
+      draft: "bg-gray-100 text-gray-800",
+      evaluating: "bg-orange-100 text-orange-800",
+      awarded: "bg-green-100 text-green-800",
+      cancelled: "bg-red-100 text-red-800",
+      submitted: "bg-blue-100 text-blue-800",
+      approved: "bg-green-100 text-green-800",
+      pending: "bg-yellow-100 text-yellow-800",
+      rejected: "bg-red-100 text-red-800",
+      normal: "bg-green-100 text-green-800",
+      flagged: "bg-red-100 text-red-800",
+      excellent: "bg-green-100 text-green-800",
+      good: "bg-blue-100 text-blue-800",
+      satisfactory: "bg-yellow-100 text-yellow-800",
+      poor: "bg-red-100 text-red-800",
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || "bg-gray-100 text-gray-800";
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
   const exportToExcel = () => {
     // Mock export function
-    console.log('Exporting to Excel...');
+    console.log("Exporting to Excel...");
   };
 
   const exportToPDF = () => {
     // Mock export function
-    console.log('Exporting to PDF...');
+    console.log("Exporting to PDF...");
   };
 
   const sendMonthlySummary = () => {
     // Mock send function
-    console.log('Sending monthly summary to BPP...');
+    console.log("Sending monthly summary to BPP...");
   };
 
   return (
@@ -306,18 +352,31 @@ const MinistryReports: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Ministry Reports</h1>
-          <p className="text-gray-600 mt-1">Comprehensive analytics and reporting dashboard</p>
+          <p className="text-gray-600 mt-1">
+            Comprehensive analytics and reporting dashboard
+          </p>
         </div>
         <div className="flex gap-3">
-          <Button onClick={exportToExcel} variant="outline" className="flex items-center gap-2">
+          <Button
+            onClick={exportToExcel}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
             <Download className="h-4 w-4" />
             Export Excel
           </Button>
-          <Button onClick={exportToPDF} variant="outline" className="flex items-center gap-2">
+          <Button
+            onClick={exportToPDF}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
             <Download className="h-4 w-4" />
             Export PDF
           </Button>
-          <Button onClick={sendMonthlySummary} className="flex items-center gap-2">
+          <Button
+            onClick={sendMonthlySummary}
+            className="flex items-center gap-2"
+          >
             <Send className="h-4 w-4" />
             Send Monthly Summary
           </Button>
@@ -330,8 +389,12 @@ const MinistryReports: React.FC = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Tenders Created</p>
-                <p className="text-2xl font-bold text-blue-600">{reportKPIs.totalTenders}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Tenders Created
+                </p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {reportKPIs.totalTenders}
+                </p>
               </div>
               <div className="p-3 bg-blue-100 rounded-full">
                 <FileText className="h-6 w-6 text-blue-600" />
@@ -339,7 +402,9 @@ const MinistryReports: React.FC = () => {
             </div>
             <div className="flex items-center mt-2">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">+12% from last month</span>
+              <span className="text-sm text-green-600">
+                +12% from last month
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -348,8 +413,12 @@ const MinistryReports: React.FC = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Contracts Awarded</p>
-                <p className="text-2xl font-bold text-green-600">{reportKPIs.totalContracts}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Contracts Awarded
+                </p>
+                <p className="text-2xl font-bold text-green-600">
+                  {reportKPIs.totalContracts}
+                </p>
               </div>
               <div className="p-3 bg-green-100 rounded-full">
                 <Award className="h-6 w-6 text-green-600" />
@@ -357,7 +426,9 @@ const MinistryReports: React.FC = () => {
             </div>
             <div className="flex items-center mt-2">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">+8% from last month</span>
+              <span className="text-sm text-green-600">
+                +8% from last month
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -366,8 +437,12 @@ const MinistryReports: React.FC = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total NOC Requests</p>
-                <p className="text-2xl font-bold text-purple-600">{reportKPIs.totalNOCRequests}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total NOC Requests
+                </p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {reportKPIs.totalNOCRequests}
+                </p>
               </div>
               <div className="p-3 bg-purple-100 rounded-full">
                 <FileCheck className="h-6 w-6 text-purple-600" />
@@ -375,7 +450,9 @@ const MinistryReports: React.FC = () => {
             </div>
             <div className="flex items-center mt-2">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">+5% from last month</span>
+              <span className="text-sm text-green-600">
+                +5% from last month
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -384,8 +461,12 @@ const MinistryReports: React.FC = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Avg Evaluation Time</p>
-                <p className="text-2xl font-bold text-orange-600">{reportKPIs.avgEvaluationTime} days</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Avg Evaluation Time
+                </p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {reportKPIs.avgEvaluationTime} days
+                </p>
               </div>
               <div className="p-3 bg-orange-100 rounded-full">
                 <Clock className="h-6 w-6 text-orange-600" />
@@ -402,8 +483,12 @@ const MinistryReports: React.FC = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Compliance Rate</p>
-                <p className="text-2xl font-bold text-emerald-600">{reportKPIs.complianceRate}%</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Compliance Rate
+                </p>
+                <p className="text-2xl font-bold text-emerald-600">
+                  {reportKPIs.complianceRate}%
+                </p>
               </div>
               <div className="p-3 bg-emerald-100 rounded-full">
                 <Shield className="h-6 w-6 text-emerald-600" />
@@ -418,7 +503,11 @@ const MinistryReports: React.FC = () => {
       </div>
 
       {/* Tabbed Content */}
-      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
+      <Tabs
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+        className="space-y-6"
+      >
         <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:flex">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="tenders">Tenders</TabsTrigger>
@@ -562,8 +651,15 @@ const MinistryReports: React.FC = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis tickFormatter={(value) => `₦${value / 1000000}M`} />
-                    <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                    <Line type="monotone" dataKey="amount" stroke="#3b82f6" strokeWidth={3} />
+                    <Tooltip
+                      formatter={(value) => formatCurrency(Number(value))}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="amount"
+                      stroke="#3b82f6"
+                      strokeWidth={3}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -579,7 +675,10 @@ const MinistryReports: React.FC = () => {
                     <span className="text-sm font-medium">Excellent</span>
                     <div className="flex items-center gap-2">
                       <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{ width: '45%' }}></div>
+                        <div
+                          className="bg-green-500 h-2 rounded-full"
+                          style={{ width: "45%" }}
+                        ></div>
                       </div>
                       <span className="text-sm text-gray-600">45%</span>
                     </div>
@@ -588,7 +687,10 @@ const MinistryReports: React.FC = () => {
                     <span className="text-sm font-medium">Good</span>
                     <div className="flex items-center gap-2">
                       <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div className="bg-blue-500 h-2 rounded-full" style={{ width: '35%' }}></div>
+                        <div
+                          className="bg-blue-500 h-2 rounded-full"
+                          style={{ width: "35%" }}
+                        ></div>
                       </div>
                       <span className="text-sm text-gray-600">35%</span>
                     </div>
@@ -597,7 +699,10 @@ const MinistryReports: React.FC = () => {
                     <span className="text-sm font-medium">Satisfactory</span>
                     <div className="flex items-center gap-2">
                       <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '15%' }}></div>
+                        <div
+                          className="bg-yellow-500 h-2 rounded-full"
+                          style={{ width: "15%" }}
+                        ></div>
                       </div>
                       <span className="text-sm text-gray-600">15%</span>
                     </div>
@@ -606,7 +711,10 @@ const MinistryReports: React.FC = () => {
                     <span className="text-sm font-medium">Poor</span>
                     <div className="flex items-center gap-2">
                       <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div className="bg-red-500 h-2 rounded-full" style={{ width: '5%' }}></div>
+                        <div
+                          className="bg-red-500 h-2 rounded-full"
+                          style={{ width: "5%" }}
+                        ></div>
                       </div>
                       <span className="text-sm text-gray-600">5%</span>
                     </div>
@@ -636,7 +744,9 @@ const MinistryReports: React.FC = () => {
                 <TableBody>
                   {contractReports.map((contract) => (
                     <TableRow key={contract.id}>
-                      <TableCell className="font-medium">{contract.id}</TableCell>
+                      <TableCell className="font-medium">
+                        {contract.id}
+                      </TableCell>
                       <TableCell>{contract.vendorName}</TableCell>
                       <TableCell>{formatCurrency(contract.value)}</TableCell>
                       <TableCell>{contract.startDate}</TableCell>
@@ -666,7 +776,9 @@ const MinistryReports: React.FC = () => {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total Procurement Spend</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Total Procurement Spend
+                    </p>
                     <p className="text-2xl font-bold text-blue-600">₦2.4B</p>
                   </div>
                   <DollarSign className="h-8 w-8 text-blue-600" />
@@ -678,7 +790,9 @@ const MinistryReports: React.FC = () => {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Budget Utilization</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Budget Utilization
+                    </p>
                     <p className="text-2xl font-bold text-green-600">78.5%</p>
                   </div>
                   <TrendingUp className="h-8 w-8 text-green-600" />
@@ -690,7 +804,9 @@ const MinistryReports: React.FC = () => {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Remaining Budget</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Remaining Budget
+                    </p>
                     <p className="text-2xl font-bold text-orange-600">₦659M</p>
                   </div>
                   <AlertTriangle className="h-8 w-8 text-orange-600" />
@@ -717,9 +833,13 @@ const MinistryReports: React.FC = () => {
                 <TableBody>
                   {topContracts.map((contract) => (
                     <TableRow key={contract.id}>
-                      <TableCell className="font-medium">{contract.id}</TableCell>
+                      <TableCell className="font-medium">
+                        {contract.id}
+                      </TableCell>
                       <TableCell>{contract.vendorName}</TableCell>
-                      <TableCell className="font-semibold">{formatCurrency(contract.value)}</TableCell>
+                      <TableCell className="font-semibold">
+                        {formatCurrency(contract.value)}
+                      </TableCell>
                       <TableCell>
                         <Badge className={getStatusColor(contract.status)}>
                           {contract.status}
@@ -745,8 +865,12 @@ const MinistryReports: React.FC = () => {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">NOCs Submitted</p>
-                    <p className="text-2xl font-bold text-blue-600">{nocSummary.submitted}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      NOCs Submitted
+                    </p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {nocSummary.submitted}
+                    </p>
                   </div>
                   <FileCheck className="h-8 w-8 text-blue-600" />
                 </div>
@@ -757,8 +881,12 @@ const MinistryReports: React.FC = () => {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">NOCs Approved</p>
-                    <p className="text-2xl font-bold text-green-600">{nocSummary.approved}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      NOCs Approved
+                    </p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {nocSummary.approved}
+                    </p>
                   </div>
                   <CheckCircle className="h-8 w-8 text-green-600" />
                 </div>
@@ -769,8 +897,12 @@ const MinistryReports: React.FC = () => {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">NOCs Pending</p>
-                    <p className="text-2xl font-bold text-yellow-600">{nocSummary.pending}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      NOCs Pending
+                    </p>
+                    <p className="text-2xl font-bold text-yellow-600">
+                      {nocSummary.pending}
+                    </p>
                   </div>
                   <Clock className="h-8 w-8 text-yellow-600" />
                 </div>
@@ -799,7 +931,9 @@ const MinistryReports: React.FC = () => {
                 <TableBody>
                   {nocReports.map((noc) => (
                     <TableRow key={noc.tenderId}>
-                      <TableCell className="font-medium">{noc.tenderId}</TableCell>
+                      <TableCell className="font-medium">
+                        {noc.tenderId}
+                      </TableCell>
                       <TableCell>{noc.tenderTitle}</TableCell>
                       <TableCell>{noc.submittedDate}</TableCell>
                       <TableCell>
@@ -843,7 +977,9 @@ const MinistryReports: React.FC = () => {
                   <TableBody>
                     {userReports.map((user) => (
                       <TableRow key={user.id}>
-                        <TableCell className="font-medium">{user.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {user.name}
+                        </TableCell>
                         <TableCell>{user.role}</TableCell>
                         <TableCell>{user.department}</TableCell>
                         <TableCell>
@@ -878,7 +1014,9 @@ const MinistryReports: React.FC = () => {
                   <TableBody>
                     {committeeReports.map((committee) => (
                       <TableRow key={committee.id}>
-                        <TableCell className="font-medium">{committee.id}</TableCell>
+                        <TableCell className="font-medium">
+                          {committee.id}
+                        </TableCell>
                         <TableCell>{committee.tenderId}</TableCell>
                         <TableCell>{committee.members}</TableCell>
                         <TableCell>
@@ -920,12 +1058,14 @@ const MinistryReports: React.FC = () => {
                       <TableCell>{activity.timestamp}</TableCell>
                       <TableCell>
                         <Badge variant="outline">
-                          {activity.type.replace('_', ' ')}
+                          {activity.type.replace("_", " ")}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <Badge className={getStatusColor(activity.status)}>
-                          {activity.status === 'flagged' && <Flag className="h-3 w-3 mr-1" />}
+                          {activity.status === "flagged" && (
+                            <Flag className="h-3 w-3 mr-1" />
+                          )}
                           {activity.status}
                         </Badge>
                       </TableCell>

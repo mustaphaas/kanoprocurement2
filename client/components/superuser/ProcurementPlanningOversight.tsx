@@ -1,17 +1,47 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
-  FileText, Clock, CheckCircle, AlertTriangle, Eye, MessageSquare,
-  Send, Calendar, DollarSign, Building, Filter, Search, TrendingUp
-} from 'lucide-react';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  FileText,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  Eye,
+  MessageSquare,
+  Send,
+  Calendar,
+  DollarSign,
+  Building,
+  Filter,
+  Search,
+  TrendingUp,
+} from "lucide-react";
 
 interface ProcurementPlan {
   id: string;
@@ -41,100 +71,117 @@ interface ProcurementPlanningOversightProps {
   onSendQuery: (planId: string, message: string) => void;
 }
 
-const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> = ({
-  procurementPlans,
-  onUpdatePlan,
-  onSendQuery
-}) => {
-  const [selectedPlan, setSelectedPlan] = useState<ProcurementPlan | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [mdaFilter, setMdaFilter] = useState<string>('all');
-  const [queryMessage, setQueryMessage] = useState('');
+const ProcurementPlanningOversight: React.FC<
+  ProcurementPlanningOversightProps
+> = ({ procurementPlans, onUpdatePlan, onSendQuery }) => {
+  const [selectedPlan, setSelectedPlan] = useState<ProcurementPlan | null>(
+    null,
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [mdaFilter, setMdaFilter] = useState<string>("all");
+  const [queryMessage, setQueryMessage] = useState("");
 
-  const filteredPlans = procurementPlans.filter(plan => {
-    const matchesSearch = plan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         plan.mdaName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || plan.status === statusFilter;
-    const matchesMda = mdaFilter === 'all' || plan.mdaId === mdaFilter;
+  const filteredPlans = procurementPlans.filter((plan) => {
+    const matchesSearch =
+      plan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      plan.mdaName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || plan.status === statusFilter;
+    const matchesMda = mdaFilter === "all" || plan.mdaId === mdaFilter;
     return matchesSearch && matchesStatus && matchesMda;
   });
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      Draft: 'bg-gray-100 text-gray-800',
-      Submitted: 'bg-blue-100 text-blue-800',
-      UnderReview: 'bg-yellow-100 text-yellow-800',
-      Approved: 'bg-green-100 text-green-800',
-      Rejected: 'bg-red-100 text-red-800'
+      Draft: "bg-gray-100 text-gray-800",
+      Submitted: "bg-blue-100 text-blue-800",
+      UnderReview: "bg-yellow-100 text-yellow-800",
+      Approved: "bg-green-100 text-green-800",
+      Rejected: "bg-red-100 text-red-800",
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || "bg-gray-100 text-gray-800";
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'Approved': return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'Rejected': return <AlertTriangle className="h-4 w-4 text-red-600" />;
-      case 'UnderReview': return <Clock className="h-4 w-4 text-yellow-600" />;
-      default: return <FileText className="h-4 w-4 text-blue-600" />;
+      case "Approved":
+        return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case "Rejected":
+        return <AlertTriangle className="h-4 w-4 text-red-600" />;
+      case "UnderReview":
+        return <Clock className="h-4 w-4 text-yellow-600" />;
+      default:
+        return <FileText className="h-4 w-4 text-blue-600" />;
     }
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
   const handleApprove = (planId: string) => {
     onUpdatePlan(planId, {
-      status: 'Approved',
-      approvedBy: 'BPP Superuser',
-      approvedAt: new Date().toISOString()
+      status: "Approved",
+      approvedBy: "BPP Superuser",
+      approvedAt: new Date().toISOString(),
     });
   };
 
   const handleReject = (planId: string) => {
     onUpdatePlan(planId, {
-      status: 'Rejected',
-      approvedBy: 'BPP Superuser',
-      approvedAt: new Date().toISOString()
+      status: "Rejected",
+      approvedBy: "BPP Superuser",
+      approvedAt: new Date().toISOString(),
     });
   };
 
   const handleSendQuery = () => {
     if (selectedPlan && queryMessage.trim()) {
       onSendQuery(selectedPlan.id, queryMessage);
-      setQueryMessage('');
+      setQueryMessage("");
     }
   };
 
-  const statusCounts = procurementPlans.reduce((acc, plan) => {
-    acc[plan.status] = (acc[plan.status] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const delayedPlans = procurementPlans.filter(plan => 
-    plan.delayedDays && plan.delayedDays > 30
+  const statusCounts = procurementPlans.reduce(
+    (acc, plan) => {
+      acc[plan.status] = (acc[plan.status] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
   );
 
-  const uniqueMDAs = Array.from(new Set(procurementPlans.map(p => ({ id: p.mdaId, name: p.mdaName }))))
-    .reduce((acc, mda) => {
-      if (!acc.find(existing => existing.id === mda.id)) {
+  const delayedPlans = procurementPlans.filter(
+    (plan) => plan.delayedDays && plan.delayedDays > 30,
+  );
+
+  const uniqueMDAs = Array.from(
+    new Set(procurementPlans.map((p) => ({ id: p.mdaId, name: p.mdaName }))),
+  ).reduce(
+    (acc, mda) => {
+      if (!acc.find((existing) => existing.id === mda.id)) {
         acc.push(mda);
       }
       return acc;
-    }, [] as Array<{ id: string; name: string }>);
+    },
+    [] as Array<{ id: string; name: string }>,
+  );
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Procurement Planning Oversight</h1>
-        <p className="text-gray-600 mt-1">Monitor and approve procurement plans from all MDAs</p>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Procurement Planning Oversight
+        </h1>
+        <p className="text-gray-600 mt-1">
+          Monitor and approve procurement plans from all MDAs
+        </p>
       </div>
 
       {/* KPI Cards */}
@@ -144,7 +191,9 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Plans</p>
-                <p className="text-2xl font-bold text-blue-600">{procurementPlans.length}</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {procurementPlans.length}
+                </p>
               </div>
               <FileText className="h-8 w-8 text-blue-600" />
             </div>
@@ -155,9 +204,12 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Pending Review</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Pending Review
+                </p>
                 <p className="text-2xl font-bold text-yellow-600">
-                  {(statusCounts.Submitted || 0) + (statusCounts.UnderReview || 0)}
+                  {(statusCounts.Submitted || 0) +
+                    (statusCounts.UnderReview || 0)}
                 </p>
               </div>
               <Clock className="h-8 w-8 text-yellow-600" />
@@ -170,7 +222,9 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Approved</p>
-                <p className="text-2xl font-bold text-green-600">{statusCounts.Approved || 0}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {statusCounts.Approved || 0}
+                </p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
@@ -181,8 +235,12 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Delayed (&gt;30 days)</p>
-                <p className="text-2xl font-bold text-red-600">{delayedPlans.length}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Delayed (&gt;30 days)
+                </p>
+                <p className="text-2xl font-bold text-red-600">
+                  {delayedPlans.length}
+                </p>
               </div>
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
@@ -193,9 +251,16 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Budget</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Budget
+                </p>
                 <p className="text-2xl font-bold text-purple-600">
-                  {formatCurrency(procurementPlans.reduce((sum, plan) => sum + plan.budgetRequested, 0))}
+                  {formatCurrency(
+                    procurementPlans.reduce(
+                      (sum, plan) => sum + plan.budgetRequested,
+                      0,
+                    ),
+                  )}
                 </p>
               </div>
               <DollarSign className="h-8 w-8 text-purple-600" />
@@ -237,7 +302,9 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
               <SelectContent>
                 <SelectItem value="all">All MDAs</SelectItem>
                 {uniqueMDAs.map((mda) => (
-                  <SelectItem key={mda.id} value={mda.id}>{mda.name}</SelectItem>
+                  <SelectItem key={mda.id} value={mda.id}>
+                    {mda.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -271,7 +338,9 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
               {filteredPlans.map((plan) => (
                 <TableRow key={plan.id}>
                   <TableCell className="font-medium">{plan.id}</TableCell>
-                  <TableCell className="max-w-xs truncate">{plan.title}</TableCell>
+                  <TableCell className="max-w-xs truncate">
+                    {plan.title}
+                  </TableCell>
                   <TableCell>{plan.mdaName}</TableCell>
                   <TableCell>{formatCurrency(plan.budgetRequested)}</TableCell>
                   <TableCell>
@@ -282,14 +351,24 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
                       </div>
                     </Badge>
                   </TableCell>
-                  <TableCell>{new Date(plan.submittedAt).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {new Date(plan.submittedAt).toLocaleDateString()}
+                  </TableCell>
                   <TableCell>
                     {plan.delayedDays && plan.delayedDays > 0 ? (
-                      <Badge className={plan.delayedDays > 30 ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}>
+                      <Badge
+                        className={
+                          plan.delayedDays > 30
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }
+                      >
                         {plan.delayedDays} days
                       </Badge>
                     ) : (
-                      <Badge className="bg-green-100 text-green-800">On time</Badge>
+                      <Badge className="bg-green-100 text-green-800">
+                        On time
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell>
@@ -306,42 +385,96 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
                         </DialogTrigger>
                         <DialogContent className="max-w-4xl">
                           <DialogHeader>
-                            <DialogTitle>Procurement Plan Details - {plan.id}</DialogTitle>
+                            <DialogTitle>
+                              Procurement Plan Details - {plan.id}
+                            </DialogTitle>
                           </DialogHeader>
                           {selectedPlan && (
                             <div className="space-y-6">
                               <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                  <h4 className="font-medium text-gray-900 mb-2">Basic Information</h4>
+                                  <h4 className="font-medium text-gray-900 mb-2">
+                                    Basic Information
+                                  </h4>
                                   <div className="space-y-2 text-sm">
-                                    <div><span className="font-medium">Title:</span> {selectedPlan.title}</div>
-                                    <div><span className="font-medium">MDA:</span> {selectedPlan.mdaName}</div>
-                                    <div><span className="font-medium">Budget:</span> {formatCurrency(selectedPlan.budgetRequested)}</div>
-                                    <div><span className="font-medium">Submitted by:</span> {selectedPlan.submittedBy}</div>
+                                    <div>
+                                      <span className="font-medium">
+                                        Title:
+                                      </span>{" "}
+                                      {selectedPlan.title}
+                                    </div>
+                                    <div>
+                                      <span className="font-medium">MDA:</span>{" "}
+                                      {selectedPlan.mdaName}
+                                    </div>
+                                    <div>
+                                      <span className="font-medium">
+                                        Budget:
+                                      </span>{" "}
+                                      {formatCurrency(
+                                        selectedPlan.budgetRequested,
+                                      )}
+                                    </div>
+                                    <div>
+                                      <span className="font-medium">
+                                        Submitted by:
+                                      </span>{" "}
+                                      {selectedPlan.submittedBy}
+                                    </div>
                                   </div>
                                 </div>
                                 <div>
-                                  <h4 className="font-medium text-gray-900 mb-2">Status & Timeline</h4>
+                                  <h4 className="font-medium text-gray-900 mb-2">
+                                    Status & Timeline
+                                  </h4>
                                   <div className="space-y-2 text-sm">
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">Status:</span>
-                                      <Badge className={getStatusColor(selectedPlan.status)}>
+                                      <span className="font-medium">
+                                        Status:
+                                      </span>
+                                      <Badge
+                                        className={getStatusColor(
+                                          selectedPlan.status,
+                                        )}
+                                      >
                                         {selectedPlan.status}
                                       </Badge>
                                     </div>
-                                    <div><span className="font-medium">Submitted:</span> {new Date(selectedPlan.submittedAt).toLocaleDateString()}</div>
+                                    <div>
+                                      <span className="font-medium">
+                                        Submitted:
+                                      </span>{" "}
+                                      {new Date(
+                                        selectedPlan.submittedAt,
+                                      ).toLocaleDateString()}
+                                    </div>
                                     {selectedPlan.approvedAt && (
-                                      <div><span className="font-medium">Approved:</span> {new Date(selectedPlan.approvedAt).toLocaleDateString()}</div>
+                                      <div>
+                                        <span className="font-medium">
+                                          Approved:
+                                        </span>{" "}
+                                        {new Date(
+                                          selectedPlan.approvedAt,
+                                        ).toLocaleDateString()}
+                                      </div>
                                     )}
-                                    {selectedPlan.delayedDays && selectedPlan.delayedDays > 0 && (
-                                      <div className="text-red-600"><span className="font-medium">Delayed:</span> {selectedPlan.delayedDays} days</div>
-                                    )}
+                                    {selectedPlan.delayedDays &&
+                                      selectedPlan.delayedDays > 0 && (
+                                        <div className="text-red-600">
+                                          <span className="font-medium">
+                                            Delayed:
+                                          </span>{" "}
+                                          {selectedPlan.delayedDays} days
+                                        </div>
+                                      )}
                                   </div>
                                 </div>
                               </div>
 
                               <div>
-                                <h4 className="font-medium text-gray-900 mb-2">Procurement Items</h4>
+                                <h4 className="font-medium text-gray-900 mb-2">
+                                  Procurement Items
+                                </h4>
                                 <Table>
                                   <TableHeader>
                                     <TableRow>
@@ -352,39 +485,67 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
                                     </TableRow>
                                   </TableHeader>
                                   <TableBody>
-                                    {selectedPlan.procurementItems.map((item) => (
-                                      <TableRow key={item.id}>
-                                        <TableCell>{item.description}</TableCell>
-                                        <TableCell>{item.quantity}</TableCell>
-                                        <TableCell>{item.procurementCategory}</TableCell>
-                                        <TableCell>{formatCurrency(item.estimatedValue)}</TableCell>
-                                      </TableRow>
-                                    ))}
+                                    {selectedPlan.procurementItems.map(
+                                      (item) => (
+                                        <TableRow key={item.id}>
+                                          <TableCell>
+                                            {item.description}
+                                          </TableCell>
+                                          <TableCell>{item.quantity}</TableCell>
+                                          <TableCell>
+                                            {item.procurementCategory}
+                                          </TableCell>
+                                          <TableCell>
+                                            {formatCurrency(
+                                              item.estimatedValue,
+                                            )}
+                                          </TableCell>
+                                        </TableRow>
+                                      ),
+                                    )}
                                   </TableBody>
                                 </Table>
                               </div>
 
-                              {selectedPlan.status === 'Submitted' || selectedPlan.status === 'UnderReview' ? (
+                              {selectedPlan.status === "Submitted" ||
+                              selectedPlan.status === "UnderReview" ? (
                                 <div className="space-y-4">
                                   <div>
-                                    <h4 className="font-medium text-gray-900 mb-2">Send Query/Comment</h4>
+                                    <h4 className="font-medium text-gray-900 mb-2">
+                                      Send Query/Comment
+                                    </h4>
                                     <Textarea
                                       placeholder="Enter your query or comment for the MDA..."
                                       value={queryMessage}
-                                      onChange={(e) => setQueryMessage(e.target.value)}
+                                      onChange={(e) =>
+                                        setQueryMessage(e.target.value)
+                                      }
                                       className="min-h-[100px]"
                                     />
                                   </div>
                                   <div className="flex gap-3">
-                                    <Button onClick={() => handleApprove(selectedPlan.id)} className="bg-green-600 hover:bg-green-700">
+                                    <Button
+                                      onClick={() =>
+                                        handleApprove(selectedPlan.id)
+                                      }
+                                      className="bg-green-600 hover:bg-green-700"
+                                    >
                                       <CheckCircle className="h-4 w-4 mr-2" />
                                       Approve Plan
                                     </Button>
-                                    <Button onClick={() => handleReject(selectedPlan.id)} variant="destructive">
+                                    <Button
+                                      onClick={() =>
+                                        handleReject(selectedPlan.id)
+                                      }
+                                      variant="destructive"
+                                    >
                                       <AlertTriangle className="h-4 w-4 mr-2" />
                                       Reject Plan
                                     </Button>
-                                    <Button onClick={handleSendQuery} variant="outline">
+                                    <Button
+                                      onClick={handleSendQuery}
+                                      variant="outline"
+                                    >
                                       <MessageSquare className="h-4 w-4 mr-2" />
                                       Send Query
                                     </Button>
@@ -392,10 +553,13 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
                                 </div>
                               ) : (
                                 <div className="text-sm text-gray-600">
-                                  Plan status: {selectedPlan.status}. 
+                                  Plan status: {selectedPlan.status}.
                                   {selectedPlan.remarks && (
                                     <div className="mt-2">
-                                      <span className="font-medium">Remarks:</span> {selectedPlan.remarks}
+                                      <span className="font-medium">
+                                        Remarks:
+                                      </span>{" "}
+                                      {selectedPlan.remarks}
                                     </div>
                                   )}
                                 </div>
@@ -405,7 +569,8 @@ const ProcurementPlanningOversight: React.FC<ProcurementPlanningOversightProps> 
                         </DialogContent>
                       </Dialog>
 
-                      {plan.status === 'Submitted' || plan.status === 'UnderReview' ? (
+                      {plan.status === "Submitted" ||
+                      plan.status === "UnderReview" ? (
                         <>
                           <Button
                             size="sm"
