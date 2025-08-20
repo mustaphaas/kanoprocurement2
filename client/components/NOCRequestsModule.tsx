@@ -253,40 +253,151 @@ export default function NOCRequestsModule({
   };
 
   const loadCompletedTenders = () => {
-    // Mock completed tender evaluations that can be used for NOC requests
-    const mockCompletedTenders: TenderEvaluation[] = [
-      {
-        id: "TENDER_001",
-        tenderTitle: "Construction of Primary Healthcare Center",
-        ministryCode,
-        status: "Completed",
-        evaluationResults: {
-          technicalScore: 85,
-          financialScore: 92,
-          totalScore: 88.5,
-          recommendation: "Recommended for Award",
-        },
-        winningBidder: "HealthBuild Construction Ltd",
-        projectValue: "₦45,000,000",
-        evaluationDate: "2024-01-15",
-      },
-      {
-        id: "TENDER_002",
-        tenderTitle: "Road Rehabilitation Project - Phase 2",
-        ministryCode,
-        status: "Completed",
-        evaluationResults: {
-          technicalScore: 78,
-          financialScore: 95,
-          totalScore: 86.5,
-          recommendation: "Recommended for Award",
-        },
-        winningBidder: "Elite Infrastructure Nigeria",
-        projectValue: "₦120,000,000",
-        evaluationDate: "2024-01-20",
-      },
-    ];
-    setCompletedTenders(mockCompletedTenders);
+    // Load actual evaluated tenders from the ministry's tender management system
+    try {
+      // Get ministry-specific evaluated tenders
+      const ministryTendersKey = `${ministryCode}_tenders`;
+      const storedTenders = localStorage.getItem(ministryTendersKey);
+
+      let evaluatedTenders: TenderEvaluation[] = [];
+
+      if (storedTenders) {
+        const tenders = JSON.parse(storedTenders);
+        // Filter for evaluated tenders and convert to TenderEvaluation format
+        evaluatedTenders = tenders
+          .filter((tender: any) => tender.status === "Evaluated")
+          .map((tender: any) => ({
+            id: tender.id,
+            tenderTitle: tender.title,
+            ministryCode,
+            status: "Completed" as const,
+            evaluationResults: {
+              technicalScore: 85, // Mock evaluation scores - in real app would come from evaluation data
+              financialScore: 90,
+              totalScore: 87.5,
+              recommendation: "Recommended for Award",
+            },
+            winningBidder: "Awaiting Final Award", // Would be set after evaluation
+            projectValue: tender.estimatedValue,
+            evaluationDate: new Date().toISOString().split('T')[0],
+            description: tender.description,
+            category: tender.category,
+            publishDate: tender.publishDate,
+            closeDate: tender.closeDate,
+            procuringEntity: tender.procuringEntity,
+          }));
+      }
+
+      // If no evaluated tenders found, load ministry-specific defaults
+      if (evaluatedTenders.length === 0) {
+        // Ministry-specific default tenders based on ministry type
+        const getDefaultTenders = () => {
+          switch (ministryCode) {
+            case "MOWI": // Ministry of Works
+              return [
+                {
+                  id: "MOWI-2024-001",
+                  tenderTitle: "Kano-Kaduna Highway Rehabilitation",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 88,
+                    financialScore: 92,
+                    totalScore: 90,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "Kano Construction Ltd",
+                  projectValue: "₦15,200,000,000",
+                  evaluationDate: "2024-01-20",
+                  description: "Complete rehabilitation of Kano-Kaduna highway",
+                  category: "Road Construction",
+                },
+                {
+                  id: "MOWI-2024-002",
+                  tenderTitle: "Bridge Construction Project - Phase 2",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 85,
+                    financialScore: 88,
+                    totalScore: 86.5,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "Sahel Bridge Builders",
+                  projectValue: "₦8,500,000,000",
+                  evaluationDate: "2024-02-01",
+                  description: "Construction of strategic bridges",
+                  category: "Bridge Construction",
+                },
+              ];
+            case "MOE": // Ministry of Education
+              return [
+                {
+                  id: "MOE-2024-001",
+                  tenderTitle: "School Furniture Supply Program",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 90,
+                    financialScore: 85,
+                    totalScore: 87.5,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "EduTech Solutions Ltd",
+                  projectValue: "₦2,100,000,000",
+                  evaluationDate: "2024-01-15",
+                  description: "Supply of furniture for 200 schools",
+                  category: "Educational Furniture",
+                },
+              ];
+            default: // Ministry of Health
+              return [
+                {
+                  id: "MOH-2024-001",
+                  tenderTitle: "Hospital Equipment Supply",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 92,
+                    financialScore: 88,
+                    totalScore: 90,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "PrimeCare Medical Ltd",
+                  projectValue: "₦850,000,000",
+                  evaluationDate: "2024-01-15",
+                  description: "Supply of medical equipment for healthcare centers",
+                  category: "Medical Equipment",
+                },
+                {
+                  id: "MOH-2024-002",
+                  tenderTitle: "Pharmaceutical Supply Contract",
+                  ministryCode,
+                  status: "Completed" as const,
+                  evaluationResults: {
+                    technicalScore: 87,
+                    financialScore: 93,
+                    totalScore: 90,
+                    recommendation: "Recommended for Award",
+                  },
+                  winningBidder: "Falcon Diagnostics Ltd",
+                  projectValue: "₦1,200,000,000",
+                  evaluationDate: "2024-01-20",
+                  description: "Annual pharmaceutical supply for hospitals",
+                  category: "Pharmaceuticals",
+                },
+              ];
+          }
+        };
+
+        evaluatedTenders = getDefaultTenders();
+      }
+
+      setCompletedTenders(evaluatedTenders);
+    } catch (error) {
+      console.error('Error loading completed tenders:', error);
+      setCompletedTenders([]);
+    }
   };
 
   const handleTenderSelection = (tender: TenderEvaluation) => {
