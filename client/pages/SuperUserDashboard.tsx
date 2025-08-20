@@ -14,6 +14,7 @@ import {
 import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
+import NOCRequestsTab from "@/components/NOCRequestsTab";
 import MDAForm from "@/components/MDAForm";
 import MDAWithAdminForm from "@/components/MDAWithAdminForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
@@ -111,7 +112,8 @@ type ActiveTab =
   | "feedback"
   | "no-objection-certificate"
   | "mda-management"
-  | "mda-testing";
+  | "mda-testing"
+  | "noc-requests";
 
 interface DashboardStats {
   newRegistrationsPending: number;
@@ -878,8 +880,7 @@ export default function SuperUserDashboard() {
       },
     );
 
-    // Load initial audit logs
-    loadAuditLogs();
+    // Note: Audit logs are loaded automatically by the dedicated useEffect with loadAuditLogs
 
     const mockAIRecommendations: AIRecommendation[] = [
       {
@@ -1665,7 +1666,7 @@ export default function SuperUserDashboard() {
       delete (window as any).testSuperUserApproval;
       delete (window as any).testNorthernApproval;
     };
-  }, [handleCompanyStatusChange]);
+  }, []); // Remove handleCompanyStatusChange dependency to prevent infinite loop
 
   // Separate useEffect for MDA system initialization
   useEffect(() => {
@@ -8173,6 +8174,9 @@ The award letter has been:
       case "mda-testing":
         return renderMDATesting();
 
+      case "noc-requests":
+        return <NOCRequestsTab />;
+
       case "settings":
         return (
           <div className="space-y-8">
@@ -8706,6 +8710,11 @@ The award letter has been:
                 key: "mda-testing",
                 label: "MDA Testing",
                 icon: RefreshCw,
+              },
+              {
+                key: "noc-requests",
+                label: "NOC Requests",
+                icon: Send,
               },
               { key: "settings", label: "Settings", icon: Settings },
               { key: "feedback", label: "Feedback", icon: MessageSquare },
