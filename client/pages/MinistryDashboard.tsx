@@ -10,6 +10,7 @@ import BudgetAllocation from "@/components/BudgetAllocation";
 import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManagement";
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
 import NOCRequestsModule from "@/components/NOCRequestsModule";
+import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistryOverview";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
@@ -4730,224 +4731,268 @@ Penalty Clause: 0.5% per week for delayed completion`,
     return matchesSearch && matchesStatus;
   });
 
-  const renderOverview = () => (
-    <div className="space-y-4">
-      {/* Key Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">
-                Active Tenders
-              </p>
-              <p className="text-3xl font-bold text-blue-600">
-                {(() => {
-                  const { ministryId } = getMinistryMockData();
-                  if (ministryId === "ministry2") return 8;
-                  if (ministryId === "ministry3") return 6;
-                  return tenders.filter((t) => t.status === "Published").length;
-                })()}
-              </p>
-            </div>
-            <FileText className="h-8 w-8 text-blue-600" />
-          </div>
-        </div>
+  // Get ministry-specific mock data for enhanced overview
+  const getEnhancedOverviewData = () => {
+    const { ministryId, ministry } = getMinistryMockData();
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">
-                Approved Companies
-              </p>
-              <p className="text-3xl font-bold text-green-600">
-                {(() => {
-                  const { ministryId } = getMinistryMockData();
-                  if (ministryId === "ministry2") return 4;
-                  if (ministryId === "ministry3") return 3;
-                  return companies.filter((c) => c.status === "Approved")
-                    .length;
-                })()}
-              </p>
-            </div>
-            <UserCheck className="h-8 w-8 text-green-600" />
-          </div>
-        </div>
+    const summaryData = {
+      totalProcurementPlans: ministryId === "ministry2" ? 24 : ministryId === "ministry3" ? 18 : 15,
+      tendersCreated: tenders.length,
+      tendersUnderEvaluation: tenders.filter(t => t.status === "Evaluated").length,
+      nocPending: nocRequests.filter(n => n.status === "Pending").length,
+      nocApproved: nocRequests.filter(n => n.status === "Approved").length,
+      nocRejected: nocRequests.filter(n => n.status === "Rejected").length,
+      contractsActive: contracts.filter(c => c.status === "Active").length,
+      contractsClosed: contracts.filter(c => c.status === "Completed").length,
+      budgetUtilization: ministryId === "ministry2" ? 73 : ministryId === "ministry3" ? 68 : 82,
+      totalBudget: ministryId === "ministry2" ? "₦50.0B" : ministryId === "ministry3" ? "₦12.5B" : "₦3.2B",
+      utilizedBudget: ministryId === "ministry2" ? "₦36.5B" : ministryId === "ministry3" ? "₦8.5B" : "₦2.6B",
+    };
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">NOC Requests</p>
-              <p className="text-3xl font-bold text-orange-600">
-                {(() => {
-                  const { ministryId } = getMinistryMockData();
-                  if (ministryId === "ministry2") return 5;
-                  if (ministryId === "ministry3") return 4;
-                  return nocRequests.length;
-                })()}
-              </p>
-            </div>
-            <FileCheck className="h-8 w-8 text-orange-600" />
-          </div>
-        </div>
+    const lifecycleData = {
+      procurementPlans: { count: summaryData.totalProcurementPlans, status: "active" as const },
+      tenderManagement: { count: summaryData.tendersUnderEvaluation, status: "active" as const },
+      nocRequest: { count: summaryData.nocPending, status: "pending" as const },
+      contractAward: { count: summaryData.contractsActive, status: "completed" as const },
+    };
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Bids</p>
-              <p className="text-3xl font-bold text-purple-600">
-                {(() => {
-                  const { ministryId } = getMinistryMockData();
-                  if (ministryId === "ministry2") return 42;
-                  if (ministryId === "ministry3") return 35;
-                  return tenders.reduce((sum, t) => sum + t.bidsReceived, 0);
-                })()}
-              </p>
-            </div>
-            <Award className="h-8 w-8 text-purple-600" />
-          </div>
-        </div>
-      </div>
+    const updatesData = [
+      {
+        id: "update-1",
+        type: "noc_feedback" as const,
+        title: "NOC Request Approved - Hospital Equipment Supply",
+        description: "Your NOC request for MOH-2024-001 has been approved by the superuser. Certificate number: NOC-2024-001",
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        priority: "high" as const,
+        status: "approved" as const,
+        relatedId: "MOH-2024-001",
+        relatedType: "noc" as const,
+      },
+      {
+        id: "update-2",
+        type: "tender_status" as const,
+        title: "Tender Evaluation Completed",
+        description: "Evaluation for " + (tenders[0]?.title || "Medical Equipment Tender") + " has been completed. Awaiting award decision.",
+        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+        priority: "medium" as const,
+        status: "completed" as const,
+        actionRequired: true,
+        relatedId: tenders[0]?.id || "tender-1",
+        relatedType: "tender" as const,
+      },
+      {
+        id: "update-3",
+        type: "contract_milestone" as const,
+        title: "Contract Milestone Due Soon",
+        description: "Milestone 'Equipment Delivery' for contract CON-MOH-001 is due in 3 days",
+        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+        priority: "urgent" as const,
+        status: "pending" as const,
+        actionRequired: true,
+        relatedId: "CON-MOH-001",
+        relatedType: "contract" as const,
+      },
+      {
+        id: "update-4",
+        type: "system_alert" as const,
+        title: "Budget Threshold Exceeded",
+        description: "Your ministry has exceeded 80% of allocated budget for Q1. Review required.",
+        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+        priority: "high" as const,
+        actionRequired: true,
+        relatedType: "compliance" as const,
+      },
+    ];
 
-      {/* Contract Statistics */}
-      <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">
-          Contract Overview
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg shadow-sm p-4 border">
-            <div className="flex items-center">
-              <FileCheck className="h-8 w-8 text-blue-600" />
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">
-                  Total Contracts
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {contracts.length}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-4 border">
-            <div className="flex items-center">
-              <Activity className="h-8 w-8 text-green-600" />
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">Active</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {contracts.filter((c) => c.status === "Active").length}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-4 border">
-            <div className="flex items-center">
-              <CheckCircle className="h-8 w-8 text-purple-600" />
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">Completed</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {contracts.filter((c) => c.status === "Completed").length}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-4 border">
-            <div className="flex items-center">
-              <DollarSign className="h-8 w-8 text-green-600" />
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600">Total Value</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {(() => {
-                    const { ministryId } = getMinistryMockData();
-                    if (ministryId === "ministry2") return "₦43.2B";
-                    if (ministryId === "ministry3") return "₦9.8B";
-                    return "₦2.7B";
-                  })()}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    const analyticsData = {
+      budgetData: [
+        { month: "Jan", budget: 8000000000, expenditure: 6200000000, variance: 1800000000 },
+        { month: "Feb", budget: 8500000000, expenditure: 7100000000, variance: 1400000000 },
+        { month: "Mar", budget: 9000000000, expenditure: 8500000000, variance: 500000000 },
+        { month: "Apr", budget: 8200000000, expenditure: 6800000000, variance: 1400000000 },
+        { month: "May", budget: 8800000000, expenditure: 7200000000, variance: 1600000000 },
+        { month: "Jun", budget: 9200000000, expenditure: 8100000000, variance: 1100000000 },
+      ],
+      tenderStatusData: [
+        { status: "Planning", count: 5, value: 2100000000, color: "#3b82f6" },
+        { status: "Open", count: 8, value: 4500000000, color: "#10b981" },
+        { status: "Evaluation", count: 3, value: 1800000000, color: "#f59e0b" },
+        { status: "NOC", count: 2, value: 950000000, color: "#8b5cf6" },
+        { status: "Awarded", count: 4, value: 3200000000, color: "#06b6d4" },
+      ],
+      timelineData: [
+        { category: "Bid Opening to Evaluation", averageDays: 12, target: 14, status: "good" as const },
+        { category: "Evaluation to Award", averageDays: 18, target: 21, status: "good" as const },
+        { category: "Award to Contract Signing", averageDays: 15, target: 10, status: "critical" as const },
+        { category: "NOC Processing", averageDays: 8, target: 7, status: "warning" as const },
+      ],
+      nocProcessingData: [
+        { month: "Jan", averageTime: 6, approved: 12, rejected: 2 },
+        { month: "Feb", averageTime: 7, approved: 15, rejected: 3 },
+        { month: "Mar", averageTime: 5, approved: 18, rejected: 1 },
+        { month: "Apr", averageTime: 8, approved: 14, rejected: 4 },
+        { month: "May", averageTime: 6, approved: 16, rejected: 2 },
+        { month: "Jun", averageTime: 7, approved: 13, rejected: 3 },
+      ],
+    };
 
-      {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-4 py-2 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Recent Tenders
-            </h2>
-          </div>
-          <div className="p-4">
-            <div className="space-y-4">
-              {tenders.slice(0, 3).map((tender) => (
-                <div
-                  key={tender.id}
-                  className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
-                >
-                  <FileText className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">
-                      {tender.title}
-                    </p>
-                    <p className="text-xs text-gray-600">
-                      {formatCurrency(tender.estimatedValue)}
-                    </p>
-                    <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${
-                        tender.status === "Published"
-                          ? "bg-green-100 text-green-800"
-                          : tender.status === "Draft"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {tender.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+    const complianceData = {
+      complianceIssues: [
+        {
+          id: "issue-1",
+          type: "tender" as const,
+          title: "Missing Technical Specifications",
+          description: "Tender MOH-2024-002 lacks detailed technical specifications for medical equipment",
+          severity: "high" as const,
+          status: "open" as const,
+          relatedId: "MOH-2024-002",
+          relatedTitle: "Pharmaceutical Supply Contract",
+          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          tags: ["specifications", "technical"],
+        },
+        {
+          id: "issue-2",
+          type: "contract" as const,
+          title: "Contract Performance Below Threshold",
+          description: "Contract CON-MOH-003 showing performance score of 68%, below required 75%",
+          severity: "medium" as const,
+          status: "in_progress" as const,
+          relatedId: "CON-MOH-003",
+          relatedTitle: "Medical Laboratory Equipment",
+          assignedTo: "Performance Team",
+          dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          tags: ["performance", "contract"],
+        },
+      ],
+      coiStatuses: [
+        {
+          committeeId: "eval-comm-1",
+          committeeName: "Medical Equipment Evaluation Committee",
+          totalMembers: 5,
+          clearedMembers: 5,
+          pendingMembers: 0,
+          flaggedMembers: 0,
+          lastReviewDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          nextReviewDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+          status: "compliant" as const,
+        },
+        {
+          committeeId: "eval-comm-2",
+          committeeName: "Pharmaceutical Evaluation Committee",
+          totalMembers: 7,
+          clearedMembers: 5,
+          pendingMembers: 2,
+          flaggedMembers: 0,
+          lastReviewDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+          nextReviewDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          status: "warning" as const,
+        },
+      ],
+      upcomingDeadlines: [
+        {
+          id: "deadline-1",
+          type: "tender_closing" as const,
+          title: "Pharmaceutical Supply Tender Closing",
+          description: "Last date for bid submission",
+          dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+          daysRemaining: 2,
+          priority: "urgent" as const,
+          actionRequired: false,
+          relatedId: "MOH-2024-002",
+        },
+        {
+          id: "deadline-2",
+          type: "contract_expiry" as const,
+          title: "IT Infrastructure Contract Expiry",
+          description: "Contract renewal required",
+          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          daysRemaining: 30,
+          priority: "medium" as const,
+          actionRequired: true,
+          relatedId: "CON-MOH-004",
+        },
+        {
+          id: "deadline-3",
+          type: "compliance_check" as const,
+          title: "Quarterly Compliance Review",
+          description: "Mandatory compliance audit due",
+          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          daysRemaining: 7,
+          priority: "high" as const,
+          actionRequired: true,
+          relatedId: "compliance-q1",
+        },
+      ],
+    };
 
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-4 py-2 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">NOC Status</h2>
-          </div>
-          <div className="p-4">
-            <div className="space-y-4">
-              {nocRequests.slice(0, 3).map((request) => (
-                <div
-                  key={request.id}
-                  className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
-                >
-                  <FileCheck className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">
-                      {request.projectTitle}
-                    </p>
-                    <p className="text-xs text-gray-600">
-                      {request.contractorName}
-                    </p>
-                    <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${
-                        request.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : request.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {request.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    return {
+      summaryData,
+      lifecycleData,
+      updatesData,
+      analyticsData,
+      complianceData,
+    };
+  };
+
+  const renderOverview = () => {
+    const overviewData = getEnhancedOverviewData();
+
+    return (
+      <EnhancedMinistryOverview
+        data={overviewData}
+        onQuickAction={{
+          onCreatePlan: () => setCurrentView("procurement-planning"),
+          onCreateTender: () => {
+            setCurrentView("tender-management");
+            setTenderSubView("create");
+          },
+          onSubmitNOC: () => setCurrentView("noc"),
+          onUploadEvaluation: () => {
+            setCurrentView("tender-management");
+            setTenderSubView("evaluation");
+          },
+          onViewContracts: () => setCurrentView("contract-management"),
+          onManageUsers: () => setCurrentView("users"),
+          onGenerateReport: () => setCurrentView("reports"),
+          onViewAnalytics: () => setCurrentView("reports"),
+          onBulkUpload: () => {
+            setCurrentView("tender-management");
+            setTenderSubView("bulk-upload");
+          },
+          onScheduleTender: () => {
+            setCurrentView("tender-management");
+            setShowScheduleModal(true);
+          },
+          onManageCommittees: () => {
+            setCurrentView("tender-management");
+            setTenderSubView("evaluation");
+          },
+          onViewNotifications: () => {
+            // Could open a notifications modal or navigate to notifications view
+            console.log("View notifications clicked");
+          },
+        }}
+        onUpdateClick={(update) => {
+          console.log("Update clicked:", update);
+          // Handle update click - could open modal or navigate to relevant section
+        }}
+        onIssueClick={(issue) => {
+          console.log("Issue clicked:", issue);
+          // Handle compliance issue click
+        }}
+        onDeadlineClick={(deadline) => {
+          console.log("Deadline clicked:", deadline);
+          // Handle deadline click
+        }}
+        onCOIClick={(status) => {
+          console.log("COI status clicked:", status);
+          // Handle COI status click
+        }}
+      />
+    );
+  };
 
   const renderCompanies = () => (
     <div className="space-y-4">
@@ -6957,7 +7002,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              🏆 Award Tenders
+              ���� Award Tenders
             </h1>
             <p className="text-gray-600">
               Award tenders to qualified vendors who have completed the required
