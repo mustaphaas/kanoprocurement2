@@ -125,8 +125,9 @@ export default function NOCRequestsTab() {
 
     // Initialize ministry NOC data if not present
     const initializeMinistryData = () => {
-      // Ministry of Health NOC Requests - Force refresh to ensure only 3 requests
-      const mohRequests = [
+      // Ministry of Health NOC Requests - Only initialize if not exists to preserve status changes
+      if (!localStorage.getItem("MOH_NOCRequests")) {
+        const mohRequests = [
         {
           id: "NOC-MOH-001",
           projectTitle: "Hospital Equipment Supply - Phase 1",
@@ -196,8 +197,9 @@ export default function NOCRequestsTab() {
             approvalDate: "2024-02-08T16:45:00Z"
           }
         }
-      ];
-      localStorage.setItem("MOH_NOCRequests", JSON.stringify(mohRequests));
+        ];
+        localStorage.setItem("MOH_NOCRequests", JSON.stringify(mohRequests));
+      }
 
       // Ministry of Works and Infrastructure NOC Requests
       if (!localStorage.getItem("MOWI_NOCRequests")) {
