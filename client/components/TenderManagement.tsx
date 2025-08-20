@@ -695,33 +695,104 @@ const TenderManagement = () => {
   });
 
   const getStatusBadge = (status: string) => {
-    const colors = {
-      // Original statuses
-      Draft: "bg-gray-100 text-gray-800",
-      Published: "bg-blue-100 text-blue-800",
-      Open: "bg-green-100 text-green-800",
-      Closed: "bg-red-100 text-red-800",
-      Evaluated: "bg-yellow-100 text-yellow-800",
-      Awarded: "bg-purple-100 text-purple-800",
+    const statusConfig = {
+      Draft: {
+        bg: "bg-gradient-to-r from-gray-100 to-slate-100",
+        text: "text-gray-700",
+        border: "border-gray-200",
+        icon: "📝",
+      },
+      Published: {
+        bg: "bg-gradient-to-r from-blue-100 to-indigo-100",
+        text: "text-blue-700",
+        border: "border-blue-200",
+        icon: "📢",
+      },
+      Open: {
+        bg: "bg-gradient-to-r from-green-100 to-emerald-100",
+        text: "text-green-700",
+        border: "border-green-200",
+        icon: "🟢",
+      },
+      Closed: {
+        bg: "bg-gradient-to-r from-red-100 to-rose-100",
+        text: "text-red-700",
+        border: "border-red-200",
+        icon: "🔴",
+      },
+      Evaluated: {
+        bg: "bg-gradient-to-r from-amber-100 to-yellow-100",
+        text: "text-amber-700",
+        border: "border-amber-200",
+        icon: "📊",
+      },
+      Awarded: {
+        bg: "bg-gradient-to-r from-purple-100 to-violet-100",
+        text: "text-purple-700",
+        border: "border-purple-200",
+        icon: "🏆",
+      },
 
       // NOC workflow statuses
-      "NOC Pending": "bg-orange-100 text-orange-800",
-      "NOC Approved": "bg-green-100 text-green-800",
-      "NOC Rejected": "bg-red-100 text-red-800",
+      "NOC Pending": {
+        bg: "bg-gradient-to-r from-orange-100 to-amber-100",
+        text: "text-orange-700",
+        border: "border-orange-200",
+        icon: "⏳",
+      },
+      "NOC Approved": {
+        bg: "bg-gradient-to-r from-green-100 to-emerald-100",
+        text: "text-green-700",
+        border: "border-green-200",
+        icon: "✅",
+      },
+      "NOC Rejected": {
+        bg: "bg-gradient-to-r from-red-100 to-rose-100",
+        text: "text-red-700",
+        border: "border-red-200",
+        icon: "❌",
+      },
 
       // Contract workflow statuses
-      "Contract Created": "bg-blue-100 text-blue-800",
-      "Contract Signed": "bg-purple-100 text-purple-800",
-      Implementation: "bg-indigo-100 text-indigo-800",
-      Completed: "bg-green-100 text-green-800",
+      "Contract Created": {
+        bg: "bg-gradient-to-r from-blue-100 to-cyan-100",
+        text: "text-blue-700",
+        border: "border-blue-200",
+        icon: "📋",
+      },
+      "Contract Signed": {
+        bg: "bg-gradient-to-r from-purple-100 to-pink-100",
+        text: "text-purple-700",
+        border: "border-purple-200",
+        icon: "✍️",
+      },
+      Implementation: {
+        bg: "bg-gradient-to-r from-indigo-100 to-blue-100",
+        text: "text-indigo-700",
+        border: "border-indigo-200",
+        icon: "🔧",
+      },
+      Completed: {
+        bg: "bg-gradient-to-r from-green-100 to-teal-100",
+        text: "text-green-700",
+        border: "border-green-200",
+        icon: "✨",
+      },
     };
+
+    const config = statusConfig[status as keyof typeof statusConfig] || {
+      bg: "bg-gradient-to-r from-gray-100 to-slate-100",
+      text: "text-gray-700",
+      border: "border-gray-200",
+      icon: "⚪",
+    };
+
     return (
       <Badge
-        className={
-          colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800"
-        }
+        className={`${config.bg} ${config.text} ${config.border} border shadow-sm font-medium px-3 py-1.5 rounded-lg flex items-center gap-1.5`}
       >
-        {status}
+        <span className="text-xs">{config.icon}</span>
+        <span>{status}</span>
       </Badge>
     );
   };
@@ -735,130 +806,270 @@ const TenderManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Tender Management Module (KanoProc)
-        </h2>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setShowTenderModal(true)}
-            className="bg-primary hover:bg-primary/90"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Tender
-          </Button>
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-blue-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+        <div className="relative p-8">
+          <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
+                  <FileText className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
+                    Tender Management System
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Complete tender lifecycle management platform
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowTenderModal(true)}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create New Tender
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Enhanced Tabs Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-8">
-          <TabsTrigger value="creation" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Creation
-          </TabsTrigger>
-          <TabsTrigger
-            value="administration"
-            className="flex items-center gap-2"
-          >
-            <Settings className="h-4 w-4" />
-            Administration
-          </TabsTrigger>
-          <TabsTrigger value="vendor" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Vendor Interaction
-          </TabsTrigger>
-          <TabsTrigger value="opening" className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            Opening
-          </TabsTrigger>
-          <TabsTrigger value="evaluation" className="flex items-center gap-2">
-            <Scale className="h-4 w-4" />
-            Evaluation
-          </TabsTrigger>
-          <TabsTrigger value="award" className="flex items-center gap-2">
-            <Award className="h-4 w-4" />
-            Award
-          </TabsTrigger>
-          <TabsTrigger value="notification" className="flex items-center gap-2">
-            <Bell className="h-4 w-4" />
-            Notification
-          </TabsTrigger>
-          <TabsTrigger value="contract" className="flex items-center gap-2">
-            <FileCheck className="h-4 w-4" />
-            Contract Link
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Tender Creation & Publication */}
-        <TabsContent value="creation" className="space-y-4">
-          <div className="flex gap-2 mb-4">
-            <Button
-              onClick={() => setShowTenderModal(true)}
-              className="bg-primary hover:bg-primary/90"
+        <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-blue-100 shadow-lg p-2">
+          <TabsList className="grid w-full grid-cols-8 bg-transparent gap-1">
+            <TabsTrigger
+              value="creation"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-50 border border-transparent data-[state=active]:border-blue-200"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              Create New Tender
-            </Button>
-          </div>
-          <div className="flex gap-4 items-center">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Search tenders..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+              <FileText className="h-4 w-4" />
+              <span className="font-medium">Creation</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="administration"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-amber-50 border border-transparent data-[state=active]:border-amber-200"
+            >
+              <Settings className="h-4 w-4" />
+              <span className="font-medium">Administration</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="vendor"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-emerald-50 border border-transparent data-[state=active]:border-emerald-200"
+            >
+              <Users className="h-4 w-4" />
+              <span className="font-medium">Vendor Interaction</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="opening"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50 border border-transparent data-[state=active]:border-purple-200"
+            >
+              <Clock className="h-4 w-4" />
+              <span className="font-medium">Opening</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="evaluation"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-rose-50 border border-transparent data-[state=active]:border-rose-200"
+            >
+              <Scale className="h-4 w-4" />
+              <span className="font-medium">Evaluation</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="award"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-yellow-50 border border-transparent data-[state=active]:border-yellow-200"
+            >
+              <Award className="h-4 w-4" />
+              <span className="font-medium">Award</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="notification"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-cyan-50 border border-transparent data-[state=active]:border-cyan-200"
+            >
+              <Bell className="h-4 w-4" />
+              <span className="font-medium">Notification</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="contract"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-600 data-[state=active]:to-gray-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-slate-50 border border-transparent data-[state=active]:border-slate-200"
+            >
+              <FileCheck className="h-4 w-4" />
+              <span className="font-medium">Contract Link</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* Enhanced Tender Creation & Publication */}
+        <TabsContent value="creation" className="space-y-6">
+          {/* Quick Actions Bar */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-blue-100 shadow-md p-6">
+            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+              <div className="flex-1 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Input
+                    placeholder="Search by title, description, or ID..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-12 pr-4 py-3 border-gray-200 focus:border-blue-400 focus:ring-blue-400 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <Filter className="h-4 w-4 text-gray-500" />
+                  <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <SelectTrigger className="w-56 border-gray-200 focus:border-blue-400 focus:ring-blue-400 rounded-lg shadow-sm">
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-lg border-gray-200 shadow-lg">
+                      <SelectItem value="all" className="hover:bg-blue-50">
+                        All Status
+                      </SelectItem>
+                      <SelectItem value="Draft" className="hover:bg-gray-50">
+                        Draft
+                      </SelectItem>
+                      <SelectItem
+                        value="Published"
+                        className="hover:bg-green-50"
+                      >
+                        Published
+                      </SelectItem>
+                      <SelectItem value="Open" className="hover:bg-blue-50">
+                        Open
+                      </SelectItem>
+                      <SelectItem value="Closed" className="hover:bg-yellow-50">
+                        Closed
+                      </SelectItem>
+                      <SelectItem
+                        value="Evaluated"
+                        className="hover:bg-purple-50"
+                      >
+                        Evaluated
+                      </SelectItem>
+                      <SelectItem
+                        value="Awarded"
+                        className="hover:bg-emerald-50"
+                      >
+                        Awarded
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <Button
+                onClick={() => setShowTenderModal(true)}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-lg"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create New Tender
+              </Button>
             </div>
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Draft">Draft</SelectItem>
-                <SelectItem value="Published">Published</SelectItem>
-                <SelectItem value="Open">Open</SelectItem>
-                <SelectItem value="Closed">Closed</SelectItem>
-                <SelectItem value="Evaluated">Evaluated</SelectItem>
-                <SelectItem value="Awarded">Awarded</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
-          <div className="grid gap-4">
+          {/* Enhanced Tender Grid */}
+          <div className="grid gap-6">
             {filteredTenders.map((tender) => (
               <Card
                 key={tender.id}
-                className="hover:shadow-md transition-shadow"
+                className="group hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm border border-gray-100 hover:border-blue-200 rounded-xl overflow-hidden"
               >
-                <CardHeader>
+                <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{tender.title}</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {tender.description}
-                      </p>
-                      <div className="flex gap-4 mt-2 text-sm text-gray-500">
-                        <span>Budget: ₦{tender.budget.toLocaleString()}</span>
-                        <span>Method: {tender.procurementMethod}</span>
-                        <span>Type: {tender.tenderType}</span>
+                    <div className="flex-1 space-y-4">
+                      <div className="flex items-start gap-4">
+                        <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg shadow-sm">
+                          <FileText className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-blue-800 transition-colors">
+                            {tender.title}
+                          </CardTitle>
+                          <p className="text-gray-600 mt-2 leading-relaxed">
+                            {tender.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+                          <DollarSign className="h-4 w-4 text-emerald-600" />
+                          <div>
+                            <p className="text-xs text-emerald-600 font-medium">
+                              Budget
+                            </p>
+                            <p className="text-sm font-bold text-emerald-800">
+                              ₦{tender.budget.toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+                          <Scale className="h-4 w-4 text-blue-600" />
+                          <div>
+                            <p className="text-xs text-blue-600 font-medium">
+                              Method
+                            </p>
+                            <p className="text-sm font-bold text-blue-800">
+                              {tender.procurementMethod}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 border border-purple-200 rounded-lg">
+                          <Target className="h-4 w-4 text-purple-600" />
+                          <div>
+                            <p className="text-xs text-purple-600 font-medium">
+                              Type
+                            </p>
+                            <p className="text-sm font-bold text-purple-800">
+                              {tender.tenderType}
+                            </p>
+                          </div>
+                        </div>
                         {tender.closingDate && (
-                          <span>
-                            Days Remaining:{" "}
-                            {getDaysRemaining(tender.closingDate)}
-                          </span>
+                          <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg">
+                            <Clock className="h-4 w-4 text-orange-600" />
+                            <div>
+                              <p className="text-xs text-orange-600 font-medium">
+                                Days Remaining
+                              </p>
+                              <p className="text-sm font-bold text-orange-800">
+                                {getDaysRemaining(tender.closingDate)}
+                              </p>
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
+
+                    <div className="flex flex-col items-end gap-3 ml-6">
                       {getStatusBadge(tender.status)}
-                      <div className="flex gap-1">
+                      <div className="flex gap-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => setSelectedTender(tender)}
+                          className="hover:bg-blue-50 hover:border-blue-300 transition-colors"
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -884,6 +1095,7 @@ const TenderManagement = () => {
                                 updatedTenders,
                               );
                             }}
+                            className="hover:bg-green-50 hover:border-green-300 transition-colors"
                           >
                             <Upload className="h-4 w-4" />
                           </Button>
@@ -897,55 +1109,170 @@ const TenderManagement = () => {
           </div>
         </TabsContent>
 
-        {/* Tender Administration */}
-        <TabsContent value="administration" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Tender Administration</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+        {/* Enhanced Tender Administration */}
+        <TabsContent value="administration" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg">
+                    <MessageSquare className="h-6 w-6 text-white" />
+                  </div>
                   <div>
-                    <h3 className="font-medium">Amendments & Addenda</h3>
-                    <p className="text-sm text-gray-600">
-                      Issue clarifications and updated documents
+                    <CardTitle className="text-xl text-amber-800">
+                      Amendments & Addenda
+                    </CardTitle>
+                    <p className="text-sm text-amber-600 mt-1">
+                      Issue clarifications and updates
                     </p>
                   </div>
-                  <Button onClick={() => setShowAmendmentModal(true)}>
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Create Amendment
-                  </Button>
                 </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-white/70 rounded-lg p-4 border border-amber-200">
+                    <p className="text-sm text-amber-700 mb-3">
+                      Manage tender modifications, clarifications, and document
+                      updates throughout the tender lifecycle.
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => setShowAmendmentModal(true)}
+                        className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-md"
+                        size="sm"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Amendment
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                      >
+                        View History
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl shadow-lg">
+                    <Calendar className="h-6 w-6 text-white" />
+                  </div>
                   <div>
-                    <h3 className="font-medium">Timeline Tracker</h3>
-                    <p className="text-sm text-gray-600">
-                      Monitor tender deadlines and milestones
+                    <CardTitle className="text-xl text-blue-800">
+                      Timeline Tracker
+                    </CardTitle>
+                    <p className="text-sm text-blue-600 mt-1">
+                      Monitor deadlines and milestones
                     </p>
                   </div>
-                  <Button variant="outline">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    View Timeline
-                  </Button>
                 </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-white/70 rounded-lg p-4 border border-blue-200">
+                    <p className="text-sm text-blue-700 mb-3">
+                      Track tender progress, deadlines, and critical milestones
+                      with automated alerts and notifications.
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Timeline
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                      >
+                        Set Alerts
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200">
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl shadow-lg">
+                    <Shield className="h-6 w-6 text-white" />
+                  </div>
                   <div>
-                    <h3 className="font-medium">Audit Trail</h3>
-                    <p className="text-sm text-gray-600">
-                      Complete log of all tender activities
+                    <CardTitle className="text-xl text-emerald-800">
+                      Audit Trail
+                    </CardTitle>
+                    <p className="text-sm text-emerald-600 mt-1">
+                      Complete activity logging
                     </p>
                   </div>
-                  <Button variant="outline">
-                    <Shield className="h-4 w-4 mr-2" />
-                    View Audit Log
-                  </Button>
                 </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-white/70 rounded-lg p-4 border border-emerald-200">
+                    <p className="text-sm text-emerald-700 mb-3">
+                      Comprehensive audit trail with timestamps, user actions,
+                      and system changes for compliance.
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        View Audit Log
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                      >
+                        Export Report
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Stats Section */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-orange-100 shadow-lg p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Settings className="h-5 w-5 text-orange-600" />
+              Administration Overview
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                <div className="text-2xl font-bold text-orange-700">12</div>
+                <div className="text-sm text-orange-600">Active Amendments</div>
               </div>
-            </CardContent>
-          </Card>
+              <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                <div className="text-2xl font-bold text-blue-700">8</div>
+                <div className="text-sm text-blue-600">Pending Deadlines</div>
+              </div>
+              <div className="text-center p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200">
+                <div className="text-2xl font-bold text-emerald-700">156</div>
+                <div className="text-sm text-emerald-600">Audit Entries</div>
+              </div>
+              <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                <div className="text-2xl font-bold text-purple-700">98%</div>
+                <div className="text-sm text-purple-600">Compliance Rate</div>
+              </div>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Vendor Interaction */}

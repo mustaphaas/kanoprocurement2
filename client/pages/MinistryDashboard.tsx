@@ -11,6 +11,7 @@ import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManag
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
 import NOCRequestsModule from "@/components/NOCRequestsModule";
 import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistryOverview";
+import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
@@ -4736,24 +4737,46 @@ Penalty Clause: 0.5% per week for delayed completion`,
     const { ministryId, ministry } = getMinistryMockData();
 
     const summaryData = {
-      totalProcurementPlans: ministryId === "ministry2" ? 24 : ministryId === "ministry3" ? 18 : 15,
+      totalProcurementPlans:
+        ministryId === "ministry2" ? 24 : ministryId === "ministry3" ? 18 : 15,
       tendersCreated: tenders.length,
-      tendersUnderEvaluation: tenders.filter(t => t.status === "Evaluated").length,
-      nocPending: nocRequests.filter(n => n.status === "Pending").length,
-      nocApproved: nocRequests.filter(n => n.status === "Approved").length,
-      nocRejected: nocRequests.filter(n => n.status === "Rejected").length,
-      contractsActive: contracts.filter(c => c.status === "Active").length,
-      contractsClosed: contracts.filter(c => c.status === "Completed").length,
-      budgetUtilization: ministryId === "ministry2" ? 73 : ministryId === "ministry3" ? 68 : 82,
-      totalBudget: ministryId === "ministry2" ? "₦50.0B" : ministryId === "ministry3" ? "₦12.5B" : "₦3.2B",
-      utilizedBudget: ministryId === "ministry2" ? "₦36.5B" : ministryId === "ministry3" ? "₦8.5B" : "₦2.6B",
+      tendersUnderEvaluation: tenders.filter((t) => t.status === "Evaluated")
+        .length,
+      nocPending: nocRequests.filter((n) => n.status === "Pending").length,
+      nocApproved: nocRequests.filter((n) => n.status === "Approved").length,
+      nocRejected: nocRequests.filter((n) => n.status === "Rejected").length,
+      contractsActive: contracts.filter((c) => c.status === "Active").length,
+      contractsClosed: contracts.filter((c) => c.status === "Completed").length,
+      budgetUtilization:
+        ministryId === "ministry2" ? 73 : ministryId === "ministry3" ? 68 : 82,
+      totalBudget:
+        ministryId === "ministry2"
+          ? "₦50.0B"
+          : ministryId === "ministry3"
+            ? "₦12.5B"
+            : "₦3.2B",
+      utilizedBudget:
+        ministryId === "ministry2"
+          ? "₦36.5B"
+          : ministryId === "ministry3"
+            ? "₦8.5B"
+            : "₦2.6B",
     };
 
     const lifecycleData = {
-      procurementPlans: { count: summaryData.totalProcurementPlans, status: "active" as const },
-      tenderManagement: { count: summaryData.tendersUnderEvaluation, status: "active" as const },
+      procurementPlans: {
+        count: summaryData.totalProcurementPlans,
+        status: "active" as const,
+      },
+      tenderManagement: {
+        count: summaryData.tendersUnderEvaluation,
+        status: "active" as const,
+      },
       nocRequest: { count: summaryData.nocPending, status: "pending" as const },
-      contractAward: { count: summaryData.contractsActive, status: "completed" as const },
+      contractAward: {
+        count: summaryData.contractsActive,
+        status: "completed" as const,
+      },
     };
 
     const updatesData = [
@@ -4761,7 +4784,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
         id: "update-1",
         type: "noc_feedback" as const,
         title: "NOC Request Approved - Hospital Equipment Supply",
-        description: "Your NOC request for MOH-2024-001 has been approved by the superuser. Certificate number: NOC-2024-001",
+        description:
+          "Your NOC request for MOH-2024-001 has been approved by the superuser. Certificate number: NOC-2024-001",
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
         priority: "high" as const,
         status: "approved" as const,
@@ -4772,7 +4796,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
         id: "update-2",
         type: "tender_status" as const,
         title: "Tender Evaluation Completed",
-        description: "Evaluation for " + (tenders[0]?.title || "Medical Equipment Tender") + " has been completed. Awaiting award decision.",
+        description:
+          "Evaluation for " +
+          (tenders[0]?.title || "Medical Equipment Tender") +
+          " has been completed. Awaiting award decision.",
         timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
         priority: "medium" as const,
         status: "completed" as const,
@@ -4784,7 +4811,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
         id: "update-3",
         type: "contract_milestone" as const,
         title: "Contract Milestone Due Soon",
-        description: "Milestone 'Equipment Delivery' for contract CON-MOH-001 is due in 3 days",
+        description:
+          "Milestone 'Equipment Delivery' for contract CON-MOH-001 is due in 3 days",
         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
         priority: "urgent" as const,
         status: "pending" as const,
@@ -4796,7 +4824,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
         id: "update-4",
         type: "system_alert" as const,
         title: "Budget Threshold Exceeded",
-        description: "Your ministry has exceeded 80% of allocated budget for Q1. Review required.",
+        description:
+          "Your ministry has exceeded 80% of allocated budget for Q1. Review required.",
         timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
         priority: "high" as const,
         actionRequired: true,
@@ -4806,12 +4835,42 @@ Penalty Clause: 0.5% per week for delayed completion`,
 
     const analyticsData = {
       budgetData: [
-        { month: "Jan", budget: 8000000000, expenditure: 6200000000, variance: 1800000000 },
-        { month: "Feb", budget: 8500000000, expenditure: 7100000000, variance: 1400000000 },
-        { month: "Mar", budget: 9000000000, expenditure: 8500000000, variance: 500000000 },
-        { month: "Apr", budget: 8200000000, expenditure: 6800000000, variance: 1400000000 },
-        { month: "May", budget: 8800000000, expenditure: 7200000000, variance: 1600000000 },
-        { month: "Jun", budget: 9200000000, expenditure: 8100000000, variance: 1100000000 },
+        {
+          month: "Jan",
+          budget: 8000000000,
+          expenditure: 6200000000,
+          variance: 1800000000,
+        },
+        {
+          month: "Feb",
+          budget: 8500000000,
+          expenditure: 7100000000,
+          variance: 1400000000,
+        },
+        {
+          month: "Mar",
+          budget: 9000000000,
+          expenditure: 8500000000,
+          variance: 500000000,
+        },
+        {
+          month: "Apr",
+          budget: 8200000000,
+          expenditure: 6800000000,
+          variance: 1400000000,
+        },
+        {
+          month: "May",
+          budget: 8800000000,
+          expenditure: 7200000000,
+          variance: 1600000000,
+        },
+        {
+          month: "Jun",
+          budget: 9200000000,
+          expenditure: 8100000000,
+          variance: 1100000000,
+        },
       ],
       tenderStatusData: [
         { status: "Planning", count: 5, value: 2100000000, color: "#3b82f6" },
@@ -4821,10 +4880,30 @@ Penalty Clause: 0.5% per week for delayed completion`,
         { status: "Awarded", count: 4, value: 3200000000, color: "#06b6d4" },
       ],
       timelineData: [
-        { category: "Bid Opening to Evaluation", averageDays: 12, target: 14, status: "good" as const },
-        { category: "Evaluation to Award", averageDays: 18, target: 21, status: "good" as const },
-        { category: "Award to Contract Signing", averageDays: 15, target: 10, status: "critical" as const },
-        { category: "NOC Processing", averageDays: 8, target: 7, status: "warning" as const },
+        {
+          category: "Bid Opening to Evaluation",
+          averageDays: 12,
+          target: 14,
+          status: "good" as const,
+        },
+        {
+          category: "Evaluation to Award",
+          averageDays: 18,
+          target: 21,
+          status: "good" as const,
+        },
+        {
+          category: "Award to Contract Signing",
+          averageDays: 15,
+          target: 10,
+          status: "critical" as const,
+        },
+        {
+          category: "NOC Processing",
+          averageDays: 8,
+          target: 7,
+          status: "warning" as const,
+        },
       ],
       nocProcessingData: [
         { month: "Jan", averageTime: 6, approved: 12, rejected: 2 },
@@ -4842,27 +4921,35 @@ Penalty Clause: 0.5% per week for delayed completion`,
           id: "issue-1",
           type: "tender" as const,
           title: "Missing Technical Specifications",
-          description: "Tender MOH-2024-002 lacks detailed technical specifications for medical equipment",
+          description:
+            "Tender MOH-2024-002 lacks detailed technical specifications for medical equipment",
           severity: "high" as const,
           status: "open" as const,
           relatedId: "MOH-2024-002",
           relatedTitle: "Pharmaceutical Supply Contract",
           dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          createdDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(
+            Date.now() - 2 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
           tags: ["specifications", "technical"],
         },
         {
           id: "issue-2",
           type: "contract" as const,
           title: "Contract Performance Below Threshold",
-          description: "Contract CON-MOH-003 showing performance score of 68%, below required 75%",
+          description:
+            "Contract CON-MOH-003 showing performance score of 68%, below required 75%",
           severity: "medium" as const,
           status: "in_progress" as const,
           relatedId: "CON-MOH-003",
           relatedTitle: "Medical Laboratory Equipment",
           assignedTo: "Performance Team",
-          dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-          createdDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          dueDate: new Date(
+            Date.now() + 14 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
+          createdDate: new Date(
+            Date.now() - 5 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
           tags: ["performance", "contract"],
         },
       ],
@@ -4874,8 +4961,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
           clearedMembers: 5,
           pendingMembers: 0,
           flaggedMembers: 0,
-          lastReviewDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-          nextReviewDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+          lastReviewDate: new Date(
+            Date.now() - 30 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
+          nextReviewDate: new Date(
+            Date.now() + 60 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
           status: "compliant" as const,
         },
         {
@@ -4885,8 +4976,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
           clearedMembers: 5,
           pendingMembers: 2,
           flaggedMembers: 0,
-          lastReviewDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
-          nextReviewDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          lastReviewDate: new Date(
+            Date.now() - 45 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
+          nextReviewDate: new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
           status: "warning" as const,
         },
       ],
@@ -4907,7 +5002,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
           type: "contract_expiry" as const,
           title: "IT Infrastructure Contract Expiry",
           description: "Contract renewal required",
-          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          dueDate: new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
           daysRemaining: 30,
           priority: "medium" as const,
           actionRequired: true,
@@ -10459,7 +10556,7 @@ Blockchain Timestamp: ${Date.now()}
     } else if (currentView === "contracts") {
       return renderContracts();
     } else if (currentView === "reports") {
-      return renderReports();
+      return <MinistryReports />;
     } else if (currentView === "noc") {
       return renderNOCRequests();
     } else if (currentView === "users") {

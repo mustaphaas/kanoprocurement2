@@ -16,6 +16,7 @@ import CompanyDashboard from "./pages/CompanyDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
+import MinistryReports from "./pages/MinistryReports";
 import UserLogin from "./pages/UserLogin";
 import UserDashboard from "./pages/UserDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
@@ -71,6 +72,14 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRole="ministry">
                   <MinistryDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ministry/reports"
+              element={
+                <ProtectedRoute requiredRole="ministry">
+                  <MinistryReports />
                 </ProtectedRoute>
               }
             />

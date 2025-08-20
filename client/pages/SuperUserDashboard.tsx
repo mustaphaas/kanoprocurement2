@@ -19,6 +19,10 @@ import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
 import NoObjectionCertificate from "@/components/NoObjectionCertificate";
 import NOCRequestsTab from "@/components/NOCRequestsTab";
+import ProcurementPlanningOversight from "@/components/superuser/ProcurementPlanningOversight";
+import ContractOversight from "@/components/superuser/ContractOversight";
+import NotificationCenter from "@/components/superuser/NotificationCenter";
+import CollaborationCenter from "@/components/superuser/CollaborationCenter";
 import MDAForm from "@/components/MDAForm";
 import MDAWithAdminForm from "@/components/MDAWithAdminForm";
 import MDAAdminForm from "@/components/MDAAdminForm";
@@ -117,7 +121,11 @@ type ActiveTab =
   | "no-objection-certificate"
   | "mda-management"
   | "mda-testing"
-  | "noc-requests";
+  | "noc-requests"
+  | "procurement-oversight"
+  | "contract-oversight"
+  | "notifications-center"
+  | "collaboration";
 
 interface DashboardStats {
   newRegistrationsPending: number;
@@ -294,6 +302,107 @@ interface TenderForm {
   additionalProcurementCategories: string[];
 }
 
+// New interfaces for oversight features
+interface ProcurementPlan {
+  id: string;
+  title: string;
+  mdaId: string;
+  mdaName: string;
+  status: "Draft" | "Submitted" | "UnderReview" | "Approved" | "Rejected";
+  budgetRequested: number;
+  submittedBy: string;
+  submittedAt: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  delayedDays?: number;
+  remarks?: string;
+  procurementItems: Array<{
+    id: string;
+    description: string;
+    quantity: number;
+    estimatedValue: number;
+    procurementCategory: string;
+  }>;
+}
+
+interface Contract {
+  id: string;
+  tenderId?: string;
+  title: string;
+  contractorId: string;
+  contractorName: string;
+  contractValue: number;
+  originalValue: number;
+  startDate: string;
+  endDate: string;
+  status: "Active" | "Completed" | "Delayed" | "Terminated";
+  mdaId: string;
+  mdaName: string;
+  performance: "excellent" | "good" | "satisfactory" | "poor";
+  delayedDays?: number;
+  variationRequests: Array<{
+    id: string;
+    description: string;
+    date: string;
+    valueImpact: number;
+    status: "Pending" | "Approved" | "Rejected";
+  }>;
+  riskFlags: Array<{
+    type: "variation_excess" | "delay" | "noc_pending";
+    severity: "high" | "medium" | "low";
+    description: string;
+    flaggedDate: string;
+  }>;
+  history: Array<{
+    id: string;
+    action: string;
+    date: string;
+    user: string;
+    details: string;
+  }>;
+}
+
+interface SuperUserAlert {
+  id: string;
+  type:
+    | "tender_delay"
+    | "noc_pending"
+    | "contract_variation"
+    | "committee_unassigned";
+  title: string;
+  description: string;
+  severity: "critical" | "high" | "medium" | "low";
+  mdaId: string;
+  mdaName: string;
+  relatedId: string; // tender ID, contract ID, etc.
+  createdAt: string;
+  isRead: boolean;
+  actionRequired: boolean;
+}
+
+interface Conversation {
+  id: string;
+  subject: string;
+  participants: string[];
+  mdaId: string;
+  mdaName: string;
+  lastMessageAt: string;
+  unreadCount: number;
+  relatedType: "alert" | "contract" | "tender" | "procurement_plan";
+  relatedId: string;
+}
+
+interface Message {
+  id: string;
+  conversationId: string;
+  from: string;
+  fromRole: string;
+  body: string;
+  attachments: string[];
+  timestamp: string;
+  isRead: boolean;
+}
+
 export default function SuperUserDashboard() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("dashboard");
 
@@ -448,6 +557,15 @@ export default function SuperUserDashboard() {
   >("");
   const [actionReason, setActionReason] = useState("");
   const [sendNotification, setSendNotification] = useState(true);
+
+  // New oversight features state
+  const [procurementPlans, setProcurementPlans] = useState<ProcurementPlan[]>(
+    [],
+  );
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [superUserAlerts, setSuperUserAlerts] = useState<SuperUserAlert[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const navigate = useNavigate();
 
@@ -969,7 +1087,7 @@ export default function SuperUserDashboard() {
           "Upgrade of government ICT infrastructure and network systems",
         category: "Technology",
         ministry: "Ministry of Science and Technology",
-        estimatedValue: "₦1.2B",
+        estimatedValue: "��1.2B",
         status: "Awarded",
         workflowStatus: "Contract_Awarded",
         workflowStep: 6,
@@ -997,7 +1115,7 @@ export default function SuperUserDashboard() {
           "Supply of advanced medical equipment for specialist units",
         category: "Healthcare",
         ministry: "Ministry of Health",
-        estimatedValue: "₦950M",
+        estimatedValue: "���950M",
         status: "Closed",
         workflowStatus: "NOC_Requested",
         workflowStep: 5,
