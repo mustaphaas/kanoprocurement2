@@ -76,6 +76,14 @@ const App = () => (
               }
             />
             <Route
+              path="/ministry/reports"
+              element={
+                <ProtectedRoute requiredRole="ministry">
+                  <MinistryReports />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/superuser/dashboard"
               element={
                 <ProtectedRoute requiredRole="superuser">
