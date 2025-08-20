@@ -845,6 +845,16 @@ export default function NoObjectionCertificate({
     // Update the ministry-specific NOC data
     updateMinistryNOCData(selectedNOCRequest, "Approved", certificateNumber);
 
+    // Dispatch event to notify ministry dashboards of the update
+    window.dispatchEvent(new CustomEvent('nocStatusUpdated', {
+      detail: {
+        requestId: selectedNOCRequest.id,
+        status: 'Approved',
+        certificateNumber,
+        approvalDate: new Date().toISOString().split("T")[0]
+      }
+    }));
+
     setShowApprovalModal(false);
     setApprovalComments("");
     setSelectedNOCRequest(null);
@@ -870,6 +880,15 @@ export default function NoObjectionCertificate({
 
     // Update the ministry-specific NOC data
     updateMinistryNOCData(selectedNOCRequest, "Rejected");
+
+    // Dispatch event to notify ministry dashboards of the update
+    window.dispatchEvent(new CustomEvent('nocStatusUpdated', {
+      detail: {
+        requestId: selectedNOCRequest.id,
+        status: 'Rejected',
+        rejectionDate: new Date().toISOString().split("T")[0]
+      }
+    }));
 
     setShowRejectionModal(false);
     setRejectReason("");
