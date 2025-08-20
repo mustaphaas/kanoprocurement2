@@ -560,6 +560,11 @@ export default function NOCRequestsTab() {
     // Generate and download approval certificate
     generateApprovalCertificate(selectedRequest, certificateNumber);
 
+    // Force reload data to ensure synchronization
+    setTimeout(() => {
+      loadNOCRequests();
+    }, 100);
+
     setShowApprovalModal(false);
     setSelectedRequest(null);
   };
