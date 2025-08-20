@@ -175,7 +175,12 @@ export function AnalyticsReports({ data, onDrillDown }: AnalyticsReportsProps) {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={spendData}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#e0e0e0"
+                  horizontal={true}
+                  vertical={true}
+                />
                 <XAxis
                   dataKey="name"
                   angle={-45}
@@ -192,14 +197,20 @@ export function AnalyticsReports({ data, onDrillDown }: AnalyticsReportsProps) {
                   axisLine={true}
                   tickLine={true}
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={(value) => [`₦${value.toLocaleString()}`, 'Spend']}
                   labelFormatter={(label) => {
                     const item = spendData.find(d => d.name === label);
                     return item ? item.fullName : label;
                   }}
+                  cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                  contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc' }}
                 />
-                <Bar dataKey="spend" fill="#8884d8" />
+                <Bar
+                  dataKey="spend"
+                  fill="#8884d8"
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
