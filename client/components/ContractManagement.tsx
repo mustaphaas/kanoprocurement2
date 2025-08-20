@@ -739,8 +739,17 @@ const ContractManagement = () => {
       contract.contractor.companyName
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-    const matchesFilter =
-      filterStatus === "all" || contract.status === filterStatus;
+
+    const matchesFilter = (() => {
+      if (filterStatus === "all") return true;
+      if (filterStatus === "noc-linked") {
+        // Check if contract was generated from NOC approval
+        const nocContract = contract as any;
+        return nocContract.generatedFromNOC || nocContract.nocId || nocContract.nocCertificateNumber;
+      }
+      return contract.status === filterStatus;
+    })();
+
     return matchesSearch && matchesFilter;
   });
 
