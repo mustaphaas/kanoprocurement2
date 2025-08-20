@@ -292,32 +292,38 @@ export function AnalyticsReports({ data, onDrillDown }: AnalyticsReportsProps) {
                 cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
                 contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc' }}
               />
-              <Area 
-                type="monotone" 
-                dataKey="timeliness" 
-                stackId="1" 
-                stroke="#8884d8" 
-                fill="#8884d8" 
+              <Area
+                type="monotone"
+                dataKey="timeliness"
+                stackId="1"
+                stroke="#8884d8"
+                fill="#8884d8"
                 fillOpacity={0.6}
                 name="Timeliness"
+                connectNulls={false}
+                dot={false}
               />
-              <Area 
-                type="monotone" 
-                dataKey="compliance" 
-                stackId="2" 
-                stroke="#82ca9d" 
-                fill="#82ca9d" 
+              <Area
+                type="monotone"
+                dataKey="compliance"
+                stackId="2"
+                stroke="#82ca9d"
+                fill="#82ca9d"
                 fillOpacity={0.6}
                 name="Compliance"
+                connectNulls={false}
+                dot={false}
               />
-              <Area 
-                type="monotone" 
-                dataKey="efficiency" 
-                stackId="3" 
-                stroke="#ffc658" 
-                fill="#ffc658" 
+              <Area
+                type="monotone"
+                dataKey="efficiency"
+                stackId="3"
+                stroke="#ffc658"
+                fill="#ffc658"
                 fillOpacity={0.6}
                 name="Efficiency"
+                connectNulls={false}
+                dot={false}
               />
             </AreaChart>
           </ResponsiveContainer>
