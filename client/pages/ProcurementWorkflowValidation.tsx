@@ -102,13 +102,15 @@ export default function ProcurementWorkflowValidation() {
     {
       id: "tender-progression",
       name: "Tender Management Progression",
-      description: "Verify tender progresses through all stages with stored results",
+      description:
+        "Verify tender progresses through all stages with stored results",
       status: "pending",
     },
     {
       id: "noc-generation",
       name: "NOC Request Generation",
-      description: "Verify evaluated tenders generate NOC requests automatically",
+      description:
+        "Verify evaluated tenders generate NOC requests automatically",
       status: "pending",
     },
     {
@@ -125,7 +127,12 @@ export default function ProcurementWorkflowValidation() {
       name: "Dr. Abubakar Hassan",
       email: "abubakar.hassan@bpp.kano.gov.ng",
       role: "superuser",
-      permissions: ["approve_noc", "manage_users", "view_all", "approve_contracts"],
+      permissions: [
+        "approve_noc",
+        "manage_users",
+        "view_all",
+        "approve_contracts",
+      ],
       active: true,
     },
     {
@@ -154,7 +161,9 @@ export default function ProcurementWorkflowValidation() {
     },
   ]);
 
-  const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+  const [validationResults, setValidationResults] = useState<
+    ValidationResult[]
+  >([]);
   const [isRunningTests, setIsRunningTests] = useState(false);
   const [mockDataGenerated, setMockDataGenerated] = useState(false);
 
@@ -175,7 +184,8 @@ export default function ProcurementWorkflowValidation() {
     const mockPlan: MockProcurementPlan = {
       id: "PLAN-MOH-2024-001",
       title: "Medical Equipment Procurement Program",
-      description: "Annual procurement of medical equipment for primary healthcare centers",
+      description:
+        "Annual procurement of medical equipment for primary healthcare centers",
       estimatedValue: "₦850,000,000",
       status: "approved",
       approvalDate: "2024-01-15",
@@ -229,9 +239,16 @@ export default function ProcurementWorkflowValidation() {
     alert("Mock data generated successfully!");
   };
 
-  const updateApplicationData = (plan: MockProcurementPlan, tender: MockTender, noc: MockNOCRequest, contract: MockContract) => {
+  const updateApplicationData = (
+    plan: MockProcurementPlan,
+    tender: MockTender,
+    noc: MockNOCRequest,
+    contract: MockContract,
+  ) => {
     // Add to featured tenders
-    const existingTenders = JSON.parse(localStorage.getItem("featuredTenders") || "[]");
+    const existingTenders = JSON.parse(
+      localStorage.getItem("featuredTenders") || "[]",
+    );
     const featuredTender = {
       id: tender.id,
       title: tender.title,
@@ -245,10 +262,15 @@ export default function ProcurementWorkflowValidation() {
       createdAt: Date.now(),
     };
     existingTenders.unshift(featuredTender);
-    localStorage.setItem("featuredTenders", JSON.stringify(existingTenders.slice(0, 5)));
+    localStorage.setItem(
+      "featuredTenders",
+      JSON.stringify(existingTenders.slice(0, 5)),
+    );
 
     // Add to NOC requests (for central system)
-    const centralNOCs = JSON.parse(localStorage.getItem("centralNOCRequests") || "[]");
+    const centralNOCs = JSON.parse(
+      localStorage.getItem("centralNOCRequests") || "[]",
+    );
     const centralNOC = {
       id: noc.id,
       projectTitle: tender.title,
@@ -270,7 +292,7 @@ export default function ProcurementWorkflowValidation() {
     try {
       const planData = localStorage.getItem("mockProcurementPlan");
       const tenderData = localStorage.getItem("mockTender");
-      
+
       if (!planData || !tenderData) {
         return {
           stepId: "procurement-planning",
@@ -289,9 +311,10 @@ export default function ProcurementWorkflowValidation() {
       return {
         stepId: "procurement-planning",
         passed: isLinked && valuesMatch,
-        message: isLinked && valuesMatch 
-          ? "✅ Approved procurement plan successfully linked to tender" 
-          : "❌ Plan-Tender linking failed",
+        message:
+          isLinked && valuesMatch
+            ? "✅ Approved procurement plan successfully linked to tender"
+            : "❌ Plan-Tender linking failed",
         data: { plan, tender, isLinked, valuesMatch },
       };
     } catch (error) {
@@ -306,7 +329,7 @@ export default function ProcurementWorkflowValidation() {
   const validateTenderProgression = (): ValidationResult => {
     try {
       const tenderData = localStorage.getItem("mockTender");
-      
+
       if (!tenderData) {
         return {
           stepId: "tender-progression",
@@ -316,21 +339,29 @@ export default function ProcurementWorkflowValidation() {
       }
 
       const tender: MockTender = JSON.parse(tenderData);
-      
+
       // Check tender has progressed through stages and has evaluation results
       const hasEvaluationResults = !!tender.evaluationResults;
-      const hasRecommendedVendor = !!tender.evaluationResults?.recommendedVendor;
-      const statusProgressed = tender.status === "evaluated" || tender.status === "awarded";
+      const hasRecommendedVendor =
+        !!tender.evaluationResults?.recommendedVendor;
+      const statusProgressed =
+        tender.status === "evaluated" || tender.status === "awarded";
 
-      const passed = hasEvaluationResults && hasRecommendedVendor && statusProgressed;
+      const passed =
+        hasEvaluationResults && hasRecommendedVendor && statusProgressed;
 
       return {
         stepId: "tender-progression",
         passed,
-        message: passed 
-          ? "✅ Tender progressed through all stages with stored evaluation results" 
+        message: passed
+          ? "✅ Tender progressed through all stages with stored evaluation results"
           : "❌ Tender progression incomplete or missing evaluation data",
-        data: { tender, hasEvaluationResults, hasRecommendedVendor, statusProgressed },
+        data: {
+          tender,
+          hasEvaluationResults,
+          hasRecommendedVendor,
+          statusProgressed,
+        },
       };
     } catch (error) {
       return {
@@ -345,7 +376,7 @@ export default function ProcurementWorkflowValidation() {
     try {
       const tenderData = localStorage.getItem("mockTender");
       const nocData = localStorage.getItem("mockNOCRequest");
-      
+
       if (!tenderData || !nocData) {
         return {
           stepId: "noc-generation",
@@ -356,23 +387,25 @@ export default function ProcurementWorkflowValidation() {
 
       const tender: MockTender = JSON.parse(tenderData);
       const noc: MockNOCRequest = JSON.parse(nocData);
-      
+
       // Check if evaluated tender generated NOC request
-      const tenderEvaluated = tender.status === "evaluated" || tender.status === "awarded";
+      const tenderEvaluated =
+        tender.status === "evaluated" || tender.status === "awarded";
       const nocLinkedToTender = noc.tenderId === tender.id;
       const nocGenerated = !!noc.id;
 
       // Check if filtering works (simulated)
-      const evaluatedTenders = [tender].filter(t => t.status === "evaluated");
+      const evaluatedTenders = [tender].filter((t) => t.status === "evaluated");
       const filterWorks = evaluatedTenders.length > 0;
 
-      const passed = tenderEvaluated && nocLinkedToTender && nocGenerated && filterWorks;
+      const passed =
+        tenderEvaluated && nocLinkedToTender && nocGenerated && filterWorks;
 
       return {
         stepId: "noc-generation",
         passed,
-        message: passed 
-          ? "✅ Evaluated tender automatically generated NOC request, filtering works" 
+        message: passed
+          ? "✅ Evaluated tender automatically generated NOC request, filtering works"
           : "❌ NOC generation failed or filtering not working",
         data: { tender, noc, tenderEvaluated, nocLinkedToTender, filterWorks },
       };
@@ -389,7 +422,7 @@ export default function ProcurementWorkflowValidation() {
     try {
       const nocData = localStorage.getItem("mockNOCRequest");
       const contractData = localStorage.getItem("mockContract");
-      
+
       if (!nocData || !contractData) {
         return {
           stepId: "contract-unlock",
@@ -400,7 +433,7 @@ export default function ProcurementWorkflowValidation() {
 
       const noc: MockNOCRequest = JSON.parse(nocData);
       const contract: MockContract = JSON.parse(contractData);
-      
+
       // Check if NOC approval unlocked contract creation
       const nocApproved = noc.status === "approved";
       const contractCreated = !!contract.id;
@@ -413,8 +446,8 @@ export default function ProcurementWorkflowValidation() {
       return {
         stepId: "contract-unlock",
         passed,
-        message: passed 
-          ? "✅ NOC approval unlocked contract creation with proper references" 
+        message: passed
+          ? "✅ NOC approval unlocked contract creation with proper references"
           : "❌ Contract creation not unlocked or missing references",
         data: { noc, contract, nocApproved, contractCreated, hasReferences },
       };
@@ -448,30 +481,38 @@ export default function ProcurementWorkflowValidation() {
 
     for (let i = 0; i < tests.length; i++) {
       // Update step status to running
-      setWorkflowSteps(prev => prev.map(step => 
-        step.id === tests[i]().stepId 
-          ? { ...step, status: "running", timestamp: new Date().toLocaleTimeString() }
-          : step
-      ));
+      setWorkflowSteps((prev) =>
+        prev.map((step) =>
+          step.id === tests[i]().stepId
+            ? {
+                ...step,
+                status: "running",
+                timestamp: new Date().toLocaleTimeString(),
+              }
+            : step,
+        ),
+      );
 
       // Wait a bit for visual effect
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Run test
       const result = tests[i]();
       results.push(result);
 
       // Update step status
-      setWorkflowSteps(prev => prev.map(step => 
-        step.id === result.stepId 
-          ? { 
-              ...step, 
-              status: result.passed ? "passed" : "failed",
-              details: result.message,
-              timestamp: new Date().toLocaleTimeString()
-            }
-          : step
-      ));
+      setWorkflowSteps((prev) =>
+        prev.map((step) =>
+          step.id === result.stepId
+            ? {
+                ...step,
+                status: result.passed ? "passed" : "failed",
+                details: result.message,
+                timestamp: new Date().toLocaleTimeString(),
+              }
+            : step,
+        ),
+      );
     }
 
     setValidationResults(results);
@@ -479,12 +520,14 @@ export default function ProcurementWorkflowValidation() {
   };
 
   const resetTests = () => {
-    setWorkflowSteps(prev => prev.map(step => ({
-      ...step,
-      status: "pending",
-      details: undefined,
-      timestamp: undefined,
-    })));
+    setWorkflowSteps((prev) =>
+      prev.map((step) => ({
+        ...step,
+        status: "pending",
+        details: undefined,
+        timestamp: undefined,
+      })),
+    );
     setValidationResults([]);
   };
 
@@ -508,7 +551,11 @@ export default function ProcurementWorkflowValidation() {
       passed: "bg-green-100 text-green-800",
       failed: "bg-red-100 text-red-800",
     };
-    return <Badge className={variants[status as keyof typeof variants]}>{status.toUpperCase()}</Badge>;
+    return (
+      <Badge className={variants[status as keyof typeof variants]}>
+        {status.toUpperCase()}
+      </Badge>
+    );
   };
 
   return (
@@ -525,13 +572,12 @@ export default function ProcurementWorkflowValidation() {
                 <h1 className="text-xl font-bold text-purple-700">
                   Procurement Workflow Validation
                 </h1>
-                <p className="text-xs text-gray-600">End-to-End Testing Dashboard</p>
+                <p className="text-xs text-gray-600">
+                  End-to-End Testing Dashboard
+                </p>
               </div>
             </div>
-            <Button
-              onClick={() => navigate("/")}
-              variant="outline"
-            >
+            <Button onClick={() => navigate("/")} variant="outline">
               Back to Dashboard
             </Button>
           </div>
@@ -584,7 +630,13 @@ export default function ProcurementWorkflowValidation() {
                   </Button>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-600">Mock Data:</span>
-                    <Badge className={mockDataGenerated ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}>
+                    <Badge
+                      className={
+                        mockDataGenerated
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }
+                    >
                       {mockDataGenerated ? "Ready" : "Not Generated"}
                     </Badge>
                   </div>
@@ -604,15 +656,23 @@ export default function ProcurementWorkflowValidation() {
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">{step.name}</h3>
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {step.name}
+                            </h3>
                             {getStatusIcon(step.status)}
                           </div>
-                          <p className="text-gray-600 mb-2">{step.description}</p>
+                          <p className="text-gray-600 mb-2">
+                            {step.description}
+                          </p>
                           {step.details && (
-                            <p className="text-sm font-medium text-gray-800">{step.details}</p>
+                            <p className="text-sm font-medium text-gray-800">
+                              {step.details}
+                            </p>
                           )}
                           {step.timestamp && (
-                            <p className="text-xs text-gray-500 mt-1">Last run: {step.timestamp}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Last run: {step.timestamp}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -635,13 +695,13 @@ export default function ProcurementWorkflowValidation() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center p-4 bg-green-50 rounded-lg">
                       <div className="text-2xl font-bold text-green-600">
-                        {validationResults.filter(r => r.passed).length}
+                        {validationResults.filter((r) => r.passed).length}
                       </div>
                       <div className="text-sm text-green-600">Passed</div>
                     </div>
                     <div className="text-center p-4 bg-red-50 rounded-lg">
                       <div className="text-2xl font-bold text-red-600">
-                        {validationResults.filter(r => !r.passed).length}
+                        {validationResults.filter((r) => !r.passed).length}
                       </div>
                       <div className="text-sm text-red-600">Failed</div>
                     </div>
@@ -653,9 +713,16 @@ export default function ProcurementWorkflowValidation() {
                     </div>
                     <div className="text-center p-4 bg-purple-50 rounded-lg">
                       <div className="text-2xl font-bold text-purple-600">
-                        {Math.round((validationResults.filter(r => r.passed).length / validationResults.length) * 100)}%
+                        {Math.round(
+                          (validationResults.filter((r) => r.passed).length /
+                            validationResults.length) *
+                            100,
+                        )}
+                        %
                       </div>
-                      <div className="text-sm text-purple-600">Success Rate</div>
+                      <div className="text-sm text-purple-600">
+                        Success Rate
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -676,22 +743,35 @@ export default function ProcurementWorkflowValidation() {
               <CardContent>
                 <div className="grid gap-4">
                   {mockUsers.map((user) => (
-                    <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={user.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                           <User className="h-5 w-5 text-blue-600" />
                         </div>
                         <div>
                           <div className="font-medium">{user.name}</div>
-                          <div className="text-sm text-gray-600">{user.email}</div>
-                          <div className="text-xs text-gray-500">{user.permissions.join(", ")}</div>
+                          <div className="text-sm text-gray-600">
+                            {user.email}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {user.permissions.join(", ")}
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge className="bg-blue-100 text-blue-800">
                           {user.role.replace("_", " ").toUpperCase()}
                         </Badge>
-                        <Badge className={user.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}>
+                        <Badge
+                          className={
+                            user.active
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }
+                        >
                           {user.active ? "Active" : "Inactive"}
                         </Badge>
                       </div>
@@ -712,10 +792,22 @@ export default function ProcurementWorkflowValidation() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 text-sm">
-                    <div><strong>ID:</strong> PLAN-MOH-2024-001</div>
-                    <div><strong>Title:</strong> Medical Equipment Procurement Program</div>
-                    <div><strong>Value:</strong> ₦850,000,000</div>
-                    <div><strong>Status:</strong> <Badge className="bg-green-100 text-green-800">Approved</Badge></div>
+                    <div>
+                      <strong>ID:</strong> PLAN-MOH-2024-001
+                    </div>
+                    <div>
+                      <strong>Title:</strong> Medical Equipment Procurement
+                      Program
+                    </div>
+                    <div>
+                      <strong>Value:</strong> ₦850,000,000
+                    </div>
+                    <div>
+                      <strong>Status:</strong>{" "}
+                      <Badge className="bg-green-100 text-green-800">
+                        Approved
+                      </Badge>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -729,10 +821,21 @@ export default function ProcurementWorkflowValidation() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 text-sm">
-                    <div><strong>ID:</strong> MOH-2024-001</div>
-                    <div><strong>Title:</strong> Medical Equipment Supply</div>
-                    <div><strong>Value:</strong> ₦850,000,000</div>
-                    <div><strong>Status:</strong> <Badge className="bg-purple-100 text-purple-800">Evaluated</Badge></div>
+                    <div>
+                      <strong>ID:</strong> MOH-2024-001
+                    </div>
+                    <div>
+                      <strong>Title:</strong> Medical Equipment Supply
+                    </div>
+                    <div>
+                      <strong>Value:</strong> ₦850,000,000
+                    </div>
+                    <div>
+                      <strong>Status:</strong>{" "}
+                      <Badge className="bg-purple-100 text-purple-800">
+                        Evaluated
+                      </Badge>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -746,10 +849,21 @@ export default function ProcurementWorkflowValidation() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 text-sm">
-                    <div><strong>ID:</strong> NOC-MOH-2024-001</div>
-                    <div><strong>Tender ID:</strong> MOH-2024-001</div>
-                    <div><strong>Status:</strong> <Badge className="bg-green-100 text-green-800">Approved</Badge></div>
-                    <div><strong>Certificate:</strong> KNS/BPP/NOC/2024/001</div>
+                    <div>
+                      <strong>ID:</strong> NOC-MOH-2024-001
+                    </div>
+                    <div>
+                      <strong>Tender ID:</strong> MOH-2024-001
+                    </div>
+                    <div>
+                      <strong>Status:</strong>{" "}
+                      <Badge className="bg-green-100 text-green-800">
+                        Approved
+                      </Badge>
+                    </div>
+                    <div>
+                      <strong>Certificate:</strong> KNS/BPP/NOC/2024/001
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -763,10 +877,21 @@ export default function ProcurementWorkflowValidation() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 text-sm">
-                    <div><strong>ID:</strong> CON-MOH-2024-001</div>
-                    <div><strong>Contractor:</strong> PrimeCare Medical Ltd</div>
-                    <div><strong>Value:</strong> ₦850,000,000</div>
-                    <div><strong>Status:</strong> <Badge className="bg-blue-100 text-blue-800">Active</Badge></div>
+                    <div>
+                      <strong>ID:</strong> CON-MOH-2024-001
+                    </div>
+                    <div>
+                      <strong>Contractor:</strong> PrimeCare Medical Ltd
+                    </div>
+                    <div>
+                      <strong>Value:</strong> ₦850,000,000
+                    </div>
+                    <div>
+                      <strong>Status:</strong>{" "}
+                      <Badge className="bg-blue-100 text-blue-800">
+                        Active
+                      </Badge>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -785,7 +910,7 @@ export default function ProcurementWorkflowValidation() {
                       ) : (
                         <XCircle className="h-5 w-5 text-red-600" />
                       )}
-                      {workflowSteps.find(s => s.id === result.stepId)?.name}
+                      {workflowSteps.find((s) => s.id === result.stepId)?.name}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -795,7 +920,9 @@ export default function ProcurementWorkflowValidation() {
                       </div>
                       {result.data && (
                         <details className="border rounded-lg p-4">
-                          <summary className="cursor-pointer font-medium">View Raw Data</summary>
+                          <summary className="cursor-pointer font-medium">
+                            View Raw Data
+                          </summary>
                           <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">
                             {JSON.stringify(result.data, null, 2)}
                           </pre>
@@ -809,7 +936,10 @@ export default function ProcurementWorkflowValidation() {
               <Card>
                 <CardContent className="p-8 text-center">
                   <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">No test results yet. Run the validation tests to see detailed results.</p>
+                  <p className="text-gray-600">
+                    No test results yet. Run the validation tests to see
+                    detailed results.
+                  </p>
                 </CardContent>
               </Card>
             )}

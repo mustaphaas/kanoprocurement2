@@ -292,7 +292,7 @@ const ContractManagement = () => {
       const allContracts = [...existingContracts];
 
       nocContracts.forEach((nocContract: any) => {
-        const exists = allContracts.find(c => c.id === nocContract.id);
+        const exists = allContracts.find((c) => c.id === nocContract.id);
         if (!exists) {
           // Convert NOC contract format to ContractManagement format
           const convertedContract = convertNOCContractFormat(nocContract);
@@ -310,8 +310,8 @@ const ContractManagement = () => {
       const { contractData } = event.detail;
       const convertedContract = convertNOCContractFormat(contractData);
 
-      setContracts(prevContracts => {
-        const exists = prevContracts.find(c => c.id === contractData.id);
+      setContracts((prevContracts) => {
+        const exists = prevContracts.find((c) => c.id === contractData.id);
         if (!exists) {
           return [convertedContract, ...prevContracts];
         }
@@ -319,10 +319,16 @@ const ContractManagement = () => {
       });
     };
 
-    window.addEventListener('contractCreated', handleContractCreated as EventListener);
+    window.addEventListener(
+      "contractCreated",
+      handleContractCreated as EventListener,
+    );
 
     return () => {
-      window.removeEventListener('contractCreated', handleContractCreated as EventListener);
+      window.removeEventListener(
+        "contractCreated",
+        handleContractCreated as EventListener,
+      );
     };
   }, []);
 
@@ -332,17 +338,22 @@ const ContractManagement = () => {
       id: nocContract.id,
       contractNumber: nocContract.id,
       title: nocContract.projectTitle,
-      description: nocContract.projectDescription || "Auto-generated contract from NOC approval",
-      contractValue: parseFloat(nocContract.contractValue?.replace(/[^\d.]/g, '') || '0'),
+      description:
+        nocContract.projectDescription ||
+        "Auto-generated contract from NOC approval",
+      contractValue: parseFloat(
+        nocContract.contractValue?.replace(/[^\d.]/g, "") || "0",
+      ),
       status: nocContract.status === "Draft" ? "Draft" : "Active",
       startDate: nocContract.startDate,
       endDate: nocContract.endDate,
-      signedDate: nocContract.status === "Active" ? nocContract.createdDate : undefined,
+      signedDate:
+        nocContract.status === "Active" ? nocContract.createdDate : undefined,
       contractor: {
         id: nocContract.contractorId || `contractor-${Date.now()}`,
         companyName: nocContract.contractorName,
         contactPerson: "Contract Manager",
-        email: `${nocContract.contractorName.toLowerCase().replace(/\s+/g, '')}@company.com`,
+        email: `${nocContract.contractorName.toLowerCase().replace(/\s+/g, "")}@company.com`,
         phone: "+234-XXX-XXX-XXXX",
         address: "Company Address",
         registrationNumber: "RC-XXXXXX",
@@ -350,20 +361,27 @@ const ContractManagement = () => {
       },
       ministry: nocContract.ministry,
       department: nocContract.procuringEntity || nocContract.ministry,
-      contractType: nocContract.category === "Infrastructure" ? "Construction" :
-                   nocContract.category === "Medical Equipment" ? "Supply" : "Services",
-      milestones: nocContract.milestones?.map((milestone: any, index: number) => ({
-        id: milestone.id || `MIL-${index + 1}`,
-        title: milestone.title,
-        description: milestone.description,
-        targetDate: milestone.targetDate,
-        completionDate: milestone.completionDate,
-        status: milestone.status || "Pending",
-        paymentPercentage: milestone.percentage,
-        deliverables: [`Deliverable for ${milestone.title}`],
-        actualCost: 0,
-        budgetedCost: parseFloat(milestone.amount?.replace(/[^\d.]/g, '') || '0'),
-      })) || [],
+      contractType:
+        nocContract.category === "Infrastructure"
+          ? "Construction"
+          : nocContract.category === "Medical Equipment"
+            ? "Supply"
+            : "Services",
+      milestones:
+        nocContract.milestones?.map((milestone: any, index: number) => ({
+          id: milestone.id || `MIL-${index + 1}`,
+          title: milestone.title,
+          description: milestone.description,
+          targetDate: milestone.targetDate,
+          completionDate: milestone.completionDate,
+          status: milestone.status || "Pending",
+          paymentPercentage: milestone.percentage,
+          deliverables: [`Deliverable for ${milestone.title}`],
+          actualCost: 0,
+          budgetedCost: parseFloat(
+            milestone.amount?.replace(/[^\d.]/g, "") || "0",
+          ),
+        })) || [],
       payments: [],
       variations: [],
       documents: [],
@@ -373,14 +391,18 @@ const ContractManagement = () => {
         qualityScore: 85,
         safetyScore: 80,
         stakeholderSatisfaction: 85,
-        lastAssessment: new Date().toISOString().split('T')[0],
+        lastAssessment: new Date().toISOString().split("T")[0],
       },
       disputes: [],
       compliance: [],
       financials: {
-        totalContractValue: parseFloat(nocContract.contractValue?.replace(/[^\d.]/g, '') || '0'),
+        totalContractValue: parseFloat(
+          nocContract.contractValue?.replace(/[^\d.]/g, "") || "0",
+        ),
         paidAmount: 0,
-        pendingAmount: parseFloat(nocContract.contractValue?.replace(/[^\d.]/g, '') || '0'),
+        pendingAmount: parseFloat(
+          nocContract.contractValue?.replace(/[^\d.]/g, "") || "0",
+        ),
         retentionAmount: 0,
         advanceAmount: 0,
         completionPercentage: 0,
@@ -745,7 +767,11 @@ const ContractManagement = () => {
       if (filterStatus === "noc-linked") {
         // Check if contract was generated from NOC approval
         const nocContract = contract as any;
-        return nocContract.generatedFromNOC || nocContract.nocId || nocContract.nocCertificateNumber;
+        return (
+          nocContract.generatedFromNOC ||
+          nocContract.nocId ||
+          nocContract.nocCertificateNumber
+        );
       }
       return contract.status === filterStatus;
     })();
@@ -910,36 +936,50 @@ const ContractManagement = () => {
                             <div className="mt-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
                               <div className="flex items-center gap-2 mb-2">
                                 <Shield className="h-4 w-4 text-purple-600" />
-                                <span className="text-sm font-medium text-purple-800">NOC-Linked Contract</span>
+                                <span className="text-sm font-medium text-purple-800">
+                                  NOC-Linked Contract
+                                </span>
                               </div>
                               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-purple-700">
                                 {nocContract.nocId && (
                                   <div>
                                     <span className="font-medium">NOC ID:</span>
-                                    <br />{nocContract.nocId}
+                                    <br />
+                                    {nocContract.nocId}
                                   </div>
                                 )}
                                 {nocContract.nocCertificateNumber && (
                                   <div>
-                                    <span className="font-medium">Certificate:</span>
-                                    <br />{nocContract.nocCertificateNumber}
+                                    <span className="font-medium">
+                                      Certificate:
+                                    </span>
+                                    <br />
+                                    {nocContract.nocCertificateNumber}
                                   </div>
                                 )}
                                 {nocContract.tenderId && (
                                   <div>
-                                    <span className="font-medium">Tender ID:</span>
-                                    <br />{nocContract.tenderId}
+                                    <span className="font-medium">
+                                      Tender ID:
+                                    </span>
+                                    <br />
+                                    {nocContract.tenderId}
                                   </div>
                                 )}
                                 {nocContract.procurementPlanId && (
                                   <div>
-                                    <span className="font-medium">Plan ID:</span>
-                                    <br />{nocContract.procurementPlanId}
+                                    <span className="font-medium">
+                                      Plan ID:
+                                    </span>
+                                    <br />
+                                    {nocContract.procurementPlanId}
                                   </div>
                                 )}
                                 {nocContract.autoGenerated && (
                                   <div>
-                                    <span className="font-medium">Auto-Generated:</span>
+                                    <span className="font-medium">
+                                      Auto-Generated:
+                                    </span>
                                     <br />✅ Yes
                                   </div>
                                 )}

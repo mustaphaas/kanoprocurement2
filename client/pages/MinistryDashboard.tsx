@@ -10514,7 +10514,6 @@ Blockchain Timestamp: ${Date.now()}
         </div>
       </nav>
 
-
       {/* Procurement Planning Sub-Navigation */}
       {currentView === "procurement-planning" && (
         <nav className="bg-white border-b border-gray-200 shadow-sm">

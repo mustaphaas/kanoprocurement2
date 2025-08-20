@@ -780,7 +780,10 @@ export default function NOCRequestsTab() {
     URL.revokeObjectURL(url);
   };
 
-  const autoGenerateContract = (request: NOCRequest, certificateNumber: string) => {
+  const autoGenerateContract = (
+    request: NOCRequest,
+    certificateNumber: string,
+  ) => {
     // Generate contract ID
     const contractId = `CON-${request.ministryCode}-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`;
 
@@ -790,12 +793,14 @@ export default function NOCRequestsTab() {
 
       // Link to original procurement records
       procurementPlanId: `PLAN-${request.ministryCode}-${new Date().getFullYear()}-001`, // Link to procurement plan
-      tenderId: request.tenderId || `TND-${request.ministryCode}-${request.id.split("-").pop()}`,
+      tenderId:
+        request.tenderId ||
+        `TND-${request.ministryCode}-${request.id.split("-").pop()}`,
       nocId: request.id,
       nocCertificateNumber: certificateNumber,
 
       // Winning company information
-      contractorId: `COMP-${request.contractorName.replace(/\s+/g, '').toLowerCase()}`,
+      contractorId: `COMP-${request.contractorName.replace(/\s+/g, "").toLowerCase()}`,
       contractorName: request.contractorName,
 
       // Project details from NOC request
@@ -809,12 +814,12 @@ export default function NOCRequestsTab() {
 
       // Contract terms
       duration: request.expectedDuration,
-      startDate: new Date().toISOString().split('T')[0],
+      startDate: new Date().toISOString().split("T")[0],
       endDate: calculateEndDate(request.expectedDuration),
 
       // Contract status and workflow
       status: "Draft", // Contract starts as draft pending final approval
-      createdDate: new Date().toISOString().split('T')[0],
+      createdDate: new Date().toISOString().split("T")[0],
       createdBy: "System Auto-Generation",
       approvalStatus: "Pending Finalization",
 
@@ -833,11 +838,15 @@ export default function NOCRequestsTab() {
       evaluationResults: request.evaluationResults,
 
       // Auto-generated milestones based on project duration
-      milestones: generateMilestones(request.expectedDuration, request.projectValue),
+      milestones: generateMilestones(
+        request.expectedDuration,
+        request.projectValue,
+      ),
 
       // Standard contract terms
       terms: {
-        paymentTerms: "Payment shall be made upon completion of milestones as specified",
+        paymentTerms:
+          "Payment shall be made upon completion of milestones as specified",
         performanceBond: "10% of contract value",
         warrantyPeriod: "12 months from completion",
         liquidatedDamages: "0.1% per day of delay",
@@ -869,7 +878,9 @@ export default function NOCRequestsTab() {
     updateTenderStatus(request.tenderId, "Contract Created");
 
     // Log the contract generation
-    console.log(`✅ Auto-generated contract ${contractId} from NOC ${request.id}`);
+    console.log(
+      `✅ Auto-generated contract ${contractId} from NOC ${request.id}`,
+    );
 
     // Trigger contract creation notification
     triggerContractNotification(contractData);
@@ -883,9 +894,9 @@ export default function NOCRequestsTab() {
       const amount = parseInt(durationMatch[1]);
       const unit = durationMatch[2].toLowerCase();
 
-      if (unit === 'month') {
+      if (unit === "month") {
         today.setMonth(today.getMonth() + amount);
-      } else if (unit === 'year') {
+      } else if (unit === "year") {
         today.setFullYear(today.getFullYear() + amount);
       }
     } else {
@@ -893,11 +904,14 @@ export default function NOCRequestsTab() {
       today.setFullYear(today.getFullYear() + 1);
     }
 
-    return today.toISOString().split('T')[0];
+    return today.toISOString().split("T")[0];
   };
 
-  const generateMilestones = (duration: string, projectValue: string): any[] => {
-    const value = parseFloat(projectValue.replace(/[^\d.]/g, ''));
+  const generateMilestones = (
+    duration: string,
+    projectValue: string,
+  ): any[] => {
+    const value = parseFloat(projectValue.replace(/[^\d.]/g, ""));
     const today = new Date();
 
     // Standard milestone structure
@@ -907,8 +921,13 @@ export default function NOCRequestsTab() {
         title: "Project Commencement",
         description: "Project initiation and mobilization",
         percentage: 20,
-        amount: (value * 0.2).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }),
-        targetDate: new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days
+        amount: (value * 0.2).toLocaleString("en-NG", {
+          style: "currency",
+          currency: "NGN",
+        }),
+        targetDate: new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0], // 30 days
         status: "Pending",
       },
       {
@@ -916,8 +935,13 @@ export default function NOCRequestsTab() {
         title: "Mid-Project Review",
         description: "50% completion milestone review",
         percentage: 50,
-        amount: (value * 0.5).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }),
-        targetDate: new Date(today.getTime() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 90 days
+        amount: (value * 0.5).toLocaleString("en-NG", {
+          style: "currency",
+          currency: "NGN",
+        }),
+        targetDate: new Date(today.getTime() + 90 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0], // 90 days
         status: "Pending",
       },
       {
@@ -925,7 +949,10 @@ export default function NOCRequestsTab() {
         title: "Project Completion",
         description: "Final delivery and handover",
         percentage: 30,
-        amount: (value * 0.3).toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }),
+        amount: (value * 0.3).toLocaleString("en-NG", {
+          style: "currency",
+          currency: "NGN",
+        }),
         targetDate: calculateEndDate(duration),
         status: "Pending",
       },
@@ -936,40 +963,65 @@ export default function NOCRequestsTab() {
 
   const storeContractData = (contractData: any) => {
     // Store in main contracts storage
-    const existingContracts = JSON.parse(localStorage.getItem("contracts") || "[]");
+    const existingContracts = JSON.parse(
+      localStorage.getItem("contracts") || "[]",
+    );
     existingContracts.unshift(contractData);
     localStorage.setItem("contracts", JSON.stringify(existingContracts));
 
     // Store in ministry-specific contracts
     const ministryContractsKey = `${contractData.ministryCode}_contracts`;
-    const ministryContracts = JSON.parse(localStorage.getItem(ministryContractsKey) || "[]");
+    const ministryContracts = JSON.parse(
+      localStorage.getItem(ministryContractsKey) || "[]",
+    );
     ministryContracts.unshift(contractData);
-    localStorage.setItem(ministryContractsKey, JSON.stringify(ministryContracts));
+    localStorage.setItem(
+      ministryContractsKey,
+      JSON.stringify(ministryContracts),
+    );
 
     // Store in TenderManagement storage (for integration)
-    const tenderContracts = JSON.parse(localStorage.getItem("kanoproc_contracts") || "[]");
+    const tenderContracts = JSON.parse(
+      localStorage.getItem("kanoproc_contracts") || "[]",
+    );
     tenderContracts.unshift(contractData);
     localStorage.setItem("kanoproc_contracts", JSON.stringify(tenderContracts));
   };
 
-  const updateTenderStatus = (tenderId: string | undefined, newStatus: string) => {
+  const updateTenderStatus = (
+    tenderId: string | undefined,
+    newStatus: string,
+  ) => {
     if (!tenderId) return;
 
     // Update in TenderManagement storage
-    const tenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
+    const tenders = JSON.parse(
+      localStorage.getItem("kanoproc_tenders") || "[]",
+    );
     const updatedTenders = tenders.map((tender: any) =>
       tender.id === tenderId
-        ? { ...tender, status: newStatus, contractCreated: true, contractCreatedDate: new Date().toISOString() }
-        : tender
+        ? {
+            ...tender,
+            status: newStatus,
+            contractCreated: true,
+            contractCreatedDate: new Date().toISOString(),
+          }
+        : tender,
     );
     localStorage.setItem("kanoproc_tenders", JSON.stringify(updatedTenders));
 
     // Update in featured tenders
-    const featuredTenders = JSON.parse(localStorage.getItem("featuredTenders") || "[]");
+    const featuredTenders = JSON.parse(
+      localStorage.getItem("featuredTenders") || "[]",
+    );
     const updatedFeatured = featuredTenders.map((tender: any) =>
       tender.id === tenderId
-        ? { ...tender, status: newStatus, statusColor: "bg-blue-100 text-blue-800" }
-        : tender
+        ? {
+            ...tender,
+            status: newStatus,
+            statusColor: "bg-blue-100 text-blue-800",
+          }
+        : tender,
     );
     localStorage.setItem("featuredTenders", JSON.stringify(updatedFeatured));
   };
@@ -988,18 +1040,20 @@ export default function NOCRequestsTab() {
     };
 
     // Store notification
-    const notifications = JSON.parse(localStorage.getItem("notifications") || "[]");
+    const notifications = JSON.parse(
+      localStorage.getItem("notifications") || "[]",
+    );
     notifications.unshift(notification);
     localStorage.setItem("notifications", JSON.stringify(notifications));
 
     // Dispatch custom event for real-time updates
-    const event = new CustomEvent('contractCreated', {
+    const event = new CustomEvent("contractCreated", {
       detail: {
         contractId: contractData.id,
         nocId: contractData.nocId,
         ministryCode: contractData.ministryCode,
         contractData: contractData,
-      }
+      },
     });
     window.dispatchEvent(event);
   };

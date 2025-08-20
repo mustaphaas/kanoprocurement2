@@ -83,7 +83,10 @@ const App = () => (
               }
             />
             <Route path="/firebase-setup" element={<FirebaseSetup />} />
-            <Route path="/validation" element={<ProcurementWorkflowValidation />} />
+            <Route
+              path="/validation"
+              element={<ProcurementWorkflowValidation />}
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
