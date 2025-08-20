@@ -10460,7 +10460,7 @@ Blockchain Timestamp: ${Date.now()}
     } else if (currentView === "contracts") {
       return renderContracts();
     } else if (currentView === "reports") {
-      return renderReports();
+      return <MinistryReports />;
     } else if (currentView === "noc") {
       return renderNOCRequests();
     } else if (currentView === "users") {
