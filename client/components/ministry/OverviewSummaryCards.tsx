@@ -30,9 +30,7 @@ interface OverviewSummaryCardsProps {
   };
 }
 
-export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({
-  data,
-}) => {
+export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data }) => {
   const cards = [
     {
       title: "Total Procurement Plans",
@@ -89,12 +87,7 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({
       subtitle: `${data.utilizedBudget} of ${data.totalBudget}`,
       value: `${data.budgetUtilization}%`,
       icon: DollarSign,
-      color:
-        data.budgetUtilization > 85
-          ? "red"
-          : data.budgetUtilization > 70
-            ? "orange"
-            : "green",
+      color: data.budgetUtilization > 85 ? "red" : data.budgetUtilization > 70 ? "orange" : "green",
       progressBar: data.budgetUtilization,
     },
   ];
@@ -148,20 +141,15 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({
         const IconComponent = card.icon;
 
         return (
-          <Card
-            key={index}
-            className={`${colors.bg} ${colors.border} border-2 hover:shadow-lg transition-shadow`}
-          >
+          <Card key={index} className={`${colors.bg} ${colors.border} border-2 hover:shadow-lg transition-shadow`}>
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center mb-2">
                     <IconComponent className={`h-6 w-6 ${colors.icon} mr-2`} />
-                    <h3 className="text-sm font-medium text-gray-700">
-                      {card.title}
-                    </h3>
+                    <h3 className="text-sm font-medium text-gray-700">{card.title}</h3>
                   </div>
-
+                  
                   <div className="mb-2">
                     <span className={`text-3xl font-bold ${colors.value}`}>
                       {card.value}
@@ -169,9 +157,7 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({
                     {card.change && (
                       <span
                         className={`ml-2 text-sm font-medium ${
-                          card.changeType === "positive"
-                            ? "text-green-600"
-                            : "text-red-600"
+                          card.changeType === "positive" ? "text-green-600" : "text-red-600"
                         }`}
                       >
                         {card.change}
@@ -186,21 +172,15 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({
                     <div className="flex space-x-3 text-xs">
                       <div className="flex items-center">
                         <Clock className="h-3 w-3 text-yellow-600 mr-1" />
-                        <span className="text-yellow-700">
-                          {card.breakdown.pending} Pending
-                        </span>
+                        <span className="text-yellow-700">{card.breakdown.pending} Pending</span>
                       </div>
                       <div className="flex items-center">
                         <CheckCircle className="h-3 w-3 text-green-600 mr-1" />
-                        <span className="text-green-700">
-                          {card.breakdown.approved} Approved
-                        </span>
+                        <span className="text-green-700">{card.breakdown.approved} Approved</span>
                       </div>
                       <div className="flex items-center">
                         <AlertTriangle className="h-3 w-3 text-red-600 mr-1" />
-                        <span className="text-red-700">
-                          {card.breakdown.rejected} Rejected
-                        </span>
+                        <span className="text-red-700">{card.breakdown.rejected} Rejected</span>
                       </div>
                     </div>
                   )}
@@ -210,15 +190,11 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({
                     <div className="flex space-x-3 text-xs">
                       <div className="flex items-center">
                         <Activity className="h-3 w-3 text-green-600 mr-1" />
-                        <span className="text-green-700">
-                          {card.breakdown.active} Active
-                        </span>
+                        <span className="text-green-700">{card.breakdown.active} Active</span>
                       </div>
                       <div className="flex items-center">
                         <CheckCircle className="h-3 w-3 text-gray-600 mr-1" />
-                        <span className="text-gray-700">
-                          {card.breakdown.closed} Closed
-                        </span>
+                        <span className="text-gray-700">{card.breakdown.closed} Closed</span>
                       </div>
                     </div>
                   )}
@@ -239,9 +215,7 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({
                                 ? "bg-orange-500"
                                 : "bg-green-500"
                           }`}
-                          style={{
-                            width: `${Math.min(card.progressBar, 100)}%`,
-                          }}
+                          style={{ width: `${Math.min(card.progressBar, 100)}%` }}
                         />
                       </div>
                     </div>

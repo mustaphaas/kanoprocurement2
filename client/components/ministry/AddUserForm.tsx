@@ -95,8 +95,12 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
   const [showPermissions, setShowPermissions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const selectedRole = DEFAULT_ROLES.find(role => role.role_id === formData.role_id);
-  const selectedDepartment = DEFAULT_DEPARTMENTS.find(dept => dept.department_id === formData.department_id);
+  const selectedRole = DEFAULT_ROLES.find(
+    (role) => role.role_id === formData.role_id,
+  );
+  const selectedDepartment = DEFAULT_DEPARTMENTS.find(
+    (dept) => dept.department_id === formData.department_id,
+  );
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -135,11 +139,11 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
   };
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => {
+      setErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[field];
         return newErrors;
@@ -148,22 +152,23 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
   };
 
   const handlePermissionToggle = (permissionId: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       custom_permissions: prev.custom_permissions.includes(permissionId)
-        ? prev.custom_permissions.filter(id => id !== permissionId)
-        : [...prev.custom_permissions, permissionId]
+        ? prev.custom_permissions.filter((id) => id !== permissionId)
+        : [...prev.custom_permissions, permissionId],
     }));
   };
 
   const getAllUserPermissions = (): Permission[] => {
     const rolePermissions = selectedRole?.default_permissions || [];
     const customPermissionIds = formData.custom_permissions;
-    const customPermissions = DEFAULT_PERMISSIONS.filter(p => 
-      customPermissionIds.includes(p.permission_id) && 
-      !rolePermissions.some(rp => rp.permission_id === p.permission_id)
+    const customPermissions = DEFAULT_PERMISSIONS.filter(
+      (p) =>
+        customPermissionIds.includes(p.permission_id) &&
+        !rolePermissions.some((rp) => rp.permission_id === p.permission_id),
     );
-    
+
     return [...rolePermissions, ...customPermissions];
   };
 
@@ -174,7 +179,7 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
 
     try {
       const allPermissions = getAllUserPermissions();
-      
+
       const newUser: User = {
         user_id: generateUserId(),
         name: formData.name.trim(),
@@ -221,22 +226,30 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
 
   const getRiskLevelColor = (riskLevel: string) => {
     switch (riskLevel) {
-      case "critical": return "bg-red-100 text-red-800 border-red-200";
-      case "high": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "medium": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "low": return "bg-green-100 text-green-800 border-green-200";
-      default: return "bg-gray-100 text-gray-800 border-gray-200";
+      case "critical":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "high":
+        return "bg-orange-100 text-orange-800 border-orange-200";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "low":
+        return "bg-green-100 text-green-800 border-green-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
   const groupPermissionsByCategory = (permissions: Permission[]) => {
-    return permissions.reduce((acc, permission) => {
-      if (!acc[permission.category]) {
-        acc[permission.category] = [];
-      }
-      acc[permission.category].push(permission);
-      return acc;
-    }, {} as Record<string, Permission[]>);
+    return permissions.reduce(
+      (acc, permission) => {
+        if (!acc[permission.category]) {
+          acc[permission.category] = [];
+        }
+        acc[permission.category].push(permission);
+        return acc;
+      },
+      {} as Record<string, Permission[]>,
+    );
   };
 
   const categoryNames = {
@@ -292,7 +305,9 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                     id="employee_id"
                     placeholder="Enter employee ID"
                     value={formData.employee_id}
-                    onChange={(e) => handleInputChange("employee_id", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("employee_id", e.target.value)
+                    }
                   />
                 </div>
 
@@ -306,7 +321,9 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                       placeholder="Enter email address"
                       className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
                       value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                     />
                   </div>
                   {errors.email && (
@@ -320,7 +337,9 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                     id="username"
                     placeholder="Enter username"
                     value={formData.username}
-                    onChange={(e) => handleInputChange("username", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("username", e.target.value)
+                    }
                     className={errors.username ? "border-red-500" : ""}
                   />
                   {errors.username && (
@@ -337,7 +356,9 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                       placeholder="Enter phone number"
                       className={`pl-10 ${errors.phone ? "border-red-500" : ""}`}
                       value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("phone", e.target.value)
+                      }
                     />
                   </div>
                   {errors.phone && (
@@ -347,7 +368,12 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
 
                 <div className="space-y-2">
                   <Label htmlFor="status">Status</Label>
-                  <Select value={formData.status} onValueChange={(value: UserStatus) => handleInputChange("status", value)}>
+                  <Select
+                    value={formData.status}
+                    onValueChange={(value: UserStatus) =>
+                      handleInputChange("status", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -389,16 +415,27 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="role">Role *</Label>
-                  <Select value={formData.role_id} onValueChange={(value) => handleInputChange("role_id", value)}>
-                    <SelectTrigger className={errors.role_id ? "border-red-500" : ""}>
+                  <Select
+                    value={formData.role_id}
+                    onValueChange={(value) =>
+                      handleInputChange("role_id", value)
+                    }
+                  >
+                    <SelectTrigger
+                      className={errors.role_id ? "border-red-500" : ""}
+                    >
                       <SelectValue placeholder="Select user role" />
                     </SelectTrigger>
                     <SelectContent>
                       {DEFAULT_ROLES.map((role) => (
                         <SelectItem key={role.role_id} value={role.role_id}>
                           <div className="flex flex-col">
-                            <span className="font-medium">{role.role_name}</span>
-                            <span className="text-xs text-gray-500">{role.role_description}</span>
+                            <span className="font-medium">
+                              {role.role_name}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {role.role_description}
+                            </span>
                           </div>
                         </SelectItem>
                       ))}
@@ -409,31 +446,49 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                   )}
                   {selectedRole && (
                     <div className="text-xs text-gray-600 p-2 bg-gray-50 rounded">
-                      <strong>Hierarchy Level:</strong> {selectedRole.hierarchy_level} | 
-                      <strong> Default Permissions:</strong> {selectedRole.default_permissions.length}
+                      <strong>Hierarchy Level:</strong>{" "}
+                      {selectedRole.hierarchy_level} |
+                      <strong> Default Permissions:</strong>{" "}
+                      {selectedRole.default_permissions.length}
                     </div>
                   )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="department">Department *</Label>
-                  <Select value={formData.department_id} onValueChange={(value) => handleInputChange("department_id", value)}>
-                    <SelectTrigger className={errors.department_id ? "border-red-500" : ""}>
+                  <Select
+                    value={formData.department_id}
+                    onValueChange={(value) =>
+                      handleInputChange("department_id", value)
+                    }
+                  >
+                    <SelectTrigger
+                      className={errors.department_id ? "border-red-500" : ""}
+                    >
                       <SelectValue placeholder="Select department" />
                     </SelectTrigger>
                     <SelectContent>
                       {DEFAULT_DEPARTMENTS.map((dept) => (
-                        <SelectItem key={dept.department_id} value={dept.department_id}>
+                        <SelectItem
+                          key={dept.department_id}
+                          value={dept.department_id}
+                        >
                           <div className="flex flex-col">
-                            <span className="font-medium">{dept.department_name}</span>
-                            <span className="text-xs text-gray-500">{dept.description}</span>
+                            <span className="font-medium">
+                              {dept.department_name}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {dept.description}
+                            </span>
                           </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   {errors.department_id && (
-                    <p className="text-sm text-red-600">{errors.department_id}</p>
+                    <p className="text-sm text-red-600">
+                      {errors.department_id}
+                    </p>
                   )}
                 </div>
               </div>
@@ -452,7 +507,11 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                   onClick={() => setShowPermissions(!showPermissions)}
                   className="ml-auto"
                 >
-                  {showPermissions ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPermissions ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                   {showPermissions ? "Hide" : "Show"} Permissions
                 </Button>
               </CardTitle>
@@ -462,14 +521,21 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
               {selectedRole && (
                 <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                   <h4 className="font-medium text-blue-900 mb-2">
-                    Default Role Permissions ({selectedRole.default_permissions.length})
+                    Default Role Permissions (
+                    {selectedRole.default_permissions.length})
                   </h4>
                   <div className="flex flex-wrap gap-1">
-                    {selectedRole.default_permissions.slice(0, 6).map((permission) => (
-                      <Badge key={permission.permission_id} variant="outline" className="text-xs">
-                        {permission.permission_name}
-                      </Badge>
-                    ))}
+                    {selectedRole.default_permissions
+                      .slice(0, 6)
+                      .map((permission) => (
+                        <Badge
+                          key={permission.permission_id}
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          {permission.permission_name}
+                        </Badge>
+                      ))}
                     {selectedRole.default_permissions.length > 6 && (
                       <Badge variant="outline" className="text-xs">
                         +{selectedRole.default_permissions.length - 6} more
@@ -483,24 +549,35 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
               {showPermissions && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Additional Custom Permissions</h4>
+                    <h4 className="font-medium">
+                      Additional Custom Permissions
+                    </h4>
                     <span className="text-sm text-gray-600">
                       Total: {getAllUserPermissions().length} permissions
                     </span>
                   </div>
-                  
-                  {Object.entries(groupPermissionsByCategory(DEFAULT_PERMISSIONS)).map(([category, permissions]) => (
+
+                  {Object.entries(
+                    groupPermissionsByCategory(DEFAULT_PERMISSIONS),
+                  ).map(([category, permissions]) => (
                     <div key={category} className="space-y-2">
                       <h5 className="font-medium text-sm text-gray-700">
-                        {categoryNames[category as keyof typeof categoryNames] || category}
+                        {categoryNames[
+                          category as keyof typeof categoryNames
+                        ] || category}
                       </h5>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {permissions.map((permission) => {
-                          const isRolePermission = selectedRole?.default_permissions.some(
-                            rp => rp.permission_id === permission.permission_id
-                          );
-                          const isCustomSelected = formData.custom_permissions.includes(permission.permission_id);
-                          
+                          const isRolePermission =
+                            selectedRole?.default_permissions.some(
+                              (rp) =>
+                                rp.permission_id === permission.permission_id,
+                            );
+                          const isCustomSelected =
+                            formData.custom_permissions.includes(
+                              permission.permission_id,
+                            );
+
                           return (
                             <div
                               key={permission.permission_id}
@@ -516,7 +593,12 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                                 id={permission.permission_id}
                                 checked={isRolePermission || isCustomSelected}
                                 disabled={isRolePermission}
-                                onCheckedChange={() => !isRolePermission && handlePermissionToggle(permission.permission_id)}
+                                onCheckedChange={() =>
+                                  !isRolePermission &&
+                                  handlePermissionToggle(
+                                    permission.permission_id,
+                                  )
+                                }
                                 className="mt-1"
                               />
                               <div className="flex-1 min-w-0">
@@ -534,7 +616,10 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                                     {permission.risk_level}
                                   </Badge>
                                   {isRolePermission && (
-                                    <Badge variant="outline" className="text-xs bg-blue-100 text-blue-800">
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs bg-blue-100 text-blue-800"
+                                    >
                                       Role Default
                                     </Badge>
                                   )}
@@ -584,10 +669,18 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
+          <Button
+            variant="outline"
+            onClick={handleClose}
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700">
+          <Button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
             {isSubmitting ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

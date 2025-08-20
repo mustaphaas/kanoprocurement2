@@ -91,7 +91,9 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showAssignForm, setShowAssignForm] = useState(false);
   const [showCOIForm, setShowCOIForm] = useState(false);
-  const [selectedCommittee, setSelectedCommittee] = useState<Committee | null>(null);
+  const [selectedCommittee, setSelectedCommittee] = useState<Committee | null>(
+    null,
+  );
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [committeeTypeFilter, setCommitteeTypeFilter] = useState<string>("all");
@@ -129,7 +131,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
     try {
       const storageKey = `ministry_committees_${ministryId}`;
       const stored = localStorage.getItem(storageKey);
-      
+
       if (stored) {
         setCommittees(JSON.parse(stored));
       } else {
@@ -149,7 +151,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
     try {
       const storageKey = `ministry_coi_${ministryId}`;
       const stored = localStorage.getItem(storageKey);
-      
+
       if (stored) {
         setCOIDeclarations(JSON.parse(stored));
       }
@@ -178,7 +180,9 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
         committee_type: "technical_evaluation",
         members: [
           {
-            user_id: users.find(u => u.role.role_name.includes("Evaluator"))?.user_id || "",
+            user_id:
+              users.find((u) => u.role.role_name.includes("Evaluator"))
+                ?.user_id || "",
             committee_role: "chair",
             assigned_date: new Date().toISOString(),
             assigned_by: currentUserId,
@@ -217,9 +221,10 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
   };
 
   const handleAssignMember = async () => {
-    if (!selectedCommittee || !assignFormData.user_id || !assignFormData.role) return;
+    if (!selectedCommittee || !assignFormData.user_id || !assignFormData.role)
+      return;
 
-    const user = users.find(u => u.user_id === assignFormData.user_id);
+    const user = users.find((u) => u.user_id === assignFormData.user_id);
     if (!user) return;
 
     // Check if user can join committee (COI check)
@@ -235,13 +240,15 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
       assigned_date: new Date().toISOString(),
       assigned_by: currentUserId,
       status: "active",
-      coi_status: assignFormData.has_coi ? "declared_with_conflict" : "declared_no_conflict",
+      coi_status: assignFormData.has_coi
+        ? "declared_with_conflict"
+        : "declared_no_conflict",
     };
 
-    const updatedCommittees = committees.map(c =>
+    const updatedCommittees = committees.map((c) =>
       c.committee_id === selectedCommittee.committee_id
         ? { ...c, members: [...c.members, newMember] }
-        : c
+        : c,
     );
 
     saveCommittees(updatedCommittees);
@@ -263,15 +270,20 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
       saveCOIDeclarations(updatedCOI);
     }
 
-    setAssignFormData({ user_id: "", role: "" as CommitteeRole, has_coi: false, coi_details: "" });
+    setAssignFormData({
+      user_id: "",
+      role: "" as CommitteeRole,
+      has_coi: false,
+      coi_details: "",
+    });
     setShowAssignForm(false);
   };
 
   const handleRemoveMember = (committee: Committee, memberId: string) => {
-    const updatedCommittees = committees.map(c =>
+    const updatedCommittees = committees.map((c) =>
       c.committee_id === committee.committee_id
-        ? { ...c, members: c.members.filter(m => m.user_id !== memberId) }
-        : c
+        ? { ...c, members: c.members.filter((m) => m.user_id !== memberId) }
+        : c,
     );
     saveCommittees(updatedCommittees);
   };
@@ -290,7 +302,9 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
       company_name: coiFormData.company_name,
       financial_interest: coiFormData.financial_interest,
       declared_date: new Date().toISOString(),
-      status: coiFormData.has_conflict ? "pending_review" : "declared_no_conflict",
+      status: coiFormData.has_conflict
+        ? "pending_review"
+        : "declared_no_conflict",
     };
 
     const updatedCOI = [...coiDeclarations, coiDeclaration];
@@ -309,46 +323,66 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
 
   const getCommitteeTypeIcon = (type: CommitteeType) => {
     switch (type) {
-      case "technical_evaluation": return Building2;
-      case "financial_evaluation": return DollarSign;
-      case "procurement_planning": return FileText;
-      case "contract_review": return Award;
-      case "audit_committee": return Scale;
-      default: return Users;
+      case "technical_evaluation":
+        return Building2;
+      case "financial_evaluation":
+        return DollarSign;
+      case "procurement_planning":
+        return FileText;
+      case "contract_review":
+        return Award;
+      case "audit_committee":
+        return Scale;
+      default:
+        return Users;
     }
   };
 
   const getRoleIcon = (role: CommitteeRole) => {
     switch (role) {
-      case "chair": return Crown;
-      case "secretary": return FileText;
-      case "evaluator": return UserCheck;
-      case "financial_analyst": return DollarSign;
-      case "technical_expert": return Building2;
-      case "legal_advisor": return Scale;
-      default: return Users;
+      case "chair":
+        return Crown;
+      case "secretary":
+        return FileText;
+      case "evaluator":
+        return UserCheck;
+      case "financial_analyst":
+        return DollarSign;
+      case "technical_expert":
+        return Building2;
+      case "legal_advisor":
+        return Scale;
+      default:
+        return Users;
     }
   };
 
   const getCOIStatusColor = (status: COIStatus) => {
     switch (status) {
-      case "declared_no_conflict": return "bg-green-100 text-green-800";
-      case "declared_with_conflict": return "bg-yellow-100 text-yellow-800";
-      case "pending_review": return "bg-orange-100 text-orange-800";
-      case "approved_with_conflict": return "bg-blue-100 text-blue-800";
-      case "rejected_conflict": return "bg-red-100 text-red-800";
-      case "not_declared": return "bg-gray-100 text-gray-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "declared_no_conflict":
+        return "bg-green-100 text-green-800";
+      case "declared_with_conflict":
+        return "bg-yellow-100 text-yellow-800";
+      case "pending_review":
+        return "bg-orange-100 text-orange-800";
+      case "approved_with_conflict":
+        return "bg-blue-100 text-blue-800";
+      case "rejected_conflict":
+        return "bg-red-100 text-red-800";
+      case "not_declared":
+        return "bg-gray-100 text-gray-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getEligibleUsers = (role: CommitteeRole, type: CommitteeType) => {
-    let eligible = users.filter(u => u.status === "active");
+    let eligible = users.filter((u) => u.status === "active");
 
     // Filter by role-based criteria
     switch (role) {
       case "chair":
-        eligible = eligible.filter(u => u.role.hierarchy_level <= 2);
+        eligible = eligible.filter((u) => u.role.hierarchy_level <= 2);
         break;
       case "evaluator":
         eligible = getUsersByRole(users, "ROLE_EVALUATOR");
@@ -367,12 +401,14 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
     return eligible;
   };
 
-  const filteredCommittees = committees.filter(committee => {
-    const matchesSearch = searchTerm === "" || 
+  const filteredCommittees = committees.filter((committee) => {
+    const matchesSearch =
+      searchTerm === "" ||
       committee.committee_name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = committeeTypeFilter === "all" || 
+    const matchesType =
+      committeeTypeFilter === "all" ||
       committee.committee_type === committeeTypeFilter;
-    
+
     return matchesSearch && matchesType;
   });
 
@@ -389,7 +425,10 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
             Manage evaluation committees and member assignments
           </p>
         </div>
-        <Button onClick={() => setShowCreateForm(true)} className="bg-blue-600 hover:bg-blue-700">
+        <Button
+          onClick={() => setShowCreateForm(true)}
+          className="bg-blue-600 hover:bg-blue-700"
+        >
           <UserPlus className="h-4 w-4 mr-2" />
           Create Committee
         </Button>
@@ -401,8 +440,12 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Committees</p>
-                <p className="text-2xl font-bold text-gray-900">{committees.length}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Committees
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {committees.length}
+                </p>
               </div>
               <Users className="h-8 w-8 text-blue-600" />
             </div>
@@ -413,9 +456,11 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Committees</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Active Committees
+                </p>
                 <p className="text-2xl font-bold text-green-600">
-                  {committees.filter(c => c.status === "active").length}
+                  {committees.filter((c) => c.status === "active").length}
                 </p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-600" />
@@ -427,7 +472,9 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Members</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Members
+                </p>
                 <p className="text-2xl font-bold text-purple-600">
                   {committees.reduce((sum, c) => sum + c.members.length, 0)}
                 </p>
@@ -441,7 +488,9 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">COI Declarations</p>
+                <p className="text-sm font-medium text-gray-600">
+                  COI Declarations
+                </p>
                 <p className="text-2xl font-bold text-orange-600">
                   {coiDeclarations.length}
                 </p>
@@ -466,15 +515,24 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
               />
             </div>
 
-            <Select value={committeeTypeFilter} onValueChange={setCommitteeTypeFilter}>
+            <Select
+              value={committeeTypeFilter}
+              onValueChange={setCommitteeTypeFilter}
+            >
               <SelectTrigger className="w-[200px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="technical_evaluation">Technical Evaluation</SelectItem>
-                <SelectItem value="financial_evaluation">Financial Evaluation</SelectItem>
-                <SelectItem value="procurement_planning">Procurement Planning</SelectItem>
+                <SelectItem value="technical_evaluation">
+                  Technical Evaluation
+                </SelectItem>
+                <SelectItem value="financial_evaluation">
+                  Financial Evaluation
+                </SelectItem>
+                <SelectItem value="procurement_planning">
+                  Procurement Planning
+                </SelectItem>
                 <SelectItem value="contract_review">Contract Review</SelectItem>
                 <SelectItem value="audit_committee">Audit Committee</SelectItem>
               </SelectContent>
@@ -487,35 +545,48 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredCommittees.map((committee) => {
           const TypeIcon = getCommitteeTypeIcon(committee.committee_type);
-          
+
           return (
-            <Card key={committee.committee_id} className="hover:shadow-lg transition-shadow">
+            <Card
+              key={committee.committee_id}
+              className="hover:shadow-lg transition-shadow"
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TypeIcon className="h-5 w-5 text-blue-600" />
                   {committee.committee_name}
                   <Badge
                     variant="outline"
-                    className={committee.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
+                    className={
+                      committee.status === "active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-800"
+                    }
                   >
                     {committee.status}
                   </Badge>
                 </CardTitle>
                 <div className="text-sm text-gray-600">
-                  {committee.committee_type.replace("_", " ")} • {committee.members.length} members
+                  {committee.committee_type.replace("_", " ")} •{" "}
+                  {committee.members.length} members
                 </div>
               </CardHeader>
               <CardContent>
                 {/* Members List */}
                 <div className="space-y-2 mb-4">
                   {committee.members.map((member) => {
-                    const user = users.find(u => u.user_id === member.user_id);
+                    const user = users.find(
+                      (u) => u.user_id === member.user_id,
+                    );
                     const RoleIcon = getRoleIcon(member.committee_role);
-                    
+
                     if (!user) return null;
-                    
+
                     return (
-                      <div key={member.user_id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <div
+                        key={member.user_id}
+                        className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                      >
                         <div className="flex items-center gap-2">
                           <RoleIcon className="h-4 w-4 text-gray-600" />
                           <span className="font-medium">{user.name}</span>
@@ -536,16 +607,20 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
-                            <DropdownMenuItem onClick={() => {
-                              setSelectedUser(user);
-                              setSelectedCommittee(committee);
-                              setShowCOIForm(true);
-                            }}>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setSelectedCommittee(committee);
+                                setShowCOIForm(true);
+                              }}
+                            >
                               <Shield className="h-4 w-4 mr-2" />
                               Update COI
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => handleRemoveMember(committee, member.user_id)}
+                              onClick={() =>
+                                handleRemoveMember(committee, member.user_id)
+                              }
                               className="text-red-600"
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
@@ -597,7 +672,9 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
                 id="committee-name"
                 placeholder="Enter committee name"
                 value={createFormData.name}
-                onChange={(e) => setCreateFormData({ ...createFormData, name: e.target.value })}
+                onChange={(e) =>
+                  setCreateFormData({ ...createFormData, name: e.target.value })
+                }
               />
             </div>
 
@@ -605,17 +682,29 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
               <Label htmlFor="committee-type">Committee Type</Label>
               <Select
                 value={createFormData.type}
-                onValueChange={(value: CommitteeType) => setCreateFormData({ ...createFormData, type: value })}
+                onValueChange={(value: CommitteeType) =>
+                  setCreateFormData({ ...createFormData, type: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select committee type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="technical_evaluation">Technical Evaluation</SelectItem>
-                  <SelectItem value="financial_evaluation">Financial Evaluation</SelectItem>
-                  <SelectItem value="procurement_planning">Procurement Planning</SelectItem>
-                  <SelectItem value="contract_review">Contract Review</SelectItem>
-                  <SelectItem value="audit_committee">Audit Committee</SelectItem>
+                  <SelectItem value="technical_evaluation">
+                    Technical Evaluation
+                  </SelectItem>
+                  <SelectItem value="financial_evaluation">
+                    Financial Evaluation
+                  </SelectItem>
+                  <SelectItem value="procurement_planning">
+                    Procurement Planning
+                  </SelectItem>
+                  <SelectItem value="contract_review">
+                    Contract Review
+                  </SelectItem>
+                  <SelectItem value="audit_committee">
+                    Audit Committee
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -624,7 +713,9 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
               <Label htmlFor="tender-id">Related Tender (Optional)</Label>
               <Select
                 value={createFormData.tender_id}
-                onValueChange={(value) => setCreateFormData({ ...createFormData, tender_id: value })}
+                onValueChange={(value) =>
+                  setCreateFormData({ ...createFormData, tender_id: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select tender" />
@@ -644,9 +735,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
             <Button variant="outline" onClick={() => setShowCreateForm(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCreateCommittee}>
-              Create Committee
-            </Button>
+            <Button onClick={handleCreateCommittee}>Create Committee</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -662,7 +751,9 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
               <Label htmlFor="member-role">Committee Role</Label>
               <Select
                 value={assignFormData.role}
-                onValueChange={(value: CommitteeRole) => setAssignFormData({ ...assignFormData, role: value })}
+                onValueChange={(value: CommitteeRole) =>
+                  setAssignFormData({ ...assignFormData, role: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select role" />
@@ -671,8 +762,12 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
                   <SelectItem value="chair">Committee Chair</SelectItem>
                   <SelectItem value="secretary">Secretary</SelectItem>
                   <SelectItem value="evaluator">Evaluator</SelectItem>
-                  <SelectItem value="financial_analyst">Financial Analyst</SelectItem>
-                  <SelectItem value="technical_expert">Technical Expert</SelectItem>
+                  <SelectItem value="financial_analyst">
+                    Financial Analyst
+                  </SelectItem>
+                  <SelectItem value="technical_expert">
+                    Technical Expert
+                  </SelectItem>
                   <SelectItem value="legal_advisor">Legal Advisor</SelectItem>
                   <SelectItem value="observer">Observer</SelectItem>
                 </SelectContent>
@@ -683,18 +778,24 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
               <Label htmlFor="member-user">Select User</Label>
               <Select
                 value={assignFormData.user_id}
-                onValueChange={(value) => setAssignFormData({ ...assignFormData, user_id: value })}
+                onValueChange={(value) =>
+                  setAssignFormData({ ...assignFormData, user_id: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select user" />
                 </SelectTrigger>
                 <SelectContent>
-                  {getEligibleUsers(assignFormData.role, selectedCommittee?.committee_type || "technical_evaluation").map((user) => (
+                  {getEligibleUsers(
+                    assignFormData.role,
+                    selectedCommittee?.committee_type || "technical_evaluation",
+                  ).map((user) => (
                     <SelectItem key={user.user_id} value={user.user_id}>
                       <div className="flex flex-col">
                         <span>{user.name}</span>
                         <span className="text-xs text-gray-500">
-                          {user.role.role_name} • {user.department.department_name}
+                          {user.role.role_name} •{" "}
+                          {user.department.department_name}
                         </span>
                       </div>
                     </SelectItem>
@@ -707,9 +808,16 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
               <Checkbox
                 id="has-coi"
                 checked={assignFormData.has_coi}
-                onCheckedChange={(checked) => setAssignFormData({ ...assignFormData, has_coi: checked === true })}
+                onCheckedChange={(checked) =>
+                  setAssignFormData({
+                    ...assignFormData,
+                    has_coi: checked === true,
+                  })
+                }
               />
-              <Label htmlFor="has-coi">User has declared conflict of interest</Label>
+              <Label htmlFor="has-coi">
+                User has declared conflict of interest
+              </Label>
             </div>
 
             {assignFormData.has_coi && (
@@ -719,7 +827,12 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
                   id="coi-details"
                   placeholder="Describe the conflict of interest"
                   value={assignFormData.coi_details}
-                  onChange={(e) => setAssignFormData({ ...assignFormData, coi_details: e.target.value })}
+                  onChange={(e) =>
+                    setAssignFormData({
+                      ...assignFormData,
+                      coi_details: e.target.value,
+                    })
+                  }
                 />
               </div>
             )}
@@ -728,9 +841,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
             <Button variant="outline" onClick={() => setShowAssignForm(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAssignMember}>
-              Assign Member
-            </Button>
+            <Button onClick={handleAssignMember}>Assign Member</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -746,9 +857,16 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
               <Checkbox
                 id="has-conflict"
                 checked={coiFormData.has_conflict}
-                onCheckedChange={(checked) => setCOIFormData({ ...coiFormData, has_conflict: checked === true })}
+                onCheckedChange={(checked) =>
+                  setCOIFormData({
+                    ...coiFormData,
+                    has_conflict: checked === true,
+                  })
+                }
               />
-              <Label htmlFor="has-conflict">I have a conflict of interest</Label>
+              <Label htmlFor="has-conflict">
+                I have a conflict of interest
+              </Label>
             </div>
 
             {coiFormData.has_conflict && (
@@ -757,15 +875,23 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
                   <Label htmlFor="conflict-type">Type of Conflict</Label>
                   <Select
                     value={coiFormData.conflict_type}
-                    onValueChange={(value) => setCOIFormData({ ...coiFormData, conflict_type: value })}
+                    onValueChange={(value) =>
+                      setCOIFormData({ ...coiFormData, conflict_type: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select conflict type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="financial">Financial Interest</SelectItem>
-                      <SelectItem value="personal">Personal Relationship</SelectItem>
-                      <SelectItem value="professional">Professional Relationship</SelectItem>
+                      <SelectItem value="financial">
+                        Financial Interest
+                      </SelectItem>
+                      <SelectItem value="personal">
+                        Personal Relationship
+                      </SelectItem>
+                      <SelectItem value="professional">
+                        Professional Relationship
+                      </SelectItem>
                       <SelectItem value="family">Family Connection</SelectItem>
                     </SelectContent>
                   </Select>
@@ -777,17 +903,29 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
                     id="conflict-details"
                     placeholder="Describe the nature of the conflict"
                     value={coiFormData.conflict_details}
-                    onChange={(e) => setCOIFormData({ ...coiFormData, conflict_details: e.target.value })}
+                    onChange={(e) =>
+                      setCOIFormData({
+                        ...coiFormData,
+                        conflict_details: e.target.value,
+                      })
+                    }
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="company-name">Company/Organization Name</Label>
+                  <Label htmlFor="company-name">
+                    Company/Organization Name
+                  </Label>
                   <Input
                     id="company-name"
                     placeholder="Name of related company or organization"
                     value={coiFormData.company_name}
-                    onChange={(e) => setCOIFormData({ ...coiFormData, company_name: e.target.value })}
+                    onChange={(e) =>
+                      setCOIFormData({
+                        ...coiFormData,
+                        company_name: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </>
@@ -797,9 +935,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
             <Button variant="outline" onClick={() => setShowCOIForm(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCOIDeclaration}>
-              Submit Declaration
-            </Button>
+            <Button onClick={handleCOIDeclaration}>Submit Declaration</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

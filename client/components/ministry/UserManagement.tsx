@@ -104,7 +104,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
       // Load from localStorage first, then generate mock data if empty
       const storageKey = `ministry_users_${ministryId}`;
       const storedUsers = localStorage.getItem(storageKey);
-      
+
       if (storedUsers) {
         setUsers(JSON.parse(storedUsers));
       } else {
@@ -133,9 +133,12 @@ export const UserManagement: React.FC<UserManagementProps> = ({
         name: "Dr. Amina Hassan",
         email: "amina.hassan@kanostate.gov.ng",
         username: "amina.hassan",
-        role: DEFAULT_ROLES.find(r => r.role_id === "ROLE_ADMIN")!,
-        department: DEFAULT_DEPARTMENTS.find(d => d.department_id === "DEPT_ADMIN")!,
-        permissions: DEFAULT_ROLES.find(r => r.role_id === "ROLE_ADMIN")!.default_permissions,
+        role: DEFAULT_ROLES.find((r) => r.role_id === "ROLE_ADMIN")!,
+        department: DEFAULT_DEPARTMENTS.find(
+          (d) => d.department_id === "DEPT_ADMIN",
+        )!,
+        permissions: DEFAULT_ROLES.find((r) => r.role_id === "ROLE_ADMIN")!
+          .default_permissions,
         status: "active",
         created_date: "2024-01-15T10:00:00Z",
         created_by: "SYSTEM",
@@ -149,9 +152,13 @@ export const UserManagement: React.FC<UserManagementProps> = ({
         name: "Mallam Ibrahim Kano",
         email: "ibrahim.kano@kanostate.gov.ng",
         username: "ibrahim.kano",
-        role: DEFAULT_ROLES.find(r => r.role_id === "ROLE_PROC_MANAGER")!,
-        department: DEFAULT_DEPARTMENTS.find(d => d.department_id === "DEPT_PROCUREMENT")!,
-        permissions: DEFAULT_ROLES.find(r => r.role_id === "ROLE_PROC_MANAGER")!.default_permissions,
+        role: DEFAULT_ROLES.find((r) => r.role_id === "ROLE_PROC_MANAGER")!,
+        department: DEFAULT_DEPARTMENTS.find(
+          (d) => d.department_id === "DEPT_PROCUREMENT",
+        )!,
+        permissions: DEFAULT_ROLES.find(
+          (r) => r.role_id === "ROLE_PROC_MANAGER",
+        )!.default_permissions,
         status: "active",
         created_date: "2024-01-16T11:00:00Z",
         created_by: "USR-ADMIN-001",
@@ -165,9 +172,12 @@ export const UserManagement: React.FC<UserManagementProps> = ({
         name: "Engr. Fatima Aliyu",
         email: "fatima.aliyu@kanostate.gov.ng",
         username: "fatima.aliyu",
-        role: DEFAULT_ROLES.find(r => r.role_id === "ROLE_EVALUATOR")!,
-        department: DEFAULT_DEPARTMENTS.find(d => d.department_id === "DEPT_TECHNICAL")!,
-        permissions: DEFAULT_ROLES.find(r => r.role_id === "ROLE_EVALUATOR")!.default_permissions,
+        role: DEFAULT_ROLES.find((r) => r.role_id === "ROLE_EVALUATOR")!,
+        department: DEFAULT_DEPARTMENTS.find(
+          (d) => d.department_id === "DEPT_TECHNICAL",
+        )!,
+        permissions: DEFAULT_ROLES.find((r) => r.role_id === "ROLE_EVALUATOR")!
+          .default_permissions,
         status: "active",
         created_date: "2024-01-17T14:00:00Z",
         created_by: "USR-ADMIN-001",
@@ -181,9 +191,12 @@ export const UserManagement: React.FC<UserManagementProps> = ({
         name: "Malam Usman Bello",
         email: "usman.bello@kanostate.gov.ng",
         username: "usman.bello",
-        role: DEFAULT_ROLES.find(r => r.role_id === "ROLE_ACCOUNTANT")!,
-        department: DEFAULT_DEPARTMENTS.find(d => d.department_id === "DEPT_FINANCE")!,
-        permissions: DEFAULT_ROLES.find(r => r.role_id === "ROLE_ACCOUNTANT")!.default_permissions,
+        role: DEFAULT_ROLES.find((r) => r.role_id === "ROLE_ACCOUNTANT")!,
+        department: DEFAULT_DEPARTMENTS.find(
+          (d) => d.department_id === "DEPT_FINANCE",
+        )!,
+        permissions: DEFAULT_ROLES.find((r) => r.role_id === "ROLE_ACCOUNTANT")!
+          .default_permissions,
         status: "active",
         created_date: "2024-01-18T09:00:00Z",
         created_by: "USR-ADMIN-001",
@@ -197,9 +210,13 @@ export const UserManagement: React.FC<UserManagementProps> = ({
         name: "Barr. Zainab Ibrahim",
         email: "zainab.ibrahim@kanostate.gov.ng",
         username: "zainab.ibrahim",
-        role: DEFAULT_ROLES.find(r => r.role_id === "ROLE_LEGAL_ADVISOR")!,
-        department: DEFAULT_DEPARTMENTS.find(d => d.department_id === "DEPT_LEGAL")!,
-        permissions: DEFAULT_ROLES.find(r => r.role_id === "ROLE_LEGAL_ADVISOR")!.default_permissions,
+        role: DEFAULT_ROLES.find((r) => r.role_id === "ROLE_LEGAL_ADVISOR")!,
+        department: DEFAULT_DEPARTMENTS.find(
+          (d) => d.department_id === "DEPT_LEGAL",
+        )!,
+        permissions: DEFAULT_ROLES.find(
+          (r) => r.role_id === "ROLE_LEGAL_ADVISOR",
+        )!.default_permissions,
         status: "active",
         created_date: "2024-01-19T10:30:00Z",
         created_by: "USR-ADMIN-001",
@@ -219,28 +236,31 @@ export const UserManagement: React.FC<UserManagementProps> = ({
     // Search filter
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
-      filtered = filtered.filter(user =>
-        user.name.toLowerCase().includes(search) ||
-        user.email.toLowerCase().includes(search) ||
-        user.username.toLowerCase().includes(search) ||
-        user.role.role_name.toLowerCase().includes(search) ||
-        user.department.department_name.toLowerCase().includes(search)
+      filtered = filtered.filter(
+        (user) =>
+          user.name.toLowerCase().includes(search) ||
+          user.email.toLowerCase().includes(search) ||
+          user.username.toLowerCase().includes(search) ||
+          user.role.role_name.toLowerCase().includes(search) ||
+          user.department.department_name.toLowerCase().includes(search),
       );
     }
 
     // Status filter
     if (statusFilter !== "all") {
-      filtered = filtered.filter(user => user.status === statusFilter);
+      filtered = filtered.filter((user) => user.status === statusFilter);
     }
 
     // Role filter
     if (roleFilter !== "all") {
-      filtered = filtered.filter(user => user.role.role_id === roleFilter);
+      filtered = filtered.filter((user) => user.role.role_id === roleFilter);
     }
 
     // Department filter
     if (departmentFilter !== "all") {
-      filtered = filtered.filter(user => user.department.department_id === departmentFilter);
+      filtered = filtered.filter(
+        (user) => user.department.department_id === departmentFilter,
+      );
     }
 
     setFilteredUsers(filtered);
@@ -249,7 +269,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
   const handleAddUser = async (newUser: User) => {
     const updatedUsers = [...users, newUser];
     saveUsers(updatedUsers);
-    
+
     // Log activity
     console.log(`User ${newUser.name} created by ${currentUser.name}`);
   };
@@ -261,25 +281,29 @@ export const UserManagement: React.FC<UserManagementProps> = ({
 
   const handleDeleteUser = async () => {
     if (!selectedUser) return;
-    
-    const updatedUsers = users.filter(user => user.user_id !== selectedUser.user_id);
+
+    const updatedUsers = users.filter(
+      (user) => user.user_id !== selectedUser.user_id,
+    );
     saveUsers(updatedUsers);
-    
+
     setShowDeleteDialog(false);
     setSelectedUser(null);
-    
+
     // Log activity
     console.log(`User ${selectedUser.name} deleted by ${currentUser.name}`);
   };
 
   const handleStatusChange = async (user: User, newStatus: UserStatus) => {
-    const updatedUsers = users.map(u =>
-      u.user_id === user.user_id ? { ...u, status: newStatus } : u
+    const updatedUsers = users.map((u) =>
+      u.user_id === user.user_id ? { ...u, status: newStatus } : u,
     );
     saveUsers(updatedUsers);
-    
+
     // Log activity
-    console.log(`User ${user.name} status changed to ${newStatus} by ${currentUser.name}`);
+    console.log(
+      `User ${user.name} status changed to ${newStatus} by ${currentUser.name}`,
+    );
   };
 
   const getStatusConfig = (status: UserStatus) => {
@@ -299,11 +323,11 @@ export const UserManagement: React.FC<UserManagementProps> = ({
 
   const formatLastLogin = (lastLogin?: string) => {
     if (!lastLogin) return "Never";
-    
+
     const date = new Date(lastLogin);
     const now = new Date();
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
-    
+
     if (diffInHours < 24) {
       return "Today";
     } else if (diffInHours < 48) {
@@ -313,7 +337,9 @@ export const UserManagement: React.FC<UserManagementProps> = ({
     }
   };
 
-  const canManageUsers = hasPermission(currentUser, "user.create") || hasPermission(currentUser, "user.edit");
+  const canManageUsers =
+    hasPermission(currentUser, "user.create") ||
+    hasPermission(currentUser, "user.edit");
 
   return (
     <div className="space-y-6">
@@ -329,7 +355,10 @@ export const UserManagement: React.FC<UserManagementProps> = ({
           </p>
         </div>
         {canManageUsers && (
-          <Button onClick={() => setShowAddForm(true)} className="bg-blue-600 hover:bg-blue-700">
+          <Button
+            onClick={() => setShowAddForm(true)}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
             <UserPlus className="h-4 w-4 mr-2" />
             Add New User
           </Button>
@@ -343,7 +372,9 @@ export const UserManagement: React.FC<UserManagementProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Users</p>
-                <p className="text-2xl font-bold text-gray-900">{users.length}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {users.length}
+                </p>
               </div>
               <Users className="h-8 w-8 text-blue-600" />
             </div>
@@ -354,9 +385,11 @@ export const UserManagement: React.FC<UserManagementProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Users</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Active Users
+                </p>
                 <p className="text-2xl font-bold text-green-600">
-                  {users.filter(u => u.status === "active").length}
+                  {users.filter((u) => u.status === "active").length}
                 </p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-600" />
@@ -370,7 +403,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
               <div>
                 <p className="text-sm font-medium text-gray-600">Departments</p>
                 <p className="text-2xl font-bold text-purple-600">
-                  {new Set(users.map(u => u.department.department_id)).size}
+                  {new Set(users.map((u) => u.department.department_id)).size}
                 </p>
               </div>
               <Building2 className="h-8 w-8 text-purple-600" />
@@ -384,7 +417,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
               <div>
                 <p className="text-sm font-medium text-gray-600">Roles</p>
                 <p className="text-2xl font-bold text-orange-600">
-                  {new Set(users.map(u => u.role.role_id)).size}
+                  {new Set(users.map((u) => u.role.role_id)).size}
                 </p>
               </div>
               <Shield className="h-8 w-8 text-orange-600" />
@@ -429,7 +462,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Roles</SelectItem>
-                {DEFAULT_ROLES.map(role => (
+                {DEFAULT_ROLES.map((role) => (
                   <SelectItem key={role.role_id} value={role.role_id}>
                     {role.role_name}
                   </SelectItem>
@@ -438,14 +471,20 @@ export const UserManagement: React.FC<UserManagementProps> = ({
             </Select>
 
             {/* Department Filter */}
-            <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+            <Select
+              value={departmentFilter}
+              onValueChange={setDepartmentFilter}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Departments</SelectItem>
-                {DEFAULT_DEPARTMENTS.map(dept => (
-                  <SelectItem key={dept.department_id} value={dept.department_id}>
+                {DEFAULT_DEPARTMENTS.map((dept) => (
+                  <SelectItem
+                    key={dept.department_id}
+                    value={dept.department_id}
+                  >
                     {dept.department_name}
                   </SelectItem>
                 ))}
@@ -463,9 +502,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
       {/* Users Table */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            Users ({filteredUsers.length})
-          </CardTitle>
+          <CardTitle>Users ({filteredUsers.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -496,18 +533,27 @@ export const UserManagement: React.FC<UserManagementProps> = ({
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                             <span className="text-sm font-medium text-blue-600">
-                              {user.name.split(' ').map(n => n[0]).join('')}
+                              {user.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
                             </span>
                           </div>
                           <div>
-                            <div className="font-medium text-gray-900">{user.name}</div>
-                            <div className="text-sm text-gray-500">{user.email}</div>
+                            <div className="font-medium text-gray-900">
+                              {user.name}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {user.email}
+                            </div>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{user.role.role_name}</div>
+                          <div className="font-medium">
+                            {user.role.role_name}
+                          </div>
                           <div className="text-sm text-gray-500">
                             Level {user.role.hierarchy_level}
                           </div>
@@ -515,8 +561,12 @@ export const UserManagement: React.FC<UserManagementProps> = ({
                       </TableCell>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{user.department.department_name}</div>
-                          <div className="text-sm text-gray-500">{user.department.department_code}</div>
+                          <div className="font-medium">
+                            {user.department.department_name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.department.department_code}
+                          </div>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -538,27 +588,39 @@ export const UserManagement: React.FC<UserManagementProps> = ({
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => {
-                              setSelectedUser(user);
-                              setShowUserDetails(true);
-                            }}>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setShowUserDetails(true);
+                              }}
+                            >
                               <Eye className="h-4 w-4 mr-2" />
                               View Details
                             </DropdownMenuItem>
                             {canManageUsers && (
                               <>
-                                <DropdownMenuItem onClick={() => handleEditUser(user)}>
+                                <DropdownMenuItem
+                                  onClick={() => handleEditUser(user)}
+                                >
                                   <Edit className="h-4 w-4 mr-2" />
                                   Edit User
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 {user.status === "active" ? (
-                                  <DropdownMenuItem onClick={() => handleStatusChange(user, "inactive")}>
+                                  <DropdownMenuItem
+                                    onClick={() =>
+                                      handleStatusChange(user, "inactive")
+                                    }
+                                  >
                                     <X className="h-4 w-4 mr-2" />
                                     Deactivate
                                   </DropdownMenuItem>
                                 ) : (
-                                  <DropdownMenuItem onClick={() => handleStatusChange(user, "active")}>
+                                  <DropdownMenuItem
+                                    onClick={() =>
+                                      handleStatusChange(user, "active")
+                                    }
+                                  >
                                     <CheckCircle className="h-4 w-4 mr-2" />
                                     Activate
                                   </DropdownMenuItem>
@@ -607,37 +669,59 @@ export const UserManagement: React.FC<UserManagementProps> = ({
               {/* User Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Name</Label>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Name
+                  </Label>
                   <p className="text-sm">{selectedUser.name}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Employee ID</Label>
-                  <p className="text-sm">{selectedUser.employee_id || "Not set"}</p>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Employee ID
+                  </Label>
+                  <p className="text-sm">
+                    {selectedUser.employee_id || "Not set"}
+                  </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Email</Label>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Email
+                  </Label>
                   <p className="text-sm">{selectedUser.email}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Phone</Label>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Phone
+                  </Label>
                   <p className="text-sm">{selectedUser.phone || "Not set"}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Role</Label>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Role
+                  </Label>
                   <p className="text-sm">{selectedUser.role.role_name}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Department</Label>
-                  <p className="text-sm">{selectedUser.department.department_name}</p>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Department
+                  </Label>
+                  <p className="text-sm">
+                    {selectedUser.department.department_name}
+                  </p>
                 </div>
               </div>
 
               {/* Permissions */}
               <div>
-                <Label className="text-sm font-medium text-gray-600">Permissions ({selectedUser.permissions.length})</Label>
+                <Label className="text-sm font-medium text-gray-600">
+                  Permissions ({selectedUser.permissions.length})
+                </Label>
                 <div className="flex flex-wrap gap-1 mt-2">
-                  {selectedUser.permissions.slice(0, 10).map(permission => (
-                    <Badge key={permission.permission_id} variant="outline" className="text-xs">
+                  {selectedUser.permissions.slice(0, 10).map((permission) => (
+                    <Badge
+                      key={permission.permission_id}
+                      variant="outline"
+                      className="text-xs"
+                    >
                       {permission.permission_name}
                     </Badge>
                   ))}
@@ -659,11 +743,15 @@ export const UserManagement: React.FC<UserManagementProps> = ({
           <DialogHeader>
             <DialogTitle>Delete User</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete {selectedUser?.name}? This action cannot be undone.
+              Are you sure you want to delete {selectedUser?.name}? This action
+              cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteDialog(false)}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteUser}>
@@ -678,7 +766,10 @@ export const UserManagement: React.FC<UserManagementProps> = ({
 
 function Label({ className, children, ...props }: any) {
   return (
-    <label className={`text-sm font-medium text-gray-700 ${className || ""}`} {...props}>
+    <label
+      className={`text-sm font-medium text-gray-700 ${className || ""}`}
+      {...props}
+    >
       {children}
     </label>
   );

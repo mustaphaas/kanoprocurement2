@@ -43,7 +43,7 @@ export interface Permission {
   risk_level: "low" | "medium" | "high" | "critical";
 }
 
-export type PermissionCategory = 
+export type PermissionCategory =
   | "tender_management"
   | "evaluation"
   | "financial"
@@ -54,7 +54,11 @@ export type PermissionCategory =
   | "audit_compliance"
   | "system_admin";
 
-export type UserStatus = "active" | "inactive" | "suspended" | "pending_approval";
+export type UserStatus =
+  | "active"
+  | "inactive"
+  | "suspended"
+  | "pending_approval";
 
 // Committee and COI Related Types
 export interface Committee {
@@ -77,14 +81,14 @@ export interface CommitteeMember {
   coi_status: COIStatus;
 }
 
-export type CommitteeType = 
+export type CommitteeType =
   | "technical_evaluation"
   | "financial_evaluation"
   | "procurement_planning"
   | "contract_review"
   | "audit_committee";
 
-export type CommitteeRole = 
+export type CommitteeRole =
   | "chair"
   | "secretary"
   | "evaluator"
@@ -112,9 +116,14 @@ export interface COIDeclaration {
   override_by?: string;
 }
 
-export type COIType = "financial" | "personal" | "professional" | "family" | "none";
+export type COIType =
+  | "financial"
+  | "personal"
+  | "professional"
+  | "family"
+  | "none";
 
-export type RelationshipType = 
+export type RelationshipType =
   | "employee"
   | "shareholder"
   | "director"
@@ -123,7 +132,7 @@ export type RelationshipType =
   | "business_partner"
   | "other";
 
-export type COIStatus = 
+export type COIStatus =
   | "declared_no_conflict"
   | "declared_with_conflict"
   | "pending_review"
@@ -376,10 +385,17 @@ export const DEFAULT_ROLES: UserRole[] = [
   {
     role_id: "ROLE_PROC_MANAGER",
     role_name: "Procurement Manager",
-    role_description: "Manages procurement processes and oversees procurement team",
+    role_description:
+      "Manages procurement processes and oversees procurement team",
     hierarchy_level: 2,
-    default_permissions: DEFAULT_PERMISSIONS.filter(p => 
-      ["tender_management", "evaluation", "contract_management", "noc_management", "reporting"].includes(p.category)
+    default_permissions: DEFAULT_PERMISSIONS.filter((p) =>
+      [
+        "tender_management",
+        "evaluation",
+        "contract_management",
+        "noc_management",
+        "reporting",
+      ].includes(p.category),
     ),
   },
   {
@@ -387,9 +403,16 @@ export const DEFAULT_ROLES: UserRole[] = [
     role_name: "Procurement Officer",
     role_description: "Handles day-to-day procurement activities",
     hierarchy_level: 3,
-    default_permissions: DEFAULT_PERMISSIONS.filter(p => 
-      p.permission_code.includes("view") || 
-      ["tender.create", "tender.edit", "noc.create", "evaluation.evaluate", "report.generate"].includes(p.permission_code)
+    default_permissions: DEFAULT_PERMISSIONS.filter(
+      (p) =>
+        p.permission_code.includes("view") ||
+        [
+          "tender.create",
+          "tender.edit",
+          "noc.create",
+          "evaluation.evaluate",
+          "report.generate",
+        ].includes(p.permission_code),
     ),
   },
   {
@@ -397,8 +420,8 @@ export const DEFAULT_ROLES: UserRole[] = [
     role_name: "Bid Evaluator",
     role_description: "Specialized in evaluating tender submissions",
     hierarchy_level: 3,
-    default_permissions: DEFAULT_PERMISSIONS.filter(p => 
-      p.category === "evaluation" || p.permission_code.includes("view")
+    default_permissions: DEFAULT_PERMISSIONS.filter(
+      (p) => p.category === "evaluation" || p.permission_code.includes("view"),
     ),
   },
   {
@@ -406,8 +429,11 @@ export const DEFAULT_ROLES: UserRole[] = [
     role_name: "Accountant",
     role_description: "Handles financial aspects of procurement",
     hierarchy_level: 3,
-    default_permissions: DEFAULT_PERMISSIONS.filter(p => 
-      p.category === "financial" || p.permission_code.includes("view") || p.category === "reporting"
+    default_permissions: DEFAULT_PERMISSIONS.filter(
+      (p) =>
+        p.category === "financial" ||
+        p.permission_code.includes("view") ||
+        p.category === "reporting",
     ),
   },
   {
@@ -415,8 +441,11 @@ export const DEFAULT_ROLES: UserRole[] = [
     role_name: "Legal Advisor",
     role_description: "Provides legal guidance on procurement matters",
     hierarchy_level: 3,
-    default_permissions: DEFAULT_PERMISSIONS.filter(p => 
-      p.permission_code.includes("view") || p.category === "contract_management" || p.category === "audit_compliance"
+    default_permissions: DEFAULT_PERMISSIONS.filter(
+      (p) =>
+        p.permission_code.includes("view") ||
+        p.category === "contract_management" ||
+        p.category === "audit_compliance",
     ),
   },
   {
@@ -424,8 +453,11 @@ export const DEFAULT_ROLES: UserRole[] = [
     role_name: "Committee Chair",
     role_description: "Chairs evaluation committees",
     hierarchy_level: 2,
-    default_permissions: DEFAULT_PERMISSIONS.filter(p => 
-      p.category === "evaluation" || p.permission_code.includes("view") || p.permission_code === "eval.finalize"
+    default_permissions: DEFAULT_PERMISSIONS.filter(
+      (p) =>
+        p.category === "evaluation" ||
+        p.permission_code.includes("view") ||
+        p.permission_code === "eval.finalize",
     ),
   },
 ];
@@ -472,28 +504,43 @@ export const DEFAULT_DEPARTMENTS: Department[] = [
 
 // Helper Functions
 export const hasPermission = (user: User, permissionCode: string): boolean => {
-  return user.permissions.some(p => p.permission_code === permissionCode);
+  return user.permissions.some((p) => p.permission_code === permissionCode);
 };
 
 export const getUsersByRole = (users: User[], roleId: string): User[] => {
-  return users.filter(user => user.role.role_id === roleId && user.status === "active");
-};
-
-export const getUsersByDepartment = (users: User[], departmentId: string): User[] => {
-  return users.filter(user => user.department.department_id === departmentId && user.status === "active");
-};
-
-export const canUserJoinCommittee = (user: User, tenderId: string, coiDeclarations: COIDeclaration[]): boolean => {
-  if (user.status !== "active") return false;
-  
-  const userCOI = coiDeclarations.find(coi => 
-    coi.user_id === user.user_id && 
-    coi.tender_id === tenderId
+  return users.filter(
+    (user) => user.role.role_id === roleId && user.status === "active",
   );
-  
+};
+
+export const getUsersByDepartment = (
+  users: User[],
+  departmentId: string,
+): User[] => {
+  return users.filter(
+    (user) =>
+      user.department.department_id === departmentId &&
+      user.status === "active",
+  );
+};
+
+export const canUserJoinCommittee = (
+  user: User,
+  tenderId: string,
+  coiDeclarations: COIDeclaration[],
+): boolean => {
+  if (user.status !== "active") return false;
+
+  const userCOI = coiDeclarations.find(
+    (coi) => coi.user_id === user.user_id && coi.tender_id === tenderId,
+  );
+
   if (!userCOI) return true; // No COI declaration means can join
-  
-  return userCOI.status === "declared_no_conflict" || userCOI.status === "approved_with_conflict";
+
+  return (
+    userCOI.status === "declared_no_conflict" ||
+    userCOI.status === "approved_with_conflict"
+  );
 };
 
 export const generateUserId = (): string => {

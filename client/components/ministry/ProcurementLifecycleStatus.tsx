@@ -24,28 +24,14 @@ interface ProcurementStage {
 
 interface ProcurementLifecycleStatusProps {
   stages: {
-    procurementPlans: {
-      count: number;
-      status: "completed" | "active" | "pending" | "delayed";
-    };
-    tenderManagement: {
-      count: number;
-      status: "completed" | "active" | "pending" | "delayed";
-    };
-    nocRequest: {
-      count: number;
-      status: "completed" | "active" | "pending" | "delayed";
-    };
-    contractAward: {
-      count: number;
-      status: "completed" | "active" | "pending" | "delayed";
-    };
+    procurementPlans: { count: number; status: "completed" | "active" | "pending" | "delayed" };
+    tenderManagement: { count: number; status: "completed" | "active" | "pending" | "delayed" };
+    nocRequest: { count: number; status: "completed" | "active" | "pending" | "delayed" };
+    contractAward: { count: number; status: "completed" | "active" | "pending" | "delayed" };
   };
 }
 
-export const ProcurementLifecycleStatus: React.FC<
-  ProcurementLifecycleStatusProps
-> = ({ stages }) => {
+export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProps> = ({ stages }) => {
   const procurementStages: ProcurementStage[] = [
     {
       id: "plans",
@@ -132,9 +118,7 @@ export const ProcurementLifecycleStatus: React.FC<
   };
 
   const getProgressPercentage = () => {
-    const completed = procurementStages.filter(
-      (stage) => stage.status === "completed",
-    ).length;
+    const completed = procurementStages.filter(stage => stage.status === "completed").length;
     return (completed / procurementStages.length) * 100;
   };
 
@@ -153,12 +137,8 @@ export const ProcurementLifecycleStatus: React.FC<
         {/* Overall Progress Bar */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">
-              Overall Progress
-            </span>
-            <span className="text-sm text-gray-600">
-              {Math.round(getProgressPercentage())}% Complete
-            </span>
+            <span className="text-sm font-medium text-gray-700">Overall Progress</span>
+            <span className="text-sm text-gray-600">{Math.round(getProgressPercentage())}% Complete</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
@@ -197,9 +177,7 @@ export const ProcurementLifecycleStatus: React.FC<
                   {/* Stage Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {stage.name}
-                      </h3>
+                      <h3 className="text-lg font-semibold text-gray-900">{stage.name}</h3>
                       <Badge
                         variant="outline"
                         className={`${statusConfig.bgColor} ${statusConfig.borderColor} ${statusConfig.textColor}`}
@@ -209,16 +187,12 @@ export const ProcurementLifecycleStatus: React.FC<
                       </Badge>
                     </div>
 
-                    <p className="text-sm text-gray-600 mb-3">
-                      {stage.description}
-                    </p>
+                    <p className="text-sm text-gray-600 mb-3">{stage.description}</p>
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-gray-900">
-                            {stage.count}
-                          </div>
+                          <div className="text-2xl font-bold text-gray-900">{stage.count}</div>
                           <div className="text-xs text-gray-600">Items</div>
                         </div>
 
@@ -271,28 +245,25 @@ export const ProcurementLifecycleStatus: React.FC<
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
               <div className="text-lg font-bold text-green-600">
-                {
-                  procurementStages.filter((s) => s.status === "completed")
-                    .length
-                }
+                {procurementStages.filter(s => s.status === "completed").length}
               </div>
               <div className="text-xs text-gray-600">Completed</div>
             </div>
             <div>
               <div className="text-lg font-bold text-blue-600">
-                {procurementStages.filter((s) => s.status === "active").length}
+                {procurementStages.filter(s => s.status === "active").length}
               </div>
               <div className="text-xs text-gray-600">Active</div>
             </div>
             <div>
               <div className="text-lg font-bold text-gray-600">
-                {procurementStages.filter((s) => s.status === "pending").length}
+                {procurementStages.filter(s => s.status === "pending").length}
               </div>
               <div className="text-xs text-gray-600">Pending</div>
             </div>
             <div>
               <div className="text-lg font-bold text-red-600">
-                {procurementStages.filter((s) => s.status === "delayed").length}
+                {procurementStages.filter(s => s.status === "delayed").length}
               </div>
               <div className="text-xs text-gray-600">Delayed</div>
             </div>
