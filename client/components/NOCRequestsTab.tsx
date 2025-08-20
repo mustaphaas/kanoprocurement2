@@ -323,7 +323,14 @@ export default function NOCRequestsTab() {
       }
     };
 
+    // Clean up any old central data that might conflict
+    const cleanupOldData = () => {
+      // Clear old central storage to start fresh
+      localStorage.removeItem("centralNOCRequests");
+    };
+
     // Initialize ministry data first
+    cleanupOldData();
     initializeMinistryData();
 
     // Load from all ministry storage keys
