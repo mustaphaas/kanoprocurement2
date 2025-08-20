@@ -779,44 +779,68 @@ const TenderManagement = () => {
         </div>
       </div>
 
+      {/* Enhanced Tabs Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-8">
-          <TabsTrigger value="creation" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Creation
-          </TabsTrigger>
-          <TabsTrigger
-            value="administration"
-            className="flex items-center gap-2"
-          >
-            <Settings className="h-4 w-4" />
-            Administration
-          </TabsTrigger>
-          <TabsTrigger value="vendor" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Vendor Interaction
-          </TabsTrigger>
-          <TabsTrigger value="opening" className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            Opening
-          </TabsTrigger>
-          <TabsTrigger value="evaluation" className="flex items-center gap-2">
-            <Scale className="h-4 w-4" />
-            Evaluation
-          </TabsTrigger>
-          <TabsTrigger value="award" className="flex items-center gap-2">
-            <Award className="h-4 w-4" />
-            Award
-          </TabsTrigger>
-          <TabsTrigger value="notification" className="flex items-center gap-2">
-            <Bell className="h-4 w-4" />
-            Notification
-          </TabsTrigger>
-          <TabsTrigger value="contract" className="flex items-center gap-2">
-            <FileCheck className="h-4 w-4" />
-            Contract Link
-          </TabsTrigger>
-        </TabsList>
+        <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-blue-100 shadow-lg p-2">
+          <TabsList className="grid w-full grid-cols-8 bg-transparent gap-1">
+            <TabsTrigger
+              value="creation"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-50 border border-transparent data-[state=active]:border-blue-200"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="font-medium">Creation</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="administration"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-amber-50 border border-transparent data-[state=active]:border-amber-200"
+            >
+              <Settings className="h-4 w-4" />
+              <span className="font-medium">Administration</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="vendor"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-emerald-50 border border-transparent data-[state=active]:border-emerald-200"
+            >
+              <Users className="h-4 w-4" />
+              <span className="font-medium">Vendor Interaction</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="opening"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50 border border-transparent data-[state=active]:border-purple-200"
+            >
+              <Clock className="h-4 w-4" />
+              <span className="font-medium">Opening</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="evaluation"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-rose-50 border border-transparent data-[state=active]:border-rose-200"
+            >
+              <Scale className="h-4 w-4" />
+              <span className="font-medium">Evaluation</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="award"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-yellow-50 border border-transparent data-[state=active]:border-yellow-200"
+            >
+              <Award className="h-4 w-4" />
+              <span className="font-medium">Award</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="notification"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-cyan-50 border border-transparent data-[state=active]:border-cyan-200"
+            >
+              <Bell className="h-4 w-4" />
+              <span className="font-medium">Notification</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="contract"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-600 data-[state=active]:to-gray-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-slate-50 border border-transparent data-[state=active]:border-slate-200"
+            >
+              <FileCheck className="h-4 w-4" />
+              <span className="font-medium">Contract Link</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Tender Creation & Publication */}
         <TabsContent value="creation" className="space-y-4">
