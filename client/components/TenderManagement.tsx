@@ -318,7 +318,7 @@ const TenderManagement = () => {
   };
 
   const formatCurrency = (amount: string | number) => {
-    const num = typeof amount === 'string' ? parseFloat(amount) : amount;
+    const num = typeof amount === "string" ? parseFloat(amount) : amount;
     if (isNaN(num)) return amount;
     return `₦${num.toLocaleString()}`;
   };
@@ -349,7 +349,9 @@ const TenderManagement = () => {
       budget: parseFloat(tenderForm.budget),
       status: isDraft ? "Draft" : "Published",
       createdDate: new Date().toISOString().split("T")[0],
-      publishedDate: !isDraft ? new Date().toISOString().split("T")[0] : undefined,
+      publishedDate: !isDraft
+        ? new Date().toISOString().split("T")[0]
+        : undefined,
       closingDate: tenderForm.closingDate,
       ministry: ministryInfo.name,
       department: "Current Department",
@@ -670,12 +672,17 @@ const TenderManagement = () => {
                                   ? {
                                       ...t,
                                       status: "Published" as const,
-                                      publishedDate: new Date().toISOString().split("T")[0],
+                                      publishedDate: new Date()
+                                        .toISOString()
+                                        .split("T")[0],
                                     }
                                   : t,
                               );
                               setTenders(updatedTenders);
-                              saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+                              saveToStorage(
+                                STORAGE_KEYS.TENDERS,
+                                updatedTenders,
+                              );
                             }}
                           >
                             <Upload className="h-4 w-4" />
