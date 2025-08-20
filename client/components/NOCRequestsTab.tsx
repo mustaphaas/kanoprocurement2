@@ -90,12 +90,44 @@ export default function NOCRequestsTab() {
   useEffect(() => {
     loadNOCRequests();
 
-    // Set up interval to sync with ministry changes
+    // Handle real-time NOC status updates
+    const handleNOCStatusUpdate = (event: CustomEvent) => {
+      const { requestId, status, certificateNumber, approvalDate, rejectionDate } = event.detail;
+
+      setNOCRequests(prevRequests => {
+        const updatedRequests = prevRequests.map(request => {
+          if (request.id === requestId) {
+            return {
+              ...request,
+              status,
+              ...(status === 'Approved' && {
+                approvalDate,
+                certificateNumber
+              }),
+              ...(status === 'Rejected' && {
+                rejectionDate
+              })
+            };
+          }
+          return request;
+        });
+
+        return updatedRequests;
+      });
+    };
+
+    // Listen for NOC status updates
+    window.addEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+
+    // Fallback: Sync with ministry changes less frequently
     const syncInterval = setInterval(() => {
       loadNOCRequests();
-    }, 5000); // Sync every 5 seconds
+    }, 30000); // Sync every 30 seconds as fallback
 
-    return () => clearInterval(syncInterval);
+    return () => {
+      window.removeEventListener('nocStatusUpdated', handleNOCStatusUpdate as EventListener);
+      clearInterval(syncInterval);
+    };
   }, []);
 
   // Filter requests based on search and filters
