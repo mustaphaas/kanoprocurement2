@@ -3567,6 +3567,22 @@ The award letter has been:
               onFilterChange={handleFilterChange}
             />
 
+            {/* SuperUser Quick Actions */}
+            <SuperUserQuickActions
+              onCreateMDA={handleCreateMDA}
+              onManageUsers={handleManageUsers}
+              onSystemSettings={handleSystemSettings}
+              onViewAuditLogs={handleViewAuditLogs}
+              onGenerateReport={handleGenerateReport}
+              onManageCompanies={handleManageCompanies}
+              onReviewNOCs={handleReviewNOCs}
+              onSystemHealth={handleSystemHealth}
+              onBulkImport={handleBulkImport}
+              onViewAnalytics={handleViewAnalytics}
+              onManagePermissions={handleManagePermissions}
+              onBackupSystem={handleBackupSystem}
+            />
+
             {/* Recent System Activity Log */}
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
