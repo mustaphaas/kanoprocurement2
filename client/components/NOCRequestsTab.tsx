@@ -246,7 +246,7 @@ export default function NOCRequestsTab() {
             id: "NOC-MOWI-001",
             projectTitle: "Kano-Kaduna Highway Rehabilitation - Phase 1",
             requestDate: "2024-01-20",
-            status: "Approved",
+            status: "Pending",
             projectValue: "₦15,200,000,000",
             contractorName: "Kano Construction Ltd",
             expectedDuration: "18 months",
@@ -260,12 +260,9 @@ export default function NOCRequestsTab() {
             justification:
               "Critical transportation infrastructure connecting major economic centers",
             category: "Infrastructure",
-            certificateNumber: "KNS/MOWI/PNO/2024/001",
-            approvalDate: "2024-01-25",
             documents: {},
             timeline: {
               dateSubmitted: "2024-01-20T08:30:00Z",
-              approvalDate: "2024-01-25T17:00:00Z",
             },
           },
           {
