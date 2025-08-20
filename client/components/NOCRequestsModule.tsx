@@ -274,9 +274,14 @@ export default function NOCRequestsModule({
 
       if (storedTenders) {
         const tenders = JSON.parse(storedTenders);
+        console.log(`Found ${tenders.length} total tenders for ${ministryCode}`);
+        console.log('Tender statuses:', tenders.map((t: any) => `${t.id}: ${t.status}`));
+
         // Filter for evaluated tenders and convert to TenderEvaluation format
-        evaluatedTenders = tenders
-          .filter((tender: any) => tender.status === "Evaluated")
+        const filteredTenders = tenders.filter((tender: any) => tender.status === "Evaluated");
+        console.log(`Found ${filteredTenders.length} evaluated tenders`);
+
+        evaluatedTenders = filteredTenders
           .map((tender: any) => ({
             id: tender.id,
             tenderTitle: tender.title,
