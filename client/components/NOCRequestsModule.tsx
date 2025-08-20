@@ -137,6 +137,11 @@ interface TenderEvaluation {
   winningBidder: string;
   projectValue: string;
   evaluationDate: string;
+  description?: string;
+  category?: string;
+  publishDate?: string;
+  closeDate?: string;
+  procuringEntity?: string;
 }
 
 interface NOCRequestsModuleProps {
