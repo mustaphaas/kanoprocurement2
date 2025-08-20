@@ -176,14 +176,22 @@ export function AnalyticsReports({ data, onDrillDown }: AnalyticsReportsProps) {
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={spendData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="name" 
+                <XAxis
+                  dataKey="name"
                   angle={-45}
                   textAnchor="end"
                   height={80}
                   fontSize={12}
+                  tick={{ fontSize: 12 }}
+                  axisLine={true}
+                  tickLine={true}
                 />
-                <YAxis tickFormatter={(value) => `₦${(value / 1000000).toFixed(1)}M`} />
+                <YAxis
+                  tickFormatter={(value) => `₦${(value / 1000000).toFixed(1)}M`}
+                  tick={{ fontSize: 12 }}
+                  axisLine={true}
+                  tickLine={true}
+                />
                 <Tooltip 
                   formatter={(value) => [`₦${value.toLocaleString()}`, 'Spend']}
                   labelFormatter={(label) => {
@@ -239,14 +247,22 @@ export function AnalyticsReports({ data, onDrillDown }: AnalyticsReportsProps) {
           <ResponsiveContainer width="100%" height={400}>
             <AreaChart data={performanceData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="name" 
+              <XAxis
+                dataKey="name"
                 angle={-45}
                 textAnchor="end"
                 height={80}
                 fontSize={12}
+                tick={{ fontSize: 12 }}
+                axisLine={true}
+                tickLine={true}
               />
-              <YAxis domain={[0, 100]} />
+              <YAxis
+                domain={[0, 100]}
+                tick={{ fontSize: 12 }}
+                axisLine={true}
+                tickLine={true}
+              />
               <Tooltip 
                 labelFormatter={(label) => {
                   const item = performanceData.find(d => d.name === label);
