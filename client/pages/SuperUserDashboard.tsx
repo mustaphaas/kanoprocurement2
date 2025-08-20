@@ -3476,74 +3476,74 @@ The award letter has been:
         const superUserData = generateMockSuperUserData();
 
         const handleDrillDown = (mda: string) => {
-          logUserAction(`Drilled down into MDA: ${mda}`, 'mda_drilldown', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'MDA_DRILLDOWN', mda, `Drilled down into MDA: ${mda}`, 'LOW');
           // Navigate to specific MDA details or set a filter
           console.log('Drilling down into MDA:', mda);
         };
 
         const handleFilterChange = (filters: any) => {
-          logUserAction(`Applied filters: ${JSON.stringify(filters)}`, 'filter_applied', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'FILTER_APPLIED', 'Dashboard Filters', `Applied filters: ${JSON.stringify(filters)}`, 'LOW');
           console.log('Filters applied:', filters);
         };
 
         // Quick Actions handlers
         const handleCreateMDA = () => {
-          logUserAction('Initiated MDA creation', 'mda_create', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'MDA_CREATE_INITIATED', 'MDA Management', 'Initiated MDA creation', 'MEDIUM');
           setActiveTab('mda-management');
         };
 
         const handleManageUsers = () => {
-          logUserAction('Accessed user management', 'user_management', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'USER_MANAGEMENT_ACCESSED', 'User Management', 'Accessed user management', 'LOW');
           setActiveTab('users');
         };
 
         const handleSystemSettings = () => {
-          logUserAction('Accessed system settings', 'system_settings', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'SYSTEM_SETTINGS_ACCESSED', 'System Settings', 'Accessed system settings', 'MEDIUM');
           setActiveTab('settings');
         };
 
         const handleViewAuditLogs = () => {
-          logUserAction('Accessed audit logs', 'audit_logs', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'AUDIT_LOGS_ACCESSED', 'Audit Logs', 'Accessed audit logs', 'MEDIUM');
           setActiveTab('audit-logs');
         };
 
         const handleGenerateReport = () => {
-          logUserAction('Initiated report generation', 'report_generate', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'REPORT_GENERATION_INITIATED', 'Reports', 'Initiated report generation', 'LOW');
           setActiveTab('reports');
         };
 
         const handleManageCompanies = () => {
-          logUserAction('Accessed company management', 'company_management', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'COMPANY_MANAGEMENT_ACCESSED', 'Company Management', 'Accessed company management', 'MEDIUM');
           setActiveTab('companies');
         };
 
         const handleReviewNOCs = () => {
-          logUserAction('Accessed NOC review', 'noc_review', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'NOC_REVIEW_ACCESSED', 'NOC Requests', 'Accessed NOC review', 'MEDIUM');
           setActiveTab('noc-requests');
         };
 
         const handleSystemHealth = () => {
-          logUserAction('Checked system health', 'system_health', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'SYSTEM_HEALTH_CHECK', 'System Health', 'Checked system health', 'LOW');
           console.log('System health check initiated');
         };
 
         const handleBulkImport = () => {
-          logUserAction('Initiated bulk import', 'bulk_import', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'BULK_IMPORT_INITIATED', 'Bulk Import', 'Initiated bulk import', 'MEDIUM');
           console.log('Bulk import initiated');
         };
 
         const handleViewAnalytics = () => {
-          logUserAction('Accessed analytics', 'analytics_view', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'ANALYTICS_ACCESSED', 'Analytics', 'Accessed analytics', 'LOW');
           setActiveTab('ai-insights');
         };
 
         const handleManagePermissions = () => {
-          logUserAction('Accessed permission management', 'permission_management', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'PERMISSION_MANAGEMENT_ACCESSED', 'Permissions', 'Accessed permission management', 'HIGH');
           console.log('Permission management accessed');
         };
 
         const handleBackupSystem = () => {
-          logUserAction('Initiated system backup', 'system_backup', 'SuperUser');
+          logUserAction('SuperUser', 'super_admin', 'SYSTEM_BACKUP_INITIATED', 'System Backup', 'Initiated system backup', 'HIGH');
           console.log('System backup initiated');
         };
 
