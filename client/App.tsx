@@ -19,6 +19,7 @@ import MinistryDashboard from "./pages/MinistryDashboard";
 import UserLogin from "./pages/UserLogin";
 import UserDashboard from "./pages/UserDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
+import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation";
 
 const queryClient = new QueryClient();
 
