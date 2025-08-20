@@ -475,7 +475,7 @@ export default function SuperUserDashboard() {
       }
       setMDAUsers(allUsers);
 
-      console.log("✅ MDA system initialized successfully with localStorage");
+      console.log("��� MDA system initialized successfully with localStorage");
       console.log(
         `📊 Loaded: ${loadedMDAs.length} MDAs, ${loadedAdmins.length} admins, ${allUsers.length} users`,
       );
@@ -4267,6 +4267,23 @@ The award letter has been:
                       <option value="HIGH">High</option>
                       <option value="CRITICAL">Critical</option>
                     </select>
+                    <button
+                      onClick={() => {
+                        const auditDataInfo = getAuditDataInfo();
+                        if (auditDataInfo.hasMockData) {
+                          if (window.confirm(`Found ${auditDataInfo.mockDataCount} mock audit entries. Clear them to show only real audit logs?`)) {
+                            clearMockAuditData();
+                            loadAuditLogs();
+                          }
+                        } else {
+                          alert('No mock data found. All audit logs appear to be real.');
+                        }
+                      }}
+                      className="flex items-center px-3 py-2 text-sm border border-yellow-300 text-yellow-600 rounded-md hover:bg-yellow-50"
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Clear Mock Data
+                    </button>
                     <button
                       onClick={handleExportAuditLogs}
                       className="flex items-center px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
