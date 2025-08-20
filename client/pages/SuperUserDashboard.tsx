@@ -867,17 +867,12 @@ export default function SuperUserDashboard() {
     ];
 
     // Clear any existing mock data and start with real audit logs only
-    // Check if we have mock data and clear it (this will run once)
-    const hasOnlyMockData = auditLogs.some(log =>
-      log.details.includes('TechSolutions Nigeria') ||
-      log.details.includes('Northern Construction Ltd') ||
-      log.action === 'COMPANY_APPROVED'
-    );
-
-    if (hasOnlyMockData) {
-      console.log('🗑️ Clearing mock audit data to start fresh with real logs');
-      auditLogStorage.clearAllLogs();
-      loadAuditLogs(); // Reload after clearing
+    const auditDataInfo = getAuditDataInfo();
+    if (auditDataInfo.hasMockData) {
+      console.log('🗑️ Found mock audit data, clearing it to start fresh with real logs');
+      console.log(`📊 Audit data info:`, auditDataInfo);
+      clearMockAuditData();
+      // Note: loadAuditLogs will be called by useEffect after this
     }
 
     // Log dashboard access
@@ -2820,7 +2815,7 @@ The award letter has been:
           <div className="p-6">
             <div className="bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-lg overflow-auto max-h-64">
               <div className="space-y-1">
-                <div>🧪 MDA Testing Environment - Ready</div>
+                <div>�� MDA Testing Environment - Ready</div>
                 <div>✅ Dynamic MDA Creation Service - Loaded</div>
                 <div>✅ Ministry Functionality Templates - Available</div>
                 <div>📊 Current MDAs: {mdas.length}</div>
