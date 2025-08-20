@@ -453,26 +453,29 @@ export default function NOCRequestsTab() {
         const requests = JSON.parse(ministryRequests);
         const ministryCode = key.split("_")[0];
 
-        // Convert ministry requests to central format
+        // Convert ministry requests to central format with proper ministry isolation
         requests.forEach((req: any) => {
-          allNOCRequests.push({
-            ...req,
-            ministryCode,
-            ministryName: ministryNames[ministryCode as keyof typeof ministryNames] || ministryCode,
-            tenderId: req.tenderId || `TND-${ministryCode}-${req.id.split('-').pop()}`,
-            tenderTitle: req.tenderTitle || `${req.projectTitle} Tender`,
-            procuringEntity: `Kano State ${ministryNames[ministryCode as keyof typeof ministryNames]}`,
-            contactPerson: req.contactPerson || "Ministry Contact",
-            contactEmail: req.contactEmail || `contact@${ministryCode.toLowerCase()}.kano.gov.ng`,
-            projectDescription: req.projectDescription || `Procurement for ${req.projectTitle}`,
-            justification: req.justification || "Critical infrastructure development requirement",
-            category: req.category || "Infrastructure",
-            documents: req.documents || {},
-            timeline: req.timeline || {
-              dateSubmitted: req.requestDate,
-              ...(req.approvalDate && { approvalDate: req.approvalDate })
-            }
-          });
+          // Ensure the request has the correct ministry code to prevent cross-contamination
+          if (req.ministryCode === ministryCode || !req.ministryCode) {
+            allNOCRequests.push({
+              ...req,
+              ministryCode,
+              ministryName: ministryNames[ministryCode as keyof typeof ministryNames] || ministryCode,
+              tenderId: req.tenderId || `TND-${ministryCode}-${req.id.split('-').pop()}`,
+              tenderTitle: req.tenderTitle || `${req.projectTitle} Tender`,
+              procuringEntity: `Kano State ${ministryNames[ministryCode as keyof typeof ministryNames]}`,
+              contactPerson: req.contactPerson || "Ministry Contact",
+              contactEmail: req.contactEmail || `contact@${ministryCode.toLowerCase()}.kano.gov.ng`,
+              projectDescription: req.projectDescription || `Procurement for ${req.projectTitle}`,
+              justification: req.justification || "Critical infrastructure development requirement",
+              category: req.category || "Infrastructure",
+              documents: req.documents || {},
+              timeline: req.timeline || {
+                dateSubmitted: req.requestDate,
+                ...(req.approvalDate && { approvalDate: req.approvalDate })
+              }
+            });
+          }
         });
       }
     });
