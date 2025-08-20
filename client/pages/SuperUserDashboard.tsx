@@ -12,6 +12,7 @@ import {
   AuditLogFilter,
 } from "@/lib/auditLogStorage";
 import { EnhancedSuperUserOverview } from "@/components/superuser/EnhancedSuperUserOverview";
+import { SuperUserQuickActions } from "@/components/superuser/SuperUserQuickActions";
 import { generateMockSuperUserData } from "@/lib/superUserMockData";
 import FirebaseStatus from "@/components/FirebaseStatus";
 import DataManagement from "@/components/DataManagement";
@@ -5766,7 +5767,7 @@ The award letter has been:
                 onClick={() => handleTabChange("tenders")}
                 className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800"
               >
-                ← Back to Tenders
+                ��� Back to Tenders
               </button>
             </div>
 
