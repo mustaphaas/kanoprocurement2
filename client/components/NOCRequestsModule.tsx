@@ -407,8 +407,10 @@ export default function NOCRequestsModule({
         };
 
         evaluatedTenders = getDefaultTenders();
+        console.log(`Using default tenders: ${evaluatedTenders.length} items`);
       }
 
+      console.log(`Final evaluated tenders for ${ministryCode}:`, evaluatedTenders.map(t => t.tenderTitle));
       setCompletedTenders(evaluatedTenders);
     } catch (error) {
       console.error('Error loading completed tenders:', error);
