@@ -329,6 +329,14 @@ export default function Index() {
                 <Bell className="h-4 w-4" />
               </button>
               <Link
+                to="/validation"
+                className="hidden sm:flex items-center px-3 py-2 text-purple-600 hover:text-purple-700 text-sm font-medium"
+                title="Workflow Validation Dashboard"
+              >
+                <Settings className="h-4 w-4 mr-1" />
+                Validation
+              </Link>
+              <Link
                 to="/login"
                 className="hidden sm:flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:text-green-700"
               >
@@ -760,7 +768,7 @@ export default function Index() {
                         Pre-bid Conference
                       </p>
                       <p className="text-xs text-gray-600">
-                        Feb 20, 2024 �� 2:00 PM
+                        Feb 20, 2024 • 2:00 PM
                       </p>
                     </div>
                     <div className="border-l-4 border-green-400 pl-4">
