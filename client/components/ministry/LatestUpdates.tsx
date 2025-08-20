@@ -19,12 +19,21 @@ import {
 
 interface UpdateItem {
   id: string;
-  type: "noc_feedback" | "tender_status" | "contract_milestone" | "system_alert";
+  type:
+    | "noc_feedback"
+    | "tender_status"
+    | "contract_milestone"
+    | "system_alert";
   title: string;
   description: string;
   timestamp: string;
   priority: "low" | "medium" | "high" | "urgent";
-  status?: "approved" | "rejected" | "clarification_needed" | "completed" | "pending";
+  status?:
+    | "approved"
+    | "rejected"
+    | "clarification_needed"
+    | "completed"
+    | "pending";
   actionRequired?: boolean;
   relatedId?: string;
   relatedType?: "tender" | "contract" | "noc" | "compliance";
@@ -35,9 +44,9 @@ interface LatestUpdatesProps {
   onUpdateClick?: (update: UpdateItem) => void;
 }
 
-export const LatestUpdates: React.FC<LatestUpdatesProps> = ({ 
-  updates, 
-  onUpdateClick 
+export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
+  updates,
+  onUpdateClick,
 }) => {
   const getUpdateIcon = (type: string) => {
     switch (type) {
@@ -155,7 +164,7 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
     const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
     const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority];
     if (priorityDiff !== 0) return priorityDiff;
-    
+
     return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
   });
 
@@ -165,9 +174,9 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
         <CardTitle className="flex items-center gap-2">
           <Bell className="h-5 w-5 text-blue-600" />
           Latest Updates & Notifications
-          {updates.filter(u => u.actionRequired).length > 0 && (
+          {updates.filter((u) => u.actionRequired).length > 0 && (
             <Badge variant="destructive" className="ml-2">
-              {updates.filter(u => u.actionRequired).length} Action Required
+              {updates.filter((u) => u.actionRequired).length} Action Required
             </Badge>
           )}
         </CardTitle>
@@ -205,9 +214,12 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
                   onClick={() => onUpdateClick?.(update)}
                 >
                   {/* Priority Indicator */}
-                  {(update.priority === "urgent" || update.priority === "high") && (
+                  {(update.priority === "urgent" ||
+                    update.priority === "high") && (
                     <div className="absolute top-2 right-2">
-                      <div className={`w-3 h-3 rounded-full ${priorityConfig.color} animate-pulse`} />
+                      <div
+                        className={`w-3 h-3 rounded-full ${priorityConfig.color} animate-pulse`}
+                      />
                     </div>
                   )}
 
@@ -296,16 +308,19 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
         <div className="mt-6 pt-4 border-t border-gray-200">
           <div className="flex flex-wrap gap-2">
             <button className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full hover:bg-red-200 transition-colors">
-              Action Required ({updates.filter(u => u.actionRequired).length})
+              Action Required ({updates.filter((u) => u.actionRequired).length})
             </button>
             <button className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors">
-              NOC Updates ({updates.filter(u => u.type === "noc_feedback").length})
+              NOC Updates (
+              {updates.filter((u) => u.type === "noc_feedback").length})
             </button>
             <button className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors">
-              Tender Status ({updates.filter(u => u.type === "tender_status").length})
+              Tender Status (
+              {updates.filter((u) => u.type === "tender_status").length})
             </button>
             <button className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200 transition-colors">
-              Contracts ({updates.filter(u => u.type === "contract_milestone").length})
+              Contracts (
+              {updates.filter((u) => u.type === "contract_milestone").length})
             </button>
           </div>
         </div>

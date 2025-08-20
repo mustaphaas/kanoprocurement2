@@ -24,21 +24,42 @@ interface MinistryData {
 
   // Lifecycle Status Data
   lifecycleData: {
-    procurementPlans: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    tenderManagement: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    nocRequest: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    contractAward: { count: number; status: "completed" | "active" | "pending" | "delayed" };
+    procurementPlans: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    tenderManagement: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    nocRequest: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    contractAward: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
   };
 
   // Updates Data
   updatesData: Array<{
     id: string;
-    type: "noc_feedback" | "tender_status" | "contract_milestone" | "system_alert";
+    type:
+      | "noc_feedback"
+      | "tender_status"
+      | "contract_milestone"
+      | "system_alert";
     title: string;
     description: string;
     timestamp: string;
     priority: "low" | "medium" | "high" | "urgent";
-    status?: "approved" | "rejected" | "clarification_needed" | "completed" | "pending";
+    status?:
+      | "approved"
+      | "rejected"
+      | "clarification_needed"
+      | "completed"
+      | "pending";
     actionRequired?: boolean;
     relatedId?: string;
     relatedType?: "tender" | "contract" | "noc" | "compliance";
@@ -101,7 +122,11 @@ interface MinistryData {
     }>;
     upcomingDeadlines: Array<{
       id: string;
-      type: "tender_closing" | "contract_expiry" | "review_due" | "compliance_check";
+      type:
+        | "tender_closing"
+        | "contract_expiry"
+        | "review_due"
+        | "compliance_check";
       title: string;
       description: string;
       dueDate: string;
@@ -135,7 +160,9 @@ interface EnhancedMinistryOverviewProps {
   onCOIClick?: (status: any) => void;
 }
 
-export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> = ({
+export const EnhancedMinistryOverview: React.FC<
+  EnhancedMinistryOverviewProps
+> = ({
   data,
   onQuickAction,
   onUpdateClick,
@@ -151,7 +178,8 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
           Ministry Dashboard - Overview
         </h1>
         <p className="text-gray-600">
-          Comprehensive procurement management dashboard with real-time insights and analytics
+          Comprehensive procurement management dashboard with real-time insights
+          and analytics
         </p>
       </div>
 
@@ -178,8 +206,8 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
             Latest Updates & Notifications
           </h2>
-          <LatestUpdates 
-            updates={data.updatesData} 
+          <LatestUpdates
+            updates={data.updatesData}
             onUpdateClick={onUpdateClick}
           />
         </section>
@@ -243,8 +271,9 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
             Synchronization Status
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            All data automatically syncs across Procurement Planning, Tender Management, 
-            NOC Module, and Contract Management. Last updated: {new Date().toLocaleString()}
+            All data automatically syncs across Procurement Planning, Tender
+            Management, NOC Module, and Contract Management. Last updated:{" "}
+            {new Date().toLocaleString()}
           </p>
           <div className="flex items-center justify-center gap-4 text-sm">
             <div className="flex items-center gap-2">
