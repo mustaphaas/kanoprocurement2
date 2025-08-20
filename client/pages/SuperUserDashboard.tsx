@@ -550,6 +550,13 @@ export default function SuperUserDashboard() {
   const [actionReason, setActionReason] = useState("");
   const [sendNotification, setSendNotification] = useState(true);
 
+  // New oversight features state
+  const [procurementPlans, setProcurementPlans] = useState<ProcurementPlan[]>([]);
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [superUserAlerts, setSuperUserAlerts] = useState<SuperUserAlert[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+
   const navigate = useNavigate();
 
   // Initialize MDA system with localStorage
@@ -1098,7 +1105,7 @@ export default function SuperUserDashboard() {
           "Supply of advanced medical equipment for specialist units",
         category: "Healthcare",
         ministry: "Ministry of Health",
-        estimatedValue: "₦950M",
+        estimatedValue: "���950M",
         status: "Closed",
         workflowStatus: "NOC_Requested",
         workflowStep: 5,
