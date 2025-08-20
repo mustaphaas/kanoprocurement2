@@ -292,7 +292,7 @@ export default function NOCRequestsTab() {
             id: "NOC-MOWI-003",
             projectTitle: "Government Secretariat Renovation",
             requestDate: "2024-02-05",
-            status: "Approved",
+            status: "Pending",
             projectValue: "₦6,800,000,000",
             contractorName: "Northern Roads Nigeria",
             expectedDuration: "10 months",
@@ -306,19 +306,16 @@ export default function NOCRequestsTab() {
             justification:
               "Modernize government facilities and improve working conditions",
             category: "Buildings",
-            certificateNumber: "KNS/MOWI/PNO/2024/002",
-            approvalDate: "2024-02-10",
             documents: {},
             timeline: {
               dateSubmitted: "2024-02-05T13:15:00Z",
-              approvalDate: "2024-02-10T14:30:00Z",
             },
           },
           {
             id: "NOC-MOWI-004",
             projectTitle: "Urban Drainage System Development",
             requestDate: "2024-02-08",
-            status: "Approved",
+            status: "Pending",
             projectValue: "₦12,300,000,000",
             contractorName: "Emirate Construction Co",
             expectedDuration: "15 months",
@@ -332,12 +329,9 @@ export default function NOCRequestsTab() {
             justification:
               "Address flooding issues and improve urban infrastructure",
             category: "Infrastructure",
-            certificateNumber: "KNS/MOWI/PNO/2024/003",
-            approvalDate: "2024-02-12",
             documents: {},
             timeline: {
               dateSubmitted: "2024-02-08T09:45:00Z",
-              approvalDate: "2024-02-12T16:20:00Z",
             },
           },
           {
