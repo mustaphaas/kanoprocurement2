@@ -633,24 +633,30 @@ const TenderManagement = () => {
   });
 
   const getStatusBadge = (status: string) => {
-    const variants = {
-      Draft: "secondary",
-      Published: "outline",
-      Open: "default",
-      Closed: "destructive",
-      Evaluated: "default",
-      Awarded: "default",
-    };
     const colors = {
+      // Original statuses
       Draft: "bg-gray-100 text-gray-800",
       Published: "bg-blue-100 text-blue-800",
       Open: "bg-green-100 text-green-800",
       Closed: "bg-red-100 text-red-800",
       Evaluated: "bg-yellow-100 text-yellow-800",
       Awarded: "bg-purple-100 text-purple-800",
+
+      // NOC workflow statuses
+      "NOC Pending": "bg-orange-100 text-orange-800",
+      "NOC Approved": "bg-green-100 text-green-800",
+      "NOC Rejected": "bg-red-100 text-red-800",
+
+      // Contract workflow statuses
+      "Contract Created": "bg-blue-100 text-blue-800",
+      "Contract Signed": "bg-purple-100 text-purple-800",
+      Implementation: "bg-indigo-100 text-indigo-800",
+      Completed: "bg-green-100 text-green-800",
     };
     return (
-      <Badge className={colors[status as keyof typeof colors]}>{status}</Badge>
+      <Badge className={colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800"}>
+        {status}
+      </Badge>
     );
   };
 
