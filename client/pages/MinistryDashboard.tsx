@@ -10663,14 +10663,110 @@ Blockchain Timestamp: ${Date.now()}
               </div>
             </div>
 
-            {/* Empty space for better layout */}
-            <div className="flex-1"></div>
+            {/* Global Search */}
+            <div className="flex-1 max-w-2xl mx-8">
+              <div className="relative">
+                <Search className="h-5 w-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search companies, tenders, contracts, NOCs..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 shadow-sm bg-gray-50 hover:bg-white transition-colors"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Search Results Dropdown */}
+              {searchTerm && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-50 max-h-96 overflow-y-auto">
+                  <div className="p-4">
+                    <div className="text-sm text-gray-600 mb-3">
+                      Search results for "{searchTerm}"
+                    </div>
+
+                    {/* Companies Results */}
+                    <div className="mb-4">
+                      <h4 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                        <Circle className="h-4 w-4 mr-2 text-blue-600" />
+                        Companies ({filteredCompanies.length})
+                      </h4>
+                      {filteredCompanies.slice(0, 3).map((company) => (
+                        <div key={company.id} className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer" onClick={() => setCurrentView("companies")}>
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <Circle className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">{company.companyName}</div>
+                            <div className="text-xs text-gray-500">{company.businessType}</div>
+                          </div>
+                        </div>
+                      ))}
+                      {filteredCompanies.length > 3 && (
+                        <button
+                          onClick={() => setCurrentView("companies")}
+                          className="text-xs text-blue-600 hover:text-blue-800 ml-2"
+                        >
+                          View all {filteredCompanies.length} companies
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="mb-4">
+                      <h4 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                        <Zap className="h-4 w-4 mr-2 text-teal-600" />
+                        Quick Actions
+                      </h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button className="flex items-center p-2 hover:bg-gray-50 rounded-lg text-sm">
+                          <Plus className="h-4 w-4 mr-2 text-emerald-600" />
+                          Create Tender
+                        </button>
+                        <button className="flex items-center p-2 hover:bg-gray-50 rounded-lg text-sm">
+                          <Send className="h-4 w-4 mr-2 text-cyan-600" />
+                          Submit NOC
+                        </button>
+                        <button className="flex items-center p-2 hover:bg-gray-50 rounded-lg text-sm">
+                          <FileText className="h-4 w-4 mr-2 text-purple-600" />
+                          View Reports
+                        </button>
+                        <button className="flex items-center p-2 hover:bg-gray-50 rounded-lg text-sm">
+                          <Users className="h-4 w-4 mr-2 text-rose-600" />
+                          Manage Users
+                        </button>
+                      </div>
+                    </div>
+
+                    {searchTerm.length > 0 && filteredCompanies.length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                        <p>No results found for "{searchTerm}"</p>
+                        <p className="text-sm">Try different keywords or browse by category</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center space-x-4">
-              <Bell className="h-5 w-5 text-gray-600" />
+              <div className="relative">
+                <Bell className="h-5 w-5 text-gray-600 hover:text-teal-600 cursor-pointer transition-colors" />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  3
+                </span>
+              </div>
               <button
                 onClick={handleLogout}
-                className="flex items-center px-3 py-2 text-gray-600 hover:text-red-600"
+                className="flex items-center px-3 py-2 text-gray-600 hover:text-red-600 transition-colors"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
