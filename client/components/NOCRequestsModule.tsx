@@ -740,56 +740,110 @@ export default function NOCRequestsModule({
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            NOC Requests Module
-          </h2>
-          <p className="text-gray-600">
-            Manage No Objection Certificate requests linked to tender
-            evaluations
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            onClick={() => setShowNewRequestDialog(true)}
-            className="bg-green-600 hover:bg-green-700"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New NOC Request
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              loadNOCRequests();
-              loadCompletedTenders();
-            }}
-          >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              debugNOCTenders();
-              console.log("=== Current Ministry Info ===");
-              console.log("Ministry Code:", ministryCode);
-              console.log("Ministry Name:", ministryName);
-              console.log("Completed Tenders:", completedTenders);
-            }}
-          >
-            🐛 Debug
-          </Button>
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-purple-50 to-violet-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-purple-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-violet-600/5"></div>
+        <div className="relative p-8">
+          <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-purple-600 to-violet-600 rounded-xl shadow-lg">
+                  <FileCheck className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-purple-800 to-violet-800 bg-clip-text text-transparent">
+                    NOC Requests Module
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Manage No Objection Certificate requests linked to tender evaluations
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowNewRequestDialog(true)}
+                className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                New NOC Request
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  loadNOCRequests();
+                  loadCompletedTenders();
+                }}
+                className="border-purple-200 text-purple-700 hover:bg-purple-50"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  debugNOCTenders();
+                  console.log("=== Current Ministry Info ===");
+                  console.log("Ministry Code:", ministryCode);
+                  console.log("Ministry Name:", ministryName);
+                  console.log("Completed Tenders:", completedTenders);
+                }}
+                className="border-purple-200 text-purple-700 hover:bg-purple-50"
+              >
+                🐛 Debug
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Enhanced Tabs Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="new-request">New NOC Request</TabsTrigger>
-          <TabsTrigger value="tracking">Request Tracking</TabsTrigger>
-          <TabsTrigger value="decisions">Approvals & Decisions</TabsTrigger>
-        </TabsList>
+        <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-purple-100 shadow-lg p-2">
+          <TabsList className="grid w-full grid-cols-3 bg-transparent gap-1">
+            <TabsTrigger
+              value="new-request"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50 border border-transparent data-[state=active]:border-purple-200"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="font-medium">New NOC Request</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="tracking"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-emerald-50 border border-transparent data-[state=active]:border-emerald-200"
+            >
+              <History className="h-4 w-4" />
+              <span className="font-medium">Request Tracking</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="decisions"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-amber-50 border border-transparent data-[state=active]:border-amber-200"
+            >
+              <Signature className="h-4 w-4" />
+              <span className="font-medium">Approvals & Decisions</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="new-request" className="space-y-6">
           <Card className="bg-white/80 backdrop-blur-sm border border-purple-100 shadow-lg rounded-xl">
