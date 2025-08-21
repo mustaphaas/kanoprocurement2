@@ -1018,7 +1018,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of medical equipment for Kano State hospitals",
               category: "Healthcare",
-              estimatedValue: "���850,000,000",
+              estimatedValue: "�����850,000,000",
               status: "Published",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
@@ -10679,47 +10679,127 @@ Blockchain Timestamp: ${Date.now()}
         </div>
       </header>
 
-      {/* Main Navigation - Similar to Super User Dashboard */}
-      <nav className="bg-white border-b border-gray-200">
+      {/* Enhanced Modern Navigation */}
+      <nav className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto py-3">
-            {[
-              { key: "overview", label: "Overview", icon: BarChart3 },
-              { key: "companies", label: "Companies", icon: Circle },
-              {
-                key: "procurement-planning",
-                label: "Procurement Planning",
-                icon: Target,
-              },
-              {
-                key: "tender-management",
-                label: "Tender Management",
-                icon: Gavel,
-              },
-              {
-                key: "contract-management",
-                label: "Contract Management",
-                icon: Handshake,
-              },
-              { key: "users", label: "User Management", icon: Users },
-              { key: "reports", label: "Reports", icon: TrendingUp },
-              { key: "noc", label: "NOC Requests", icon: Send },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => {
-                  setCurrentView(tab.key as CurrentView);
-                }}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
-                  currentView === tab.key
-                    ? "bg-green-50 text-green-600 border border-green-200"
-                    : "text-gray-600 hover:text-green-600 hover:bg-green-50"
-                }`}
-              >
-                <tab.icon className="h-4 w-4" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
+          <div className="relative">
+            {/* Modern Horizontal Scroller */}
+            <div className="flex space-x-2 overflow-x-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
+              {[
+                {
+                  key: "overview",
+                  label: "Overview",
+                  icon: BarChart3,
+                  gradient: "from-teal-600 to-cyan-600",
+                  hoverGradient: "from-teal-50 to-cyan-50",
+                  textColor: "text-teal-700",
+                  borderColor: "border-teal-200"
+                },
+                {
+                  key: "companies",
+                  label: "Companies",
+                  icon: Circle,
+                  gradient: "from-blue-600 to-indigo-600",
+                  hoverGradient: "from-blue-50 to-indigo-50",
+                  textColor: "text-blue-700",
+                  borderColor: "border-blue-200"
+                },
+                {
+                  key: "procurement-planning",
+                  label: "Procurement Planning",
+                  icon: Target,
+                  gradient: "from-emerald-600 to-teal-600",
+                  hoverGradient: "from-emerald-50 to-teal-50",
+                  textColor: "text-emerald-700",
+                  borderColor: "border-emerald-200"
+                },
+                {
+                  key: "tender-management",
+                  label: "Tender Management",
+                  icon: Gavel,
+                  gradient: "from-purple-600 to-violet-600",
+                  hoverGradient: "from-purple-50 to-violet-50",
+                  textColor: "text-purple-700",
+                  borderColor: "border-purple-200"
+                },
+                {
+                  key: "contract-management",
+                  label: "Contract Management",
+                  icon: Handshake,
+                  gradient: "from-amber-600 to-orange-600",
+                  hoverGradient: "from-amber-50 to-orange-50",
+                  textColor: "text-amber-700",
+                  borderColor: "border-amber-200"
+                },
+                {
+                  key: "users",
+                  label: "User Management",
+                  icon: Users,
+                  gradient: "from-rose-600 to-pink-600",
+                  hoverGradient: "from-rose-50 to-pink-50",
+                  textColor: "text-rose-700",
+                  borderColor: "border-rose-200"
+                },
+                {
+                  key: "reports",
+                  label: "Reports",
+                  icon: TrendingUp,
+                  gradient: "from-slate-600 to-gray-600",
+                  hoverGradient: "from-slate-50 to-gray-50",
+                  textColor: "text-slate-700",
+                  borderColor: "border-slate-200"
+                },
+                {
+                  key: "noc",
+                  label: "NOC Requests",
+                  icon: Send,
+                  gradient: "from-cyan-600 to-blue-600",
+                  hoverGradient: "from-cyan-50 to-blue-50",
+                  textColor: "text-cyan-700",
+                  borderColor: "border-cyan-200"
+                },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => {
+                    setCurrentView(tab.key as CurrentView);
+                  }}
+                  className={`flex items-center space-x-3 px-6 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-300 min-w-max relative overflow-hidden ${
+                    currentView === tab.key
+                      ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg hover:shadow-xl transform hover:scale-105`
+                      : `bg-white hover:bg-gradient-to-br hover:${tab.hoverGradient} ${tab.textColor} border ${tab.borderColor} hover:shadow-md hover:transform hover:scale-105 hover:border-opacity-50`
+                  }`}
+                >
+                  {/* Background glow effect for active tab */}
+                  {currentView === tab.key && (
+                    <div className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} opacity-20 blur-xl`}></div>
+                  )}
+
+                  {/* Icon with enhanced styling */}
+                  <div className={`relative z-10 p-1 rounded-lg ${
+                    currentView === tab.key
+                      ? "bg-white/20 backdrop-blur-sm"
+                      : `bg-gradient-to-br ${tab.hoverGradient}`
+                  }`}>
+                    <tab.icon className={`h-5 w-5 ${
+                      currentView === tab.key ? "text-white" : tab.textColor
+                    }`} />
+                  </div>
+
+                  {/* Label */}
+                  <span className="relative z-10 font-medium">{tab.label}</span>
+
+                  {/* Active indicator */}
+                  {currentView === tab.key && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-lg"></div>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* Scroll indicators */}
+            <div className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-l from-white via-white to-transparent w-8 h-full pointer-events-none"></div>
+            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-white via-white to-transparent w-8 h-full pointer-events-none"></div>
           </div>
         </div>
       </nav>
