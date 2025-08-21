@@ -281,125 +281,118 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Zap className="h-5 w-5 text-blue-600" />
-          Quick Actions
-          <span className="text-sm text-gray-500 font-normal ml-2">
-            ({quickActions.length} available shortcuts)
-          </span>
-        </CardTitle>
-        <div className="text-sm text-gray-600">
-          Frequently used actions for faster procurement management
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-6">
-          {Object.entries(groupedActions).map(([category, actions]) => {
-            const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons];
-            
-            return (
-              <div key={category}>
-                <div className="flex items-center gap-2 mb-3">
-                  <CategoryIcon className="h-4 w-4 text-gray-600" />
-                  <h3 className="text-sm font-semibold text-gray-900">
-                    {categoryNames[category as keyof typeof categoryNames]}
-                  </h3>
-                  <div className="h-px bg-gray-200 flex-1 ml-2" />
+    <div className="w-full">
+      <div className="space-y-6">
+        {Object.entries(groupedActions).map(([category, actions]) => {
+          const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons];
+
+          return (
+            <div key={category} className="bg-white/80 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-gradient-to-r from-teal-600 to-cyan-600 p-2 rounded-lg">
+                  <CategoryIcon className="h-5 w-5 text-white" />
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {actions.map((action) => {
-                    const colors = getColorClasses(action.color);
-                    const IconComponent = action.icon;
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {categoryNames[category as keyof typeof categoryNames]}
+                </h3>
+                <div className="h-px bg-teal-200 flex-1 ml-3" />
+              </div>
 
-                    return (
-                      <div
-                        key={action.id}
-                        className={`relative p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer ${colors.bg} ${colors.border} ${
-                          action.disabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-md"
-                        }`}
-                        onClick={() => !action.disabled && action.onClick()}
-                      >
-                        {/* Badge */}
-                        {action.badge && (
-                          <div className="absolute top-2 right-2">
-                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                              {action.badge}
-                            </span>
-                          </div>
-                        )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {actions.map((action) => {
+                  const colors = getColorClasses(action.color);
+                  const IconComponent = action.icon;
 
-                        <div className="flex items-start gap-3">
-                          {/* Action Icon */}
-                          <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center bg-white border ${colors.border}`}>
-                            <IconComponent className={`h-5 w-5 ${colors.icon}`} />
-                          </div>
+                  return (
+                    <div
+                      key={action.id}
+                      className={`relative p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer ${colors.bg} ${colors.border} ${
+                        action.disabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-xl hover:scale-105"
+                      }`}
+                      onClick={() => !action.disabled && action.onClick()}
+                    >
+                      {/* Badge */}
+                      {action.badge && (
+                        <div className="absolute top-3 right-3">
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg">
+                            {action.badge}
+                          </span>
+                        </div>
+                      )}
 
-                          {/* Action Content */}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-1">
-                              {action.title}
-                            </h4>
-                            <p className="text-xs text-gray-600 mb-3 line-clamp-2">
-                              {action.description}
-                            </p>
+                      <div className="flex items-start gap-4">
+                        {/* Action Icon */}
+                        <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-white shadow-lg border-2 ${colors.border}`}>
+                          <IconComponent className={`h-6 w-6 ${colors.icon}`} />
+                        </div>
 
-                            <div className="flex items-center justify-between">
-                              {action.shortcut && (
-                                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                  {action.shortcut}
-                                </span>
-                              )}
-                              
-                              <Button
-                                size="sm"
-                                className={`${colors.button} text-white text-xs px-3 py-1 h-7 ml-auto`}
-                                disabled={action.disabled}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (!action.disabled) action.onClick();
-                                }}
-                              >
-                                {action.disabled ? "Disabled" : "Execute"}
-                              </Button>
-                            </div>
+                        {/* Action Content */}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-bold text-gray-900 mb-2">
+                            {action.title}
+                          </h4>
+                          <p className="text-xs text-gray-600 mb-4 leading-relaxed">
+                            {action.description}
+                          </p>
+
+                          <div className="flex items-center justify-between">
+                            {action.shortcut && (
+                              <span className="text-xs text-gray-500 bg-white/70 px-2 py-1 rounded-lg border">
+                                {action.shortcut}
+                              </span>
+                            )}
+
+                            <Button
+                              size="sm"
+                              className={`${colors.button} text-white text-xs px-4 py-2 h-8 ml-auto shadow-lg`}
+                              disabled={action.disabled}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!action.disabled) action.onClick();
+                              }}
+                            >
+                              {action.disabled ? "Disabled" : "Execute"}
+                            </Button>
                           </div>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
 
-        {/* Quick Access Bar */}
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-semibold text-gray-900">Most Used Actions</h4>
-            <span className="text-xs text-gray-500">Click to execute</span>
+        {/* Enhanced Quick Access Bar */}
+        <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3 text-white">
+              <Zap className="h-6 w-6" />
+              <div>
+                <h4 className="text-lg font-semibold">Quick Access</h4>
+                <p className="text-teal-100 text-sm">Most frequently used actions</p>
+              </div>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {quickActions.slice(0, 6).map((action) => {
               const colors = getColorClasses(action.color);
               const IconComponent = action.icon;
-              
+
               return (
                 <Button
                   key={action.id}
                   variant="outline"
                   size="sm"
-                  className={`flex items-center gap-2 ${colors.bg} ${colors.border} hover:shadow-md`}
+                  className="flex flex-col items-center gap-2 p-4 h-auto bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 hover:shadow-lg transition-all duration-300"
                   onClick={action.onClick}
                   disabled={action.disabled}
                 >
-                  <IconComponent className={`h-4 w-4 ${colors.icon}`} />
-                  {action.title}
+                  <IconComponent className="h-5 w-5" />
+                  <span className="text-xs font-medium text-center leading-tight">{action.title}</span>
                   {action.badge && (
-                    <span className="ml-1 inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
                       {action.badge}
                     </span>
                   )}
@@ -408,7 +401,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
             })}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
