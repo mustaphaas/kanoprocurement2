@@ -1347,7 +1347,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "������255,000,000",
+            amount: "�����255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -10519,9 +10519,9 @@ Blockchain Timestamp: ${Date.now()}
       </div>
 
       {/* Enhanced Users List */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-red-100">
-        <div className="px-6 py-4 border-b border-red-100 bg-gradient-to-r from-red-600/5 to-rose-600/5">
-          <h2 className="text-xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-amber-100">
+        <div className="px-6 py-4 border-b border-amber-100 bg-gradient-to-r from-amber-600/5 to-orange-600/5">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
             Ministry Users
           </h2>
           <p className="text-sm text-gray-600 mt-1">
@@ -10529,8 +10529,8 @@ Blockchain Timestamp: ${Date.now()}
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-red-100">
-            <thead className="bg-gradient-to-r from-red-50 to-rose-50">
+          <table className="min-w-full divide-y divide-amber-100">
+            <thead className="bg-gradient-to-r from-amber-50 to-orange-50">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-bold text-red-700 uppercase tracking-wider">
                   User Details
@@ -10649,10 +10649,10 @@ Blockchain Timestamp: ${Date.now()}
 
         {mdaUsers.length === 0 && (
           <div className="text-center py-16">
-            <div className="p-4 bg-gradient-to-r from-red-600 to-rose-600 rounded-full w-20 h-20 mx-auto mb-4">
+            <div className="p-4 bg-gradient-to-r from-amber-600 to-orange-600 rounded-full w-20 h-20 mx-auto mb-4">
               <Users className="h-12 w-12 text-white mx-auto mt-2" />
             </div>
-            <h3 className="text-lg font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+            <h3 className="text-lg font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
               No users found
             </h3>
             <p className="mt-2 text-gray-600 max-w-md mx-auto">
@@ -10661,7 +10661,7 @@ Blockchain Timestamp: ${Date.now()}
             </p>
             <button
               onClick={handleCreateUser}
-              className="mt-4 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white px-6 py-3 rounded-lg inline-flex items-center shadow-lg hover:shadow-xl transition-all duration-200"
+              className="mt-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-6 py-3 rounded-lg inline-flex items-center shadow-lg hover:shadow-xl transition-all duration-200"
             >
               <Plus className="h-5 w-5 mr-2" />
               Add First User
