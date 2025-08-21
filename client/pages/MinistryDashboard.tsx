@@ -307,6 +307,10 @@ export default function MinistryDashboard() {
   const [isNavigationLoading, setIsNavigationLoading] = useState(false);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [loadingActions, setLoadingActions] = useState<Record<string, boolean>>({});
+
+  // Mobile navigation
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
