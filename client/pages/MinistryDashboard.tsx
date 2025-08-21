@@ -3045,7 +3045,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-005",
           companyName: "Zenith Health Technologies",
-          bidAmount: "₦910,000,000",
+          bidAmount: "��910,000,000",
           technicalScore: 80,
           financialScore: 76,
           totalScore: 78,
@@ -6571,7 +6571,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {activeCommittee.name}
                     </h3>
                     <p className="text-green-700">
-                      Chairperson: {activeCommittee.chairperson} ��� Secretary:{" "}
+                      Chairperson: {activeCommittee.chairperson} • Secretary:{" "}
                       {activeCommittee.secretary}
                     </p>
                   </div>
@@ -10698,6 +10698,18 @@ Blockchain Timestamp: ${Date.now()}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
+              {/* Mobile Menu Toggle */}
+              {isMobile && (
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors md:hidden"
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                  </svg>
+                </button>
+              )}
+
               <div className="w-10 h-10 rounded-lg flex items-center justify-center">
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2Fe2b03698f65d43d792efcb7e22009c33?format=webp&width=800"
@@ -10705,7 +10717,7 @@ Blockchain Timestamp: ${Date.now()}
                   className="h-10 w-10 rounded-lg object-cover"
                 />
               </div>
-              <div>
+              <div className={isMobile ? "hidden sm:block" : ""}>
                 <h1 className="text-xl font-bold text-green-700">
                   {ministryInfo.name}
                 </h1>
