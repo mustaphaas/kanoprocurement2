@@ -1347,7 +1347,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "�����255,000,000",
+            amount: "������255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -10400,13 +10400,13 @@ Blockchain Timestamp: ${Date.now()}
   const renderUserManagement = () => (
     <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-red-50 to-rose-50 min-h-screen">
       {/* Enhanced Header Section */}
-      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-red-100 shadow-xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-600/5 to-rose-600/5"></div>
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-amber-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-600/5 to-orange-600/5"></div>
         <div className="relative p-8">
           <div className="flex items-center justify-between">
             <div className="space-y-3">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-red-600 to-rose-600 rounded-xl shadow-lg">
+                <div className="p-3 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl shadow-lg">
                   <Users className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -10441,7 +10441,7 @@ Blockchain Timestamp: ${Date.now()}
             <div className="flex gap-3">
               <button
                 onClick={handleCreateUser}
-                className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-lg inline-flex items-center"
+                className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-lg inline-flex items-center"
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Create New User
@@ -10459,11 +10459,11 @@ Blockchain Timestamp: ${Date.now()}
               <p className="text-sm font-medium text-gray-600 mb-1">
                 Total Users
               </p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+              <p className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                 {mdaUsers.length}
               </p>
             </div>
-            <div className="p-3 bg-gradient-to-r from-red-600 to-rose-600 rounded-xl shadow-lg">
+            <div className="p-3 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl shadow-lg">
               <Users className="h-6 w-6 text-white" />
             </div>
           </div>
@@ -10941,10 +10941,10 @@ Blockchain Timestamp: ${Date.now()}
                   key: "users",
                   label: "User Management",
                   icon: Users,
-                  gradient: "from-rose-600 to-pink-600",
-                  hoverGradient: "from-rose-50 to-pink-50",
-                  textColor: "text-rose-700",
-                  borderColor: "border-rose-200",
+                  gradient: "from-amber-600 to-orange-600",
+                  hoverGradient: "from-amber-50 to-orange-50",
+                  textColor: "text-amber-700",
+                  borderColor: "border-amber-200",
                 },
               ].map((tab) => (
                 <button
