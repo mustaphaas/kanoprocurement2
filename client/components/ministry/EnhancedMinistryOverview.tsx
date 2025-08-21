@@ -145,14 +145,22 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
 }) => {
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+      {/* Enhanced Header with Turquoise Theme */}
+      <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl shadow-lg p-8 text-white mb-6">
+        <h1 className="text-3xl font-bold mb-2">
           Ministry Dashboard - Overview
         </h1>
-        <p className="text-gray-600">
+        <p className="text-teal-100 text-lg">
           Comprehensive procurement management dashboard with real-time insights and analytics
         </p>
+        <div className="mt-4 flex items-center gap-4">
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
+            <span className="text-sm font-medium">Last Updated: {new Date().toLocaleString()}</span>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
+            <span className="text-sm font-medium">Status: Active</span>
+          </div>
+        </div>
       </div>
 
       {/* 1. Procurement Summary Cards */}
