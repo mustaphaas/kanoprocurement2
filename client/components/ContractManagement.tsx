@@ -808,91 +808,177 @@ const ContractManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Contract Management Module
-        </h2>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setShowContractModal(true)}
-            className="bg-primary hover:bg-primary/90"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Contract
-          </Button>
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-orange-50 to-amber-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-orange-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-600/5 to-amber-600/5"></div>
+        <div className="relative p-8">
+          <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-orange-600 to-amber-600 rounded-xl shadow-lg">
+                  <Handshake className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-orange-800 to-amber-800 bg-clip-text text-transparent">
+                    Contract Management System
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Complete contract lifecycle management platform
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowContractModal(true)}
+                className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create New Contract
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Enhanced Tabs Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-8">
-          <TabsTrigger value="contracts" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            All Contracts
-          </TabsTrigger>
-          <TabsTrigger value="milestones" className="flex items-center gap-2">
-            <Target className="h-4 w-4" />
-            Milestones
-          </TabsTrigger>
-          <TabsTrigger value="payments" className="flex items-center gap-2">
-            <CreditCard className="h-4 w-4" />
-            Payments
-          </TabsTrigger>
-          <TabsTrigger value="variations" className="flex items-center gap-2">
-            <PenTool className="h-4 w-4" />
-            Variations
-          </TabsTrigger>
-          <TabsTrigger value="disputes" className="flex items-center gap-2">
-            <Gavel className="h-4 w-4" />
-            Disputes
-          </TabsTrigger>
-          <TabsTrigger value="compliance" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            Compliance
-          </TabsTrigger>
-          <TabsTrigger value="closeout" className="flex items-center gap-2">
-            <Archive className="h-4 w-4" />
-            Closeout
-          </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Analytics
-          </TabsTrigger>
-        </TabsList>
+        <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-orange-100 shadow-lg p-2">
+          <TabsList className="grid w-full grid-cols-8 bg-transparent gap-1">
+            <TabsTrigger
+              value="contracts"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 border border-transparent data-[state=active]:border-orange-200"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="font-medium">All Contracts</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="milestones"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 border border-transparent data-[state=active]:border-orange-200"
+            >
+              <Target className="h-4 w-4" />
+              <span className="font-medium">Milestones</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="payments"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 border border-transparent data-[state=active]:border-orange-200"
+            >
+              <CreditCard className="h-4 w-4" />
+              <span className="font-medium">Payments</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="variations"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 border border-transparent data-[state=active]:border-orange-200"
+            >
+              <PenTool className="h-4 w-4" />
+              <span className="font-medium">Variations</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="disputes"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 border border-transparent data-[state=active]:border-orange-200"
+            >
+              <Gavel className="h-4 w-4" />
+              <span className="font-medium">Disputes</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="compliance"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 border border-transparent data-[state=active]:border-orange-200"
+            >
+              <Shield className="h-4 w-4" />
+              <span className="font-medium">Compliance</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="closeout"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 border border-transparent data-[state=active]:border-orange-200"
+            >
+              <Archive className="h-4 w-4" />
+              <span className="font-medium">Closeout</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="analytics"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-orange-50 border border-transparent data-[state=active]:border-orange-200"
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span className="font-medium">Analytics</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* All Contracts */}
-        <TabsContent value="contracts" className="space-y-4">
-          <div className="flex gap-4 items-center">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Search contracts..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+        <TabsContent value="contracts" className="space-y-6">
+          {/* Quick Actions Bar */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-orange-100 shadow-md p-6">
+            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+              <div className="flex-1 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Input
+                    placeholder="Search by title, contractor, or ID..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-12 pr-4 py-3 border-gray-200 focus:border-orange-400 focus:ring-orange-400 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <Filter className="h-4 w-4 text-gray-500" />
+                  <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <SelectTrigger className="w-56 border-gray-200 focus:border-orange-400 focus:ring-orange-400 rounded-lg shadow-sm">
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-lg border-gray-200 shadow-lg">
+                      <SelectItem value="all" className="hover:bg-orange-50">
+                        All Status
+                      </SelectItem>
+                      <SelectItem value="Draft" className="hover:bg-gray-50">
+                        Draft
+                      </SelectItem>
+                      <SelectItem value="Active" className="hover:bg-green-50">
+                        Active
+                      </SelectItem>
+                      <SelectItem value="Completed" className="hover:bg-blue-50">
+                        Completed
+                      </SelectItem>
+                      <SelectItem value="Terminated" className="hover:bg-red-50">
+                        Terminated
+                      </SelectItem>
+                      <SelectItem value="Suspended" className="hover:bg-yellow-50">
+                        Suspended
+                      </SelectItem>
+                      <SelectItem value="noc-linked" className="hover:bg-purple-50">
+                        NOC-Linked Only
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Draft">Draft</SelectItem>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Completed">Completed</SelectItem>
-                <SelectItem value="Terminated">Terminated</SelectItem>
-                <SelectItem value="Suspended">Suspended</SelectItem>
-                <SelectItem value="noc-linked">NOC-Linked Only</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-6">
             {filteredContracts.map((contract) => (
               <Card
                 key={contract.id}
-                className="hover:shadow-md transition-shadow"
+                className="hover:shadow-xl transition-all duration-200 bg-white/80 backdrop-blur-sm border border-orange-100 rounded-xl"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
