@@ -1267,9 +1267,9 @@ const TenderManagement = () => {
                 <div className="text-2xl font-bold text-emerald-700">156</div>
                 <div className="text-sm text-emerald-600">Audit Entries</div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-50 rounded-lg border border-blue-200">
-                <div className="text-2xl font-bold text-blue-700">98%</div>
-                <div className="text-sm text-blue-600">Compliance Rate</div>
+              <div className="text-center p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200">
+                <div className="text-2xl font-bold text-emerald-700">98%</div>
+                <div className="text-sm text-emerald-600">Compliance Rate</div>
               </div>
             </div>
           </div>
