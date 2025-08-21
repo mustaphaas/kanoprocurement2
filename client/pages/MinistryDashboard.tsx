@@ -3424,7 +3424,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "PrimeCare Medical Ltd",
-          bidAmount: "₦820,000,000",
+          bidAmount: "��820,000,000",
           technicalScore: 92,
           financialScore: 88,
           totalScore: 90,
@@ -4805,7 +4805,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         ministryId === "ministry2"
           ? "₦50.0B"
           : ministryId === "ministry3"
-            ? "₦12.5B"
+            ? "��12.5B"
             : "₦3.2B",
       utilizedBudget:
         ministryId === "ministry2"
@@ -5144,87 +5144,129 @@ Penalty Clause: 0.5% per week for delayed completion`,
   };
 
   const renderCompanies = () => (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Company Registry
-        </h1>
-        <div className="flex items-center space-x-2">
-          <p className="text-gray-600">
-            View registered companies with real-time updates
-          </p>
-          <div className="flex items-center bg-blue-50 px-2 py-1 rounded-md">
-            <RefreshCw className="h-4 w-4 text-blue-600 mr-1" />
-            <span className="text-xs text-blue-600 font-medium">Live Sync</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <CheckCircle className="h-8 w-8 text-green-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Approved Companies
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {companies.filter((c) => c.status === "Approved").length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <Clock className="h-8 w-8 text-yellow-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Pending Approval
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {companies.filter((c) => c.status === "Pending").length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <Circle className="h-8 w-8 text-blue-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Total Companies
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {companies.length}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Companies List */}
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-4 py-2 border-b border-gray-200">
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-blue-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+        <div className="relative p-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
+                  <Circle className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
+                    Company Registry
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Comprehensive company management and verification platform
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <RefreshCw className="h-4 w-4" />
+                  <span className="font-medium">Live Sync Enabled</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>{new Date().toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Enhanced Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 to-emerald-600/5"></div>
+          <div className="relative p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-600">
+                  Approved Companies
+                </p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                  {companies.filter((c) => c.status === "Approved").length}
+                </p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg">
+                <CheckCircle className="h-6 w-6 text-white" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-yellow-100 hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/5 to-amber-600/5"></div>
+          <div className="relative p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-600">
+                  Pending Approval
+                </p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-yellow-600 to-amber-600 bg-clip-text text-transparent">
+                  {companies.filter((c) => c.status === "Pending").length}
+                </p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-yellow-600 to-amber-600 rounded-xl shadow-lg">
+                <Clock className="h-6 w-6 text-white" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+          <div className="relative p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-600">
+                  Total Companies
+                </p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  {companies.length}
+                </p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
+                <Circle className="h-6 w-6 text-white" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Enhanced Companies List */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-blue-100">
+        <div className="px-6 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-600/5 to-indigo-600/5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Registered Companies
             </h2>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <div className="relative">
-                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" />
                 <input
                   type="text"
                   placeholder="Search companies..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-72 pl-10 pr-4 py-3 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="px-4 py-3 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200 font-medium"
               >
                 <option value="all">All Status</option>
                 <option value="Pending">Pending</option>
@@ -5237,79 +5279,136 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-blue-100">
+            <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Company
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Contact
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Business Type
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-blue-100">
               {filteredCompanies.map((company) => (
-                <tr key={company.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
+                <tr
+                  key={company.id}
+                  className="hover:bg-blue-50/50 transition-all duration-200 group"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="space-y-1">
+                      <div className="text-sm font-semibold text-gray-900">
                         {company.companyName}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-600 flex items-center">
+                        <svg
+                          className="h-3 w-3 mr-1 text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                         {company.address}
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="space-y-1">
+                      <div className="text-sm font-medium text-gray-900">
                         {company.contactPerson}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-600 flex items-center">
+                        <svg
+                          className="h-3 w-3 mr-1 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
+                        </svg>
                         {company.email}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-600 flex items-center">
+                        <svg
+                          className="h-3 w-3 mr-1 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                          />
+                        </svg>
                         {company.phone}
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                    {company.businessType}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900 bg-gray-50 px-3 py-1 rounded-full border">
+                      {company.businessType}
+                    </div>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      className={`inline-flex items-center px-3 py-1.5 text-xs font-bold rounded-full border shadow-sm ${
                         company.status === "Approved"
-                          ? "bg-green-100 text-green-800"
+                          ? "bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border-green-200"
                           : company.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-800"
+                            ? "bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border-yellow-200"
                             : company.status === "Suspended"
-                              ? "bg-orange-100 text-orange-800"
+                              ? "bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border-orange-200"
                               : company.status === "Blacklisted"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-gray-100 text-gray-800"
+                                ? "bg-gradient-to-r from-red-100 to-rose-100 text-red-800 border-red-200"
+                                : "bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 border-gray-200"
                       }`}
                     >
+                      <div
+                        className={`w-2 h-2 rounded-full mr-2 ${
+                          company.status === "Approved"
+                            ? "bg-green-500"
+                            : company.status === "Pending"
+                              ? "bg-yellow-500 animate-pulse"
+                              : company.status === "Suspended"
+                                ? "bg-orange-500"
+                                : company.status === "Blacklisted"
+                                  ? "bg-red-500"
+                                  : "bg-gray-500"
+                        }`}
+                      ></div>
                       {company.status}
                     </span>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center space-x-2">
-                      <button className="text-blue-600 hover:text-blue-900">
-                        <Eye className="h-4 w-4 inline mr-1" />
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-3">
+                      <button className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all duration-200 hover:shadow-md group-hover:shadow-lg">
+                        <Eye className="h-4 w-4 mr-2" />
                         View Details
                       </button>
-                      <span className="text-xs text-gray-500">(Read Only)</span>
+                      <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md border">
+                        Read Only
+                      </span>
                     </div>
                   </td>
                 </tr>
@@ -7973,7 +8072,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         <ul className="text-sm text-blue-700 mt-2 ml-4 space-y-1">
                           <li>1. ✅ Company Registration</li>
                           <li>2. ✅ Login & Verification</li>
-                          <li>3. ✅ Bidding Process</li>
+                          <li>3. ��� Bidding Process</li>
                           <li>4. ✅ Tender Evaluation</li>
                           <li>5. ✅ No Objection Certificate</li>
                         </ul>
@@ -9951,7 +10050,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       )}
                       {contractFormData.blockchainVerification && (
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
-                          ⛓��� Blockchain Verified
+                          ������ Blockchain Verified
                         </span>
                       )}
                       {contractFormData.autoExecution && (
@@ -10400,13 +10499,13 @@ Blockchain Timestamp: ${Date.now()}
   const renderUserManagement = () => (
     <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-red-50 to-rose-50 min-h-screen">
       {/* Enhanced Header Section */}
-      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-red-100 shadow-xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-600/5 to-rose-600/5"></div>
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-amber-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-600/5 to-orange-600/5"></div>
         <div className="relative p-8">
           <div className="flex items-center justify-between">
             <div className="space-y-3">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-red-600 to-rose-600 rounded-xl shadow-lg">
+                <div className="p-3 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl shadow-lg">
                   <Users className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -10441,7 +10540,7 @@ Blockchain Timestamp: ${Date.now()}
             <div className="flex gap-3">
               <button
                 onClick={handleCreateUser}
-                className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-lg inline-flex items-center"
+                className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-lg inline-flex items-center"
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Create New User
@@ -10459,11 +10558,11 @@ Blockchain Timestamp: ${Date.now()}
               <p className="text-sm font-medium text-gray-600 mb-1">
                 Total Users
               </p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+              <p className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                 {mdaUsers.length}
               </p>
             </div>
-            <div className="p-3 bg-gradient-to-r from-red-600 to-rose-600 rounded-xl shadow-lg">
+            <div className="p-3 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl shadow-lg">
               <Users className="h-6 w-6 text-white" />
             </div>
           </div>
@@ -10519,9 +10618,9 @@ Blockchain Timestamp: ${Date.now()}
       </div>
 
       {/* Enhanced Users List */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-red-100">
-        <div className="px-6 py-4 border-b border-red-100 bg-gradient-to-r from-red-600/5 to-rose-600/5">
-          <h2 className="text-xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-amber-100">
+        <div className="px-6 py-4 border-b border-amber-100 bg-gradient-to-r from-amber-600/5 to-orange-600/5">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
             Ministry Users
           </h2>
           <p className="text-sm text-gray-600 mt-1">
@@ -10529,8 +10628,8 @@ Blockchain Timestamp: ${Date.now()}
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-red-100">
-            <thead className="bg-gradient-to-r from-red-50 to-rose-50">
+          <table className="min-w-full divide-y divide-amber-100">
+            <thead className="bg-gradient-to-r from-amber-50 to-orange-50">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-bold text-red-700 uppercase tracking-wider">
                   User Details
@@ -10649,10 +10748,10 @@ Blockchain Timestamp: ${Date.now()}
 
         {mdaUsers.length === 0 && (
           <div className="text-center py-16">
-            <div className="p-4 bg-gradient-to-r from-red-600 to-rose-600 rounded-full w-20 h-20 mx-auto mb-4">
+            <div className="p-4 bg-gradient-to-r from-amber-600 to-orange-600 rounded-full w-20 h-20 mx-auto mb-4">
               <Users className="h-12 w-12 text-white mx-auto mt-2" />
             </div>
-            <h3 className="text-lg font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+            <h3 className="text-lg font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
               No users found
             </h3>
             <p className="mt-2 text-gray-600 max-w-md mx-auto">
@@ -10661,7 +10760,7 @@ Blockchain Timestamp: ${Date.now()}
             </p>
             <button
               onClick={handleCreateUser}
-              className="mt-4 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white px-6 py-3 rounded-lg inline-flex items-center shadow-lg hover:shadow-xl transition-all duration-200"
+              className="mt-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-6 py-3 rounded-lg inline-flex items-center shadow-lg hover:shadow-xl transition-all duration-200"
             >
               <Plus className="h-5 w-5 mr-2" />
               Add First User
@@ -10905,46 +11004,46 @@ Blockchain Timestamp: ${Date.now()}
                   key: "tender-management",
                   label: "Tender Management",
                   icon: Gavel,
+                  gradient: "from-blue-600 to-blue-700",
+                  hoverGradient: "from-blue-50 to-blue-100",
+                  textColor: "text-blue-700",
+                  borderColor: "border-blue-200",
+                },
+                {
+                  key: "noc",
+                  label: "NOC Requests",
+                  icon: Send,
                   gradient: "from-purple-600 to-violet-600",
                   hoverGradient: "from-purple-50 to-violet-50",
                   textColor: "text-purple-700",
                   borderColor: "border-purple-200",
                 },
                 {
-                  key: "noc",
-                  label: "NOC Requests",
-                  icon: Send,
+                  key: "contract-management",
+                  label: "Contract Management",
+                  icon: Handshake,
+                  gradient: "from-teal-600 to-blue-600",
+                  hoverGradient: "from-teal-50 to-blue-50",
+                  textColor: "text-teal-700",
+                  borderColor: "border-teal-200",
+                },
+                {
+                  key: "reports",
+                  label: "Reports",
+                  icon: TrendingUp,
                   gradient: "from-cyan-600 to-blue-600",
                   hoverGradient: "from-cyan-50 to-blue-50",
                   textColor: "text-cyan-700",
                   borderColor: "border-cyan-200",
                 },
                 {
-                  key: "contract-management",
-                  label: "Contract Management",
-                  icon: Handshake,
+                  key: "users",
+                  label: "User Management",
+                  icon: Users,
                   gradient: "from-amber-600 to-orange-600",
                   hoverGradient: "from-amber-50 to-orange-50",
                   textColor: "text-amber-700",
                   borderColor: "border-amber-200",
-                },
-                {
-                  key: "reports",
-                  label: "Reports",
-                  icon: TrendingUp,
-                  gradient: "from-slate-600 to-gray-600",
-                  hoverGradient: "from-slate-50 to-gray-50",
-                  textColor: "text-slate-700",
-                  borderColor: "border-slate-200",
-                },
-                {
-                  key: "users",
-                  label: "User Management",
-                  icon: Users,
-                  gradient: "from-rose-600 to-pink-600",
-                  hoverGradient: "from-rose-50 to-pink-50",
-                  textColor: "text-rose-700",
-                  borderColor: "border-rose-200",
                 },
               ].map((tab) => (
                 <button
@@ -11075,7 +11174,7 @@ Blockchain Timestamp: ${Date.now()}
                       key: "contract-management",
                       label: "Contract Management",
                       icon: Handshake,
-                      gradient: "from-amber-600 to-orange-600",
+                      gradient: "from-teal-600 to-blue-600",
                     },
                     {
                       key: "reports",

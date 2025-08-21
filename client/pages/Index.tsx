@@ -330,7 +330,7 @@ export default function Index() {
               </button>
               <Link
                 to="/validation"
-                className="hidden sm:flex items-center px-3 py-2 text-purple-600 hover:text-purple-700 text-sm font-medium"
+                className="hidden sm:flex items-center px-3 py-2 text-teal-600 hover:text-green-700 text-sm font-medium"
                 title="Workflow Validation Dashboard"
               >
                 <Settings className="h-4 w-4 mr-1" />
@@ -2307,7 +2307,7 @@ export default function Index() {
                             <li>• Advance payment: Up to 15%</li>
                             <li>• Progress payments: Based on milestones</li>
                             <li>
-                              • Final payment: After completion & acceptance
+                              ��� Final payment: After completion & acceptance
                             </li>
                             <li>
                               • Retention: 5-10% for defect liability period

@@ -808,19 +808,19 @@ const ContractManagement = () => {
   };
 
   return (
-    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-orange-50 to-amber-50 min-h-screen">
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-teal-50 to-blue-50 min-h-screen">
       {/* Enhanced Header Section */}
-      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-orange-100 shadow-xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-600/5 to-amber-600/5"></div>
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-teal-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/5 to-blue-600/5"></div>
         <div className="relative p-8">
           <div className="flex items-center justify-between">
             <div className="space-y-3">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-orange-600 to-amber-600 rounded-xl shadow-lg">
+                <div className="p-3 bg-gradient-to-r from-teal-600 to-blue-600 rounded-xl shadow-lg">
                   <Handshake className="h-8 w-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-orange-800 to-amber-800 bg-clip-text text-transparent">
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-teal-800 to-blue-800 bg-clip-text text-transparent">
                     Contract Management System
                   </h2>
                   <p className="text-lg text-gray-600 font-medium">
@@ -851,7 +851,7 @@ const ContractManagement = () => {
             <div className="flex gap-3">
               <Button
                 onClick={() => setShowContractModal(true)}
-                className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+                className="bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Create New Contract

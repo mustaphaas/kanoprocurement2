@@ -181,7 +181,7 @@ export const EnhancedMinistryOverview: React.FC<
   return (
     <div className="space-y-8">
       {/* Enhanced Header with Turquoise Theme */}
-      <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl shadow-lg p-8 text-white mb-6">
+      <div className="bg-gradient-to-r from-green-600 to-teal-600 rounded-xl shadow-lg p-8 text-white mb-6">
         <h1 className="text-3xl font-bold mb-2">
           Ministry Dashboard - Overview
         </h1>
