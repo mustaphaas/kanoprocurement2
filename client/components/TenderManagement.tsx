@@ -24,6 +24,7 @@ import {
   DollarSign,
   Target,
   Settings,
+  Hammer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -815,7 +816,7 @@ const TenderManagement = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
-                  <FileText className="h-8 w-8 text-white" />
+                  <Hammer className="h-8 w-8 text-white" />
                 </div>
                 <div>
                   <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
@@ -865,14 +866,14 @@ const TenderManagement = () => {
           <TabsList className="grid w-full grid-cols-8 bg-transparent gap-1">
             <TabsTrigger
               value="creation"
-              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-50 border border-transparent data-[state=active]:border-blue-200"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-50 border border-transparent data-[state=active]:border-blue-200"
             >
               <FileText className="h-4 w-4" />
               <span className="font-medium">Creation</span>
             </TabsTrigger>
             <TabsTrigger
               value="administration"
-              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-amber-50 border border-transparent data-[state=active]:border-amber-200"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-50 border border-transparent data-[state=active]:border-blue-200"
             >
               <Settings className="h-4 w-4" />
               <span className="font-medium">Administration</span>
