@@ -5245,28 +5245,28 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
       </div>
 
-      {/* Companies List */}
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-4 py-2 border-b border-gray-200">
+      {/* Enhanced Companies List */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-blue-100">
+        <div className="px-6 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-600/5 to-indigo-600/5">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Registered Companies
             </h2>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <div className="relative">
-                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" />
                 <input
                   type="text"
                   placeholder="Search companies..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-72 pl-10 pr-4 py-3 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="px-4 py-3 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200 font-medium"
               >
                 <option value="all">All Status</option>
                 <option value="Pending">Pending</option>
@@ -5279,22 +5279,22 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-blue-100">
+            <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Company
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Contact
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Business Type
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
