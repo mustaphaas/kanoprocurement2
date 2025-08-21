@@ -134,7 +134,7 @@ export default function CompanyLogin() {
               <Building2 className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-green-700">Ministry of Public Procurement</h1>
+              <h1 className="text-2xl font-bold text-green-700">KanoProc</h1>
               <p className="text-sm text-gray-600">Company Portal</p>
             </div>
           </div>
@@ -294,7 +294,7 @@ export default function CompanyLogin() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">
-                  New to Ministry Portal?
+                  New to KanoProc?
                 </span>
               </div>
             </div>

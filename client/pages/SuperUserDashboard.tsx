@@ -1739,7 +1739,7 @@ export default function SuperUserDashboard() {
       if (pendingCompany) {
         console.log("📋 Found pending company:", pendingCompany);
         console.log("📊 Current status:", pendingCompany.status);
-        console.log("�� Attempting to approve from SuperUser...");
+        console.log("🔄 Attempting to approve from SuperUser...");
         handleCompanyStatusChange(
           pendingCompany.id,
           "Approved",
@@ -8877,7 +8877,7 @@ The award letter has been:
               </div>
               <div>
                 <h1 className="text-xl font-bold text-white">
-                  Ministry Super User
+                  KanoProc Super User
                 </h1>
                 <p className="text-xs text-blue-100">
                   Advanced System Administration

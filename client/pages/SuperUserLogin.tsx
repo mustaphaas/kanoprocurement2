@@ -85,7 +85,7 @@ export default function SuperUserLogin() {
               <Building2 className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Ministry of Public Procurement</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">KanoProc</h1>
               <p className="text-sm text-gray-600">Super User Portal</p>
             </div>
           </div>
