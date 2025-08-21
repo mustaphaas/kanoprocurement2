@@ -534,6 +534,38 @@ export default function MinistryDashboard() {
   ]);
   const navigate = useNavigate();
 
+  // Mobile detection and responsive behavior
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    // Simulate initial loading
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Handle view change with loading state
+  const handleViewChange = (view: CurrentView) => {
+    setIsNavigationLoading(true);
+    setTimeout(() => {
+      setCurrentView(view);
+      setIsNavigationLoading(false);
+      setIsMobileMenuOpen(false); // Close mobile menu on selection
+    }, 300);
+  };
+
+  // Handle action loading
+  const handleActionLoading = (actionId: string, isLoading: boolean) => {
+    setLoadingActions(prev => ({ ...prev, [actionId]: isLoading }));
+  };
+
   // Get ministry info from localStorage
   const getMinistryInfo = (): MinistryInfo => {
     const ministryUser = localStorage.getItem("ministryUser");
@@ -6539,7 +6571,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       {activeCommittee.name}
                     </h3>
                     <p className="text-green-700">
-                      Chairperson: {activeCommittee.chairperson} • Secretary:{" "}
+                      Chairperson: {activeCommittee.chairperson} ��� Secretary:{" "}
                       {activeCommittee.secretary}
                     </p>
                   </div>
