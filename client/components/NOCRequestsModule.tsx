@@ -928,11 +928,11 @@ export default function NOCRequestsModule({
                 </div>
               </div>
 
-              <div className="grid gap-4">
+              <div className="grid gap-6">
                 {filteredRequests.map((request) => (
                   <Card
                     key={request.id}
-                    className="hover:shadow-md transition-shadow"
+                    className="hover:shadow-xl transition-all duration-200 bg-white/80 backdrop-blur-sm border border-purple-100 rounded-xl"
                   >
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start">
