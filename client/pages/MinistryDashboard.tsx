@@ -316,9 +316,6 @@ export default function MinistryDashboard() {
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [businessTypeFilter, setBusinessTypeFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState("all");
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showCreateTender, setShowCreateTender] = useState(false);
   const [newTender, setNewTender] = useState({
     title: "",
@@ -3380,7 +3377,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-012",
           companyName: "Northern Educational Supplies",
-          bidAmount: "₦2,100,000,000",
+          bidAmount: "��2,100,000,000",
           technicalScore: 88,
           financialScore: 86,
           totalScore: 87,
