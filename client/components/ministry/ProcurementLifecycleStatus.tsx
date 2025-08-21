@@ -197,8 +197,8 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
                         </div>
 
                         {stage.status === "active" && (
-                          <div className="flex items-center gap-2 text-sm text-blue-600">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                          <div className="flex items-center gap-2 text-sm text-teal-600">
+                            <div className="w-2 h-2 bg-teal-500 rounded-full animate-pulse" />
                             In Progress
                           </div>
                         )}
@@ -213,14 +213,14 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
 
                       {/* Action Button */}
                       <button
-                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 shadow-lg ${
                           stage.status === "completed"
-                            ? "bg-green-100 text-green-700 hover:bg-green-200"
+                            ? "bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 hover:from-emerald-200 hover:to-teal-200"
                             : stage.status === "active"
-                              ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                              ? "bg-gradient-to-r from-teal-100 to-cyan-100 text-teal-700 hover:from-teal-200 hover:to-cyan-200"
                               : stage.status === "delayed"
-                                ? "bg-red-100 text-red-700 hover:bg-red-200"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                ? "bg-gradient-to-r from-red-100 to-pink-100 text-red-700 hover:from-red-200 hover:to-pink-200"
+                                : "bg-gradient-to-r from-slate-100 to-gray-100 text-slate-700 hover:from-slate-200 hover:to-gray-200"
                         }`}
                       >
                         {stage.status === "completed" ? "View" : "Manage"}
@@ -240,32 +240,32 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
           })}
         </div>
 
-        {/* Summary Stats */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div>
-              <div className="text-lg font-bold text-green-600">
+        {/* Enhanced Summary Stats */}
+        <div className="mt-6 p-6 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl border border-teal-200 shadow-lg">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-emerald-200">
+              <div className="text-2xl font-bold text-emerald-600">
                 {procurementStages.filter(s => s.status === "completed").length}
               </div>
-              <div className="text-xs text-gray-600">Completed</div>
+              <div className="text-sm text-gray-600 font-medium">Completed</div>
             </div>
-            <div>
-              <div className="text-lg font-bold text-blue-600">
+            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-teal-200">
+              <div className="text-2xl font-bold text-teal-600">
                 {procurementStages.filter(s => s.status === "active").length}
               </div>
-              <div className="text-xs text-gray-600">Active</div>
+              <div className="text-sm text-gray-600 font-medium">Active</div>
             </div>
-            <div>
-              <div className="text-lg font-bold text-gray-600">
+            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-slate-200">
+              <div className="text-2xl font-bold text-slate-600">
                 {procurementStages.filter(s => s.status === "pending").length}
               </div>
-              <div className="text-xs text-gray-600">Pending</div>
+              <div className="text-sm text-gray-600 font-medium">Pending</div>
             </div>
-            <div>
-              <div className="text-lg font-bold text-red-600">
+            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-red-200">
+              <div className="text-2xl font-bold text-red-600">
                 {procurementStages.filter(s => s.status === "delayed").length}
               </div>
-              <div className="text-xs text-gray-600">Delayed</div>
+              <div className="text-sm text-gray-600 font-medium">Delayed</div>
             </div>
           </div>
         </div>
