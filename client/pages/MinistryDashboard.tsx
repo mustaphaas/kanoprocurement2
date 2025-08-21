@@ -61,6 +61,7 @@ import {
   RefreshCw,
   Users2,
   FileSpreadsheet,
+  User,
   Calculator,
   PlayCircle,
   PauseCircle,
