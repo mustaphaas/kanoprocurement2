@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/utils";
 import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
 import { persistentStorage } from "@/lib/persistentStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
   Home,
