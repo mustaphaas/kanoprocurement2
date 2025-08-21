@@ -190,52 +190,52 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
         <ProcurementLifecycleStatus stages={data.lifecycleData} />
       </section>
 
-      {/* 3. Two Column Layout: Updates & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Latest Updates */}
-        <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-2 rounded-lg">
-              <MessageSquare className="h-6 w-6 text-white" />
-            </div>
-            <h2 className="text-xl font-semibold text-gray-900">
-              Latest Updates & Notifications
-            </h2>
+      {/* 3. Latest Updates & Notifications */}
+      <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-2 rounded-lg">
+            <MessageSquare className="h-6 w-6 text-white" />
           </div>
-          <LatestUpdates
-            updates={data.updatesData}
-            onUpdateClick={onUpdateClick}
-          />
-        </section>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Latest Updates & Notifications
+          </h2>
+        </div>
+        <LatestUpdates
+          updates={data.updatesData}
+          onUpdateClick={onUpdateClick}
+        />
+      </section>
 
-        {/* Quick Actions */}
-        <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-gradient-to-r from-teal-600 to-blue-600 p-2 rounded-lg">
-              <Zap className="h-6 w-6 text-white" />
-            </div>
-            <h2 className="text-xl font-semibold text-gray-900">
-              Quick Actions
-            </h2>
+      {/* 4. Quick Actions - Full Width Card */}
+      <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-gradient-to-r from-teal-600 to-blue-600 p-2 rounded-lg">
+            <Zap className="h-6 w-6 text-white" />
           </div>
-          {onQuickAction && (
-            <QuickActions
-              onCreatePlan={onQuickAction.onCreatePlan}
-              onCreateTender={onQuickAction.onCreateTender}
-              onSubmitNOC={onQuickAction.onSubmitNOC}
-              onUploadEvaluation={onQuickAction.onUploadEvaluation}
-              onViewContracts={onQuickAction.onViewContracts}
-              onManageUsers={onQuickAction.onManageUsers}
-              onGenerateReport={onQuickAction.onGenerateReport}
-              onViewAnalytics={onQuickAction.onViewAnalytics}
-              onBulkUpload={onQuickAction.onBulkUpload}
-              onScheduleTender={onQuickAction.onScheduleTender}
-              onManageCommittees={onQuickAction.onManageCommittees}
-              onViewNotifications={onQuickAction.onViewNotifications}
-            />
-          )}
-        </section>
-      </div>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Quick Actions
+          </h2>
+          <div className="ml-auto text-sm text-gray-600">
+            Streamlined workflow shortcuts
+          </div>
+        </div>
+        {onQuickAction && (
+          <QuickActions
+            onCreatePlan={onQuickAction.onCreatePlan}
+            onCreateTender={onQuickAction.onCreateTender}
+            onSubmitNOC={onQuickAction.onSubmitNOC}
+            onUploadEvaluation={onQuickAction.onUploadEvaluation}
+            onViewContracts={onQuickAction.onViewContracts}
+            onManageUsers={onQuickAction.onManageUsers}
+            onGenerateReport={onQuickAction.onGenerateReport}
+            onViewAnalytics={onQuickAction.onViewAnalytics}
+            onBulkUpload={onQuickAction.onBulkUpload}
+            onScheduleTender={onQuickAction.onScheduleTender}
+            onManageCommittees={onQuickAction.onManageCommittees}
+            onViewNotifications={onQuickAction.onViewNotifications}
+          />
+        )}
+      </section>
 
       {/* 4. Ministry Procurement Performance */}
       <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
