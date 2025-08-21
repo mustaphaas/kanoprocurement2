@@ -976,6 +976,7 @@ export default function NOCRequestsModule({
                               setSelectedRequest(request);
                               setShowRequestDetails(true);
                             }}
+                            className="border-purple-200 text-purple-700 hover:bg-purple-50 shadow-sm"
                           >
                             <Eye className="h-4 w-4 mr-1" />
                             View
@@ -984,7 +985,7 @@ export default function NOCRequestsModule({
                             <Button
                               size="sm"
                               onClick={() => handleSubmitForReview(request.id)}
-                              className="bg-blue-600 hover:bg-blue-700"
+                              className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 shadow-lg hover:shadow-xl transition-all duration-200"
                             >
                               <Send className="h-4 w-4 mr-1" />
                               Submit
