@@ -797,7 +797,7 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-green-700">
-                    KanoProc Admin
+                    Ministry Admin
                   </h1>
                   <p className="text-xs text-gray-600">Company Details</p>
                 </div>
@@ -1038,7 +1038,7 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-green-700">
-                    KanoProc Admin
+                    Ministry Admin
                   </h1>
                   <p className="text-xs text-gray-600">Approval Process</p>
                 </div>
@@ -1272,7 +1272,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-green-700">
-                  KanoProc Admin
+                  Ministry Admin
                 </h1>
                 <p className="text-xs text-gray-600">
                   Registration Validator Dashboard
