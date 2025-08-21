@@ -125,6 +125,7 @@ interface Contract {
 export default function CompanyDashboard() {
   const [activeSection, setActiveSection] =
     useState<ActiveSection>("dashboard");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
