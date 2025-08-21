@@ -7973,7 +7973,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                         <ul className="text-sm text-blue-700 mt-2 ml-4 space-y-1">
                           <li>1. ✅ Company Registration</li>
                           <li>2. ✅ Login & Verification</li>
-                          <li>3. ✅ Bidding Process</li>
+                          <li>3. ��� Bidding Process</li>
                           <li>4. ✅ Tender Evaluation</li>
                           <li>5. ✅ No Objection Certificate</li>
                         </ul>
@@ -9951,7 +9951,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       )}
                       {contractFormData.blockchainVerification && (
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
-                          ⛓��� Blockchain Verified
+                          ������ Blockchain Verified
                         </span>
                       )}
                       {contractFormData.autoExecution && (
@@ -10905,10 +10905,10 @@ Blockchain Timestamp: ${Date.now()}
                   key: "tender-management",
                   label: "Tender Management",
                   icon: Gavel,
-                  gradient: "from-purple-600 to-violet-600",
-                  hoverGradient: "from-purple-50 to-violet-50",
-                  textColor: "text-purple-700",
-                  borderColor: "border-purple-200",
+                  gradient: "from-blue-600 to-blue-700",
+                  hoverGradient: "from-blue-50 to-blue-100",
+                  textColor: "text-blue-700",
+                  borderColor: "border-blue-200",
                 },
                 {
                   key: "noc",
