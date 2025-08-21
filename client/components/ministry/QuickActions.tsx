@@ -364,20 +364,24 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
           );
         })}
 
-        {/* Enhanced Quick Access Bar */}
+        {/* Enhanced Quick Access Bar - Full Width Layout */}
         <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3 text-white">
               <Zap className="h-6 w-6" />
               <div>
-                <h4 className="text-lg font-semibold">Quick Access</h4>
-                <p className="text-teal-100 text-sm">Most frequently used actions</p>
+                <h4 className="text-lg font-semibold">Priority Actions</h4>
+                <p className="text-teal-100 text-sm">Essential workflow shortcuts for efficient procurement management</p>
               </div>
             </div>
+            <div className="text-white/80 text-sm">
+              {quickActions.length} actions available
+            </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {quickActions.slice(0, 6).map((action) => {
-              const colors = getColorClasses(action.color);
+
+          {/* Primary Quick Actions - Side by Side Layout */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mb-6">
+            {quickActions.slice(0, 8).map((action) => {
               const IconComponent = action.icon;
 
               return (
@@ -385,11 +389,13 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
                   key={action.id}
                   variant="outline"
                   size="sm"
-                  className="flex flex-col items-center gap-2 p-4 h-auto bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 hover:shadow-lg transition-all duration-300"
+                  className="flex flex-col items-center gap-2 p-4 h-auto bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 hover:shadow-lg transition-all duration-300 hover:scale-105"
                   onClick={action.onClick}
                   disabled={action.disabled}
                 >
-                  <IconComponent className="h-5 w-5" />
+                  <div className="bg-white/20 p-2 rounded-lg">
+                    <IconComponent className="h-6 w-6" />
+                  </div>
                   <span className="text-xs font-medium text-center leading-tight">{action.title}</span>
                   {action.badge && (
                     <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
@@ -400,6 +406,36 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
               );
             })}
           </div>
+
+          {/* Secondary Actions - Horizontal Layout */}
+          {quickActions.length > 8 && (
+            <div className="border-t border-white/20 pt-4">
+              <div className="flex flex-wrap gap-2">
+                {quickActions.slice(8).map((action) => {
+                  const IconComponent = action.icon;
+
+                  return (
+                    <Button
+                      key={action.id}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 transition-all duration-300"
+                      onClick={action.onClick}
+                      disabled={action.disabled}
+                    >
+                      <IconComponent className="h-4 w-4" />
+                      <span className="text-sm font-medium">{action.title}</span>
+                      {action.badge && (
+                        <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
+                          {action.badge}
+                        </span>
+                      )}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
