@@ -868,11 +868,11 @@ export default function NOCRequestsModule({
           </Card>
         </TabsContent>
 
-        <TabsContent value="tracking" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
+        <TabsContent value="tracking" className="space-y-6">
+          <Card className="bg-white/80 backdrop-blur-sm border border-purple-100 shadow-lg rounded-xl">
+            <CardHeader className="bg-gradient-to-r from-purple-600/5 to-violet-600/5 border-b border-purple-100">
+              <CardTitle className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                <History className="h-5 w-5 text-purple-600" />
                 Request Tracking
               </CardTitle>
             </CardHeader>
