@@ -71,28 +71,28 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
     switch (status) {
       case "completed":
         return {
-          color: "bg-green-500",
-          textColor: "text-green-700",
-          bgColor: "bg-green-50",
-          borderColor: "border-green-200",
+          color: "bg-gradient-to-r from-emerald-500 to-teal-500",
+          textColor: "text-emerald-700",
+          bgColor: "bg-gradient-to-br from-emerald-50 to-teal-50",
+          borderColor: "border-emerald-200",
           icon: CheckCircle,
           label: "Completed",
         };
       case "active":
         return {
-          color: "bg-blue-500",
-          textColor: "text-blue-700",
-          bgColor: "bg-blue-50",
-          borderColor: "border-blue-200",
+          color: "bg-gradient-to-r from-teal-500 to-cyan-500",
+          textColor: "text-teal-700",
+          bgColor: "bg-gradient-to-br from-teal-50 to-cyan-50",
+          borderColor: "border-teal-200",
           icon: Circle,
           label: "Active",
         };
       case "pending":
         return {
-          color: "bg-gray-400",
-          textColor: "text-gray-700",
-          bgColor: "bg-gray-50",
-          borderColor: "border-gray-200",
+          color: "bg-gradient-to-r from-slate-400 to-gray-400",
+          textColor: "text-slate-700",
+          bgColor: "bg-gradient-to-br from-slate-50 to-gray-50",
+          borderColor: "border-slate-200",
           icon: Clock,
           label: "Pending",
         };
@@ -107,10 +107,10 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
         };
       default:
         return {
-          color: "bg-gray-400",
-          textColor: "text-gray-700",
-          bgColor: "bg-gray-50",
-          borderColor: "border-gray-200",
+          color: "bg-gradient-to-r from-slate-400 to-gray-400",
+          textColor: "text-slate-700",
+          bgColor: "bg-gradient-to-br from-slate-50 to-gray-50",
+          borderColor: "border-slate-200",
           icon: Circle,
           label: "Unknown",
         };
@@ -140,9 +140,9 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
             <span className="text-sm font-medium text-gray-700">Overall Progress</span>
             <span className="text-sm text-gray-600">{Math.round(getProgressPercentage())}% Complete</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3">
+          <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
             <div
-              className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500"
+              className="bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 h-4 rounded-full transition-all duration-500 shadow-lg"
               style={{ width: `${getProgressPercentage()}%` }}
             />
           </div>
@@ -165,13 +165,13 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
 
                 {/* Stage Card */}
                 <div
-                  className={`relative z-10 flex items-start gap-4 p-4 rounded-lg border-2 ${statusConfig.bgColor} ${statusConfig.borderColor} transition-all duration-200 hover:shadow-md`}
+                  className={`relative z-10 flex items-start gap-4 p-5 rounded-xl border-2 ${statusConfig.bgColor} ${statusConfig.borderColor} transition-all duration-300 hover:shadow-xl hover:scale-105 backdrop-blur-sm`}
                 >
                   {/* Stage Icon */}
                   <div
-                    className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${statusConfig.color}`}
+                    className={`flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center ${statusConfig.color} shadow-lg`}
                   >
-                    <IconComponent className="h-6 w-6 text-white" />
+                    <IconComponent className="h-7 w-7 text-white" />
                   </div>
 
                   {/* Stage Content */}
