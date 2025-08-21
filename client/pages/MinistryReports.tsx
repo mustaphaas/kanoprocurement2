@@ -535,20 +535,58 @@ const MinistryReports: React.FC = () => {
         </Card>
       </div>
 
-      {/* Tabbed Content */}
+      {/* Enhanced Colorful Tabs Navigation */}
       <Tabs
         value={selectedTab}
         onValueChange={setSelectedTab}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:flex">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="tenders">Tenders</TabsTrigger>
-          <TabsTrigger value="contracts">Contracts</TabsTrigger>
-          <TabsTrigger value="financial">Financial</TabsTrigger>
-          <TabsTrigger value="noc">NOC Reports</TabsTrigger>
-          <TabsTrigger value="audit">Audit & Compliance</TabsTrigger>
-        </TabsList>
+        <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-cyan-100 shadow-lg p-2">
+          <TabsList className="grid w-full grid-cols-6 lg:grid-cols-6 bg-transparent gap-1">
+            <TabsTrigger
+              value="overview"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-cyan-50 border border-transparent data-[state=active]:border-cyan-200"
+            >
+              <Activity className="h-4 w-4" />
+              <span className="font-medium">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="tenders"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-emerald-50 border border-transparent data-[state=active]:border-emerald-200"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="font-medium">Tenders</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="contracts"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-amber-50 border border-transparent data-[state=active]:border-amber-200"
+            >
+              <Award className="h-4 w-4" />
+              <span className="font-medium">Contracts</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="financial"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-green-50 border border-transparent data-[state=active]:border-green-200"
+            >
+              <DollarSign className="h-4 w-4" />
+              <span className="font-medium">Financial</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="noc"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50 border border-transparent data-[state=active]:border-purple-200"
+            >
+              <FileCheck className="h-4 w-4" />
+              <span className="font-medium">NOC Reports</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="audit"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-rose-50 border border-transparent data-[state=active]:border-rose-200"
+            >
+              <Shield className="h-4 w-4" />
+              <span className="font-medium">Audit & Compliance</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
