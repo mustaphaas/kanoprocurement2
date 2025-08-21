@@ -148,10 +148,10 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
     <div className="space-y-8">
       {/* Enhanced Header with Turquoise Theme */}
       <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl shadow-lg p-8 text-white mb-6">
-        <h1 className="text-3xl font-bold mb-2">
+        <h1 className="text-2xl font-bold mb-2">
           Ministry Dashboard - Overview
         </h1>
-        <p className="text-teal-100 text-lg">
+        <p className="text-teal-100">
           Comprehensive procurement management dashboard with real-time insights and analytics
         </p>
         <div className="mt-4 flex items-center gap-4">
