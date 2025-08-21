@@ -58,26 +58,26 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
     switch (priority) {
       case "urgent":
         return {
-          color: "bg-red-500",
+          color: "bg-gradient-to-r from-red-500 to-pink-500",
           textColor: "text-red-700",
-          bgColor: "bg-red-50",
+          bgColor: "bg-gradient-to-br from-red-50 to-pink-50",
           borderColor: "border-red-200",
           label: "Urgent",
         };
       case "high":
         return {
-          color: "bg-orange-500",
-          textColor: "text-orange-700",
-          bgColor: "bg-orange-50",
-          borderColor: "border-orange-200",
+          color: "bg-gradient-to-r from-amber-500 to-orange-500",
+          textColor: "text-amber-700",
+          bgColor: "bg-gradient-to-br from-amber-50 to-orange-50",
+          borderColor: "border-amber-200",
           label: "High",
         };
       case "medium":
         return {
-          color: "bg-blue-500",
-          textColor: "text-blue-700",
-          bgColor: "bg-blue-50",
-          borderColor: "border-blue-200",
+          color: "bg-gradient-to-r from-teal-500 to-cyan-500",
+          textColor: "text-teal-700",
+          bgColor: "bg-gradient-to-br from-teal-50 to-cyan-50",
+          borderColor: "border-teal-200",
           label: "Medium",
         };
       case "low":
