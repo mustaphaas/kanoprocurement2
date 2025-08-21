@@ -165,39 +165,59 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
       </div>
 
       {/* 1. Procurement Summary Cards */}
-      <section>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          Procurement Summary
-        </h2>
+      <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-gradient-to-r from-teal-600 to-cyan-600 p-2 rounded-lg">
+            <FileText className="h-6 w-6 text-white" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Procurement Summary
+          </h2>
+        </div>
         <OverviewSummaryCards data={data.summaryData} />
       </section>
 
       {/* 2. Procurement Lifecycle Status */}
-      <section>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          Procurement Workflow Tracker
-        </h2>
+      <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-gradient-to-r from-cyan-600 to-teal-600 p-2 rounded-lg">
+            <Activity className="h-6 w-6 text-white" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Procurement Workflow Tracker
+          </h2>
+        </div>
         <ProcurementLifecycleStatus stages={data.lifecycleData} />
       </section>
 
       {/* 3. Two Column Layout: Updates & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Latest Updates */}
-        <section>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Latest Updates & Notifications
-          </h2>
-          <LatestUpdates 
-            updates={data.updatesData} 
+        <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-2 rounded-lg">
+              <MessageSquare className="h-6 w-6 text-white" />
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Latest Updates & Notifications
+            </h2>
+          </div>
+          <LatestUpdates
+            updates={data.updatesData}
             onUpdateClick={onUpdateClick}
           />
         </section>
 
         {/* Quick Actions */}
-        <section>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Quick Actions
-          </h2>
+        <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-gradient-to-r from-teal-600 to-blue-600 p-2 rounded-lg">
+              <Zap className="h-6 w-6 text-white" />
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Quick Actions
+            </h2>
+          </div>
           {onQuickAction && (
             <QuickActions
               onCreatePlan={onQuickAction.onCreatePlan}
