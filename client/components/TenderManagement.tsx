@@ -24,7 +24,6 @@ import {
   DollarSign,
   Target,
   Settings,
-  Hammer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -816,7 +815,7 @@ const TenderManagement = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
-                  <Hammer className="h-8 w-8 text-white" />
+                  <FileText className="h-8 w-8 text-white" />
                 </div>
                 <div>
                   <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
