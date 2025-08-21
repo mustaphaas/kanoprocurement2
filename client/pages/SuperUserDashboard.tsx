@@ -8963,32 +8963,140 @@ The award letter has been:
               },
               { key: "settings", label: "Settings", icon: Settings },
               { key: "feedback", label: "Feedback", icon: MessageSquare },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => handleTabChange(tab.key as ActiveTab)}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
-                  activeTab === tab.key
-                    ? "bg-blue-50 text-blue-600 border border-blue-200"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
-                }`}
-              >
-                <tab.icon className="h-4 w-4" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
+            ].map((tab) => {
+              // Define color schemes for each tab
+              const tabConfig = {
+                "overview": {
+                  gradient: "from-teal-600 to-cyan-600",
+                  hoverGradient: "from-teal-50 to-cyan-50",
+                  textColor: "text-teal-700",
+                  borderColor: "border-teal-200"
+                },
+                "ministries": {
+                  gradient: "from-blue-600 to-indigo-600",
+                  hoverGradient: "from-blue-50 to-indigo-50",
+                  textColor: "text-blue-700",
+                  borderColor: "border-blue-200"
+                },
+                "analytics-reports": {
+                  gradient: "from-emerald-600 to-teal-600",
+                  hoverGradient: "from-emerald-50 to-teal-50",
+                  textColor: "text-emerald-700",
+                  borderColor: "border-emerald-200"
+                },
+                "notifications": {
+                  gradient: "from-purple-600 to-violet-600",
+                  hoverGradient: "from-purple-50 to-violet-50",
+                  textColor: "text-purple-700",
+                  borderColor: "border-purple-200"
+                },
+                "collaboration": {
+                  gradient: "from-cyan-600 to-blue-600",
+                  hoverGradient: "from-cyan-50 to-blue-50",
+                  textColor: "text-cyan-700",
+                  borderColor: "border-cyan-200"
+                },
+                "noc-requests": {
+                  gradient: "from-orange-600 to-amber-600",
+                  hoverGradient: "from-orange-50 to-amber-50",
+                  textColor: "text-orange-700",
+                  borderColor: "border-orange-200"
+                },
+                "settings": {
+                  gradient: "from-slate-600 to-gray-600",
+                  hoverGradient: "from-slate-50 to-gray-50",
+                  textColor: "text-slate-700",
+                  borderColor: "border-slate-200"
+                },
+                "feedback": {
+                  gradient: "from-rose-600 to-pink-600",
+                  hoverGradient: "from-rose-50 to-pink-50",
+                  textColor: "text-rose-700",
+                  borderColor: "border-rose-200"
+                }
+              };
+
+              const config = tabConfig[tab.key] || tabConfig["overview"];
+
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => handleTabChange(tab.key as ActiveTab)}
+                  className={`flex items-center space-x-3 px-6 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-300 min-w-max relative overflow-hidden ${
+                    activeTab === tab.key
+                      ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg hover:shadow-xl transform hover:scale-105`
+                      : `bg-white hover:bg-gradient-to-br hover:${config.hoverGradient} ${config.textColor} border ${config.borderColor} hover:shadow-md hover:transform hover:scale-105 hover:border-opacity-50`
+                  }`}
+                >
+                  {/* Background glow effect for active tab */}
+                  {activeTab === tab.key && (
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-r ${config.gradient} opacity-20 blur-xl`}
+                    ></div>
+                  )}
+
+                  {/* Icon with enhanced styling */}
+                  <div
+                    className={`relative z-10 p-1 rounded-lg ${
+                      activeTab === tab.key
+                        ? "bg-white/20 backdrop-blur-sm"
+                        : `bg-gradient-to-br ${config.hoverGradient}`
+                    }`}
+                  >
+                    <tab.icon
+                      className={`h-5 w-5 ${
+                        activeTab === tab.key ? "text-white" : config.textColor
+                      }`}
+                    />
+                  </div>
+
+                  {/* Label */}
+                  <span className="relative z-10 font-medium">{tab.label}</span>
+
+                  {/* Active indicator */}
+                  {activeTab === tab.key && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-lg"></div>
+                  )}
+                </button>
+              );
+            })}
 
             {/* Quick access to NOC Management Tab */}
             <button
               onClick={() => handleTabChange("no-objection-certificate")}
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
+              className={`flex items-center space-x-3 px-6 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-300 min-w-max relative overflow-hidden ${
                 activeTab === "no-objection-certificate"
-                  ? "text-blue-600 bg-blue-50 border-l-2 border-blue-500"
-                  : "text-gray-600 hover:text-blue-600 hover:bg-blue-50 border-l-2 border-green-500"
+                  ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105"
+                  : "bg-white hover:bg-gradient-to-br hover:from-green-50 hover:to-emerald-50 text-green-700 border border-green-200 hover:shadow-md hover:transform hover:scale-105 hover:border-opacity-50"
               }`}
             >
-              <Send className="h-4 w-4" />
-              <span>NOC Management</span>
+              {/* Background glow effect for active tab */}
+              {activeTab === "no-objection-certificate" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 opacity-20 blur-xl"></div>
+              )}
+
+              {/* Icon with enhanced styling */}
+              <div
+                className={`relative z-10 p-1 rounded-lg ${
+                  activeTab === "no-objection-certificate"
+                    ? "bg-white/20 backdrop-blur-sm"
+                    : "bg-gradient-to-br from-green-50 to-emerald-50"
+                }`}
+              >
+                <Send
+                  className={`h-5 w-5 ${
+                    activeTab === "no-objection-certificate" ? "text-white" : "text-green-700"
+                  }`}
+                />
+              </div>
+
+              {/* Label */}
+              <span className="relative z-10 font-medium">NOC Management</span>
+
+              {/* Active indicator */}
+              {activeTab === "no-objection-certificate" && (
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-lg"></div>
+              )}
             </button>
           </div>
         </div>
