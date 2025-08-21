@@ -876,33 +876,56 @@ export default function NOCRequestsModule({
                 Request Tracking
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex gap-4 mb-4">
-                <div className="flex-1">
-                  <Input
-                    placeholder="Search NOC requests..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full"
-                  />
+            <CardContent className="p-6">
+              {/* Enhanced Search Bar */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100 shadow-md p-6 mb-6">
+                <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+                  <div className="flex-1 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4">
+                    <div className="relative flex-1 max-w-md">
+                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <Input
+                        placeholder="Search by project title, contractor, or ID..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-12 pr-4 py-3 border-gray-200 focus:border-purple-400 focus:ring-purple-400 rounded-lg shadow-sm"
+                      />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Filter className="h-4 w-4 text-gray-500" />
+                      <Select value={statusFilter} onValueChange={setStatusFilter}>
+                        <SelectTrigger className="w-56 border-gray-200 focus:border-purple-400 focus:ring-purple-400 rounded-lg shadow-sm">
+                          <SelectValue placeholder="Filter by status" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-lg border-gray-200 shadow-lg">
+                          <SelectItem value="all" className="hover:bg-purple-50">
+                            All Statuses
+                          </SelectItem>
+                          <SelectItem value="Draft" className="hover:bg-gray-50">
+                            Draft
+                          </SelectItem>
+                          <SelectItem value="Submitted" className="hover:bg-blue-50">
+                            Submitted
+                          </SelectItem>
+                          <SelectItem value="Under Review" className="hover:bg-orange-50">
+                            Under Review
+                          </SelectItem>
+                          <SelectItem value="Clarification Requested" className="hover:bg-yellow-50">
+                            Clarification Requested
+                          </SelectItem>
+                          <SelectItem value="Approved" className="hover:bg-green-50">
+                            Approved
+                          </SelectItem>
+                          <SelectItem value="Rejected" className="hover:bg-red-50">
+                            Rejected
+                          </SelectItem>
+                          <SelectItem value="Pending" className="hover:bg-gray-50">
+                            Pending
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                 </div>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="Draft">Draft</SelectItem>
-                    <SelectItem value="Submitted">Submitted</SelectItem>
-                    <SelectItem value="Under Review">Under Review</SelectItem>
-                    <SelectItem value="Clarification Requested">
-                      Clarification Requested
-                    </SelectItem>
-                    <SelectItem value="Approved">Approved</SelectItem>
-                    <SelectItem value="Rejected">Rejected</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <div className="grid gap-4">
