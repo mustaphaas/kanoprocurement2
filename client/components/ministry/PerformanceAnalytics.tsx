@@ -326,25 +326,25 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
         <CardContent>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={nocProcessingData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <LineChart data={nocProcessingData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis 
-                  dataKey="month" 
+                <XAxis
+                  dataKey="month"
                   stroke="#666"
                   fontSize={12}
                 />
-                <YAxis 
+                <YAxis
                   stroke="#666"
                   fontSize={12}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Area
+                <Line
                   type="monotone"
                   dataKey="averageTime"
                   name="Avg Processing Time (days)"
                   stroke="#8b5cf6"
-                  fill="#8b5cf6"
-                  fillOpacity={0.3}
+                  strokeWidth={3}
+                  dot={{ fill: "#8b5cf6", strokeWidth: 2, r: 4 }}
                 />
                 <Line
                   type="monotone"
@@ -352,6 +352,7 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                   name="Approved"
                   stroke="#10b981"
                   strokeWidth={2}
+                  dot={{ fill: "#10b981", strokeWidth: 2, r: 3 }}
                 />
                 <Line
                   type="monotone"
@@ -359,8 +360,9 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                   name="Rejected"
                   stroke="#ef4444"
                   strokeWidth={2}
+                  dot={{ fill: "#ef4444", strokeWidth: 2, r: 3 }}
                 />
-              </AreaChart>
+              </LineChart>
             </ResponsiveContainer>
           </div>
           
