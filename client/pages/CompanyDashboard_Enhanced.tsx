@@ -245,7 +245,33 @@ export default function CompanyDashboardEnhanced() {
                 <FileText className="h-8 w-8 text-teal-600" />
               </div>
             </div>
-            {/* Add more dashboard cards here */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-blue-100 shadow-md p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Submitted Bids</p>
+                  <p className="text-2xl font-bold text-gray-900">8</p>
+                </div>
+                <Target className="h-8 w-8 text-blue-600" />
+              </div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-emerald-100 shadow-md p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Won Contracts</p>
+                  <p className="text-2xl font-bold text-gray-900">3</p>
+                </div>
+                <Award className="h-8 w-8 text-emerald-600" />
+              </div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100 shadow-md p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Value</p>
+                  <p className="text-2xl font-bold text-gray-900">₦2.5B</p>
+                </div>
+                <DollarSign className="h-8 w-8 text-purple-600" />
+              </div>
+            </div>
           </div>
         </TabsContent>
 
