@@ -1031,7 +1031,7 @@ export default function CompanyDashboard() {
                   </button>
                   <button
                     onClick={() => setActiveSection("contracts-awarded")}
-                    className="inline-flex items-center px-4 py-2 border border-green-300 text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50"
+                    className="inline-flex items-center px-4 py-2 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50"
                   >
                     View Contracts
                   </button>
