@@ -172,13 +172,15 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
         const IconComponent = card.icon;
 
         return (
-          <Card key={index} className={`${colors.bg} ${colors.border} border-2 hover:shadow-lg transition-shadow`}>
+          <Card key={index} className={`${colors.bg} ${colors.border} border-2 hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm`}>
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center mb-2">
-                    <IconComponent className={`h-6 w-6 ${colors.icon} mr-2`} />
-                    <h3 className="text-sm font-medium text-gray-700">{card.title}</h3>
+                  <div className="flex items-center mb-3">
+                    <div className={`p-2 rounded-lg ${colors.icon.replace('text-', 'bg-').replace('-600', '-100')} mr-3`}>
+                      <IconComponent className={`h-5 w-5 ${colors.icon}`} />
+                    </div>
+                    <h3 className="text-sm font-semibold text-gray-800">{card.title}</h3>
                   </div>
                   
                   <div className="mb-2">
