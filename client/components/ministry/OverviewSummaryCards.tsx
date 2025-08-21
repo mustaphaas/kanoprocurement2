@@ -94,44 +94,75 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
 
   const getColorClasses = (color: string) => {
     const colorMap = {
-      blue: {
-        bg: "bg-blue-50",
+      teal: {
+        bg: "bg-gradient-to-br from-teal-50 to-cyan-50",
+        icon: "text-teal-600",
+        value: "text-teal-900",
+        border: "border-teal-200",
+      },
+      cyan: {
+        bg: "bg-gradient-to-br from-cyan-50 to-teal-50",
+        icon: "text-cyan-600",
+        value: "text-cyan-900",
+        border: "border-cyan-200",
+      },
+      emerald: {
+        bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
+        icon: "text-emerald-600",
+        value: "text-emerald-900",
+        border: "border-emerald-200",
+      },
+      turquoise: {
+        bg: "bg-gradient-to-br from-sky-50 to-cyan-50",
+        icon: "text-sky-600",
+        value: "text-sky-900",
+        border: "border-sky-200",
+      },
+      "teal-blue": {
+        bg: "bg-gradient-to-br from-teal-50 to-blue-50",
         icon: "text-blue-600",
         value: "text-blue-900",
         border: "border-blue-200",
       },
-      green: {
-        bg: "bg-green-50",
-        icon: "text-green-600",
-        value: "text-green-900",
-        border: "border-green-200",
-      },
-      orange: {
-        bg: "bg-orange-50",
-        icon: "text-orange-600",
-        value: "text-orange-900",
-        border: "border-orange-200",
-      },
-      purple: {
-        bg: "bg-purple-50",
-        icon: "text-purple-600",
-        value: "text-purple-900",
-        border: "border-purple-200",
-      },
-      indigo: {
-        bg: "bg-indigo-50",
-        icon: "text-indigo-600",
-        value: "text-indigo-900",
-        border: "border-indigo-200",
-      },
       red: {
-        bg: "bg-red-50",
+        bg: "bg-gradient-to-br from-red-50 to-pink-50",
         icon: "text-red-600",
         value: "text-red-900",
         border: "border-red-200",
       },
+      // Keep old colors as fallback
+      blue: {
+        bg: "bg-gradient-to-br from-teal-50 to-cyan-50",
+        icon: "text-teal-600",
+        value: "text-teal-900",
+        border: "border-teal-200",
+      },
+      green: {
+        bg: "bg-gradient-to-br from-cyan-50 to-teal-50",
+        icon: "text-cyan-600",
+        value: "text-cyan-900",
+        border: "border-cyan-200",
+      },
+      orange: {
+        bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
+        icon: "text-emerald-600",
+        value: "text-emerald-900",
+        border: "border-emerald-200",
+      },
+      purple: {
+        bg: "bg-gradient-to-br from-sky-50 to-cyan-50",
+        icon: "text-sky-600",
+        value: "text-sky-900",
+        border: "border-sky-200",
+      },
+      indigo: {
+        bg: "bg-gradient-to-br from-teal-50 to-blue-50",
+        icon: "text-blue-600",
+        value: "text-blue-900",
+        border: "border-blue-200",
+      },
     };
-    return colorMap[color as keyof typeof colorMap] || colorMap.blue;
+    return colorMap[color as keyof typeof colorMap] || colorMap.teal;
   };
 
   return (
