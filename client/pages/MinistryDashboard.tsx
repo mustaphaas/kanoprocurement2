@@ -84,7 +84,6 @@ import {
 type CurrentView =
   | "overview"
   | "companies"
-  | "contracts"
   | "reports"
   | "noc"
   | "users"
@@ -8549,7 +8548,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-3xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  📥 Download Bids - {selectedTenderForDetails.title}
+                  �� Download Bids - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowDownloadModal(false)}
@@ -10625,8 +10624,6 @@ Blockchain Timestamp: ${Date.now()}
       return renderOverview();
     } else if (currentView === "companies") {
       return renderCompanies();
-    } else if (currentView === "contracts") {
-      return renderContracts();
     } else if (currentView === "reports") {
       return <MinistryReports />;
     } else if (currentView === "noc") {
@@ -10689,7 +10686,6 @@ Blockchain Timestamp: ${Date.now()}
             {[
               { key: "overview", label: "Overview", icon: BarChart3 },
               { key: "companies", label: "Companies", icon: Circle },
-              { key: "contracts", label: "Contracts", icon: FileCheck },
               {
                 key: "procurement-planning",
                 label: "Procurement Planning",
