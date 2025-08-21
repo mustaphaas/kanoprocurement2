@@ -10840,6 +10840,15 @@ Blockchain Timestamp: ${Date.now()}
                   borderColor: "border-purple-200"
                 },
                 {
+                  key: "noc",
+                  label: "NOC Requests",
+                  icon: Send,
+                  gradient: "from-cyan-600 to-blue-600",
+                  hoverGradient: "from-cyan-50 to-blue-50",
+                  textColor: "text-cyan-700",
+                  borderColor: "border-cyan-200"
+                },
+                {
                   key: "contract-management",
                   label: "Contract Management",
                   icon: Handshake,
@@ -10847,15 +10856,6 @@ Blockchain Timestamp: ${Date.now()}
                   hoverGradient: "from-amber-50 to-orange-50",
                   textColor: "text-amber-700",
                   borderColor: "border-amber-200"
-                },
-                {
-                  key: "users",
-                  label: "User Management",
-                  icon: Users,
-                  gradient: "from-rose-600 to-pink-600",
-                  hoverGradient: "from-rose-50 to-pink-50",
-                  textColor: "text-rose-700",
-                  borderColor: "border-rose-200"
                 },
                 {
                   key: "reports",
@@ -10867,13 +10867,13 @@ Blockchain Timestamp: ${Date.now()}
                   borderColor: "border-slate-200"
                 },
                 {
-                  key: "noc",
-                  label: "NOC Requests",
-                  icon: Send,
-                  gradient: "from-cyan-600 to-blue-600",
-                  hoverGradient: "from-cyan-50 to-blue-50",
-                  textColor: "text-cyan-700",
-                  borderColor: "border-cyan-200"
+                  key: "users",
+                  label: "User Management",
+                  icon: Users,
+                  gradient: "from-rose-600 to-pink-600",
+                  hoverGradient: "from-rose-50 to-pink-50",
+                  textColor: "text-rose-700",
+                  borderColor: "border-rose-200"
                 },
               ].map((tab) => (
                 <button
