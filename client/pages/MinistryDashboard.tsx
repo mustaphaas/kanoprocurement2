@@ -3276,7 +3276,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-005",
           companyName: "Federal Infrastructure Ltd",
-          bidAmount: "��15,800,000,000",
+          bidAmount: "₦15,800,000,000",
           technicalScore: 80,
           financialScore: 78,
           totalScore: 79,
@@ -3424,7 +3424,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "PrimeCare Medical Ltd",
-          bidAmount: "₦820,000,000",
+          bidAmount: "��820,000,000",
           technicalScore: 92,
           financialScore: 88,
           totalScore: 90,
@@ -10914,10 +10914,10 @@ Blockchain Timestamp: ${Date.now()}
                   key: "noc",
                   label: "NOC Requests",
                   icon: Send,
-                  gradient: "from-orange-600 to-purple-600",
-                  hoverGradient: "from-orange-50 to-purple-50",
-                  textColor: "text-orange-700",
-                  borderColor: "border-orange-200",
+                  gradient: "from-purple-600 to-violet-600",
+                  hoverGradient: "from-purple-50 to-violet-50",
+                  textColor: "text-purple-700",
+                  borderColor: "border-purple-200",
                 },
                 {
                   key: "contract-management",
