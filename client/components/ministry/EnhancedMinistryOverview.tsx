@@ -255,7 +255,7 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
         />
       </section>
 
-      {/* 5. Audit & Compliance Snapshot */}
+      {/* 6. Audit & Compliance Snapshot */}
       <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="bg-gradient-to-r from-violet-600 to-purple-600 p-2 rounded-lg">
