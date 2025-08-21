@@ -238,10 +238,15 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
       </div>
 
       {/* 4. Ministry Procurement Performance */}
-      <section>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          Performance Analytics
-        </h2>
+      <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-2 rounded-lg">
+            <BarChart3 className="h-6 w-6 text-white" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Performance Analytics
+          </h2>
+        </div>
         <PerformanceAnalytics
           budgetData={data.analyticsData.budgetData}
           tenderStatusData={data.analyticsData.tenderStatusData}
@@ -251,10 +256,15 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
       </section>
 
       {/* 5. Audit & Compliance Snapshot */}
-      <section>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          Audit & Compliance
-        </h2>
+      <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-gradient-to-r from-violet-600 to-purple-600 p-2 rounded-lg">
+            <Shield className="h-6 w-6 text-white" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Audit & Compliance
+          </h2>
+        </div>
         <AuditComplianceSnapshot
           complianceIssues={data.complianceData.complianceIssues}
           coiStatuses={data.complianceData.coiStatuses}
@@ -266,7 +276,7 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
       </section>
 
       {/* Footer Summary */}
-      <section className="bg-gray-50 rounded-lg p-6 border">
+      <section className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl border border-teal-200 shadow-lg p-6">
         <div className="text-center">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             Synchronization Status
