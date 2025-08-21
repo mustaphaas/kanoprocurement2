@@ -5,7 +5,14 @@ import { LatestUpdates } from "./LatestUpdates";
 import { PerformanceAnalytics } from "./PerformanceAnalytics";
 import { QuickActions } from "./QuickActions";
 import { AuditComplianceSnapshot } from "./AuditComplianceSnapshot";
-import { FileText, Activity, MessageSquare, Zap, BarChart3, Shield } from "lucide-react";
+import {
+  FileText,
+  Activity,
+  MessageSquare,
+  Zap,
+  BarChart3,
+  Shield,
+} from "lucide-react";
 
 interface MinistryData {
   // Summary Cards Data
@@ -25,21 +32,42 @@ interface MinistryData {
 
   // Lifecycle Status Data
   lifecycleData: {
-    procurementPlans: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    tenderManagement: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    nocRequest: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    contractAward: { count: number; status: "completed" | "active" | "pending" | "delayed" };
+    procurementPlans: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    tenderManagement: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    nocRequest: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    contractAward: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
   };
 
   // Updates Data
   updatesData: Array<{
     id: string;
-    type: "noc_feedback" | "tender_status" | "contract_milestone" | "system_alert";
+    type:
+      | "noc_feedback"
+      | "tender_status"
+      | "contract_milestone"
+      | "system_alert";
     title: string;
     description: string;
     timestamp: string;
     priority: "low" | "medium" | "high" | "urgent";
-    status?: "approved" | "rejected" | "clarification_needed" | "completed" | "pending";
+    status?:
+      | "approved"
+      | "rejected"
+      | "clarification_needed"
+      | "completed"
+      | "pending";
     actionRequired?: boolean;
     relatedId?: string;
     relatedType?: "tender" | "contract" | "noc" | "compliance";
@@ -102,7 +130,11 @@ interface MinistryData {
     }>;
     upcomingDeadlines: Array<{
       id: string;
-      type: "tender_closing" | "contract_expiry" | "review_due" | "compliance_check";
+      type:
+        | "tender_closing"
+        | "contract_expiry"
+        | "review_due"
+        | "compliance_check";
       title: string;
       description: string;
       dueDate: string;
@@ -136,7 +168,9 @@ interface EnhancedMinistryOverviewProps {
   onCOIClick?: (status: any) => void;
 }
 
-export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> = ({
+export const EnhancedMinistryOverview: React.FC<
+  EnhancedMinistryOverviewProps
+> = ({
   data,
   onQuickAction,
   onUpdateClick,
@@ -152,11 +186,14 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
           Ministry Dashboard - Overview
         </h1>
         <p className="text-teal-100 text-lg">
-          Comprehensive procurement management dashboard with real-time insights and analytics
+          Comprehensive procurement management dashboard with real-time insights
+          and analytics
         </p>
         <div className="mt-4 flex items-center gap-4">
           <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
-            <span className="text-sm font-medium">Last Updated: {new Date().toLocaleString()}</span>
+            <span className="text-sm font-medium">
+              Last Updated: {new Date().toLocaleString()}
+            </span>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
             <span className="text-sm font-medium">Status: Active</span>
@@ -212,9 +249,7 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
           <div className="bg-gradient-to-r from-teal-600 to-blue-600 p-2 rounded-lg">
             <Zap className="h-6 w-6 text-white" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-900">
-            Quick Actions
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-900">Quick Actions</h2>
           <div className="ml-auto text-sm text-gray-600">
             Streamlined workflow shortcuts
           </div>
@@ -282,8 +317,9 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
             Synchronization Status
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            All data automatically syncs across Procurement Planning, Tender Management, 
-            NOC Module, and Contract Management. Last updated: {new Date().toLocaleString()}
+            All data automatically syncs across Procurement Planning, Tender
+            Management, NOC Module, and Contract Management. Last updated:{" "}
+            {new Date().toLocaleString()}
           </p>
           <div className="flex items-center justify-center gap-4 text-sm">
             <div className="flex items-center gap-2">

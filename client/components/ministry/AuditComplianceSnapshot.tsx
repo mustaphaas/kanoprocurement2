@@ -49,7 +49,11 @@ interface COIStatus {
 
 interface UpcomingDeadline {
   id: string;
-  type: "tender_closing" | "contract_expiry" | "review_due" | "compliance_check";
+  type:
+    | "tender_closing"
+    | "contract_expiry"
+    | "review_due"
+    | "compliance_check";
   title: string;
   description: string;
   dueDate: string;
@@ -68,7 +72,9 @@ interface AuditComplianceSnapshotProps {
   onCOIClick?: (status: COIStatus) => void;
 }
 
-export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = ({
+export const AuditComplianceSnapshot: React.FC<
+  AuditComplianceSnapshotProps
+> = ({
   complianceIssues,
   coiStatuses,
   upcomingDeadlines,
@@ -145,7 +151,7 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
   const getPriorityColor = (priority: string, daysRemaining: number) => {
     if (daysRemaining < 0) return "text-red-600 bg-red-50";
     if (daysRemaining === 0) return "text-red-600 bg-red-50";
-    
+
     switch (priority) {
       case "urgent":
         return "text-red-600 bg-red-50";
@@ -193,9 +199,15 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
     }
   };
 
-  const criticalIssues = complianceIssues.filter(issue => issue.severity === "critical" || issue.severity === "high");
-  const overdueDeadlines = upcomingDeadlines.filter(deadline => deadline.daysRemaining < 0);
-  const urgentDeadlines = upcomingDeadlines.filter(deadline => deadline.daysRemaining >= 0 && deadline.daysRemaining <= 3);
+  const criticalIssues = complianceIssues.filter(
+    (issue) => issue.severity === "critical" || issue.severity === "high",
+  );
+  const overdueDeadlines = upcomingDeadlines.filter(
+    (deadline) => deadline.daysRemaining < 0,
+  );
+  const urgentDeadlines = upcomingDeadlines.filter(
+    (deadline) => deadline.daysRemaining >= 0 && deadline.daysRemaining <= 3,
+  );
 
   return (
     <div className="space-y-6">
@@ -205,8 +217,12 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Critical Issues</p>
-                <p className="text-2xl font-bold text-red-600">{criticalIssues.length}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Critical Issues
+                </p>
+                <p className="text-2xl font-bold text-red-600">
+                  {criticalIssues.length}
+                </p>
               </div>
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
@@ -217,8 +233,12 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Overdue Items</p>
-                <p className="text-2xl font-bold text-orange-600">{overdueDeadlines.length}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Overdue Items
+                </p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {overdueDeadlines.length}
+                </p>
               </div>
               <Clock className="h-8 w-8 text-orange-600" />
             </div>
@@ -229,8 +249,12 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Urgent Deadlines</p>
-                <p className="text-2xl font-bold text-blue-600">{urgentDeadlines.length}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Urgent Deadlines
+                </p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {urgentDeadlines.length}
+                </p>
               </div>
               <Calendar className="h-8 w-8 text-blue-600" />
             </div>
@@ -241,9 +265,17 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">COI Compliance</p>
+                <p className="text-sm font-medium text-gray-600">
+                  COI Compliance
+                </p>
                 <p className="text-2xl font-bold text-green-600">
-                  {Math.round((coiStatuses.filter(s => s.status === "compliant").length / coiStatuses.length) * 100)}%
+                  {Math.round(
+                    (coiStatuses.filter((s) => s.status === "compliant")
+                      .length /
+                      coiStatuses.length) *
+                      100,
+                  )}
+                  %
                 </p>
               </div>
               <Shield className="h-8 w-8 text-green-600" />
@@ -260,7 +292,9 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
               <AlertTriangle className="h-5 w-5 text-red-600" />
               Flagged Compliance Issues
               {criticalIssues.length > 0 && (
-                <Badge variant="destructive">{criticalIssues.length} Critical</Badge>
+                <Badge variant="destructive">
+                  {criticalIssues.length} Critical
+                </Badge>
               )}
             </CardTitle>
             <div className="text-sm text-gray-600">
@@ -307,8 +341,12 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
                               {issue.relatedTitle}
                             </span>
                             <div className="flex items-center gap-1">
-                              <StatusIcon className={`h-3 w-3 ${severityConfig.textColor}`} />
-                              <span className={`text-xs ${severityConfig.textColor}`}>
+                              <StatusIcon
+                                className={`h-3 w-3 ${severityConfig.textColor}`}
+                              />
+                              <span
+                                className={`text-xs ${severityConfig.textColor}`}
+                              >
                                 {issue.status.replace("_", " ")}
                               </span>
                             </div>
@@ -320,7 +358,7 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
                 })}
               </div>
             )}
-            
+
             {complianceIssues.length > 5 && (
               <div className="mt-4 text-center">
                 <Button variant="outline" size="sm">
@@ -354,7 +392,9 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
                 {coiStatuses.map((status) => {
                   const statusConfig = getCOIStatusConfig(status.status);
                   const StatusIcon = statusConfig.icon;
-                  const compliancePercentage = Math.round((status.clearedMembers / status.totalMembers) * 100);
+                  const compliancePercentage = Math.round(
+                    (status.clearedMembers / status.totalMembers) * 100,
+                  );
 
                   return (
                     <div
@@ -363,10 +403,16 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
                       onClick={() => onCOIClick?.(status)}
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h4 className="text-sm font-semibold text-gray-900">{status.committeeName}</h4>
+                        <h4 className="text-sm font-semibold text-gray-900">
+                          {status.committeeName}
+                        </h4>
                         <div className="flex items-center gap-1">
-                          <StatusIcon className={`h-4 w-4 ${statusConfig.color}`} />
-                          <span className={`text-xs font-medium ${statusConfig.color}`}>
+                          <StatusIcon
+                            className={`h-4 w-4 ${statusConfig.color}`}
+                          />
+                          <span
+                            className={`text-xs font-medium ${statusConfig.color}`}
+                          >
                             {compliancePercentage}%
                           </span>
                         </div>
@@ -374,15 +420,21 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
 
                       <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 mb-2">
                         <div className="text-center">
-                          <div className="font-medium text-green-600">{status.clearedMembers}</div>
+                          <div className="font-medium text-green-600">
+                            {status.clearedMembers}
+                          </div>
                           <div>Cleared</div>
                         </div>
                         <div className="text-center">
-                          <div className="font-medium text-orange-600">{status.pendingMembers}</div>
+                          <div className="font-medium text-orange-600">
+                            {status.pendingMembers}
+                          </div>
                           <div>Pending</div>
                         </div>
                         <div className="text-center">
-                          <div className="font-medium text-red-600">{status.flaggedMembers}</div>
+                          <div className="font-medium text-red-600">
+                            {status.flaggedMembers}
+                          </div>
                           <div>Flagged</div>
                         </div>
                       </div>
@@ -409,7 +461,9 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
             <Calendar className="h-5 w-5 text-orange-600" />
             Upcoming Deadlines
             {urgentDeadlines.length > 0 && (
-              <Badge variant="destructive">{urgentDeadlines.length} Urgent</Badge>
+              <Badge variant="destructive">
+                {urgentDeadlines.length} Urgent
+              </Badge>
             )}
           </CardTitle>
           <div className="text-sm text-gray-600">
@@ -425,9 +479,13 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
           ) : (
             <div className="space-y-3 max-h-80 overflow-y-auto">
               {upcomingDeadlines.slice(0, 8).map((deadline) => {
-                const priorityColor = getPriorityColor(deadline.priority, deadline.daysRemaining);
+                const priorityColor = getPriorityColor(
+                  deadline.priority,
+                  deadline.daysRemaining,
+                );
                 const isOverdue = deadline.daysRemaining < 0;
-                const isUrgent = deadline.daysRemaining >= 0 && deadline.daysRemaining <= 3;
+                const isUrgent =
+                  deadline.daysRemaining >= 0 && deadline.daysRemaining <= 3;
 
                 return (
                   <div
@@ -458,9 +516,12 @@ export const AuditComplianceSnapshot: React.FC<AuditComplianceSnapshotProps> = (
                         </p>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-gray-500">
-                            Due: {new Date(deadline.dueDate).toLocaleDateString()}
+                            Due:{" "}
+                            {new Date(deadline.dueDate).toLocaleDateString()}
                           </span>
-                          <span className={`text-xs font-medium px-2 py-1 rounded ${priorityColor}`}>
+                          <span
+                            className={`text-xs font-medium px-2 py-1 rounded ${priorityColor}`}
+                          >
                             {formatDaysRemaining(deadline.daysRemaining)}
                           </span>
                         </div>

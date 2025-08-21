@@ -70,7 +70,10 @@ export const QuickActionsSkeleton = () => (
     </div>
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
       {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} className="flex flex-col items-center gap-2 p-4 bg-white/20 rounded-lg">
+        <div
+          key={i}
+          className="flex flex-col items-center gap-2 p-4 bg-white/20 rounded-lg"
+        >
           <Skeleton className="h-8 w-8 rounded-lg" />
           <Skeleton className="h-3 w-16" />
         </div>
@@ -79,11 +82,17 @@ export const QuickActionsSkeleton = () => (
   </div>
 );
 
-export const LoadingSpinner = ({ size = "md", className = "" }: { size?: "sm" | "md" | "lg", className?: string }) => {
+export const LoadingSpinner = ({
+  size = "md",
+  className = "",
+}: {
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}) => {
   const sizeClasses = {
     sm: "h-4 w-4",
-    md: "h-6 w-6", 
-    lg: "h-8 w-8"
+    md: "h-6 w-6",
+    lg: "h-8 w-8",
   };
 
   return (
@@ -98,14 +107,24 @@ export const RefreshIndicator = () => (
   </div>
 );
 
-export const DataLoadingState = ({ message = "Loading data..." }: { message?: string }) => (
+export const DataLoadingState = ({
+  message = "Loading data...",
+}: {
+  message?: string;
+}) => (
   <div className="flex flex-col items-center justify-center py-12">
     <LoadingSpinner size="lg" className="text-teal-600 mb-4" />
     <p className="text-gray-600 text-sm">{message}</p>
   </div>
 );
 
-export const ActionLoadingState = ({ children, isLoading = false }: { children: React.ReactNode, isLoading?: boolean }) => (
+export const ActionLoadingState = ({
+  children,
+  isLoading = false,
+}: {
+  children: React.ReactNode;
+  isLoading?: boolean;
+}) => (
   <div className="relative">
     {children}
     {isLoading && (

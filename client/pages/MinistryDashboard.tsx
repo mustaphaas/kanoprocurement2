@@ -21,7 +21,7 @@ import {
   NavigationSkeleton,
   DataLoadingState,
   LoadingSpinner,
-  ActionLoadingState
+  ActionLoadingState,
 } from "@/components/ui/loading-states";
 import {
   Circle,
@@ -306,7 +306,9 @@ export default function MinistryDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isNavigationLoading, setIsNavigationLoading] = useState(false);
   const [isDataLoading, setIsDataLoading] = useState(false);
-  const [loadingActions, setLoadingActions] = useState<Record<string, boolean>>({});
+  const [loadingActions, setLoadingActions] = useState<Record<string, boolean>>(
+    {},
+  );
 
   // Mobile navigation
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -541,14 +543,14 @@ export default function MinistryDashboard() {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
 
     // Simulate initial loading
     setTimeout(() => {
       setIsLoading(false);
     }, 1500);
 
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Handle view change with loading state
@@ -563,7 +565,7 @@ export default function MinistryDashboard() {
 
   // Handle action loading
   const handleActionLoading = (actionId: string, isLoading: boolean) => {
-    setLoadingActions(prev => ({ ...prev, [actionId]: isLoading }));
+    setLoadingActions((prev) => ({ ...prev, [actionId]: isLoading }));
   };
 
   // Get ministry info from localStorage
@@ -10704,8 +10706,22 @@ Blockchain Timestamp: ${Date.now()}
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="p-2 rounded-lg hover:bg-gray-100 transition-colors md:hidden"
                 >
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d={
+                        isMobileMenuOpen
+                          ? "M6 18L18 6M6 6l12 12"
+                          : "M4 6h16M4 12h16M4 18h16"
+                      }
+                    />
                   </svg>
                 </button>
               )}
@@ -10761,13 +10777,21 @@ Blockchain Timestamp: ${Date.now()}
                         Companies ({filteredCompanies.length})
                       </h4>
                       {filteredCompanies.slice(0, 3).map((company) => (
-                        <div key={company.id} className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer" onClick={() => setCurrentView("companies")}>
+                        <div
+                          key={company.id}
+                          className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                          onClick={() => setCurrentView("companies")}
+                        >
                           <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                             <Circle className="h-4 w-4 text-blue-600" />
                           </div>
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{company.companyName}</div>
-                            <div className="text-xs text-gray-500">{company.businessType}</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {company.companyName}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {company.businessType}
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -10807,13 +10831,16 @@ Blockchain Timestamp: ${Date.now()}
                       </div>
                     </div>
 
-                    {searchTerm.length > 0 && filteredCompanies.length === 0 && (
-                      <div className="text-center py-8 text-gray-500">
-                        <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                        <p>No results found for "{searchTerm}"</p>
-                        <p className="text-sm">Try different keywords or browse by category</p>
-                      </div>
-                    )}
+                    {searchTerm.length > 0 &&
+                      filteredCompanies.length === 0 && (
+                        <div className="text-center py-8 text-gray-500">
+                          <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                          <p>No results found for "{searchTerm}"</p>
+                          <p className="text-sm">
+                            Try different keywords or browse by category
+                          </p>
+                        </div>
+                      )}
                   </div>
                 </div>
               )}
@@ -10843,7 +10870,9 @@ Blockchain Timestamp: ${Date.now()}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative">
             {/* Desktop Navigation */}
-            <div className={`${isMobile ? 'hidden' : 'flex'} space-x-2 overflow-x-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400`}>
+            <div
+              className={`${isMobile ? "hidden" : "flex"} space-x-2 overflow-x-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400`}
+            >
               {[
                 {
                   key: "overview",
@@ -10852,7 +10881,7 @@ Blockchain Timestamp: ${Date.now()}
                   gradient: "from-teal-600 to-cyan-600",
                   hoverGradient: "from-teal-50 to-cyan-50",
                   textColor: "text-teal-700",
-                  borderColor: "border-teal-200"
+                  borderColor: "border-teal-200",
                 },
                 {
                   key: "companies",
@@ -10861,7 +10890,7 @@ Blockchain Timestamp: ${Date.now()}
                   gradient: "from-blue-600 to-indigo-600",
                   hoverGradient: "from-blue-50 to-indigo-50",
                   textColor: "text-blue-700",
-                  borderColor: "border-blue-200"
+                  borderColor: "border-blue-200",
                 },
                 {
                   key: "procurement-planning",
@@ -10870,7 +10899,7 @@ Blockchain Timestamp: ${Date.now()}
                   gradient: "from-emerald-600 to-teal-600",
                   hoverGradient: "from-emerald-50 to-teal-50",
                   textColor: "text-emerald-700",
-                  borderColor: "border-emerald-200"
+                  borderColor: "border-emerald-200",
                 },
                 {
                   key: "tender-management",
@@ -10879,7 +10908,7 @@ Blockchain Timestamp: ${Date.now()}
                   gradient: "from-purple-600 to-violet-600",
                   hoverGradient: "from-purple-50 to-violet-50",
                   textColor: "text-purple-700",
-                  borderColor: "border-purple-200"
+                  borderColor: "border-purple-200",
                 },
                 {
                   key: "noc",
@@ -10888,7 +10917,7 @@ Blockchain Timestamp: ${Date.now()}
                   gradient: "from-cyan-600 to-blue-600",
                   hoverGradient: "from-cyan-50 to-blue-50",
                   textColor: "text-cyan-700",
-                  borderColor: "border-cyan-200"
+                  borderColor: "border-cyan-200",
                 },
                 {
                   key: "contract-management",
@@ -10897,7 +10926,7 @@ Blockchain Timestamp: ${Date.now()}
                   gradient: "from-amber-600 to-orange-600",
                   hoverGradient: "from-amber-50 to-orange-50",
                   textColor: "text-amber-700",
-                  borderColor: "border-amber-200"
+                  borderColor: "border-amber-200",
                 },
                 {
                   key: "reports",
@@ -10906,7 +10935,7 @@ Blockchain Timestamp: ${Date.now()}
                   gradient: "from-slate-600 to-gray-600",
                   hoverGradient: "from-slate-50 to-gray-50",
                   textColor: "text-slate-700",
-                  borderColor: "border-slate-200"
+                  borderColor: "border-slate-200",
                 },
                 {
                   key: "users",
@@ -10915,7 +10944,7 @@ Blockchain Timestamp: ${Date.now()}
                   gradient: "from-rose-600 to-pink-600",
                   hoverGradient: "from-rose-50 to-pink-50",
                   textColor: "text-rose-700",
-                  borderColor: "border-rose-200"
+                  borderColor: "border-rose-200",
                 },
               ].map((tab) => (
                 <button
@@ -10931,18 +10960,24 @@ Blockchain Timestamp: ${Date.now()}
                 >
                   {/* Background glow effect for active tab */}
                   {currentView === tab.key && (
-                    <div className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} opacity-20 blur-xl`}></div>
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} opacity-20 blur-xl`}
+                    ></div>
                   )}
 
                   {/* Icon with enhanced styling */}
-                  <div className={`relative z-10 p-1 rounded-lg ${
-                    currentView === tab.key
-                      ? "bg-white/20 backdrop-blur-sm"
-                      : `bg-gradient-to-br ${tab.hoverGradient}`
-                  }`}>
-                    <tab.icon className={`h-5 w-5 ${
-                      currentView === tab.key ? "text-white" : tab.textColor
-                    }`} />
+                  <div
+                    className={`relative z-10 p-1 rounded-lg ${
+                      currentView === tab.key
+                        ? "bg-white/20 backdrop-blur-sm"
+                        : `bg-gradient-to-br ${tab.hoverGradient}`
+                    }`}
+                  >
+                    <tab.icon
+                      className={`h-5 w-5 ${
+                        currentView === tab.key ? "text-white" : tab.textColor
+                      }`}
+                    />
                   </div>
 
                   {/* Label */}
@@ -10974,7 +11009,9 @@ Blockchain Timestamp: ${Date.now()}
             )}
 
             {/* Mobile Drawer */}
-            <div className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 z-50 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:hidden`}>
+            <div
+              className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 z-50 ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}
+            >
               <div className="p-6">
                 {/* Mobile Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -10985,8 +11022,12 @@ Blockchain Timestamp: ${Date.now()}
                       className="h-8 w-8 rounded-lg object-cover"
                     />
                     <div>
-                      <h2 className="text-lg font-bold text-green-700">{ministryInfo.name}</h2>
-                      <p className="text-xs text-gray-600">Ministry Dashboard</p>
+                      <h2 className="text-lg font-bold text-green-700">
+                        {ministryInfo.name}
+                      </h2>
+                      <p className="text-xs text-gray-600">
+                        Ministry Dashboard
+                      </p>
                     </div>
                   </div>
                   <button
@@ -11055,10 +11096,12 @@ Blockchain Timestamp: ${Date.now()}
                       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
                         currentView === tab.key
                           ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
-                          : 'text-gray-700 hover:bg-gray-100'
+                          : "text-gray-700 hover:bg-gray-100"
                       }`}
                     >
-                      <tab.icon className={`h-5 w-5 ${currentView === tab.key ? 'text-white' : 'text-gray-600'}`} />
+                      <tab.icon
+                        className={`h-5 w-5 ${currentView === tab.key ? "text-white" : "text-gray-600"}`}
+                      />
                       <span className="font-medium">{tab.label}</span>
                       {isNavigationLoading && currentView === tab.key && (
                         <LoadingSpinner size="sm" className="ml-auto" />
@@ -11069,7 +11112,9 @@ Blockchain Timestamp: ${Date.now()}
 
                 {/* Mobile Quick Actions */}
                 <div className="mt-8 pt-6 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-800 mb-3">Quick Actions</h3>
+                  <h3 className="text-sm font-semibold text-gray-800 mb-3">
+                    Quick Actions
+                  </h3>
                   <div className="space-y-2">
                     <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
                       <Plus className="h-4 w-4 text-emerald-600" />

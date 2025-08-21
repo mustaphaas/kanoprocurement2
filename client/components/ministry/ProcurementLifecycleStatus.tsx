@@ -24,14 +24,28 @@ interface ProcurementStage {
 
 interface ProcurementLifecycleStatusProps {
   stages: {
-    procurementPlans: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    tenderManagement: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    nocRequest: { count: number; status: "completed" | "active" | "pending" | "delayed" };
-    contractAward: { count: number; status: "completed" | "active" | "pending" | "delayed" };
+    procurementPlans: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    tenderManagement: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    nocRequest: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
+    contractAward: {
+      count: number;
+      status: "completed" | "active" | "pending" | "delayed";
+    };
   };
 }
 
-export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProps> = ({ stages }) => {
+export const ProcurementLifecycleStatus: React.FC<
+  ProcurementLifecycleStatusProps
+> = ({ stages }) => {
   const procurementStages: ProcurementStage[] = [
     {
       id: "plans",
@@ -118,7 +132,9 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
   };
 
   const getProgressPercentage = () => {
-    const completed = procurementStages.filter(stage => stage.status === "completed").length;
+    const completed = procurementStages.filter(
+      (stage) => stage.status === "completed",
+    ).length;
     return (completed / procurementStages.length) * 100;
   };
 
@@ -137,8 +153,12 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
         {/* Overall Progress Bar */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">Overall Progress</span>
-            <span className="text-sm text-gray-600">{Math.round(getProgressPercentage())}% Complete</span>
+            <span className="text-sm font-medium text-gray-700">
+              Overall Progress
+            </span>
+            <span className="text-sm text-gray-600">
+              {Math.round(getProgressPercentage())}% Complete
+            </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
             <div
@@ -177,7 +197,9 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
                   {/* Stage Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{stage.name}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {stage.name}
+                      </h3>
                       <Badge
                         variant="outline"
                         className={`${statusConfig.bgColor} ${statusConfig.borderColor} ${statusConfig.textColor}`}
@@ -187,12 +209,16 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
                       </Badge>
                     </div>
 
-                    <p className="text-sm text-gray-600 mb-3">{stage.description}</p>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {stage.description}
+                    </p>
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-gray-900">{stage.count}</div>
+                          <div className="text-2xl font-bold text-gray-900">
+                            {stage.count}
+                          </div>
                           <div className="text-xs text-gray-600">Items</div>
                         </div>
 
@@ -245,25 +271,28 @@ export const ProcurementLifecycleStatus: React.FC<ProcurementLifecycleStatusProp
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-emerald-200">
               <div className="text-2xl font-bold text-emerald-600">
-                {procurementStages.filter(s => s.status === "completed").length}
+                {
+                  procurementStages.filter((s) => s.status === "completed")
+                    .length
+                }
               </div>
               <div className="text-sm text-gray-600 font-medium">Completed</div>
             </div>
             <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-teal-200">
               <div className="text-2xl font-bold text-teal-600">
-                {procurementStages.filter(s => s.status === "active").length}
+                {procurementStages.filter((s) => s.status === "active").length}
               </div>
               <div className="text-sm text-gray-600 font-medium">Active</div>
             </div>
             <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-slate-200">
               <div className="text-2xl font-bold text-slate-600">
-                {procurementStages.filter(s => s.status === "pending").length}
+                {procurementStages.filter((s) => s.status === "pending").length}
               </div>
               <div className="text-sm text-gray-600 font-medium">Pending</div>
             </div>
             <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-red-200">
               <div className="text-2xl font-bold text-red-600">
-                {procurementStages.filter(s => s.status === "delayed").length}
+                {procurementStages.filter((s) => s.status === "delayed").length}
               </div>
               <div className="text-sm text-gray-600 font-medium">Delayed</div>
             </div>
