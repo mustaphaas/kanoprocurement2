@@ -3045,7 +3045,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-005",
           companyName: "Zenith Health Technologies",
-          bidAmount: "��910,000,000",
+          bidAmount: "₦910,000,000",
           technicalScore: 80,
           financialScore: 76,
           totalScore: 78,
@@ -10842,8 +10842,8 @@ Blockchain Timestamp: ${Date.now()}
       <nav className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative">
-            {/* Modern Horizontal Scroller */}
-            <div className="flex space-x-2 overflow-x-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
+            {/* Desktop Navigation */}
+            <div className={`${isMobile ? 'hidden' : 'flex'} space-x-2 overflow-x-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400`}>
               {[
                 {
                   key: "overview",
