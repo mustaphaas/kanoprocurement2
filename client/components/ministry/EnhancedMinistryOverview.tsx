@@ -170,7 +170,7 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
           <div className="bg-gradient-to-r from-teal-600 to-cyan-600 p-2 rounded-lg">
             <FileText className="h-6 w-6 text-white" />
           </div>
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-gray-900">
             Procurement Summary
           </h2>
         </div>
