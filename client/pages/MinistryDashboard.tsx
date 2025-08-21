@@ -16,7 +16,7 @@ import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
 import {
-  Building2,
+  Circle,
   Users,
   FileText,
   LogOut,
@@ -84,7 +84,6 @@ import {
 type CurrentView =
   | "overview"
   | "companies"
-  | "contracts"
   | "reports"
   | "noc"
   | "users"
@@ -3313,7 +3312,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Kano School Furniture Ltd",
-          bidAmount: "₦2,050,000,000",
+          bidAmount: "��2,050,000,000",
           technicalScore: 91,
           financialScore: 89,
           totalScore: 90,
@@ -5138,7 +5137,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
         <div className="bg-white rounded-lg shadow-sm p-4 border">
           <div className="flex items-center">
-            <Building2 className="h-8 w-8 text-blue-600" />
+            <Circle className="h-8 w-8 text-blue-600" />
             <div className="ml-3">
               <p className="text-sm font-medium text-gray-600">
                 Total Companies
@@ -8111,7 +8110,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
               {bidders.length > 0 && (
                 <div className="mt-6">
                   <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
-                    <Building2 className="h-5 w-5 mr-2 text-blue-600" />
+                    <Circle className="h-5 w-5 mr-2 text-blue-600" />
                     Companies That Participated in This Tender
                   </h4>
                   <div className="bg-gray-50 rounded-lg overflow-hidden">
@@ -8549,7 +8548,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-3xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  📥 Download Bids - {selectedTenderForDetails.title}
+                  �� Download Bids - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowDownloadModal(false)}
@@ -10625,8 +10624,6 @@ Blockchain Timestamp: ${Date.now()}
       return renderOverview();
     } else if (currentView === "companies") {
       return renderCompanies();
-    } else if (currentView === "contracts") {
-      return renderContracts();
     } else if (currentView === "reports") {
       return <MinistryReports />;
     } else if (currentView === "noc") {
@@ -10688,8 +10685,7 @@ Blockchain Timestamp: ${Date.now()}
           <div className="flex space-x-8 overflow-x-auto py-3">
             {[
               { key: "overview", label: "Overview", icon: BarChart3 },
-              { key: "companies", label: "Companies", icon: Building2 },
-              { key: "contracts", label: "Contracts", icon: FileCheck },
+              { key: "companies", label: "Companies", icon: Circle },
               {
                 key: "procurement-planning",
                 label: "Procurement Planning",
@@ -10727,44 +10723,6 @@ Blockchain Timestamp: ${Date.now()}
           </div>
         </div>
       </nav>
-
-      {/* Procurement Planning Sub-Navigation */}
-      {currentView === "procurement-planning" && (
-        <nav className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex space-x-1 overflow-x-auto py-2">
-              <div className="flex items-center space-x-4 text-sm text-gray-600">
-                <div className="flex items-center space-x-1">
-                  <Target className="h-4 w-4 text-green-600" />
-                  <span className="font-medium text-green-600">
-                    Procurement Planning Module
-                  </span>
-                </div>
-                <span>•</span>
-                <div className="flex items-center space-x-1">
-                  <Calendar className="h-4 w-4" />
-                  <span>Annual Planning</span>
-                </div>
-                <span>•</span>
-                <div className="flex items-center space-x-1">
-                  <DollarSign className="h-4 w-4" />
-                  <span>Budget Allocation</span>
-                </div>
-                <span>•</span>
-                <div className="flex items-center space-x-1">
-                  <Users className="h-4 w-4" />
-                  <span>Committee Management</span>
-                </div>
-                <span>•</span>
-                <div className="flex items-center space-x-1">
-                  <Calculator className="h-4 w-4" />
-                  <span>Scoring Matrix</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-      )}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">

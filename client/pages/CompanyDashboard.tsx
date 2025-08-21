@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/utils";
 import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
 import { persistentStorage } from "@/lib/persistentStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
   Home,
@@ -124,6 +125,7 @@ interface Contract {
 export default function CompanyDashboard() {
   const [activeSection, setActiveSection] =
     useState<ActiveSection>("dashboard");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -941,12 +943,12 @@ export default function CompanyDashboard() {
                 <span
                   className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
                     companyData.status === "Approved"
-                      ? "bg-green-100 text-green-800"
+                      ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                       : companyData.status === "Pending"
-                        ? "bg-blue-100 text-blue-800"
+                        ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                         : companyData.status === "Suspended"
-                          ? "bg-orange-100 text-orange-800"
-                          : "bg-red-100 text-red-800"
+                          ? "bg-gradient-to-r from-orange-100 to-red-100 text-orange-800"
+                          : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                   }`}
                 >
                   {companyData.status === "Approved" && (
@@ -1024,14 +1026,14 @@ export default function CompanyDashboard() {
                 <div className="mt-4 flex space-x-3">
                   <button
                     onClick={() => setActiveSection("tender-ads")}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     <Search className="h-4 w-4 mr-2" />
                     Browse Tenders
                   </button>
                   <button
                     onClick={() => setActiveSection("contracts-awarded")}
-                    className="inline-flex items-center px-4 py-2 border border-green-300 text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50"
+                    className="inline-flex items-center px-4 py-2 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50"
                   >
                     View Contracts
                   </button>
@@ -1667,12 +1669,12 @@ export default function CompanyDashboard() {
                           <span
                             className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                               tender.status === "Open"
-                                ? "bg-green-100 text-green-800"
+                                ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                 : tender.status === "Closed"
                                   ? "bg-gray-100 text-gray-800"
                                   : tender.status === "Awarded"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-red-100 text-red-800"
+                                    ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
+                                    : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                             }`}
                           >
                             {tender.status}
@@ -1866,10 +1868,10 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                 contract.status === "Active"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : contract.status === "Completed"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-red-100 text-red-800"
+                                    ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
+                                    : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                               }`}
                             >
                               {contract.status}
@@ -1951,9 +1953,9 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 bid.status === "Active"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : bid.status === "Submitted"
-                                    ? "bg-blue-100 text-blue-800"
+                                    ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                     : "bg-gray-100 text-gray-800"
                               }`}
                             >
@@ -2064,9 +2066,9 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 award.status === "Contract Signed"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : award.status === "In Progress"
-                                    ? "bg-blue-100 text-blue-800"
+                                    ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                     : "bg-yellow-100 text-yellow-800"
                               }`}
                             >
@@ -2275,12 +2277,12 @@ export default function CompanyDashboard() {
                           <span
                             className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
                               companyData.status === "Approved"
-                                ? "bg-green-100 text-green-800"
+                                ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                 : companyData.status === "Pending"
-                                  ? "bg-blue-100 text-blue-800"
+                                  ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                   : companyData.status === "Suspended"
-                                    ? "bg-orange-100 text-orange-800"
-                                    : "bg-red-100 text-red-800"
+                                    ? "bg-gradient-to-r from-orange-100 to-red-100 text-orange-800"
+                                    : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                             }`}
                           >
                             {companyData.status === "Approved" && (
@@ -2381,8 +2383,8 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 cert.status === "Valid"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
+                                  : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                               }`}
                             >
                               {cert.status}
@@ -2501,10 +2503,10 @@ export default function CompanyDashboard() {
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             doc.status === "Verified"
-                              ? "bg-green-100 text-green-800"
+                              ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                               : doc.status === "Under Review"
                                 ? "bg-yellow-100 text-yellow-800"
-                                : "bg-red-100 text-red-800"
+                                : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                           }`}
                         >
                           {doc.status}
@@ -2704,10 +2706,10 @@ export default function CompanyDashboard() {
                                 <span
                                   className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                     req.status === "Compliant"
-                                      ? "bg-green-100 text-green-800"
+                                      ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                       : req.status === "Expiring Soon"
                                         ? "bg-yellow-100 text-yellow-800"
-                                        : "bg-red-100 text-red-800"
+                                        : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                                   }`}
                                 >
                                   {req.status}
@@ -2821,10 +2823,10 @@ export default function CompanyDashboard() {
                                 <span
                                   className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                     req.status === "Compliant"
-                                      ? "bg-green-100 text-green-800"
+                                      ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                       : req.status === "Expiring Soon"
                                         ? "bg-yellow-100 text-yellow-800"
-                                        : "bg-red-100 text-red-800"
+                                        : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                                   }`}
                                 >
                                   {req.status}
@@ -2943,10 +2945,10 @@ export default function CompanyDashboard() {
                                 <span
                                   className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                     req.status === "Compliant"
-                                      ? "bg-green-100 text-green-800"
+                                      ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                       : req.status === "Expiring Soon"
                                         ? "bg-yellow-100 text-yellow-800"
-                                        : "bg-red-100 text-red-800"
+                                        : "bg-gradient-to-r from-red-100 to-rose-100 text-red-800"
                                   }`}
                                 >
                                   {req.status}
@@ -3310,7 +3312,7 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 clarification.status === "Responded"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : clarification.status === "Pending Response"
                                     ? "bg-yellow-100 text-yellow-800"
                                     : "bg-gray-100 text-gray-800"
