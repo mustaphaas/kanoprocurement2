@@ -941,7 +941,7 @@ export default function CompanyDashboard() {
                 <span
                   className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
                     companyData.status === "Approved"
-                      ? "bg-green-100 text-green-800"
+                      ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                       : companyData.status === "Pending"
                         ? "bg-blue-100 text-blue-800"
                         : companyData.status === "Suspended"
@@ -1667,7 +1667,7 @@ export default function CompanyDashboard() {
                           <span
                             className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                               tender.status === "Open"
-                                ? "bg-green-100 text-green-800"
+                                ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                 : tender.status === "Closed"
                                   ? "bg-gray-100 text-gray-800"
                                   : tender.status === "Awarded"
@@ -1866,7 +1866,7 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                 contract.status === "Active"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : contract.status === "Completed"
                                     ? "bg-blue-100 text-blue-800"
                                     : "bg-red-100 text-red-800"
@@ -1951,7 +1951,7 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 bid.status === "Active"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : bid.status === "Submitted"
                                     ? "bg-blue-100 text-blue-800"
                                     : "bg-gray-100 text-gray-800"
@@ -2064,7 +2064,7 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 award.status === "Contract Signed"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : award.status === "In Progress"
                                     ? "bg-blue-100 text-blue-800"
                                     : "bg-yellow-100 text-yellow-800"
@@ -2275,7 +2275,7 @@ export default function CompanyDashboard() {
                           <span
                             className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
                               companyData.status === "Approved"
-                                ? "bg-green-100 text-green-800"
+                                ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                 : companyData.status === "Pending"
                                   ? "bg-blue-100 text-blue-800"
                                   : companyData.status === "Suspended"
@@ -2381,7 +2381,7 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 cert.status === "Valid"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : "bg-red-100 text-red-800"
                               }`}
                             >
@@ -2501,7 +2501,7 @@ export default function CompanyDashboard() {
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             doc.status === "Verified"
-                              ? "bg-green-100 text-green-800"
+                              ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                               : doc.status === "Under Review"
                                 ? "bg-yellow-100 text-yellow-800"
                                 : "bg-red-100 text-red-800"
@@ -2704,7 +2704,7 @@ export default function CompanyDashboard() {
                                 <span
                                   className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                     req.status === "Compliant"
-                                      ? "bg-green-100 text-green-800"
+                                      ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                       : req.status === "Expiring Soon"
                                         ? "bg-yellow-100 text-yellow-800"
                                         : "bg-red-100 text-red-800"
@@ -2821,7 +2821,7 @@ export default function CompanyDashboard() {
                                 <span
                                   className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                     req.status === "Compliant"
-                                      ? "bg-green-100 text-green-800"
+                                      ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                       : req.status === "Expiring Soon"
                                         ? "bg-yellow-100 text-yellow-800"
                                         : "bg-red-100 text-red-800"
@@ -2943,7 +2943,7 @@ export default function CompanyDashboard() {
                                 <span
                                   className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                     req.status === "Compliant"
-                                      ? "bg-green-100 text-green-800"
+                                      ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                       : req.status === "Expiring Soon"
                                         ? "bg-yellow-100 text-yellow-800"
                                         : "bg-red-100 text-red-800"
@@ -3310,7 +3310,7 @@ export default function CompanyDashboard() {
                             <span
                               className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 clarification.status === "Responded"
-                                  ? "bg-green-100 text-green-800"
+                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : clarification.status === "Pending Response"
                                     ? "bg-yellow-100 text-yellow-800"
                                     : "bg-gray-100 text-gray-800"
