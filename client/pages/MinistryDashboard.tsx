@@ -16,6 +16,14 @@ import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
 import {
+  CardSkeleton,
+  TableSkeleton,
+  NavigationSkeleton,
+  DataLoadingState,
+  LoadingSpinner,
+  ActionLoadingState,
+} from "@/components/ui/loading-states";
+import {
   Circle,
   Users,
   FileText,
@@ -61,6 +69,7 @@ import {
   RefreshCw,
   Users2,
   FileSpreadsheet,
+  User,
   Calculator,
   PlayCircle,
   PauseCircle,
@@ -292,6 +301,18 @@ interface MinistryInfo {
 export default function MinistryDashboard() {
   const [currentView, setCurrentView] = useState<CurrentView>("overview");
   const [tenderSubView, setTenderSubView] = useState<TenderSubView>("list");
+
+  // Loading states
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNavigationLoading, setIsNavigationLoading] = useState(false);
+  const [isDataLoading, setIsDataLoading] = useState(false);
+  const [loadingActions, setLoadingActions] = useState<Record<string, boolean>>(
+    {},
+  );
+
+  // Mobile navigation
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
@@ -514,6 +535,38 @@ export default function MinistryDashboard() {
     },
   ]);
   const navigate = useNavigate();
+
+  // Mobile detection and responsive behavior
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    // Simulate initial loading
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Handle view change with loading state
+  const handleViewChange = (view: CurrentView) => {
+    setIsNavigationLoading(true);
+    setTimeout(() => {
+      setCurrentView(view);
+      setIsNavigationLoading(false);
+      setIsMobileMenuOpen(false); // Close mobile menu on selection
+    }, 300);
+  };
+
+  // Handle action loading
+  const handleActionLoading = (actionId: string, isLoading: boolean) => {
+    setLoadingActions((prev) => ({ ...prev, [actionId]: isLoading }));
+  };
 
   // Get ministry info from localStorage
   const getMinistryInfo = (): MinistryInfo => {
@@ -1018,7 +1071,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of medical equipment for Kano State hospitals",
               category: "Healthcare",
-              estimatedValue: "���850,000,000",
+              estimatedValue: "�����850,000,000",
               status: "Published",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
@@ -3326,7 +3379,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-012",
           companyName: "Northern Educational Supplies",
-          bidAmount: "₦2,100,000,000",
+          bidAmount: "��2,100,000,000",
           technicalScore: 88,
           financialScore: 86,
           totalScore: 87,
@@ -10647,6 +10700,32 @@ Blockchain Timestamp: ${Date.now()}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
+              {/* Mobile Menu Toggle */}
+              {isMobile && (
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors md:hidden"
+                >
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d={
+                        isMobileMenuOpen
+                          ? "M6 18L18 6M6 6l12 12"
+                          : "M4 6h16M4 12h16M4 18h16"
+                      }
+                    />
+                  </svg>
+                </button>
+              )}
+
               <div className="w-10 h-10 rounded-lg flex items-center justify-center">
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2Fe2b03698f65d43d792efcb7e22009c33?format=webp&width=800"
@@ -10654,7 +10733,7 @@ Blockchain Timestamp: ${Date.now()}
                   className="h-10 w-10 rounded-lg object-cover"
                 />
               </div>
-              <div>
+              <div className={isMobile ? "hidden sm:block" : ""}>
                 <h1 className="text-xl font-bold text-green-700">
                   {ministryInfo.name}
                 </h1>
@@ -10662,14 +10741,121 @@ Blockchain Timestamp: ${Date.now()}
               </div>
             </div>
 
-            {/* Empty space for better layout */}
-            <div className="flex-1"></div>
+            {/* Global Search */}
+            <div className="flex-1 max-w-2xl mx-8">
+              <div className="relative">
+                <Search className="h-5 w-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search companies, tenders, contracts, NOCs..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 shadow-sm bg-gray-50 hover:bg-white transition-colors"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Search Results Dropdown */}
+              {searchTerm && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-50 max-h-96 overflow-y-auto">
+                  <div className="p-4">
+                    <div className="text-sm text-gray-600 mb-3">
+                      Search results for "{searchTerm}"
+                    </div>
+
+                    {/* Companies Results */}
+                    <div className="mb-4">
+                      <h4 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                        <Circle className="h-4 w-4 mr-2 text-blue-600" />
+                        Companies ({filteredCompanies.length})
+                      </h4>
+                      {filteredCompanies.slice(0, 3).map((company) => (
+                        <div
+                          key={company.id}
+                          className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                          onClick={() => setCurrentView("companies")}
+                        >
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <Circle className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {company.companyName}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {company.businessType}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {filteredCompanies.length > 3 && (
+                        <button
+                          onClick={() => setCurrentView("companies")}
+                          className="text-xs text-blue-600 hover:text-blue-800 ml-2"
+                        >
+                          View all {filteredCompanies.length} companies
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="mb-4">
+                      <h4 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                        <Zap className="h-4 w-4 mr-2 text-teal-600" />
+                        Quick Actions
+                      </h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button className="flex items-center p-2 hover:bg-gray-50 rounded-lg text-sm">
+                          <Plus className="h-4 w-4 mr-2 text-emerald-600" />
+                          Create Tender
+                        </button>
+                        <button className="flex items-center p-2 hover:bg-gray-50 rounded-lg text-sm">
+                          <Send className="h-4 w-4 mr-2 text-cyan-600" />
+                          Submit NOC
+                        </button>
+                        <button className="flex items-center p-2 hover:bg-gray-50 rounded-lg text-sm">
+                          <FileText className="h-4 w-4 mr-2 text-purple-600" />
+                          View Reports
+                        </button>
+                        <button className="flex items-center p-2 hover:bg-gray-50 rounded-lg text-sm">
+                          <Users className="h-4 w-4 mr-2 text-rose-600" />
+                          Manage Users
+                        </button>
+                      </div>
+                    </div>
+
+                    {searchTerm.length > 0 &&
+                      filteredCompanies.length === 0 && (
+                        <div className="text-center py-8 text-gray-500">
+                          <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                          <p>No results found for "{searchTerm}"</p>
+                          <p className="text-sm">
+                            Try different keywords or browse by category
+                          </p>
+                        </div>
+                      )}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center space-x-4">
-              <Bell className="h-5 w-5 text-gray-600" />
+              <div className="relative">
+                <Bell className="h-5 w-5 text-gray-600 hover:text-teal-600 cursor-pointer transition-colors" />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  3
+                </span>
+              </div>
               <button
                 onClick={handleLogout}
-                className="flex items-center px-3 py-2 text-gray-600 hover:text-red-600"
+                className="flex items-center px-3 py-2 text-gray-600 hover:text-red-600 transition-colors"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
@@ -10679,49 +10865,275 @@ Blockchain Timestamp: ${Date.now()}
         </div>
       </header>
 
-      {/* Main Navigation - Similar to Super User Dashboard */}
-      <nav className="bg-white border-b border-gray-200">
+      {/* Enhanced Modern Navigation */}
+      <nav className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto py-3">
-            {[
-              { key: "overview", label: "Overview", icon: BarChart3 },
-              { key: "companies", label: "Companies", icon: Circle },
-              {
-                key: "procurement-planning",
-                label: "Procurement Planning",
-                icon: Target,
-              },
-              {
-                key: "tender-management",
-                label: "Tender Management",
-                icon: Gavel,
-              },
-              {
-                key: "contract-management",
-                label: "Contract Management",
-                icon: Handshake,
-              },
-              { key: "users", label: "User Management", icon: Users },
-              { key: "reports", label: "Reports", icon: TrendingUp },
-              { key: "noc", label: "NOC Requests", icon: Send },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => {
-                  setCurrentView(tab.key as CurrentView);
-                }}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
-                  currentView === tab.key
-                    ? "bg-green-50 text-green-600 border border-green-200"
-                    : "text-gray-600 hover:text-green-600 hover:bg-green-50"
-                }`}
-              >
-                <tab.icon className="h-4 w-4" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
+          <div className="relative">
+            {/* Desktop Navigation */}
+            <div
+              className={`${isMobile ? "hidden" : "flex"} space-x-2 overflow-x-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400`}
+            >
+              {[
+                {
+                  key: "overview",
+                  label: "Overview",
+                  icon: BarChart3,
+                  gradient: "from-teal-600 to-cyan-600",
+                  hoverGradient: "from-teal-50 to-cyan-50",
+                  textColor: "text-teal-700",
+                  borderColor: "border-teal-200",
+                },
+                {
+                  key: "companies",
+                  label: "Companies",
+                  icon: Circle,
+                  gradient: "from-blue-600 to-indigo-600",
+                  hoverGradient: "from-blue-50 to-indigo-50",
+                  textColor: "text-blue-700",
+                  borderColor: "border-blue-200",
+                },
+                {
+                  key: "procurement-planning",
+                  label: "Procurement Planning",
+                  icon: Target,
+                  gradient: "from-emerald-600 to-teal-600",
+                  hoverGradient: "from-emerald-50 to-teal-50",
+                  textColor: "text-emerald-700",
+                  borderColor: "border-emerald-200",
+                },
+                {
+                  key: "tender-management",
+                  label: "Tender Management",
+                  icon: Gavel,
+                  gradient: "from-purple-600 to-violet-600",
+                  hoverGradient: "from-purple-50 to-violet-50",
+                  textColor: "text-purple-700",
+                  borderColor: "border-purple-200",
+                },
+                {
+                  key: "noc",
+                  label: "NOC Requests",
+                  icon: Send,
+                  gradient: "from-cyan-600 to-blue-600",
+                  hoverGradient: "from-cyan-50 to-blue-50",
+                  textColor: "text-cyan-700",
+                  borderColor: "border-cyan-200",
+                },
+                {
+                  key: "contract-management",
+                  label: "Contract Management",
+                  icon: Handshake,
+                  gradient: "from-amber-600 to-orange-600",
+                  hoverGradient: "from-amber-50 to-orange-50",
+                  textColor: "text-amber-700",
+                  borderColor: "border-amber-200",
+                },
+                {
+                  key: "reports",
+                  label: "Reports",
+                  icon: TrendingUp,
+                  gradient: "from-slate-600 to-gray-600",
+                  hoverGradient: "from-slate-50 to-gray-50",
+                  textColor: "text-slate-700",
+                  borderColor: "border-slate-200",
+                },
+                {
+                  key: "users",
+                  label: "User Management",
+                  icon: Users,
+                  gradient: "from-rose-600 to-pink-600",
+                  hoverGradient: "from-rose-50 to-pink-50",
+                  textColor: "text-rose-700",
+                  borderColor: "border-rose-200",
+                },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => {
+                    handleViewChange(tab.key as CurrentView);
+                  }}
+                  className={`flex items-center space-x-3 px-6 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-300 min-w-max relative overflow-hidden ${
+                    currentView === tab.key
+                      ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg hover:shadow-xl transform hover:scale-105`
+                      : `bg-white hover:bg-gradient-to-br hover:${tab.hoverGradient} ${tab.textColor} border ${tab.borderColor} hover:shadow-md hover:transform hover:scale-105 hover:border-opacity-50`
+                  }`}
+                >
+                  {/* Background glow effect for active tab */}
+                  {currentView === tab.key && (
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} opacity-20 blur-xl`}
+                    ></div>
+                  )}
+
+                  {/* Icon with enhanced styling */}
+                  <div
+                    className={`relative z-10 p-1 rounded-lg ${
+                      currentView === tab.key
+                        ? "bg-white/20 backdrop-blur-sm"
+                        : `bg-gradient-to-br ${tab.hoverGradient}`
+                    }`}
+                  >
+                    <tab.icon
+                      className={`h-5 w-5 ${
+                        currentView === tab.key ? "text-white" : tab.textColor
+                      }`}
+                    />
+                  </div>
+
+                  {/* Label */}
+                  <span className="relative z-10 font-medium">{tab.label}</span>
+
+                  {/* Active indicator */}
+                  {currentView === tab.key && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-lg"></div>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* Scroll indicators */}
+            <div className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-l from-white via-white to-transparent w-8 h-full pointer-events-none"></div>
+            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-white via-white to-transparent w-8 h-full pointer-events-none"></div>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobile && (
+          <>
+            {/* Overlay */}
+            {isMobileMenuOpen && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+            )}
+
+            {/* Mobile Drawer */}
+            <div
+              className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 z-50 ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}
+            >
+              <div className="p-6">
+                {/* Mobile Header */}
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2Fe2b03698f65d43d792efcb7e22009c33?format=webp&width=800"
+                      alt="Kano State Government Logo"
+                      className="h-8 w-8 rounded-lg object-cover"
+                    />
+                    <div>
+                      <h2 className="text-lg font-bold text-green-700">
+                        {ministryInfo.name}
+                      </h2>
+                      <p className="text-xs text-gray-600">
+                        Ministry Dashboard
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 rounded-lg hover:bg-gray-100"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                {/* Mobile Navigation Items */}
+                <div className="space-y-2">
+                  {[
+                    {
+                      key: "overview",
+                      label: "Overview",
+                      icon: BarChart3,
+                      gradient: "from-teal-600 to-cyan-600",
+                    },
+                    {
+                      key: "companies",
+                      label: "Companies",
+                      icon: Circle,
+                      gradient: "from-blue-600 to-indigo-600",
+                    },
+                    {
+                      key: "procurement-planning",
+                      label: "Procurement Planning",
+                      icon: Target,
+                      gradient: "from-emerald-600 to-teal-600",
+                    },
+                    {
+                      key: "tender-management",
+                      label: "Tender Management",
+                      icon: Gavel,
+                      gradient: "from-purple-600 to-violet-600",
+                    },
+                    {
+                      key: "noc",
+                      label: "NOC Requests",
+                      icon: Send,
+                      gradient: "from-cyan-600 to-blue-600",
+                    },
+                    {
+                      key: "contract-management",
+                      label: "Contract Management",
+                      icon: Handshake,
+                      gradient: "from-amber-600 to-orange-600",
+                    },
+                    {
+                      key: "reports",
+                      label: "Reports",
+                      icon: TrendingUp,
+                      gradient: "from-slate-600 to-gray-600",
+                    },
+                    {
+                      key: "users",
+                      label: "User Management",
+                      icon: Users,
+                      gradient: "from-rose-600 to-pink-600",
+                    },
+                  ].map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => handleViewChange(tab.key as CurrentView)}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                        currentView === tab.key
+                          ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      <tab.icon
+                        className={`h-5 w-5 ${currentView === tab.key ? "text-white" : "text-gray-600"}`}
+                      />
+                      <span className="font-medium">{tab.label}</span>
+                      {isNavigationLoading && currentView === tab.key && (
+                        <LoadingSpinner size="sm" className="ml-auto" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Mobile Quick Actions */}
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <h3 className="text-sm font-semibold text-gray-800 mb-3">
+                    Quick Actions
+                  </h3>
+                  <div className="space-y-2">
+                    <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                      <Plus className="h-4 w-4 text-emerald-600" />
+                      <span>Create Tender</span>
+                    </button>
+                    <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                      <Send className="h-4 w-4 text-cyan-600" />
+                      <span>Submit NOC</span>
+                    </button>
+                    <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                      <FileText className="h-4 w-4 text-purple-600" />
+                      <span>View Reports</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </nav>
 
       {/* Main Content */}

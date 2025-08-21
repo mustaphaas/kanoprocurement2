@@ -30,14 +30,16 @@ interface OverviewSummaryCardsProps {
   };
 }
 
-export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data }) => {
+export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({
+  data,
+}) => {
   const cards = [
     {
       title: "Total Procurement Plans",
       subtitle: "Active FY 2024",
       value: data.totalProcurementPlans,
       icon: FileText,
-      color: "blue",
+      color: "teal",
       change: "+12%",
       changeType: "positive",
     },
@@ -46,7 +48,7 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
       subtitle: "This quarter",
       value: data.tendersCreated,
       icon: Building2,
-      color: "green",
+      color: "cyan",
       change: "+8%",
       changeType: "positive",
     },
@@ -55,7 +57,7 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
       subtitle: "Awaiting decisions",
       value: data.tendersUnderEvaluation,
       icon: Activity,
-      color: "orange",
+      color: "emerald",
       change: "-15%",
       changeType: "negative",
     },
@@ -64,7 +66,7 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
       subtitle: `${data.nocPending} Pending • ${data.nocApproved} Approved • ${data.nocRejected} Rejected`,
       value: data.nocPending + data.nocApproved + data.nocRejected,
       icon: FileCheck,
-      color: "purple",
+      color: "turquoise",
       breakdown: {
         pending: data.nocPending,
         approved: data.nocApproved,
@@ -76,7 +78,7 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
       subtitle: `${data.contractsActive} Active • ${data.contractsClosed} Closed`,
       value: data.contractsActive + data.contractsClosed,
       icon: Award,
-      color: "indigo",
+      color: "teal-blue",
       breakdown: {
         active: data.contractsActive,
         closed: data.contractsClosed,
@@ -87,51 +89,87 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
       subtitle: `${data.utilizedBudget} of ${data.totalBudget}`,
       value: `${data.budgetUtilization}%`,
       icon: DollarSign,
-      color: data.budgetUtilization > 85 ? "red" : data.budgetUtilization > 70 ? "orange" : "green",
+      color:
+        data.budgetUtilization > 85
+          ? "red"
+          : data.budgetUtilization > 70
+            ? "emerald"
+            : "cyan",
       progressBar: data.budgetUtilization,
     },
   ];
 
   const getColorClasses = (color: string) => {
     const colorMap = {
-      blue: {
-        bg: "bg-blue-50",
+      teal: {
+        bg: "bg-gradient-to-br from-teal-50 to-cyan-50",
+        icon: "text-teal-600",
+        value: "text-teal-900",
+        border: "border-teal-200",
+      },
+      cyan: {
+        bg: "bg-gradient-to-br from-cyan-50 to-teal-50",
+        icon: "text-cyan-600",
+        value: "text-cyan-900",
+        border: "border-cyan-200",
+      },
+      emerald: {
+        bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
+        icon: "text-emerald-600",
+        value: "text-emerald-900",
+        border: "border-emerald-200",
+      },
+      turquoise: {
+        bg: "bg-gradient-to-br from-sky-50 to-cyan-50",
+        icon: "text-sky-600",
+        value: "text-sky-900",
+        border: "border-sky-200",
+      },
+      "teal-blue": {
+        bg: "bg-gradient-to-br from-teal-50 to-blue-50",
         icon: "text-blue-600",
         value: "text-blue-900",
         border: "border-blue-200",
       },
-      green: {
-        bg: "bg-green-50",
-        icon: "text-green-600",
-        value: "text-green-900",
-        border: "border-green-200",
-      },
-      orange: {
-        bg: "bg-orange-50",
-        icon: "text-orange-600",
-        value: "text-orange-900",
-        border: "border-orange-200",
-      },
-      purple: {
-        bg: "bg-purple-50",
-        icon: "text-purple-600",
-        value: "text-purple-900",
-        border: "border-purple-200",
-      },
-      indigo: {
-        bg: "bg-indigo-50",
-        icon: "text-indigo-600",
-        value: "text-indigo-900",
-        border: "border-indigo-200",
-      },
       red: {
-        bg: "bg-red-50",
+        bg: "bg-gradient-to-br from-red-50 to-pink-50",
         icon: "text-red-600",
         value: "text-red-900",
         border: "border-red-200",
       },
+      // Keep old colors as fallback
+      blue: {
+        bg: "bg-gradient-to-br from-teal-50 to-cyan-50",
+        icon: "text-teal-600",
+        value: "text-teal-900",
+        border: "border-teal-200",
+      },
+      green: {
+        bg: "bg-gradient-to-br from-cyan-50 to-teal-50",
+        icon: "text-cyan-600",
+        value: "text-cyan-900",
+        border: "border-cyan-200",
+      },
+      orange: {
+        bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
+        icon: "text-emerald-600",
+        value: "text-emerald-900",
+        border: "border-emerald-200",
+      },
+      purple: {
+        bg: "bg-gradient-to-br from-sky-50 to-cyan-50",
+        icon: "text-sky-600",
+        value: "text-sky-900",
+        border: "border-sky-200",
+      },
+      indigo: {
+        bg: "bg-gradient-to-br from-teal-50 to-blue-50",
+        icon: "text-blue-600",
+        value: "text-blue-900",
+        border: "border-blue-200",
+      },
     };
-    return colorMap[color as keyof typeof colorMap] || colorMap.blue;
+    return colorMap[color as keyof typeof colorMap] || colorMap.teal;
   };
 
   return (
@@ -141,15 +179,24 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
         const IconComponent = card.icon;
 
         return (
-          <Card key={index} className={`${colors.bg} ${colors.border} border-2 hover:shadow-lg transition-shadow`}>
+          <Card
+            key={index}
+            className={`${colors.bg} ${colors.border} border-2 hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm`}
+          >
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center mb-2">
-                    <IconComponent className={`h-6 w-6 ${colors.icon} mr-2`} />
-                    <h3 className="text-sm font-medium text-gray-700">{card.title}</h3>
+                  <div className="flex items-center mb-3">
+                    <div
+                      className={`p-2 rounded-lg ${colors.icon.replace("text-", "bg-").replace("-600", "-100")} mr-3`}
+                    >
+                      <IconComponent className={`h-5 w-5 ${colors.icon}`} />
+                    </div>
+                    <h3 className="text-sm font-semibold text-gray-800">
+                      {card.title}
+                    </h3>
                   </div>
-                  
+
                   <div className="mb-2">
                     <span className={`text-3xl font-bold ${colors.value}`}>
                       {card.value}
@@ -157,7 +204,9 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
                     {card.change && (
                       <span
                         className={`ml-2 text-sm font-medium ${
-                          card.changeType === "positive" ? "text-green-600" : "text-red-600"
+                          card.changeType === "positive"
+                            ? "text-green-600"
+                            : "text-red-600"
                         }`}
                       >
                         {card.change}
@@ -172,15 +221,21 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
                     <div className="flex space-x-3 text-xs">
                       <div className="flex items-center">
                         <Clock className="h-3 w-3 text-yellow-600 mr-1" />
-                        <span className="text-yellow-700">{card.breakdown.pending} Pending</span>
+                        <span className="text-yellow-700">
+                          {card.breakdown.pending} Pending
+                        </span>
                       </div>
                       <div className="flex items-center">
                         <CheckCircle className="h-3 w-3 text-green-600 mr-1" />
-                        <span className="text-green-700">{card.breakdown.approved} Approved</span>
+                        <span className="text-green-700">
+                          {card.breakdown.approved} Approved
+                        </span>
                       </div>
                       <div className="flex items-center">
                         <AlertTriangle className="h-3 w-3 text-red-600 mr-1" />
-                        <span className="text-red-700">{card.breakdown.rejected} Rejected</span>
+                        <span className="text-red-700">
+                          {card.breakdown.rejected} Rejected
+                        </span>
                       </div>
                     </div>
                   )}
@@ -190,11 +245,15 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
                     <div className="flex space-x-3 text-xs">
                       <div className="flex items-center">
                         <Activity className="h-3 w-3 text-green-600 mr-1" />
-                        <span className="text-green-700">{card.breakdown.active} Active</span>
+                        <span className="text-green-700">
+                          {card.breakdown.active} Active
+                        </span>
                       </div>
                       <div className="flex items-center">
                         <CheckCircle className="h-3 w-3 text-gray-600 mr-1" />
-                        <span className="text-gray-700">{card.breakdown.closed} Closed</span>
+                        <span className="text-gray-700">
+                          {card.breakdown.closed} Closed
+                        </span>
                       </div>
                     </div>
                   )}
@@ -215,7 +274,9 @@ export const OverviewSummaryCards: React.FC<OverviewSummaryCardsProps> = ({ data
                                 ? "bg-orange-500"
                                 : "bg-green-500"
                           }`}
-                          style={{ width: `${Math.min(card.progressBar, 100)}%` }}
+                          style={{
+                            width: `${Math.min(card.progressBar, 100)}%`,
+                          }}
                         />
                       </div>
                     </div>
