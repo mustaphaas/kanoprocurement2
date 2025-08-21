@@ -727,9 +727,9 @@ const TenderManagement = () => {
         icon: "📊",
       },
       Awarded: {
-        bg: "bg-gradient-to-r from-purple-100 to-violet-100",
-        text: "text-purple-700",
-        border: "border-purple-200",
+        bg: "bg-gradient-to-r from-blue-100 to-blue-100",
+        text: "text-blue-700",
+        border: "border-blue-200",
         icon: "🏆",
       },
 
@@ -761,9 +761,9 @@ const TenderManagement = () => {
         icon: "📋",
       },
       "Contract Signed": {
-        bg: "bg-gradient-to-r from-purple-100 to-pink-100",
-        text: "text-purple-700",
-        border: "border-purple-200",
+        bg: "bg-gradient-to-r from-blue-100 to-blue-100",
+        text: "text-blue-700",
+        border: "border-blue-200",
         icon: "✍️",
       },
       Implementation: {
@@ -964,7 +964,7 @@ const TenderManagement = () => {
                       </SelectItem>
                       <SelectItem
                         value="Evaluated"
-                        className="hover:bg-purple-50"
+                        className="hover:bg-blue-50"
                       >
                         Evaluated
                       </SelectItem>
@@ -1035,13 +1035,13 @@ const TenderManagement = () => {
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 border border-purple-200 rounded-lg">
-                          <Target className="h-4 w-4 text-purple-600" />
+                        <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+                          <Target className="h-4 w-4 text-blue-600" />
                           <div>
-                            <p className="text-xs text-purple-600 font-medium">
+                            <p className="text-xs text-blue-600 font-medium">
                               Type
                             </p>
-                            <p className="text-sm font-bold text-purple-800">
+                            <p className="text-sm font-bold text-blue-800">
                               {tender.tenderType}
                             </p>
                           </div>
@@ -1267,9 +1267,9 @@ const TenderManagement = () => {
                 <div className="text-2xl font-bold text-emerald-700">156</div>
                 <div className="text-sm text-emerald-600">Audit Entries</div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
-                <div className="text-2xl font-bold text-purple-700">98%</div>
-                <div className="text-sm text-purple-600">Compliance Rate</div>
+              <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-50 rounded-lg border border-blue-200">
+                <div className="text-2xl font-bold text-blue-700">98%</div>
+                <div className="text-sm text-blue-600">Compliance Rate</div>
               </div>
             </div>
           </div>
@@ -1306,7 +1306,7 @@ const TenderManagement = () => {
 
                   <Card className="p-4">
                     <div className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-purple-600" />
+                      <Users className="h-5 w-5 text-blue-600" />
                       <div>
                         <p className="font-medium">Interested Vendors</p>
                         <p className="text-2xl font-bold">47</p>
@@ -2134,8 +2134,8 @@ const TenderManagement = () => {
 
                     {/* Final QCBS Ranking Tab */}
                     <TabsContent value="final" className="space-y-4">
-                      <div className="p-4 bg-purple-50 rounded-lg">
-                        <p className="text-sm text-purple-800">
+                      <div className="p-4 bg-blue-50 rounded-lg">
+                        <p className="text-sm text-blue-800">
                           <strong>Final QCBS Ranking:</strong> Technical (70%) +
                           Financial (30%) = Combined Score
                         </p>
