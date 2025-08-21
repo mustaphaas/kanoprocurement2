@@ -416,120 +416,120 @@ const MinistryReports: React.FC = () => {
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card className="shadow-md border-l-4 border-l-blue-500">
-          <CardContent className="p-4">
+      {/* Enhanced KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-cyan-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Total Tenders Created
                 </p>
-                <p className="text-2xl font-bold text-blue-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
                   {reportKPIs.totalTenders}
                 </p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <FileText className="h-6 w-6 text-blue-600" />
+              <div className="p-3 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl shadow-lg">
+                <FileText className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-3">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">
+              <span className="text-sm text-green-600 font-medium">
                 +12% from last month
               </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md border-l-4 border-l-green-500">
-          <CardContent className="p-4">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Total Contracts Awarded
                 </p>
-                <p className="text-2xl font-bold text-green-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                   {reportKPIs.totalContracts}
                 </p>
               </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <Award className="h-6 w-6 text-green-600" />
+              <div className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg">
+                <Award className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-3">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">
+              <span className="text-sm text-green-600 font-medium">
                 +8% from last month
               </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md border-l-4 border-l-purple-500">
-          <CardContent className="p-4">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Total NOC Requests
                 </p>
-                <p className="text-2xl font-bold text-purple-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
                   {reportKPIs.totalNOCRequests}
                 </p>
               </div>
-              <div className="p-3 bg-purple-100 rounded-full">
-                <FileCheck className="h-6 w-6 text-purple-600" />
+              <div className="p-3 bg-gradient-to-r from-purple-600 to-violet-600 rounded-xl shadow-lg">
+                <FileCheck className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-3">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">
+              <span className="text-sm text-green-600 font-medium">
                 +5% from last month
               </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md border-l-4 border-l-orange-500">
-          <CardContent className="p-4">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-orange-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Avg Evaluation Time
                 </p>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
                   {reportKPIs.avgEvaluationTime} days
                 </p>
               </div>
-              <div className="p-3 bg-orange-100 rounded-full">
-                <Clock className="h-6 w-6 text-orange-600" />
+              <div className="p-3 bg-gradient-to-r from-orange-600 to-amber-600 rounded-xl shadow-lg">
+                <Clock className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
-              <TrendingUp className="h-4 w-4 text-red-500 mr-1" />
-              <span className="text-sm text-red-600">+2 days from target</span>
+            <div className="flex items-center mt-3">
+              <AlertTriangle className="h-4 w-4 text-red-500 mr-1" />
+              <span className="text-sm text-red-600 font-medium">+2 days from target</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md border-l-4 border-l-emerald-500">
-          <CardContent className="p-4">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-emerald-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Compliance Rate
                 </p>
-                <p className="text-2xl font-bold text-emerald-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                   {reportKPIs.complianceRate}%
                 </p>
               </div>
-              <div className="p-3 bg-emerald-100 rounded-full">
-                <Shield className="h-6 w-6 text-emerald-600" />
+              <div className="p-3 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl shadow-lg">
+                <Shield className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-3">
               <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">Above target (90%)</span>
+              <span className="text-sm text-green-600 font-medium">Above target (90%)</span>
             </div>
           </CardContent>
         </Card>
