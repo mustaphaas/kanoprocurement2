@@ -1024,7 +1024,7 @@ export default function CompanyDashboard() {
                 <div className="mt-4 flex space-x-3">
                   <button
                     onClick={() => setActiveSection("tender-ads")}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     <Search className="h-4 w-4 mr-2" />
                     Browse Tenders
