@@ -943,7 +943,7 @@ export default function CompanyDashboard() {
                     companyData.status === "Approved"
                       ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                       : companyData.status === "Pending"
-                        ? "bg-blue-100 text-blue-800"
+                        ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                         : companyData.status === "Suspended"
                           ? "bg-orange-100 text-orange-800"
                           : "bg-red-100 text-red-800"
@@ -1671,7 +1671,7 @@ export default function CompanyDashboard() {
                                 : tender.status === "Closed"
                                   ? "bg-gray-100 text-gray-800"
                                   : tender.status === "Awarded"
-                                    ? "bg-blue-100 text-blue-800"
+                                    ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                     : "bg-red-100 text-red-800"
                             }`}
                           >
@@ -1868,7 +1868,7 @@ export default function CompanyDashboard() {
                                 contract.status === "Active"
                                   ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : contract.status === "Completed"
-                                    ? "bg-blue-100 text-blue-800"
+                                    ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                     : "bg-red-100 text-red-800"
                               }`}
                             >
@@ -1953,7 +1953,7 @@ export default function CompanyDashboard() {
                                 bid.status === "Active"
                                   ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : bid.status === "Submitted"
-                                    ? "bg-blue-100 text-blue-800"
+                                    ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                     : "bg-gray-100 text-gray-800"
                               }`}
                             >
@@ -2066,7 +2066,7 @@ export default function CompanyDashboard() {
                                 award.status === "Contract Signed"
                                   ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                   : award.status === "In Progress"
-                                    ? "bg-blue-100 text-blue-800"
+                                    ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                     : "bg-yellow-100 text-yellow-800"
                               }`}
                             >
@@ -2277,7 +2277,7 @@ export default function CompanyDashboard() {
                               companyData.status === "Approved"
                                 ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
                                 : companyData.status === "Pending"
-                                  ? "bg-blue-100 text-blue-800"
+                                  ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                   : companyData.status === "Suspended"
                                     ? "bg-orange-100 text-orange-800"
                                     : "bg-red-100 text-red-800"
