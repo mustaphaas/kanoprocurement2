@@ -4805,7 +4805,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         ministryId === "ministry2"
           ? "₦50.0B"
           : ministryId === "ministry3"
-            ? "₦12.5B"
+            ? "��12.5B"
             : "₦3.2B",
       utilizedBudget:
         ministryId === "ministry2"
@@ -10932,10 +10932,10 @@ Blockchain Timestamp: ${Date.now()}
                   key: "reports",
                   label: "Reports",
                   icon: TrendingUp,
-                  gradient: "from-slate-600 to-gray-600",
-                  hoverGradient: "from-slate-50 to-gray-50",
-                  textColor: "text-slate-700",
-                  borderColor: "border-slate-200",
+                  gradient: "from-cyan-600 to-blue-600",
+                  hoverGradient: "from-cyan-50 to-blue-50",
+                  textColor: "text-cyan-700",
+                  borderColor: "border-cyan-200",
                 },
                 {
                   key: "users",
