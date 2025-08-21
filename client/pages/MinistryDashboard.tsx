@@ -16,6 +16,14 @@ import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
 import {
+  CardSkeleton,
+  TableSkeleton,
+  NavigationSkeleton,
+  DataLoadingState,
+  LoadingSpinner,
+  ActionLoadingState
+} from "@/components/ui/loading-states";
+import {
   Circle,
   Users,
   FileText,
@@ -9828,7 +9836,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </div>
                   <div className="bg-white border border-gray-200 rounded-lg p-4">
                     <h5 className="font-medium text-gray-900 mb-2">
-                      ⚡ Automation Benefits
+                      ��� Automation Benefits
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>����� 90% faster processing</li>
