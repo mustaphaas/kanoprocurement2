@@ -5299,59 +5299,81 @@ Penalty Clause: 0.5% per week for delayed completion`,
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-blue-100">
               {filteredCompanies.map((company) => (
-                <tr key={company.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
+                <tr key={company.id} className="hover:bg-blue-50/50 transition-all duration-200 group">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="space-y-1">
+                      <div className="text-sm font-semibold text-gray-900">
                         {company.companyName}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-600 flex items-center">
+                        <svg className="h-3 w-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                        </svg>
                         {company.address}
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="space-y-1">
+                      <div className="text-sm font-medium text-gray-900">
                         {company.contactPerson}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-600 flex items-center">
+                        <svg className="h-3 w-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
                         {company.email}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-600 flex items-center">
+                        <svg className="h-3 w-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
                         {company.phone}
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                    {company.businessType}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900 bg-gray-50 px-3 py-1 rounded-full border">
+                      {company.businessType}
+                    </div>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      className={`inline-flex items-center px-3 py-1.5 text-xs font-bold rounded-full border shadow-sm ${
                         company.status === "Approved"
-                          ? "bg-green-100 text-green-800"
+                          ? "bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border-green-200"
                           : company.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-800"
+                            ? "bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border-yellow-200"
                             : company.status === "Suspended"
-                              ? "bg-orange-100 text-orange-800"
+                              ? "bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border-orange-200"
                               : company.status === "Blacklisted"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-gray-100 text-gray-800"
+                                ? "bg-gradient-to-r from-red-100 to-rose-100 text-red-800 border-red-200"
+                                : "bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 border-gray-200"
                       }`}
                     >
+                      <div className={`w-2 h-2 rounded-full mr-2 ${
+                        company.status === "Approved"
+                          ? "bg-green-500"
+                          : company.status === "Pending"
+                            ? "bg-yellow-500 animate-pulse"
+                            : company.status === "Suspended"
+                              ? "bg-orange-500"
+                              : company.status === "Blacklisted"
+                                ? "bg-red-500"
+                                : "bg-gray-500"
+                      }`}></div>
                       {company.status}
                     </span>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center space-x-2">
-                      <button className="text-blue-600 hover:text-blue-900">
-                        <Eye className="h-4 w-4 inline mr-1" />
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-3">
+                      <button className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all duration-200 hover:shadow-md group-hover:shadow-lg">
+                        <Eye className="h-4 w-4 mr-2" />
                         View Details
                       </button>
-                      <span className="text-xs text-gray-500">(Read Only)</span>
+                      <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md border">Read Only</span>
                     </div>
                   </td>
                 </tr>
