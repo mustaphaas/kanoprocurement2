@@ -857,7 +857,7 @@ export default function NOCRequestsModule({
 
                 <Button
                   onClick={() => setShowNewRequestDialog(true)}
-                  className="w-full"
+                  className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 disabled:bg-gray-300 shadow-lg hover:shadow-xl transition-all duration-200"
                   disabled={!selectedTender}
                 >
                   <Plus className="h-4 w-4 mr-2" />
