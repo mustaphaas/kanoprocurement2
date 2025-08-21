@@ -82,18 +82,18 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
         };
       case "low":
         return {
-          color: "bg-gray-500",
-          textColor: "text-gray-700",
-          bgColor: "bg-gray-50",
-          borderColor: "border-gray-200",
+          color: "bg-gradient-to-r from-slate-500 to-gray-500",
+          textColor: "text-slate-700",
+          bgColor: "bg-gradient-to-br from-slate-50 to-gray-50",
+          borderColor: "border-slate-200",
           label: "Low",
         };
       default:
         return {
-          color: "bg-gray-500",
-          textColor: "text-gray-700",
-          bgColor: "bg-gray-50",
-          borderColor: "border-gray-200",
+          color: "bg-gradient-to-r from-slate-500 to-gray-500",
+          textColor: "text-slate-700",
+          bgColor: "bg-gradient-to-br from-slate-50 to-gray-50",
+          borderColor: "border-slate-200",
           label: "Normal",
         };
     }
@@ -120,13 +120,13 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
     switch (status) {
       case "approved":
       case "completed":
-        return "text-green-600";
+        return "text-emerald-600";
       case "rejected":
         return "text-red-600";
       case "clarification_needed":
-        return "text-blue-600";
+        return "text-teal-600";
       case "pending":
-        return "text-orange-600";
+        return "text-amber-600";
       default:
         return "text-gray-600";
     }
@@ -193,14 +193,16 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
               return (
                 <div
                   key={update.id}
-                  className={`relative p-4 rounded-lg border-l-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
+                  className={`relative p-5 rounded-xl border-l-4 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 backdrop-blur-sm ${
                     update.actionRequired
-                      ? "bg-red-50 border-l-red-500 hover:bg-red-100"
+                      ? "bg-gradient-to-br from-red-50 to-pink-50 border-l-red-500 hover:from-red-100 hover:to-pink-100"
                       : update.priority === "urgent"
-                        ? "bg-red-50 border-l-red-500 hover:bg-red-100"
+                        ? "bg-gradient-to-br from-red-50 to-pink-50 border-l-red-500 hover:from-red-100 hover:to-pink-100"
                         : update.priority === "high"
-                          ? "bg-orange-50 border-l-orange-500 hover:bg-orange-100"
-                          : "bg-gray-50 border-l-gray-300 hover:bg-gray-100"
+                          ? "bg-gradient-to-br from-amber-50 to-orange-50 border-l-amber-500 hover:from-amber-100 hover:to-orange-100"
+                          : update.priority === "medium"
+                            ? "bg-gradient-to-br from-teal-50 to-cyan-50 border-l-teal-500 hover:from-teal-100 hover:to-cyan-100"
+                            : "bg-gradient-to-br from-slate-50 to-gray-50 border-l-slate-300 hover:from-slate-100 hover:to-gray-100"
                   }`}
                   onClick={() => onUpdateClick?.(update)}
                 >
@@ -214,25 +216,29 @@ export const LatestUpdates: React.FC<LatestUpdatesProps> = ({
                   <div className="flex items-start gap-3">
                     {/* Update Icon */}
                     <div
-                      className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                      className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
                         update.actionRequired
-                          ? "bg-red-100"
+                          ? "bg-gradient-to-r from-red-100 to-pink-100 border border-red-200"
                           : update.priority === "urgent"
-                            ? "bg-red-100"
+                            ? "bg-gradient-to-r from-red-100 to-pink-100 border border-red-200"
                             : update.priority === "high"
-                              ? "bg-orange-100"
-                              : "bg-blue-100"
+                              ? "bg-gradient-to-r from-amber-100 to-orange-100 border border-amber-200"
+                              : update.priority === "medium"
+                                ? "bg-gradient-to-r from-teal-100 to-cyan-100 border border-teal-200"
+                                : "bg-gradient-to-r from-slate-100 to-gray-100 border border-slate-200"
                       }`}
                     >
                       <IconComponent
-                        className={`h-5 w-5 ${
+                        className={`h-6 w-6 ${
                           update.actionRequired
                             ? "text-red-600"
                             : update.priority === "urgent"
                               ? "text-red-600"
                               : update.priority === "high"
-                                ? "text-orange-600"
-                                : "text-blue-600"
+                                ? "text-amber-600"
+                                : update.priority === "medium"
+                                  ? "text-teal-600"
+                                  : "text-slate-600"
                         }`}
                       />
                     </div>
