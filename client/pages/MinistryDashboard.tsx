@@ -3377,7 +3377,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-012",
           companyName: "Northern Educational Supplies",
-          bidAmount: "₦2,100,000,000",
+          bidAmount: "��2,100,000,000",
           technicalScore: 88,
           financialScore: 86,
           totalScore: 87,
@@ -10961,6 +10961,134 @@ Blockchain Timestamp: ${Date.now()}
             <div className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-white via-white to-transparent w-8 h-full pointer-events-none"></div>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobile && (
+          <>
+            {/* Overlay */}
+            {isMobileMenuOpen && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+            )}
+
+            {/* Mobile Drawer */}
+            <div className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 z-50 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:hidden`}>
+              <div className="p-6">
+                {/* Mobile Header */}
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2F6facb0e4b5694bbdb114af8656259028%2Fe2b03698f65d43d792efcb7e22009c33?format=webp&width=800"
+                      alt="Kano State Government Logo"
+                      className="h-8 w-8 rounded-lg object-cover"
+                    />
+                    <div>
+                      <h2 className="text-lg font-bold text-green-700">{ministryInfo.name}</h2>
+                      <p className="text-xs text-gray-600">Ministry Dashboard</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 rounded-lg hover:bg-gray-100"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                {/* Mobile Navigation Items */}
+                <div className="space-y-2">
+                  {[
+                    {
+                      key: "overview",
+                      label: "Overview",
+                      icon: BarChart3,
+                      gradient: "from-teal-600 to-cyan-600",
+                    },
+                    {
+                      key: "companies",
+                      label: "Companies",
+                      icon: Circle,
+                      gradient: "from-blue-600 to-indigo-600",
+                    },
+                    {
+                      key: "procurement-planning",
+                      label: "Procurement Planning",
+                      icon: Target,
+                      gradient: "from-emerald-600 to-teal-600",
+                    },
+                    {
+                      key: "tender-management",
+                      label: "Tender Management",
+                      icon: Gavel,
+                      gradient: "from-purple-600 to-violet-600",
+                    },
+                    {
+                      key: "noc",
+                      label: "NOC Requests",
+                      icon: Send,
+                      gradient: "from-cyan-600 to-blue-600",
+                    },
+                    {
+                      key: "contract-management",
+                      label: "Contract Management",
+                      icon: Handshake,
+                      gradient: "from-amber-600 to-orange-600",
+                    },
+                    {
+                      key: "reports",
+                      label: "Reports",
+                      icon: TrendingUp,
+                      gradient: "from-slate-600 to-gray-600",
+                    },
+                    {
+                      key: "users",
+                      label: "User Management",
+                      icon: Users,
+                      gradient: "from-rose-600 to-pink-600",
+                    },
+                  ].map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => handleViewChange(tab.key as CurrentView)}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                        currentView === tab.key
+                          ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      <tab.icon className={`h-5 w-5 ${currentView === tab.key ? 'text-white' : 'text-gray-600'}`} />
+                      <span className="font-medium">{tab.label}</span>
+                      {isNavigationLoading && currentView === tab.key && (
+                        <LoadingSpinner size="sm" className="ml-auto" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Mobile Quick Actions */}
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <h3 className="text-sm font-semibold text-gray-800 mb-3">Quick Actions</h3>
+                  <div className="space-y-2">
+                    <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                      <Plus className="h-4 w-4 text-emerald-600" />
+                      <span>Create Tender</span>
+                    </button>
+                    <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                      <Send className="h-4 w-4 text-cyan-600" />
+                      <span>Submit NOC</span>
+                    </button>
+                    <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                      <FileText className="h-4 w-4 text-purple-600" />
+                      <span>View Reports</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </nav>
 
       {/* Main Content */}
