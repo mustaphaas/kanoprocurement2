@@ -5,6 +5,7 @@ import { LatestUpdates } from "./LatestUpdates";
 import { PerformanceAnalytics } from "./PerformanceAnalytics";
 import { QuickActions } from "./QuickActions";
 import { AuditComplianceSnapshot } from "./AuditComplianceSnapshot";
+import { FileText, Activity, MessageSquare, Zap, BarChart3, Shield } from "lucide-react";
 
 interface MinistryData {
   // Summary Cards Data
