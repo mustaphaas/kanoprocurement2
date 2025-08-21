@@ -591,10 +591,10 @@ const MinistryReports: React.FC = () => {
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart className="h-5 w-5" />
+            <Card className="bg-white/80 backdrop-blur-sm border border-cyan-100 shadow-lg rounded-xl">
+              <CardHeader className="bg-gradient-to-r from-cyan-600/5 to-blue-600/5 border-b border-cyan-100">
+                <CardTitle className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                  <BarChart className="h-5 w-5 text-cyan-600" />
                   Tenders by Department
                 </CardTitle>
               </CardHeader>
