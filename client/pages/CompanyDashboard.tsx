@@ -945,7 +945,7 @@ export default function CompanyDashboard() {
                       : companyData.status === "Pending"
                         ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                         : companyData.status === "Suspended"
-                          ? "bg-orange-100 text-orange-800"
+                          ? "bg-gradient-to-r from-orange-100 to-red-100 text-orange-800"
                           : "bg-red-100 text-red-800"
                   }`}
                 >
@@ -2279,7 +2279,7 @@ export default function CompanyDashboard() {
                                 : companyData.status === "Pending"
                                   ? "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800"
                                   : companyData.status === "Suspended"
-                                    ? "bg-orange-100 text-orange-800"
+                                    ? "bg-gradient-to-r from-orange-100 to-red-100 text-orange-800"
                                     : "bg-red-100 text-red-800"
                             }`}
                           >
