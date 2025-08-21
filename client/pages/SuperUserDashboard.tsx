@@ -8966,54 +8966,54 @@ The award letter has been:
             ].map((tab) => {
               // Define color schemes for each tab
               const tabConfig = {
-                "overview": {
+                overview: {
                   gradient: "from-teal-600 to-cyan-600",
                   hoverGradient: "from-teal-50 to-cyan-50",
                   textColor: "text-teal-700",
-                  borderColor: "border-teal-200"
+                  borderColor: "border-teal-200",
                 },
-                "ministries": {
+                ministries: {
                   gradient: "from-blue-600 to-indigo-600",
                   hoverGradient: "from-blue-50 to-indigo-50",
                   textColor: "text-blue-700",
-                  borderColor: "border-blue-200"
+                  borderColor: "border-blue-200",
                 },
                 "analytics-reports": {
                   gradient: "from-emerald-600 to-teal-600",
                   hoverGradient: "from-emerald-50 to-teal-50",
                   textColor: "text-emerald-700",
-                  borderColor: "border-emerald-200"
+                  borderColor: "border-emerald-200",
                 },
-                "notifications": {
+                notifications: {
                   gradient: "from-purple-600 to-violet-600",
                   hoverGradient: "from-purple-50 to-violet-50",
                   textColor: "text-purple-700",
-                  borderColor: "border-purple-200"
+                  borderColor: "border-purple-200",
                 },
-                "collaboration": {
+                collaboration: {
                   gradient: "from-cyan-600 to-blue-600",
                   hoverGradient: "from-cyan-50 to-blue-50",
                   textColor: "text-cyan-700",
-                  borderColor: "border-cyan-200"
+                  borderColor: "border-cyan-200",
                 },
                 "noc-requests": {
                   gradient: "from-orange-600 to-amber-600",
                   hoverGradient: "from-orange-50 to-amber-50",
                   textColor: "text-orange-700",
-                  borderColor: "border-orange-200"
+                  borderColor: "border-orange-200",
                 },
-                "settings": {
+                settings: {
                   gradient: "from-slate-600 to-gray-600",
                   hoverGradient: "from-slate-50 to-gray-50",
                   textColor: "text-slate-700",
-                  borderColor: "border-slate-200"
+                  borderColor: "border-slate-200",
                 },
-                "feedback": {
+                feedback: {
                   gradient: "from-rose-600 to-pink-600",
                   hoverGradient: "from-rose-50 to-pink-50",
                   textColor: "text-rose-700",
-                  borderColor: "border-rose-200"
-                }
+                  borderColor: "border-rose-200",
+                },
               };
 
               const config = tabConfig[tab.key] || tabConfig["overview"];
@@ -9085,7 +9085,9 @@ The award letter has been:
               >
                 <Send
                   className={`h-5 w-5 ${
-                    activeTab === "no-objection-certificate" ? "text-white" : "text-green-700"
+                    activeTab === "no-objection-certificate"
+                      ? "text-white"
+                      : "text-green-700"
                   }`}
                 />
               </div>
