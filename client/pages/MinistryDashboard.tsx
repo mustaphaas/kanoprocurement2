@@ -10921,7 +10921,7 @@ Blockchain Timestamp: ${Date.now()}
                 <button
                   key={tab.key}
                   onClick={() => {
-                    setCurrentView(tab.key as CurrentView);
+                    handleViewChange(tab.key as CurrentView);
                   }}
                   className={`flex items-center space-x-3 px-6 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-300 min-w-max relative overflow-hidden ${
                     currentView === tab.key
