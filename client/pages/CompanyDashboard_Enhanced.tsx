@@ -239,7 +239,9 @@ export default function CompanyDashboardEnhanced() {
             <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-teal-100 shadow-md p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Active Tenders</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Active Tenders
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">24</p>
                 </div>
                 <FileText className="h-8 w-8 text-teal-600" />
@@ -248,7 +250,9 @@ export default function CompanyDashboardEnhanced() {
             <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-blue-100 shadow-md p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Submitted Bids</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Submitted Bids
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">8</p>
                 </div>
                 <Target className="h-8 w-8 text-blue-600" />
@@ -257,7 +261,9 @@ export default function CompanyDashboardEnhanced() {
             <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-emerald-100 shadow-md p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Won Contracts</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Won Contracts
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">3</p>
                 </div>
                 <Award className="h-8 w-8 text-emerald-600" />
@@ -266,7 +272,9 @@ export default function CompanyDashboardEnhanced() {
             <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100 shadow-md p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Value</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Value
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">₦2.5B</p>
                 </div>
                 <DollarSign className="h-8 w-8 text-purple-600" />
@@ -277,36 +285,56 @@ export default function CompanyDashboardEnhanced() {
 
         <TabsContent value="tenders" className="space-y-6">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-blue-100 shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Available Tenders</h3>
-            <p className="text-gray-600">Tender listings will be displayed here...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Available Tenders
+            </h3>
+            <p className="text-gray-600">
+              Tender listings will be displayed here...
+            </p>
           </div>
         </TabsContent>
 
         <TabsContent value="bids" className="space-y-6">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-emerald-100 shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">My Bid Submissions</h3>
-            <p className="text-gray-600">Your bid history will be displayed here...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              My Bid Submissions
+            </h3>
+            <p className="text-gray-600">
+              Your bid history will be displayed here...
+            </p>
           </div>
         </TabsContent>
 
         <TabsContent value="contracts" className="space-y-6">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100 shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Awarded Contracts</h3>
-            <p className="text-gray-600">Your awarded contracts will be displayed here...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Awarded Contracts
+            </h3>
+            <p className="text-gray-600">
+              Your awarded contracts will be displayed here...
+            </p>
           </div>
         </TabsContent>
 
         <TabsContent value="profile" className="space-y-6">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-amber-100 shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Profile</h3>
-            <p className="text-gray-600">Company information and documents...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Company Profile
+            </h3>
+            <p className="text-gray-600">
+              Company information and documents...
+            </p>
           </div>
         </TabsContent>
 
         <TabsContent value="support" className="space-y-6">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-rose-100 shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Support & Help</h3>
-            <p className="text-gray-600">Contact support and view help resources...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Support & Help
+            </h3>
+            <p className="text-gray-600">
+              Contact support and view help resources...
+            </p>
           </div>
         </TabsContent>
       </Tabs>

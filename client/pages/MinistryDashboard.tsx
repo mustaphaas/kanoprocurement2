@@ -10724,7 +10724,6 @@ Blockchain Timestamp: ${Date.now()}
         </div>
       </nav>
 
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         {renderContent()}

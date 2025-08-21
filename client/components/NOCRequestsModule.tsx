@@ -756,7 +756,8 @@ export default function NOCRequestsModule({
                     NOC Requests Module
                   </h2>
                   <p className="text-lg text-gray-600 font-medium">
-                    Manage No Objection Certificate requests linked to tender evaluations
+                    Manage No Objection Certificate requests linked to tender
+                    evaluations
                   </p>
                 </div>
               </div>
