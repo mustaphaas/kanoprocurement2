@@ -5092,294 +5092,178 @@ Penalty Clause: 0.5% per week for delayed completion`,
   };
 
   const renderCompanies = () => (
-    <div className="space-y-6">
-      {/* Enhanced Header with Gradient */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg p-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">
-              Strategic Partner Ecosystem
-            </h1>
-            <p className="text-blue-100 text-lg">
-              Comprehensive vendor management and performance analytics
-            </p>
-            <div className="flex items-center mt-4 space-x-4">
-              <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
-                <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
-                <span className="text-sm font-medium">Real-time Sync</span>
-              </div>
-              <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
-                <Shield className="h-5 w-5 mr-2" />
-                <span className="text-sm font-medium">Verified Partners</span>
-              </div>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold">{companies.length}</div>
-            <div className="text-blue-100">Total Partners</div>
+    <div className="space-y-4">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          Company Registry
+        </h1>
+        <div className="flex items-center space-x-2">
+          <p className="text-gray-600">
+            View registered companies with real-time updates
+          </p>
+          <div className="flex items-center bg-blue-50 px-2 py-1 rounded-md">
+            <RefreshCw className="h-4 w-4 text-blue-600 mr-1" />
+            <span className="text-xs text-blue-600 font-medium">Live Sync</span>
           </div>
         </div>
       </div>
 
-      {/* Enhanced Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-l-emerald-500 hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="bg-emerald-100 p-2 rounded-lg">
-                  <CheckCircle className="h-6 w-6 text-emerald-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Verified Partners</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {companies.filter((c) => c.status === "Approved").length}
-                  </p>
-                </div>
-              </div>
-              <div className="text-xs text-emerald-600 font-medium">
-                +12% this month
-              </div>
+      {/* Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
+          <div className="flex items-center">
+            <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">
+                Approved Companies
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {companies.filter((c) => c.status === "Approved").length}
+              </p>
             </div>
           </div>
         </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-l-amber-500 hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="bg-amber-100 p-2 rounded-lg">
-                  <Clock className="h-6 w-6 text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Under Review</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {companies.filter((c) => c.status === "Pending").length}
-                  </p>
-                </div>
-              </div>
-              <div className="text-xs text-amber-600 font-medium">
-                Avg. 3.2 days
-              </div>
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
+          <div className="flex items-center">
+            <Clock className="h-8 w-8 text-yellow-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">
+                Pending Approval
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {companies.filter((c) => c.status === "Pending").length}
+              </p>
             </div>
           </div>
         </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-l-blue-500 hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="bg-blue-100 p-2 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Performance Score</p>
-                  <p className="text-2xl font-bold text-gray-900">87.5%</p>
-                </div>
-              </div>
-              <div className="text-xs text-blue-600 font-medium">
-                Avg. rating
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-l-purple-500 hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="bg-purple-100 p-2 rounded-lg">
-                  <Award className="h-6 w-6 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Elite Partners</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {Math.floor(companies.filter((c) => c.status === "Approved").length * 0.3)}
-                  </p>
-                </div>
-              </div>
-              <div className="text-xs text-purple-600 font-medium">
-                Top 30%
-              </div>
+        <div className="bg-white rounded-lg shadow-sm p-4 border">
+          <div className="flex items-center">
+            <Circle className="h-8 w-8 text-blue-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">
+                Total Companies
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {companies.length}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Enhanced Companies Management */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-        {/* Enhanced Header with Actions */}
-        <div className="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
+      {/* Companies List */}
+      <div className="bg-white rounded-lg shadow-sm border">
+        <div className="px-4 py-2 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">Partner Directory</h2>
-              <p className="text-sm text-gray-600 mt-1">Manage and analyze partner relationships</p>
-            </div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Registered Companies
+            </h2>
             <div className="flex items-center space-x-3">
-              <button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center">
-                <Plus className="h-4 w-4 mr-2" />
-                Invite Partner
-              </button>
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center">
-                <Download className="h-4 w-4 mr-2" />
-                Export Data
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Enhanced Search and Filters */}
-        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-          <div className="flex items-center justify-between space-x-4">
-            <div className="flex-1 flex items-center space-x-4">
-              <div className="relative flex-1 max-w-md">
-                <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <div className="relative">
+                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search partners, services, locations..."
+                  placeholder="Search companies..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                  className="w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm min-w-[140px]"
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 <option value="all">All Status</option>
-                <option value="Pending">Under Review</option>
-                <option value="Approved">Verified</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
                 <option value="Suspended">Suspended</option>
                 <option value="Blacklisted">Blacklisted</option>
               </select>
             </div>
-            <div className="flex items-center space-x-2">
-              <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                <Filter className="h-5 w-5" />
-              </button>
-              <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                <Settings className="h-5 w-5" />
-              </button>
-            </div>
           </div>
         </div>
 
-        {/* Enhanced Companies Grid */}
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCompanies.map((company) => (
-              <div key={company.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group">
-                {/* Company Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg ${
-                      company.status === "Approved" ? "bg-gradient-to-r from-emerald-500 to-teal-500" :
-                      company.status === "Pending" ? "bg-gradient-to-r from-amber-500 to-orange-500" :
-                      company.status === "Suspended" ? "bg-gradient-to-r from-orange-500 to-red-500" :
-                      "bg-gradient-to-r from-gray-500 to-gray-600"
-                    }`}>
-                      {company.companyName.charAt(0)}
-                    </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Company
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Contact
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Business Type
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredCompanies.map((company) => (
+                <tr key={company.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div>
-                      <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      <div className="text-sm font-medium text-gray-900">
                         {company.companyName}
-                      </h3>
-                      <p className="text-sm text-gray-600">{company.businessType}</p>
-                    </div>
-                  </div>
-                  <span
-                    className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                      company.status === "Approved"
-                        ? "bg-emerald-100 text-emerald-800"
-                        : company.status === "Pending"
-                          ? "bg-amber-100 text-amber-800"
-                          : company.status === "Suspended"
-                            ? "bg-orange-100 text-orange-800"
-                            : company.status === "Blacklisted"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {company.status === "Approved" ? "Verified" :
-                     company.status === "Pending" ? "Under Review" : company.status}
-                  </span>
-                </div>
-
-                {/* Contact Info */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <User className="h-4 w-4 mr-2" />
-                    {company.contactPerson}
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Mail className="h-4 w-4 mr-2" />
-                    {company.email}
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Phone className="h-4 w-4 mr-2" />
-                    {company.phone}
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    {company.address}
-                  </div>
-                </div>
-
-                {/* Performance Indicators */}
-                <div className="border-t border-gray-200 pt-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-medium text-gray-700">Performance</span>
-                    <div className="flex items-center space-x-1">
-                      {[1,2,3,4,5].map((star) => (
-                        <Star key={star} className={`h-4 w-4 ${star <= 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                      <div className="text-lg font-bold text-blue-600">
-                        {Math.floor(Math.random() * 20) + 5}
                       </div>
-                      <div className="text-xs text-gray-600">Projects</div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-emerald-600">
-                        {Math.floor(Math.random() * 30) + 85}%
+                      <div className="text-sm text-gray-500">
+                        {company.address}
                       </div>
-                      <div className="text-xs text-gray-600">Success Rate</div>
                     </div>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="border-t border-gray-200 pt-4 mt-4">
-                  <div className="flex items-center justify-between">
-                    <button className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
-                      <Eye className="h-4 w-4 mr-1" />
-                      View Profile
-                    </button>
+                  </td>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <div>
+                      <div className="text-sm text-gray-900">
+                        {company.contactPerson}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {company.email}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {company.phone}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                    {company.businessType}
+                  </td>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        company.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : company.status === "Pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : company.status === "Suspended"
+                              ? "bg-orange-100 text-orange-800"
+                              : company.status === "Blacklisted"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {company.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center space-x-2">
-                      <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                        <MessageSquare className="h-4 w-4" />
+                      <button className="text-blue-600 hover:text-blue-900">
+                        <Eye className="h-4 w-4 inline mr-1" />
+                        View Details
                       </button>
-                      <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                        <ExternalLink className="h-4 w-4" />
-                      </button>
+                      <span className="text-xs text-gray-500">(Read Only)</span>
                     </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredCompanies.length === 0 && (
-            <div className="text-center py-12">
-              <Circle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No partners found</h3>
-              <p className="text-gray-600">Try adjusting your search criteria or invite new partners to join.</p>
-            </div>
-          )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
