@@ -5144,60 +5144,102 @@ Penalty Clause: 0.5% per week for delayed completion`,
   };
 
   const renderCompanies = () => (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Company Registry
-        </h1>
-        <div className="flex items-center space-x-2">
-          <p className="text-gray-600">
-            View registered companies with real-time updates
-          </p>
-          <div className="flex items-center bg-blue-50 px-2 py-1 rounded-md">
-            <RefreshCw className="h-4 w-4 text-blue-600 mr-1" />
-            <span className="text-xs text-blue-600 font-medium">Live Sync</span>
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-blue-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+        <div className="relative p-8">
+          <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
+                  <Circle className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
+                    Company Registry
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Comprehensive company management and verification platform
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <RefreshCw className="h-4 w-4" />
+                  <span className="font-medium">Live Sync Enabled</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>{new Date().toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <CheckCircle className="h-8 w-8 text-green-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Approved Companies
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {companies.filter((c) => c.status === "Approved").length}
-              </p>
+      {/* Enhanced Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 to-emerald-600/5"></div>
+          <div className="relative p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-600">
+                  Approved Companies
+                </p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                  {companies.filter((c) => c.status === "Approved").length}
+                </p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg">
+                <CheckCircle className="h-6 w-6 text-white" />
+              </div>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <Clock className="h-8 w-8 text-yellow-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Pending Approval
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {companies.filter((c) => c.status === "Pending").length}
-              </p>
+
+        <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-yellow-100 hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/5 to-amber-600/5"></div>
+          <div className="relative p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-600">
+                  Pending Approval
+                </p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-yellow-600 to-amber-600 bg-clip-text text-transparent">
+                  {companies.filter((c) => c.status === "Pending").length}
+                </p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-yellow-600 to-amber-600 rounded-xl shadow-lg">
+                <Clock className="h-6 w-6 text-white" />
+              </div>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
-          <div className="flex items-center">
-            <Circle className="h-8 w-8 text-blue-600" />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">
-                Total Companies
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {companies.length}
-              </p>
+
+        <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+          <div className="relative p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-600">
+                  Total Companies
+                </p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  {companies.length}
+                </p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
+                <Circle className="h-6 w-6 text-white" />
+              </div>
             </div>
           </div>
         </div>
