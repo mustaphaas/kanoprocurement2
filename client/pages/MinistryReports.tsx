@@ -347,183 +347,258 @@ const MinistryReports: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Ministry Reports</h1>
-          <p className="text-gray-600 mt-1">
-            Comprehensive analytics and reporting dashboard
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Button
-            onClick={exportToExcel}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export Excel
-          </Button>
-          <Button
-            onClick={exportToPDF}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export PDF
-          </Button>
-          <Button
-            onClick={sendMonthlySummary}
-            className="flex items-center gap-2"
-          >
-            <Send className="h-4 w-4" />
-            Send Monthly Summary
-          </Button>
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-cyan-50 to-blue-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-cyan-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/5 to-blue-600/5"></div>
+        <div className="relative p-8">
+          <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl shadow-lg">
+                  <TrendingUp className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-cyan-800 to-blue-800 bg-clip-text text-transparent">
+                    Ministry Reports & Analytics
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Comprehensive analytics and reporting dashboard
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={exportToExcel}
+                variant="outline"
+                className="flex items-center gap-2 border-cyan-200 text-cyan-700 hover:bg-cyan-50 shadow-sm"
+              >
+                <Download className="h-4 w-4" />
+                Export Excel
+              </Button>
+              <Button
+                onClick={exportToPDF}
+                variant="outline"
+                className="flex items-center gap-2 border-cyan-200 text-cyan-700 hover:bg-cyan-50 shadow-sm"
+              >
+                <Download className="h-4 w-4" />
+                Export PDF
+              </Button>
+              <Button
+                onClick={sendMonthlySummary}
+                className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <Send className="h-4 w-4" />
+                Send Monthly Summary
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card className="shadow-md border-l-4 border-l-blue-500">
-          <CardContent className="p-4">
+      {/* Enhanced KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-cyan-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Total Tenders Created
                 </p>
-                <p className="text-2xl font-bold text-blue-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
                   {reportKPIs.totalTenders}
                 </p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <FileText className="h-6 w-6 text-blue-600" />
+              <div className="p-3 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl shadow-lg">
+                <FileText className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-3">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">
+              <span className="text-sm text-green-600 font-medium">
                 +12% from last month
               </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md border-l-4 border-l-green-500">
-          <CardContent className="p-4">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Total Contracts Awarded
                 </p>
-                <p className="text-2xl font-bold text-green-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                   {reportKPIs.totalContracts}
                 </p>
               </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <Award className="h-6 w-6 text-green-600" />
+              <div className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg">
+                <Award className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-3">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">
+              <span className="text-sm text-green-600 font-medium">
                 +8% from last month
               </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md border-l-4 border-l-purple-500">
-          <CardContent className="p-4">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Total NOC Requests
                 </p>
-                <p className="text-2xl font-bold text-purple-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
                   {reportKPIs.totalNOCRequests}
                 </p>
               </div>
-              <div className="p-3 bg-purple-100 rounded-full">
-                <FileCheck className="h-6 w-6 text-purple-600" />
+              <div className="p-3 bg-gradient-to-r from-purple-600 to-violet-600 rounded-xl shadow-lg">
+                <FileCheck className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-3">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">
+              <span className="text-sm text-green-600 font-medium">
                 +5% from last month
               </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md border-l-4 border-l-orange-500">
-          <CardContent className="p-4">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-orange-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Avg Evaluation Time
                 </p>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
                   {reportKPIs.avgEvaluationTime} days
                 </p>
               </div>
-              <div className="p-3 bg-orange-100 rounded-full">
-                <Clock className="h-6 w-6 text-orange-600" />
+              <div className="p-3 bg-gradient-to-r from-orange-600 to-amber-600 rounded-xl shadow-lg">
+                <Clock className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
-              <TrendingUp className="h-4 w-4 text-red-500 mr-1" />
-              <span className="text-sm text-red-600">+2 days from target</span>
+            <div className="flex items-center mt-3">
+              <AlertTriangle className="h-4 w-4 text-red-500 mr-1" />
+              <span className="text-sm text-red-600 font-medium">
+                +2 days from target
+              </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md border-l-4 border-l-emerald-500">
-          <CardContent className="p-4">
+        <Card className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-emerald-100 hover:shadow-xl transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Compliance Rate
                 </p>
-                <p className="text-2xl font-bold text-emerald-600">
+                <p className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                   {reportKPIs.complianceRate}%
                 </p>
               </div>
-              <div className="p-3 bg-emerald-100 rounded-full">
-                <Shield className="h-6 w-6 text-emerald-600" />
+              <div className="p-3 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl shadow-lg">
+                <Shield className="h-6 w-6 text-white" />
               </div>
             </div>
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-3">
               <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600">Above target (90%)</span>
+              <span className="text-sm text-green-600 font-medium">
+                Above target (90%)
+              </span>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Tabbed Content */}
+      {/* Enhanced Colorful Tabs Navigation */}
       <Tabs
         value={selectedTab}
         onValueChange={setSelectedTab}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:flex">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="tenders">Tenders</TabsTrigger>
-          <TabsTrigger value="contracts">Contracts</TabsTrigger>
-          <TabsTrigger value="financial">Financial</TabsTrigger>
-          <TabsTrigger value="noc">NOC Reports</TabsTrigger>
-          <TabsTrigger value="audit">Audit & Compliance</TabsTrigger>
-        </TabsList>
+        <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-cyan-100 shadow-lg p-2">
+          <TabsList className="grid w-full grid-cols-6 lg:grid-cols-6 bg-transparent gap-1">
+            <TabsTrigger
+              value="overview"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-cyan-50 border border-transparent data-[state=active]:border-cyan-200"
+            >
+              <Activity className="h-4 w-4" />
+              <span className="font-medium">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="tenders"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-emerald-50 border border-transparent data-[state=active]:border-emerald-200"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="font-medium">Tenders</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="contracts"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-amber-50 border border-transparent data-[state=active]:border-amber-200"
+            >
+              <Award className="h-4 w-4" />
+              <span className="font-medium">Contracts</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="financial"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-green-50 border border-transparent data-[state=active]:border-green-200"
+            >
+              <DollarSign className="h-4 w-4" />
+              <span className="font-medium">Financial</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="noc"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50 border border-transparent data-[state=active]:border-purple-200"
+            >
+              <FileCheck className="h-4 w-4" />
+              <span className="font-medium">NOC Reports</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="audit"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-rose-50 border border-transparent data-[state=active]:border-rose-200"
+            >
+              <Shield className="h-4 w-4" />
+              <span className="font-medium">Audit & Compliance</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart className="h-5 w-5" />
+            <Card className="bg-white/80 backdrop-blur-sm border border-cyan-100 shadow-lg rounded-xl">
+              <CardHeader className="bg-gradient-to-r from-cyan-600/5 to-blue-600/5 border-b border-cyan-100">
+                <CardTitle className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                  <BarChart className="h-5 w-5 text-cyan-600" />
                   Tenders by Department
                 </CardTitle>
               </CardHeader>
@@ -540,10 +615,10 @@ const MinistryReports: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PieChart className="h-5 w-5" />
+            <Card className="bg-white/80 backdrop-blur-sm border border-cyan-100 shadow-lg rounded-xl">
+              <CardHeader className="bg-gradient-to-r from-cyan-600/5 to-blue-600/5 border-b border-cyan-100">
+                <CardTitle className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                  <PieChart className="h-5 w-5 text-cyan-600" />
                   Contracts by Status
                 </CardTitle>
               </CardHeader>

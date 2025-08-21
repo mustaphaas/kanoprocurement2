@@ -86,8 +86,10 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
           <p className="font-semibold text-gray-900">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color }}>
-              {entry.name}: {entry.name.includes("Budget") || entry.name.includes("Expenditure") 
-                ? formatCurrency(entry.value) 
+              {entry.name}:{" "}
+              {entry.name.includes("Budget") ||
+              entry.name.includes("Expenditure")
+                ? formatCurrency(entry.value)
                 : entry.value}
             </p>
           ))}
@@ -127,55 +129,62 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
         <CardContent>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={budgetData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <BarChart
+                data={budgetData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis 
-                  dataKey="month" 
-                  stroke="#666"
-                  fontSize={12}
-                />
-                <YAxis 
+                <XAxis dataKey="month" stroke="#666" fontSize={12} />
+                <YAxis
                   stroke="#666"
                   fontSize={12}
                   tickFormatter={formatCurrency}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar 
-                  dataKey="budget" 
+                <Bar
+                  dataKey="budget"
                   name="Budget"
-                  fill="#3b82f6" 
+                  fill="#3b82f6"
                   radius={[4, 4, 0, 0]}
                   opacity={0.8}
                 />
-                <Bar 
-                  dataKey="expenditure" 
+                <Bar
+                  dataKey="expenditure"
                   name="Expenditure"
-                  fill="#10b981" 
+                  fill="#10b981"
                   radius={[4, 4, 0, 0]}
                   opacity={0.8}
                 />
               </BarChart>
             </ResponsiveContainer>
           </div>
-          
+
           {/* Budget Summary */}
           <div className="mt-4 grid grid-cols-3 gap-4 pt-4 border-t border-gray-200">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
-                {formatCurrency(budgetData.reduce((sum, item) => sum + item.budget, 0))}
+                {formatCurrency(
+                  budgetData.reduce((sum, item) => sum + item.budget, 0),
+                )}
               </div>
               <div className="text-sm text-gray-600">Total Budget</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
-                {formatCurrency(budgetData.reduce((sum, item) => sum + item.expenditure, 0))}
+                {formatCurrency(
+                  budgetData.reduce((sum, item) => sum + item.expenditure, 0),
+                )}
               </div>
               <div className="text-sm text-gray-600">Total Expenditure</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
-                {((budgetData.reduce((sum, item) => sum + item.expenditure, 0) / 
-                   budgetData.reduce((sum, item) => sum + item.budget, 0)) * 100).toFixed(1)}%
+                {(
+                  (budgetData.reduce((sum, item) => sum + item.expenditure, 0) /
+                    budgetData.reduce((sum, item) => sum + item.budget, 0)) *
+                  100
+                ).toFixed(1)}
+                %
               </div>
               <div className="text-sm text-gray-600">Utilization Rate</div>
             </div>
@@ -216,21 +225,26 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
               </PieChart>
             </ResponsiveContainer>
           </div>
-          
+
           {/* Status Legend */}
           <div className="mt-4 space-y-2">
             {tenderStatusData.map((item, index) => (
-              <div key={index} className="flex items-center justify-between text-sm">
+              <div
+                key={index}
+                className="flex items-center justify-between text-sm"
+              >
                 <div className="flex items-center gap-2">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
+                  <div
+                    className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: item.color }}
                   />
                   <span className="text-gray-700">{item.status}</span>
                 </div>
                 <div className="flex gap-4">
                   <span className="text-gray-600">{item.count} tenders</span>
-                  <span className="text-gray-900 font-medium">{formatCurrency(item.value)}</span>
+                  <span className="text-gray-900 font-medium">
+                    {formatCurrency(item.value)}
+                  </span>
                 </div>
               </div>
             ))}
@@ -254,26 +268,36 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
             {timelineData.map((item, index) => {
               const percentage = (item.averageDays / item.target) * 100;
               const isOverTarget = percentage > 100;
-              
+
               return (
                 <div key={index} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-700">{item.category}</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      {item.category}
+                    </span>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-600">
                         {item.averageDays} / {item.target} days
                       </span>
-                      <div className={`w-2 h-2 rounded-full ${
-                        item.status === "good" ? "bg-green-500" :
-                        item.status === "warning" ? "bg-orange-500" : "bg-red-500"
-                      }`} />
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          item.status === "good"
+                            ? "bg-green-500"
+                            : item.status === "warning"
+                              ? "bg-orange-500"
+                              : "bg-red-500"
+                        }`}
+                      />
                     </div>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all duration-300 ${
-                        isOverTarget ? "bg-red-500" : 
-                        percentage > 80 ? "bg-orange-500" : "bg-green-500"
+                        isOverTarget
+                          ? "bg-red-500"
+                          : percentage > 80
+                            ? "bg-orange-500"
+                            : "bg-green-500"
                       }`}
                       style={{ width: `${Math.min(percentage, 100)}%` }}
                     />
@@ -285,25 +309,31 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
               );
             })}
           </div>
-          
+
           {/* Summary */}
           <div className="mt-6 pt-4 border-t border-gray-200">
             <div className="grid grid-cols-3 gap-2 text-center">
               <div>
                 <div className="text-lg font-bold text-green-600">
-                  {timelineData.filter(item => item.status === "good").length}
+                  {timelineData.filter((item) => item.status === "good").length}
                 </div>
                 <div className="text-xs text-gray-600">On Target</div>
               </div>
               <div>
                 <div className="text-lg font-bold text-orange-600">
-                  {timelineData.filter(item => item.status === "warning").length}
+                  {
+                    timelineData.filter((item) => item.status === "warning")
+                      .length
+                  }
                 </div>
                 <div className="text-xs text-gray-600">At Risk</div>
               </div>
               <div>
                 <div className="text-lg font-bold text-red-600">
-                  {timelineData.filter(item => item.status === "critical").length}
+                  {
+                    timelineData.filter((item) => item.status === "critical")
+                      .length
+                  }
                 </div>
                 <div className="text-xs text-gray-600">Over Target</div>
               </div>
@@ -326,25 +356,21 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
         <CardContent>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={nocProcessingData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <LineChart
+                data={nocProcessingData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis 
-                  dataKey="month" 
-                  stroke="#666"
-                  fontSize={12}
-                />
-                <YAxis 
-                  stroke="#666"
-                  fontSize={12}
-                />
+                <XAxis dataKey="month" stroke="#666" fontSize={12} />
+                <YAxis stroke="#666" fontSize={12} />
                 <Tooltip content={<CustomTooltip />} />
-                <Area
+                <Line
                   type="monotone"
                   dataKey="averageTime"
                   name="Avg Processing Time (days)"
                   stroke="#8b5cf6"
-                  fill="#8b5cf6"
-                  fillOpacity={0.3}
+                  strokeWidth={3}
+                  dot={{ fill: "#8b5cf6", strokeWidth: 2, r: 4 }}
                 />
                 <Line
                   type="monotone"
@@ -352,6 +378,7 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                   name="Approved"
                   stroke="#10b981"
                   strokeWidth={2}
+                  dot={{ fill: "#10b981", strokeWidth: 2, r: 3 }}
                 />
                 <Line
                   type="monotone"
@@ -359,38 +386,61 @@ export const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                   name="Rejected"
                   stroke="#ef4444"
                   strokeWidth={2}
+                  dot={{ fill: "#ef4444", strokeWidth: 2, r: 3 }}
                 />
-              </AreaChart>
+              </LineChart>
             </ResponsiveContainer>
           </div>
-          
+
           {/* NOC Summary */}
           <div className="mt-4 grid grid-cols-4 gap-4 pt-4 border-t border-gray-200">
             <div className="text-center">
               <div className="text-xl font-bold text-purple-600">
-                {(nocProcessingData.reduce((sum, item) => sum + item.averageTime, 0) / nocProcessingData.length).toFixed(1)}
+                {(
+                  nocProcessingData.reduce(
+                    (sum, item) => sum + item.averageTime,
+                    0,
+                  ) / nocProcessingData.length
+                ).toFixed(1)}
               </div>
               <div className="text-sm text-gray-600">Avg. Processing Days</div>
             </div>
             <div className="text-center">
               <div className="text-xl font-bold text-green-600">
-                {nocProcessingData.reduce((sum, item) => sum + item.approved, 0)}
+                {nocProcessingData.reduce(
+                  (sum, item) => sum + item.approved,
+                  0,
+                )}
               </div>
               <div className="text-sm text-gray-600">Total Approved</div>
             </div>
             <div className="text-center">
               <div className="text-xl font-bold text-red-600">
-                {nocProcessingData.reduce((sum, item) => sum + item.rejected, 0)}
+                {nocProcessingData.reduce(
+                  (sum, item) => sum + item.rejected,
+                  0,
+                )}
               </div>
               <div className="text-sm text-gray-600">Total Rejected</div>
             </div>
             <div className="text-center">
               <div className="text-xl font-bold text-blue-600">
                 {(
-                  (nocProcessingData.reduce((sum, item) => sum + item.approved, 0) /
-                   (nocProcessingData.reduce((sum, item) => sum + item.approved, 0) + 
-                    nocProcessingData.reduce((sum, item) => sum + item.rejected, 0))) * 100
-                ).toFixed(1)}%
+                  (nocProcessingData.reduce(
+                    (sum, item) => sum + item.approved,
+                    0,
+                  ) /
+                    (nocProcessingData.reduce(
+                      (sum, item) => sum + item.approved,
+                      0,
+                    ) +
+                      nocProcessingData.reduce(
+                        (sum, item) => sum + item.rejected,
+                        0,
+                      ))) *
+                  100
+                ).toFixed(1)}
+                %
               </div>
               <div className="text-sm text-gray-600">Approval Rate</div>
             </div>

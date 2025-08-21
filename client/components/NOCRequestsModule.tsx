@@ -791,11 +791,11 @@ export default function NOCRequestsModule({
           <TabsTrigger value="decisions">Approvals & Decisions</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="new-request" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5" />
+        <TabsContent value="new-request" className="space-y-6">
+          <Card className="bg-white/80 backdrop-blur-sm border border-purple-100 shadow-lg rounded-xl">
+            <CardHeader className="bg-gradient-to-r from-purple-600/5 to-violet-600/5 border-b border-purple-100">
+              <CardTitle className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                <Plus className="h-5 w-5 text-purple-600" />
                 Create New NOC Request
               </CardTitle>
             </CardHeader>
@@ -818,10 +818,10 @@ export default function NOCRequestsModule({
                       {completedTenders.map((tender) => (
                         <Card
                           key={tender.id}
-                          className={`cursor-pointer transition-colors ${
+                          className={`cursor-pointer transition-all duration-200 rounded-lg ${
                             selectedTender?.id === tender.id
-                              ? "ring-2 ring-green-500 bg-green-50"
-                              : "hover:bg-gray-50"
+                              ? "ring-2 ring-purple-500 bg-purple-50 shadow-md"
+                              : "hover:bg-purple-50/50 hover:shadow-md border border-purple-100"
                           }`}
                           onClick={() => handleTenderSelection(tender)}
                         >
@@ -857,7 +857,7 @@ export default function NOCRequestsModule({
 
                 <Button
                   onClick={() => setShowNewRequestDialog(true)}
-                  className="w-full"
+                  className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 disabled:bg-gray-300 shadow-lg hover:shadow-xl transition-all duration-200"
                   disabled={!selectedTender}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -868,48 +868,98 @@ export default function NOCRequestsModule({
           </Card>
         </TabsContent>
 
-        <TabsContent value="tracking" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
+        <TabsContent value="tracking" className="space-y-6">
+          <Card className="bg-white/80 backdrop-blur-sm border border-purple-100 shadow-lg rounded-xl">
+            <CardHeader className="bg-gradient-to-r from-purple-600/5 to-violet-600/5 border-b border-purple-100">
+              <CardTitle className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                <History className="h-5 w-5 text-purple-600" />
                 Request Tracking
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex gap-4 mb-4">
-                <div className="flex-1">
-                  <Input
-                    placeholder="Search NOC requests..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full"
-                  />
+            <CardContent className="p-6">
+              {/* Enhanced Search Bar */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100 shadow-md p-6 mb-6">
+                <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+                  <div className="flex-1 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4">
+                    <div className="relative flex-1 max-w-md">
+                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <Input
+                        placeholder="Search by project title, contractor, or ID..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-12 pr-4 py-3 border-gray-200 focus:border-purple-400 focus:ring-purple-400 rounded-lg shadow-sm"
+                      />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Filter className="h-4 w-4 text-gray-500" />
+                      <Select
+                        value={statusFilter}
+                        onValueChange={setStatusFilter}
+                      >
+                        <SelectTrigger className="w-56 border-gray-200 focus:border-purple-400 focus:ring-purple-400 rounded-lg shadow-sm">
+                          <SelectValue placeholder="Filter by status" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-lg border-gray-200 shadow-lg">
+                          <SelectItem
+                            value="all"
+                            className="hover:bg-purple-50"
+                          >
+                            All Statuses
+                          </SelectItem>
+                          <SelectItem
+                            value="Draft"
+                            className="hover:bg-gray-50"
+                          >
+                            Draft
+                          </SelectItem>
+                          <SelectItem
+                            value="Submitted"
+                            className="hover:bg-blue-50"
+                          >
+                            Submitted
+                          </SelectItem>
+                          <SelectItem
+                            value="Under Review"
+                            className="hover:bg-orange-50"
+                          >
+                            Under Review
+                          </SelectItem>
+                          <SelectItem
+                            value="Clarification Requested"
+                            className="hover:bg-yellow-50"
+                          >
+                            Clarification Requested
+                          </SelectItem>
+                          <SelectItem
+                            value="Approved"
+                            className="hover:bg-green-50"
+                          >
+                            Approved
+                          </SelectItem>
+                          <SelectItem
+                            value="Rejected"
+                            className="hover:bg-red-50"
+                          >
+                            Rejected
+                          </SelectItem>
+                          <SelectItem
+                            value="Pending"
+                            className="hover:bg-gray-50"
+                          >
+                            Pending
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                 </div>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="Draft">Draft</SelectItem>
-                    <SelectItem value="Submitted">Submitted</SelectItem>
-                    <SelectItem value="Under Review">Under Review</SelectItem>
-                    <SelectItem value="Clarification Requested">
-                      Clarification Requested
-                    </SelectItem>
-                    <SelectItem value="Approved">Approved</SelectItem>
-                    <SelectItem value="Rejected">Rejected</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
-              <div className="grid gap-4">
+              <div className="grid gap-6">
                 {filteredRequests.map((request) => (
                   <Card
                     key={request.id}
-                    className="hover:shadow-md transition-shadow"
+                    className="hover:shadow-xl transition-all duration-200 bg-white/80 backdrop-blur-sm border border-purple-100 rounded-xl"
                   >
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start">
@@ -953,6 +1003,7 @@ export default function NOCRequestsModule({
                               setSelectedRequest(request);
                               setShowRequestDetails(true);
                             }}
+                            className="border-purple-200 text-purple-700 hover:bg-purple-50 shadow-sm"
                           >
                             <Eye className="h-4 w-4 mr-1" />
                             View
@@ -961,7 +1012,7 @@ export default function NOCRequestsModule({
                             <Button
                               size="sm"
                               onClick={() => handleSubmitForReview(request.id)}
-                              className="bg-blue-600 hover:bg-blue-700"
+                              className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 shadow-lg hover:shadow-xl transition-all duration-200"
                             >
                               <Send className="h-4 w-4 mr-1" />
                               Submit
