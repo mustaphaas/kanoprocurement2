@@ -347,39 +347,72 @@ const MinistryReports: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Ministry Reports</h1>
-          <p className="text-gray-600 mt-1">
-            Comprehensive analytics and reporting dashboard
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Button
-            onClick={exportToExcel}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export Excel
-          </Button>
-          <Button
-            onClick={exportToPDF}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export PDF
-          </Button>
-          <Button
-            onClick={sendMonthlySummary}
-            className="flex items-center gap-2"
-          >
-            <Send className="h-4 w-4" />
-            Send Monthly Summary
-          </Button>
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-cyan-50 to-blue-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-cyan-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/5 to-blue-600/5"></div>
+        <div className="relative p-8">
+          <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl shadow-lg">
+                  <TrendingUp className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-cyan-800 to-blue-800 bg-clip-text text-transparent">
+                    Ministry Reports & Analytics
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Comprehensive analytics and reporting dashboard
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={exportToExcel}
+                variant="outline"
+                className="flex items-center gap-2 border-cyan-200 text-cyan-700 hover:bg-cyan-50 shadow-sm"
+              >
+                <Download className="h-4 w-4" />
+                Export Excel
+              </Button>
+              <Button
+                onClick={exportToPDF}
+                variant="outline"
+                className="flex items-center gap-2 border-cyan-200 text-cyan-700 hover:bg-cyan-50 shadow-sm"
+              >
+                <Download className="h-4 w-4" />
+                Export PDF
+              </Button>
+              <Button
+                onClick={sendMonthlySummary}
+                className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <Send className="h-4 w-4" />
+                Send Monthly Summary
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
