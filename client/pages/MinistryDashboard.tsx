@@ -301,6 +301,12 @@ interface MinistryInfo {
 export default function MinistryDashboard() {
   const [currentView, setCurrentView] = useState<CurrentView>("overview");
   const [tenderSubView, setTenderSubView] = useState<TenderSubView>("list");
+
+  // Loading states
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNavigationLoading, setIsNavigationLoading] = useState(false);
+  const [isDataLoading, setIsDataLoading] = useState(false);
+  const [loadingActions, setLoadingActions] = useState<Record<string, boolean>>({});
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
@@ -9836,7 +9842,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                   </div>
                   <div className="bg-white border border-gray-200 rounded-lg p-4">
                     <h5 className="font-medium text-gray-900 mb-2">
-                      ��� Automation Benefits
+                      ⚡ Automation Benefits
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>����� 90% faster processing</li>
