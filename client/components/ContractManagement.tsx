@@ -955,16 +955,28 @@ const ContractManagement = () => {
                       <SelectItem value="Active" className="hover:bg-green-50">
                         Active
                       </SelectItem>
-                      <SelectItem value="Completed" className="hover:bg-blue-50">
+                      <SelectItem
+                        value="Completed"
+                        className="hover:bg-blue-50"
+                      >
                         Completed
                       </SelectItem>
-                      <SelectItem value="Terminated" className="hover:bg-red-50">
+                      <SelectItem
+                        value="Terminated"
+                        className="hover:bg-red-50"
+                      >
                         Terminated
                       </SelectItem>
-                      <SelectItem value="Suspended" className="hover:bg-yellow-50">
+                      <SelectItem
+                        value="Suspended"
+                        className="hover:bg-yellow-50"
+                      >
                         Suspended
                       </SelectItem>
-                      <SelectItem value="noc-linked" className="hover:bg-purple-50">
+                      <SelectItem
+                        value="noc-linked"
+                        className="hover:bg-purple-50"
+                      >
                         NOC-Linked Only
                       </SelectItem>
                     </SelectContent>

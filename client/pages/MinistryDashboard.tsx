@@ -10404,7 +10404,9 @@ Blockchain Timestamp: ${Date.now()}
         <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-red-100 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">Total Users</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">
+                Total Users
+              </p>
               <p className="text-3xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
                 {mdaUsers.length}
               </p>
@@ -10417,7 +10419,9 @@ Blockchain Timestamp: ${Date.now()}
         <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-green-100 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">Active Users</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">
+                Active Users
+              </p>
               <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 {mdaUsers.filter((u) => u.isActive).length}
               </p>
@@ -10448,7 +10452,9 @@ Blockchain Timestamp: ${Date.now()}
         <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-purple-100 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">Accountants</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">
+                Accountants
+              </p>
               <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
                 {mdaUsers.filter((u) => u.role === "accountant").length}
               </p>
@@ -10466,7 +10472,9 @@ Blockchain Timestamp: ${Date.now()}
           <h2 className="text-xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
             Ministry Users
           </h2>
-          <p className="text-sm text-gray-600 mt-1">Manage user roles, permissions, and access levels</p>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage user roles, permissions, and access levels
+          </p>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-red-100">
@@ -10491,7 +10499,10 @@ Blockchain Timestamp: ${Date.now()}
             </thead>
             <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-red-100">
               {mdaUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-red-50/50 transition-colors duration-150">
+                <tr
+                  key={user.id}
+                  className="hover:bg-red-50/50 transition-colors duration-150"
+                >
                   <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
@@ -10563,7 +10574,9 @@ Blockchain Timestamp: ${Date.now()}
                             ? "text-red-600 hover:text-red-800 hover:bg-red-50"
                             : "text-green-600 hover:text-green-800 hover:bg-green-50"
                         }`}
-                        title={user.isActive ? "Deactivate User" : "Activate User"}
+                        title={
+                          user.isActive ? "Deactivate User" : "Activate User"
+                        }
                       >
                         {user.isActive ? "Deactivate" : "Activate"}
                       </button>
@@ -10591,7 +10604,8 @@ Blockchain Timestamp: ${Date.now()}
               No users found
             </h3>
             <p className="mt-2 text-gray-600 max-w-md mx-auto">
-              Start by adding your first ministry user to begin managing roles and permissions.
+              Start by adding your first ministry user to begin managing roles
+              and permissions.
             </p>
             <button
               onClick={handleCreateUser}

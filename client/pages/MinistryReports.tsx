@@ -507,7 +507,9 @@ const MinistryReports: React.FC = () => {
             </div>
             <div className="flex items-center mt-3">
               <AlertTriangle className="h-4 w-4 text-red-500 mr-1" />
-              <span className="text-sm text-red-600 font-medium">+2 days from target</span>
+              <span className="text-sm text-red-600 font-medium">
+                +2 days from target
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -529,7 +531,9 @@ const MinistryReports: React.FC = () => {
             </div>
             <div className="flex items-center mt-3">
               <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-sm text-green-600 font-medium">Above target (90%)</span>
+              <span className="text-sm text-green-600 font-medium">
+                Above target (90%)
+              </span>
             </div>
           </CardContent>
         </Card>

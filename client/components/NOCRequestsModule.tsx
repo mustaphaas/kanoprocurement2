@@ -892,33 +892,60 @@ export default function NOCRequestsModule({
                     </div>
                     <div className="flex items-center gap-3">
                       <Filter className="h-4 w-4 text-gray-500" />
-                      <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <Select
+                        value={statusFilter}
+                        onValueChange={setStatusFilter}
+                      >
                         <SelectTrigger className="w-56 border-gray-200 focus:border-purple-400 focus:ring-purple-400 rounded-lg shadow-sm">
                           <SelectValue placeholder="Filter by status" />
                         </SelectTrigger>
                         <SelectContent className="rounded-lg border-gray-200 shadow-lg">
-                          <SelectItem value="all" className="hover:bg-purple-50">
+                          <SelectItem
+                            value="all"
+                            className="hover:bg-purple-50"
+                          >
                             All Statuses
                           </SelectItem>
-                          <SelectItem value="Draft" className="hover:bg-gray-50">
+                          <SelectItem
+                            value="Draft"
+                            className="hover:bg-gray-50"
+                          >
                             Draft
                           </SelectItem>
-                          <SelectItem value="Submitted" className="hover:bg-blue-50">
+                          <SelectItem
+                            value="Submitted"
+                            className="hover:bg-blue-50"
+                          >
                             Submitted
                           </SelectItem>
-                          <SelectItem value="Under Review" className="hover:bg-orange-50">
+                          <SelectItem
+                            value="Under Review"
+                            className="hover:bg-orange-50"
+                          >
                             Under Review
                           </SelectItem>
-                          <SelectItem value="Clarification Requested" className="hover:bg-yellow-50">
+                          <SelectItem
+                            value="Clarification Requested"
+                            className="hover:bg-yellow-50"
+                          >
                             Clarification Requested
                           </SelectItem>
-                          <SelectItem value="Approved" className="hover:bg-green-50">
+                          <SelectItem
+                            value="Approved"
+                            className="hover:bg-green-50"
+                          >
                             Approved
                           </SelectItem>
-                          <SelectItem value="Rejected" className="hover:bg-red-50">
+                          <SelectItem
+                            value="Rejected"
+                            className="hover:bg-red-50"
+                          >
                             Rejected
                           </SelectItem>
-                          <SelectItem value="Pending" className="hover:bg-gray-50">
+                          <SelectItem
+                            value="Pending"
+                            className="hover:bg-gray-50"
+                          >
                             Pending
                           </SelectItem>
                         </SelectContent>
