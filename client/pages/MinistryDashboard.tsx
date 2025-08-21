@@ -10346,108 +10346,152 @@ Blockchain Timestamp: ${Date.now()}
   };
 
   const renderUserManagement = () => (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            User Management
-          </h1>
-          <p className="text-gray-600">Manage ministry users and their roles</p>
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-red-50 to-rose-50 min-h-screen">
+      {/* Enhanced Header Section */}
+      <div className="relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm border border-red-100 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-600/5 to-rose-600/5"></div>
+        <div className="relative p-8">
+          <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-red-600 to-rose-600 rounded-xl shadow-lg">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-rose-800 bg-clip-text text-transparent">
+                    User Management System
+                  </h2>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Complete user administration and role management platform
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-700 font-medium">
+                    System Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleCreateUser}
+                className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-lg inline-flex items-center"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create New User
+              </button>
+            </div>
+          </div>
         </div>
-        <button
-          onClick={handleCreateUser}
-          className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add New User
-        </button>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
+      {/* Enhanced Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-red-100 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Users</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 mb-1">Total Users</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
                 {mdaUsers.length}
               </p>
             </div>
-            <Users className="h-8 w-8 text-blue-600" />
+            <div className="p-3 bg-gradient-to-r from-red-600 to-rose-600 rounded-xl shadow-lg">
+              <Users className="h-6 w-6 text-white" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-green-100 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Active Users</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 mb-1">Active Users</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 {mdaUsers.filter((u) => u.isActive).length}
               </p>
             </div>
-            <UserCheck className="h-8 w-8 text-green-600" />
+            <div className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg">
+              <UserCheck className="h-6 w-6 text-white" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-orange-100 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-sm font-medium text-gray-600 mb-1">
                 Procurement Officers
               </p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
                 {
                   mdaUsers.filter((u) => u.role === "procurement_officer")
                     .length
                 }
               </p>
             </div>
-            <Briefcase className="h-8 w-8 text-orange-600" />
+            <div className="p-3 bg-gradient-to-r from-orange-600 to-amber-600 rounded-xl shadow-lg">
+              <Briefcase className="h-6 w-6 text-white" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-purple-100 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Accountants</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 mb-1">Accountants</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
                 {mdaUsers.filter((u) => u.role === "accountant").length}
               </p>
             </div>
-            <Calculator className="h-8 w-8 text-purple-600" />
+            <div className="p-3 bg-gradient-to-r from-purple-600 to-violet-600 rounded-xl shadow-lg">
+              <Calculator className="h-6 w-6 text-white" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Users List */}
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-4 py-2 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">
+      {/* Enhanced Users List */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-red-100">
+        <div className="px-6 py-4 border-b border-red-100 bg-gradient-to-r from-red-600/5 to-rose-600/5">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
             Ministry Users
           </h2>
+          <p className="text-sm text-gray-600 mt-1">Manage user roles, permissions, and access levels</p>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-red-100">
+            <thead className="bg-gradient-to-r from-red-50 to-rose-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-red-700 uppercase tracking-wider">
                   User Details
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-red-700 uppercase tracking-wider">
                   Role & Department
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-red-700 uppercase tracking-wider">
                   Permissions
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-red-700 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-red-700 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-red-100">
               {mdaUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
+                <tr key={user.id} className="hover:bg-red-50/50 transition-colors duration-150">
                   <td className="px-4 py-2 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
@@ -10503,29 +10547,34 @@ Blockchain Timestamp: ${Date.now()}
                       {user.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button
-                      onClick={() => handleEditUser(user)}
-                      className="text-blue-600 hover:text-blue-900"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => toggleUserStatus(user)}
-                      className={`${
-                        user.isActive
-                          ? "text-red-600 hover:text-red-900"
-                          : "text-green-600 hover:text-green-900"
-                      }`}
-                    >
-                      {user.isActive ? "Deactivate" : "Activate"}
-                    </button>
-                    <button
-                      onClick={() => handleDeleteUser(user)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleEditUser(user)}
+                        className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-all duration-150"
+                        title="Edit User"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => toggleUserStatus(user)}
+                        className={`p-2 rounded-lg transition-all duration-150 ${
+                          user.isActive
+                            ? "text-red-600 hover:text-red-800 hover:bg-red-50"
+                            : "text-green-600 hover:text-green-800 hover:bg-green-50"
+                        }`}
+                        title={user.isActive ? "Deactivate User" : "Activate User"}
+                      >
+                        {user.isActive ? "Deactivate" : "Activate"}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(user)}
+                        className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all duration-150"
+                        title="Delete User"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -10534,14 +10583,23 @@ Blockchain Timestamp: ${Date.now()}
         </div>
 
         {mdaUsers.length === 0 && (
-          <div className="text-center py-12">
-            <Users className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+          <div className="text-center py-16">
+            <div className="p-4 bg-gradient-to-r from-red-600 to-rose-600 rounded-full w-20 h-20 mx-auto mb-4">
+              <Users className="h-12 w-12 text-white mx-auto mt-2" />
+            </div>
+            <h3 className="text-lg font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
               No users found
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Start by adding your first ministry user.
+            <p className="mt-2 text-gray-600 max-w-md mx-auto">
+              Start by adding your first ministry user to begin managing roles and permissions.
             </p>
+            <button
+              onClick={handleCreateUser}
+              className="mt-4 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white px-6 py-3 rounded-lg inline-flex items-center shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Add First User
+            </button>
           </div>
         )}
       </div>
