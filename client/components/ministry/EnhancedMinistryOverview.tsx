@@ -237,7 +237,7 @@ export const EnhancedMinistryOverview: React.FC<EnhancedMinistryOverviewProps> =
         )}
       </section>
 
-      {/* 4. Ministry Procurement Performance */}
+      {/* 5. Ministry Procurement Performance */}
       <section className="bg-white/70 backdrop-blur-sm rounded-xl border border-teal-100 shadow-lg p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-2 rounded-lg">
