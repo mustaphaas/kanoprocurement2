@@ -495,7 +495,7 @@ export default function AdminDashboard() {
           });
 
           console.log(
-            "📊 Updated companies:",
+            "�� Updated companies:",
             updatedCompanies.map((c) => ({
               name: c.companyName,
               status: c.status,

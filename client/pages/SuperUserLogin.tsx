@@ -9,7 +9,7 @@ import {
   EyeOff,
   AlertCircle,
   ArrowLeft,
-  Shield
+  Shield,
 } from "lucide-react";
 
 interface LoginData {
@@ -20,7 +20,7 @@ interface LoginData {
 export default function SuperUserLogin() {
   const [formData, setFormData] = useState<LoginData>({
     username: "",
-    password: ""
+    password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -30,16 +30,16 @@ export default function SuperUserLogin() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
@@ -61,7 +61,7 @@ export default function SuperUserLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -70,7 +70,12 @@ export default function SuperUserLogin() {
       await signIn(formData.username, formData.password);
       navigate("/superuser/dashboard");
     } catch (error) {
-      setErrors({ general: error instanceof Error ? error.message : "Login failed. Please try again." });
+      setErrors({
+        general:
+          error instanceof Error
+            ? error.message
+            : "Login failed. Please try again.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -85,12 +90,14 @@ export default function SuperUserLogin() {
               <Building2 className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">KanoProc</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                KanoProc
+              </h1>
               <p className="text-sm text-gray-600">Super User Portal</p>
             </div>
           </div>
         </Link>
-        
+
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Super User Login
         </h2>
@@ -105,7 +112,9 @@ export default function SuperUserLogin() {
           <div className="mb-6 flex items-center justify-center">
             <div className="flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full">
               <Shield className="h-4 w-4 text-blue-600" />
-              <span className="text-xs text-blue-600 font-medium">Secure Access Portal</span>
+              <span className="text-xs text-blue-600 font-medium">
+                Secure Access Portal
+              </span>
             </div>
           </div>
 
@@ -124,7 +133,10 @@ export default function SuperUserLogin() {
             )}
 
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <div className="mt-1 relative">
@@ -140,7 +152,7 @@ export default function SuperUserLogin() {
                   value={formData.username}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.username ? 'border-red-500' : 'border-gray-300'
+                    errors.username ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter your username"
                 />
@@ -154,7 +166,10 @@ export default function SuperUserLogin() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
@@ -170,7 +185,7 @@ export default function SuperUserLogin() {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                    errors.password ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter your password"
                 />
@@ -198,7 +213,10 @@ export default function SuperUserLogin() {
 
             <div className="flex items-center justify-between">
               <div className="text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                <a
+                  href="#"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
                   Forgot your password?
                 </a>
               </div>
@@ -228,7 +246,9 @@ export default function SuperUserLogin() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Other access</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Other access
+                </span>
               </div>
             </div>
 
@@ -257,9 +277,13 @@ export default function SuperUserLogin() {
       {/* Demo Credentials */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-blue-800 mb-2">Demo Credentials</h3>
+          <h3 className="text-sm font-medium text-blue-800 mb-2">
+            Demo Credentials
+          </h3>
           <p className="text-sm text-blue-700">
-            Username: <code className="bg-blue-100 px-1 rounded">superuser</code><br />
+            Username:{" "}
+            <code className="bg-blue-100 px-1 rounded">superuser</code>
+            <br />
             Password: <code className="bg-blue-100 px-1 rounded">admin123</code>
           </p>
         </div>
@@ -273,8 +297,9 @@ export default function SuperUserLogin() {
             <div className="text-sm text-yellow-800">
               <p className="font-medium mb-1">Security Notice</p>
               <p>
-                This portal provides access to sensitive system functions. All activities are logged and monitored.
-                Unauthorized access is prohibited.
+                This portal provides access to sensitive system functions. All
+                activities are logged and monitored. Unauthorized access is
+                prohibited.
               </p>
             </div>
           </div>
