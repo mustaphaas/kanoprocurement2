@@ -181,79 +181,79 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
   const getColorClasses = (color: string) => {
     const colorMap = {
       blue: {
-        bg: "bg-blue-50 hover:bg-blue-100",
-        icon: "text-blue-600",
-        border: "border-blue-200",
-        button: "bg-blue-600 hover:bg-blue-700",
-      },
-      green: {
-        bg: "bg-green-50 hover:bg-green-100",
-        icon: "text-green-600",
-        border: "border-green-200",
-        button: "bg-green-600 hover:bg-green-700",
-      },
-      orange: {
-        bg: "bg-orange-50 hover:bg-orange-100",
-        icon: "text-orange-600",
-        border: "border-orange-200",
-        button: "bg-orange-600 hover:bg-orange-700",
-      },
-      purple: {
-        bg: "bg-purple-50 hover:bg-purple-100",
-        icon: "text-purple-600",
-        border: "border-purple-200",
-        button: "bg-purple-600 hover:bg-purple-700",
-      },
-      indigo: {
-        bg: "bg-indigo-50 hover:bg-indigo-100",
-        icon: "text-indigo-600",
-        border: "border-indigo-200",
-        button: "bg-indigo-600 hover:bg-indigo-700",
-      },
-      teal: {
-        bg: "bg-teal-50 hover:bg-teal-100",
+        bg: "bg-gradient-to-br from-teal-50 to-cyan-50 hover:from-teal-100 hover:to-cyan-100",
         icon: "text-teal-600",
         border: "border-teal-200",
-        button: "bg-teal-600 hover:bg-teal-700",
+        button: "bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700",
       },
-      pink: {
-        bg: "bg-pink-50 hover:bg-pink-100",
-        icon: "text-pink-600",
-        border: "border-pink-200",
-        button: "bg-pink-600 hover:bg-pink-700",
-      },
-      gray: {
-        bg: "bg-gray-50 hover:bg-gray-100",
-        icon: "text-gray-600",
-        border: "border-gray-200",
-        button: "bg-gray-600 hover:bg-gray-700",
-      },
-      cyan: {
-        bg: "bg-cyan-50 hover:bg-cyan-100",
-        icon: "text-cyan-600",
-        border: "border-cyan-200",
-        button: "bg-cyan-600 hover:bg-cyan-700",
-      },
-      emerald: {
-        bg: "bg-emerald-50 hover:bg-emerald-100",
+      green: {
+        bg: "bg-gradient-to-br from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100",
         icon: "text-emerald-600",
         border: "border-emerald-200",
-        button: "bg-emerald-600 hover:bg-emerald-700",
+        button: "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700",
+      },
+      orange: {
+        bg: "bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100",
+        icon: "text-amber-600",
+        border: "border-amber-200",
+        button: "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700",
+      },
+      purple: {
+        bg: "bg-gradient-to-br from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100",
+        icon: "text-purple-600",
+        border: "border-purple-200",
+        button: "bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700",
+      },
+      indigo: {
+        bg: "bg-gradient-to-br from-indigo-50 to-blue-50 hover:from-indigo-100 hover:to-blue-100",
+        icon: "text-indigo-600",
+        border: "border-indigo-200",
+        button: "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700",
+      },
+      teal: {
+        bg: "bg-gradient-to-br from-teal-50 to-cyan-50 hover:from-teal-100 hover:to-cyan-100",
+        icon: "text-teal-600",
+        border: "border-teal-200",
+        button: "bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700",
+      },
+      pink: {
+        bg: "bg-gradient-to-br from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100",
+        icon: "text-pink-600",
+        border: "border-pink-200",
+        button: "bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700",
+      },
+      gray: {
+        bg: "bg-gradient-to-br from-slate-50 to-gray-50 hover:from-slate-100 hover:to-gray-100",
+        icon: "text-slate-600",
+        border: "border-slate-200",
+        button: "bg-gradient-to-r from-slate-600 to-gray-600 hover:from-slate-700 hover:to-gray-700",
+      },
+      cyan: {
+        bg: "bg-gradient-to-br from-cyan-50 to-teal-50 hover:from-cyan-100 hover:to-teal-100",
+        icon: "text-cyan-600",
+        border: "border-cyan-200",
+        button: "bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700",
+      },
+      emerald: {
+        bg: "bg-gradient-to-br from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100",
+        icon: "text-emerald-600",
+        border: "border-emerald-200",
+        button: "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700",
       },
       violet: {
-        bg: "bg-violet-50 hover:bg-violet-100",
+        bg: "bg-gradient-to-br from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100",
         icon: "text-violet-600",
         border: "border-violet-200",
-        button: "bg-violet-600 hover:bg-violet-700",
+        button: "bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700",
       },
       yellow: {
-        bg: "bg-yellow-50 hover:bg-yellow-100",
+        bg: "bg-gradient-to-br from-yellow-50 to-amber-50 hover:from-yellow-100 hover:to-amber-100",
         icon: "text-yellow-600",
         border: "border-yellow-200",
-        button: "bg-yellow-600 hover:bg-yellow-700",
+        button: "bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700",
       },
     };
-    return colorMap[color as keyof typeof colorMap] || colorMap.blue;
+    return colorMap[color as keyof typeof colorMap] || colorMap.teal;
   };
 
   const groupedActions = quickActions.reduce((acc, action) => {
