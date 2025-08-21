@@ -3276,7 +3276,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-005",
           companyName: "Federal Infrastructure Ltd",
-          bidAmount: "₦15,800,000,000",
+          bidAmount: "��15,800,000,000",
           technicalScore: 80,
           financialScore: 78,
           totalScore: 79,
@@ -8356,7 +8356,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  �������� Evaluation Report - {selectedTenderForDetails.title}
+                  ������ Evaluation Report - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
@@ -10914,8 +10914,8 @@ Blockchain Timestamp: ${Date.now()}
                   key: "noc",
                   label: "NOC Requests",
                   icon: Send,
-                  gradient: "from-orange-600 to-amber-600",
-                  hoverGradient: "from-orange-50 to-amber-50",
+                  gradient: "from-orange-600 to-purple-600",
+                  hoverGradient: "from-orange-50 to-purple-50",
                   textColor: "text-orange-700",
                   borderColor: "border-orange-200",
                 },
