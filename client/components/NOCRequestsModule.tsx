@@ -818,10 +818,10 @@ export default function NOCRequestsModule({
                       {completedTenders.map((tender) => (
                         <Card
                           key={tender.id}
-                          className={`cursor-pointer transition-colors ${
+                          className={`cursor-pointer transition-all duration-200 rounded-lg ${
                             selectedTender?.id === tender.id
-                              ? "ring-2 ring-green-500 bg-green-50"
-                              : "hover:bg-gray-50"
+                              ? "ring-2 ring-purple-500 bg-purple-50 shadow-md"
+                              : "hover:bg-purple-50/50 hover:shadow-md border border-purple-100"
                           }`}
                           onClick={() => handleTenderSelection(tender)}
                         >
