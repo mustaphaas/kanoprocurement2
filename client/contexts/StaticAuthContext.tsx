@@ -235,7 +235,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredRole?: "admin" | "superuser" | "company" | "ministry";
+  requiredRole?: "admin" | "superuser" | "company" | "ministry" | "governor";
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
