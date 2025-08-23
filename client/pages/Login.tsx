@@ -18,7 +18,7 @@ import {
   Zap,
 } from "lucide-react";
 
-type UserType = "company" | "admin" | "superuser" | "ministry";
+type UserType = "company" | "admin" | "superuser" | "ministry" | "governor";
 
 interface LoginData {
   email?: string;
