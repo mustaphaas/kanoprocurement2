@@ -105,6 +105,65 @@
   }
 }
 
+/* Governor Dashboard Premium Styles */
+.governor-gradient-bg {
+  background: linear-gradient(135deg, #1B5E20 0%, #2E7D33 50%, #4CAF50 100%);
+}
+
+.governor-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.governor-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.governor-metric-glow {
+  box-shadow: 0 0 20px rgba(75, 175, 80, 0.3);
+}
+
+.governor-tab-active {
+  background: linear-gradient(135deg, #2E7D33, #1B5E20);
+  box-shadow: 0 4px 14px 0 rgba(46, 125, 51, 0.39);
+}
+
+/* Premium animation effects */
+@keyframes governorPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.governor-pulse {
+  animation: governorPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes governorSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.governor-slide-up {
+  animation: governorSlideUp 0.6s ease-out;
+}
+
+/* Executive glass morphism */
+.governor-glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
 /* Print styles for No Objection Certificate */
 @media print {
   body {
