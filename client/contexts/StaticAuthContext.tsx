@@ -40,7 +40,7 @@ const demoCredentials: Record<
   { password: string; profile: UserProfile }
 > = {
   admin: {
-    password: "admin123",
+    password: "password",
     profile: {
       role: "admin",
       email: "admin@kanoproc.gov.ng",
@@ -48,7 +48,7 @@ const demoCredentials: Record<
     },
   },
   superuser: {
-    password: "superuser123",
+    password: "admin123",
     profile: {
       role: "superuser",
       email: "superuser@kanoproc.gov.ng",
