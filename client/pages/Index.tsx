@@ -36,6 +36,7 @@ import {
   BarChart3,
   Send,
   Settings,
+  Crown,
 } from "lucide-react";
 
 interface FeaturedTender {
@@ -462,6 +463,13 @@ export default function Index() {
                     >
                       <Search className="mr-2 h-5 w-5" />
                       Browse Tenders
+                    </Link>
+                    <Link
+                      to="/governor/dashboard"
+                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      <Crown className="mr-2 h-5 w-5" />
+                      Governor Dashboard
                     </Link>
                   </div>
 

@@ -19,6 +19,7 @@ import MinistryDashboard from "./pages/MinistryDashboard";
 import MinistryReports from "./pages/MinistryReports";
 import UserLogin from "./pages/UserLogin";
 import UserDashboard from "./pages/UserDashboard";
+import GovernorDashboard from "./pages/GovernorDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
 import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation";
 
@@ -88,6 +89,14 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRole="superuser">
                   <SuperUserDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/governor/dashboard"
+              element={
+                <ProtectedRoute requiredRole="governor">
+                  <GovernorDashboard />
                 </ProtectedRoute>
               }
             />

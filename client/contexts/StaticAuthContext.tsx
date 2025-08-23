@@ -6,7 +6,7 @@ interface User {
 }
 
 interface UserProfile {
-  role: "admin" | "superuser" | "company" | "ministry";
+  role: "admin" | "superuser" | "company" | "ministry" | "governor";
   email: string;
   name: string;
   companyName?: string;
@@ -40,7 +40,7 @@ const demoCredentials: Record<
   { password: string; profile: UserProfile }
 > = {
   admin: {
-    password: "admin123",
+    password: "password",
     profile: {
       role: "admin",
       email: "admin@kanoproc.gov.ng",
@@ -48,11 +48,19 @@ const demoCredentials: Record<
     },
   },
   superuser: {
-    password: "superuser123",
+    password: "admin123",
     profile: {
       role: "superuser",
       email: "superuser@kanoproc.gov.ng",
       name: "Super User",
+    },
+  },
+  governor: {
+    password: "governor123",
+    profile: {
+      role: "governor",
+      email: "governor@kanoproc.gov.ng",
+      name: "Governor of Kano State",
     },
   },
   // Test company users for superuser testing
@@ -227,7 +235,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredRole?: "admin" | "superuser" | "company" | "ministry";
+  requiredRole?: "admin" | "superuser" | "company" | "ministry" | "governor";
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -319,15 +327,19 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             </p>
             <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
               <p>
-                <strong>Test Credentials for Superuser:</strong>
+                <strong>Test Credentials for Administrative Roles:</strong>
               </p>
               <p>
                 Admin: username <code>admin</code> / password{" "}
-                <code>admin123</code>
+                <code>password</code>
               </p>
               <p>
                 Super User: username <code>superuser</code> / password{" "}
-                <code>superuser123</code>
+                <code>admin123</code>
+              </p>
+              <p>
+                Governor: username <code>governor</code> / password{" "}
+                <code>governor123</code>
               </p>
               <p className="mt-2">
                 <strong>Company Approval Status:</strong>
