@@ -36,6 +36,7 @@ import {
   BarChart3,
   Send,
   Settings,
+  Crown,
 } from "lucide-react";
 
 interface FeaturedTender {
