@@ -55,6 +55,14 @@ const demoCredentials: Record<
       name: "Super User",
     },
   },
+  governor: {
+    password: "governor123",
+    profile: {
+      role: "governor",
+      email: "governor@kanoproc.gov.ng",
+      name: "Governor of Kano State",
+    },
+  },
   // Test company users for superuser testing
   "approved@company.com": {
     password: "password123",
