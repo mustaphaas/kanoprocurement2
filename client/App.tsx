@@ -92,6 +92,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/governor/dashboard"
+              element={
+                <ProtectedRoute requiredRole="governor">
+                  <GovernorDashboard />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/firebase-setup" element={<FirebaseSetup />} />
             <Route
               path="/validation"
