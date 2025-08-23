@@ -583,27 +583,8 @@ export default function GovernorDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/30">
       {/* Ultra-Modern Executive Header */}
-      <div className="relative overflow-hidden">
-        {/* Animated background with mesh gradient */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-emerald-900 to-teal-900" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 via-transparent to-teal-500/20" />
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
-            <div className="absolute top-0 right-0 w-72 h-72 bg-teal-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
-            <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-green-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
-          </div>
-        </div>
-
-        {/* Floating geometric shapes */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-20 w-8 h-8 bg-white/10 rounded-lg rotate-45 animate-pulse" />
-          <div className="absolute top-40 right-32 w-6 h-6 bg-emerald-400/20 rounded-full animate-bounce" />
-          <div className="absolute bottom-40 left-1/4 w-4 h-4 bg-teal-400/30 rounded-sm rotate-12 animate-spin" style={{ animationDuration: '3s' }} />
-          <div className="absolute top-60 right-1/4 w-10 h-10 border-2 border-white/20 rounded-full" />
-        </div>
-
-        <div className="relative px-6 py-16 lg:py-20">
+      <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600">
+        <div className="px-6 py-16 lg:py-20">
           <div className="max-w-7xl mx-auto">
             {/* Top Bar with Governor Info */}
             <div className="flex items-center justify-between mb-12">
