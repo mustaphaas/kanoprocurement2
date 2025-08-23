@@ -85,6 +85,20 @@ const userTypes: UserTypeConfig[] = [
     navigation: "/superuser/dashboard",
   },
   {
+    id: "governor",
+    title: "Governor Login",
+    subtitle: "Executive Command Center • State-wide Overview",
+    icon: <Zap className="h-6 w-6" />,
+    bgGradient: "from-emerald-50 to-green-100",
+    iconBg: "bg-emerald-100 text-emerald-600",
+    useEmail: false,
+    demoCredentials: {
+      identifier: "governor",
+      password: "governor123",
+    },
+    navigation: "/governor/dashboard",
+  },
+  {
     id: "ministry",
     title: "Ministry Login",
     subtitle: "Procurement Management Access • Multiple Ministries Available",
