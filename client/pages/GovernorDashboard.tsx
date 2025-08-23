@@ -36,7 +36,30 @@ import {
   Crown,
   Layers,
   PieChart,
-  TrendingDown
+  TrendingDown,
+  Brain,
+  Lightbulb,
+  Cpu,
+  Sparkles,
+  BarChart2,
+  LineChart as LineChartIcon,
+  Calculator,
+  Percent,
+  Timer,
+  AlertCircle,
+  CheckSquare,
+  Bookmark,
+  Flag,
+  MapIcon,
+  Ruler,
+  Package,
+  Truck,
+  Factory,
+  School,
+  Hospital,
+  Home,
+  Wrench,
+  Leaf
 } from 'lucide-react';
 import {
   BarChart,
@@ -59,7 +82,10 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   Radar,
-  ComposedChart
+  ComposedChart,
+  Treemap,
+  ScatterChart,
+  Scatter
 } from 'recharts';
 
 // Enhanced color palette with gradients
@@ -134,28 +160,65 @@ const realTimeMetrics = [
   { label: 'Storage', value: 89, color: 'bg-orange-500' }
 ];
 
-const systemHealth = [
-  { component: 'Database', status: 'Optimal', uptime: '99.98%', color: 'text-green-600', bg: 'bg-green-50' },
-  { component: 'API Gateway', status: 'Optimal', uptime: '99.95%', color: 'text-green-600', bg: 'bg-green-50' },
-  { component: 'File Storage', status: 'Warning', uptime: '99.12%', color: 'text-yellow-600', bg: 'bg-yellow-50' },
-  { component: 'Email Service', status: 'Optimal', uptime: '99.89%', color: 'text-green-600', bg: 'bg-green-50' }
+// AI Insights Data
+const aiInsights = [
+  {
+    title: 'Procurement Efficiency Prediction',
+    insight: 'Based on current trends, procurement efficiency is projected to reach 92% by Q4 2024',
+    confidence: 87,
+    impact: 'High',
+    icon: Brain,
+    color: 'text-blue-600',
+    bg: 'bg-blue-50',
+    recommendation: 'Optimize tender evaluation process in Works & Infrastructure ministry'
+  },
+  {
+    title: 'Budget Optimization Opportunity',
+    insight: 'AI analysis suggests potential savings of ₦1.2B through contract consolidation',
+    confidence: 93,
+    impact: 'Very High',
+    icon: Calculator,
+    color: 'text-green-600',
+    bg: 'bg-green-50',
+    recommendation: 'Implement bulk purchasing strategy for common items across MDAs'
+  },
+  {
+    title: 'Risk Alert: Delayed Projects',
+    insight: 'Pattern analysis indicates 15% probability of delays in infrastructure projects',
+    confidence: 78,
+    impact: 'Medium',
+    icon: AlertCircle,
+    color: 'text-orange-600',
+    bg: 'bg-orange-50',
+    recommendation: 'Deploy additional project management resources to high-risk projects'
+  },
+  {
+    title: 'Vendor Performance Insights',
+    insight: 'Top 10% of vendors deliver 23% faster than average, creating optimization potential',
+    confidence: 91,
+    impact: 'High',
+    icon: Sparkles,
+    color: 'text-purple-600',
+    bg: 'bg-purple-50',
+    recommendation: 'Establish preferred vendor program with performance incentives'
+  }
 ];
 
 const mdaSpendingData = [
-  { name: 'Works & Infrastructure', value: 3500, percentage: 35, color: '#10B981', budget: 4000, spent: 3500 },
-  { name: 'Health', value: 2200, percentage: 22, color: '#3B82F6', budget: 2800, spent: 2200 },
-  { name: 'Education', value: 1800, percentage: 18, color: '#8B5CF6', budget: 2200, spent: 1800 },
-  { name: 'Agriculture', value: 1200, percentage: 12, color: '#F59E0B', budget: 1500, spent: 1200 },
-  { name: 'Others', value: 1300, percentage: 13, color: '#EF4444', budget: 1600, spent: 1300 }
+  { name: 'Works & Infrastructure', value: 3500, percentage: 35, color: '#10B981', budget: 4000, spent: 3500, efficiency: 88 },
+  { name: 'Health', value: 2200, percentage: 22, color: '#3B82F6', budget: 2800, spent: 2200, efficiency: 92 },
+  { name: 'Education', value: 1800, percentage: 18, color: '#8B5CF6', budget: 2200, spent: 1800, efficiency: 85 },
+  { name: 'Agriculture', value: 1200, percentage: 12, color: '#F59E0B', budget: 1500, spent: 1200, efficiency: 90 },
+  { name: 'Others', value: 1300, percentage: 13, color: '#EF4444', budget: 1600, spent: 1300, efficiency: 87 }
 ];
 
 const procurementTrendData = [
-  { month: 'Jan', tenders: 45, contracts: 38, value: 1200, efficiency: 84, satisfaction: 4.2 },
-  { month: 'Feb', tenders: 52, contracts: 41, value: 1350, efficiency: 79, satisfaction: 4.1 },
-  { month: 'Mar', tenders: 48, contracts: 44, value: 1180, efficiency: 92, satisfaction: 4.5 },
-  { month: 'Apr', tenders: 61, contracts: 52, value: 1580, efficiency: 85, satisfaction: 4.3 },
-  { month: 'May', tenders: 58, contracts: 49, value: 1420, efficiency: 84, satisfaction: 4.4 },
-  { month: 'Jun', tenders: 67, contracts: 58, value: 1750, efficiency: 87, satisfaction: 4.6 }
+  { month: 'Jan', tenders: 45, contracts: 38, value: 1200, efficiency: 84, satisfaction: 4.2, savings: 120 },
+  { month: 'Feb', tenders: 52, contracts: 41, value: 1350, efficiency: 79, satisfaction: 4.1, savings: 95 },
+  { month: 'Mar', tenders: 48, contracts: 44, value: 1180, efficiency: 92, satisfaction: 4.5, savings: 180 },
+  { month: 'Apr', tenders: 61, contracts: 52, value: 1580, efficiency: 85, satisfaction: 4.3, savings: 156 },
+  { month: 'May', tenders: 58, contracts: 49, value: 1420, efficiency: 84, satisfaction: 4.4, savings: 142 },
+  { month: 'Jun', tenders: 67, contracts: 58, value: 1750, efficiency: 87, satisfaction: 4.6, savings: 205 }
 ];
 
 // Performance radar data
@@ -168,12 +231,93 @@ const performanceData = [
   { metric: 'Innovation', current: 73, target: 80, fullMark: 100 }
 ];
 
+// Enhanced project data with detailed analytics
 const topProjectsData = [
-  { name: 'Kano-Kaduna Express Road', value: 850, status: 'On Track', completion: 65, risk: 'Low', timeline: 'Q4 2024' },
-  { name: 'State Hospital Upgrade', value: 620, status: 'Delayed', completion: 45, risk: 'High', timeline: 'Q1 2025' },
-  { name: 'School Infrastructure', value: 480, status: 'On Track', completion: 78, risk: 'Medium', timeline: 'Q3 2024' },
-  { name: 'Agricultural Equipment', value: 320, status: 'Completed', completion: 100, risk: 'None', timeline: 'Completed' },
-  { name: 'IT Infrastructure', value: 250, status: 'On Track', completion: 32, risk: 'Low', timeline: 'Q2 2025' }
+  { 
+    name: 'Kano-Kaduna Express Road', 
+    value: 850, 
+    status: 'On Track', 
+    completion: 65, 
+    risk: 'Low', 
+    timeline: 'Q4 2024',
+    category: 'Infrastructure',
+    contractors: 3,
+    milestones: { completed: 8, total: 12 },
+    budget_utilization: 62,
+    quality_score: 4.2,
+    local_impact: 'High',
+    employment_created: 1240,
+    icon: Truck,
+    trend_data: [60, 62, 65, 65]
+  },
+  { 
+    name: 'State Hospital Complex Upgrade', 
+    value: 620, 
+    status: 'At Risk', 
+    completion: 45, 
+    risk: 'High', 
+    timeline: 'Q1 2025',
+    category: 'Healthcare',
+    contractors: 2,
+    milestones: { completed: 5, total: 14 },
+    budget_utilization: 52,
+    quality_score: 3.8,
+    local_impact: 'Very High',
+    employment_created: 890,
+    icon: Hospital,
+    trend_data: [40, 42, 44, 45]
+  },
+  { 
+    name: 'Schools Infrastructure Program', 
+    value: 480, 
+    status: 'Ahead of Schedule', 
+    completion: 78, 
+    risk: 'Low', 
+    timeline: 'Q3 2024',
+    category: 'Education',
+    contractors: 5,
+    milestones: { completed: 11, total: 13 },
+    budget_utilization: 74,
+    quality_score: 4.5,
+    local_impact: 'Very High',
+    employment_created: 650,
+    icon: School,
+    trend_data: [70, 74, 76, 78]
+  },
+  { 
+    name: 'Agricultural Mechanization', 
+    value: 320, 
+    status: 'Completed', 
+    completion: 100, 
+    risk: 'None', 
+    timeline: 'Completed',
+    category: 'Agriculture',
+    contractors: 1,
+    milestones: { completed: 8, total: 8 },
+    budget_utilization: 98,
+    quality_score: 4.7,
+    local_impact: 'High',
+    employment_created: 420,
+    icon: Leaf,
+    trend_data: [95, 97, 99, 100]
+  },
+  { 
+    name: 'Smart City IT Infrastructure', 
+    value: 250, 
+    status: 'On Track', 
+    completion: 32, 
+    risk: 'Medium', 
+    timeline: 'Q2 2025',
+    category: 'Technology',
+    contractors: 2,
+    milestones: { completed: 3, total: 10 },
+    budget_utilization: 28,
+    quality_score: 4.1,
+    local_impact: 'Medium',
+    employment_created: 180,
+    icon: Monitor,
+    trend_data: [25, 28, 30, 32]
+  }
 ];
 
 const alertsData = [
@@ -181,6 +325,22 @@ const alertsData = [
   { type: 'Contract Variations', count: 8, severity: 'medium', icon: Activity, color: 'text-yellow-600', bg: 'bg-yellow-50', priority: 'Medium' },
   { type: 'Pending NOC Approvals', count: 15, severity: 'high', icon: Shield, color: 'text-red-600', bg: 'bg-red-50', priority: 'High' },
   { type: 'Budget Overruns', count: 5, severity: 'low', icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50', priority: 'Low' }
+];
+
+// Additional analytics data
+const contractAnalytics = [
+  { period: 'Q1 2024', awarded: 38, value: 3200, avg_duration: 26, satisfaction: 4.1 },
+  { period: 'Q2 2024', awarded: 45, value: 4100, avg_duration: 24, satisfaction: 4.3 },
+  { period: 'Q3 2024', awarded: 52, value: 4800, avg_duration: 22, satisfaction: 4.5 },
+  { period: 'Q4 2024', awarded: 58, value: 5200, avg_duration: 21, satisfaction: 4.6 }
+];
+
+const vendorPerformance = [
+  { category: 'Infrastructure', avgRating: 4.2, onTimeDelivery: 87, costEfficiency: 91 },
+  { category: 'Healthcare', avgRating: 4.5, onTimeDelivery: 92, costEfficiency: 88 },
+  { category: 'Education', avgRating: 4.3, onTimeDelivery: 89, costEfficiency: 93 },
+  { category: 'Agriculture', avgRating: 4.6, onTimeDelivery: 94, costEfficiency: 95 },
+  { category: 'Technology', avgRating: 4.1, onTimeDelivery: 83, costEfficiency: 86 }
 ];
 
 // Animated counter component
@@ -237,6 +397,153 @@ const KPICard = ({ data }: { data: any }) => (
     </Card>
   </div>
 );
+
+const AIInsightCard = ({ insight }: { insight: any }) => (
+  <div className={`${insight.bg} border border-opacity-20 rounded-xl p-4 hover:shadow-lg transition-all duration-300 cursor-pointer group`}>
+    <div className="flex items-start space-x-3 mb-3">
+      <div className={`p-2 rounded-lg ${insight.color} bg-opacity-10 flex-shrink-0`}>
+        <insight.icon className={`h-5 w-5 ${insight.color}`} />
+      </div>
+      <div className="flex-1">
+        <h4 className="font-semibold text-gray-900 mb-1">{insight.title}</h4>
+        <p className="text-sm text-gray-700 mb-2">{insight.insight}</p>
+      </div>
+    </div>
+    <div className="flex items-center justify-between text-xs">
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-1">
+          <span className="text-gray-500">Confidence:</span>
+          <span className="font-medium">{insight.confidence}%</span>
+        </div>
+        <Badge variant="outline" className={`${insight.color} border-current`}>
+          {insight.impact} Impact
+        </Badge>
+      </div>
+    </div>
+    <div className="mt-3 p-2 bg-white rounded-lg border border-gray-100">
+      <p className="text-xs text-gray-600">
+        <Lightbulb className="h-3 w-3 inline mr-1" />
+        <strong>Recommendation:</strong> {insight.recommendation}
+      </p>
+    </div>
+  </div>
+);
+
+const EnhancedProjectCard = ({ project }: { project: any }) => {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Completed': return 'text-green-600 bg-green-50 border-green-200';
+      case 'Ahead of Schedule': return 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'On Track': return 'text-emerald-600 bg-emerald-50 border-emerald-200';
+      case 'At Risk': return 'text-orange-600 bg-orange-50 border-orange-200';
+      case 'Delayed': return 'text-red-600 bg-red-50 border-red-200';
+      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+    }
+  };
+
+  const getRiskColor = (risk: string) => {
+    switch (risk) {
+      case 'None': return 'text-gray-500';
+      case 'Low': return 'text-green-600';
+      case 'Medium': return 'text-yellow-600';
+      case 'High': return 'text-red-600';
+      default: return 'text-gray-500';
+    }
+  };
+
+  return (
+    <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden">
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 border-b">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 rounded-lg bg-white shadow-sm">
+              <project.icon className="h-5 w-5 text-gray-600" />
+            </div>
+            <div>
+              <h4 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                {project.name}
+              </h4>
+              <p className="text-sm text-gray-600">{project.category} • ₦{project.value}M</p>
+            </div>
+          </div>
+          <Badge className={`${getStatusColor(project.status)} border`}>
+            {project.status}
+          </Badge>
+        </div>
+      </div>
+      
+      <CardContent className="p-4 space-y-4">
+        {/* Progress and Timeline */}
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-600">Overall Progress</span>
+            <span className="font-bold text-lg">{project.completion}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-3">
+            <div 
+              className="bg-gradient-to-r from-emerald-500 to-green-600 h-3 rounded-full transition-all duration-1000 relative"
+              style={{ width: `${project.completion}%` }}
+            >
+              <div className="absolute right-0 top-0 h-full w-2 bg-white rounded-full opacity-60"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Key Metrics Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-500 mb-1">Milestones</p>
+            <p className="font-bold text-lg">{project.milestones.completed}/{project.milestones.total}</p>
+          </div>
+          <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-500 mb-1">Budget Used</p>
+            <p className="font-bold text-lg">{project.budget_utilization}%</p>
+          </div>
+          <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-500 mb-1">Quality Score</p>
+            <p className="font-bold text-lg flex items-center justify-center">
+              {project.quality_score}/5 <Star className="h-3 w-3 ml-1 text-yellow-500" />
+            </p>
+          </div>
+          <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-500 mb-1">Jobs Created</p>
+            <p className="font-bold text-lg">{project.employment_created}</p>
+          </div>
+        </div>
+
+        {/* Risk and Impact */}
+        <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+          <div>
+            <p className="text-xs text-gray-500">Risk Level</p>
+            <p className={`font-medium ${getRiskColor(project.risk)}`}>{project.risk}</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-500">Local Impact</p>
+            <p className="font-medium text-gray-900">{project.local_impact}</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-500">Timeline</p>
+            <p className="font-medium text-gray-900">{project.timeline}</p>
+          </div>
+        </div>
+
+        {/* Mini Progress Trend */}
+        <div className="pt-2 border-t">
+          <p className="text-xs text-gray-500 mb-2">Progress Trend (Last 4 Months)</p>
+          <div className="flex justify-between items-end h-8">
+            {project.trend_data.map((value: number, index: number) => (
+              <div 
+                key={index}
+                className="bg-gradient-to-t from-emerald-500 to-emerald-400 rounded-t-sm w-6"
+                style={{ height: `${(value / 100) * 32}px` }}
+              />
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 const MetricGauge = ({ label, value, color }: { label: string; value: number; color: string }) => (
   <div className="text-center">
@@ -346,7 +653,7 @@ export default function GovernorDashboard() {
                   Command Center
                 </h2>
                 <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
-                  Real-time intelligence and strategic oversight of Kano State's procurement ecosystem
+                  AI-powered strategic oversight of Kano State's procurement ecosystem
                 </p>
               </div>
 
@@ -484,43 +791,34 @@ export default function GovernorDashboard() {
             </Card>
           </div>
 
-          {/* System Health */}
+          {/* AI Insights Section */}
           <div className="lg:col-span-2">
             <Card className="border-0 shadow-xl">
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 border-b">
+              <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-6 border-b">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 rounded-lg bg-green-100">
-                    <Shield className="h-5 w-5 text-green-600" />
+                  <div className="p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100">
+                    <Brain className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900">System Health</h3>
-                    <p className="text-gray-600 text-sm">Real-time system monitoring</p>
+                    <h3 className="text-lg font-bold text-gray-900">AI Strategic Insights</h3>
+                    <p className="text-gray-600 text-sm">Intelligent analysis and recommendations</p>
+                  </div>
+                  <div className="flex items-center space-x-1 ml-auto">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                    <span className="text-sm text-blue-600 font-medium">Live AI</span>
                   </div>
                 </div>
               </div>
-              <CardContent className="p-6 space-y-4">
-                {systemHealth.map((system, index) => (
-                  <div key={index} className={`${system.bg} border border-opacity-20 rounded-xl p-4`}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-3 h-3 rounded-full ${system.status === 'Optimal' ? 'bg-green-500' : 'bg-yellow-500'}`} />
-                        <div>
-                          <p className="font-semibold text-gray-900">{system.component}</p>
-                          <p className="text-sm text-gray-600">Uptime: {system.uptime}</p>
-                        </div>
-                      </div>
-                      <Badge className={system.status === 'Optimal' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}>
-                        {system.status}
-                      </Badge>
-                    </div>
-                  </div>
+              <CardContent className="p-6 space-y-4 max-h-96 overflow-y-auto">
+                {aiInsights.map((insight, index) => (
+                  <AIInsightCard key={index} insight={insight} />
                 ))}
               </CardContent>
             </Card>
           </div>
         </div>
 
-        {/* Enhanced Spending & Alerts */}
+        {/* Enhanced Spending & Vendor Analytics */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Enhanced Spending Chart */}
           <div className="lg:col-span-2">
@@ -528,23 +826,24 @@ export default function GovernorDashboard() {
               <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 border-b">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">Budget vs Spending Analysis</h3>
-                    <p className="text-gray-600">Ministry-wise budget utilization</p>
+                    <h3 className="text-xl font-bold text-gray-900">Budget vs Spending vs Efficiency</h3>
+                    <p className="text-gray-600">Comprehensive ministry performance analysis</p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <BarChart3 className="h-5 w-5 text-emerald-600" />
                     <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                      Live Data
+                      Real-time
                     </Badge>
                   </div>
                 </div>
               </div>
               <CardContent className="p-6">
-                <ResponsiveContainer width="100%" height={350}>
+                <ResponsiveContainer width="100%" height={400}>
                   <ComposedChart data={mdaSpendingData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                     <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} fontSize={12} />
-                    <YAxis />
+                    <YAxis yAxisId="left" />
+                    <YAxis yAxisId="right" orientation="right" />
                     <Tooltip 
                       contentStyle={{
                         backgroundColor: '#fff',
@@ -554,50 +853,60 @@ export default function GovernorDashboard() {
                       }}
                     />
                     <Legend />
-                    <Bar dataKey="budget" fill="#e5e7eb" name="Budget Allocated" radius={[2, 2, 0, 0]} />
-                    <Bar dataKey="spent" fill="#10B981" name="Amount Spent" radius={[2, 2, 0, 0]} />
+                    <Bar yAxisId="left" dataKey="budget" fill="#e5e7eb" name="Budget (₦M)" radius={[2, 2, 0, 0]} />
+                    <Bar yAxisId="left" dataKey="spent" fill="#10B981" name="Spent (₦M)" radius={[2, 2, 0, 0]} />
+                    <Line yAxisId="right" type="monotone" dataKey="efficiency" stroke="#8B5CF6" strokeWidth={3} name="Efficiency %" />
                   </ComposedChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
           </div>
 
-          {/* Enhanced Alerts */}
+          {/* Vendor Performance Analytics */}
           <div>
             <Card className="border-0 shadow-xl">
-              <div className="bg-gradient-to-r from-red-50 to-orange-50 p-6 border-b">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 rounded-lg bg-red-100">
-                      <AlertTriangle className="h-5 w-5 text-red-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">Critical Alerts</h3>
-                      <p className="text-gray-600 text-sm">Priority actions required</p>
-                    </div>
+              <div className="bg-gradient-to-r from-orange-50 to-red-50 p-6 border-b">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-lg bg-orange-100">
+                    <Award className="h-5 w-5 text-orange-600" />
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                    <span className="text-sm text-red-600 font-medium">Live</span>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">Vendor Performance</h3>
+                    <p className="text-gray-600 text-sm">Category-wise excellence metrics</p>
                   </div>
                 </div>
               </div>
               <CardContent className="p-6 space-y-4">
-                {alertsData.map((alert, index) => (
-                  <div key={index} className={`${alert.bg} border border-opacity-20 rounded-xl p-4 hover:shadow-lg transition-all duration-300 cursor-pointer group`}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-lg ${alert.color} bg-opacity-10`}>
-                          <alert.icon className={`h-5 w-5 ${alert.color}`} />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">{alert.type}</p>
-                          <p className="text-sm text-gray-600">{alert.count} items • {alert.priority} priority</p>
-                        </div>
+                {vendorPerformance.map((vendor, index) => (
+                  <div key={index} className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                    <div className="flex justify-between items-center mb-3">
+                      <h4 className="font-semibold text-gray-900">{vendor.category}</h4>
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-4 w-4 text-yellow-500" />
+                        <span className="font-bold">{vendor.avgRating}</span>
                       </div>
-                      <Badge variant="outline" className={`${alert.color} border-current group-hover:scale-105 transition-transform`}>
-                        {alert.severity.toUpperCase()}
-                      </Badge>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">On-time Delivery</span>
+                        <span className="font-medium">{vendor.onTimeDelivery}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full"
+                          style={{ width: `${vendor.onTimeDelivery}%` }}
+                        />
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Cost Efficiency</span>
+                        <span className="font-medium">{vendor.costEfficiency}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full"
+                          style={{ width: `${vendor.costEfficiency}%` }}
+                        />
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -606,256 +915,226 @@ export default function GovernorDashboard() {
           </div>
         </div>
 
-        {/* Enhanced Procurement Trends */}
-        <Card className="border-0 shadow-xl overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b">
+        {/* Advanced Procurement Analytics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Contract Analytics */}
+          <Card className="border-0 shadow-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-6 border-b">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Contract Award Analytics</h3>
+                  <p className="text-gray-600">Quarterly performance and satisfaction trends</p>
+                </div>
+                <div className="p-2 rounded-lg bg-indigo-100">
+                  <BarChart2 className="h-5 w-5 text-indigo-600" />
+                </div>
+              </div>
+            </div>
+            <CardContent className="p-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <ComposedChart data={contractAnalytics}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="period" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
+                  <Bar yAxisId="left" dataKey="awarded" fill="#3B82F6" name="Contracts Awarded" />
+                  <Line yAxisId="right" type="monotone" dataKey="satisfaction" stroke="#10B981" strokeWidth={3} name="Satisfaction" />
+                  <Line yAxisId="left" type="monotone" dataKey="avg_duration" stroke="#F59E0B" strokeWidth={3} name="Avg Duration (days)" />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Procurement Savings Analytics */}
+          <Card className="border-0 shadow-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 border-b">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Procurement Savings</h3>
+                  <p className="text-gray-600">Cost optimization and efficiency gains</p>
+                </div>
+                <div className="p-2 rounded-lg bg-green-100">
+                  <DollarSign className="h-5 w-5 text-green-600" />
+                </div>
+              </div>
+            </div>
+            <CardContent className="p-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={procurementTrendData}>
+                  <defs>
+                    <linearGradient id="savingsGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value) => [`₦${value}M`, 'Savings']}
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: 'none',
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+                    }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="savings" 
+                    stroke="#10B981" 
+                    strokeWidth={3}
+                    fill="url(#savingsGradient)"
+                    name="Monthly Savings"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Enhanced Major Projects Section */}
+        <Card className="border-0 shadow-xl">
+          <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-6 border-b">
             <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-bold text-gray-900">Advanced Procurement Analytics</h3>
-                <p className="text-gray-600">Multi-metric performance tracking with predictive insights</p>
+              <div className="flex items-center space-x-3">
+                <div className="p-3 rounded-lg bg-emerald-100">
+                  <Briefcase className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Major Infrastructure Projects</h3>
+                  <p className="text-gray-600">Comprehensive project analytics and performance tracking</p>
+                </div>
               </div>
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-emerald-500 rounded-full" />
-                  <span className="text-sm text-gray-600">Tenders</span>
+                <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                  {topProjectsData.length} Active Projects
+                </Badge>
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  ₦{topProjectsData.reduce((sum, p) => sum + p.value, 0)}M Total Value
+                </Badge>
+              </div>
+            </div>
+          </div>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {topProjectsData.map((project, index) => (
+                <EnhancedProjectCard key={index} project={project} />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Enhanced Geographic with Real-time Analytics */}
+        <Card className="border-0 shadow-xl">
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 border-b">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-lg bg-purple-100">
+                  <MapPin className="h-5 w-5 text-purple-600" />
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full" />
-                  <span className="text-sm text-gray-600">Contracts</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full" />
-                  <span className="text-sm text-gray-600">Efficiency</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-orange-500 rounded-full" />
-                  <span className="text-sm text-gray-600">Satisfaction</span>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Geographic Impact Analysis</h3>
+                  <p className="text-gray-600 text-sm">Regional development and economic impact</p>
                 </div>
               </div>
             </div>
           </div>
           <CardContent className="p-6">
-            <ResponsiveContainer width="100%" height={400}>
-              <ComposedChart data={procurementTrendData}>
-                <defs>
-                  <linearGradient id="tenderGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="contractGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" stroke="#6b7280" />
-                <YAxis yAxisId="left" stroke="#6b7280" />
-                <YAxis yAxisId="right" orientation="right" stroke="#6b7280" />
-                <Tooltip 
-                  contentStyle={{
-                    backgroundColor: '#fff',
-                    border: 'none',
-                    borderRadius: '12px',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-                  }}
-                />
-                <Area 
-                  yAxisId="left"
-                  type="monotone" 
-                  dataKey="tenders" 
-                  stroke="#10B981" 
-                  strokeWidth={3}
-                  fill="url(#tenderGradient)"
-                  name="Tenders Published"
-                />
-                <Area 
-                  yAxisId="left"
-                  type="monotone" 
-                  dataKey="contracts" 
-                  stroke="#3B82F6" 
-                  strokeWidth={3}
-                  fill="url(#contractGradient)"
-                  name="Contracts Awarded"
-                />
-                <Line 
-                  yAxisId="right"
-                  type="monotone" 
-                  dataKey="efficiency" 
-                  stroke="#8B5CF6" 
-                  strokeWidth={3}
-                  name="Efficiency %"
-                  dot={{ fill: '#8B5CF6', strokeWidth: 2, r: 4 }}
-                />
-                <Line 
-                  yAxisId="right"
-                  type="monotone" 
-                  dataKey="satisfaction" 
-                  stroke="#F59E0B" 
-                  strokeWidth={3}
-                  name="Satisfaction (1-5)"
-                  dot={{ fill: '#F59E0B', strokeWidth: 2, r: 4 }}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Quick Metrics */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-gray-900 mb-4">Regional Overview</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { value: 105, label: 'Total Projects', icon: Package, color: 'text-blue-500' },
+                    { value: 89, label: 'Completion Rate', icon: CheckSquare, color: 'text-green-500' },
+                    { value: 44, label: 'Zones Covered', icon: MapIcon, color: 'text-purple-500' },
+                    { value: 3680, label: 'Jobs Created', icon: Users, color: 'text-orange-500' }
+                  ].map((metric, index) => (
+                    <div key={index} className="text-center p-3 bg-gray-50 rounded-lg">
+                      <metric.icon className={`h-6 w-6 ${metric.color} mx-auto mb-2`} />
+                      <p className="text-lg font-bold text-gray-900">{metric.value}</p>
+                      <p className="text-xs text-gray-600">{metric.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Zone Performance */}
+              <div className="lg:col-span-2 space-y-3">
+                <h4 className="font-bold text-gray-900 mb-4">Zone Performance Dashboard</h4>
+                {[
+                  { zone: 'Kano Municipal', projects: 28, value: 2400, activity: 'High', growth: '+15%', jobs: 1240, completion: 78 },
+                  { zone: 'Fagge', projects: 15, value: 1200, activity: 'Medium', growth: '+8%', jobs: 680, completion: 82 },
+                  { zone: 'Gwale', projects: 18, value: 1350, activity: 'High', growth: '+22%', jobs: 890, completion: 75 },
+                  { zone: 'Nassarawa', projects: 22, value: 1800, activity: 'High', growth: '+18%', jobs: 870, completion: 80 }
+                ].map((zone, index) => (
+                  <div key={index} className="p-4 bg-gradient-to-r from-white to-gray-50 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 rounded-lg bg-purple-100">
+                          <MapPin className="h-4 w-4 text-purple-600" />
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-gray-900">{zone.zone}</h5>
+                          <p className="text-sm text-gray-600">{zone.projects} projects • {zone.jobs} jobs created</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-purple-600">₦{zone.value}M</p>
+                        <Badge variant="outline" className={
+                          zone.activity === 'High' ? 'text-green-600 border-green-200 bg-green-50' :
+                          'text-yellow-600 border-yellow-200 bg-yellow-50'
+                        }>
+                          {zone.activity} Activity
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Growth:</span>
+                        <span className="font-medium text-green-600 ml-2">{zone.growth}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Completion:</span>
+                        <span className="font-medium ml-2">{zone.completion}%</span>
+                      </div>
+                      <div className="text-right">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-purple-500 to-pink-600 h-2 rounded-full"
+                            style={{ width: `${zone.completion}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Enhanced Projects and Geographic Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Enhanced Major Projects */}
-          <Card className="border-0 shadow-xl">
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 border-b">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 rounded-lg bg-emerald-100">
-                    <Award className="h-5 w-5 text-emerald-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900">Major Infrastructure Projects</h3>
-                    <p className="text-gray-600 text-sm">Strategic state development initiatives</p>
-                  </div>
-                </div>
-                <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                  5 Active
-                </Badge>
-              </div>
-            </div>
-            <CardContent className="p-6 space-y-4">
-              {topProjectsData.map((project, index) => (
-                <div key={index} className="bg-gradient-to-r from-white to-gray-50 rounded-xl p-4 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
-                  <div className="flex justify-between items-start mb-3">
-                    <h4 className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">
-                      {project.name}
-                    </h4>
-                    <div className="flex space-x-2">
-                      <Badge className={
-                        project.status === 'Completed' ? 'bg-green-50 text-green-700' :
-                        project.status === 'On Track' ? 'bg-blue-50 text-blue-700' :
-                        'bg-red-50 text-red-700'
-                      }>
-                        {project.status}
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-gray-600">Value:</span>
-                      <span className="font-medium ml-2">₦{project.value}M</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Timeline:</span>
-                      <span className="font-medium ml-2">{project.timeline}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Risk Level:</span>
-                      <span className={`font-medium ml-2 ${
-                        project.risk === 'Low' ? 'text-green-600' :
-                        project.risk === 'Medium' ? 'text-yellow-600' :
-                        project.risk === 'High' ? 'text-red-600' : 'text-gray-600'
-                      }`}>{project.risk}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Progress:</span>
-                      <span className="font-medium ml-2">{project.completion}%</span>
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-gradient-to-r from-emerald-500 to-green-600 h-2 rounded-full transition-all duration-1000"
-                        style={{ width: `${project.completion}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Enhanced Geographic with Metrics */}
-          <Card className="border-0 shadow-xl">
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 border-b">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 rounded-lg bg-purple-100">
-                    <MapPin className="h-5 w-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900">Geographic Distribution</h3>
-                    <p className="text-gray-600 text-sm">Regional project activity and performance</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <CardContent className="p-6">
-              {/* Quick Metrics */}
-              <div className="grid grid-cols-4 gap-4 mb-6">
-                {[
-                  { value: 105, label: 'Total Projects' },
-                  { value: 89, label: 'Completion Rate' },
-                  { value: 44, label: 'Zones Covered' },
-                  { value: 12, label: 'High Activity' }
-                ].map((metric, index) => (
-                  <MetricGauge 
-                    key={index}
-                    label={metric.label}
-                    value={metric.value}
-                    color={index === 0 ? 'text-blue-500' : index === 1 ? 'text-green-500' : index === 2 ? 'text-purple-500' : 'text-orange-500'}
-                  />
-                ))}
-              </div>
-
-              {/* Zone Details */}
-              <div className="space-y-3">
-                {[
-                  { zone: 'Kano Municipal', projects: 28, value: 2400, activity: 'High', growth: '+15%' },
-                  { zone: 'Fagge', projects: 15, value: 1200, activity: 'Medium', growth: '+8%' },
-                  { zone: 'Gwale', projects: 18, value: 1350, activity: 'High', growth: '+22%' },
-                  { zone: 'Nassarawa', projects: 22, value: 1800, activity: 'High', growth: '+18%' }
-                ].map((zone, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg hover:shadow-md transition-all duration-300 group">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 rounded-lg bg-white shadow-sm">
-                        <MapPin className="h-4 w-4 text-purple-600" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">{zone.zone}</p>
-                        <p className="text-sm text-gray-600">{zone.projects} projects • Growth {zone.growth}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-purple-600">₦{zone.value}M</p>
-                      <Badge variant="outline" className={
-                        zone.activity === 'High' ? 'text-green-600 border-green-200 bg-green-50' :
-                        'text-yellow-600 border-yellow-200 bg-yellow-50'
-                      }>
-                        {zone.activity}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Executive Summary Footer */}
+        {/* Enhanced Executive Summary Footer */}
         <Card className="border-0 shadow-xl overflow-hidden">
           <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 text-white p-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               {[
-                { icon: CheckCircle, value: '94.2%', label: 'Success Rate', trend: '+2.1%' },
-                { icon: Clock, value: '18 days', label: 'Avg Processing', trend: '-3 days' },
-                { icon: Shield, value: '89%', label: 'Compliance Score', trend: '+5%' },
-                { icon: Star, value: '4.8/5', label: 'Vendor Rating', trend: '+0.3' }
+                { icon: CheckCircle, value: '94.2%', label: 'Success Rate', trend: '+2.1%', description: 'Project completion success' },
+                { icon: Clock, value: '18 days', label: 'Avg Processing', trend: '-3 days', description: 'Tender to award cycle' },
+                { icon: Shield, value: '89%', label: 'Compliance Score', trend: '+5%', description: 'Regulatory adherence' },
+                { icon: Star, value: '4.8/5', label: 'Vendor Rating', trend: '+0.3', description: 'Vendor satisfaction' }
               ].map((stat, index) => (
                 <div key={index} className="text-center group cursor-pointer">
                   <div className="flex items-center justify-center w-16 h-16 bg-white/20 rounded-xl mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
                     <stat.icon className="h-8 w-8" />
                   </div>
                   <p className="text-4xl font-bold mb-2">{stat.value}</p>
-                  <p className="text-emerald-100 text-lg">{stat.label}</p>
+                  <p className="text-emerald-100 text-lg font-medium">{stat.label}</p>
                   <p className="text-emerald-200 text-sm mt-1">{stat.trend} this month</p>
+                  <p className="text-emerald-300 text-xs mt-1">{stat.description}</p>
                 </div>
               ))}
             </div>
