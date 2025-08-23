@@ -1026,93 +1026,189 @@ export default function GovernorDashboard() {
           </CardContent>
         </Card>
 
-        {/* Enhanced Geographic with Real-time Analytics */}
-        <Card className="border-0 shadow-xl">
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 border-b">
-            <div className="flex items-center justify-between">
+        {/* Geographic Distribution Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Geographic Information Card */}
+          <Card className="border-0 shadow-xl">
+            <div className="bg-gradient-to-r from-teal-50 to-cyan-50 p-6 border-b">
               <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-lg bg-purple-100">
-                  <MapPin className="h-5 w-5 text-purple-600" />
+                <div className="p-2 rounded-lg bg-teal-100">
+                  <Globe className="h-5 w-5 text-teal-600" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">Geographic Impact Analysis</h3>
-                  <p className="text-gray-600 text-sm">Regional development and economic impact</p>
+                  <h3 className="text-lg font-bold text-gray-900">Geographic Distribution</h3>
+                  <p className="text-gray-600 text-sm">Project activity by zone</p>
                 </div>
               </div>
             </div>
-          </div>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Quick Metrics */}
-              <div className="space-y-4">
-                <h4 className="font-bold text-gray-900 mb-4">Regional Overview</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { value: 105, label: 'Total Projects', icon: Package, color: 'text-blue-500' },
-                    { value: 89, label: 'Completion Rate', icon: CheckSquare, color: 'text-green-500' },
-                    { value: 44, label: 'Zones Covered', icon: MapIcon, color: 'text-purple-500' },
-                    { value: 3680, label: 'Jobs Created', icon: Users, color: 'text-orange-500' }
-                  ].map((metric, index) => (
-                    <div key={index} className="text-center p-3 bg-gray-50 rounded-lg">
-                      <metric.icon className={`h-6 w-6 ${metric.color} mx-auto mb-2`} />
-                      <p className="text-lg font-bold text-gray-900">{metric.value}</p>
-                      <p className="text-xs text-gray-600">{metric.label}</p>
+            <CardContent className="p-6 space-y-4">
+              {[
+                { zone: 'Kano Municipal', projects: 28, value: 2400, status: 'High Activity' },
+                { zone: 'Fagge', projects: 15, value: 1200, status: 'Medium Activity' },
+                { zone: 'Dala', projects: 12, value: 980, status: 'Medium Activity' },
+                { zone: 'Gwale', projects: 18, value: 1350, status: 'High Activity' },
+                { zone: 'Tarauni', projects: 10, value: 750, status: 'Low Activity' },
+                { zone: 'Nassarawa', projects: 22, value: 1800, status: 'High Activity' }
+              ].map((zone, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:shadow-md transition-all duration-300 group">
+                  <div className="flex items-center space-x-4">
+                    <div className="p-2 rounded-lg bg-white shadow-sm">
+                      <MapPin className="h-4 w-4 text-teal-600" />
                     </div>
-                  ))}
+                    <div>
+                      <p className="font-semibold text-gray-900 group-hover:text-teal-600 transition-colors">{zone.zone}</p>
+                      <p className="text-sm text-gray-600">{zone.projects} active projects</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-teal-600">₦{zone.value}M</p>
+                    <Badge variant="outline" className={
+                      zone.status === 'High Activity' ? 'text-green-600 border-green-200 bg-green-50' :
+                      zone.status === 'Medium Activity' ? 'text-yellow-600 border-yellow-200 bg-yellow-50' :
+                      'text-gray-600 border-gray-200 bg-gray-50'
+                    }>
+                      {zone.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Enhanced Geographic with Real-time Analytics */}
+          <Card className="border-0 shadow-xl">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 border-b">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-lg bg-purple-100">
+                    <BarChart3 className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">Regional Analytics</h3>
+                    <p className="text-gray-600 text-sm">Performance and impact metrics</p>
+                  </div>
                 </div>
               </div>
-
-              {/* Zone Performance */}
-              <div className="lg:col-span-2 space-y-3">
-                <h4 className="font-bold text-gray-900 mb-4">Zone Performance Dashboard</h4>
+            </div>
+            <CardContent className="p-6">
+              {/* Quick Metrics */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
                 {[
-                  { zone: 'Kano Municipal', projects: 28, value: 2400, activity: 'High', growth: '+15%', jobs: 1240, completion: 78 },
-                  { zone: 'Fagge', projects: 15, value: 1200, activity: 'Medium', growth: '+8%', jobs: 680, completion: 82 },
-                  { zone: 'Gwale', projects: 18, value: 1350, activity: 'High', growth: '+22%', jobs: 890, completion: 75 },
-                  { zone: 'Nassarawa', projects: 22, value: 1800, activity: 'High', growth: '+18%', jobs: 870, completion: 80 }
+                  { value: 105, label: 'Total Projects', icon: Package, color: 'text-blue-500' },
+                  { value: 89, label: 'Completion Rate', icon: CheckSquare, color: 'text-green-500' },
+                  { value: 44, label: 'Zones Covered', icon: MapIcon, color: 'text-purple-500' },
+                  { value: 3680, label: 'Jobs Created', icon: Users, color: 'text-orange-500' }
+                ].map((metric, index) => (
+                  <MetricGauge
+                    key={index}
+                    label={metric.label}
+                    value={metric.value}
+                    color={metric.color}
+                  />
+                ))}
+              </div>
+
+              {/* Top Performing Zones */}
+              <div className="space-y-3">
+                <h4 className="font-bold text-gray-900 mb-3">Top Performing Zones</h4>
+                {[
+                  { zone: 'Kano Municipal', completion: 78, growth: '+15%' },
+                  { zone: 'Nassarawa', completion: 80, growth: '+18%' },
+                  { zone: 'Gwale', completion: 75, growth: '+22%' }
                 ].map((zone, index) => (
-                  <div key={index} className="p-4 bg-gradient-to-r from-white to-gray-50 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-300">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2 rounded-lg bg-purple-100">
-                          <MapPin className="h-4 w-4 text-purple-600" />
-                        </div>
-                        <div>
-                          <h5 className="font-bold text-gray-900">{zone.zone}</h5>
-                          <p className="text-sm text-gray-600">{zone.projects} projects • {zone.jobs} jobs created</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-purple-600">₦{zone.value}M</p>
-                        <Badge variant="outline" className={
-                          zone.activity === 'High' ? 'text-green-600 border-green-200 bg-green-50' :
-                          'text-yellow-600 border-yellow-200 bg-yellow-50'
-                        }>
-                          {zone.activity} Activity
-                        </Badge>
-                      </div>
+                  <div key={index} className="flex items-center justify-between p-3 bg-gradient-to-r from-white to-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-semibold text-gray-900">{zone.zone}</p>
+                      <p className="text-sm text-gray-600">Growth: {zone.growth}</p>
                     </div>
-                    <div className="grid grid-cols-3 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-600">Growth:</span>
-                        <span className="font-medium text-green-600 ml-2">{zone.growth}</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Completion:</span>
-                        <span className="font-medium ml-2">{zone.completion}%</span>
-                      </div>
-                      <div className="text-right">
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-purple-500 to-pink-600 h-2 rounded-full"
-                            style={{ width: `${zone.completion}%` }}
-                          />
-                        </div>
+                    <div className="text-right">
+                      <p className="font-bold text-purple-600">{zone.completion}%</p>
+                      <div className="w-16 bg-gray-200 rounded-full h-2 mt-1">
+                        <div
+                          className="bg-gradient-to-r from-purple-500 to-pink-600 h-2 rounded-full"
+                          style={{ width: `${zone.completion}%` }}
+                        />
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Detailed Geographic Impact Analysis */}
+        <Card className="border-0 shadow-xl">
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 border-b">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-lg bg-indigo-100">
+                  <MapPin className="h-5 w-5 text-indigo-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Comprehensive Geographic Impact</h3>
+                  <p className="text-gray-600 text-sm">Regional development and economic transformation</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {[
+                { zone: 'Kano Municipal', projects: 28, value: 2400, activity: 'High', growth: '+15%', jobs: 1240, completion: 78, population: '3.2M' },
+                { zone: 'Fagge', projects: 15, value: 1200, activity: 'Medium', growth: '+8%', jobs: 680, completion: 82, population: '1.8M' },
+                { zone: 'Gwale', projects: 18, value: 1350, activity: 'High', growth: '+22%', jobs: 890, completion: 75, population: '2.1M' },
+                { zone: 'Nassarawa', projects: 22, value: 1800, activity: 'High', growth: '+18%', jobs: 870, completion: 80, population: '2.4M' }
+              ].map((zone, index) => (
+                <div key={index} className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="p-2 rounded-lg bg-indigo-100">
+                      <MapPin className="h-4 w-4 text-indigo-600" />
+                    </div>
+                    <Badge variant="outline" className={
+                      zone.activity === 'High' ? 'text-green-600 border-green-200 bg-green-50' :
+                      'text-yellow-600 border-yellow-200 bg-yellow-50'
+                    }>
+                      {zone.activity}
+                    </Badge>
+                  </div>
+                  <h4 className="font-bold text-gray-900 mb-2">{zone.zone}</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Population:</span>
+                      <span className="font-medium">{zone.population}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Projects:</span>
+                      <span className="font-medium">{zone.projects}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Investment:</span>
+                      <span className="font-medium">₦{zone.value}M</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Jobs:</span>
+                      <span className="font-medium">{zone.jobs}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Growth:</span>
+                      <span className="font-medium text-green-600">{zone.growth}</span>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600">Completion:</span>
+                      <span className="font-medium">{zone.completion}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-1000"
+                        style={{ width: `${zone.completion}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
