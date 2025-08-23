@@ -6,7 +6,7 @@ interface User {
 }
 
 interface UserProfile {
-  role: "admin" | "superuser" | "company" | "ministry";
+  role: "admin" | "superuser" | "company" | "ministry" | "governor";
   email: string;
   name: string;
   companyName?: string;
