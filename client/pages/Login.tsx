@@ -296,7 +296,7 @@ export default function Login() {
           <label className="block text-sm font-medium text-gray-700 mb-3">
             Select Account Type
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             {userTypes.map((type) => (
               <button
                 key={type.id}
