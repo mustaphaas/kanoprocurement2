@@ -1215,24 +1215,45 @@ export default function GovernorDashboard() {
 
         {/* Enhanced Executive Summary Footer */}
         <Card className="border-0 shadow-xl overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 text-white p-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              {[
-                { icon: CheckCircle, value: '94.2%', label: 'Success Rate', trend: '+2.1%', description: 'Project completion success' },
-                { icon: Clock, value: '18 days', label: 'Avg Processing', trend: '-3 days', description: 'Tender to award cycle' },
-                { icon: Shield, value: '89%', label: 'Compliance Score', trend: '+5%', description: 'Regulatory adherence' },
-                { icon: Star, value: '4.8/5', label: 'Vendor Rating', trend: '+0.3', description: 'Vendor satisfaction' }
-              ].map((stat, index) => (
-                <div key={index} className="text-center group cursor-pointer">
-                  <div className="flex items-center justify-center w-16 h-16 bg-white/20 rounded-xl mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
-                    <stat.icon className="h-8 w-8" />
+          <div className="relative overflow-hidden">
+            {/* Animated background with mesh gradient - same as header */}
+            <div className="absolute inset-0">
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-emerald-900 to-teal-900" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 via-transparent to-teal-500/20" />
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
+                <div className="absolute top-0 right-0 w-72 h-72 bg-teal-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
+                <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-green-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
+              </div>
+            </div>
+
+            {/* Floating geometric shapes */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute top-4 left-20 w-8 h-8 bg-white/10 rounded-lg rotate-45 animate-pulse" />
+              <div className="absolute top-8 right-32 w-6 h-6 bg-emerald-400/20 rounded-full animate-bounce" />
+              <div className="absolute bottom-8 left-1/4 w-4 h-4 bg-teal-400/30 rounded-sm rotate-12 animate-spin" style={{ animationDuration: '3s' }} />
+              <div className="absolute top-12 right-1/4 w-10 h-10 border-2 border-white/20 rounded-full" />
+            </div>
+
+            <div className="relative text-white p-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                {[
+                  { icon: CheckCircle, value: '94.2%', label: 'Success Rate', trend: '+2.1%', description: 'Project completion success' },
+                  { icon: Clock, value: '18 days', label: 'Avg Processing', trend: '-3 days', description: 'Tender to award cycle' },
+                  { icon: Shield, value: '89%', label: 'Compliance Score', trend: '+5%', description: 'Regulatory adherence' },
+                  { icon: Star, value: '4.8/5', label: 'Vendor Rating', trend: '+0.3', description: 'Vendor satisfaction' }
+                ].map((stat, index) => (
+                  <div key={index} className="text-center group cursor-pointer">
+                    <div className="flex items-center justify-center w-16 h-16 bg-white/20 rounded-xl mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
+                      <stat.icon className="h-8 w-8" />
+                    </div>
+                    <p className="text-4xl font-bold mb-2">{stat.value}</p>
+                    <p className="text-emerald-100 text-lg font-medium">{stat.label}</p>
+                    <p className="text-emerald-200 text-sm mt-1">{stat.trend} this month</p>
+                    <p className="text-emerald-300 text-xs mt-1">{stat.description}</p>
                   </div>
-                  <p className="text-4xl font-bold mb-2">{stat.value}</p>
-                  <p className="text-emerald-100 text-lg font-medium">{stat.label}</p>
-                  <p className="text-emerald-200 text-sm mt-1">{stat.trend} this month</p>
-                  <p className="text-emerald-300 text-xs mt-1">{stat.description}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </Card>
