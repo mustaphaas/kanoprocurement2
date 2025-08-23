@@ -327,7 +327,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             </p>
             <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
               <p>
-                <strong>Test Credentials for Superuser:</strong>
+                <strong>Test Credentials for Administrative Roles:</strong>
               </p>
               <p>
                 Admin: username <code>admin</code> / password{" "}
@@ -336,6 +336,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               <p>
                 Super User: username <code>superuser</code> / password{" "}
                 <code>superuser123</code>
+              </p>
+              <p>
+                Governor: username <code>governor</code> / password{" "}
+                <code>governor123</code>
               </p>
               <p className="mt-2">
                 <strong>Company Approval Status:</strong>
