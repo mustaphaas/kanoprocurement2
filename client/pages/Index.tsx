@@ -288,7 +288,7 @@ export default function Index() {
 
     const rawTenders = [
       {
-        id: "KS-2024-001",
+        id: "MOWI-2024-001",
         title: "Road Construction Project",
         description:
           "Construction of 50km rural roads to improve connectivity across Kano North LGA",
@@ -299,7 +299,7 @@ export default function Index() {
         category: "Infrastructure",
       },
       {
-        id: "KS-2024-005",
+        id: "MOH-2024-001",
         title: "Healthcare Equipment Supply",
         description:
           "Supply and installation of modern medical equipment for 25 primary healthcare centers",
@@ -310,7 +310,7 @@ export default function Index() {
         category: "Healthcare",
       },
       {
-        id: "KS-2024-012",
+        id: "MOE-2024-001",
         title: "School Infrastructure Upgrade",
         description:
           "Renovation and modernization of 15 public secondary schools across rural areas",
@@ -321,7 +321,7 @@ export default function Index() {
         category: "Education",
       },
       {
-        id: "KS-2024-008",
+        id: "MOWI-2024-002",
         title: "ICT Infrastructure Development",
         description:
           "Fiber optic network expansion to connect all LGA headquarters",
@@ -332,7 +332,7 @@ export default function Index() {
         category: "Technology",
       },
       {
-        id: "KS-2024-003",
+        id: "MOWI-2024-003",
         title: "Water Treatment Plant",
         description:
           "Construction of modern water treatment facility serving 200,000 residents",
@@ -343,7 +343,7 @@ export default function Index() {
         category: "Infrastructure",
       },
       {
-        id: "KS-2024-009",
+        id: "MOH-2024-002",
         title: "Agricultural Equipment Supply",
         description:
           "Procurement of modern agricultural machinery for rural farming communities",
@@ -3051,7 +3051,7 @@ export default function Index() {
 
                 <div className="mt-6 pt-4 border-t border-gray-200 flex justify-between items-center">
                   <div className="text-sm text-gray-500">
-                    Effective Date: January 2024 • Version 3.0 • Review Date:
+                    Effective Date: January 2024 • Version 3.0 ��� Review Date:
                     January 2025
                   </div>
                   <div className="flex space-x-3">
