@@ -250,7 +250,21 @@ export default function Index() {
 
     // Set up interval to refresh recent tenders every 30 seconds
     const interval = setInterval(loadRecentTenders, 30000);
-    return () => clearInterval(interval);
+
+    // Listen for localStorage changes (when tenders are published from other tabs/components)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "recentTenders") {
+        console.log("Recent tenders updated in localStorage, reloading...");
+        loadRecentTenders();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const handleViewTenderDetails = (tender: any) => {
