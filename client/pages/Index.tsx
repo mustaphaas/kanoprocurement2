@@ -226,7 +226,25 @@ export default function Index() {
 
   // Load recent tenders from localStorage
   const loadRecentTenders = () => {
-    // Always use default data for now to avoid localStorage issues
+    try {
+      const storedRecentTenders = localStorage.getItem("recentTenders");
+      if (storedRecentTenders) {
+        const parsedTenders = JSON.parse(storedRecentTenders);
+        if (parsedTenders && parsedTenders.length > 0) {
+          console.log(
+            "Loaded recent tenders from localStorage:",
+            parsedTenders.length,
+          );
+          setRecentTenders(parsedTenders);
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Error loading recent tenders from localStorage:", error);
+    }
+
+    // Fall back to default data if localStorage is empty or has errors
+    console.log("Using default recent tenders");
     setRecentTenders(getDefaultRecentTenders());
   };
 
@@ -235,7 +253,21 @@ export default function Index() {
 
     // Set up interval to refresh recent tenders every 30 seconds
     const interval = setInterval(loadRecentTenders, 30000);
-    return () => clearInterval(interval);
+
+    // Listen for localStorage changes (when tenders are published from other tabs/components)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "recentTenders") {
+        console.log("Recent tenders updated in localStorage, reloading...");
+        loadRecentTenders();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const handleViewTenderDetails = (tender: any) => {
@@ -259,7 +291,7 @@ export default function Index() {
 
     const rawTenders = [
       {
-        id: "KS-2024-001",
+        id: "MOWI-2024-001",
         title: "Road Construction Project",
         description:
           "Construction of 50km rural roads to improve connectivity across Kano North LGA",
@@ -270,18 +302,18 @@ export default function Index() {
         category: "Infrastructure",
       },
       {
-        id: "KS-2024-005",
+        id: "MOH-2024-001",
         title: "Healthcare Equipment Supply",
         description:
           "Supply and installation of modern medical equipment for 25 primary healthcare centers",
-        value: "���1.8B",
+        value: "₦1.8B",
         deadline: futureDate(25), // 25 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Healthcare",
       },
       {
-        id: "KS-2024-012",
+        id: "MOE-2024-001",
         title: "School Infrastructure Upgrade",
         description:
           "Renovation and modernization of 15 public secondary schools across rural areas",
@@ -292,7 +324,7 @@ export default function Index() {
         category: "Education",
       },
       {
-        id: "KS-2024-008",
+        id: "MOWI-2024-002",
         title: "ICT Infrastructure Development",
         description:
           "Fiber optic network expansion to connect all LGA headquarters",
@@ -303,7 +335,7 @@ export default function Index() {
         category: "Technology",
       },
       {
-        id: "KS-2024-003",
+        id: "MOWI-2024-003",
         title: "Water Treatment Plant",
         description:
           "Construction of modern water treatment facility serving 200,000 residents",
@@ -314,7 +346,7 @@ export default function Index() {
         category: "Infrastructure",
       },
       {
-        id: "KS-2024-009",
+        id: "MOH-2024-002",
         title: "Agricultural Equipment Supply",
         description:
           "Procurement of modern agricultural machinery for rural farming communities",
@@ -335,7 +367,29 @@ export default function Index() {
 
   // Load featured tenders from localStorage on component mount
   const loadFeaturedTenders = () => {
-    // Always use default data for now to avoid localStorage issues
+    try {
+      const storedFeaturedTenders = localStorage.getItem("featuredTenders");
+      if (storedFeaturedTenders) {
+        const parsedTenders = JSON.parse(storedFeaturedTenders);
+        if (parsedTenders && parsedTenders.length > 0) {
+          // Apply automatic status transitions to stored tenders
+          const tendersWithUpdatedStatus = parsedTenders.map(
+            applyStatusTransition,
+          );
+          setFeaturedTenders(tendersWithUpdatedStatus);
+          console.log(
+            "Loaded featured tenders from localStorage:",
+            tendersWithUpdatedStatus.length,
+          );
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Error loading featured tenders from localStorage:", error);
+    }
+
+    // Fall back to default data if localStorage is empty or has errors
+    console.log("Using default featured tenders");
     setFeaturedTenders(getDefaultTenders());
   };
 
@@ -344,7 +398,21 @@ export default function Index() {
 
     // Set up interval to refresh featured tenders every 30 seconds
     const interval = setInterval(loadFeaturedTenders, 30000);
-    return () => clearInterval(interval);
+
+    // Listen for localStorage changes (when tenders are published from other tabs/components)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "featuredTenders") {
+        console.log("Featured tenders updated in localStorage, reloading...");
+        loadFeaturedTenders();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -2991,7 +3059,7 @@ export default function Index() {
 
                 <div className="mt-6 pt-4 border-t border-gray-200 flex justify-between items-center">
                   <div className="text-sm text-gray-500">
-                    Effective Date: January 2024 • Version 3.0 • Review Date:
+                    Effective Date: January 2024 • Version 3.0 ��� Review Date:
                     January 2025
                   </div>
                   <div className="flex space-x-3">

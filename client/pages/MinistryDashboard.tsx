@@ -1580,7 +1580,7 @@ export default function MinistryDashboard() {
               projectTitle: "School Furniture Supply Program - Phase 1",
               requestDate: "2024-01-18",
               status: "Approved",
-              projectValue: "₦2,100,000,000",
+              projectValue: "���2,100,000,000",
               contractorName: "EduTech Solutions Ltd",
               expectedDuration: "8 months",
               approvalDate: "2024-01-22",
@@ -3898,127 +3898,172 @@ export default function MinistryDashboard() {
 
   // Tender Creation Functions
   const handleSubmitTender = (isDraft = false) => {
-    if (
-      !newTender.title ||
-      !newTender.category ||
-      !newTender.description ||
-      !newTender.estimatedValue ||
-      !newTender.closeDate
-    ) {
-      alert("Please fill in all required fields");
+    console.log("handleSubmitTender called with isDraft:", isDraft);
+    console.log("newTender state:", newTender);
+
+    // More detailed validation with specific error messages
+    const missingFields = [];
+    if (!newTender.title) missingFields.push("Title");
+    if (!newTender.category) missingFields.push("Category");
+    if (!newTender.description) missingFields.push("Description");
+    if (!newTender.estimatedValue) missingFields.push("Estimated Value");
+    if (!newTender.closeDate) missingFields.push("Closing Date");
+
+    if (missingFields.length > 0) {
+      alert(
+        `Please fill in the following required fields: ${missingFields.join(", ")}`,
+      );
       return;
     }
 
-    // Initialize counter on first use
-    initializeTenderCounter();
+    // Validate estimated value is a number
+    const estimatedValueNum = parseFloat(newTender.estimatedValue);
+    if (isNaN(estimatedValueNum) || estimatedValueNum <= 0) {
+      alert("Please enter a valid estimated value (numbers only)");
+      return;
+    }
 
-    // Generate proper tender ID (KS-YYYY-XXX format)
-    const tenderId = generateTenderId();
+    // Validate closing date is in the future
+    const closingDate = new Date(newTender.closeDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for comparison
+    if (closingDate <= today) {
+      alert("Closing date must be in the future");
+      return;
+    }
 
-    const tender: Tender = {
-      id: tenderId,
-      title: newTender.title,
-      description: newTender.description,
-      category: newTender.category,
-      estimatedValue: formatCurrency(newTender.estimatedValue),
-      status: isDraft ? "Draft" : "Published",
-      publishDate:
-        newTender.publishDate || new Date().toISOString().split("T")[0],
-      closeDate: newTender.closeDate,
-      bidsReceived: getBidCountForTender(tenderId),
-      ministry: ministry.name,
-      procuringEntity: ministry.name,
-    };
+    try {
+      console.log("Starting tender creation process...");
 
-    // Add to local tenders
-    setTenders((prev) => {
-      const updatedTenders = [tender, ...prev];
-      // Save to localStorage for ministry dashboard persistence
-      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
-      return updatedTenders;
-    });
+      // Initialize counter on first use
+      initializeTenderCounter();
 
-    // Store in localStorage for cross-page access
-    const existingTenders = localStorage.getItem("featuredTenders") || "[]";
-    const tendersList = JSON.parse(existingTenders);
-    const featuredTender = {
-      id: tender.id,
-      title: tender.title,
-      description: tender.description,
-      value: tender.estimatedValue, // Already formatted above
-      deadline: new Date(tender.closeDate).toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }),
-      status: tender.status === "Published" ? "Open" : "Draft",
-      statusColor:
-        tender.status === "Published"
-          ? "bg-green-100 text-green-800"
-          : "bg-gray-100 text-gray-800",
-      category: tender.category,
-      ministry: ministry.name,
-      createdAt: Date.now(),
-    };
+      // Generate proper tender ID (KS-YYYY-XXX format)
+      const tenderId = generateTenderId();
+      console.log("Generated tender ID:", tenderId);
 
-    tendersList.unshift(featuredTender);
-    // Keep only the last 5 tenders
-    const latestTenders = tendersList.slice(0, 5);
-    localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
+      // Get ministry info
+      const ministryInfo = getMinistryInfo();
+      console.log("Ministry info:", ministryInfo);
 
-    // Also store in recentTenders with more detailed information
-    const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
-    const recentTendersList = JSON.parse(existingRecentTenders);
-    const recentTender = {
-      id: tender.id,
-      title: tender.title,
-      category: tender.category,
-      value: tender.estimatedValue, // Already formatted above
-      deadline: tender.closeDate,
-      location: "Kano State",
-      views: 0,
-      status: tender.status === "Published" ? "Open" : "Draft",
-      description: tender.description,
-      publishDate: tender.publishDate || new Date().toISOString().split("T")[0],
-      closingDate: tender.closeDate,
-      tenderFee: formatCurrency(25000),
-      procuringEntity: ministry.name,
-      duration: "12 months",
-      eligibility: "Qualified contractors with relevant experience",
-      requirements: [
-        "Valid CAC certificate",
-        "Tax clearance for last 3 years",
-        "Professional license",
-        "Evidence of similar projects",
-        "Financial capacity documentation",
-      ],
-      technicalSpecs: [
-        "Project specifications as detailed in tender document",
-        "Quality standards must meet government requirements",
-        "Timeline adherence is mandatory",
-      ],
-      createdAt: Date.now(),
-    };
+      const tender: Tender = {
+        id: tenderId,
+        title: newTender.title,
+        description: newTender.description,
+        category: newTender.category,
+        estimatedValue: formatCurrency(newTender.estimatedValue),
+        status: isDraft ? "Draft" : "Published",
+        publishDate:
+          newTender.publishDate || new Date().toISOString().split("T")[0],
+        closeDate: newTender.closeDate,
+        bidsReceived: getBidCountForTender(tenderId),
+        ministry: ministryInfo.name,
+        procuringEntity: ministryInfo.name,
+      };
 
-    recentTendersList.unshift(recentTender);
-    // Keep only the last 10 recent tenders
-    const latestRecentTenders = recentTendersList.slice(0, 10);
-    localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+      console.log("Created tender object:", tender);
 
-    // Reset form
-    setNewTender({
-      title: "",
-      category: "",
-      description: "",
-      estimatedValue: "",
-      procurementMethod: "Open Tender",
-      publishDate: "",
-      closeDate: "",
-      contactEmail: "",
-    });
+      // Add to local tenders
+      setTenders((prev) => {
+        const updatedTenders = [tender, ...prev];
+        // Save to localStorage for ministry dashboard persistence
+        localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+        return updatedTenders;
+      });
 
-    setTenderSubView("list");
-    alert(`Tender ${isDraft ? "saved as draft" : "published"} successfully!`);
+      // Store in localStorage for cross-page access
+      const existingTenders = localStorage.getItem("featuredTenders") || "[]";
+      const tendersList = JSON.parse(existingTenders);
+      const featuredTender = {
+        id: tender.id,
+        title: tender.title,
+        description: tender.description,
+        value: tender.estimatedValue, // Already formatted above
+        deadline: new Date(tender.closeDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }),
+        status: tender.status === "Published" ? "Open" : "Draft",
+        statusColor:
+          tender.status === "Published"
+            ? "bg-green-100 text-green-800"
+            : "bg-gray-100 text-gray-800",
+        category: tender.category,
+        ministry: ministryInfo.name,
+        createdAt: Date.now(),
+      };
+
+      tendersList.unshift(featuredTender);
+      // Keep only the last 5 tenders
+      const latestTenders = tendersList.slice(0, 5);
+      localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
+
+      // Also store in recentTenders with more detailed information
+      const existingRecentTenders =
+        localStorage.getItem("recentTenders") || "[]";
+      const recentTendersList = JSON.parse(existingRecentTenders);
+      const recentTender = {
+        id: tender.id,
+        title: tender.title,
+        category: tender.category,
+        value: tender.estimatedValue, // Already formatted above
+        deadline: tender.closeDate,
+        location: "Kano State",
+        views: 0,
+        status: tender.status === "Published" ? "Open" : "Draft",
+        description: tender.description,
+        publishDate:
+          tender.publishDate || new Date().toISOString().split("T")[0],
+        closingDate: tender.closeDate,
+        tenderFee: formatCurrency(25000),
+        procuringEntity: ministryInfo.name,
+        duration: "12 months",
+        eligibility: "Qualified contractors with relevant experience",
+        requirements: [
+          "Valid CAC certificate",
+          "Tax clearance for last 3 years",
+          "Professional license",
+          "Evidence of similar projects",
+          "Financial capacity documentation",
+        ],
+        technicalSpecs: [
+          "Project specifications as detailed in tender document",
+          "Quality standards must meet government requirements",
+          "Timeline adherence is mandatory",
+        ],
+        createdAt: Date.now(),
+      };
+
+      recentTendersList.unshift(recentTender);
+      // Keep only the last 10 recent tenders
+      const latestRecentTenders = recentTendersList.slice(0, 10);
+      localStorage.setItem(
+        "recentTenders",
+        JSON.stringify(latestRecentTenders),
+      );
+
+      // Reset form
+      setNewTender({
+        title: "",
+        category: "",
+        description: "",
+        estimatedValue: "",
+        procurementMethod: "Open Tender",
+        publishDate: "",
+        closeDate: "",
+        contactEmail: "",
+      });
+
+      setTenderSubView("list");
+      alert(`Tender ${isDraft ? "saved as draft" : "published"} successfully!`);
+      console.log("Tender creation completed successfully");
+    } catch (error) {
+      console.error("Error creating tender:", error);
+      alert(
+        `Error ${isDraft ? "saving draft" : "publishing"} tender. Please try again. Error: ${error.message || error}`,
+      );
+    }
   };
 
   // Helper functions for evaluation scoring
@@ -8551,7 +8596,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ������ Evaluation Report - {selectedTenderForDetails.title}
+                  �������� Evaluation Report - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
