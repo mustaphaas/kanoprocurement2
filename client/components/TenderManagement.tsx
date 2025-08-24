@@ -557,8 +557,11 @@ const TenderManagement = () => {
       return;
     }
 
-    const ministryInfo = getMinistryInfo();
-    const tenderId = `${ministryInfo.code}-${Date.now()}`;
+    // Initialize counter on first use
+    initializeTenderCounter();
+
+    // Generate proper tender ID (KS-YYYY-XXX format)
+    const tenderId = generateTenderId();
 
     // Create tender for TenderManagement local state
     const newTender: Tender = {
