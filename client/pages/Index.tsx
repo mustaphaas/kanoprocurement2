@@ -61,7 +61,19 @@ export default function Index() {
   // Helper function to apply automatic status transitions
   const applyStatusTransition = (tender: FeaturedTender): FeaturedTender => {
     // Convert deadline format from "Feb 15, 2024" to "2024-02-15"
-    const deadlineStr = new Date(tender.deadline).toISOString().split("T")[0];
+    let deadlineStr: string;
+    try {
+      const deadlineDate = new Date(tender.deadline);
+      // Check if date is valid
+      if (isNaN(deadlineDate.getTime())) {
+        console.warn(`Invalid date format for tender ${tender.id}: ${tender.deadline}`);
+        return tender; // Return original if date is invalid
+      }
+      deadlineStr = deadlineDate.toISOString().split("T")[0];
+    } catch (error) {
+      console.warn(`Error parsing date for tender ${tender.id}: ${tender.deadline}`, error);
+      return tender; // Return original if date parsing fails
+    }
 
     // Apply automatic status check
     const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
