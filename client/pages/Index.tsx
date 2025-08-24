@@ -243,7 +243,7 @@ export default function Index() {
         description:
           "Construction of 50km rural roads to improve connectivity across Kano North LGA",
         value: "₦2.5B",
-        deadline: "Feb 15, 2024",
+        deadline: futureDate(15), // 15 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Infrastructure",
@@ -254,7 +254,7 @@ export default function Index() {
         description:
           "Supply and installation of modern medical equipment for 25 primary healthcare centers",
         value: "���1.8B",
-        deadline: "Feb 28, 2024",
+        deadline: futureDate(25), // 25 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Healthcare",
@@ -265,7 +265,7 @@ export default function Index() {
         description:
           "Renovation and modernization of 15 public secondary schools across rural areas",
         value: "₦3.2B",
-        deadline: "Mar 10, 2024",
+        deadline: futureDate(30), // 30 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Education",
@@ -276,7 +276,7 @@ export default function Index() {
         description:
           "Fiber optic network expansion to connect all LGA headquarters",
         value: "₦4.1B",
-        deadline: "Feb 20, 2024",
+        deadline: futureDate(3), // 3 days from today - should be Closing Soon
         status: "Closing Soon",
         statusColor: "bg-orange-100 text-orange-800",
         category: "Technology",
@@ -287,7 +287,7 @@ export default function Index() {
         description:
           "Construction of modern water treatment facility serving 200,000 residents",
         value: "₦5.7B",
-        deadline: "Mar 05, 2024",
+        deadline: futureDate(20), // 20 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Infrastructure",
