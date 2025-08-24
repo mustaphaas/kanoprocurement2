@@ -37,17 +37,44 @@ const getNextTenderNumber = (): number => {
 };
 
 /**
+ * Get ministry code from current context
+ */
+const getMinistryCode = (): string => {
+  try {
+    const ministryUser = localStorage.getItem("ministryUser");
+    if (ministryUser) {
+      const userData = JSON.parse(ministryUser);
+
+      // Map ministry IDs to codes
+      const ministryMap: Record<string, string> = {
+        'ministry': 'MOH',    // Ministry of Health
+        'ministry2': 'MOWI',  // Ministry of Works and Infrastructure
+        'ministry3': 'MOE',   // Ministry of Education
+      };
+
+      return ministryMap[userData.ministryId] || 'MOH';
+    }
+  } catch (error) {
+    console.error("Error getting ministry code:", error);
+  }
+
+  // Default to MOH if no ministry context
+  return 'MOH';
+};
+
+/**
  * Generate a properly formatted tender ID
- * Format: KS-YYYY-XXX (e.g., KS-2024-001)
+ * Format: [MINISTRY]-YYYY-XXX (e.g., MOH-2024-001, MOWI-2024-001, MOE-2024-001)
  *
  * @returns {string} The generated tender ID
  */
 export const generateTenderId = (): string => {
+  const ministryCode = getMinistryCode();
   const year = getCurrentYear();
-  const number = getNextTenderNumber();
+  const number = getNextTenderNumber(ministryCode);
   const paddedNumber = number.toString().padStart(3, "0");
 
-  return `KS-${year}-${paddedNumber}`;
+  return `${ministryCode}-${year}-${paddedNumber}`;
 };
 
 /**
