@@ -21,25 +21,7 @@ import {
   UserPlus,
 } from "lucide-react";
 
-interface Tender {
-  id: string;
-  title: string;
-  description: string;
-  value: string;
-  deadline: string;
-  location: string;
-  views: number;
-  status: TenderStatus;
-  category: string;
-  publishDate: string;
-  closingDate: string;
-  tenderFee: string;
-  procuringEntity: string;
-  duration: string;
-  eligibility: string;
-  requirements: string[];
-  technicalSpecs: string[];
-}
+// Using unified Tender type from tenderData
 
 export default function AllTenders() {
   const [searchQuery, setSearchQuery] = useState("");
