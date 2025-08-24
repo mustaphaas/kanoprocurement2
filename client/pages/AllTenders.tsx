@@ -57,7 +57,7 @@ export default function AllTenders() {
       deadline: "2024-02-15",
       location: "Kano North LGA",
       views: 245,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
