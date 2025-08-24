@@ -89,7 +89,7 @@ export default function AllTenders() {
       deadline: "2024-02-20",
       location: "Statewide",
       views: 189,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Procurement of essential medical equipment for 50 Primary Health Centers across Kano State to improve healthcare delivery and patient outcomes.",
       publishDate: "2024-01-20",
