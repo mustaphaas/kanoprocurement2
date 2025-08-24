@@ -376,7 +376,21 @@ export default function Index() {
 
     // Set up interval to refresh featured tenders every 30 seconds
     const interval = setInterval(loadFeaturedTenders, 30000);
-    return () => clearInterval(interval);
+
+    // Listen for localStorage changes (when tenders are published from other tabs/components)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "featuredTenders") {
+        console.log("Featured tenders updated in localStorage, reloading...");
+        loadFeaturedTenders();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   useEffect(() => {
