@@ -560,6 +560,9 @@ const TenderManagement = () => {
       return;
     }
 
+    // Get ministry info
+    const ministryInfo = getMinistryInfo();
+
     // Initialize counter on first use
     initializeTenderCounter();
 
