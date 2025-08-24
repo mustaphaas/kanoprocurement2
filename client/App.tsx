@@ -23,6 +23,14 @@ import GovernorDashboard from "./pages/GovernorDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
 import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation";
 import TenderStatusDemo from "./pages/TenderStatusDemo";
+import { performFullMigration } from "@/lib/tenderMigration";
+
+// Trigger tender system migration on app startup
+try {
+  performFullMigration();
+} catch (error) {
+  console.error("Error during tender migration:", error);
+}
 
 const queryClient = new QueryClient();
 
