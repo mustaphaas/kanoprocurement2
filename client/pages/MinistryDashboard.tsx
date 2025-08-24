@@ -2794,7 +2794,8 @@ export default function MinistryDashboard() {
 
       if (hasStatusChanges) {
         localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
-        const ministryTendersKey = `${ministry.code}_tenders`;
+        const { ministry: statusMinistry } = getMinistryMockData();
+        const ministryTendersKey = `${statusMinistry.code}_tenders`;
         localStorage.setItem(
           ministryTendersKey,
           JSON.stringify(updatedTenders),
@@ -3250,7 +3251,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "�����1,450,000,000",
+          bidAmount: "������1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,
