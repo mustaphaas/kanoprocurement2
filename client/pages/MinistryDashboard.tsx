@@ -1093,7 +1093,7 @@ export default function MinistryDashboard() {
               description:
                 "Construction of bridges across major rivers in Kano State",
               category: "Bridge Construction",
-              estimatedValue: "₦8,500,000,000",
+              estimatedValue: "��8,500,000,000",
               status: "Evaluated",
               publishDate: "2024-01-20",
               closeDate: "2024-03-01",
@@ -1652,7 +1652,9 @@ export default function MinistryDashboard() {
     };
 
     // Load ministry-specific NOC requests from localStorage or use mock data
-    const ministryNOCKey = `${ministry.code}_NOCRequests`;
+    const { ministryId: currentMinistryId, ministry: currentMinistry } =
+      getMinistryMockData();
+    const ministryNOCKey = `${currentMinistry.code}_NOCRequests`;
     const storedMinistryNOCs = localStorage.getItem(ministryNOCKey);
 
     let mockNOCRequests;
@@ -2480,7 +2482,8 @@ export default function MinistryDashboard() {
       localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
 
       // Also save with ministry-specific key for NOC system access
-      const ministryTendersKey = `${ministry.code}_tenders`;
+      const { ministry: tenderMinistry } = getMinistryMockData();
+      const ministryTendersKey = `${tenderMinistry.code}_tenders`;
       localStorage.setItem(ministryTendersKey, JSON.stringify(mockTenders));
     }
 
@@ -2642,18 +2645,19 @@ export default function MinistryDashboard() {
     };
 
     // Log ministry dashboard access
+    const { ministry: logMinistry } = getMinistryMockData();
     logUserAction(
       "MinistryUser",
       "ministry_user",
       "MINISTRY_DASHBOARD_ACCESSED",
       "Ministry Dashboard",
-      `Ministry user from ${ministry.name} accessed the ministry dashboard`,
+      `Ministry user from ${logMinistry.name} accessed the ministry dashboard`,
       "LOW",
       undefined,
       {
         accessTime: new Date().toISOString(),
-        ministryName: ministry.name,
-        ministryCode: ministry.code,
+        ministryName: logMinistry.name,
+        ministryCode: logMinistry.code,
         ministryId: ministryId,
         userAgent: navigator.userAgent,
         tendersLoaded: mockTenders.length,
@@ -2791,7 +2795,8 @@ export default function MinistryDashboard() {
 
       if (hasStatusChanges) {
         localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
-        const ministryTendersKey = `${ministry.code}_tenders`;
+        const { ministry: statusMinistry } = getMinistryMockData();
+        const ministryTendersKey = `${statusMinistry.code}_tenders`;
         localStorage.setItem(
           ministryTendersKey,
           JSON.stringify(updatedTenders),
@@ -3117,7 +3122,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-004",
           companyName: "Royal Medical Solutions",
-          bidAmount: "₦890,000,000",
+          bidAmount: "��890,000,000",
           technicalScore: 82,
           financialScore: 79,
           totalScore: 80.5,
@@ -3247,7 +3252,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "�����1,450,000,000",
+          bidAmount: "������1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,

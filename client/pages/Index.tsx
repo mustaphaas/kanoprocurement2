@@ -61,7 +61,24 @@ export default function Index() {
   // Helper function to apply automatic status transitions
   const applyStatusTransition = (tender: FeaturedTender): FeaturedTender => {
     // Convert deadline format from "Feb 15, 2024" to "2024-02-15"
-    const deadlineStr = new Date(tender.deadline).toISOString().split("T")[0];
+    let deadlineStr: string;
+    try {
+      const deadlineDate = new Date(tender.deadline);
+      // Check if date is valid
+      if (isNaN(deadlineDate.getTime())) {
+        console.warn(
+          `Invalid date format for tender ${tender.id}: ${tender.deadline}`,
+        );
+        return tender; // Return original if date is invalid
+      }
+      deadlineStr = deadlineDate.toISOString().split("T")[0];
+    } catch (error) {
+      console.warn(
+        `Error parsing date for tender ${tender.id}: ${tender.deadline}`,
+        error,
+      );
+      return tender; // Return original if date parsing fails
+    }
 
     // Apply automatic status check
     const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
@@ -100,14 +117,18 @@ export default function Index() {
       title: "Construction of 50km Rural Roads in Kano North",
       category: "Infrastructure",
       value: "₦2.5B",
-      deadline: "2024-02-15",
+      deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       location: "Kano North LGA",
       views: 245,
       status: "Open",
       description:
         "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
-      closingDate: "2024-02-15",
+      closingDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       tenderFee: "₦25,000",
       procuringEntity: "Kano State Ministry of Works",
       duration: "18 months",
@@ -132,14 +153,18 @@ export default function Index() {
       title: "Supply of Medical Equipment to Primary Health Centers",
       category: "Healthcare",
       value: "₦850M",
-      deadline: "2024-02-20",
+      deadline: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       location: "Statewide",
       views: 189,
       status: "Open",
       description:
         "Procurement of essential medical equipment for 50 Primary Health Centers across Kano State to improve healthcare delivery and patient outcomes.",
       publishDate: "2024-01-20",
-      closingDate: "2024-02-20",
+      closingDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       tenderFee: "₦15,000",
       procuringEntity: "Kano State Ministry of Health",
       duration: "6 months",
@@ -164,14 +189,18 @@ export default function Index() {
       title: "Rehabilitation of Government Secondary Schools",
       category: "Education",
       value: "₦1.8B",
-      deadline: "2024-02-25",
+      deadline: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       location: "Various LGAs",
       views: 156,
       status: "Open",
       description:
         "Comprehensive rehabilitation and renovation of 25 government secondary schools across Kano State including classroom blocks, laboratories, and recreational facilities.",
       publishDate: "2024-01-25",
-      closingDate: "2024-02-25",
+      closingDate: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       tenderFee: "₦20,000",
       procuringEntity: "Kano State Ministry of Education",
       duration: "12 months",
@@ -216,6 +245,18 @@ export default function Index() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const getDefaultTenders = (): FeaturedTender[] => {
+    // Generate dynamic dates relative to today for testing status transitions
+    const today = new Date();
+    const futureDate = (days: number) => {
+      const date = new Date(today);
+      date.setDate(date.getDate() + days);
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    };
+
     const rawTenders = [
       {
         id: "KS-2024-001",
@@ -223,7 +264,7 @@ export default function Index() {
         description:
           "Construction of 50km rural roads to improve connectivity across Kano North LGA",
         value: "₦2.5B",
-        deadline: "Feb 15, 2024",
+        deadline: futureDate(15), // 15 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Infrastructure",
@@ -234,7 +275,7 @@ export default function Index() {
         description:
           "Supply and installation of modern medical equipment for 25 primary healthcare centers",
         value: "���1.8B",
-        deadline: "Feb 28, 2024",
+        deadline: futureDate(25), // 25 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Healthcare",
@@ -245,7 +286,7 @@ export default function Index() {
         description:
           "Renovation and modernization of 15 public secondary schools across rural areas",
         value: "₦3.2B",
-        deadline: "Mar 10, 2024",
+        deadline: futureDate(30), // 30 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Education",
@@ -256,7 +297,7 @@ export default function Index() {
         description:
           "Fiber optic network expansion to connect all LGA headquarters",
         value: "₦4.1B",
-        deadline: "Feb 20, 2024",
+        deadline: futureDate(3), // 3 days from today - should be Closing Soon
         status: "Closing Soon",
         statusColor: "bg-orange-100 text-orange-800",
         category: "Technology",
@@ -267,10 +308,21 @@ export default function Index() {
         description:
           "Construction of modern water treatment facility serving 200,000 residents",
         value: "₦5.7B",
-        deadline: "Mar 05, 2024",
+        deadline: futureDate(20), // 20 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
         category: "Infrastructure",
+      },
+      {
+        id: "KS-2024-009",
+        title: "Agricultural Equipment Supply",
+        description:
+          "Procurement of modern agricultural machinery for rural farming communities",
+        value: "₦1.2B",
+        deadline: futureDate(-2), // 2 days ago - should be Closed
+        status: "Open",
+        statusColor: "bg-green-100 text-green-800",
+        category: "Agriculture",
       },
     ];
 
