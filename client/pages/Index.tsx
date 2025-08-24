@@ -335,7 +335,24 @@ export default function Index() {
 
   // Load featured tenders from localStorage on component mount
   const loadFeaturedTenders = () => {
-    // Always use default data for now to avoid localStorage issues
+    try {
+      const storedFeaturedTenders = localStorage.getItem("featuredTenders");
+      if (storedFeaturedTenders) {
+        const parsedTenders = JSON.parse(storedFeaturedTenders);
+        if (parsedTenders && parsedTenders.length > 0) {
+          // Apply automatic status transitions to stored tenders
+          const tendersWithUpdatedStatus = parsedTenders.map(applyStatusTransition);
+          setFeaturedTenders(tendersWithUpdatedStatus);
+          console.log("Loaded featured tenders from localStorage:", tendersWithUpdatedStatus.length);
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Error loading featured tenders from localStorage:", error);
+    }
+
+    // Fall back to default data if localStorage is empty or has errors
+    console.log("Using default featured tenders");
     setFeaturedTenders(getDefaultTenders());
   };
 
@@ -1424,7 +1441,7 @@ export default function Index() {
                   paperwork. We've won 12 contracts in the last 6 months!"
                 </p>
                 <div className="text-xs text-green-600">
-                  <strong>Impact:</strong> ₦8.5B in contracts secured • 40%
+                  <strong>Impact:</strong> ���8.5B in contracts secured • 40%
                   faster project delivery
                 </div>
               </div>
@@ -1510,7 +1527,7 @@ export default function Index() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-400 mb-2">
-                    ₦45.2B
+                    ��45.2B
                   </div>
                   <div className="text-sm text-gray-300">
                     Total Contract Value
