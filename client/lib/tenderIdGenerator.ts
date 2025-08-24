@@ -14,11 +14,11 @@ const getCurrentYear = (): number => {
 };
 
 /**
- * Get the next tender number for the current year
+ * Get the next tender number for the current year and ministry
  */
-const getNextTenderNumber = (): number => {
+const getNextTenderNumber = (ministryCode: string): number => {
   const currentYear = getCurrentYear();
-  const counterKey = `${TENDER_COUNTER_KEY}_${currentYear}`;
+  const counterKey = `${TENDER_COUNTER_KEY}_${ministryCode}_${currentYear}`;
 
   try {
     const storedCounter = localStorage.getItem(counterKey);
