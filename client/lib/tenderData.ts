@@ -232,27 +232,47 @@ export const getCurrentMinistryContext = () => {
 // Get ministry-specific tenders
 export const getMinistryTenders = (): Tender[] => {
   const { ministryCode, ministryId } = getCurrentMinistryContext();
+  const allTenders = getAllTenders();
+
+  console.log(`Ministry Context: Code=${ministryCode}, ID=${ministryId}`);
+  console.log(`Total tenders available: ${allTenders.length}`);
 
   // Filter tenders based on ministry
-  return getAllTenders().filter(tender => {
+  const filteredTenders = allTenders.filter(tender => {
     // For Ministry of Health (MOH) - show healthcare tenders
     if (ministryCode === "MOH" || ministryId === "ministry") {
-      return tender.category === "Healthcare" || tender.procuringEntity.includes("Ministry of Health");
+      const isHealthcare = tender.category === "Healthcare" || tender.procuringEntity.includes("Ministry of Health");
+      if (isHealthcare) {
+        console.log(`Including healthcare tender: ${tender.id} - ${tender.title}`);
+      }
+      return isHealthcare;
     }
 
     // For Ministry of Works and Infrastructure (MOWI)
     if (ministryCode === "MOWI" || ministryId === "ministry2") {
-      return tender.category === "Infrastructure" || tender.procuringEntity.includes("Ministry of Works");
+      const isInfrastructure = tender.category === "Infrastructure" || tender.procuringEntity.includes("Ministry of Works");
+      if (isInfrastructure) {
+        console.log(`Including infrastructure tender: ${tender.id} - ${tender.title}`);
+      }
+      return isInfrastructure;
     }
 
     // For Ministry of Education (MOE)
     if (ministryCode === "MOE" || ministryId === "ministry3") {
-      return tender.category === "Education" || tender.procuringEntity.includes("Ministry of Education");
+      const isEducation = tender.category === "Education" || tender.procuringEntity.includes("Ministry of Education");
+      if (isEducation) {
+        console.log(`Including education tender: ${tender.id} - ${tender.title}`);
+      }
+      return isEducation;
     }
 
     // Default: show all if ministry not recognized
+    console.log(`Unknown ministry context, showing all tenders`);
     return true;
   });
+
+  console.log(`Filtered tenders for ministry ${ministryCode}: ${filteredTenders.length} tenders`);
+  return filteredTenders;
 };
 
 // Get closed tenders for committee assignment (ministry-specific)
