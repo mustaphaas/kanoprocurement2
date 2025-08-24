@@ -295,7 +295,63 @@ export const getMinistryTenders = (): Tender[] => {
 
 // Get closed tenders for committee assignment (ministry-specific)
 export const getClosedTenders = (): ClosedTender[] => {
-  return getMinistryTenders()
+  // Apply status transitions to a tender
+  const applyStatusTransitions = (tender: Tender): Tender => {
+    const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
+      tender.status,
+      tender.closingDate || tender.deadline,
+      tender.publishDate,
+    );
+
+    return {
+      ...tender,
+      status: automaticStatus,
+    };
+  };
+
+  // Get all tenders using the same logic as AllTenders page
+  const getAllTendersWithLocalStorage = (): Tender[] => {
+    const storedTenders = localStorage.getItem("recentTenders");
+    if (storedTenders) {
+      const parsedTenders = JSON.parse(storedTenders);
+      if (parsedTenders.length > 0) {
+        // Apply currency formatting and automatic status transitions
+        const formattedParsedTenders = parsedTenders.map((tender: Tender) => {
+          const formatted = {
+            ...tender,
+            value: formatCurrency(tender.value),
+          };
+          return applyStatusTransitions(formatted);
+        });
+
+        // Combine stored tenders with default ones, removing duplicates
+        const defaultTenders = getMinistryTenders().map(applyStatusTransitions);
+        const allUniqueTenders = [...formattedParsedTenders];
+
+        // Add default tenders that don't exist in stored tenders
+        defaultTenders.forEach((defaultTender) => {
+          if (
+            !formattedParsedTenders.find(
+              (t: Tender) => t.id === defaultTender.id,
+            )
+          ) {
+            allUniqueTenders.push(defaultTender);
+          }
+        });
+
+        return allUniqueTenders;
+      } else {
+        // If no stored tenders, just use defaults with status transitions
+        return getMinistryTenders().map(applyStatusTransitions);
+      }
+    } else {
+      // If no stored tenders, just use defaults with status transitions
+      return getMinistryTenders().map(applyStatusTransitions);
+    }
+  };
+
+  // Get all tenders (including localStorage) and filter for closed ones
+  return getAllTendersWithLocalStorage()
     .filter((tender) => {
       // Check if tender should be closed based on closing date
       const closingDate = new Date(tender.closingDate);
