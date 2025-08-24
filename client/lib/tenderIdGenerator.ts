@@ -109,8 +109,9 @@ export const getCurrentTenderCount = (ministryCode?: string): number => {
  * This ensures we don't create duplicate IDs when upgrading from timestamp-based IDs
  */
 export const initializeTenderCounter = (): void => {
+  const ministryCode = getMinistryCode();
   const currentYear = getCurrentYear();
-  const counterKey = `${TENDER_COUNTER_KEY}_${currentYear}`;
+  const counterKey = `${TENDER_COUNTER_KEY}_${ministryCode}_${currentYear}`;
 
   // Only initialize if counter doesn't exist
   if (!localStorage.getItem(counterKey)) {
@@ -132,14 +133,15 @@ export const initializeTenderCounter = (): void => {
           if (Array.isArray(tenders)) {
             tenders.forEach((tender) => {
               if (tender.id && typeof tender.id === "string") {
-                // Extract number from KS-YYYY-XXX format
-                const match = tender.id.match(/^KS-(\d{4})-(\d{3})$/);
+                // Extract number from MINISTRY-YYYY-XXX format (MOH-2024-001, MOWI-2024-001, etc.)
+                const match = tender.id.match(/^([A-Z]+)-(\d{4})-(\d{3})$/);
                 if (match) {
-                  const yearFromId = parseInt(match[1], 10);
-                  const numberFromId = parseInt(match[2], 10);
+                  const ministryFromId = match[1];
+                  const yearFromId = parseInt(match[2], 10);
+                  const numberFromId = parseInt(match[3], 10);
 
-                  // Only count tenders from current year
-                  if (yearFromId === currentYear && numberFromId > maxNumber) {
+                  // Only count tenders from current ministry and year
+                  if (ministryFromId === ministryCode && yearFromId === currentYear && numberFromId > maxNumber) {
                     maxNumber = numberFromId;
                   }
                 }
@@ -156,7 +158,7 @@ export const initializeTenderCounter = (): void => {
     localStorage.setItem(counterKey, maxNumber.toString());
 
     console.log(
-      `Initialized tender counter for ${currentYear} to ${maxNumber}`,
+      `Initialized tender counter for ${ministryCode} ${currentYear} to ${maxNumber}`,
     );
   }
 };
