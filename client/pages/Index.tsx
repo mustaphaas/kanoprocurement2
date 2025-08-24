@@ -303,7 +303,7 @@ export default function Index() {
         title: "Healthcare Equipment Supply",
         description:
           "Supply and installation of modern medical equipment for 25 primary healthcare centers",
-        value: "���1.8B",
+        value: "₦1.8B",
         deadline: futureDate(25), // 25 days from today - should be Active
         status: "Open",
         statusColor: "bg-green-100 text-green-800",
