@@ -52,6 +52,7 @@ import {
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getClosedTenders, type ClosedTender } from "@/lib/tenderData";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -289,19 +290,13 @@ export default function TenderCommitteeAssignment() {
         localStorage.setItem(memberPoolKey, JSON.stringify(sampleMemberPool));
       }
 
-      // Load closed tenders
+      // Load closed tenders from unified data source
+      const closedTendersData = getClosedTenders();
+      setClosedTenders(closedTendersData);
+
+      // Store in localStorage for consistency
       const closedTendersKey = `${ministryCode}_${STORAGE_KEYS.CLOSED_TENDERS}`;
-      const storedClosedTenders = localStorage.getItem(closedTendersKey);
-      if (storedClosedTenders) {
-        setClosedTenders(JSON.parse(storedClosedTenders));
-      } else {
-        const sampleClosedTenders = createSampleClosedTenders(ministryCode);
-        setClosedTenders(sampleClosedTenders);
-        localStorage.setItem(
-          closedTendersKey,
-          JSON.stringify(sampleClosedTenders),
-        );
-      }
+      localStorage.setItem(closedTendersKey, JSON.stringify(closedTendersData));
     } catch (error) {
       console.error("Error loading data:", error);
     }
@@ -325,9 +320,9 @@ export default function TenderCommitteeAssignment() {
   ): TenderCommitteeAssignment[] => {
     const baseAssignment: TenderCommitteeAssignment = {
       id: "TCA-2024-001",
-      tenderId: "MOH-2024-001",
-      tenderTitle: "Hospital Equipment Supply",
-      tenderCategory: "Medical Equipment",
+      tenderId: "KS-2024-002",
+      tenderTitle: "Supply of Medical Equipment to Primary Health Centers",
+      tenderCategory: "Healthcare",
       committeeTemplateId: "CT-2024-001",
       templateName: "Medical Equipment Procurement Committee",
       assignmentDate: "2024-02-10",
@@ -808,84 +803,7 @@ export default function TenderCommitteeAssignment() {
     return baseMemberPool;
   };
 
-  const createSampleClosedTenders = (ministryCode: string): ClosedTender[] => {
-    const baseTenders: ClosedTender[] = [
-      {
-        id: "MOH-2024-001",
-        title: "Hospital Equipment Supply",
-        category: "Medical Equipment",
-        status: "Closed",
-        closingDate: "2024-02-01",
-        ministry: "Ministry of Health",
-        estimatedValue: 250000000,
-      },
-      {
-        id: "MOH-2024-002",
-        title: "Pharmaceutical Procurement",
-        category: "Pharmaceuticals",
-        status: "Evaluation_Complete",
-        closingDate: "2024-01-25",
-        ministry: "Ministry of Health",
-        estimatedValue: 180000000,
-      },
-      {
-        id: "MOH-2023-015",
-        title: "Laboratory Equipment Upgrade",
-        category: "Laboratory Equipment",
-        status: "Awarded",
-        closingDate: "2023-12-15",
-        ministry: "Ministry of Health",
-        estimatedValue: 120000000,
-      },
-    ];
-
-    // Customize for different ministries
-    if (ministryCode === "MOWI") {
-      baseTenders.push(
-        {
-          id: "MOWI-2024-001",
-          title: "Kano-Kaduna Highway Rehabilitation",
-          category: "Road Construction",
-          status: "Closed",
-          closingDate: "2024-01-30",
-          ministry: "Ministry of Works and Infrastructure",
-          estimatedValue: 5000000000,
-        },
-        {
-          id: "MOWI-2024-002",
-          title: "Bridge Construction Project",
-          category: "Bridge Construction",
-          status: "Evaluation_Complete",
-          closingDate: "2024-01-20",
-          ministry: "Ministry of Works and Infrastructure",
-          estimatedValue: 3200000000,
-        },
-      );
-    } else if (ministryCode === "MOE") {
-      baseTenders.push(
-        {
-          id: "MOE-2024-001",
-          title: "School Furniture Supply Program",
-          category: "Educational Materials",
-          status: "Closed",
-          closingDate: "2024-01-28",
-          ministry: "Ministry of Education",
-          estimatedValue: 800000000,
-        },
-        {
-          id: "MOE-2024-002",
-          title: "Educational Technology Package",
-          category: "Educational Technology",
-          status: "Evaluation_Complete",
-          closingDate: "2024-01-22",
-          ministry: "Ministry of Education",
-          estimatedValue: 450000000,
-        },
-      );
-    }
-
-    return baseTenders;
-  };
+  // Removed createSampleClosedTenders - now using unified data source from @/lib/tenderData
 
   const createAssignment = () => {
     const newAssignment: TenderCommitteeAssignment = {

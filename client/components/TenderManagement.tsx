@@ -61,6 +61,10 @@ import {
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  generateTenderId,
+  initializeTenderCounter,
+} from "@/lib/tenderIdGenerator";
 
 // Types
 interface Tender {
@@ -556,8 +560,11 @@ const TenderManagement = () => {
       return;
     }
 
-    const ministryInfo = getMinistryInfo();
-    const tenderId = `${ministryInfo.code}-${Date.now()}`;
+    // Initialize counter on first use
+    initializeTenderCounter();
+
+    // Generate proper tender ID (KS-YYYY-XXX format)
+    const tenderId = generateTenderId();
 
     // Create tender for TenderManagement local state
     const newTender: Tender = {
