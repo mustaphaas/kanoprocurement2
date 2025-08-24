@@ -21,11 +21,15 @@ interface ValidationResult {
 }
 
 export function TenderStatusValidation() {
-  const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+  const [validationResults, setValidationResults] = useState<
+    ValidationResult[]
+  >([]);
   const [settings, setSettings] = useState<TenderSystemSettings>(
-    tenderSettingsManager.getSettings()
+    tenderSettingsManager.getSettings(),
   );
-  const [newThreshold, setNewThreshold] = useState(settings.closingSoonThresholdDays);
+  const [newThreshold, setNewThreshold] = useState(
+    settings.closingSoonThresholdDays,
+  );
 
   useEffect(() => {
     runValidation();
@@ -38,13 +42,15 @@ export function TenderStatusValidation() {
     const testTender = {
       status: "Active" as TenderStatus,
       closingDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days from now
-      publishedDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), // 10 days ago
+      publishedDate: new Date(
+        Date.now() - 10 * 24 * 60 * 60 * 1000,
+      ).toISOString(), // 10 days ago
     };
 
     const statusAfter3Days = tenderStatusChecker.determineAutomaticStatus(
       testTender.status,
       testTender.closingDate,
-      testTender.publishedDate
+      testTender.publishedDate,
     );
 
     results.push({
@@ -58,13 +64,15 @@ export function TenderStatusValidation() {
     const pastDeadlineTender = {
       status: "Active" as TenderStatus,
       closingDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-      publishedDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+      publishedDate: new Date(
+        Date.now() - 20 * 24 * 60 * 60 * 1000,
+      ).toISOString(),
     };
 
     const pastStatus = tenderStatusChecker.determineAutomaticStatus(
       pastDeadlineTender.status,
       pastDeadlineTender.closingDate,
-      pastDeadlineTender.publishedDate
+      pastDeadlineTender.publishedDate,
     );
 
     results.push({
@@ -78,7 +86,10 @@ export function TenderStatusValidation() {
     const activeStatusInfo = tenderStatusChecker.getStatusInfo("Active");
     results.push({
       requirement: "Active tenders allow EOI and bid submission",
-      status: activeStatusInfo.canExpressInterest && activeStatusInfo.canSubmitBid ? "pass" : "fail",
+      status:
+        activeStatusInfo.canExpressInterest && activeStatusInfo.canSubmitBid
+          ? "pass"
+          : "fail",
       details: "Active tenders should allow both EOI and bid submission",
       evidence: `EOI: ${activeStatusInfo.canExpressInterest}, Bid: ${activeStatusInfo.canSubmitBid}`,
     });
@@ -86,7 +97,10 @@ export function TenderStatusValidation() {
     const closingSoonInfo = tenderStatusChecker.getStatusInfo("Closing Soon");
     results.push({
       requirement: "Closing Soon tenders allow EOI and bid submission",
-      status: closingSoonInfo.canExpressInterest && closingSoonInfo.canSubmitBid ? "pass" : "fail",
+      status:
+        closingSoonInfo.canExpressInterest && closingSoonInfo.canSubmitBid
+          ? "pass"
+          : "fail",
       details: "Closing Soon tenders should still allow EOI and bid submission",
       evidence: `EOI: ${closingSoonInfo.canExpressInterest}, Bid: ${closingSoonInfo.canSubmitBid}`,
     });
@@ -95,17 +109,23 @@ export function TenderStatusValidation() {
     const closedStatusInfo = tenderStatusChecker.getStatusInfo("Closed");
     results.push({
       requirement: "Closed tenders prevent EOI and bid submission",
-      status: !closedStatusInfo.canExpressInterest && !closedStatusInfo.canSubmitBid ? "pass" : "fail",
+      status:
+        !closedStatusInfo.canExpressInterest && !closedStatusInfo.canSubmitBid
+          ? "pass"
+          : "fail",
       details: "Closed tenders should not allow new EOI or bid submissions",
       evidence: `EOI: ${closedStatusInfo.canExpressInterest}, Bid: ${closedStatusInfo.canSubmitBid}`,
     });
 
     // Test 5: System settings for closing soon threshold
-    const thresholdConfigurable = settings.closingSoonThresholdDays >= 1 && settings.closingSoonThresholdDays <= 30;
+    const thresholdConfigurable =
+      settings.closingSoonThresholdDays >= 1 &&
+      settings.closingSoonThresholdDays <= 30;
     results.push({
       requirement: "Configurable Closing Soon threshold (1-30 days)",
       status: thresholdConfigurable ? "pass" : "fail",
-      details: "System should allow configuring the Closing Soon threshold between 1-30 days",
+      details:
+        "System should allow configuring the Closing Soon threshold between 1-30 days",
       evidence: `Current threshold: ${settings.closingSoonThresholdDays} days`,
     });
 
@@ -113,16 +133,22 @@ export function TenderStatusValidation() {
     const shouldStartEval = tenderStatusChecker.shouldStartEvaluation("Closed");
     results.push({
       requirement: "Closed tenders auto-flow to Evaluation stage",
-      status: shouldStartEval && settings.autoEvaluationStartEnabled ? "pass" : "warning",
-      details: "When tender closes, it should automatically flow into evaluation stage",
+      status:
+        shouldStartEval && settings.autoEvaluationStartEnabled
+          ? "pass"
+          : "warning",
+      details:
+        "When tender closes, it should automatically flow into evaluation stage",
       evidence: `Auto evaluation enabled: ${settings.autoEvaluationStartEnabled}, Should start: ${shouldStartEval}`,
     });
 
     // Test 7: Auto transition setting
     results.push({
       requirement: "Auto transition system configurable",
-      status: typeof settings.autoTransitionEnabled === "boolean" ? "pass" : "fail",
-      details: "System should allow enabling/disabling automatic status transitions",
+      status:
+        typeof settings.autoTransitionEnabled === "boolean" ? "pass" : "fail",
+      details:
+        "System should allow enabling/disabling automatic status transitions",
       evidence: `Auto transitions: ${settings.autoTransitionEnabled}`,
     });
 
@@ -140,13 +166,17 @@ export function TenderStatusValidation() {
   };
 
   const toggleAutoTransitions = () => {
-    tenderSettingsManager.setAutoTransitionEnabled(!settings.autoTransitionEnabled);
+    tenderSettingsManager.setAutoTransitionEnabled(
+      !settings.autoTransitionEnabled,
+    );
     setSettings(tenderSettingsManager.getSettings());
     runValidation();
   };
 
   const toggleAutoEvaluation = () => {
-    tenderSettingsManager.setAutoEvaluationStartEnabled(!settings.autoEvaluationStartEnabled);
+    tenderSettingsManager.setAutoEvaluationStartEnabled(
+      !settings.autoEvaluationStartEnabled,
+    );
     setSettings(tenderSettingsManager.getSettings());
     runValidation();
   };
@@ -168,16 +198,14 @@ export function TenderStatusValidation() {
       fail: "destructive" as const,
       warning: "secondary" as const,
     };
-    return (
-      <Badge variant={variants[status]}>
-        {status.toUpperCase()}
-      </Badge>
-    );
+    return <Badge variant={variants[status]}>{status.toUpperCase()}</Badge>;
   };
 
-  const passCount = validationResults.filter(r => r.status === "pass").length;
-  const failCount = validationResults.filter(r => r.status === "fail").length;
-  const warningCount = validationResults.filter(r => r.status === "warning").length;
+  const passCount = validationResults.filter((r) => r.status === "pass").length;
+  const failCount = validationResults.filter((r) => r.status === "fail").length;
+  const warningCount = validationResults.filter(
+    (r) => r.status === "warning",
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -191,7 +219,9 @@ export function TenderStatusValidation() {
         <CardContent>
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{passCount}</div>
+              <div className="text-2xl font-bold text-green-600">
+                {passCount}
+              </div>
               <div className="text-sm text-muted-foreground">Passed</div>
             </div>
             <div className="text-center">
@@ -199,23 +229,30 @@ export function TenderStatusValidation() {
               <div className="text-sm text-muted-foreground">Failed</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-yellow-600">{warningCount}</div>
+              <div className="text-2xl font-bold text-yellow-600">
+                {warningCount}
+              </div>
               <div className="text-sm text-muted-foreground">Warnings</div>
             </div>
           </div>
-          
+
           <Separator className="my-4" />
 
           <div className="space-y-4">
             {validationResults.map((result, index) => (
-              <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
+              <div
+                key={index}
+                className="flex items-start gap-3 p-3 border rounded-lg"
+              >
                 {getStatusIcon(result.status)}
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-medium">{result.requirement}</span>
                     {getStatusBadge(result.status)}
                   </div>
-                  <p className="text-sm text-muted-foreground mb-2">{result.details}</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {result.details}
+                  </p>
                   {result.evidence && (
                     <p className="text-xs text-muted-foreground bg-muted p-2 rounded">
                       {result.evidence}
@@ -254,8 +291,10 @@ export function TenderStatusValidation() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label>Auto Transitions</Label>
-                <Button 
-                  variant={settings.autoTransitionEnabled ? "default" : "outline"}
+                <Button
+                  variant={
+                    settings.autoTransitionEnabled ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={toggleAutoTransitions}
                 >
@@ -264,8 +303,10 @@ export function TenderStatusValidation() {
               </div>
               <div className="flex items-center justify-between">
                 <Label>Auto Evaluation Start</Label>
-                <Button 
-                  variant={settings.autoEvaluationStartEnabled ? "default" : "outline"}
+                <Button
+                  variant={
+                    settings.autoEvaluationStartEnabled ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={toggleAutoEvaluation}
                 >
@@ -276,7 +317,11 @@ export function TenderStatusValidation() {
           </div>
 
           <div className="mt-4">
-            <Button onClick={runValidation} variant="outline" className="w-full">
+            <Button
+              onClick={runValidation}
+              variant="outline"
+              className="w-full"
+            >
               Re-run Validation
             </Button>
           </div>

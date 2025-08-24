@@ -61,12 +61,12 @@ export default function Index() {
   // Helper function to apply automatic status transitions
   const applyStatusTransition = (tender: FeaturedTender): FeaturedTender => {
     // Convert deadline format from "Feb 15, 2024" to "2024-02-15"
-    const deadlineStr = new Date(tender.deadline).toISOString().split('T')[0];
+    const deadlineStr = new Date(tender.deadline).toISOString().split("T")[0];
 
     // Apply automatic status check
     const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
       tender.status as TenderStatus,
-      deadlineStr
+      deadlineStr,
     );
 
     // Update status color based on new status
@@ -89,7 +89,7 @@ export default function Index() {
     return {
       ...tender,
       status: automaticStatus,
-      statusColor
+      statusColor,
     };
   };
 
@@ -217,61 +217,61 @@ export default function Index() {
 
   const getDefaultTenders = (): FeaturedTender[] => {
     const rawTenders = [
-    {
-      id: "KS-2024-001",
-      title: "Road Construction Project",
-      description:
-        "Construction of 50km rural roads to improve connectivity across Kano North LGA",
-      value: "₦2.5B",
-      deadline: "Feb 15, 2024",
-      status: "Open",
-      statusColor: "bg-green-100 text-green-800",
-      category: "Infrastructure",
-    },
-    {
-      id: "KS-2024-005",
-      title: "Healthcare Equipment Supply",
-      description:
-        "Supply and installation of modern medical equipment for 25 primary healthcare centers",
-      value: "���1.8B",
-      deadline: "Feb 28, 2024",
-      status: "Open",
-      statusColor: "bg-green-100 text-green-800",
-      category: "Healthcare",
-    },
-    {
-      id: "KS-2024-012",
-      title: "School Infrastructure Upgrade",
-      description:
-        "Renovation and modernization of 15 public secondary schools across rural areas",
-      value: "₦3.2B",
-      deadline: "Mar 10, 2024",
-      status: "Open",
-      statusColor: "bg-green-100 text-green-800",
-      category: "Education",
-    },
-    {
-      id: "KS-2024-008",
-      title: "ICT Infrastructure Development",
-      description:
-        "Fiber optic network expansion to connect all LGA headquarters",
-      value: "₦4.1B",
-      deadline: "Feb 20, 2024",
-      status: "Closing Soon",
-      statusColor: "bg-orange-100 text-orange-800",
-      category: "Technology",
-    },
-    {
-      id: "KS-2024-003",
-      title: "Water Treatment Plant",
-      description:
-        "Construction of modern water treatment facility serving 200,000 residents",
-      value: "₦5.7B",
-      deadline: "Mar 05, 2024",
-      status: "Open",
-      statusColor: "bg-green-100 text-green-800",
-      category: "Infrastructure",
-    },
+      {
+        id: "KS-2024-001",
+        title: "Road Construction Project",
+        description:
+          "Construction of 50km rural roads to improve connectivity across Kano North LGA",
+        value: "₦2.5B",
+        deadline: "Feb 15, 2024",
+        status: "Open",
+        statusColor: "bg-green-100 text-green-800",
+        category: "Infrastructure",
+      },
+      {
+        id: "KS-2024-005",
+        title: "Healthcare Equipment Supply",
+        description:
+          "Supply and installation of modern medical equipment for 25 primary healthcare centers",
+        value: "���1.8B",
+        deadline: "Feb 28, 2024",
+        status: "Open",
+        statusColor: "bg-green-100 text-green-800",
+        category: "Healthcare",
+      },
+      {
+        id: "KS-2024-012",
+        title: "School Infrastructure Upgrade",
+        description:
+          "Renovation and modernization of 15 public secondary schools across rural areas",
+        value: "₦3.2B",
+        deadline: "Mar 10, 2024",
+        status: "Open",
+        statusColor: "bg-green-100 text-green-800",
+        category: "Education",
+      },
+      {
+        id: "KS-2024-008",
+        title: "ICT Infrastructure Development",
+        description:
+          "Fiber optic network expansion to connect all LGA headquarters",
+        value: "₦4.1B",
+        deadline: "Feb 20, 2024",
+        status: "Closing Soon",
+        statusColor: "bg-orange-100 text-orange-800",
+        category: "Technology",
+      },
+      {
+        id: "KS-2024-003",
+        title: "Water Treatment Plant",
+        description:
+          "Construction of modern water treatment facility serving 200,000 residents",
+        value: "₦5.7B",
+        deadline: "Mar 05, 2024",
+        status: "Open",
+        statusColor: "bg-green-100 text-green-800",
+        category: "Infrastructure",
+      },
     ];
 
     // Apply automatic status transitions to all tenders

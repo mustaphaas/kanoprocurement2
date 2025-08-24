@@ -106,10 +106,7 @@ const App = () => (
               path="/validation"
               element={<ProcurementWorkflowValidation />}
             />
-            <Route
-              path="/tender-status-demo"
-              element={<TenderStatusDemo />}
-            />
+            <Route path="/tender-status-demo" element={<TenderStatusDemo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

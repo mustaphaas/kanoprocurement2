@@ -5,19 +5,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TenderStatusValidation } from "@/components/TenderStatusValidation";
 import TenderSystemSettings from "@/components/TenderSystemSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  tenderStatusChecker, 
+import {
+  tenderStatusChecker,
   tenderSettingsManager,
-  TenderStatus
+  TenderStatus,
 } from "@/lib/tenderSettings";
-import { 
-  Clock, 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle, 
+import {
+  Clock,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
   Settings,
   PlayCircle,
-  StopCircle 
+  StopCircle,
 } from "lucide-react";
 
 interface DemoTender {
@@ -34,7 +34,7 @@ export default function TenderStatusDemo() {
 
   useEffect(() => {
     generateDemoTenders();
-    
+
     // Auto-refresh every 10 seconds to show status transitions
     const interval = setInterval(() => {
       generateDemoTenders();
@@ -47,48 +47,63 @@ export default function TenderStatusDemo() {
   const generateDemoTenders = () => {
     const now = new Date();
     const settings = tenderSettingsManager.getSettings();
-    
+
     const demoData: DemoTender[] = [
       {
         id: "DEMO-001",
         title: "Active Tender (10 days remaining)",
-        closingDate: new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+        closingDate: new Date(
+          now.getTime() + 10 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
         status: "Active",
         daysRemaining: 10,
       },
       {
-        id: "DEMO-002", 
+        id: "DEMO-002",
         title: `Closing Soon Tender (${Math.floor(settings.closingSoonThresholdDays / 2)} days remaining)`,
-        closingDate: new Date(now.getTime() + Math.floor(settings.closingSoonThresholdDays / 2) * 24 * 60 * 60 * 1000).toISOString(),
+        closingDate: new Date(
+          now.getTime() +
+            Math.floor(settings.closingSoonThresholdDays / 2) *
+              24 *
+              60 *
+              60 *
+              1000,
+        ).toISOString(),
         status: "Active", // Will auto-transition to Closing Soon
         daysRemaining: Math.floor(settings.closingSoonThresholdDays / 2),
       },
       {
         id: "DEMO-003",
         title: "Recently Closed Tender (1 day past deadline)",
-        closingDate: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        closingDate: new Date(
+          now.getTime() - 1 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
         status: "Active", // Will auto-transition to Closed
         daysRemaining: -1,
       },
       {
         id: "DEMO-004",
         title: "Long Closed Tender (10 days past deadline)",
-        closingDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        closingDate: new Date(
+          now.getTime() - 10 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
         status: "Closed",
         daysRemaining: -10,
       },
     ];
 
     // Apply automatic status transitions
-    const updatedTenders = demoData.map(tender => {
+    const updatedTenders = demoData.map((tender) => {
       const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
         tender.status,
-        tender.closingDate
+        tender.closingDate,
       );
       return {
         ...tender,
         status: automaticStatus,
-        daysRemaining: tenderStatusChecker.calculateDaysUntilDeadline(tender.closingDate),
+        daysRemaining: tenderStatusChecker.calculateDaysUntilDeadline(
+          tender.closingDate,
+        ),
       };
     });
 
@@ -172,35 +187,39 @@ export default function TenderStatusDemo() {
                       <div className="flex-1">
                         <h3 className="font-semibold">{tender.title}</h3>
                         <p className="text-sm text-muted-foreground">
-                          {tender.daysRemaining >= 0 
+                          {tender.daysRemaining >= 0
                             ? `${tender.daysRemaining} days remaining`
-                            : `${Math.abs(tender.daysRemaining)} days past deadline`
-                          }
+                            : `${Math.abs(tender.daysRemaining)} days past deadline`}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Deadline: {new Date(tender.closingDate).toLocaleDateString()}
+                          Deadline:{" "}
+                          {new Date(tender.closingDate).toLocaleDateString()}
                         </p>
                       </div>
-                      
+
                       <div className="flex items-center gap-4">
                         <div className="text-center">
-                          <div className="text-xs text-muted-foreground mb-1">EOI</div>
+                          <div className="text-xs text-muted-foreground mb-1">
+                            EOI
+                          </div>
                           {permissions.canEOI ? (
                             <CheckCircle className="h-5 w-5 text-green-600 mx-auto" />
                           ) : (
                             <XCircle className="h-5 w-5 text-red-600 mx-auto" />
                           )}
                         </div>
-                        
+
                         <div className="text-center">
-                          <div className="text-xs text-muted-foreground mb-1">Bid</div>
+                          <div className="text-xs text-muted-foreground mb-1">
+                            Bid
+                          </div>
                           {permissions.canBid ? (
                             <CheckCircle className="h-5 w-5 text-green-600 mx-auto" />
                           ) : (
                             <XCircle className="h-5 w-5 text-red-600 mx-auto" />
                           )}
                         </div>
-                        
+
                         <div className="flex items-center gap-2">
                           {getStatusIcon(tender.status)}
                           <Badge className={getStatusColor(tender.status)}>
@@ -214,12 +233,21 @@ export default function TenderStatusDemo() {
               </div>
 
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-2">Status Transition Rules</h4>
+                <h4 className="font-semibold text-blue-800 mb-2">
+                  Status Transition Rules
+                </h4>
                 <div className="text-sm text-blue-700 space-y-1">
-                  <div>• Active → Closing Soon: {tenderSettingsManager.getClosingSoonThreshold()} days before deadline</div>
+                  <div>
+                    • Active → Closing Soon:{" "}
+                    {tenderSettingsManager.getClosingSoonThreshold()} days
+                    before deadline
+                  </div>
                   <div>• Closing Soon → Closed: Past deadline (automatic)</div>
                   <div>• Closed → Evaluation: Automatic flow enabled</div>
-                  <div>• EOI/Bid submission: Only allowed for Active and Closing Soon tenders</div>
+                  <div>
+                    • EOI/Bid submission: Only allowed for Active and Closing
+                    Soon tenders
+                  </div>
                 </div>
               </div>
 
