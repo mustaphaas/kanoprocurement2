@@ -105,10 +105,82 @@ export const getCurrentTenderCount = (ministryCode?: string): number => {
 };
 
 /**
+ * Migrate old tender data to new ministry-aware format
+ */
+export const migrateTenderData = (): void => {
+  const storageKeys = [
+    "featuredTenders",
+    "recentTenders",
+    "ministryTenders",
+    "kanoproc_tenders",
+  ];
+
+  console.log("🔄 Migrating tender data to new ministry-aware format...");
+
+  storageKeys.forEach((key) => {
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored) {
+        const tenders = JSON.parse(stored);
+        if (Array.isArray(tenders)) {
+          let hasChanges = false;
+          const updatedTenders = tenders.map((tender) => {
+            if (tender.id && typeof tender.id === "string") {
+              // Check if already in new format
+              if (tender.id.match(/^(MOH|MOWI|MOE)-\d{4}-\d{3}$/)) {
+                return tender; // Already in correct format
+              }
+
+              // Convert old KS- format to ministry-specific format
+              const oldMatch = tender.id.match(/^KS-(\d{4})-(\d{3})$/);
+              if (oldMatch) {
+                const year = oldMatch[1];
+                const number = oldMatch[2];
+
+                // Determine ministry based on tender category/procuring entity
+                let ministryCode = 'MOH'; // default
+                if (tender.category === 'Infrastructure' ||
+                    (tender.procuringEntity && tender.procuringEntity.includes('Works'))) {
+                  ministryCode = 'MOWI';
+                } else if (tender.category === 'Education' ||
+                          (tender.procuringEntity && tender.procuringEntity.includes('Education'))) {
+                  ministryCode = 'MOE';
+                } else if (tender.category === 'Healthcare' ||
+                          (tender.procuringEntity && tender.procuringEntity.includes('Health'))) {
+                  ministryCode = 'MOH';
+                }
+
+                const newId = `${ministryCode}-${year}-${number}`;
+                console.log(`  📝 Migrating: ${tender.id} → ${newId}`);
+                hasChanges = true;
+                return { ...tender, id: newId };
+              }
+            }
+            return tender;
+          });
+
+          if (hasChanges) {
+            localStorage.setItem(key, JSON.stringify(updatedTenders));
+            console.log(`  ✅ Updated ${key} with new ID format`);
+          }
+        }
+      }
+    } catch (error) {
+      console.warn(`Error migrating storage key ${key}:`, error);
+    }
+  });
+
+  console.log("✅ Tender data migration completed");
+};
+
+/**
  * Initialize the tender counter based on existing tenders in storage
  * This ensures we don't create duplicate IDs when upgrading from timestamp-based IDs
  */
 export const initializeTenderCounter = (): void => {
+  // First, migrate any old format tenders
+  migrateTenderData();
+
   const ministryCode = getMinistryCode();
   const currentYear = getCurrentYear();
   const counterKey = `${TENDER_COUNTER_KEY}_${ministryCode}_${currentYear}`;
