@@ -314,6 +314,20 @@ export default function AllTenders() {
 
   const [allTenders, setAllTenders] = useState<Tender[]>(getDefaultTenders());
 
+  // Apply automatic status transitions to a tender
+  const applyStatusTransitions = (tender: Tender): Tender => {
+    const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
+      tender.status,
+      tender.closingDate || tender.deadline,
+      tender.publishDate
+    );
+
+    return {
+      ...tender,
+      status: automaticStatus
+    };
+  };
+
   // Load tenders from localStorage
   useEffect(() => {
     const loadAllTenders = () => {
@@ -321,16 +335,19 @@ export default function AllTenders() {
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
-          // Apply currency formatting to fix any incorrectly formatted values
+          // Apply currency formatting and automatic status transitions
           const formattedParsedTenders = parsedTenders.map(
-            (tender: Tender) => ({
-              ...tender,
-              value: formatCurrency(tender.value),
-            }),
+            (tender: Tender) => {
+              const formatted = {
+                ...tender,
+                value: formatCurrency(tender.value),
+              };
+              return applyStatusTransitions(formatted);
+            }
           );
 
           // Combine stored tenders with default ones, removing duplicates
-          const defaultTenders = getDefaultTenders();
+          const defaultTenders = getDefaultTenders().map(applyStatusTransitions);
           const allUniqueTenders = [...formattedParsedTenders];
 
           // Add default tenders that don't exist in stored tenders
@@ -345,7 +362,13 @@ export default function AllTenders() {
           });
 
           setAllTenders(allUniqueTenders);
+        } else {
+          // If no stored tenders, just use defaults with status transitions
+          setAllTenders(getDefaultTenders().map(applyStatusTransitions));
         }
+      } else {
+        // If no stored tenders, just use defaults with status transitions
+        setAllTenders(getDefaultTenders().map(applyStatusTransitions));
       }
     };
 
