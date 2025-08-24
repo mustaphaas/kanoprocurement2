@@ -3910,7 +3910,9 @@ export default function MinistryDashboard() {
     if (!newTender.closeDate) missingFields.push("Closing Date");
 
     if (missingFields.length > 0) {
-      alert(`Please fill in the following required fields: ${missingFields.join(", ")}`);
+      alert(
+        `Please fill in the following required fields: ${missingFields.join(", ")}`,
+      );
       return;
     }
 
@@ -3998,7 +4000,8 @@ export default function MinistryDashboard() {
       localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
 
       // Also store in recentTenders with more detailed information
-      const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
+      const existingRecentTenders =
+        localStorage.getItem("recentTenders") || "[]";
       const recentTendersList = JSON.parse(existingRecentTenders);
       const recentTender = {
         id: tender.id,
@@ -4010,7 +4013,8 @@ export default function MinistryDashboard() {
         views: 0,
         status: tender.status === "Published" ? "Open" : "Draft",
         description: tender.description,
-        publishDate: tender.publishDate || new Date().toISOString().split("T")[0],
+        publishDate:
+          tender.publishDate || new Date().toISOString().split("T")[0],
         closingDate: tender.closeDate,
         tenderFee: formatCurrency(25000),
         procuringEntity: ministryInfo.name,
@@ -4034,7 +4038,10 @@ export default function MinistryDashboard() {
       recentTendersList.unshift(recentTender);
       // Keep only the last 10 recent tenders
       const latestRecentTenders = recentTendersList.slice(0, 10);
-      localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+      localStorage.setItem(
+        "recentTenders",
+        JSON.stringify(latestRecentTenders),
+      );
 
       // Reset form
       setNewTender({
@@ -4053,7 +4060,9 @@ export default function MinistryDashboard() {
       console.log("Tender creation completed successfully");
     } catch (error) {
       console.error("Error creating tender:", error);
-      alert(`Error ${isDraft ? "saving draft" : "publishing"} tender. Please try again. Error: ${error.message || error}`);
+      alert(
+        `Error ${isDraft ? "saving draft" : "publishing"} tender. Please try again. Error: ${error.message || error}`,
+      );
     }
   };
 

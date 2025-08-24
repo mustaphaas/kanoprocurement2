@@ -47,19 +47,19 @@ const getMinistryCode = (): string => {
 
       // Map ministry IDs to codes
       const ministryMap: Record<string, string> = {
-        'ministry': 'MOH',    // Ministry of Health
-        'ministry2': 'MOWI',  // Ministry of Works and Infrastructure
-        'ministry3': 'MOE',   // Ministry of Education
+        ministry: "MOH", // Ministry of Health
+        ministry2: "MOWI", // Ministry of Works and Infrastructure
+        ministry3: "MOE", // Ministry of Education
       };
 
-      return ministryMap[userData.ministryId] || 'MOH';
+      return ministryMap[userData.ministryId] || "MOH";
     }
   } catch (error) {
     console.error("Error getting ministry code:", error);
   }
 
   // Default to MOH if no ministry context
-  return 'MOH';
+  return "MOH";
 };
 
 /**
@@ -138,16 +138,25 @@ export const migrateTenderData = (): void => {
                 const number = oldMatch[2];
 
                 // Determine ministry based on tender category/procuring entity
-                let ministryCode = 'MOH'; // default
-                if (tender.category === 'Infrastructure' ||
-                    (tender.procuringEntity && tender.procuringEntity.includes('Works'))) {
-                  ministryCode = 'MOWI';
-                } else if (tender.category === 'Education' ||
-                          (tender.procuringEntity && tender.procuringEntity.includes('Education'))) {
-                  ministryCode = 'MOE';
-                } else if (tender.category === 'Healthcare' ||
-                          (tender.procuringEntity && tender.procuringEntity.includes('Health'))) {
-                  ministryCode = 'MOH';
+                let ministryCode = "MOH"; // default
+                if (
+                  tender.category === "Infrastructure" ||
+                  (tender.procuringEntity &&
+                    tender.procuringEntity.includes("Works"))
+                ) {
+                  ministryCode = "MOWI";
+                } else if (
+                  tender.category === "Education" ||
+                  (tender.procuringEntity &&
+                    tender.procuringEntity.includes("Education"))
+                ) {
+                  ministryCode = "MOE";
+                } else if (
+                  tender.category === "Healthcare" ||
+                  (tender.procuringEntity &&
+                    tender.procuringEntity.includes("Health"))
+                ) {
+                  ministryCode = "MOH";
                 }
 
                 const newId = `${ministryCode}-${year}-${number}`;
@@ -213,7 +222,11 @@ export const initializeTenderCounter = (): void => {
                   const numberFromId = parseInt(match[3], 10);
 
                   // Only count tenders from current ministry and year
-                  if (ministryFromId === ministryCode && yearFromId === currentYear && numberFromId > maxNumber) {
+                  if (
+                    ministryFromId === ministryCode &&
+                    yearFromId === currentYear &&
+                    numberFromId > maxNumber
+                  ) {
                     maxNumber = numberFromId;
                   }
                 }

@@ -231,7 +231,10 @@ export default function Index() {
       if (storedRecentTenders) {
         const parsedTenders = JSON.parse(storedRecentTenders);
         if (parsedTenders && parsedTenders.length > 0) {
-          console.log("Loaded recent tenders from localStorage:", parsedTenders.length);
+          console.log(
+            "Loaded recent tenders from localStorage:",
+            parsedTenders.length,
+          );
           setRecentTenders(parsedTenders);
           return;
         }
@@ -259,11 +262,11 @@ export default function Index() {
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
@@ -370,9 +373,14 @@ export default function Index() {
         const parsedTenders = JSON.parse(storedFeaturedTenders);
         if (parsedTenders && parsedTenders.length > 0) {
           // Apply automatic status transitions to stored tenders
-          const tendersWithUpdatedStatus = parsedTenders.map(applyStatusTransition);
+          const tendersWithUpdatedStatus = parsedTenders.map(
+            applyStatusTransition,
+          );
           setFeaturedTenders(tendersWithUpdatedStatus);
-          console.log("Loaded featured tenders from localStorage:", tendersWithUpdatedStatus.length);
+          console.log(
+            "Loaded featured tenders from localStorage:",
+            tendersWithUpdatedStatus.length,
+          );
           return;
         }
       }
@@ -399,11 +407,11 @@ export default function Index() {
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
