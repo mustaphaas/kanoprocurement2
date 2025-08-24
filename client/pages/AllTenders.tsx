@@ -121,7 +121,7 @@ export default function AllTenders() {
       deadline: "2024-02-25",
       location: "Various LGAs",
       views: 156,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Comprehensive rehabilitation and renovation of 25 government secondary schools across Kano State including classroom blocks, laboratories, and recreational facilities.",
       publishDate: "2024-01-25",
@@ -153,7 +153,7 @@ export default function AllTenders() {
       deadline: "2024-02-20",
       location: "Statewide",
       views: 278,
-      status: "Closing Soon",
+      status: "Closing Soon" as TenderStatus,
       description:
         "Fiber optic network expansion to connect all LGA headquarters and major government facilities across Kano State.",
       publishDate: "2024-01-10",
@@ -186,7 +186,7 @@ export default function AllTenders() {
       deadline: "2024-03-05",
       location: "Kano Municipal",
       views: 189,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Construction of modern water treatment facility serving 200,000 residents with advanced filtration and purification systems.",
       publishDate: "2024-01-30",
@@ -219,7 +219,7 @@ export default function AllTenders() {
       deadline: "2024-02-28",
       location: "Rural LGAs",
       views: 145,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Supply of modern agricultural equipment and machinery to support farming cooperatives across rural areas of Kano State.",
       publishDate: "2024-01-28",
@@ -252,7 +252,7 @@ export default function AllTenders() {
       deadline: "2024-03-10",
       location: "Statewide",
       views: 198,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Installation of modern security systems including CCTV surveillance, access control, and communication networks for government facilities.",
       publishDate: "2024-02-01",
@@ -285,7 +285,7 @@ export default function AllTenders() {
       deadline: "2024-03-15",
       location: "Kano Metropolitan",
       views: 167,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Implementation of comprehensive waste management system including collection, sorting, recycling, and disposal facilities.",
       publishDate: "2024-02-05",
