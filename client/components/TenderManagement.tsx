@@ -25,6 +25,12 @@ import {
   Target,
   Settings,
 } from "lucide-react";
+import {
+  tenderSettingsManager,
+  tenderStatusChecker,
+  TenderStatus,
+  TenderStatusInfo,
+} from "@/lib/tenderSettings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -62,19 +68,7 @@ interface Tender {
   title: string;
   description: string;
   budget: number;
-  status:
-    | "Draft"
-    | "Published"
-    | "Open"
-    | "Closed"
-    | "Evaluated"
-    | "NOC Pending"
-    | "NOC Approved"
-    | "NOC Rejected"
-    | "Contract Created"
-    | "Contract Signed"
-    | "Implementation"
-    | "Completed";
+  status: TenderStatus;
   createdDate: string;
   publishedDate?: string;
   closingDate?: string;
@@ -279,21 +273,50 @@ const TenderManagement = () => {
 
   // Synchronize tender status with NOC and contract data
   const synchronizeTenderStatus = (tender: Tender): Tender => {
+    // First apply automatic date-based status transitions
+    let updatedTender = { ...tender };
+
+    // Apply automatic status transitions based on dates
+    if (tender.closingDate) {
+      const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
+        tender.status,
+        tender.closingDate,
+        tender.publishedDate,
+      );
+
+      // Update status if it changed due to automatic transition
+      if (automaticStatus !== tender.status) {
+        updatedTender.status = automaticStatus;
+        updatedTender.lastUpdated = new Date().toISOString();
+
+        // If tender just moved to Closed, check if we should start evaluation
+        if (
+          automaticStatus === "Closed" &&
+          tenderStatusChecker.shouldStartEvaluation(automaticStatus)
+        ) {
+          // Update workflow stage to evaluation
+          updatedTender.workflowStage = "Evaluation";
+
+          // If evaluation hasn't been set up yet, initialize it
+          if (updatedTender.evaluation?.status === "Not Started") {
+            updatedTender.evaluation.status = "Technical";
+          }
+        }
+      }
+    }
     // Check NOC status
     const nocRequests = JSON.parse(
       localStorage.getItem("centralNOCRequests") || "[]",
     );
     const relatedNOC = nocRequests.find(
-      (noc: any) => noc.tenderId === tender.id,
+      (noc: any) => noc.tenderId === updatedTender.id,
     );
 
     // Check contract status
     const contracts = JSON.parse(localStorage.getItem("contracts") || "[]");
     const relatedContract = contracts.find(
-      (contract: any) => contract.tenderId === tender.id,
+      (contract: any) => contract.tenderId === updatedTender.id,
     );
-
-    let updatedTender = { ...tender };
 
     if (relatedContract) {
       // Contract exists - highest priority status
@@ -332,7 +355,12 @@ const TenderManagement = () => {
       // Evaluation complete but no NOC yet
       updatedTender.workflowStage = "Evaluation";
       if (tender.status !== "NOC Pending") {
-        updatedTender.status = "Evaluated"; // Should trigger NOC request
+        // Only update to Evaluated if not already in a post-evaluation stage
+        if (
+          ["Active", "Closing Soon", "Closed"].includes(updatedTender.status)
+        ) {
+          updatedTender.status = "Evaluated";
+        }
       }
     }
 
@@ -714,6 +742,18 @@ const TenderManagement = () => {
         border: "border-green-200",
         icon: "🟢",
       },
+      Active: {
+        bg: "bg-gradient-to-r from-green-100 to-emerald-100",
+        text: "text-green-700",
+        border: "border-green-200",
+        icon: "🟢",
+      },
+      "Closing Soon": {
+        bg: "bg-gradient-to-r from-orange-100 to-yellow-100",
+        text: "text-orange-700",
+        border: "border-orange-200",
+        icon: "⚠️",
+      },
       Closed: {
         bg: "bg-gradient-to-r from-red-100 to-rose-100",
         text: "text-red-700",
@@ -798,12 +838,39 @@ const TenderManagement = () => {
   };
 
   const getDaysRemaining = (closingDate: string) => {
-    const closing = new Date(closingDate);
-    const today = new Date();
-    const diffTime = closing.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+    return tenderStatusChecker.calculateDaysUntilDeadline(closingDate);
   };
+
+  const getTenderStatusInfo = (tender: Tender): TenderStatusInfo => {
+    return tenderStatusChecker.getStatusInfo(tender.status, tender.closingDate);
+  };
+
+  // Auto-refresh tender statuses every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTenders((prevTenders) => {
+        const updatedTenders = prevTenders.map((tender) => {
+          const synchronized = synchronizeTenderStatus(tender);
+          return synchronized;
+        });
+
+        // Only save if there were actual changes
+        const hasChanges = updatedTenders.some(
+          (tender, index) =>
+            tender.status !== prevTenders[index]?.status ||
+            tender.workflowStage !== prevTenders[index]?.workflowStage,
+        );
+
+        if (hasChanges) {
+          saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+        }
+
+        return updatedTenders;
+      });
+    }, 60000); // Check every minute
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
@@ -959,7 +1026,16 @@ const TenderManagement = () => {
                       <SelectItem value="Open" className="hover:bg-blue-50">
                         Open
                       </SelectItem>
-                      <SelectItem value="Closed" className="hover:bg-yellow-50">
+                      <SelectItem value="Active" className="hover:bg-green-50">
+                        Active
+                      </SelectItem>
+                      <SelectItem
+                        value="Closing Soon"
+                        className="hover:bg-orange-50"
+                      >
+                        Closing Soon
+                      </SelectItem>
+                      <SelectItem value="Closed" className="hover:bg-red-50">
                         Closed
                       </SelectItem>
                       <SelectItem
@@ -1056,6 +1132,11 @@ const TenderManagement = () => {
                               <p className="text-sm font-bold text-orange-800">
                                 {getDaysRemaining(tender.closingDate)}
                               </p>
+                              {tender.status === "Closing Soon" && (
+                                <p className="text-xs text-orange-600 font-medium">
+                                  ⚠️ Closing Soon!
+                                </p>
+                              )}
                             </div>
                           </div>
                         )}

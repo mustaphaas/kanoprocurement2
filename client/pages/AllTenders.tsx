@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { formatCurrency } from "@/lib/utils";
+import { tenderStatusChecker, TenderStatus } from "@/lib/tenderSettings";
 import {
   Building2,
   FileText,
@@ -27,7 +28,7 @@ interface Tender {
   deadline: string;
   location: string;
   views: number;
-  status: string;
+  status: TenderStatus;
   category: string;
   publishDate: string;
   closingDate: string;
@@ -56,7 +57,7 @@ export default function AllTenders() {
       deadline: "2024-02-15",
       location: "Kano North LGA",
       views: 245,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
@@ -88,7 +89,7 @@ export default function AllTenders() {
       deadline: "2024-02-20",
       location: "Statewide",
       views: 189,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Procurement of essential medical equipment for 50 Primary Health Centers across Kano State to improve healthcare delivery and patient outcomes.",
       publishDate: "2024-01-20",
@@ -120,7 +121,7 @@ export default function AllTenders() {
       deadline: "2024-02-25",
       location: "Various LGAs",
       views: 156,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Comprehensive rehabilitation and renovation of 25 government secondary schools across Kano State including classroom blocks, laboratories, and recreational facilities.",
       publishDate: "2024-01-25",
@@ -152,7 +153,7 @@ export default function AllTenders() {
       deadline: "2024-02-20",
       location: "Statewide",
       views: 278,
-      status: "Closing Soon",
+      status: "Closing Soon" as TenderStatus,
       description:
         "Fiber optic network expansion to connect all LGA headquarters and major government facilities across Kano State.",
       publishDate: "2024-01-10",
@@ -185,7 +186,7 @@ export default function AllTenders() {
       deadline: "2024-03-05",
       location: "Kano Municipal",
       views: 189,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Construction of modern water treatment facility serving 200,000 residents with advanced filtration and purification systems.",
       publishDate: "2024-01-30",
@@ -218,7 +219,7 @@ export default function AllTenders() {
       deadline: "2024-02-28",
       location: "Rural LGAs",
       views: 145,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Supply of modern agricultural equipment and machinery to support farming cooperatives across rural areas of Kano State.",
       publishDate: "2024-01-28",
@@ -251,7 +252,7 @@ export default function AllTenders() {
       deadline: "2024-03-10",
       location: "Statewide",
       views: 198,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Installation of modern security systems including CCTV surveillance, access control, and communication networks for government facilities.",
       publishDate: "2024-02-01",
@@ -284,7 +285,7 @@ export default function AllTenders() {
       deadline: "2024-03-15",
       location: "Kano Metropolitan",
       views: 167,
-      status: "Open",
+      status: "Active" as TenderStatus,
       description:
         "Implementation of comprehensive waste management system including collection, sorting, recycling, and disposal facilities.",
       publishDate: "2024-02-05",
@@ -313,6 +314,20 @@ export default function AllTenders() {
 
   const [allTenders, setAllTenders] = useState<Tender[]>(getDefaultTenders());
 
+  // Apply automatic status transitions to a tender
+  const applyStatusTransitions = (tender: Tender): Tender => {
+    const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
+      tender.status,
+      tender.closingDate || tender.deadline,
+      tender.publishDate,
+    );
+
+    return {
+      ...tender,
+      status: automaticStatus,
+    };
+  };
+
   // Load tenders from localStorage
   useEffect(() => {
     const loadAllTenders = () => {
@@ -320,16 +335,19 @@ export default function AllTenders() {
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
-          // Apply currency formatting to fix any incorrectly formatted values
-          const formattedParsedTenders = parsedTenders.map(
-            (tender: Tender) => ({
+          // Apply currency formatting and automatic status transitions
+          const formattedParsedTenders = parsedTenders.map((tender: Tender) => {
+            const formatted = {
               ...tender,
               value: formatCurrency(tender.value),
-            }),
-          );
+            };
+            return applyStatusTransitions(formatted);
+          });
 
           // Combine stored tenders with default ones, removing duplicates
-          const defaultTenders = getDefaultTenders();
+          const defaultTenders = getDefaultTenders().map(
+            applyStatusTransitions,
+          );
           const allUniqueTenders = [...formattedParsedTenders];
 
           // Add default tenders that don't exist in stored tenders
@@ -344,7 +362,13 @@ export default function AllTenders() {
           });
 
           setAllTenders(allUniqueTenders);
+        } else {
+          // If no stored tenders, just use defaults with status transitions
+          setAllTenders(getDefaultTenders().map(applyStatusTransitions));
         }
+      } else {
+        // If no stored tenders, just use defaults with status transitions
+        setAllTenders(getDefaultTenders().map(applyStatusTransitions));
       }
     };
 
@@ -365,7 +389,7 @@ export default function AllTenders() {
     "Security",
     "Environment",
   ];
-  const statuses = ["all", "Open", "Closing Soon", "Closed"];
+  const statuses = ["all", "Active", "Closing Soon", "Closed"];
 
   // Filter tenders based on search and filters
   const filteredTenders = allTenders.filter((tender) => {
@@ -386,14 +410,19 @@ export default function AllTenders() {
     setShowTenderDetails(true);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: TenderStatus) => {
     switch (status) {
-      case "Open":
+      case "Draft":
+        return "bg-gray-100 text-gray-800";
+      case "Published":
+      case "Active":
         return "bg-green-100 text-green-800";
       case "Closing Soon":
         return "bg-orange-100 text-orange-800";
       case "Closed":
         return "bg-red-100 text-red-800";
+      case "Evaluated":
+        return "bg-blue-100 text-blue-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -549,7 +578,7 @@ export default function AllTenders() {
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(tender.status)}`}
                   >
-                    {tender.status}
+                    {tender.status === "Active" ? "Open" : tender.status}
                   </span>
                 </div>
 
