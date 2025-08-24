@@ -297,7 +297,10 @@ export default function TenderCommitteeAssignment() {
       } else {
         const sampleClosedTenders = createSampleClosedTenders(ministryCode);
         setClosedTenders(sampleClosedTenders);
-        localStorage.setItem(closedTendersKey, JSON.stringify(sampleClosedTenders));
+        localStorage.setItem(
+          closedTendersKey,
+          JSON.stringify(sampleClosedTenders),
+        );
       }
     } catch (error) {
       console.error("Error loading data:", error);
@@ -1589,7 +1592,9 @@ export default function TenderCommitteeAssignment() {
                 <Select
                   value={assignmentForm.tenderId}
                   onValueChange={(value) => {
-                    const selectedTender = closedTenders.find(t => t.id === value);
+                    const selectedTender = closedTenders.find(
+                      (t) => t.id === value,
+                    );
                     setAssignmentForm({
                       ...assignmentForm,
                       tenderId: value,
@@ -1606,7 +1611,9 @@ export default function TenderCommitteeAssignment() {
                       <SelectItem key={tender.id} value={tender.id}>
                         <div className="flex flex-col items-start">
                           <span className="font-medium">{tender.id}</span>
-                          <span className="text-sm text-gray-600">{tender.title}</span>
+                          <span className="text-sm text-gray-600">
+                            {tender.title}
+                          </span>
                           <span className="text-xs text-gray-500">
                             {tender.category} • Closed: {tender.closingDate}
                           </span>
