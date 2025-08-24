@@ -228,6 +228,14 @@ export default function Index() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const getDefaultTenders = (): FeaturedTender[] => {
+    // Generate dynamic dates relative to today for testing status transitions
+    const today = new Date();
+    const futureDate = (days: number) => {
+      const date = new Date(today);
+      date.setDate(date.getDate() + days);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    };
+
     const rawTenders = [
       {
         id: "KS-2024-001",
