@@ -30,8 +30,8 @@ export default function AllTenders() {
   const [selectedTender, setSelectedTender] = useState<UnifiedTender | null>(null);
   const [showTenderDetails, setShowTenderDetails] = useState(false);
 
-  // Use unified tender data source
-  const getDefaultTenders = (): UnifiedTender[] => getAllTenders();
+  // Use ministry-specific tender data source
+  const getDefaultTenders = (): UnifiedTender[] => getMinistryTenders();
 
   const [allTenders, setAllTenders] = useState<UnifiedTender[]>(getDefaultTenders());
 
