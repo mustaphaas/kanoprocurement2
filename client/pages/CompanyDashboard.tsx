@@ -687,19 +687,22 @@ export default function CompanyDashboard() {
     }
 
     // Check tender status for EOI eligibility
-    const statusInfo = tenderStatusChecker.getStatusInfo(tender.status, tender.deadline);
+    const statusInfo = tenderStatusChecker.getStatusInfo(
+      tender.status,
+      tender.deadline,
+    );
     if (!statusInfo.canExpressInterest) {
       if (tender.status === "Closed") {
         alert(
-          "This tender is closed. The deadline has passed and no new expressions of interest are being accepted."
+          "This tender is closed. The deadline has passed and no new expressions of interest are being accepted.",
         );
       } else if (tender.status === "Draft") {
         alert(
-          "This tender is still in draft status and not yet open for expressions of interest."
+          "This tender is still in draft status and not yet open for expressions of interest.",
         );
       } else {
         alert(
-          `This tender is in '${tender.status}' status and is no longer accepting expressions of interest.`
+          `This tender is in '${tender.status}' status and is no longer accepting expressions of interest.`,
         );
       }
       return;
@@ -735,19 +738,22 @@ export default function CompanyDashboard() {
     }
 
     // Check tender status for bid submission eligibility
-    const statusInfo = tenderStatusChecker.getStatusInfo(tender.status, tender.deadline);
+    const statusInfo = tenderStatusChecker.getStatusInfo(
+      tender.status,
+      tender.deadline,
+    );
     if (!statusInfo.canSubmitBid) {
       if (tender.status === "Closed") {
         alert(
-          "This tender is closed. The deadline has passed and no new bids are being accepted."
+          "This tender is closed. The deadline has passed and no new bids are being accepted.",
         );
       } else if (tender.status === "Draft") {
         alert(
-          "This tender is still in draft status and not yet open for bid submissions."
+          "This tender is still in draft status and not yet open for bid submissions.",
         );
       } else {
         alert(
-          `This tender is in '${tender.status}' status and is no longer accepting bid submissions.`
+          `This tender is in '${tender.status}' status and is no longer accepting bid submissions.`,
         );
       }
       return;

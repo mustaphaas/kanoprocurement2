@@ -1,23 +1,32 @@
 import { useState, useEffect } from "react";
-import { Settings, Save, RotateCcw, Clock, CheckCircle, AlertTriangle } from "lucide-react";
+import {
+  Settings,
+  Save,
+  RotateCcw,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { 
-  tenderSettingsManager, 
-  TenderSystemSettings, 
-  tenderStatusChecker 
+import {
+  tenderSettingsManager,
+  TenderSystemSettings,
+  tenderStatusChecker,
 } from "@/lib/tenderSettings";
 
 export default function TenderSystemSettings() {
   const [settings, setSettings] = useState<TenderSystemSettings>(
-    tenderSettingsManager.getSettings()
+    tenderSettingsManager.getSettings(),
   );
   const [hasChanges, setHasChanges] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
 
   // Load current settings
   useEffect(() => {
@@ -26,9 +35,9 @@ export default function TenderSystemSettings() {
   }, []);
 
   const handleSettingChange = (key: keyof TenderSystemSettings, value: any) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
     setHasChanges(true);
     setSaveStatus("idle");
@@ -40,7 +49,7 @@ export default function TenderSystemSettings() {
       tenderSettingsManager.updateSettings(settings);
       setHasChanges(false);
       setSaveStatus("saved");
-      
+
       // Reset save status after 2 seconds
       setTimeout(() => {
         setSaveStatus("idle");
@@ -55,7 +64,11 @@ export default function TenderSystemSettings() {
   };
 
   const handleResetToDefaults = () => {
-    if (confirm("Are you sure you want to reset all settings to their default values? This action cannot be undone.")) {
+    if (
+      confirm(
+        "Are you sure you want to reset all settings to their default values? This action cannot be undone.",
+      )
+    ) {
       tenderSettingsManager.resetToDefaults();
       const defaultSettings = tenderSettingsManager.getSettings();
       setSettings(defaultSettings);
@@ -66,19 +79,27 @@ export default function TenderSystemSettings() {
 
   const getSaveButtonText = () => {
     switch (saveStatus) {
-      case "saving": return "Saving...";
-      case "saved": return "Saved!";
-      case "error": return "Error";
-      default: return "Save Settings";
+      case "saving":
+        return "Saving...";
+      case "saved":
+        return "Saved!";
+      case "error":
+        return "Error";
+      default:
+        return "Save Settings";
     }
   };
 
   const getSaveButtonIcon = () => {
     switch (saveStatus) {
-      case "saving": return <Clock className="h-4 w-4 animate-spin" />;
-      case "saved": return <CheckCircle className="h-4 w-4" />;
-      case "error": return <AlertTriangle className="h-4 w-4" />;
-      default: return <Save className="h-4 w-4" />;
+      case "saving":
+        return <Clock className="h-4 w-4 animate-spin" />;
+      case "saved":
+        return <CheckCircle className="h-4 w-4" />;
+      case "error":
+        return <AlertTriangle className="h-4 w-4" />;
+      default:
+        return <Save className="h-4 w-4" />;
     }
   };
 
@@ -97,7 +118,8 @@ export default function TenderSystemSettings() {
                   Tender System Settings
                 </h2>
                 <p className="text-lg text-gray-600 font-medium">
-                  Configure automatic tender status transitions and evaluation settings
+                  Configure automatic tender status transitions and evaluation
+                  settings
                 </p>
               </div>
             </div>
@@ -117,7 +139,10 @@ export default function TenderSystemSettings() {
           <CardContent className="space-y-6">
             {/* Closing Soon Threshold */}
             <div className="space-y-3">
-              <Label htmlFor="closingSoonThreshold" className="text-sm font-medium text-gray-700">
+              <Label
+                htmlFor="closingSoonThreshold"
+                className="text-sm font-medium text-gray-700"
+              >
                 "Closing Soon" Threshold (Days)
               </Label>
               <div className="space-y-2">
@@ -127,12 +152,19 @@ export default function TenderSystemSettings() {
                   min="1"
                   max="30"
                   value={settings.closingSoonThresholdDays}
-                  onChange={(e) => handleSettingChange('closingSoonThresholdDays', parseInt(e.target.value) || 1)}
+                  onChange={(e) =>
+                    handleSettingChange(
+                      "closingSoonThresholdDays",
+                      parseInt(e.target.value) || 1,
+                    )
+                  }
                   className="w-full"
                 />
                 <p className="text-xs text-gray-600">
-                  Number of days before tender deadline when status changes to "Closing Soon". 
-                  Current setting: {settings.closingSoonThresholdDays} day{settings.closingSoonThresholdDays !== 1 ? 's' : ''}.
+                  Number of days before tender deadline when status changes to
+                  "Closing Soon". Current setting:{" "}
+                  {settings.closingSoonThresholdDays} day
+                  {settings.closingSoonThresholdDays !== 1 ? "s" : ""}.
                 </p>
               </div>
             </div>
@@ -146,22 +178,34 @@ export default function TenderSystemSettings() {
                   Automatic Status Transitions
                 </Label>
                 <p className="text-xs text-gray-600">
-                  Automatically update tender status based on deadlines (Active → Closing Soon → Closed)
+                  Automatically update tender status based on deadlines (Active
+                  → Closing Soon → Closed)
                 </p>
               </div>
               <Switch
                 checked={settings.autoTransitionEnabled}
-                onCheckedChange={(checked) => handleSettingChange('autoTransitionEnabled', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("autoTransitionEnabled", checked)
+                }
               />
             </div>
 
             {/* Current Status Preview */}
             <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <h4 className="font-medium text-blue-900 mb-2">Status Transition Preview</h4>
+              <h4 className="font-medium text-blue-900 mb-2">
+                Status Transition Preview
+              </h4>
               <div className="text-sm text-blue-800 space-y-1">
-                <div>• Active tender → "Closing Soon" when {settings.closingSoonThresholdDays} day{settings.closingSoonThresholdDays !== 1 ? 's' : ''} remain</div>
+                <div>
+                  • Active tender → "Closing Soon" when{" "}
+                  {settings.closingSoonThresholdDays} day
+                  {settings.closingSoonThresholdDays !== 1 ? "s" : ""} remain
+                </div>
                 <div>• "Closing Soon" → "Closed" when deadline passes</div>
-                <div>• Automatic transitions: {settings.autoTransitionEnabled ? "Enabled" : "Disabled"}</div>
+                <div>
+                  • Automatic transitions:{" "}
+                  {settings.autoTransitionEnabled ? "Enabled" : "Disabled"}
+                </div>
               </div>
             </div>
           </CardContent>
@@ -183,12 +227,15 @@ export default function TenderSystemSettings() {
                   Automatic Evaluation Start
                 </Label>
                 <p className="text-xs text-gray-600">
-                  Automatically trigger evaluation workflow when tenders move to "Closed" status
+                  Automatically trigger evaluation workflow when tenders move to
+                  "Closed" status
                 </p>
               </div>
               <Switch
                 checked={settings.autoEvaluationStartEnabled}
-                onCheckedChange={(checked) => handleSettingChange('autoEvaluationStartEnabled', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("autoEvaluationStartEnabled", checked)
+                }
               />
             </div>
 
@@ -196,12 +243,17 @@ export default function TenderSystemSettings() {
 
             {/* Evaluation Workflow Preview */}
             <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-              <h4 className="font-medium text-green-900 mb-2">Evaluation Workflow</h4>
+              <h4 className="font-medium text-green-900 mb-2">
+                Evaluation Workflow
+              </h4>
               <div className="text-sm text-green-800 space-y-1">
                 <div>• "Closed" tender → Evaluation stage preparation</div>
                 <div>• Committee assignment ready</div>
                 <div>• Bid scoring workspace activated</div>
-                <div>• Auto-start: {settings.autoEvaluationStartEnabled ? "Enabled" : "Disabled"}</div>
+                <div>
+                  • Auto-start:{" "}
+                  {settings.autoEvaluationStartEnabled ? "Enabled" : "Disabled"}
+                </div>
               </div>
             </div>
 
@@ -216,7 +268,9 @@ export default function TenderSystemSettings() {
       {/* System Status Overview */}
       <Card className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-lg">
         <CardHeader>
-          <CardTitle className="text-xl text-gray-900">System Status Overview</CardTitle>
+          <CardTitle className="text-xl text-gray-900">
+            System Status Overview
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -261,11 +315,11 @@ export default function TenderSystemSettings() {
           onClick={handleSaveSettings}
           disabled={!hasChanges || saveStatus === "saving"}
           className={`flex items-center gap-2 ${
-            saveStatus === "saved" 
-              ? "bg-green-600 hover:bg-green-700" 
+            saveStatus === "saved"
+              ? "bg-green-600 hover:bg-green-700"
               : saveStatus === "error"
-              ? "bg-red-600 hover:bg-red-700"
-              : "bg-blue-600 hover:bg-blue-700"
+                ? "bg-red-600 hover:bg-red-700"
+                : "bg-blue-600 hover:bg-blue-700"
           } text-white`}
         >
           {getSaveButtonIcon()}

@@ -95,9 +95,9 @@ export class TenderSettingsManager {
 }
 
 // Utility functions for tender status management
-export type TenderStatus = 
+export type TenderStatus =
   | "Draft"
-  | "Published" 
+  | "Published"
   | "Active"
   | "Closing Soon"
   | "Closed"
@@ -128,7 +128,7 @@ export class TenderStatusChecker {
     // Set time to start of day for accurate day calculation
     closing.setHours(23, 59, 59, 999);
     today.setHours(0, 0, 0, 0);
-    
+
     const diffTime = closing.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
@@ -137,41 +137,59 @@ export class TenderStatusChecker {
   public static determineAutomaticStatus(
     currentStatus: TenderStatus,
     closingDate: string,
-    publishedDate?: string
+    publishedDate?: string,
   ): TenderStatus {
     const settings = this.settingsManager.getSettings();
-    
+
     if (!settings.autoTransitionEnabled) {
       return currentStatus;
     }
 
     // Don't auto-transition if already in post-closure stages
-    if (["Closed", "Evaluated", "NOC Pending", "NOC Approved", "NOC Rejected", 
-         "Contract Created", "Contract Signed", "Implementation", "Completed"].includes(currentStatus)) {
+    if (
+      [
+        "Closed",
+        "Evaluated",
+        "NOC Pending",
+        "NOC Approved",
+        "NOC Rejected",
+        "Contract Created",
+        "Contract Signed",
+        "Implementation",
+        "Completed",
+      ].includes(currentStatus)
+    ) {
       return currentStatus;
     }
 
     const daysUntilDeadline = this.calculateDaysUntilDeadline(closingDate);
-    
+
     // Past deadline - should be Closed
     if (daysUntilDeadline < 0) {
       return "Closed";
     }
-    
+
     // Within closing soon threshold
     if (daysUntilDeadline <= settings.closingSoonThresholdDays) {
       return "Closing Soon";
     }
-    
+
     // Active if published and not yet closing soon
-    if (currentStatus === "Published" || currentStatus === "Open" || currentStatus === "Active") {
+    if (
+      currentStatus === "Published" ||
+      currentStatus === "Open" ||
+      currentStatus === "Active"
+    ) {
       return "Active";
     }
-    
+
     return currentStatus;
   }
 
-  public static getStatusInfo(status: TenderStatus, closingDate?: string): TenderStatusInfo {
+  public static getStatusInfo(
+    status: TenderStatus,
+    closingDate?: string,
+  ): TenderStatusInfo {
     let canExpressInterest = false;
     let canSubmitBid = false;
     let isActive = false;
@@ -182,7 +200,7 @@ export class TenderStatusChecker {
       case "Draft":
         description = "Tender is being prepared and not yet published";
         break;
-      
+
       case "Published":
       case "Active":
         canExpressInterest = true;
@@ -191,7 +209,7 @@ export class TenderStatusChecker {
         description = "Tender is open for vendor participation";
         nextStage = closingDate ? "Closing Soon" : undefined;
         break;
-      
+
       case "Closing Soon":
         canExpressInterest = true;
         canSubmitBid = true;
@@ -199,46 +217,47 @@ export class TenderStatusChecker {
         description = "Tender deadline is approaching - limited time remaining";
         nextStage = "Closed";
         break;
-      
+
       case "Closed":
-        description = "Tender deadline has passed - no new submissions accepted";
+        description =
+          "Tender deadline has passed - no new submissions accepted";
         nextStage = "Evaluated";
         break;
-      
+
       case "Evaluated":
         description = "Tender evaluation completed - awaiting NOC process";
         nextStage = "NOC Pending";
         break;
-      
+
       case "NOC Pending":
         description = "Awaiting No Objection Certificate from oversight body";
         nextStage = "NOC Approved";
         break;
-      
+
       case "NOC Approved":
         description = "NOC approved - proceeding to contract creation";
         nextStage = "Contract Created";
         break;
-      
+
       case "NOC Rejected":
         description = "NOC rejected - review required";
         break;
-      
+
       case "Contract Created":
         description = "Contract documents prepared - awaiting signature";
         nextStage = "Contract Signed";
         break;
-      
+
       case "Contract Signed":
         description = "Contract executed - project implementation beginning";
         nextStage = "Implementation";
         break;
-      
+
       case "Implementation":
         description = "Project implementation in progress";
         nextStage = "Completed";
         break;
-      
+
       case "Completed":
         description = "Project completed successfully";
         break;
@@ -250,7 +269,7 @@ export class TenderStatusChecker {
       canSubmitBid,
       isActive,
       description,
-      nextStage
+      nextStage,
     };
   }
 

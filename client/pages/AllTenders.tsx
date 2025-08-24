@@ -319,12 +319,12 @@ export default function AllTenders() {
     const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
       tender.status,
       tender.closingDate || tender.deadline,
-      tender.publishDate
+      tender.publishDate,
     );
 
     return {
       ...tender,
-      status: automaticStatus
+      status: automaticStatus,
     };
   };
 
@@ -336,18 +336,18 @@ export default function AllTenders() {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
           // Apply currency formatting and automatic status transitions
-          const formattedParsedTenders = parsedTenders.map(
-            (tender: Tender) => {
-              const formatted = {
-                ...tender,
-                value: formatCurrency(tender.value),
-              };
-              return applyStatusTransitions(formatted);
-            }
-          );
+          const formattedParsedTenders = parsedTenders.map((tender: Tender) => {
+            const formatted = {
+              ...tender,
+              value: formatCurrency(tender.value),
+            };
+            return applyStatusTransitions(formatted);
+          });
 
           // Combine stored tenders with default ones, removing duplicates
-          const defaultTenders = getDefaultTenders().map(applyStatusTransitions);
+          const defaultTenders = getDefaultTenders().map(
+            applyStatusTransitions,
+          );
           const allUniqueTenders = [...formattedParsedTenders];
 
           // Add default tenders that don't exist in stored tenders

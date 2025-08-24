@@ -15,7 +15,11 @@ import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
-import { tenderStatusChecker, tenderSettingsManager, TenderStatus } from "@/lib/tenderSettings";
+import {
+  tenderStatusChecker,
+  tenderSettingsManager,
+  TenderStatus,
+} from "@/lib/tenderSettings";
 import {
   CardSkeleton,
   TableSkeleton,
@@ -2729,7 +2733,7 @@ export default function MinistryDashboard() {
         const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
           tender.status as TenderStatus,
           tender.closeDate,
-          tender.publishDate
+          tender.publishDate,
         );
 
         const updatedTender = {
@@ -2754,21 +2758,22 @@ export default function MinistryDashboard() {
               {
                 previousStatus: tender.status,
                 newStatus: automaticStatus,
-                autoEvaluationEnabled: tenderSettingsManager.isAutoEvaluationStartEnabled(),
+                autoEvaluationEnabled:
+                  tenderSettingsManager.isAutoEvaluationStartEnabled(),
                 tenderCloseDate: tender.closeDate,
-                triggerTime: new Date().toISOString()
-              }
+                triggerTime: new Date().toISOString(),
+              },
             );
 
             // Update workflow status to show evaluation is ready
-            setWorkflowStatuses(prevStatuses => ({
+            setWorkflowStatuses((prevStatuses) => ({
               ...prevStatuses,
               [tender.id]: {
                 ...prevStatuses[tender.id],
                 evaluationReady: true,
                 evaluationStarted: false,
-                evaluationDate: new Date().toISOString().split('T')[0]
-              }
+                evaluationDate: new Date().toISOString().split("T")[0],
+              },
             }));
           }
         }
@@ -2777,14 +2782,17 @@ export default function MinistryDashboard() {
       });
 
       // Save updated tenders to localStorage if there were status changes
-      const hasStatusChanges = updatedTenders.some((tender, index) =>
-        tender.status !== prev[index]?.status
+      const hasStatusChanges = updatedTenders.some(
+        (tender, index) => tender.status !== prev[index]?.status,
       );
 
       if (hasStatusChanges) {
         localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
         const ministryTendersKey = `${ministry.code}_tenders`;
-        localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
+        localStorage.setItem(
+          ministryTendersKey,
+          JSON.stringify(updatedTenders),
+        );
       }
 
       return updatedTenders;

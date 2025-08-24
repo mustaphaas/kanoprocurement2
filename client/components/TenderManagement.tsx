@@ -29,7 +29,7 @@ import {
   tenderSettingsManager,
   tenderStatusChecker,
   TenderStatus,
-  TenderStatusInfo
+  TenderStatusInfo,
 } from "@/lib/tenderSettings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -281,7 +281,7 @@ const TenderManagement = () => {
       const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
         tender.status,
         tender.closingDate,
-        tender.publishedDate
+        tender.publishedDate,
       );
 
       // Update status if it changed due to automatic transition
@@ -290,7 +290,10 @@ const TenderManagement = () => {
         updatedTender.lastUpdated = new Date().toISOString();
 
         // If tender just moved to Closed, check if we should start evaluation
-        if (automaticStatus === "Closed" && tenderStatusChecker.shouldStartEvaluation(automaticStatus)) {
+        if (
+          automaticStatus === "Closed" &&
+          tenderStatusChecker.shouldStartEvaluation(automaticStatus)
+        ) {
           // Update workflow stage to evaluation
           updatedTender.workflowStage = "Evaluation";
 
@@ -353,7 +356,9 @@ const TenderManagement = () => {
       updatedTender.workflowStage = "Evaluation";
       if (tender.status !== "NOC Pending") {
         // Only update to Evaluated if not already in a post-evaluation stage
-        if (["Active", "Closing Soon", "Closed"].includes(updatedTender.status)) {
+        if (
+          ["Active", "Closing Soon", "Closed"].includes(updatedTender.status)
+        ) {
           updatedTender.status = "Evaluated";
         }
       }
@@ -843,16 +848,17 @@ const TenderManagement = () => {
   // Auto-refresh tender statuses every minute
   useEffect(() => {
     const interval = setInterval(() => {
-      setTenders(prevTenders => {
-        const updatedTenders = prevTenders.map(tender => {
+      setTenders((prevTenders) => {
+        const updatedTenders = prevTenders.map((tender) => {
           const synchronized = synchronizeTenderStatus(tender);
           return synchronized;
         });
 
         // Only save if there were actual changes
-        const hasChanges = updatedTenders.some((tender, index) =>
-          tender.status !== prevTenders[index]?.status ||
-          tender.workflowStage !== prevTenders[index]?.workflowStage
+        const hasChanges = updatedTenders.some(
+          (tender, index) =>
+            tender.status !== prevTenders[index]?.status ||
+            tender.workflowStage !== prevTenders[index]?.workflowStage,
         );
 
         if (hasChanges) {
@@ -1023,7 +1029,10 @@ const TenderManagement = () => {
                       <SelectItem value="Active" className="hover:bg-green-50">
                         Active
                       </SelectItem>
-                      <SelectItem value="Closing Soon" className="hover:bg-orange-50">
+                      <SelectItem
+                        value="Closing Soon"
+                        className="hover:bg-orange-50"
+                      >
                         Closing Soon
                       </SelectItem>
                       <SelectItem value="Closed" className="hover:bg-red-50">
