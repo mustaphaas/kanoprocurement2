@@ -38,6 +38,7 @@ import {
   Settings,
   Crown,
 } from "lucide-react";
+import { tenderStatusChecker, TenderStatus } from "@/lib/tenderSettings";
 
 interface FeaturedTender {
   id: string;
@@ -2698,7 +2699,7 @@ export default function Index() {
                             • Conflicts of interest without proper disclosure
                           </li>
                           <li>
-                            • Fraudulent documentation or misrepresentation
+                            �� Fraudulent documentation or misrepresentation
                           </li>
                           <li>• Abuse of confidential information</li>
                         </ul>
