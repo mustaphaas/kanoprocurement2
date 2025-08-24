@@ -27,11 +27,14 @@ export default function AllTenders() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
+  const [selectedTender, setSelectedTender] = useState<UnifiedTender | null>(null);
   const [showTenderDetails, setShowTenderDetails] = useState(false);
 
   // Comprehensive tender data
-  const getDefaultTenders = (): Tender[] => [
+  const getDefaultTenders = (): UnifiedTender[] => getAllTenders();
+
+  // Removed old inline data - now using unified data source
+  const oldGetDefaultTenders = (): UnifiedTender[] => [
     {
       id: "KS-2024-001",
       title: "Construction of 50km Rural Roads in Kano North",
@@ -295,10 +298,10 @@ export default function AllTenders() {
     },
   ];
 
-  const [allTenders, setAllTenders] = useState<Tender[]>(getDefaultTenders());
+  const [allTenders, setAllTenders] = useState<UnifiedTender[]>(getDefaultTenders());
 
   // Apply automatic status transitions to a tender
-  const applyStatusTransitions = (tender: Tender): Tender => {
+  const applyStatusTransitions = (tender: UnifiedTender): UnifiedTender => {
     const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
       tender.status,
       tender.closingDate || tender.deadline,
@@ -319,7 +322,7 @@ export default function AllTenders() {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
           // Apply currency formatting and automatic status transitions
-          const formattedParsedTenders = parsedTenders.map((tender: Tender) => {
+          const formattedParsedTenders = parsedTenders.map((tender: UnifiedTender) => {
             const formatted = {
               ...tender,
               value: formatCurrency(tender.value),
@@ -337,7 +340,7 @@ export default function AllTenders() {
           defaultTenders.forEach((defaultTender) => {
             if (
               !formattedParsedTenders.find(
-                (t: Tender) => t.id === defaultTender.id,
+                (t: UnifiedTender) => t.id === defaultTender.id,
               )
             ) {
               allUniqueTenders.push(defaultTender);
@@ -388,7 +391,7 @@ export default function AllTenders() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const handleViewTenderDetails = (tender: Tender) => {
+  const handleViewTenderDetails = (tender: UnifiedTender) => {
     setSelectedTender(tender);
     setShowTenderDetails(true);
   };
