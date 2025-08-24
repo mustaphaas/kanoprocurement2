@@ -22,6 +22,7 @@ import UserDashboard from "./pages/UserDashboard";
 import GovernorDashboard from "./pages/GovernorDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
 import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation";
+import TenderStatusDemo from "./pages/TenderStatusDemo";
 
 const queryClient = new QueryClient();
 
@@ -105,6 +106,7 @@ const App = () => (
               path="/validation"
               element={<ProcurementWorkflowValidation />}
             />
+            <Route path="/tender-status-demo" element={<TenderStatusDemo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
