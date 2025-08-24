@@ -28,7 +28,7 @@ interface DemoTender {
   daysRemaining: number;
 }
 
-export function TenderStatusDemo() {
+export default function TenderStatusDemo() {
   const [demoTenders, setDemoTenders] = useState<DemoTender[]>([]);
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
