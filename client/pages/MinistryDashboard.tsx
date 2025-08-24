@@ -434,9 +434,9 @@ export default function MinistryDashboard() {
   const [vendorWorkflowStatuses, setVendorWorkflowStatuses] = useState<
     VendorWorkflowStatus[]
   >([]);
-  const [workflowStatuses, setWorkflowStatuses] = useState<
-    Record<string, any>
-  >({});
+  const [workflowStatuses, setWorkflowStatuses] = useState<Record<string, any>>(
+    {},
+  );
   const [selectedWorkspace, setSelectedWorkspace] = useState("MOH-2024-001");
   const [isEditingEvaluation, setIsEditingEvaluation] = useState(false);
   const [evaluationScores, setEvaluationScores] = useState<{
