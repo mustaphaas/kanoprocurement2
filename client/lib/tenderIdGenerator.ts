@@ -78,20 +78,22 @@ export const generateTenderId = (): string => {
 };
 
 /**
- * Reset the tender counter for the current year (for testing/admin purposes)
+ * Reset the tender counter for the current year and ministry (for testing/admin purposes)
  */
-export const resetTenderCounter = (): void => {
+export const resetTenderCounter = (ministryCode?: string): void => {
+  const ministry = ministryCode || getMinistryCode();
   const currentYear = getCurrentYear();
-  const counterKey = `${TENDER_COUNTER_KEY}_${currentYear}`;
+  const counterKey = `${TENDER_COUNTER_KEY}_${ministry}_${currentYear}`;
   localStorage.removeItem(counterKey);
 };
 
 /**
- * Get the current tender count for the year
+ * Get the current tender count for the year and ministry
  */
-export const getCurrentTenderCount = (): number => {
+export const getCurrentTenderCount = (ministryCode?: string): number => {
+  const ministry = ministryCode || getMinistryCode();
   const currentYear = getCurrentYear();
-  const counterKey = `${TENDER_COUNTER_KEY}_${currentYear}`;
+  const counterKey = `${TENDER_COUNTER_KEY}_${ministry}_${currentYear}`;
 
   try {
     const storedCounter = localStorage.getItem(counterKey);
