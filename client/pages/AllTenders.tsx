@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { formatCurrency } from "@/lib/utils";
+import { tenderStatusChecker, TenderStatus } from "@/lib/tenderSettings";
 import {
   Building2,
   FileText,
@@ -27,7 +28,7 @@ interface Tender {
   deadline: string;
   location: string;
   views: number;
-  status: string;
+  status: TenderStatus;
   category: string;
   publishDate: string;
   closingDate: string;
@@ -365,7 +366,7 @@ export default function AllTenders() {
     "Security",
     "Environment",
   ];
-  const statuses = ["all", "Open", "Closing Soon", "Closed"];
+  const statuses = ["all", "Active", "Closing Soon", "Closed"];
 
   // Filter tenders based on search and filters
   const filteredTenders = allTenders.filter((tender) => {
@@ -386,14 +387,19 @@ export default function AllTenders() {
     setShowTenderDetails(true);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: TenderStatus) => {
     switch (status) {
-      case "Open":
+      case "Draft":
+        return "bg-gray-100 text-gray-800";
+      case "Published":
+      case "Active":
         return "bg-green-100 text-green-800";
       case "Closing Soon":
         return "bg-orange-100 text-orange-800";
       case "Closed":
         return "bg-red-100 text-red-800";
+      case "Evaluated":
+        return "bg-blue-100 text-blue-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -549,7 +555,7 @@ export default function AllTenders() {
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(tender.status)}`}
                   >
-                    {tender.status}
+                    {tender.status === "Active" ? "Open" : tender.status}
                   </span>
                 </div>
 
