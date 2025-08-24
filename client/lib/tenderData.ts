@@ -276,5 +276,12 @@ export const getTendersByCategory = (category: string): Tender[] => {
 
 // Get healthcare/health tenders specifically
 export const getHealthcareTenders = (): Tender[] => {
-  return getTendersByCategory("Healthcare");
+  return getAllTenders().filter(tender =>
+    tender.category === "Healthcare" ||
+    tender.procuringEntity.includes("Ministry of Health") ||
+    tender.procuringEntity.includes("Health")
+  );
 };
+
+// Export ministry-aware version as the default
+export { getMinistryTenders as getDefaultTenders };
