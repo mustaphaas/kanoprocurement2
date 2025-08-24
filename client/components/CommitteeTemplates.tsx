@@ -943,11 +943,11 @@ export default function CommitteeTemplates() {
 
       {/* Create Template Modal */}
       <Dialog open={showTemplateModal} onOpenChange={setShowTemplateModal}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Create Committee Template</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto flex-1 pr-2">
             <div>
               <Label htmlFor="template-name">Template Name</Label>
               <Input
@@ -1142,7 +1142,7 @@ export default function CommitteeTemplates() {
                 placeholder="e.g., Medical Equipment, Healthcare Technology"
               />
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
               <Button
                 variant="outline"
                 onClick={() => setShowTemplateModal(false)}
@@ -1157,11 +1157,11 @@ export default function CommitteeTemplates() {
 
       {/* Add Role Modal */}
       <Dialog open={showRoleModal} onOpenChange={setShowRoleModal}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
+        <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Add Committee Role</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto flex-1 pr-2">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="role-title">Role Title</Label>
@@ -1295,7 +1295,7 @@ export default function CommitteeTemplates() {
                 />
               </div>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
               <Button variant="outline" onClick={() => setShowRoleModal(false)}>
                 Cancel
               </Button>

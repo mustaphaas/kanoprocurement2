@@ -56,6 +56,16 @@ import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Types for Tender-Specific Committee Assignment
+interface ClosedTender {
+  id: string;
+  title: string;
+  category: string;
+  status: "Closed" | "Evaluation_Complete" | "Awarded";
+  closingDate: string;
+  ministry: string;
+  estimatedValue: number;
+}
+
 interface TenderCommitteeAssignment {
   id: string;
   tenderId: string;
@@ -209,6 +219,7 @@ const STORAGE_KEYS = {
   TENDER_ASSIGNMENTS: "tenderCommitteeAssignments",
   MEMBER_POOL: "memberPool",
   COI_DECLARATIONS: "coiDeclarations",
+  CLOSED_TENDERS: "closedTenders",
 };
 
 export default function TenderCommitteeAssignment() {
@@ -216,6 +227,7 @@ export default function TenderCommitteeAssignment() {
     [],
   );
   const [memberPool, setMemberPool] = useState<MemberPool[]>([]);
+  const [closedTenders, setClosedTenders] = useState<ClosedTender[]>([]);
   const [selectedAssignment, setSelectedAssignment] =
     useState<TenderCommitteeAssignment | null>(null);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
@@ -275,6 +287,20 @@ export default function TenderCommitteeAssignment() {
         const sampleMemberPool = createSampleMemberPool(ministryCode);
         setMemberPool(sampleMemberPool);
         localStorage.setItem(memberPoolKey, JSON.stringify(sampleMemberPool));
+      }
+
+      // Load closed tenders
+      const closedTendersKey = `${ministryCode}_${STORAGE_KEYS.CLOSED_TENDERS}`;
+      const storedClosedTenders = localStorage.getItem(closedTendersKey);
+      if (storedClosedTenders) {
+        setClosedTenders(JSON.parse(storedClosedTenders));
+      } else {
+        const sampleClosedTenders = createSampleClosedTenders(ministryCode);
+        setClosedTenders(sampleClosedTenders);
+        localStorage.setItem(
+          closedTendersKey,
+          JSON.stringify(sampleClosedTenders),
+        );
       }
     } catch (error) {
       console.error("Error loading data:", error);
@@ -780,6 +806,85 @@ export default function TenderCommitteeAssignment() {
     }
 
     return baseMemberPool;
+  };
+
+  const createSampleClosedTenders = (ministryCode: string): ClosedTender[] => {
+    const baseTenders: ClosedTender[] = [
+      {
+        id: "MOH-2024-001",
+        title: "Hospital Equipment Supply",
+        category: "Medical Equipment",
+        status: "Closed",
+        closingDate: "2024-02-01",
+        ministry: "Ministry of Health",
+        estimatedValue: 250000000,
+      },
+      {
+        id: "MOH-2024-002",
+        title: "Pharmaceutical Procurement",
+        category: "Pharmaceuticals",
+        status: "Evaluation_Complete",
+        closingDate: "2024-01-25",
+        ministry: "Ministry of Health",
+        estimatedValue: 180000000,
+      },
+      {
+        id: "MOH-2023-015",
+        title: "Laboratory Equipment Upgrade",
+        category: "Laboratory Equipment",
+        status: "Awarded",
+        closingDate: "2023-12-15",
+        ministry: "Ministry of Health",
+        estimatedValue: 120000000,
+      },
+    ];
+
+    // Customize for different ministries
+    if (ministryCode === "MOWI") {
+      baseTenders.push(
+        {
+          id: "MOWI-2024-001",
+          title: "Kano-Kaduna Highway Rehabilitation",
+          category: "Road Construction",
+          status: "Closed",
+          closingDate: "2024-01-30",
+          ministry: "Ministry of Works and Infrastructure",
+          estimatedValue: 5000000000,
+        },
+        {
+          id: "MOWI-2024-002",
+          title: "Bridge Construction Project",
+          category: "Bridge Construction",
+          status: "Evaluation_Complete",
+          closingDate: "2024-01-20",
+          ministry: "Ministry of Works and Infrastructure",
+          estimatedValue: 3200000000,
+        },
+      );
+    } else if (ministryCode === "MOE") {
+      baseTenders.push(
+        {
+          id: "MOE-2024-001",
+          title: "School Furniture Supply Program",
+          category: "Educational Materials",
+          status: "Closed",
+          closingDate: "2024-01-28",
+          ministry: "Ministry of Education",
+          estimatedValue: 800000000,
+        },
+        {
+          id: "MOE-2024-002",
+          title: "Educational Technology Package",
+          category: "Educational Technology",
+          status: "Evaluation_Complete",
+          closingDate: "2024-01-22",
+          ministry: "Ministry of Education",
+          estimatedValue: 450000000,
+        },
+      );
+    }
+
+    return baseTenders;
   };
 
   const createAssignment = () => {
@@ -1476,25 +1581,47 @@ export default function TenderCommitteeAssignment() {
 
       {/* Create Assignment Modal */}
       <Dialog open={showAssignmentModal} onOpenChange={setShowAssignmentModal}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Create Committee Assignment</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto flex-1 pr-2">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="tender-id">Tender ID</Label>
-                <Input
-                  id="tender-id"
+                <Label htmlFor="tender-id">Select Closed Tender</Label>
+                <Select
                   value={assignmentForm.tenderId}
-                  onChange={(e) =>
+                  onValueChange={(value) => {
+                    const selectedTender = closedTenders.find(
+                      (t) => t.id === value,
+                    );
                     setAssignmentForm({
                       ...assignmentForm,
-                      tenderId: e.target.value,
-                    })
-                  }
-                  placeholder="e.g., MOH-2024-001"
-                />
+                      tenderId: value,
+                      tenderTitle: selectedTender?.title || "",
+                      tenderCategory: selectedTender?.category || "",
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a closed tender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {closedTenders.map((tender) => (
+                      <SelectItem key={tender.id} value={tender.id}>
+                        <div className="flex flex-col items-start">
+                          <span className="font-medium">{tender.id}</span>
+                          <span className="text-sm text-gray-600">
+                            {tender.title}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {tender.category} • Closed: {tender.closingDate}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <Label htmlFor="tender-category">Category</Label>
@@ -1507,7 +1634,8 @@ export default function TenderCommitteeAssignment() {
                       tenderCategory: e.target.value,
                     })
                   }
-                  placeholder="e.g., Medical Equipment"
+                  placeholder="Auto-filled from tender selection"
+                  disabled
                 />
               </div>
             </div>
@@ -1522,7 +1650,8 @@ export default function TenderCommitteeAssignment() {
                     tenderTitle: e.target.value,
                   })
                 }
-                placeholder="Enter tender title"
+                placeholder="Auto-filled from tender selection"
+                disabled
               />
             </div>
             <div>
@@ -1597,7 +1726,7 @@ export default function TenderCommitteeAssignment() {
                 rows={3}
               />
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
               <Button
                 variant="outline"
                 onClick={() => setShowAssignmentModal(false)}
@@ -1612,11 +1741,11 @@ export default function TenderCommitteeAssignment() {
 
       {/* COI Declaration Modal */}
       <Dialog open={showCOIModal} onOpenChange={setShowCOIModal}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
+        <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Conflict of Interest Declaration</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto flex-1 pr-2">
             <div>
               <Label htmlFor="coi-member">Committee Member</Label>
               <Select
@@ -1736,7 +1865,7 @@ export default function TenderCommitteeAssignment() {
               </>
             )}
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
               <Button variant="outline" onClick={() => setShowCOIModal(false)}>
                 Cancel
               </Button>

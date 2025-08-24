@@ -1457,11 +1457,11 @@ export default function QCBSFrameworkDefinition() {
 
       {/* Create Framework Modal */}
       <Dialog open={showFrameworkModal} onOpenChange={setShowFrameworkModal}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
+        <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Create QCBS Framework</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto flex-1 pr-2">
             <div>
               <Label htmlFor="framework-name">Framework Name</Label>
               <Input
@@ -1652,7 +1652,7 @@ export default function QCBSFrameworkDefinition() {
               />
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
               <Button
                 variant="outline"
                 onClick={() => setShowFrameworkModal(false)}

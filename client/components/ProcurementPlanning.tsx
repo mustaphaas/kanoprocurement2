@@ -1248,11 +1248,11 @@ export default function ProcurementPlanning() {
 
       {/* Create Procurement Plan Modal */}
       <Dialog open={showPlanModal} onOpenChange={setShowPlanModal}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Create New Procurement Plan</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto flex-1 pr-2">
             <div>
               <Label htmlFor="plan-title">Plan Title</Label>
               <Input
@@ -1343,7 +1343,7 @@ export default function ProcurementPlanning() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
               <Button variant="outline" onClick={() => setShowPlanModal(false)}>
                 Cancel
               </Button>
@@ -1355,11 +1355,11 @@ export default function ProcurementPlanning() {
 
       {/* Create Committee Modal */}
       <Dialog open={showCommitteeModal} onOpenChange={setShowCommitteeModal}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
+        <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Create New Evaluation Committee</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto flex-1 pr-2">
             <div>
               <Label htmlFor="committee-name">Committee Name</Label>
               <Input
@@ -1548,7 +1548,7 @@ export default function ProcurementPlanning() {
                 ))}
               </div>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
               <Button
                 variant="outline"
                 onClick={() => setShowCommitteeModal(false)}
@@ -1566,11 +1566,11 @@ export default function ProcurementPlanning() {
         open={showMarketResearchModal}
         onOpenChange={setShowMarketResearchModal}
       >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Add Market Research</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto flex-1 pr-2">
             <div>
               <Label htmlFor="research-category">Category</Label>
               <Input
@@ -1630,7 +1630,7 @@ export default function ProcurementPlanning() {
                 rows={3}
               />
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
               <Button
                 variant="outline"
                 onClick={() => setShowMarketResearchModal(false)}
