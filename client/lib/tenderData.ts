@@ -33,10 +33,10 @@ export interface ClosedTender {
 // Unified tender data source
 export const getAllTenders = (): Tender[] => [
   {
-    id: "KS-2024-001",
+    id: "MOWI-2024-001",
     title: "Construction of 50km Rural Roads in Kano North",
     category: "Infrastructure",
-    value: "₦2.5B",
+    value: "��2.5B",
     deadline: "2024-02-15",
     location: "Kano North LGA",
     views: 245,
@@ -65,7 +65,7 @@ export const getAllTenders = (): Tender[] => [
     ],
   },
   {
-    id: "KS-2024-002",
+    id: "MOH-2024-001",
     title: "Supply of Medical Equipment to Primary Health Centers",
     category: "Healthcare",
     value: "₦850M",
@@ -97,7 +97,7 @@ export const getAllTenders = (): Tender[] => [
     ],
   },
   {
-    id: "KS-2024-003",
+    id: "MOH-2024-002",
     title: "Pharmaceutical Procurement for State Hospitals",
     category: "Healthcare",
     value: "₦450M",
@@ -129,7 +129,7 @@ export const getAllTenders = (): Tender[] => [
     ],
   },
   {
-    id: "KS-2024-004",
+    id: "MOH-2024-003",
     title: "Laboratory Equipment Upgrade Program",
     category: "Healthcare",
     value: "₦320M",
@@ -161,7 +161,7 @@ export const getAllTenders = (): Tender[] => [
     ],
   },
   {
-    id: "KS-2024-005",
+    id: "MOE-2024-001",
     title: "Rehabilitation of Government Secondary Schools",
     category: "Education",
     value: "₦1.8B",
