@@ -505,13 +505,6 @@ export default function Index() {
                       <Search className="mr-2 h-5 w-5" />
                       Browse Tenders
                     </Link>
-                    <Link
-                      to="/governor/dashboard"
-                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                      <Crown className="mr-2 h-5 w-5" />
-                      Governor Dashboard
-                    </Link>
                   </div>
 
                   <div className="flex items-center space-x-6 text-sm text-gray-600">
@@ -2320,7 +2313,7 @@ export default function Index() {
                             Nigerian ownership)
                           </li>
                           <li>• Valid tax payments and clearances</li>
-                          <li>• No involvement in corrupt practices</li>
+                          <li>�� No involvement in corrupt practices</li>
                           <li>• Compliance with labor laws and standards</li>
                         </ul>
                       </div>
