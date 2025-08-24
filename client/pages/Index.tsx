@@ -58,6 +58,41 @@ export default function Index() {
   const [selectedTender, setSelectedTender] = useState<any>(null);
   const [showTenderDetails, setShowTenderDetails] = useState(false);
 
+  // Helper function to apply automatic status transitions
+  const applyStatusTransition = (tender: FeaturedTender): FeaturedTender => {
+    // Convert deadline format from "Feb 15, 2024" to "2024-02-15"
+    const deadlineStr = new Date(tender.deadline).toISOString().split('T')[0];
+
+    // Apply automatic status check
+    const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
+      tender.status as TenderStatus,
+      deadlineStr
+    );
+
+    // Update status color based on new status
+    let statusColor = "bg-gray-100 text-gray-800";
+    switch (automaticStatus) {
+      case "Active":
+      case "Published":
+        statusColor = "bg-green-100 text-green-800";
+        break;
+      case "Closing Soon":
+        statusColor = "bg-orange-100 text-orange-800";
+        break;
+      case "Closed":
+        statusColor = "bg-red-100 text-red-800";
+        break;
+      default:
+        statusColor = "bg-gray-100 text-gray-800";
+    }
+
+    return {
+      ...tender,
+      status: automaticStatus,
+      statusColor
+    };
+  };
+
   // Comprehensive tender data
   const getDefaultRecentTenders = () => [
     {
@@ -2845,7 +2880,7 @@ export default function Index() {
                           <li>
                             • Gender equality and youth employment initiatives
                           </li>
-                          <li>• Disabled-friendly procurement practices</li>
+                          <li>�� Disabled-friendly procurement practices</li>
                           <li>
                             • Corporate social responsibility requirements
                           </li>
