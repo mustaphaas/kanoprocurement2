@@ -15,6 +15,7 @@ import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
+import { tenderStatusChecker, tenderSettingsManager, TenderStatus } from "@/lib/tenderSettings";
 import {
   CardSkeleton,
   TableSkeleton,
@@ -1347,7 +1348,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "�����255,000,000",
+            amount: "�������255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -2616,10 +2617,22 @@ export default function MinistryDashboard() {
     setScheduledPublications(mockScheduledPublications);
     setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
 
-    // Refresh bid counts for all tenders after initial load
+    // Refresh bid counts and check tender statuses after initial load
     setTimeout(() => {
       refreshAllTenderBidCounts();
     }, 100);
+
+    // Set up automatic status checking every minute
+    const statusCheckInterval = setInterval(() => {
+      refreshAllTenderBidCounts();
+    }, 60000); // Check every minute
+
+    // Cleanup interval on unmount
+    return () => {
+      if (statusCheckInterval) {
+        clearInterval(statusCheckInterval);
+      }
+    };
 
     // Log ministry dashboard access
     logUserAction(
@@ -2708,14 +2721,74 @@ export default function MinistryDashboard() {
     }
   };
 
-  // Function to refresh bid counts for all tenders
+  // Function to refresh bid counts for all tenders and check for automatic evaluation
   const refreshAllTenderBidCounts = () => {
-    setTenders((prev) =>
-      prev.map((tender) => ({
-        ...tender,
-        bidsReceived: getBidCountForTender(tender.id),
-      })),
-    );
+    setTenders((prev) => {
+      const updatedTenders = prev.map((tender) => {
+        // Apply automatic status transitions
+        const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
+          tender.status as TenderStatus,
+          tender.closeDate,
+          tender.publishDate
+        );
+
+        const updatedTender = {
+          ...tender,
+          status: automaticStatus,
+          bidsReceived: getBidCountForTender(tender.id),
+        };
+
+        // Check if tender just moved to Closed and should start evaluation
+        if (automaticStatus === "Closed" && tender.status !== "Closed") {
+          // Trigger automatic evaluation start
+          if (tenderStatusChecker.shouldStartEvaluation(automaticStatus)) {
+            // Log the automatic evaluation trigger
+            logUserAction(
+              "MinistrySystem",
+              "ministry_user",
+              "TENDER_EVALUATION_AUTO_START",
+              tender.title,
+              `Tender ${tender.id} automatically moved to evaluation stage after closure`,
+              "MEDIUM",
+              tender.id,
+              {
+                previousStatus: tender.status,
+                newStatus: automaticStatus,
+                autoEvaluationEnabled: tenderSettingsManager.isAutoEvaluationStartEnabled(),
+                tenderCloseDate: tender.closeDate,
+                triggerTime: new Date().toISOString()
+              }
+            );
+
+            // Update workflow status to show evaluation is ready
+            setWorkflowStatuses(prevStatuses => ({
+              ...prevStatuses,
+              [tender.id]: {
+                ...prevStatuses[tender.id],
+                evaluationReady: true,
+                evaluationStarted: false,
+                evaluationDate: new Date().toISOString().split('T')[0]
+              }
+            }));
+          }
+        }
+
+        return updatedTender;
+      });
+
+      // Save updated tenders to localStorage if there were status changes
+      const hasStatusChanges = updatedTenders.some((tender, index) =>
+        tender.status !== prev[index]?.status
+      );
+
+      if (hasStatusChanges) {
+        localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+        const ministryTendersKey = `${ministry.code}_tenders`;
+        localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
+      }
+
+      return updatedTenders;
+    });
   };
 
   // Update bidders when workspace changes
