@@ -320,9 +320,9 @@ export default function TenderCommitteeAssignment() {
   ): TenderCommitteeAssignment[] => {
     const baseAssignment: TenderCommitteeAssignment = {
       id: "TCA-2024-001",
-      tenderId: "MOH-2024-001",
-      tenderTitle: "Hospital Equipment Supply",
-      tenderCategory: "Medical Equipment",
+      tenderId: "KS-2024-002",
+      tenderTitle: "Supply of Medical Equipment to Primary Health Centers",
+      tenderCategory: "Healthcare",
       committeeTemplateId: "CT-2024-001",
       templateName: "Medical Equipment Procurement Committee",
       assignmentDate: "2024-02-10",
