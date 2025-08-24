@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { formatCurrency } from "@/lib/utils";
 import { tenderStatusChecker, TenderStatus } from "@/lib/tenderSettings";
-import { getAllTenders, type Tender as UnifiedTender } from "@/lib/tenderData";
+import { getMinistryTenders, type Tender as UnifiedTender } from "@/lib/tenderData";
 import {
   Building2,
   FileText,
