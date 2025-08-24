@@ -1,4 +1,4 @@
-import { TenderStatus } from './tenderSettings';
+import { TenderStatus } from "./tenderSettings";
 
 export interface Tender {
   id: string;
@@ -202,7 +202,9 @@ export const convertToClosedTender = (tender: Tender): ClosedTender => ({
   status: tender.status,
   closingDate: tender.closingDate,
   ministry: tender.procuringEntity,
-  estimatedValue: parseFloat(tender.value.replace(/[₦,BM]/g, '')) * (tender.value.includes('B') ? 1000000000 : 1000000),
+  estimatedValue:
+    parseFloat(tender.value.replace(/[₦,BM]/g, "")) *
+    (tender.value.includes("B") ? 1000000000 : 1000000),
 });
 
 // Get current user's ministry context
@@ -213,8 +215,9 @@ export const getCurrentMinistryContext = () => {
       const userData = JSON.parse(ministryUser);
       return {
         ministryId: userData.ministryId,
-        ministryCode: userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH",
-        ministryName: userData.ministryName
+        ministryCode:
+          userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH",
+        ministryName: userData.ministryName,
       };
     }
   } catch (error) {
@@ -225,7 +228,7 @@ export const getCurrentMinistryContext = () => {
   return {
     ministryId: "ministry",
     ministryCode: "MOH",
-    ministryName: "Ministry of Health"
+    ministryName: "Ministry of Health",
   };
 };
 
@@ -238,30 +241,42 @@ export const getMinistryTenders = (): Tender[] => {
   console.log(`Total tenders available: ${allTenders.length}`);
 
   // Filter tenders based on ministry
-  const filteredTenders = allTenders.filter(tender => {
+  const filteredTenders = allTenders.filter((tender) => {
     // For Ministry of Health (MOH) - show healthcare tenders
     if (ministryCode === "MOH" || ministryId === "ministry") {
-      const isHealthcare = tender.category === "Healthcare" || tender.procuringEntity.includes("Ministry of Health");
+      const isHealthcare =
+        tender.category === "Healthcare" ||
+        tender.procuringEntity.includes("Ministry of Health");
       if (isHealthcare) {
-        console.log(`Including healthcare tender: ${tender.id} - ${tender.title}`);
+        console.log(
+          `Including healthcare tender: ${tender.id} - ${tender.title}`,
+        );
       }
       return isHealthcare;
     }
 
     // For Ministry of Works and Infrastructure (MOWI)
     if (ministryCode === "MOWI" || ministryId === "ministry2") {
-      const isInfrastructure = tender.category === "Infrastructure" || tender.procuringEntity.includes("Ministry of Works");
+      const isInfrastructure =
+        tender.category === "Infrastructure" ||
+        tender.procuringEntity.includes("Ministry of Works");
       if (isInfrastructure) {
-        console.log(`Including infrastructure tender: ${tender.id} - ${tender.title}`);
+        console.log(
+          `Including infrastructure tender: ${tender.id} - ${tender.title}`,
+        );
       }
       return isInfrastructure;
     }
 
     // For Ministry of Education (MOE)
     if (ministryCode === "MOE" || ministryId === "ministry3") {
-      const isEducation = tender.category === "Education" || tender.procuringEntity.includes("Ministry of Education");
+      const isEducation =
+        tender.category === "Education" ||
+        tender.procuringEntity.includes("Ministry of Education");
       if (isEducation) {
-        console.log(`Including education tender: ${tender.id} - ${tender.title}`);
+        console.log(
+          `Including education tender: ${tender.id} - ${tender.title}`,
+        );
       }
       return isEducation;
     }
@@ -271,14 +286,16 @@ export const getMinistryTenders = (): Tender[] => {
     return true;
   });
 
-  console.log(`Filtered tenders for ministry ${ministryCode}: ${filteredTenders.length} tenders`);
+  console.log(
+    `Filtered tenders for ministry ${ministryCode}: ${filteredTenders.length} tenders`,
+  );
   return filteredTenders;
 };
 
 // Get closed tenders for committee assignment (ministry-specific)
 export const getClosedTenders = (): ClosedTender[] => {
   return getMinistryTenders()
-    .filter(tender => {
+    .filter((tender) => {
       // Check if tender should be closed based on closing date
       const closingDate = new Date(tender.closingDate);
       const today = new Date();
@@ -289,17 +306,20 @@ export const getClosedTenders = (): ClosedTender[] => {
 
 // Get tenders by category
 export const getTendersByCategory = (category: string): Tender[] => {
-  return getAllTenders().filter(tender => 
-    category === "all" || tender.category.toLowerCase() === category.toLowerCase()
+  return getAllTenders().filter(
+    (tender) =>
+      category === "all" ||
+      tender.category.toLowerCase() === category.toLowerCase(),
   );
 };
 
 // Get healthcare/health tenders specifically
 export const getHealthcareTenders = (): Tender[] => {
-  return getAllTenders().filter(tender =>
-    tender.category === "Healthcare" ||
-    tender.procuringEntity.includes("Ministry of Health") ||
-    tender.procuringEntity.includes("Health")
+  return getAllTenders().filter(
+    (tender) =>
+      tender.category === "Healthcare" ||
+      tender.procuringEntity.includes("Ministry of Health") ||
+      tender.procuringEntity.includes("Health"),
   );
 };
 

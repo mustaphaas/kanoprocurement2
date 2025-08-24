@@ -2,7 +2,10 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { formatCurrency } from "@/lib/utils";
 import { tenderStatusChecker, TenderStatus } from "@/lib/tenderSettings";
-import { getMinistryTenders, type Tender as UnifiedTender } from "@/lib/tenderData";
+import {
+  getMinistryTenders,
+  type Tender as UnifiedTender,
+} from "@/lib/tenderData";
 import {
   Building2,
   FileText,
@@ -27,13 +30,16 @@ export default function AllTenders() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [selectedTender, setSelectedTender] = useState<UnifiedTender | null>(null);
+  const [selectedTender, setSelectedTender] = useState<UnifiedTender | null>(
+    null,
+  );
   const [showTenderDetails, setShowTenderDetails] = useState(false);
 
   // Use ministry-specific tender data source
   const getDefaultTenders = (): UnifiedTender[] => getMinistryTenders();
 
-  const [allTenders, setAllTenders] = useState<UnifiedTender[]>(getDefaultTenders());
+  const [allTenders, setAllTenders] =
+    useState<UnifiedTender[]>(getDefaultTenders());
 
   // Apply automatic status transitions to a tender
   const applyStatusTransitions = (tender: UnifiedTender): UnifiedTender => {
@@ -57,13 +63,15 @@ export default function AllTenders() {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
           // Apply currency formatting and automatic status transitions
-          const formattedParsedTenders = parsedTenders.map((tender: UnifiedTender) => {
-            const formatted = {
-              ...tender,
-              value: formatCurrency(tender.value),
-            };
-            return applyStatusTransitions(formatted);
-          });
+          const formattedParsedTenders = parsedTenders.map(
+            (tender: UnifiedTender) => {
+              const formatted = {
+                ...tender,
+                value: formatCurrency(tender.value),
+              };
+              return applyStatusTransitions(formatted);
+            },
+          );
 
           // Combine stored tenders with default ones, removing duplicates
           const defaultTenders = getDefaultTenders().map(
@@ -355,7 +363,9 @@ export default function AllTenders() {
                     selectedTender.status,
                   )}`}
                 >
-                  {selectedTender.status === "Active" ? "Open" : selectedTender.status}
+                  {selectedTender.status === "Active"
+                    ? "Open"
+                    : selectedTender.status}
                 </span>
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
                   {selectedTender.category}

@@ -15,7 +15,10 @@ import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
-import { generateTenderId, initializeTenderCounter } from "@/lib/tenderIdGenerator";
+import {
+  generateTenderId,
+  initializeTenderCounter,
+} from "@/lib/tenderIdGenerator";
 import {
   tenderStatusChecker,
   tenderSettingsManager,
