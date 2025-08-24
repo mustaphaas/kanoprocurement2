@@ -66,12 +66,17 @@ export default function Index() {
       const deadlineDate = new Date(tender.deadline);
       // Check if date is valid
       if (isNaN(deadlineDate.getTime())) {
-        console.warn(`Invalid date format for tender ${tender.id}: ${tender.deadline}`);
+        console.warn(
+          `Invalid date format for tender ${tender.id}: ${tender.deadline}`,
+        );
         return tender; // Return original if date is invalid
       }
       deadlineStr = deadlineDate.toISOString().split("T")[0];
     } catch (error) {
-      console.warn(`Error parsing date for tender ${tender.id}: ${tender.deadline}`, error);
+      console.warn(
+        `Error parsing date for tender ${tender.id}: ${tender.deadline}`,
+        error,
+      );
       return tender; // Return original if date parsing fails
     }
 
@@ -112,14 +117,18 @@ export default function Index() {
       title: "Construction of 50km Rural Roads in Kano North",
       category: "Infrastructure",
       value: "₦2.5B",
-      deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       location: "Kano North LGA",
       views: 245,
       status: "Open",
       description:
         "The project involves the construction and upgrading of 50 kilometers of rural roads in Kano North Local Government Area to improve connectivity and access to rural communities.",
       publishDate: "2024-01-15",
-      closingDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      closingDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       tenderFee: "₦25,000",
       procuringEntity: "Kano State Ministry of Works",
       duration: "18 months",
@@ -144,14 +153,18 @@ export default function Index() {
       title: "Supply of Medical Equipment to Primary Health Centers",
       category: "Healthcare",
       value: "₦850M",
-      deadline: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      deadline: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       location: "Statewide",
       views: 189,
       status: "Open",
       description:
         "Procurement of essential medical equipment for 50 Primary Health Centers across Kano State to improve healthcare delivery and patient outcomes.",
       publishDate: "2024-01-20",
-      closingDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      closingDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       tenderFee: "₦15,000",
       procuringEntity: "Kano State Ministry of Health",
       duration: "6 months",
@@ -176,14 +189,18 @@ export default function Index() {
       title: "Rehabilitation of Government Secondary Schools",
       category: "Education",
       value: "₦1.8B",
-      deadline: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      deadline: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       location: "Various LGAs",
       views: 156,
       status: "Open",
       description:
         "Comprehensive rehabilitation and renovation of 25 government secondary schools across Kano State including classroom blocks, laboratories, and recreational facilities.",
       publishDate: "2024-01-25",
-      closingDate: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      closingDate: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       tenderFee: "₦20,000",
       procuringEntity: "Kano State Ministry of Education",
       duration: "12 months",
@@ -233,7 +250,11 @@ export default function Index() {
     const futureDate = (days: number) => {
       const date = new Date(today);
       date.setDate(date.getDate() + days);
-      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
     };
 
     const rawTenders = [
