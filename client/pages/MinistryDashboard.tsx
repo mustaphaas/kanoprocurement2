@@ -2481,7 +2481,8 @@ export default function MinistryDashboard() {
       localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
 
       // Also save with ministry-specific key for NOC system access
-      const ministryTendersKey = `${ministry.code}_tenders`;
+      const { ministry: tenderMinistry } = getMinistryMockData();
+      const ministryTendersKey = `${tenderMinistry.code}_tenders`;
       localStorage.setItem(ministryTendersKey, JSON.stringify(mockTenders));
     }
 
@@ -3118,7 +3119,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-004",
           companyName: "Royal Medical Solutions",
-          bidAmount: "₦890,000,000",
+          bidAmount: "��890,000,000",
           technicalScore: 82,
           financialScore: 79,
           totalScore: 80.5,
