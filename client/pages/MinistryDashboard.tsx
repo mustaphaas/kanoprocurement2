@@ -1093,7 +1093,7 @@ export default function MinistryDashboard() {
               description:
                 "Construction of bridges across major rivers in Kano State",
               category: "Bridge Construction",
-              estimatedValue: "₦8,500,000,000",
+              estimatedValue: "��8,500,000,000",
               status: "Evaluated",
               publishDate: "2024-01-20",
               closeDate: "2024-03-01",
@@ -1652,7 +1652,8 @@ export default function MinistryDashboard() {
     };
 
     // Load ministry-specific NOC requests from localStorage or use mock data
-    const ministryNOCKey = `${ministry.code}_NOCRequests`;
+    const { ministryId: currentMinistryId, ministry: currentMinistry } = getMinistryMockData();
+    const ministryNOCKey = `${currentMinistry.code}_NOCRequests`;
     const storedMinistryNOCs = localStorage.getItem(ministryNOCKey);
 
     let mockNOCRequests;
