@@ -3906,8 +3906,11 @@ export default function MinistryDashboard() {
       return;
     }
 
-    const { ministry } = getMinistryMockData();
-    const tenderId = `${ministry.code}-${Date.now()}`;
+    // Initialize counter on first use
+    initializeTenderCounter();
+
+    // Generate proper tender ID (KS-YYYY-XXX format)
+    const tenderId = generateTenderId();
 
     const tender: Tender = {
       id: tenderId,
