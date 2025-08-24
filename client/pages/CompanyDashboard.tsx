@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/utils";
 import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
 import { persistentStorage } from "@/lib/persistentStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
+import { tenderStatusChecker, TenderStatusInfo } from "@/lib/tenderSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
@@ -661,6 +662,7 @@ export default function CompanyDashboard() {
   };
 
   const handleExpressInterest = (tender: Tender) => {
+    // First check company status
     if (companyData.status === "Suspended") {
       alert(
         "Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore tender participation privileges.",
@@ -683,11 +685,32 @@ export default function CompanyDashboard() {
       alert("Your account must be approved to express interest in tenders.");
       return;
     }
+
+    // Check tender status for EOI eligibility
+    const statusInfo = tenderStatusChecker.getStatusInfo(tender.status, tender.deadline);
+    if (!statusInfo.canExpressInterest) {
+      if (tender.status === "Closed") {
+        alert(
+          "This tender is closed. The deadline has passed and no new expressions of interest are being accepted."
+        );
+      } else if (tender.status === "Draft") {
+        alert(
+          "This tender is still in draft status and not yet open for expressions of interest."
+        );
+      } else {
+        alert(
+          `This tender is in '${tender.status}' status and is no longer accepting expressions of interest.`
+        );
+      }
+      return;
+    }
+
     setSelectedTender(tender);
     setShowExpressInterestModal(true);
   };
 
   const handleSubmitBid = (tender: Tender) => {
+    // First check company status
     if (companyData.status === "Suspended") {
       alert(
         "Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore bidding privileges.",
@@ -710,6 +733,26 @@ export default function CompanyDashboard() {
       alert("Your account must be approved to submit bids.");
       return;
     }
+
+    // Check tender status for bid submission eligibility
+    const statusInfo = tenderStatusChecker.getStatusInfo(tender.status, tender.deadline);
+    if (!statusInfo.canSubmitBid) {
+      if (tender.status === "Closed") {
+        alert(
+          "This tender is closed. The deadline has passed and no new bids are being accepted."
+        );
+      } else if (tender.status === "Draft") {
+        alert(
+          "This tender is still in draft status and not yet open for bid submissions."
+        );
+      } else {
+        alert(
+          `This tender is in '${tender.status}' status and is no longer accepting bid submissions.`
+        );
+      }
+      return;
+    }
+
     if (!tender.hasExpressedInterest) {
       alert(
         "You must express interest in this tender before submitting a bid.",
