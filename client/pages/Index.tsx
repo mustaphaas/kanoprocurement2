@@ -215,7 +215,8 @@ export default function Index() {
   };
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const getDefaultTenders = (): FeaturedTender[] => [
+  const getDefaultTenders = (): FeaturedTender[] => {
+    const rawTenders = [
     {
       id: "KS-2024-001",
       title: "Road Construction Project",
@@ -232,7 +233,7 @@ export default function Index() {
       title: "Healthcare Equipment Supply",
       description:
         "Supply and installation of modern medical equipment for 25 primary healthcare centers",
-      value: "₦1.8B",
+      value: "���1.8B",
       deadline: "Feb 28, 2024",
       status: "Open",
       statusColor: "bg-green-100 text-green-800",
@@ -271,7 +272,11 @@ export default function Index() {
       statusColor: "bg-green-100 text-green-800",
       category: "Infrastructure",
     },
-  ];
+    ];
+
+    // Apply automatic status transitions to all tenders
+    return rawTenders.map(applyStatusTransition);
+  };
 
   const [featuredTenders, setFeaturedTenders] =
     useState<FeaturedTender[]>(getDefaultTenders());
@@ -2660,7 +2665,7 @@ export default function Index() {
                           </li>
                           <li>• Financial capacity assessment</li>
                           <li>
-                            • Background checks and integrity verification
+                            �� Background checks and integrity verification
                           </li>
                         </ul>
                       </div>
@@ -2880,7 +2885,7 @@ export default function Index() {
                           <li>
                             • Gender equality and youth employment initiatives
                           </li>
-                          <li>�� Disabled-friendly procurement practices</li>
+                          <li>• Disabled-friendly procurement practices</li>
                           <li>
                             • Corporate social responsibility requirements
                           </li>
