@@ -2644,18 +2644,19 @@ export default function MinistryDashboard() {
     };
 
     // Log ministry dashboard access
+    const { ministry: logMinistry } = getMinistryMockData();
     logUserAction(
       "MinistryUser",
       "ministry_user",
       "MINISTRY_DASHBOARD_ACCESSED",
       "Ministry Dashboard",
-      `Ministry user from ${ministry.name} accessed the ministry dashboard`,
+      `Ministry user from ${logMinistry.name} accessed the ministry dashboard`,
       "LOW",
       undefined,
       {
         accessTime: new Date().toISOString(),
-        ministryName: ministry.name,
-        ministryCode: ministry.code,
+        ministryName: logMinistry.name,
+        ministryCode: logMinistry.code,
         ministryId: ministryId,
         userAgent: navigator.userAgent,
         tendersLoaded: mockTenders.length,
