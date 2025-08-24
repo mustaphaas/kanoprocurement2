@@ -290,19 +290,13 @@ export default function TenderCommitteeAssignment() {
         localStorage.setItem(memberPoolKey, JSON.stringify(sampleMemberPool));
       }
 
-      // Load closed tenders
+      // Load closed tenders from unified data source
+      const closedTendersData = getClosedTenders();
+      setClosedTenders(closedTendersData);
+
+      // Store in localStorage for consistency
       const closedTendersKey = `${ministryCode}_${STORAGE_KEYS.CLOSED_TENDERS}`;
-      const storedClosedTenders = localStorage.getItem(closedTendersKey);
-      if (storedClosedTenders) {
-        setClosedTenders(JSON.parse(storedClosedTenders));
-      } else {
-        const sampleClosedTenders = createSampleClosedTenders(ministryCode);
-        setClosedTenders(sampleClosedTenders);
-        localStorage.setItem(
-          closedTendersKey,
-          JSON.stringify(sampleClosedTenders),
-        );
-      }
+      localStorage.setItem(closedTendersKey, JSON.stringify(closedTendersData));
     } catch (error) {
       console.error("Error loading data:", error);
     }
