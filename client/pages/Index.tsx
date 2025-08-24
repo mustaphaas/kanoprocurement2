@@ -226,7 +226,22 @@ export default function Index() {
 
   // Load recent tenders from localStorage
   const loadRecentTenders = () => {
-    // Always use default data for now to avoid localStorage issues
+    try {
+      const storedRecentTenders = localStorage.getItem("recentTenders");
+      if (storedRecentTenders) {
+        const parsedTenders = JSON.parse(storedRecentTenders);
+        if (parsedTenders && parsedTenders.length > 0) {
+          console.log("Loaded recent tenders from localStorage:", parsedTenders.length);
+          setRecentTenders(parsedTenders);
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Error loading recent tenders from localStorage:", error);
+    }
+
+    // Fall back to default data if localStorage is empty or has errors
+    console.log("Using default recent tenders");
     setRecentTenders(getDefaultRecentTenders());
   };
 
@@ -1441,7 +1456,7 @@ export default function Index() {
                   paperwork. We've won 12 contracts in the last 6 months!"
                 </p>
                 <div className="text-xs text-green-600">
-                  <strong>Impact:</strong> ���8.5B in contracts secured • 40%
+                  <strong>Impact:</strong> ₦8.5B in contracts secured • 40%
                   faster project delivery
                 </div>
               </div>
@@ -1527,7 +1542,7 @@ export default function Index() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-400 mb-2">
-                    ��45.2B
+                    ₦45.2B
                   </div>
                   <div className="text-sm text-gray-300">
                     Total Contract Value
