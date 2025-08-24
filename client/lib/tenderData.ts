@@ -205,9 +205,59 @@ export const convertToClosedTender = (tender: Tender): ClosedTender => ({
   estimatedValue: parseFloat(tender.value.replace(/[₦,BM]/g, '')) * (tender.value.includes('B') ? 1000000000 : 1000000),
 });
 
-// Get closed tenders for committee assignment
+// Get current user's ministry context
+export const getCurrentMinistryContext = () => {
+  try {
+    const ministryUser = localStorage.getItem("ministryUser");
+    if (ministryUser) {
+      const userData = JSON.parse(ministryUser);
+      return {
+        ministryId: userData.ministryId,
+        ministryCode: userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH",
+        ministryName: userData.ministryName
+      };
+    }
+  } catch (error) {
+    console.error("Error parsing ministry user data:", error);
+  }
+
+  // Default fallback to MOH
+  return {
+    ministryId: "ministry",
+    ministryCode: "MOH",
+    ministryName: "Ministry of Health"
+  };
+};
+
+// Get ministry-specific tenders
+export const getMinistryTenders = (): Tender[] => {
+  const { ministryCode, ministryId } = getCurrentMinistryContext();
+
+  // Filter tenders based on ministry
+  return getAllTenders().filter(tender => {
+    // For Ministry of Health (MOH) - show healthcare tenders
+    if (ministryCode === "MOH" || ministryId === "ministry") {
+      return tender.category === "Healthcare" || tender.procuringEntity.includes("Ministry of Health");
+    }
+
+    // For Ministry of Works and Infrastructure (MOWI)
+    if (ministryCode === "MOWI" || ministryId === "ministry2") {
+      return tender.category === "Infrastructure" || tender.procuringEntity.includes("Ministry of Works");
+    }
+
+    // For Ministry of Education (MOE)
+    if (ministryCode === "MOE" || ministryId === "ministry3") {
+      return tender.category === "Education" || tender.procuringEntity.includes("Ministry of Education");
+    }
+
+    // Default: show all if ministry not recognized
+    return true;
+  });
+};
+
+// Get closed tenders for committee assignment (ministry-specific)
 export const getClosedTenders = (): ClosedTender[] => {
-  return getAllTenders()
+  return getMinistryTenders()
     .filter(tender => {
       // Check if tender should be closed based on closing date
       const closingDate = new Date(tender.closingDate);
