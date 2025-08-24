@@ -3898,14 +3898,35 @@ export default function MinistryDashboard() {
 
   // Tender Creation Functions
   const handleSubmitTender = (isDraft = false) => {
-    if (
-      !newTender.title ||
-      !newTender.category ||
-      !newTender.description ||
-      !newTender.estimatedValue ||
-      !newTender.closeDate
-    ) {
-      alert("Please fill in all required fields");
+    console.log("handleSubmitTender called with isDraft:", isDraft);
+    console.log("newTender state:", newTender);
+
+    // More detailed validation with specific error messages
+    const missingFields = [];
+    if (!newTender.title) missingFields.push("Title");
+    if (!newTender.category) missingFields.push("Category");
+    if (!newTender.description) missingFields.push("Description");
+    if (!newTender.estimatedValue) missingFields.push("Estimated Value");
+    if (!newTender.closeDate) missingFields.push("Closing Date");
+
+    if (missingFields.length > 0) {
+      alert(`Please fill in the following required fields: ${missingFields.join(", ")}`);
+      return;
+    }
+
+    // Validate estimated value is a number
+    const estimatedValueNum = parseFloat(newTender.estimatedValue);
+    if (isNaN(estimatedValueNum) || estimatedValueNum <= 0) {
+      alert("Please enter a valid estimated value (numbers only)");
+      return;
+    }
+
+    // Validate closing date is in the future
+    const closingDate = new Date(newTender.closeDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for comparison
+    if (closingDate <= today) {
+      alert("Closing date must be in the future");
       return;
     }
 
@@ -8551,7 +8572,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ������ Evaluation Report - {selectedTenderForDetails.title}
+                  �������� Evaluation Report - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
