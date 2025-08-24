@@ -292,6 +292,17 @@ export default function Index() {
         statusColor: "bg-green-100 text-green-800",
         category: "Infrastructure",
       },
+      {
+        id: "KS-2024-009",
+        title: "Agricultural Equipment Supply",
+        description:
+          "Procurement of modern agricultural machinery for rural farming communities",
+        value: "₦1.2B",
+        deadline: futureDate(-2), // 2 days ago - should be Closed
+        status: "Open",
+        statusColor: "bg-green-100 text-green-800",
+        category: "Agriculture",
+      },
     ];
 
     // Apply automatic status transitions to all tenders
