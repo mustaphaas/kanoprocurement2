@@ -298,19 +298,16 @@ export default function ProcurementWorkflowValidation() {
   // Validation functions
   const validateProcurementPlanToTender = (): ValidationResult => {
     try {
-      const planData = localStorage.getItem("mockProcurementPlan");
-      const tenderData = localStorage.getItem("mockTender");
+      const plan = readMinistryData<MockProcurementPlan | null>(MINISTRY_SPECIFIC_KEYS.MOCK_PROCUREMENT_PLAN, null);
+      const tender = readMinistryData<MockTender | null>(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, null);
 
-      if (!planData || !tenderData) {
+      if (!plan || !tender) {
         return {
           stepId: "procurement-planning",
           passed: false,
           message: "Mock data not found. Generate mock data first.",
         };
       }
-
-      const plan: MockProcurementPlan = JSON.parse(planData);
-      const tender: MockTender = JSON.parse(tenderData);
 
       // Check if approved plan has linked tender
       const isLinked = plan.status === "approved" && tender.planId === plan.id;
@@ -336,17 +333,15 @@ export default function ProcurementWorkflowValidation() {
 
   const validateTenderProgression = (): ValidationResult => {
     try {
-      const tenderData = localStorage.getItem("mockTender");
+      const tender = readMinistryData<MockTender | null>(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, null);
 
-      if (!tenderData) {
+      if (!tender) {
         return {
           stepId: "tender-progression",
           passed: false,
           message: "Tender data not found",
         };
       }
-
-      const tender: MockTender = JSON.parse(tenderData);
 
       // Check tender has progressed through stages and has evaluation results
       const hasEvaluationResults = !!tender.evaluationResults;
