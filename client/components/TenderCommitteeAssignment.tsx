@@ -964,7 +964,7 @@ export default function TenderCommitteeAssignment() {
     setShowAssignmentModal(false);
 
     // Show success message
-    alert("Committee assignment created successfully!");
+    setSuccessMessage("Committee assignment created successfully!");
 
     // Refresh committee templates after creating assignment
     loadCommitteeTemplates();
