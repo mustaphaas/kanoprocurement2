@@ -238,15 +238,19 @@ export default function TenderCommitteeAssignment() {
   );
   const [memberPool, setMemberPool] = useState<MemberPool[]>([]);
   const [closedTenders, setClosedTenders] = useState<ClosedTender[]>([]);
-  const [committeeTemplates, setCommitteeTemplates] = useState<CommitteeTemplate[]>([]);
+  const [committeeTemplates, setCommitteeTemplates] = useState<
+    CommitteeTemplate[]
+  >([]);
   const [selectedAssignment, setSelectedAssignment] =
     useState<TenderCommitteeAssignment | null>(null);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [showCOIModal, setShowCOIModal] = useState(false);
   const [showMemberSearchModal, setShowMemberSearchModal] = useState(false);
   const [activeTab, setActiveTab] = useState("assignments");
-  const [showMemberAssignmentModal, setShowMemberAssignmentModal] = useState(false);
-  const [selectedAssignmentForMembers, setSelectedAssignmentForMembers] = useState<TenderCommitteeAssignment | null>(null);
+  const [showMemberAssignmentModal, setShowMemberAssignmentModal] =
+    useState(false);
+  const [selectedAssignmentForMembers, setSelectedAssignmentForMembers] =
+    useState<TenderCommitteeAssignment | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
@@ -305,7 +309,7 @@ export default function TenderCommitteeAssignment() {
       // Load closed tenders from unified data source
       const closedTendersData = getClosedTenders();
       setClosedTenders(closedTendersData);
-      console.log('Loaded closed tenders:', closedTendersData);
+      console.log("Loaded closed tenders:", closedTendersData);
 
       // Store in localStorage for consistency
       const closedTendersKey = `${ministryCode}_${STORAGE_KEYS.CLOSED_TENDERS}`;
@@ -317,7 +321,7 @@ export default function TenderCommitteeAssignment() {
       if (storedTemplates) {
         const parsedTemplates = JSON.parse(storedTemplates);
         setCommitteeTemplates(parsedTemplates);
-        console.log('Loaded committee templates:', parsedTemplates);
+        console.log("Loaded committee templates:", parsedTemplates);
       } else {
         // Create default templates if none exist
         const defaultTemplates = createDefaultCommitteeTemplates(ministryCode);
@@ -638,7 +642,9 @@ export default function TenderCommitteeAssignment() {
     return [baseAssignment];
   };
 
-  const createDefaultCommitteeTemplates = (ministryCode: string): CommitteeTemplate[] => {
+  const createDefaultCommitteeTemplates = (
+    ministryCode: string,
+  ): CommitteeTemplate[] => {
     const baseTemplates: CommitteeTemplate[] = [
       {
         id: "CT-2024-001",
@@ -665,11 +671,11 @@ export default function TenderCommitteeAssignment() {
 
     // Customize for different ministries
     if (ministryCode === "MOH") {
-      return baseTemplates.filter(t => t.category === "Healthcare");
+      return baseTemplates.filter((t) => t.category === "Healthcare");
     } else if (ministryCode === "MOWI") {
-      return baseTemplates.filter(t => t.category === "Infrastructure");
+      return baseTemplates.filter((t) => t.category === "Infrastructure");
     } else if (ministryCode === "MOE") {
-      return baseTemplates.filter(t => t.category === "Education");
+      return baseTemplates.filter((t) => t.category === "Education");
     }
 
     return baseTemplates;
@@ -872,7 +878,7 @@ export default function TenderCommitteeAssignment() {
   const createAssignment = () => {
     // Find the selected template to get its name
     const selectedTemplate = committeeTemplates.find(
-      t => t.id === assignmentForm.committeeTemplateId
+      (t) => t.id === assignmentForm.committeeTemplateId,
     );
 
     const newAssignment: TenderCommitteeAssignment = {
@@ -939,10 +945,10 @@ export default function TenderCommitteeAssignment() {
       if (storedTemplates) {
         const parsedTemplates = JSON.parse(storedTemplates);
         setCommitteeTemplates(parsedTemplates);
-        console.log('Refreshed committee templates:', parsedTemplates);
+        console.log("Refreshed committee templates:", parsedTemplates);
       }
     } catch (error) {
-      console.error('Error loading committee templates:', error);
+      console.error("Error loading committee templates:", error);
     }
   };
 
@@ -1044,8 +1050,14 @@ export default function TenderCommitteeAssignment() {
   });
 
   // Debug: Log current state
-  console.log('TenderCommitteeAssignment - Closed tenders:', closedTenders.length);
-  console.log('TenderCommitteeAssignment - Committee templates:', committeeTemplates.length);
+  console.log(
+    "TenderCommitteeAssignment - Closed tenders:",
+    closedTenders.length,
+  );
+  console.log(
+    "TenderCommitteeAssignment - Committee templates:",
+    committeeTemplates.length,
+  );
 
   return (
     <div className="space-y-6">
@@ -1372,7 +1384,8 @@ export default function TenderCommitteeAssignment() {
                     <div>
                       <h4 className="font-medium mb-2 flex items-center gap-2">
                         <UserCheck className="h-4 w-4" />
-                        Current Committee Members ({assignment.assignedMembers.length})
+                        Current Committee Members (
+                        {assignment.assignedMembers.length})
                       </h4>
                       {assignment.assignedMembers.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
@@ -1404,13 +1417,17 @@ export default function TenderCommitteeAssignment() {
                                     <span className="font-medium">
                                       {member.memberName}
                                     </span>
-                                    <Badge variant="outline" className="text-xs">
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
                                       {member.roleTitle}
                                     </Badge>
                                     {getStatusBadge(member.status)}
                                   </div>
                                   <div className="text-sm text-gray-600">
-                                    {member.department} • {member.experience}+ years
+                                    {member.department} • {member.experience}+
+                                    years
                                   </div>
                                   <div className="text-xs text-gray-500">
                                     Expertise: {member.expertise.join(", ")}
@@ -1421,7 +1438,11 @@ export default function TenderCommitteeAssignment() {
                                 <Button variant="ghost" size="sm">
                                   <Edit className="h-4 w-4" />
                                 </Button>
-                                <Button variant="ghost" size="sm" className="text-red-600">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-red-600"
+                                >
                                   <XCircle className="h-4 w-4" />
                                 </Button>
                               </div>

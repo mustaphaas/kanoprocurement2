@@ -414,7 +414,7 @@ export const getClosedTenders = (): ClosedTender[] => {
 
   // Get all tenders (including localStorage) and filter for closed ones
   const allTenders = getAllTendersWithLocalStorage();
-  console.log('All tenders for closed tender filtering:', allTenders.length);
+  console.log("All tenders for closed tender filtering:", allTenders.length);
 
   const closedTenders = allTenders
     .filter((tender) => {
@@ -423,12 +423,20 @@ export const getClosedTenders = (): ClosedTender[] => {
       const today = new Date();
       today.setHours(23, 59, 59, 999); // Set to end of today to include today's closures
 
-      const isClosed = closingDate < today || tender.status === "Closed" || tender.status === "Evaluation_Complete" || tender.status === "Awarded";
+      const isClosed =
+        closingDate < today ||
+        tender.status === "Closed" ||
+        tender.status === "Evaluation_Complete" ||
+        tender.status === "Awarded";
 
-      console.log(`Tender ${tender.id}: closing=${tender.closingDate}, today=${today.toISOString().split('T')[0]}, status=${tender.status}, isClosed=${isClosed}`);
+      console.log(
+        `Tender ${tender.id}: closing=${tender.closingDate}, today=${today.toISOString().split("T")[0]}, status=${tender.status}, isClosed=${isClosed}`,
+      );
 
       if (isClosed) {
-        console.log(`✓ Found closed tender: ${tender.id} - ${tender.title} (closed: ${tender.closingDate}, status: ${tender.status})`);
+        console.log(
+          `✓ Found closed tender: ${tender.id} - ${tender.title} (closed: ${tender.closingDate}, status: ${tender.status})`,
+        );
       }
 
       return isClosed;
