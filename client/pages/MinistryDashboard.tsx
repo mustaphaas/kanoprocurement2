@@ -3981,8 +3981,10 @@ export default function MinistryDashboard() {
         return updatedTenders;
       });
 
-      // Store in localStorage for cross-page access
-      const existingTenders = localStorage.getItem("featuredTenders") || "[]";
+      // Store in ministry-specific localStorage for proper isolation
+      const { ministry: featuredMinistry } = getMinistryMockData();
+      const featuredTendersKey = `${featuredMinistry.code}_featuredTenders`;
+      const existingTenders = localStorage.getItem(featuredTendersKey) || "[]";
       const tendersList = JSON.parse(existingTenders);
       const featuredTender = {
         id: tender.id,
@@ -4001,13 +4003,14 @@ export default function MinistryDashboard() {
             : "bg-gray-100 text-gray-800",
         category: tender.category,
         ministry: ministryInfo.name,
+        ministryCode: featuredMinistry.code, // Track ministry for this tender
         createdAt: Date.now(),
       };
 
       tendersList.unshift(featuredTender);
       // Keep only the last 5 tenders
       const latestTenders = tendersList.slice(0, 5);
-      localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
+      localStorage.setItem(featuredTendersKey, JSON.stringify(latestTenders));
 
       // Also store in recentTenders with more detailed information
       const existingRecentTenders =
