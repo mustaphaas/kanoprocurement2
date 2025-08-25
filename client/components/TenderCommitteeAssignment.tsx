@@ -286,6 +286,9 @@ export default function TenderCommitteeAssignment() {
       );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
 
+      // One-time cleanup: remove any cross-ministry contamination
+      cleanupCrossMinistryContamination(ministryCode);
+
       // Load tender committee assignments
       const assignmentsKey = `${ministryCode}_${STORAGE_KEYS.TENDER_ASSIGNMENTS}`;
       const storedAssignments = localStorage.getItem(assignmentsKey);
