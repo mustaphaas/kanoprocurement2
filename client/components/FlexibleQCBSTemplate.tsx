@@ -514,6 +514,9 @@ export default function FlexibleQCBSTemplate() {
       setSelectedTemplate(updatedTemplate);
     }
     saveTemplates(updatedTemplates);
+
+    // Clear validation error since scores are now normalized
+    setValidationError(null);
   };
 
   const duplicateTemplate = (template: QCBSTemplate) => {
