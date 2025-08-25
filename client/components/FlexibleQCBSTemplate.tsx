@@ -702,7 +702,11 @@ export default function FlexibleQCBSTemplate() {
             {templates.map((template) => (
               <Card
                 key={template.id}
-                className="group hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm border border-gray-100 hover:border-green-200 rounded-xl overflow-hidden"
+                className={`group hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm border rounded-xl overflow-hidden ${
+                  !isTemplateValid(template)
+                    ? 'border-red-300 hover:border-red-400'
+                    : 'border-gray-100 hover:border-green-200'
+                }`}
               >
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
