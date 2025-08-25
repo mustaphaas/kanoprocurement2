@@ -113,6 +113,7 @@ export default function FlexibleQCBSTemplate() {
   });
 
   const [currentEditingTemplateId, setCurrentEditingTemplateId] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
     loadTemplates();
