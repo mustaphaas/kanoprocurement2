@@ -372,8 +372,9 @@ export default function CommitteeTemplates() {
       ],
       evaluationFramework: {
         methodology: "QCBS",
-        technicalWeightPercent: 70,
-        financialWeightPercent: 30,
+        defaultTechnicalWeight: 70,
+        defaultFinancialWeight: 30,
+        allowWeightCustomization: true,
         passingTechnicalScore: 75,
         scoringScale: 100,
         evaluationCriteria: [
