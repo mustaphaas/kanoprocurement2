@@ -118,32 +118,37 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
 
     // Keep only the last 5 featured tenders
     const latestFeaturedTenders = featuredTendersList.slice(0, 5);
-    localStorage.setItem(
-      "featuredTenders",
-      JSON.stringify(latestFeaturedTenders),
-    );
+    localStorage.setItem(featuredTendersKey, JSON.stringify(latestFeaturedTenders));
 
     console.log("Test tender created:", testTender);
-    console.log("Stored in localStorage with keys:");
-    console.log("- 'recentTenders' (for CompanyDashboard)");
-    console.log("- 'ministryTenders' (for MinistryDashboard)");
-    console.log("- 'featuredTenders' (for Index page)");
+    console.log(`Stored in ministry-specific localStorage keys for ${ministryCode}:`);
+    console.log(`- '${recentTendersKey}' (for CompanyDashboard)`);
+    console.log(`- '${ministryTendersKey}' (for MinistryDashboard)`);
+    console.log(`- '${featuredTendersKey}' (for Index page)`);
 
     setIsCreating(false);
     onTenderCreated();
 
     alert(
-      `Test tender "${testTender.title}" created successfully! Now visible in:\n• Company dashboards (for active users)\n• Ministry dashboard\n• Main index page`,
+      `Test tender "${testTender.title}" created successfully for ${ministryCode}! Now visible in:\n• Company dashboards (for active users)\n• Ministry dashboard\n• Main index page`,
     );
   };
 
   const clearAllTenders = () => {
-    localStorage.removeItem("recentTenders");
-    localStorage.removeItem("featuredTenders");
-    localStorage.removeItem("ministryTenders");
+    // Get current ministry context for proper cleanup
+    const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+    const ministryCode = ministryUser.ministryCode || ministryUser.ministryId?.toUpperCase() || "MOH";
+
+    const recentTendersKey = `${ministryCode}_recentTenders`;
+    const featuredTendersKey = `${ministryCode}_featuredTenders`;
+    const ministryTendersKey = `${ministryCode}_tenders`;
+
+    localStorage.removeItem(recentTendersKey);
+    localStorage.removeItem(featuredTendersKey);
+    localStorage.removeItem(ministryTendersKey);
     onTenderCreated();
     alert(
-      "All tenders cleared from localStorage:\n• recentTenders\n• featuredTenders\n• ministryTenders",
+      `All tenders cleared from ${ministryCode} localStorage:\n• ${recentTendersKey}\n• ${featuredTendersKey}\n• ${ministryTendersKey}`,
     );
   };
 
