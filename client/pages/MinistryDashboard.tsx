@@ -1369,7 +1369,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "�������255,000,000",
+            amount: "���������255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -3974,8 +3974,10 @@ export default function MinistryDashboard() {
       // Add to local tenders
       setTenders((prev) => {
         const updatedTenders = [tender, ...prev];
-        // Save to localStorage for ministry dashboard persistence
-        localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+        // Save to ministry-specific localStorage for proper isolation
+        const { ministry: saveMinistry } = getMinistryMockData();
+        const ministryTendersKey = `${saveMinistry.code}_tenders`;
+        localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
         return updatedTenders;
       });
 
@@ -4198,8 +4200,10 @@ export default function MinistryDashboard() {
       const updatedTenders = prev.map((tender) =>
         tender.id === selectedTenderForAward.id ? updatedTender : tender,
       );
-      // Save to localStorage
-      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      // Save to ministry-specific localStorage
+      const { ministry: awardMinistry } = getMinistryMockData();
+      const ministryTendersKey = `${awardMinistry.code}_tenders`;
+      localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
       return updatedTenders;
     });
 
@@ -4349,8 +4353,10 @@ export default function MinistryDashboard() {
           ? { ...tender, status: "Evaluated" as any }
           : tender,
       );
-      // Save to localStorage
-      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      // Save to ministry-specific localStorage
+      const { ministry: evalMinistry } = getMinistryMockData();
+      const ministryTendersKey = `${evalMinistry.code}_tenders`;
+      localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
       return updatedTenders;
     });
 
