@@ -82,17 +82,15 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
       procuringEntity: testTender.procuringEntity,
     };
 
-    const existingMinistryTenders =
-      localStorage.getItem("ministryTenders") || "[]";
+    // Store in ministry-specific tenders to prevent cross-contamination
+    const ministryTendersKey = `${ministryCode}_tenders`;
+    const existingMinistryTenders = localStorage.getItem(ministryTendersKey) || "[]";
     const ministryTendersList = JSON.parse(existingMinistryTenders);
     ministryTendersList.unshift(ministryTenderFormat);
 
     // Keep only the last 10 ministry tenders
     const latestMinistryTenders = ministryTendersList.slice(0, 10);
-    localStorage.setItem(
-      "ministryTenders",
-      JSON.stringify(latestMinistryTenders),
-    );
+    localStorage.setItem(ministryTendersKey, JSON.stringify(latestMinistryTenders));
 
     // Also store in featuredTenders for the main index page
     const featuredTenderFormat = {
@@ -112,8 +110,9 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
       createdAt: Date.now(),
     };
 
-    const existingFeaturedTenders =
-      localStorage.getItem("featuredTenders") || "[]";
+    // Store in ministry-specific featured tenders to prevent cross-contamination
+    const featuredTendersKey = `${ministryCode}_featuredTenders`;
+    const existingFeaturedTenders = localStorage.getItem(featuredTendersKey) || "[]";
     const featuredTendersList = JSON.parse(existingFeaturedTenders);
     featuredTendersList.unshift(featuredTenderFormat);
 
