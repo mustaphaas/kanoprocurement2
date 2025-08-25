@@ -205,27 +205,42 @@ export default function CommitteeTemplates() {
         const parsedTemplates = JSON.parse(stored);
         // Ensure all templates have auditTrail property for backwards compatibility
         const templatesWithAuditTrail = parsedTemplates.map((template: any) => {
-          if (!template.auditTrail) {
-            return {
-              ...template,
-              auditTrail: {
-                createdBy: "Legacy",
-                createdDate: template.createdDate || "2024-01-01",
-                lastModifiedBy: "Legacy",
-                lastModifiedDate: template.lastModified || "2024-01-01",
-                versionHistory: [
-                  {
-                    version: 1,
-                    modifiedBy: "Legacy",
-                    modifiedDate: template.createdDate || "2024-01-01",
-                    changes: "Legacy template migration",
-                    reason: "Added missing auditTrail",
-                  },
-                ],
-              },
+          const migratedTemplate = { ...template };
+
+          // Ensure auditTrail exists
+          if (!migratedTemplate.auditTrail) {
+            migratedTemplate.auditTrail = {
+              createdBy: "Legacy",
+              createdDate: template.createdDate || "2024-01-01",
+              lastModifiedBy: "Legacy",
+              lastModifiedDate: template.lastModified || "2024-01-01",
+              versionHistory: [
+                {
+                  version: 1,
+                  modifiedBy: "Legacy",
+                  modifiedDate: template.createdDate || "2024-01-01",
+                  changes: "Legacy template migration",
+                  reason: "Added missing auditTrail",
+                },
+              ],
             };
           }
-          return template;
+
+          // Ensure all array properties exist
+          if (!migratedTemplate.roles) {
+            migratedTemplate.roles = [];
+          }
+          if (!migratedTemplate.applicableTypes) {
+            migratedTemplate.applicableTypes = [];
+          }
+          if (!migratedTemplate.governanceRules) {
+            migratedTemplate.governanceRules = [];
+          }
+          if (!migratedTemplate.approvalLevels) {
+            migratedTemplate.approvalLevels = [];
+          }
+
+          return migratedTemplate;
         });
         setTemplates(templatesWithAuditTrail);
         // Save the migrated templates back to localStorage
