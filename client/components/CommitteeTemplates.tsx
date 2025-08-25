@@ -538,6 +538,21 @@ export default function CommitteeTemplates() {
           penalty: "Committee reconstitution required",
         },
       ],
+      auditTrail: {
+        createdBy: "System",
+        createdDate: "2024-01-15",
+        lastModifiedBy: "System",
+        lastModifiedDate: "2024-02-10",
+        versionHistory: [
+          {
+            version: 1,
+            modifiedBy: "System",
+            modifiedDate: "2024-01-15",
+            changes: "Initial template creation",
+            reason: "Sample template generated",
+          },
+        ],
+      },
     };
 
     // Customize for different ministries
