@@ -647,40 +647,148 @@ export default function TenderCommitteeAssignment() {
   const createDefaultCommitteeTemplates = (
     ministryCode: string,
   ): CommitteeTemplate[] => {
-    const baseTemplates: CommitteeTemplate[] = [
-      {
-        id: "CT-2024-001",
-        name: "Medical Equipment Procurement Committee",
-        description: "Template for medical equipment procurement",
-        category: "Healthcare",
-        status: "Active",
-      },
-      {
-        id: "CT-2024-002",
-        name: "Infrastructure Procurement Committee",
-        description: "Template for infrastructure procurement",
-        category: "Infrastructure",
-        status: "Active",
-      },
-      {
-        id: "CT-2024-003",
-        name: "Educational Procurement Committee",
-        description: "Template for educational procurement",
-        category: "Education",
-        status: "Active",
-      },
-    ];
-
-    // Customize for different ministries
+    // Create ministry-specific templates with unique IDs to prevent cross-contamination
     if (ministryCode === "MOH") {
-      return baseTemplates.filter((t) => t.category === "Healthcare");
+      return [
+        {
+          id: `${ministryCode}-CT-2024-001`,
+          name: "Medical Equipment Procurement Committee",
+          description: "Template for medical equipment procurement",
+          category: "Healthcare",
+          status: "Active",
+          roles: [],
+          applicableTypes: ["Medical Devices", "Laboratory Equipment", "Pharmaceuticals"],
+          minimumMembers: 5,
+          maximumMembers: 7,
+          quorumRequirement: 4,
+          createdDate: new Date().toISOString().split("T")[0],
+          lastModified: new Date().toISOString().split("T")[0],
+          usageCount: 0,
+          evaluationFramework: {
+            methodology: "QCBS",
+            defaultTechnicalWeight: 70,
+            defaultFinancialWeight: 30,
+            allowWeightCustomization: true,
+            passingTechnicalScore: 75,
+            scoringScale: 100,
+            evaluationCriteria: [],
+            consensusRules: [],
+          },
+          approvalLevels: [],
+          governanceRules: [],
+          templateCategory: "Goods",
+          auditTrail: {
+            createdBy: "System",
+            createdDate: new Date().toISOString().split("T")[0],
+            lastModifiedBy: "System",
+            lastModifiedDate: new Date().toISOString().split("T")[0],
+            versionHistory: [
+              {
+                version: 1,
+                modifiedBy: "System",
+                modifiedDate: new Date().toISOString().split("T")[0],
+                changes: "Initial template creation",
+                reason: "Default template for Ministry of Health",
+              },
+            ],
+          },
+        },
+      ];
     } else if (ministryCode === "MOWI") {
-      return baseTemplates.filter((t) => t.category === "Infrastructure");
+      return [
+        {
+          id: `${ministryCode}-CT-2024-001`,
+          name: "Infrastructure Procurement Committee",
+          description: "Template for infrastructure and construction procurement",
+          category: "Infrastructure",
+          status: "Active",
+          roles: [],
+          applicableTypes: ["Road Construction", "Bridge Construction", "Building Construction"],
+          minimumMembers: 5,
+          maximumMembers: 7,
+          quorumRequirement: 4,
+          createdDate: new Date().toISOString().split("T")[0],
+          lastModified: new Date().toISOString().split("T")[0],
+          usageCount: 0,
+          evaluationFramework: {
+            methodology: "QCBS",
+            defaultTechnicalWeight: 80,
+            defaultFinancialWeight: 20,
+            allowWeightCustomization: true,
+            passingTechnicalScore: 75,
+            scoringScale: 100,
+            evaluationCriteria: [],
+            consensusRules: [],
+          },
+          approvalLevels: [],
+          governanceRules: [],
+          templateCategory: "Works",
+          auditTrail: {
+            createdBy: "System",
+            createdDate: new Date().toISOString().split("T")[0],
+            lastModifiedBy: "System",
+            lastModifiedDate: new Date().toISOString().split("T")[0],
+            versionHistory: [
+              {
+                version: 1,
+                modifiedBy: "System",
+                modifiedDate: new Date().toISOString().split("T")[0],
+                changes: "Initial template creation",
+                reason: "Default template for Ministry of Works and Infrastructure",
+              },
+            ],
+          },
+        },
+      ];
     } else if (ministryCode === "MOE") {
-      return baseTemplates.filter((t) => t.category === "Education");
+      return [
+        {
+          id: `${ministryCode}-CT-2024-001`,
+          name: "Educational Procurement Committee",
+          description: "Template for educational equipment and materials procurement",
+          category: "Education",
+          status: "Active",
+          roles: [],
+          applicableTypes: ["Educational Technology", "School Furniture", "Learning Materials"],
+          minimumMembers: 5,
+          maximumMembers: 7,
+          quorumRequirement: 4,
+          createdDate: new Date().toISOString().split("T")[0],
+          lastModified: new Date().toISOString().split("T")[0],
+          usageCount: 0,
+          evaluationFramework: {
+            methodology: "QCBS",
+            defaultTechnicalWeight: 70,
+            defaultFinancialWeight: 30,
+            allowWeightCustomization: true,
+            passingTechnicalScore: 75,
+            scoringScale: 100,
+            evaluationCriteria: [],
+            consensusRules: [],
+          },
+          approvalLevels: [],
+          governanceRules: [],
+          templateCategory: "Goods",
+          auditTrail: {
+            createdBy: "System",
+            createdDate: new Date().toISOString().split("T")[0],
+            lastModifiedBy: "System",
+            lastModifiedDate: new Date().toISOString().split("T")[0],
+            versionHistory: [
+              {
+                version: 1,
+                modifiedBy: "System",
+                modifiedDate: new Date().toISOString().split("T")[0],
+                changes: "Initial template creation",
+                reason: "Default template for Ministry of Education",
+              },
+            ],
+          },
+        },
+      ];
     }
 
-    return baseTemplates;
+    return [];
   };
 
   const createSampleMemberPool = (ministryCode: string): MemberPool[] => {
