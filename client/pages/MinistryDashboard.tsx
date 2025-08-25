@@ -2500,14 +2500,19 @@ export default function MinistryDashboard() {
 
     // Sync any ministry tenders that might be missing from featured/recent tenders
     const syncTendersToPublicKeys = () => {
+      const { ministry: syncMinistry } = getMinistryMockData();
+      const ministryTendersKey = `${syncMinistry.code}_tenders`;
+      const featuredTendersKey = `${syncMinistry.code}_featuredTenders`;
+      const recentTendersKey = `${syncMinistry.code}_recentTenders`;
+
       const ministryTenders = JSON.parse(
-        localStorage.getItem("ministryTenders") || "[]",
+        localStorage.getItem(ministryTendersKey) || "[]",
       );
       const existingFeatured = JSON.parse(
-        localStorage.getItem("featuredTenders") || "[]",
+        localStorage.getItem(featuredTendersKey) || "[]",
       );
       const existingRecent = JSON.parse(
-        localStorage.getItem("recentTenders") || "[]",
+        localStorage.getItem(recentTendersKey) || "[]",
       );
 
       ministryTenders.forEach((tender: any) => {
@@ -2805,13 +2810,9 @@ export default function MinistryDashboard() {
       );
 
       if (hasStatusChanges) {
-        localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
         const { ministry: statusMinistry } = getMinistryMockData();
         const ministryTendersKey = `${statusMinistry.code}_tenders`;
-        localStorage.setItem(
-          ministryTendersKey,
-          JSON.stringify(updatedTenders),
-        );
+        localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
       }
 
       return updatedTenders;
