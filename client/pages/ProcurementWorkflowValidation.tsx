@@ -255,10 +255,10 @@ export default function ProcurementWorkflowValidation() {
     noc: MockNOCRequest,
     contract: MockContract,
   ) => {
-    // Add to featured tenders
-    const existingTenders = JSON.parse(
-      localStorage.getItem("featuredTenders") || "[]",
-    );
+    // Add to ministry-specific featured tenders to prevent cross-contamination
+    const ministryContext = getCurrentMinistryContext();
+    const existingTenders = readMinistryData(MINISTRY_SPECIFIC_KEYS.FEATURED_TENDERS, []);
+
     const featuredTender = {
       id: tender.id,
       title: tender.title,
@@ -269,13 +269,11 @@ export default function ProcurementWorkflowValidation() {
       statusColor: "bg-purple-100 text-purple-800",
       category: "Medical Equipment",
       ministry: plan.ministry,
+      ministryCode: ministryContext.ministryCode, // Track ministry for this tender
       createdAt: Date.now(),
     };
     existingTenders.unshift(featuredTender);
-    localStorage.setItem(
-      "featuredTenders",
-      JSON.stringify(existingTenders.slice(0, 5)),
-    );
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.FEATURED_TENDERS, existingTenders.slice(0, 5));
 
     // Add to NOC requests (for central system)
     const centralNOCs = JSON.parse(
