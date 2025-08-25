@@ -89,12 +89,18 @@ const FINANCIAL_WEIGHT = 30;
 
 export default function FlexibleQCBSTemplate() {
   const [templates, setTemplates] = useState<QCBSTemplate[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<QCBSTemplate | null>(null);
-  const [editingTemplate, setEditingTemplate] = useState<QCBSTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<QCBSTemplate | null>(
+    null,
+  );
+  const [editingTemplate, setEditingTemplate] = useState<QCBSTemplate | null>(
+    null,
+  );
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [showCriterionModal, setShowCriterionModal] = useState(false);
   const [activeTab, setActiveTab] = useState("templates");
-  const [criterionType, setCriterionType] = useState<"Technical" | "Financial">("Technical");
+  const [criterionType, setCriterionType] = useState<"Technical" | "Financial">(
+    "Technical",
+  );
 
   // Form states
   const [templateForm, setTemplateForm] = useState({
@@ -112,7 +118,9 @@ export default function FlexibleQCBSTemplate() {
     evaluationGuideline: "",
   });
 
-  const [currentEditingTemplateId, setCurrentEditingTemplateId] = useState<string | null>(null);
+  const [currentEditingTemplateId, setCurrentEditingTemplateId] = useState<
+    string | null
+  >(null);
   const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -121,7 +129,9 @@ export default function FlexibleQCBSTemplate() {
 
   const loadTemplates = () => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
 
@@ -140,7 +150,9 @@ export default function FlexibleQCBSTemplate() {
 
   const saveTemplates = (updatedTemplates: QCBSTemplate[]) => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
       localStorage.setItem(storageKey, JSON.stringify(updatedTemplates));
@@ -153,7 +165,8 @@ export default function FlexibleQCBSTemplate() {
     const sampleTemplate: QCBSTemplate = {
       id: "FLEX-QCBS-001",
       name: "Medical Equipment Evaluation Template",
-      description: "Flexible template for evaluating medical equipment procurement",
+      description:
+        "Flexible template for evaluating medical equipment procurement",
       category: "Medical Equipment",
       technicalCriteria: [
         {
@@ -164,17 +177,20 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Evaluate against specified technical requirements and standards",
+          evaluationGuideline:
+            "Evaluate against specified technical requirements and standards",
         },
         {
           id: "TECH-002",
           name: "Quality Standards Compliance",
-          description: "Compliance with international and local quality standards",
+          description:
+            "Compliance with international and local quality standards",
           maxScore: 20,
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Verify ISO, FDA, and local regulatory compliance",
+          evaluationGuideline:
+            "Verify ISO, FDA, and local regulatory compliance",
         },
         {
           id: "TECH-003",
@@ -184,7 +200,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Assess track record and previous project success",
+          evaluationGuideline:
+            "Assess track record and previous project success",
         },
         {
           id: "TECH-004",
@@ -194,7 +211,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Evaluate local support presence and service quality",
+          evaluationGuideline:
+            "Evaluate local support presence and service quality",
         },
       ],
       financialCriteria: [
@@ -206,7 +224,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Financial",
           isRequired: true,
-          evaluationGuideline: "Lowest cost gets highest score using normalization formula",
+          evaluationGuideline:
+            "Lowest cost gets highest score using normalization formula",
         },
         {
           id: "FIN-002",
@@ -234,7 +253,8 @@ export default function FlexibleQCBSTemplate() {
     // Customize for different ministries
     if (ministryCode === "MOWI") {
       sampleTemplate.name = "Infrastructure Evaluation Template";
-      sampleTemplate.description = "Flexible template for evaluating infrastructure projects";
+      sampleTemplate.description =
+        "Flexible template for evaluating infrastructure projects";
       sampleTemplate.category = "Infrastructure";
       sampleTemplate.technicalCriteria = [
         {
@@ -245,7 +265,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Assess design quality, safety, and compliance with standards",
+          evaluationGuideline:
+            "Assess design quality, safety, and compliance with standards",
         },
         {
           id: "TECH-002",
@@ -255,7 +276,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Evaluate construction plan, timeline, and resource allocation",
+          evaluationGuideline:
+            "Evaluate construction plan, timeline, and resource allocation",
         },
         {
           id: "TECH-003",
@@ -265,7 +287,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Review portfolio and assess project complexity handled",
+          evaluationGuideline:
+            "Review portfolio and assess project complexity handled",
         },
         {
           id: "TECH-004",
@@ -275,12 +298,14 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Evaluate environmental assessment and sustainability measures",
+          evaluationGuideline:
+            "Evaluate environmental assessment and sustainability measures",
         },
       ];
     } else if (ministryCode === "MOE") {
       sampleTemplate.name = "Educational Materials Evaluation Template";
-      sampleTemplate.description = "Flexible template for evaluating educational materials and equipment";
+      sampleTemplate.description =
+        "Flexible template for evaluating educational materials and equipment";
       sampleTemplate.category = "Educational";
       sampleTemplate.technicalCriteria = [
         {
@@ -291,7 +316,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Assess curriculum alignment and pedagogical value",
+          evaluationGuideline:
+            "Assess curriculum alignment and pedagogical value",
         },
         {
           id: "TECH-002",
@@ -301,7 +327,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Evaluate user interface, accessibility, and technical capabilities",
+          evaluationGuideline:
+            "Evaluate user interface, accessibility, and technical capabilities",
         },
         {
           id: "TECH-003",
@@ -311,7 +338,8 @@ export default function FlexibleQCBSTemplate() {
           weight: 1,
           type: "Technical",
           isRequired: true,
-          evaluationGuideline: "Assess teacher training quality and support infrastructure",
+          evaluationGuideline:
+            "Assess teacher training quality and support infrastructure",
         },
       ];
     }
@@ -367,23 +395,31 @@ export default function FlexibleQCBSTemplate() {
 
     const updatedTemplate = { ...editingTemplate };
     if (criterionType === "Technical") {
-      updatedTemplate.technicalCriteria = [...updatedTemplate.technicalCriteria, newCriterion];
-      updatedTemplate.totalTechnicalScore = updatedTemplate.technicalCriteria.reduce(
-        (sum, criterion) => sum + criterion.maxScore,
-        0
-      );
+      updatedTemplate.technicalCriteria = [
+        ...updatedTemplate.technicalCriteria,
+        newCriterion,
+      ];
+      updatedTemplate.totalTechnicalScore =
+        updatedTemplate.technicalCriteria.reduce(
+          (sum, criterion) => sum + criterion.maxScore,
+          0,
+        );
     } else {
-      updatedTemplate.financialCriteria = [...updatedTemplate.financialCriteria, newCriterion];
-      updatedTemplate.totalFinancialScore = updatedTemplate.financialCriteria.reduce(
-        (sum, criterion) => sum + criterion.maxScore,
-        0
-      );
+      updatedTemplate.financialCriteria = [
+        ...updatedTemplate.financialCriteria,
+        newCriterion,
+      ];
+      updatedTemplate.totalFinancialScore =
+        updatedTemplate.financialCriteria.reduce(
+          (sum, criterion) => sum + criterion.maxScore,
+          0,
+        );
     }
 
     updatedTemplate.lastModified = new Date().toISOString().split("T")[0];
 
     const updatedTemplates = templates.map((template) =>
-      template.id === editingTemplate.id ? updatedTemplate : template
+      template.id === editingTemplate.id ? updatedTemplate : template,
     );
 
     setTemplates(updatedTemplates);
@@ -405,32 +441,39 @@ export default function FlexibleQCBSTemplate() {
     setShowCriterionModal(false);
   };
 
-  const deleteCriterion = (criterionId: string, type: "Technical" | "Financial") => {
+  const deleteCriterion = (
+    criterionId: string,
+    type: "Technical" | "Financial",
+  ) => {
     if (!editingTemplate) return;
 
     const updatedTemplate = { ...editingTemplate };
     if (type === "Technical") {
-      updatedTemplate.technicalCriteria = updatedTemplate.technicalCriteria.filter(
-        (criterion) => criterion.id !== criterionId
-      );
-      updatedTemplate.totalTechnicalScore = updatedTemplate.technicalCriteria.reduce(
-        (sum, criterion) => sum + criterion.maxScore,
-        0
-      );
+      updatedTemplate.technicalCriteria =
+        updatedTemplate.technicalCriteria.filter(
+          (criterion) => criterion.id !== criterionId,
+        );
+      updatedTemplate.totalTechnicalScore =
+        updatedTemplate.technicalCriteria.reduce(
+          (sum, criterion) => sum + criterion.maxScore,
+          0,
+        );
     } else {
-      updatedTemplate.financialCriteria = updatedTemplate.financialCriteria.filter(
-        (criterion) => criterion.id !== criterionId
-      );
-      updatedTemplate.totalFinancialScore = updatedTemplate.financialCriteria.reduce(
-        (sum, criterion) => sum + criterion.maxScore,
-        0
-      );
+      updatedTemplate.financialCriteria =
+        updatedTemplate.financialCriteria.filter(
+          (criterion) => criterion.id !== criterionId,
+        );
+      updatedTemplate.totalFinancialScore =
+        updatedTemplate.financialCriteria.reduce(
+          (sum, criterion) => sum + criterion.maxScore,
+          0,
+        );
     }
 
     updatedTemplate.lastModified = new Date().toISOString().split("T")[0];
 
     const updatedTemplates = templates.map((template) =>
-      template.id === editingTemplate.id ? updatedTemplate : template
+      template.id === editingTemplate.id ? updatedTemplate : template,
     );
 
     setTemplates(updatedTemplates);
@@ -451,24 +494,27 @@ export default function FlexibleQCBSTemplate() {
     if (updatedTemplate.technicalCriteria.length > 0) {
       const currentTechnicalTotal = updatedTemplate.technicalCriteria.reduce(
         (sum, criterion) => sum + criterion.maxScore,
-        0
+        0,
       );
-      
+
       if (currentTechnicalTotal !== TECHNICAL_WEIGHT) {
         const normalizationFactor = TECHNICAL_WEIGHT / currentTechnicalTotal;
-        updatedTemplate.technicalCriteria = updatedTemplate.technicalCriteria.map((criterion) => ({
-          ...criterion,
-          maxScore: Math.round(criterion.maxScore * normalizationFactor),
-        }));
-        
+        updatedTemplate.technicalCriteria =
+          updatedTemplate.technicalCriteria.map((criterion) => ({
+            ...criterion,
+            maxScore: Math.round(criterion.maxScore * normalizationFactor),
+          }));
+
         // Adjust the last criterion to ensure exact total
         const newTotal = updatedTemplate.technicalCriteria.reduce(
           (sum, criterion) => sum + criterion.maxScore,
-          0
+          0,
         );
         const difference = TECHNICAL_WEIGHT - newTotal;
         if (difference !== 0) {
-          updatedTemplate.technicalCriteria[updatedTemplate.technicalCriteria.length - 1].maxScore += difference;
+          updatedTemplate.technicalCriteria[
+            updatedTemplate.technicalCriteria.length - 1
+          ].maxScore += difference;
         }
       }
       updatedTemplate.totalTechnicalScore = TECHNICAL_WEIGHT;
@@ -478,24 +524,27 @@ export default function FlexibleQCBSTemplate() {
     if (updatedTemplate.financialCriteria.length > 0) {
       const currentFinancialTotal = updatedTemplate.financialCriteria.reduce(
         (sum, criterion) => sum + criterion.maxScore,
-        0
+        0,
       );
-      
+
       if (currentFinancialTotal !== FINANCIAL_WEIGHT) {
         const normalizationFactor = FINANCIAL_WEIGHT / currentFinancialTotal;
-        updatedTemplate.financialCriteria = updatedTemplate.financialCriteria.map((criterion) => ({
-          ...criterion,
-          maxScore: Math.round(criterion.maxScore * normalizationFactor),
-        }));
-        
+        updatedTemplate.financialCriteria =
+          updatedTemplate.financialCriteria.map((criterion) => ({
+            ...criterion,
+            maxScore: Math.round(criterion.maxScore * normalizationFactor),
+          }));
+
         // Adjust the last criterion to ensure exact total
         const newTotal = updatedTemplate.financialCriteria.reduce(
           (sum, criterion) => sum + criterion.maxScore,
-          0
+          0,
         );
         const difference = FINANCIAL_WEIGHT - newTotal;
         if (difference !== 0) {
-          updatedTemplate.financialCriteria[updatedTemplate.financialCriteria.length - 1].maxScore += difference;
+          updatedTemplate.financialCriteria[
+            updatedTemplate.financialCriteria.length - 1
+          ].maxScore += difference;
         }
       }
       updatedTemplate.totalFinancialScore = FINANCIAL_WEIGHT;
@@ -504,7 +553,7 @@ export default function FlexibleQCBSTemplate() {
     updatedTemplate.lastModified = new Date().toISOString().split("T")[0];
 
     const updatedTemplates = templates.map((template) =>
-      template.id === editingTemplate.id ? updatedTemplate : template
+      template.id === editingTemplate.id ? updatedTemplate : template,
     );
 
     setTemplates(updatedTemplates);
@@ -544,10 +593,13 @@ export default function FlexibleQCBSTemplate() {
     const technicalTotal = editingTemplate.totalTechnicalScore;
     const financialTotal = editingTemplate.totalFinancialScore;
 
-    if (technicalTotal !== TECHNICAL_WEIGHT || financialTotal !== FINANCIAL_WEIGHT) {
+    if (
+      technicalTotal !== TECHNICAL_WEIGHT ||
+      financialTotal !== FINANCIAL_WEIGHT
+    ) {
       setValidationError(
         `Cannot save template: Score distribution must be exactly ${TECHNICAL_WEIGHT}% technical and ${FINANCIAL_WEIGHT}% financial. ` +
-        `Current: ${technicalTotal} technical, ${financialTotal} financial. Please normalize scores first.`
+          `Current: ${technicalTotal} technical, ${financialTotal} financial. Please normalize scores first.`,
       );
       return;
     }
@@ -562,7 +614,7 @@ export default function FlexibleQCBSTemplate() {
     };
 
     const updatedTemplates = templates.map((template) =>
-      template.id === editingTemplate.id ? updatedTemplate : template
+      template.id === editingTemplate.id ? updatedTemplate : template,
     );
 
     setTemplates(updatedTemplates);
@@ -582,33 +634,53 @@ export default function FlexibleQCBSTemplate() {
 
   const getTechnicalScoreStatus = () => {
     if (!editingTemplate) return { status: "neutral", message: "" };
-    
+
     const total = editingTemplate.totalTechnicalScore;
     if (total === TECHNICAL_WEIGHT) {
-      return { status: "success", message: `Perfect! Technical criteria total ${TECHNICAL_WEIGHT} points.` };
+      return {
+        status: "success",
+        message: `Perfect! Technical criteria total ${TECHNICAL_WEIGHT} points.`,
+      };
     } else if (total > TECHNICAL_WEIGHT) {
-      return { status: "warning", message: `Technical criteria total ${total} points. Should be ${TECHNICAL_WEIGHT} points. Click normalize to fix.` };
+      return {
+        status: "warning",
+        message: `Technical criteria total ${total} points. Should be ${TECHNICAL_WEIGHT} points. Click normalize to fix.`,
+      };
     } else {
-      return { status: "error", message: `Technical criteria total ${total} points. Should be ${TECHNICAL_WEIGHT} points. Add more criteria or increase scores.` };
+      return {
+        status: "error",
+        message: `Technical criteria total ${total} points. Should be ${TECHNICAL_WEIGHT} points. Add more criteria or increase scores.`,
+      };
     }
   };
 
   const getFinancialScoreStatus = () => {
     if (!editingTemplate) return { status: "neutral", message: "" };
-    
+
     const total = editingTemplate.totalFinancialScore;
     if (total === FINANCIAL_WEIGHT) {
-      return { status: "success", message: `Perfect! Financial criteria total ${FINANCIAL_WEIGHT} points.` };
+      return {
+        status: "success",
+        message: `Perfect! Financial criteria total ${FINANCIAL_WEIGHT} points.`,
+      };
     } else if (total > FINANCIAL_WEIGHT) {
-      return { status: "warning", message: `Financial criteria total ${total} points. Should be ${FINANCIAL_WEIGHT} points. Click normalize to fix.` };
+      return {
+        status: "warning",
+        message: `Financial criteria total ${total} points. Should be ${FINANCIAL_WEIGHT} points. Click normalize to fix.`,
+      };
     } else {
-      return { status: "error", message: `Financial criteria total ${total} points. Should be ${FINANCIAL_WEIGHT} points. Add more criteria or increase scores.` };
+      return {
+        status: "error",
+        message: `Financial criteria total ${total} points. Should be ${FINANCIAL_WEIGHT} points. Add more criteria or increase scores.`,
+      };
     }
   };
 
   const isTemplateValid = (template: QCBSTemplate): boolean => {
-    return template.totalTechnicalScore === TECHNICAL_WEIGHT &&
-           template.totalFinancialScore === FINANCIAL_WEIGHT;
+    return (
+      template.totalTechnicalScore === TECHNICAL_WEIGHT &&
+      template.totalFinancialScore === FINANCIAL_WEIGHT
+    );
   };
 
   const getStatusBadge = (status: string) => {
@@ -641,14 +713,17 @@ export default function FlexibleQCBSTemplate() {
                     Flexible QCBS Evaluation Template
                   </h2>
                   <p className="text-lg text-gray-600 font-medium">
-                    Dynamic criteria creation with 70/30 technical-financial split
+                    Dynamic criteria creation with 70/30 technical-financial
+                    split
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-700 font-medium">Template Builder Active</span>
+                  <span className="text-green-700 font-medium">
+                    Template Builder Active
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Target className="h-4 w-4" />
@@ -704,15 +779,17 @@ export default function FlexibleQCBSTemplate() {
                 key={template.id}
                 className={`group hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm border rounded-xl overflow-hidden ${
                   !isTemplateValid(template)
-                    ? 'border-red-300 hover:border-red-400'
-                    : 'border-gray-100 hover:border-green-200'
+                    ? "border-red-300 hover:border-red-400"
+                    : "border-gray-100 hover:border-green-200"
                 }`}
               >
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg">{template.name}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {template.name}
+                        </CardTitle>
                         {getStatusBadge(template.status)}
                         <Badge variant="outline">v1.0</Badge>
                         {!isTemplateValid(template) && (
@@ -722,14 +799,24 @@ export default function FlexibleQCBSTemplate() {
                           </Badge>
                         )}
                         {template.usageCount > 0 && (
-                          <Badge variant="secondary">{template.usageCount} uses</Badge>
+                          <Badge variant="secondary">
+                            {template.usageCount} uses
+                          </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">{template.description}</p>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {template.description}
+                      </p>
                       <div className="flex gap-4 text-sm text-gray-500">
                         <span>Category: {template.category}</span>
-                        <span>Technical: {template.technicalCriteria.length} criteria</span>
-                        <span>Financial: {template.financialCriteria.length} criteria</span>
+                        <span>
+                          Technical: {template.technicalCriteria.length}{" "}
+                          criteria
+                        </span>
+                        <span>
+                          Financial: {template.financialCriteria.length}{" "}
+                          criteria
+                        </span>
                         <span>Modified: {template.lastModified}</span>
                       </div>
                     </div>
@@ -777,32 +864,56 @@ export default function FlexibleQCBSTemplate() {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span>Technical ({template.technicalCriteria.length} criteria)</span>
-                            <span className={`font-medium ${template.totalTechnicalScore === TECHNICAL_WEIGHT ? 'text-green-600' : 'text-red-600'}`}>
+                            <span>
+                              Technical ({template.technicalCriteria.length}{" "}
+                              criteria)
+                            </span>
+                            <span
+                              className={`font-medium ${template.totalTechnicalScore === TECHNICAL_WEIGHT ? "text-green-600" : "text-red-600"}`}
+                            >
                               {template.totalTechnicalScore} pts
-                              {template.totalTechnicalScore !== TECHNICAL_WEIGHT && (
-                                <span className="text-xs ml-1">(should be {TECHNICAL_WEIGHT})</span>
+                              {template.totalTechnicalScore !==
+                                TECHNICAL_WEIGHT && (
+                                <span className="text-xs ml-1">
+                                  (should be {TECHNICAL_WEIGHT})
+                                </span>
                               )}
                             </span>
                           </div>
                           <Progress
-                            value={(template.totalTechnicalScore / TECHNICAL_WEIGHT) * 100}
-                            className={`h-2 ${template.totalTechnicalScore !== TECHNICAL_WEIGHT ? 'bg-red-100' : ''}`}
+                            value={
+                              (template.totalTechnicalScore /
+                                TECHNICAL_WEIGHT) *
+                              100
+                            }
+                            className={`h-2 ${template.totalTechnicalScore !== TECHNICAL_WEIGHT ? "bg-red-100" : ""}`}
                           />
                         </div>
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span>Financial ({template.financialCriteria.length} criteria)</span>
-                            <span className={`font-medium ${template.totalFinancialScore === FINANCIAL_WEIGHT ? 'text-green-600' : 'text-red-600'}`}>
+                            <span>
+                              Financial ({template.financialCriteria.length}{" "}
+                              criteria)
+                            </span>
+                            <span
+                              className={`font-medium ${template.totalFinancialScore === FINANCIAL_WEIGHT ? "text-green-600" : "text-red-600"}`}
+                            >
                               {template.totalFinancialScore} pts
-                              {template.totalFinancialScore !== FINANCIAL_WEIGHT && (
-                                <span className="text-xs ml-1">(should be {FINANCIAL_WEIGHT})</span>
+                              {template.totalFinancialScore !==
+                                FINANCIAL_WEIGHT && (
+                                <span className="text-xs ml-1">
+                                  (should be {FINANCIAL_WEIGHT})
+                                </span>
                               )}
                             </span>
                           </div>
                           <Progress
-                            value={(template.totalFinancialScore / FINANCIAL_WEIGHT) * 100}
-                            className={`h-2 ${template.totalFinancialScore !== FINANCIAL_WEIGHT ? 'bg-red-100' : ''}`}
+                            value={
+                              (template.totalFinancialScore /
+                                FINANCIAL_WEIGHT) *
+                              100
+                            }
+                            className={`h-2 ${template.totalFinancialScore !== FINANCIAL_WEIGHT ? "bg-red-100" : ""}`}
                           />
                         </div>
                       </div>
@@ -816,20 +927,25 @@ export default function FlexibleQCBSTemplate() {
                           Technical Criteria
                         </h4>
                         <div className="space-y-2">
-                          {template.technicalCriteria.slice(0, 3).map((criterion) => (
-                            <div
-                              key={criterion.id}
-                              className="flex items-center justify-between p-2 bg-blue-50 rounded"
-                            >
-                              <span className="font-medium text-sm">{criterion.name}</span>
-                              <Badge variant="secondary" className="text-xs">
-                                {criterion.maxScore} pts
-                              </Badge>
-                            </div>
-                          ))}
+                          {template.technicalCriteria
+                            .slice(0, 3)
+                            .map((criterion) => (
+                              <div
+                                key={criterion.id}
+                                className="flex items-center justify-between p-2 bg-blue-50 rounded"
+                              >
+                                <span className="font-medium text-sm">
+                                  {criterion.name}
+                                </span>
+                                <Badge variant="secondary" className="text-xs">
+                                  {criterion.maxScore} pts
+                                </Badge>
+                              </div>
+                            ))}
                           {template.technicalCriteria.length > 3 && (
                             <div className="text-sm text-gray-500 text-center py-1">
-                              +{template.technicalCriteria.length - 3} more criteria
+                              +{template.technicalCriteria.length - 3} more
+                              criteria
                             </div>
                           )}
                         </div>
@@ -840,20 +956,25 @@ export default function FlexibleQCBSTemplate() {
                           Financial Criteria
                         </h4>
                         <div className="space-y-2">
-                          {template.financialCriteria.slice(0, 3).map((criterion) => (
-                            <div
-                              key={criterion.id}
-                              className="flex items-center justify-between p-2 bg-green-50 rounded"
-                            >
-                              <span className="font-medium text-sm">{criterion.name}</span>
-                              <Badge variant="secondary" className="text-xs">
-                                {criterion.maxScore} pts
-                              </Badge>
-                            </div>
-                          ))}
+                          {template.financialCriteria
+                            .slice(0, 3)
+                            .map((criterion) => (
+                              <div
+                                key={criterion.id}
+                                className="flex items-center justify-between p-2 bg-green-50 rounded"
+                              >
+                                <span className="font-medium text-sm">
+                                  {criterion.name}
+                                </span>
+                                <Badge variant="secondary" className="text-xs">
+                                  {criterion.maxScore} pts
+                                </Badge>
+                              </div>
+                            ))}
                           {template.financialCriteria.length > 3 && (
                             <div className="text-sm text-gray-500 text-center py-1">
-                              +{template.financialCriteria.length - 3} more criteria
+                              +{template.financialCriteria.length - 3} more
+                              criteria
                             </div>
                           )}
                         </div>
@@ -881,8 +1002,12 @@ export default function FlexibleQCBSTemplate() {
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">{editingTemplate.description}</p>
-                      <p className="text-xs text-gray-500 mt-1">Category: {editingTemplate.category}</p>
+                      <p className="text-sm text-gray-600">
+                        {editingTemplate.description}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Category: {editingTemplate.category}
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -917,12 +1042,19 @@ export default function FlexibleQCBSTemplate() {
                 <Alert className="border-orange-500 bg-orange-50">
                   <AlertTriangle className="h-4 w-4 text-orange-600" />
                   <AlertDescription className="text-orange-800">
-                    <strong>Cannot Save Template:</strong> Technical criteria must total exactly {TECHNICAL_WEIGHT} points
-                    and Financial criteria must total exactly {FINANCIAL_WEIGHT} points.
-                    Current totals: Technical {editingTemplate.totalTechnicalScore} pts, Financial {editingTemplate.totalFinancialScore} pts.
-                    {(editingTemplate.totalTechnicalScore !== TECHNICAL_WEIGHT || editingTemplate.totalFinancialScore !== FINANCIAL_WEIGHT) && (
+                    <strong>Cannot Save Template:</strong> Technical criteria
+                    must total exactly {TECHNICAL_WEIGHT} points and Financial
+                    criteria must total exactly {FINANCIAL_WEIGHT} points.
+                    Current totals: Technical{" "}
+                    {editingTemplate.totalTechnicalScore} pts, Financial{" "}
+                    {editingTemplate.totalFinancialScore} pts.
+                    {(editingTemplate.totalTechnicalScore !==
+                      TECHNICAL_WEIGHT ||
+                      editingTemplate.totalFinancialScore !==
+                        FINANCIAL_WEIGHT) && (
                       <span className="block mt-1">
-                        Click <strong>Normalize Scores</strong> below to automatically fix this.
+                        Click <strong>Normalize Scores</strong> below to
+                        automatically fix this.
                       </span>
                     )}
                   </AlertDescription>
@@ -934,11 +1066,15 @@ export default function FlexibleQCBSTemplate() {
                 {(() => {
                   const techStatus = getTechnicalScoreStatus();
                   return (
-                    <Alert className={
-                      techStatus.status === "success" ? "border-green-500 bg-green-50" :
-                      techStatus.status === "warning" ? "border-yellow-500 bg-yellow-50" :
-                      "border-red-500 bg-red-50"
-                    }>
+                    <Alert
+                      className={
+                        techStatus.status === "success"
+                          ? "border-green-500 bg-green-50"
+                          : techStatus.status === "warning"
+                            ? "border-yellow-500 bg-yellow-50"
+                            : "border-red-500 bg-red-50"
+                      }
+                    >
                       <Target className="h-4 w-4" />
                       <AlertDescription>{techStatus.message}</AlertDescription>
                     </Alert>
@@ -947,11 +1083,15 @@ export default function FlexibleQCBSTemplate() {
                 {(() => {
                   const finStatus = getFinancialScoreStatus();
                   return (
-                    <Alert className={
-                      finStatus.status === "success" ? "border-green-500 bg-green-50" :
-                      finStatus.status === "warning" ? "border-yellow-500 bg-yellow-50" :
-                      "border-red-500 bg-red-50"
-                    }>
+                    <Alert
+                      className={
+                        finStatus.status === "success"
+                          ? "border-green-500 bg-green-50"
+                          : finStatus.status === "warning"
+                            ? "border-yellow-500 bg-yellow-50"
+                            : "border-red-500 bg-red-50"
+                      }
+                    >
                       <DollarSign className="h-4 w-4" />
                       <AlertDescription>{finStatus.message}</AlertDescription>
                     </Alert>
@@ -960,18 +1100,24 @@ export default function FlexibleQCBSTemplate() {
               </div>
 
               {/* Normalize Button */}
-              {(editingTemplate.totalTechnicalScore !== TECHNICAL_WEIGHT || 
+              {(editingTemplate.totalTechnicalScore !== TECHNICAL_WEIGHT ||
                 editingTemplate.totalFinancialScore !== FINANCIAL_WEIGHT) && (
                 <Card className="border-yellow-200 bg-yellow-50">
                   <CardContent className="pt-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h4 className="font-medium text-yellow-800">Score Normalization Available</h4>
+                        <h4 className="font-medium text-yellow-800">
+                          Score Normalization Available
+                        </h4>
                         <p className="text-sm text-yellow-700">
                           Auto-normalize scores to maintain 70/30 split
                         </p>
                       </div>
-                      <Button onClick={normalizeScores} variant="outline" className="border-yellow-300">
+                      <Button
+                        onClick={normalizeScores}
+                        variant="outline"
+                        className="border-yellow-300"
+                      >
                         <Calculator className="h-4 w-4 mr-2" />
                         Normalize Scores
                       </Button>
@@ -986,7 +1132,8 @@ export default function FlexibleQCBSTemplate() {
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
                       <Target className="h-5 w-5 text-blue-600" />
-                      Technical Criteria ({editingTemplate.totalTechnicalScore}/{TECHNICAL_WEIGHT} points)
+                      Technical Criteria ({editingTemplate.totalTechnicalScore}/
+                      {TECHNICAL_WEIGHT} points)
                     </CardTitle>
                     <Button
                       onClick={() => {
@@ -1006,7 +1153,9 @@ export default function FlexibleQCBSTemplate() {
                       <div className="text-center py-8 text-gray-500">
                         <Target className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                         <p>No technical criteria added yet</p>
-                        <p className="text-sm">Add criteria to evaluate technical proposals</p>
+                        <p className="text-sm">
+                          Add criteria to evaluate technical proposals
+                        </p>
                       </div>
                     ) : (
                       <div className="space-y-3">
@@ -1017,12 +1166,21 @@ export default function FlexibleQCBSTemplate() {
                           >
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <h4 className="font-medium">{criterion.name}</h4>
+                                <h4 className="font-medium">
+                                  {criterion.name}
+                                </h4>
                                 {criterion.isRequired && (
-                                  <Badge variant="destructive" className="text-xs">Required</Badge>
+                                  <Badge
+                                    variant="destructive"
+                                    className="text-xs"
+                                  >
+                                    Required
+                                  </Badge>
                                 )}
                               </div>
-                              <p className="text-sm text-gray-600 mb-2">{criterion.description}</p>
+                              <p className="text-sm text-gray-600 mb-2">
+                                {criterion.description}
+                              </p>
                               {criterion.evaluationGuideline && (
                                 <p className="text-xs text-gray-500 italic">
                                   Guide: {criterion.evaluationGuideline}
@@ -1031,13 +1189,19 @@ export default function FlexibleQCBSTemplate() {
                             </div>
                             <div className="flex items-center gap-3">
                               <div className="text-right">
-                                <div className="font-semibold text-lg">{criterion.maxScore}</div>
-                                <div className="text-xs text-gray-500">points</div>
+                                <div className="font-semibold text-lg">
+                                  {criterion.maxScore}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  points
+                                </div>
                               </div>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => deleteCriterion(criterion.id, "Technical")}
+                                onClick={() =>
+                                  deleteCriterion(criterion.id, "Technical")
+                                }
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -1056,7 +1220,8 @@ export default function FlexibleQCBSTemplate() {
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
                       <DollarSign className="h-5 w-5 text-green-600" />
-                      Financial Criteria ({editingTemplate.totalFinancialScore}/{FINANCIAL_WEIGHT} points)
+                      Financial Criteria ({editingTemplate.totalFinancialScore}/
+                      {FINANCIAL_WEIGHT} points)
                     </CardTitle>
                     <Button
                       onClick={() => {
@@ -1076,7 +1241,9 @@ export default function FlexibleQCBSTemplate() {
                       <div className="text-center py-8 text-gray-500">
                         <DollarSign className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                         <p>No financial criteria added yet</p>
-                        <p className="text-sm">Add criteria to evaluate financial proposals</p>
+                        <p className="text-sm">
+                          Add criteria to evaluate financial proposals
+                        </p>
                       </div>
                     ) : (
                       <div className="space-y-3">
@@ -1087,12 +1254,21 @@ export default function FlexibleQCBSTemplate() {
                           >
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <h4 className="font-medium">{criterion.name}</h4>
+                                <h4 className="font-medium">
+                                  {criterion.name}
+                                </h4>
                                 {criterion.isRequired && (
-                                  <Badge variant="destructive" className="text-xs">Required</Badge>
+                                  <Badge
+                                    variant="destructive"
+                                    className="text-xs"
+                                  >
+                                    Required
+                                  </Badge>
                                 )}
                               </div>
-                              <p className="text-sm text-gray-600 mb-2">{criterion.description}</p>
+                              <p className="text-sm text-gray-600 mb-2">
+                                {criterion.description}
+                              </p>
                               {criterion.evaluationGuideline && (
                                 <p className="text-xs text-gray-500 italic">
                                   Guide: {criterion.evaluationGuideline}
@@ -1101,13 +1277,19 @@ export default function FlexibleQCBSTemplate() {
                             </div>
                             <div className="flex items-center gap-3">
                               <div className="text-right">
-                                <div className="font-semibold text-lg">{criterion.maxScore}</div>
-                                <div className="text-xs text-gray-500">points</div>
+                                <div className="font-semibold text-lg">
+                                  {criterion.maxScore}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  points
+                                </div>
                               </div>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => deleteCriterion(criterion.id, "Financial")}
+                                onClick={() =>
+                                  deleteCriterion(criterion.id, "Financial")
+                                }
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -1123,8 +1305,12 @@ export default function FlexibleQCBSTemplate() {
           ) : (
             <div className="text-center py-12">
               <Settings className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Template Selected</h3>
-              <p className="text-gray-600 mb-4">Select a template to edit or create a new one</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No Template Selected
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Select a template to edit or create a new one
+              </p>
               <Button onClick={() => setShowTemplateModal(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create New Template
@@ -1138,7 +1324,10 @@ export default function FlexibleQCBSTemplate() {
           {selectedTemplate || editingTemplate ? (
             <Card>
               <CardHeader>
-                <CardTitle>Template Preview: {(selectedTemplate || editingTemplate)?.name}</CardTitle>
+                <CardTitle>
+                  Template Preview:{" "}
+                  {(selectedTemplate || editingTemplate)?.name}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
@@ -1146,26 +1335,48 @@ export default function FlexibleQCBSTemplate() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="p-4 bg-blue-50 rounded-lg">
                       <div className="text-2xl font-bold text-blue-600">
-                        {(selectedTemplate || editingTemplate)?.technicalCriteria.length}
+                        {
+                          (selectedTemplate || editingTemplate)
+                            ?.technicalCriteria.length
+                        }
                       </div>
-                      <div className="text-sm text-blue-700">Technical Criteria</div>
+                      <div className="text-sm text-blue-700">
+                        Technical Criteria
+                      </div>
                       <div className="text-xs text-blue-600">
-                        {(selectedTemplate || editingTemplate)?.totalTechnicalScore} total points
+                        {
+                          (selectedTemplate || editingTemplate)
+                            ?.totalTechnicalScore
+                        }{" "}
+                        total points
                       </div>
                     </div>
                     <div className="p-4 bg-green-50 rounded-lg">
                       <div className="text-2xl font-bold text-green-600">
-                        {(selectedTemplate || editingTemplate)?.financialCriteria.length}
+                        {
+                          (selectedTemplate || editingTemplate)
+                            ?.financialCriteria.length
+                        }
                       </div>
-                      <div className="text-sm text-green-700">Financial Criteria</div>
+                      <div className="text-sm text-green-700">
+                        Financial Criteria
+                      </div>
                       <div className="text-xs text-green-600">
-                        {(selectedTemplate || editingTemplate)?.totalFinancialScore} total points
+                        {
+                          (selectedTemplate || editingTemplate)
+                            ?.totalFinancialScore
+                        }{" "}
+                        total points
                       </div>
                     </div>
                     <div className="p-4 bg-purple-50 rounded-lg">
-                      <div className="text-2xl font-bold text-purple-600">100</div>
+                      <div className="text-2xl font-bold text-purple-600">
+                        100
+                      </div>
                       <div className="text-sm text-purple-700">Total Score</div>
-                      <div className="text-xs text-purple-600">70% Technical + 30% Financial</div>
+                      <div className="text-xs text-purple-600">
+                        70% Technical + 30% Financial
+                      </div>
                     </div>
                   </div>
 
@@ -1180,16 +1391,24 @@ export default function FlexibleQCBSTemplate() {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Criterion</TableHead>
-                            <TableHead className="text-right">Max Score</TableHead>
+                            <TableHead className="text-right">
+                              Max Score
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {(selectedTemplate || editingTemplate)?.technicalCriteria.map((criterion) => (
+                          {(
+                            selectedTemplate || editingTemplate
+                          )?.technicalCriteria.map((criterion) => (
                             <TableRow key={criterion.id}>
                               <TableCell>
                                 <div>
-                                  <div className="font-medium">{criterion.name}</div>
-                                  <div className="text-sm text-gray-600">{criterion.description}</div>
+                                  <div className="font-medium">
+                                    {criterion.name}
+                                  </div>
+                                  <div className="text-sm text-gray-600">
+                                    {criterion.description}
+                                  </div>
                                 </div>
                               </TableCell>
                               <TableCell className="text-right font-semibold">
@@ -1198,9 +1417,14 @@ export default function FlexibleQCBSTemplate() {
                             </TableRow>
                           ))}
                           <TableRow className="bg-blue-50">
-                            <TableCell className="font-semibold">Total Technical Score</TableCell>
+                            <TableCell className="font-semibold">
+                              Total Technical Score
+                            </TableCell>
                             <TableCell className="text-right font-bold">
-                              {(selectedTemplate || editingTemplate)?.totalTechnicalScore}
+                              {
+                                (selectedTemplate || editingTemplate)
+                                  ?.totalTechnicalScore
+                              }
                             </TableCell>
                           </TableRow>
                         </TableBody>
@@ -1216,16 +1440,24 @@ export default function FlexibleQCBSTemplate() {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Criterion</TableHead>
-                            <TableHead className="text-right">Max Score</TableHead>
+                            <TableHead className="text-right">
+                              Max Score
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {(selectedTemplate || editingTemplate)?.financialCriteria.map((criterion) => (
+                          {(
+                            selectedTemplate || editingTemplate
+                          )?.financialCriteria.map((criterion) => (
                             <TableRow key={criterion.id}>
                               <TableCell>
                                 <div>
-                                  <div className="font-medium">{criterion.name}</div>
-                                  <div className="text-sm text-gray-600">{criterion.description}</div>
+                                  <div className="font-medium">
+                                    {criterion.name}
+                                  </div>
+                                  <div className="text-sm text-gray-600">
+                                    {criterion.description}
+                                  </div>
                                 </div>
                               </TableCell>
                               <TableCell className="text-right font-semibold">
@@ -1234,9 +1466,14 @@ export default function FlexibleQCBSTemplate() {
                             </TableRow>
                           ))}
                           <TableRow className="bg-green-50">
-                            <TableCell className="font-semibold">Total Financial Score</TableCell>
+                            <TableCell className="font-semibold">
+                              Total Financial Score
+                            </TableCell>
                             <TableCell className="text-right font-bold">
-                              {(selectedTemplate || editingTemplate)?.totalFinancialScore}
+                              {
+                                (selectedTemplate || editingTemplate)
+                                  ?.totalFinancialScore
+                              }
                             </TableCell>
                           </TableRow>
                         </TableBody>
@@ -1251,16 +1488,23 @@ export default function FlexibleQCBSTemplate() {
                       QCBS Scoring Formula
                     </h4>
                     <div className="font-mono text-lg text-center p-4 bg-white rounded border">
-                      Combined Score = (Technical Score × 0.70) + (Financial Score × 0.30)
+                      Combined Score = (Technical Score × 0.70) + (Financial
+                      Score × 0.30)
                     </div>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div>
                         <strong>Technical Component (70%):</strong>
-                        <p>Sum of all technical criteria scores, normalized to 70 points</p>
+                        <p>
+                          Sum of all technical criteria scores, normalized to 70
+                          points
+                        </p>
                       </div>
                       <div>
                         <strong>Financial Component (30%):</strong>
-                        <p>Sum of all financial criteria scores, normalized to 30 points</p>
+                        <p>
+                          Sum of all financial criteria scores, normalized to 30
+                          points
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1270,8 +1514,12 @@ export default function FlexibleQCBSTemplate() {
           ) : (
             <div className="text-center py-12">
               <Eye className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Template to Preview</h3>
-              <p className="text-gray-600">Select a template from the Templates tab to preview</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No Template to Preview
+              </h3>
+              <p className="text-gray-600">
+                Select a template from the Templates tab to preview
+              </p>
             </div>
           )}
         </TabsContent>
@@ -1289,7 +1537,9 @@ export default function FlexibleQCBSTemplate() {
               <Input
                 id="template-name"
                 value={templateForm.name}
-                onChange={(e) => setTemplateForm({ ...templateForm, name: e.target.value })}
+                onChange={(e) =>
+                  setTemplateForm({ ...templateForm, name: e.target.value })
+                }
                 placeholder="e.g., Medical Equipment Evaluation Template"
               />
             </div>
@@ -1298,7 +1548,12 @@ export default function FlexibleQCBSTemplate() {
               <Textarea
                 id="template-description"
                 value={templateForm.description}
-                onChange={(e) => setTemplateForm({ ...templateForm, description: e.target.value })}
+                onChange={(e) =>
+                  setTemplateForm({
+                    ...templateForm,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Describe the template purpose and scope"
                 rows={3}
               />
@@ -1308,17 +1563,20 @@ export default function FlexibleQCBSTemplate() {
               <Input
                 id="template-category"
                 value={templateForm.category}
-                onChange={(e) => setTemplateForm({ ...templateForm, category: e.target.value })}
+                onChange={(e) =>
+                  setTemplateForm({ ...templateForm, category: e.target.value })
+                }
                 placeholder="e.g., Medical Equipment, Infrastructure, Services"
               />
             </div>
             <div className="flex justify-end gap-2 pt-4 border-t">
-              <Button variant="outline" onClick={() => setShowTemplateModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowTemplateModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={createNewTemplate}>
-                Create Template
-              </Button>
+              <Button onClick={createNewTemplate}>Create Template</Button>
             </div>
           </div>
         </DialogContent>
@@ -1341,7 +1599,9 @@ export default function FlexibleQCBSTemplate() {
               <Input
                 id="criterion-name"
                 value={criterionForm.name}
-                onChange={(e) => setCriterionForm({ ...criterionForm, name: e.target.value })}
+                onChange={(e) =>
+                  setCriterionForm({ ...criterionForm, name: e.target.value })
+                }
                 placeholder={
                   criterionType === "Technical"
                     ? "e.g., Technical Specifications"
@@ -1354,47 +1614,64 @@ export default function FlexibleQCBSTemplate() {
               <Textarea
                 id="criterion-description"
                 value={criterionForm.description}
-                onChange={(e) => setCriterionForm({ ...criterionForm, description: e.target.value })}
+                onChange={(e) =>
+                  setCriterionForm({
+                    ...criterionForm,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Describe what this criterion evaluates"
                 rows={3}
               />
             </div>
             <div>
-              <Label htmlFor="criterion-max-score">Maximum Score (Points)</Label>
+              <Label htmlFor="criterion-max-score">
+                Maximum Score (Points)
+              </Label>
               <Input
                 id="criterion-max-score"
                 type="number"
                 value={criterionForm.maxScore}
                 onChange={(e) =>
-                  setCriterionForm({ ...criterionForm, maxScore: parseInt(e.target.value) || 0 })
+                  setCriterionForm({
+                    ...criterionForm,
+                    maxScore: parseInt(e.target.value) || 0,
+                  })
                 }
                 placeholder="20"
                 min="1"
                 max={criterionType === "Technical" ? "70" : "30"}
               />
               <p className="text-xs text-gray-500 mt-1">
-                Recommended: {criterionType === "Technical" ? "10-30 points" : "5-15 points"}
+                Recommended:{" "}
+                {criterionType === "Technical" ? "10-30 points" : "5-15 points"}
               </p>
             </div>
             <div>
-              <Label htmlFor="criterion-guideline">Evaluation Guideline (Optional)</Label>
+              <Label htmlFor="criterion-guideline">
+                Evaluation Guideline (Optional)
+              </Label>
               <Textarea
                 id="criterion-guideline"
                 value={criterionForm.evaluationGuideline}
                 onChange={(e) =>
-                  setCriterionForm({ ...criterionForm, evaluationGuideline: e.target.value })
+                  setCriterionForm({
+                    ...criterionForm,
+                    evaluationGuideline: e.target.value,
+                  })
                 }
                 placeholder="Instructions for evaluators on how to score this criterion"
                 rows={2}
               />
             </div>
             <div className="flex justify-end gap-2 pt-4 border-t">
-              <Button variant="outline" onClick={() => setShowCriterionModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowCriterionModal(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={addCriterion}>
-                Add Criterion
-              </Button>
+              <Button onClick={addCriterion}>Add Criterion</Button>
             </div>
           </div>
         </DialogContent>
