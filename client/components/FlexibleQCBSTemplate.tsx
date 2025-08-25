@@ -603,6 +603,11 @@ export default function FlexibleQCBSTemplate() {
     }
   };
 
+  const isTemplateValid = (template: QCBSTemplate): boolean => {
+    return template.totalTechnicalScore === TECHNICAL_WEIGHT &&
+           template.totalFinancialScore === FINANCIAL_WEIGHT;
+  };
+
   const getStatusBadge = (status: string) => {
     const variants = {
       Draft: "secondary",
