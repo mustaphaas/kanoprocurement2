@@ -374,11 +374,25 @@ export const getClosedTenders = (): ClosedTender[] => {
   // Get all tenders using the same logic as AllTenders page
   const getAllTendersWithLocalStorage = (): Tender[] => {
     const storedTenders = localStorage.getItem("recentTenders");
+    const { ministryCode, ministryName, ministryId } = getCurrentMinistryContext();
+
     if (storedTenders) {
-      const parsedTenders = JSON.parse(storedTenders);
+      const parsedTenders = JSON.parse(storedTenders) as Tender[];
       if (parsedTenders.length > 0) {
+        // Filter stored tenders to only include those belonging to current ministry
+        const storedTendersForMinistry = parsedTenders.filter((t) => {
+          const idMatches = t.id && t.id.toUpperCase().startsWith((ministryCode || ministryId || "").toUpperCase());
+          const procuringMatches =
+            typeof t.procuringEntity === "string" &&
+            ministryName &&
+            t.procuringEntity.includes(ministryName);
+          return idMatches || procuringMatches;
+        });
+
+        console.log(`Filtered stored tenders for ministry ${ministryCode}: ${storedTendersForMinistry.length} out of ${parsedTenders.length} total`);
+
         // Apply currency formatting and automatic status transitions
-        const formattedParsedTenders = parsedTenders.map((tender: Tender) => {
+        const formattedParsedTenders = storedTendersForMinistry.map((tender: Tender) => {
           const formatted = {
             ...tender,
             value: formatCurrency(tender.value),
