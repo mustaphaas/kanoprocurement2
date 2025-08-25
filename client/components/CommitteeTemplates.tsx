@@ -158,6 +158,7 @@ export default function CommitteeTemplates() {
     useState<CommitteeTemplate | null>(null);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [editingTemplate, setEditingTemplate] =
     useState<CommitteeTemplate | null>(null);
 
@@ -372,8 +373,9 @@ export default function CommitteeTemplates() {
       ],
       evaluationFramework: {
         methodology: "QCBS",
-        technicalWeightPercent: 70,
-        financialWeightPercent: 30,
+        defaultTechnicalWeight: 70,
+        defaultFinancialWeight: 30,
+        allowWeightCustomization: true,
         passingTechnicalScore: 75,
         scoringScale: 100,
         evaluationCriteria: [
@@ -605,6 +607,9 @@ export default function CommitteeTemplates() {
   };
 
   const createTemplate = () => {
+    const currentUser = "Current User"; // In a real app, get from auth context
+    const currentDate = new Date().toISOString().split("T")[0];
+
     const newTemplate: CommitteeTemplate = {
       id: `CT-${Date.now()}`,
       name: templateForm.name,
@@ -617,24 +622,50 @@ export default function CommitteeTemplates() {
       roles: [],
       evaluationFramework: {
         methodology: templateForm.methodology,
-        technicalWeightPercent: templateForm.technicalWeightPercent,
-        financialWeightPercent: templateForm.financialWeightPercent,
+        defaultTechnicalWeight: templateForm.technicalWeightPercent,
+        defaultFinancialWeight: templateForm.financialWeightPercent,
+        allowWeightCustomization: true,
         passingTechnicalScore: templateForm.passingTechnicalScore,
         scoringScale: 100,
         evaluationCriteria: [],
         consensusRules: [],
       },
       approvalLevels: [],
-      createdDate: new Date().toISOString().split("T")[0],
-      lastModified: new Date().toISOString().split("T")[0],
+      createdDate: currentDate,
+      lastModified: currentDate,
       status: "Draft",
       usageCount: 0,
       governanceRules: [],
+      templateCategory: (templateForm.category === "Healthcare"
+        ? "Goods"
+        : templateForm.category === "Infrastructure"
+          ? "Works"
+          : templateForm.category === "Education"
+            ? "Goods"
+            : "Services") as "Goods" | "Works" | "Services" | "Consultancy",
+      auditTrail: {
+        createdBy: currentUser,
+        createdDate: currentDate,
+        lastModifiedBy: currentUser,
+        lastModifiedDate: currentDate,
+        versionHistory: [
+          {
+            version: 1,
+            modifiedBy: currentUser,
+            modifiedDate: currentDate,
+            changes: "Initial template creation",
+            reason: "New template created",
+          },
+        ],
+      },
     };
 
     const updatedTemplates = [...templates, newTemplate];
     setTemplates(updatedTemplates);
     saveTemplates(updatedTemplates);
+
+    console.log("Created new template:", newTemplate);
+    console.log("Updated templates list:", updatedTemplates);
 
     setTemplateForm({
       name: "",
@@ -662,21 +693,43 @@ export default function CommitteeTemplates() {
       requiredExpertise: roleForm.requiredExpertise,
       minimumExperience: roleForm.minimumExperience,
       mandatoryRole: roleForm.mandatoryRole,
-      maxConflictScore: roleForm.maxConflictScore,
+      conflictOfInterestAllowed: roleForm.maxConflictScore > 0,
+      minimumRequired: 1,
     };
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const currentUser = "Current User";
 
     const updatedTemplates = templates.map((template) =>
       template.id === templateId
         ? {
             ...template,
             roles: [...template.roles, newRole],
-            lastModified: new Date().toISOString().split("T")[0],
+            lastModified: currentDate,
+            auditTrail: {
+              ...template.auditTrail,
+              lastModifiedBy: currentUser,
+              lastModifiedDate: currentDate,
+              versionHistory: [
+                ...template.auditTrail.versionHistory,
+                {
+                  version: template.auditTrail.versionHistory.length + 1,
+                  modifiedBy: currentUser,
+                  modifiedDate: currentDate,
+                  changes: `Added role: ${newRole.title}`,
+                  reason: "Role addition",
+                },
+              ],
+            },
           }
         : template,
     );
 
     setTemplates(updatedTemplates);
     saveTemplates(updatedTemplates);
+
+    console.log("Added role to template:", templateId, newRole);
+    console.log("Updated templates after role addition:", updatedTemplates);
 
     setRoleForm({
       title: "",
@@ -689,6 +742,127 @@ export default function CommitteeTemplates() {
       maxConflictScore: 3,
     });
     setShowRoleModal(false);
+  };
+
+  const activateTemplate = (templateId: string) => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    const currentUser = "Current User";
+
+    const updatedTemplates = templates.map((template) =>
+      template.id === templateId
+        ? {
+            ...template,
+            status: "Active" as const,
+            lastModified: currentDate,
+            auditTrail: {
+              ...template.auditTrail,
+              lastModifiedBy: currentUser,
+              lastModifiedDate: currentDate,
+              versionHistory: [
+                ...template.auditTrail.versionHistory,
+                {
+                  version: template.auditTrail.versionHistory.length + 1,
+                  modifiedBy: currentUser,
+                  modifiedDate: currentDate,
+                  changes: "Template activated",
+                  reason: "Status change to Active",
+                },
+              ],
+            },
+          }
+        : template,
+    );
+
+    setTemplates(updatedTemplates);
+    saveTemplates(updatedTemplates);
+    console.log("Activated template:", templateId);
+  };
+
+  const editTemplate = (template: CommitteeTemplate) => {
+    setEditingTemplate(template);
+    setTemplateForm({
+      name: template.name,
+      description: template.description,
+      category: template.category,
+      applicableTypes: template.applicableTypes,
+      minimumMembers: template.minimumMembers,
+      maximumMembers: template.maximumMembers,
+      quorumRequirement: template.quorumRequirement,
+      methodology: template.evaluationFramework?.methodology || "QCBS",
+      technicalWeightPercent:
+        template.evaluationFramework?.defaultTechnicalWeight || 70,
+      financialWeightPercent:
+        template.evaluationFramework?.defaultFinancialWeight || 30,
+      passingTechnicalScore:
+        template.evaluationFramework?.passingTechnicalScore || 75,
+    });
+    setShowEditModal(true);
+  };
+
+  const updateTemplate = () => {
+    if (!editingTemplate) return;
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const currentUser = "Current User";
+
+    const updatedTemplate: CommitteeTemplate = {
+      ...editingTemplate,
+      name: templateForm.name,
+      description: templateForm.description,
+      category: templateForm.category,
+      applicableTypes: templateForm.applicableTypes,
+      minimumMembers: templateForm.minimumMembers,
+      maximumMembers: templateForm.maximumMembers,
+      quorumRequirement: templateForm.quorumRequirement,
+      evaluationFramework: {
+        ...editingTemplate.evaluationFramework,
+        methodology: templateForm.methodology,
+        defaultTechnicalWeight: templateForm.technicalWeightPercent,
+        defaultFinancialWeight: templateForm.financialWeightPercent,
+        passingTechnicalScore: templateForm.passingTechnicalScore,
+      },
+      lastModified: currentDate,
+      auditTrail: {
+        ...editingTemplate.auditTrail,
+        lastModifiedBy: currentUser,
+        lastModifiedDate: currentDate,
+        versionHistory: [
+          ...editingTemplate.auditTrail.versionHistory,
+          {
+            version: editingTemplate.auditTrail.versionHistory.length + 1,
+            modifiedBy: currentUser,
+            modifiedDate: currentDate,
+            changes: "Template details updated",
+            reason: "Template editing",
+          },
+        ],
+      },
+    };
+
+    const updatedTemplates = templates.map((template) =>
+      template.id === editingTemplate.id ? updatedTemplate : template,
+    );
+
+    setTemplates(updatedTemplates);
+    saveTemplates(updatedTemplates);
+
+    setEditingTemplate(null);
+    setTemplateForm({
+      name: "",
+      description: "",
+      category: "",
+      applicableTypes: [],
+      minimumMembers: 3,
+      maximumMembers: 7,
+      quorumRequirement: 3,
+      methodology: "QCBS",
+      technicalWeightPercent: 70,
+      financialWeightPercent: 30,
+      passingTechnicalScore: 75,
+    });
+    setShowEditModal(false);
+
+    console.log("Updated template:", updatedTemplate);
   };
 
   const getStatusBadge = (status: string) => {
@@ -747,9 +921,10 @@ export default function CommitteeTemplates() {
                   <div className="flex items-center gap-3 mb-2">
                     <CardTitle className="text-lg">{template.name}</CardTitle>
                     {getStatusBadge(template.status)}
-                    {getMethodologyBadge(
-                      template.evaluationFramework.methodology,
-                    )}
+                    {template.evaluationFramework?.methodology &&
+                      getMethodologyBadge(
+                        template.evaluationFramework.methodology,
+                      )}
                   </div>
                   <p className="text-sm text-gray-600 mb-3">
                     {template.description}
@@ -777,9 +952,17 @@ export default function CommitteeTemplates() {
                         QCBS Weights
                       </Label>
                       <p className="text-sm font-semibold">
-                        T:{template.evaluationFramework.technicalWeightPercent}%
-                        / F:
-                        {template.evaluationFramework.financialWeightPercent}%
+                        T:
+                        {template.evaluationFramework?.defaultTechnicalWeight ||
+                          template.evaluationFramework
+                            ?.technicalWeightPercent ||
+                          70}
+                        % / F:
+                        {template.evaluationFramework?.defaultFinancialWeight ||
+                          template.evaluationFramework
+                            ?.financialWeightPercent ||
+                          30}
+                        %
                       </p>
                     </div>
                     <div>
@@ -797,8 +980,17 @@ export default function CommitteeTemplates() {
                     variant="outline"
                     size="sm"
                     onClick={() => setSelectedTemplate(template)}
+                    title="View Details"
                   >
                     <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => editTemplate(template)}
+                    title="Edit Template"
+                  >
+                    <Edit className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
@@ -807,9 +999,21 @@ export default function CommitteeTemplates() {
                       setSelectedTemplate(template);
                       setShowRoleModal(true);
                     }}
+                    title="Add Role"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
+                  {template.status === "Draft" && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => activateTemplate(template.id)}
+                      title="Activate Template"
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardHeader>
@@ -864,7 +1068,11 @@ export default function CommitteeTemplates() {
                         Technical Weight
                       </Label>
                       <p className="font-semibold text-blue-900">
-                        {template.evaluationFramework.technicalWeightPercent}%
+                        {template.evaluationFramework?.defaultTechnicalWeight ||
+                          template.evaluationFramework
+                            ?.technicalWeightPercent ||
+                          70}
+                        %
                       </p>
                     </div>
                     <div>
@@ -872,7 +1080,11 @@ export default function CommitteeTemplates() {
                         Financial Weight
                       </Label>
                       <p className="font-semibold text-blue-900">
-                        {template.evaluationFramework.financialWeightPercent}%
+                        {template.evaluationFramework?.defaultFinancialWeight ||
+                          template.evaluationFramework
+                            ?.financialWeightPercent ||
+                          30}
+                        %
                       </p>
                     </div>
                     <div>
@@ -880,7 +1092,9 @@ export default function CommitteeTemplates() {
                         Passing Score
                       </Label>
                       <p className="font-semibold text-blue-900">
-                        {template.evaluationFramework.passingTechnicalScore}%
+                        {template.evaluationFramework?.passingTechnicalScore ||
+                          75}
+                        %
                       </p>
                     </div>
                     <div>
@@ -888,7 +1102,8 @@ export default function CommitteeTemplates() {
                         Criteria
                       </Label>
                       <p className="font-semibold text-blue-900">
-                        {template.evaluationFramework.evaluationCriteria.length}
+                        {template.evaluationFramework?.evaluationCriteria
+                          ?.length || 0}
                       </p>
                     </div>
                   </div>

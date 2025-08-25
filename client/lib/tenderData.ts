@@ -193,6 +193,68 @@ export const getAllTenders = (): Tender[] => [
       "Solar power installation for all schools",
     ],
   },
+  {
+    id: "MOE-2023-015",
+    title: "School Furniture Procurement Program",
+    category: "Education",
+    value: "₦680M",
+    deadline: "2023-12-15", // Past date
+    location: "Statewide",
+    views: 98,
+    status: "Active" as TenderStatus, // Will be auto-converted to Closed
+    description:
+      "Supply of classroom furniture including desks, chairs, and storage units for government schools.",
+    publishDate: "2023-11-01",
+    closingDate: "2023-12-15", // Past date
+    tenderFee: "₦12,000",
+    procuringEntity: "Kano State Ministry of Education",
+    duration: "4 months",
+    eligibility: "Furniture manufacturers and suppliers",
+    requirements: [
+      "Manufacturing capability certification",
+      "Quality standards compliance",
+      "Delivery logistics capability",
+      "After-sales service provision",
+    ],
+    technicalSpecs: [
+      "Student desks: 5,000 units",
+      "Student chairs: 10,000 units",
+      "Teacher tables: 500 units",
+      "Storage cabinets: 200 units",
+      "Ergonomic design compliance",
+    ],
+  },
+  {
+    id: "MOWI-2023-018",
+    title: "Bridge Construction and Maintenance",
+    category: "Infrastructure",
+    value: "��1.2B",
+    deadline: "2023-11-30", // Past date
+    location: "Kano South",
+    views: 178,
+    status: "Active" as TenderStatus, // Will be auto-converted to Closed
+    description:
+      "Construction of new bridges and maintenance of existing ones across major rivers in Kano South.",
+    publishDate: "2023-10-15",
+    closingDate: "2023-11-30", // Past date
+    tenderFee: "₦18,000",
+    procuringEntity: "Kano State Ministry of Works",
+    duration: "14 months",
+    eligibility: "Category A contractors with bridge construction experience",
+    requirements: [
+      "Structural engineering expertise",
+      "Heavy equipment availability",
+      "Safety compliance certification",
+      "Environmental impact assessment",
+    ],
+    technicalSpecs: [
+      "Concrete bridge construction: 3 bridges",
+      "Steel reinforcement: Grade 60",
+      "Foundation depth: 15 meters minimum",
+      "Load capacity: 40 tons",
+      "Seismic resistance compliance",
+    ],
+  },
 ];
 
 // Convert tender to closed tender format for committee assignment
@@ -351,14 +413,38 @@ export const getClosedTenders = (): ClosedTender[] => {
   };
 
   // Get all tenders (including localStorage) and filter for closed ones
-  return getAllTendersWithLocalStorage()
+  const allTenders = getAllTendersWithLocalStorage();
+  console.log("All tenders for closed tender filtering:", allTenders.length);
+
+  const closedTenders = allTenders
     .filter((tender) => {
       // Check if tender should be closed based on closing date
       const closingDate = new Date(tender.closingDate);
       const today = new Date();
-      return closingDate < today;
+      today.setHours(23, 59, 59, 999); // Set to end of today to include today's closures
+
+      const isClosed =
+        closingDate < today ||
+        tender.status === "Closed" ||
+        tender.status === "Evaluation_Complete" ||
+        tender.status === "Awarded";
+
+      console.log(
+        `Tender ${tender.id}: closing=${tender.closingDate}, today=${today.toISOString().split("T")[0]}, status=${tender.status}, isClosed=${isClosed}`,
+      );
+
+      if (isClosed) {
+        console.log(
+          `✓ Found closed tender: ${tender.id} - ${tender.title} (closed: ${tender.closingDate}, status: ${tender.status})`,
+        );
+      }
+
+      return isClosed;
     })
     .map(convertToClosedTender);
+
+  console.log(`Total closed tenders found: ${closedTenders.length}`);
+  return closedTenders;
 };
 
 // Get tenders by category
