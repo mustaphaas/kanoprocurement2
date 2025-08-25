@@ -53,14 +53,19 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
       createdAt: Date.now(),
     };
 
-    // Store in recentTenders (what CompanyDashboard looks for)
-    const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
+    // Get current ministry context for proper isolation
+    const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+    const ministryCode = ministryUser.ministryCode || ministryUser.ministryId?.toUpperCase() || "MOH";
+
+    // Store in ministry-specific recentTenders to prevent cross-contamination
+    const recentTendersKey = `${ministryCode}_recentTenders`;
+    const existingRecentTenders = localStorage.getItem(recentTendersKey) || "[]";
     const recentTendersList = JSON.parse(existingRecentTenders);
     recentTendersList.unshift(testTender);
 
     // Keep only the last 10 recent tenders
     const latestRecentTenders = recentTendersList.slice(0, 10);
-    localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+    localStorage.setItem(recentTendersKey, JSON.stringify(latestRecentTenders));
 
     // Also store in ministryTenders (what MinistryDashboard looks for)
     const ministryTenderFormat = {
