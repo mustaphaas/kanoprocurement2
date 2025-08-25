@@ -901,7 +901,10 @@ export default function TenderCommitteeAssignment() {
     }
 
     // Validate date logic
-    if (new Date(assignmentForm.evaluationStartDate) >= new Date(assignmentForm.evaluationEndDate)) {
+    if (
+      new Date(assignmentForm.evaluationStartDate) >=
+      new Date(assignmentForm.evaluationEndDate)
+    ) {
       setErrorMessage("Evaluation end date must be after start date.");
       return;
     }
@@ -1103,12 +1106,12 @@ export default function TenderCommitteeAssignment() {
     filteredAssignments: filteredAssignments.length,
     searchTerm,
     filterStatus,
-    assignments: assignments.map(a => ({
+    assignments: assignments.map((a) => ({
       id: a.id,
       tenderId: a.tenderId,
       tenderTitle: a.tenderTitle,
-      status: a.status
-    }))
+      status: a.status,
+    })),
   });
 
   return (
@@ -1198,215 +1201,227 @@ export default function TenderCommitteeAssignment() {
                 {assignments.length === 0 ? (
                   <div>
                     <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <h3 className="text-lg font-medium mb-2">No Committee Assignments</h3>
-                    <p className="text-sm">Create your first committee assignment to get started.</p>
+                    <h3 className="text-lg font-medium mb-2">
+                      No Committee Assignments
+                    </h3>
+                    <p className="text-sm">
+                      Create your first committee assignment to get started.
+                    </p>
                   </div>
                 ) : (
                   <div>
                     <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <h3 className="text-lg font-medium mb-2">No Matches Found</h3>
-                    <p className="text-sm">Try adjusting your search terms or filters.</p>
-                    <p className="text-xs mt-2">Total assignments: {assignments.length}</p>
+                    <h3 className="text-lg font-medium mb-2">
+                      No Matches Found
+                    </h3>
+                    <p className="text-sm">
+                      Try adjusting your search terms or filters.
+                    </p>
+                    <p className="text-xs mt-2">
+                      Total assignments: {assignments.length}
+                    </p>
                   </div>
                 )}
               </div>
             ) : (
               filteredAssignments.map((assignment) => (
-              <Card
-                key={assignment.id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg">
-                          {assignment.tenderTitle}
-                        </CardTitle>
-                        {getStatusBadge(assignment.status)}
-                        <Badge variant="outline">
-                          {assignment.tenderCategory}
-                        </Badge>
+                <Card
+                  key={assignment.id}
+                  className="hover:shadow-md transition-shadow"
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <CardTitle className="text-lg">
+                            {assignment.tenderTitle}
+                          </CardTitle>
+                          {getStatusBadge(assignment.status)}
+                          <Badge variant="outline">
+                            {assignment.tenderCategory}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Tender ID: {assignment.tenderId} • Template:{" "}
+                          {assignment.templateName}
+                        </p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-500">
+                              Members Assigned
+                            </Label>
+                            <p className="text-sm font-semibold">
+                              {assignment.assignedMembers.length}
+                            </p>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-500">
+                              COI Declarations
+                            </Label>
+                            <p className="text-sm font-semibold">
+                              {assignment.coiDeclarations.length}
+                              {assignment.coiDeclarations.some(
+                                (coi) => coi.hasConflict,
+                              ) && (
+                                <AlertTriangle className="inline h-3 w-3 ml-1 text-yellow-600" />
+                              )}
+                            </p>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-500">
+                              Evaluation Period
+                            </Label>
+                            <p className="text-sm font-semibold">
+                              {assignment.evaluationPeriod.startDate} to{" "}
+                              {assignment.evaluationPeriod.endDate}
+                            </p>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-500">
+                              Conflicts
+                            </Label>
+                            <p className="text-sm font-semibold">
+                              {assignment.conflicts.length}
+                              {assignment.conflicts.some(
+                                (c) => c.severity === "Critical",
+                              ) && (
+                                <XCircle className="inline h-3 w-3 ml-1 text-red-600" />
+                              )}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Tender ID: {assignment.tenderId} • Template:{" "}
-                        {assignment.templateName}
-                      </p>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div>
-                          <Label className="text-xs font-medium text-gray-500">
-                            Members Assigned
-                          </Label>
-                          <p className="text-sm font-semibold">
-                            {assignment.assignedMembers.length}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-xs font-medium text-gray-500">
-                            COI Declarations
-                          </Label>
-                          <p className="text-sm font-semibold">
-                            {assignment.coiDeclarations.length}
-                            {assignment.coiDeclarations.some(
-                              (coi) => coi.hasConflict,
-                            ) && (
-                              <AlertTriangle className="inline h-3 w-3 ml-1 text-yellow-600" />
-                            )}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-xs font-medium text-gray-500">
-                            Evaluation Period
-                          </Label>
-                          <p className="text-sm font-semibold">
-                            {assignment.evaluationPeriod.startDate} to{" "}
-                            {assignment.evaluationPeriod.endDate}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-xs font-medium text-gray-500">
-                            Conflicts
-                          </Label>
-                          <p className="text-sm font-semibold">
-                            {assignment.conflicts.length}
-                            {assignment.conflicts.some(
-                              (c) => c.severity === "Critical",
-                            ) && (
-                              <XCircle className="inline h-3 w-3 ml-1 text-red-600" />
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSelectedAssignment(assignment)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      {assignment.status === "Assigned" && (
+                      <div className="flex flex-col gap-2">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => {
-                            setSelectedAssignment(assignment);
-                            setShowCOIModal(true);
-                          }}
+                          onClick={() => setSelectedAssignment(assignment)}
                         >
-                          <Shield className="h-4 w-4" />
+                          <Eye className="h-4 w-4" />
                         </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium mb-2">Assigned Members</h4>
-                      <div className="space-y-2">
-                        {assignment.assignedMembers
-                          .slice(0, 3)
-                          .map((member) => (
-                            <div
-                              key={member.id}
-                              className="flex items-center justify-between p-2 bg-gray-50 rounded"
-                            >
-                              <div className="flex items-center gap-2">
-                                <User className="h-4 w-4 text-gray-400" />
-                                <div>
-                                  <span className="font-medium">
-                                    {member.memberName}
-                                  </span>
-                                  <span className="text-sm text-gray-600 ml-2">
-                                    ({member.roleTitle})
-                                  </span>
-                                  <div className="text-xs text-gray-500">
-                                    {member.department} • {member.experience}+
-                                    years
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                {getStatusBadge(member.status)}
-                                {member.status === "COI_Declared" && (
-                                  <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        {assignment.assignedMembers.length > 3 && (
-                          <div className="text-sm text-gray-500 text-center py-1">
-                            +{assignment.assignedMembers.length - 3} more
-                            members
-                          </div>
+                        {assignment.status === "Assigned" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedAssignment(assignment);
+                              setShowCOIModal(true);
+                            }}
+                          >
+                            <Shield className="h-4 w-4" />
+                          </Button>
                         )}
                       </div>
                     </div>
-
-                    {assignment.coiDeclarations.length > 0 && (
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
                       <div>
-                        <h4 className="font-medium mb-2 flex items-center gap-2">
-                          <Shield className="h-4 w-4" />
-                          COI Declarations ({assignment.coiDeclarations.length})
-                        </h4>
+                        <h4 className="font-medium mb-2">Assigned Members</h4>
                         <div className="space-y-2">
-                          {assignment.coiDeclarations.map((coi) => (
-                            <div
-                              key={coi.id}
-                              className="flex items-center justify-between p-2 bg-yellow-50 rounded"
-                            >
-                              <div>
-                                <span className="font-medium">
-                                  {coi.memberName}
-                                </span>
-                                <span className="text-sm text-gray-600 ml-2">
-                                  {coi.hasConflict
-                                    ? "Conflict Declared"
-                                    : "No Conflict"}
-                                </span>
-                                {coi.hasConflict && (
-                                  <div className="text-xs text-gray-500">
-                                    {coi.conflictDetails
-                                      .map((detail) => detail.type)
-                                      .join(", ")}
+                          {assignment.assignedMembers
+                            .slice(0, 3)
+                            .map((member) => (
+                              <div
+                                key={member.id}
+                                className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <User className="h-4 w-4 text-gray-400" />
+                                  <div>
+                                    <span className="font-medium">
+                                      {member.memberName}
+                                    </span>
+                                    <span className="text-sm text-gray-600 ml-2">
+                                      ({member.roleTitle})
+                                    </span>
+                                    <div className="text-xs text-gray-500">
+                                      {member.department} • {member.experience}+
+                                      years
+                                    </div>
                                   </div>
-                                )}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {getStatusBadge(member.status)}
+                                  {member.status === "COI_Declared" && (
+                                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                                  )}
+                                </div>
                               </div>
-                              <div className="flex items-center gap-2">
-                                {getRiskBadge(coi.riskLevel)}
-                                <Badge
-                                  variant={
-                                    coi.reviewStatus === "Approved"
-                                      ? "default"
-                                      : "outline"
-                                  }
-                                  className="text-xs"
-                                >
-                                  {coi.reviewStatus}
-                                </Badge>
-                              </div>
+                            ))}
+                          {assignment.assignedMembers.length > 3 && (
+                            <div className="text-sm text-gray-500 text-center py-1">
+                              +{assignment.assignedMembers.length - 3} more
+                              members
                             </div>
-                          ))}
+                          )}
                         </div>
                       </div>
-                    )}
 
-                    {assignment.conflicts.length > 0 && (
-                      <Alert>
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertDescription>
-                          {assignment.conflicts.length} conflict(s) require
-                          attention. Review member assignments and COI
-                          declarations.
-                        </AlertDescription>
-                      </Alert>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )))}
+                      {assignment.coiDeclarations.length > 0 && (
+                        <div>
+                          <h4 className="font-medium mb-2 flex items-center gap-2">
+                            <Shield className="h-4 w-4" />
+                            COI Declarations (
+                            {assignment.coiDeclarations.length})
+                          </h4>
+                          <div className="space-y-2">
+                            {assignment.coiDeclarations.map((coi) => (
+                              <div
+                                key={coi.id}
+                                className="flex items-center justify-between p-2 bg-yellow-50 rounded"
+                              >
+                                <div>
+                                  <span className="font-medium">
+                                    {coi.memberName}
+                                  </span>
+                                  <span className="text-sm text-gray-600 ml-2">
+                                    {coi.hasConflict
+                                      ? "Conflict Declared"
+                                      : "No Conflict"}
+                                  </span>
+                                  {coi.hasConflict && (
+                                    <div className="text-xs text-gray-500">
+                                      {coi.conflictDetails
+                                        .map((detail) => detail.type)
+                                        .join(", ")}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {getRiskBadge(coi.riskLevel)}
+                                  <Badge
+                                    variant={
+                                      coi.reviewStatus === "Approved"
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    className="text-xs"
+                                  >
+                                    {coi.reviewStatus}
+                                  </Badge>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {assignment.conflicts.length > 0 && (
+                        <Alert>
+                          <AlertTriangle className="h-4 w-4" />
+                          <AlertDescription>
+                            {assignment.conflicts.length} conflict(s) require
+                            attention. Review member assignments and COI
+                            declarations.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </TabsContent>
 
