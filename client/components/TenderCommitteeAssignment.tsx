@@ -221,7 +221,16 @@ const STORAGE_KEYS = {
   MEMBER_POOL: "memberPool",
   COI_DECLARATIONS: "coiDeclarations",
   CLOSED_TENDERS: "closedTenders",
+  COMMITTEE_TEMPLATES: "committeeTemplates",
 };
+
+interface CommitteeTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  status: string;
+}
 
 export default function TenderCommitteeAssignment() {
   const [assignments, setAssignments] = useState<TenderCommitteeAssignment[]>(
@@ -229,6 +238,7 @@ export default function TenderCommitteeAssignment() {
   );
   const [memberPool, setMemberPool] = useState<MemberPool[]>([]);
   const [closedTenders, setClosedTenders] = useState<ClosedTender[]>([]);
+  const [committeeTemplates, setCommitteeTemplates] = useState<CommitteeTemplate[]>([]);
   const [selectedAssignment, setSelectedAssignment] =
     useState<TenderCommitteeAssignment | null>(null);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
@@ -293,10 +303,25 @@ export default function TenderCommitteeAssignment() {
       // Load closed tenders from unified data source
       const closedTendersData = getClosedTenders();
       setClosedTenders(closedTendersData);
+      console.log('Loaded closed tenders:', closedTendersData);
 
       // Store in localStorage for consistency
       const closedTendersKey = `${ministryCode}_${STORAGE_KEYS.CLOSED_TENDERS}`;
       localStorage.setItem(closedTendersKey, JSON.stringify(closedTendersData));
+
+      // Load committee templates
+      const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
+      const storedTemplates = localStorage.getItem(templatesKey);
+      if (storedTemplates) {
+        const parsedTemplates = JSON.parse(storedTemplates);
+        setCommitteeTemplates(parsedTemplates);
+        console.log('Loaded committee templates:', parsedTemplates);
+      } else {
+        // Create default templates if none exist
+        const defaultTemplates = createDefaultCommitteeTemplates(ministryCode);
+        setCommitteeTemplates(defaultTemplates);
+        localStorage.setItem(templatesKey, JSON.stringify(defaultTemplates));
+      }
     } catch (error) {
       console.error("Error loading data:", error);
     }
@@ -609,6 +634,43 @@ export default function TenderCommitteeAssignment() {
     }
 
     return [baseAssignment];
+  };
+
+  const createDefaultCommitteeTemplates = (ministryCode: string): CommitteeTemplate[] => {
+    const baseTemplates: CommitteeTemplate[] = [
+      {
+        id: "CT-2024-001",
+        name: "Medical Equipment Procurement Committee",
+        description: "Template for medical equipment procurement",
+        category: "Healthcare",
+        status: "Active",
+      },
+      {
+        id: "CT-2024-002",
+        name: "Infrastructure Procurement Committee",
+        description: "Template for infrastructure procurement",
+        category: "Infrastructure",
+        status: "Active",
+      },
+      {
+        id: "CT-2024-003",
+        name: "Educational Procurement Committee",
+        description: "Template for educational procurement",
+        category: "Education",
+        status: "Active",
+      },
+    ];
+
+    // Customize for different ministries
+    if (ministryCode === "MOH") {
+      return baseTemplates.filter(t => t.category === "Healthcare");
+    } else if (ministryCode === "MOWI") {
+      return baseTemplates.filter(t => t.category === "Infrastructure");
+    } else if (ministryCode === "MOE") {
+      return baseTemplates.filter(t => t.category === "Education");
+    }
+
+    return baseTemplates;
   };
 
   const createSampleMemberPool = (ministryCode: string): MemberPool[] => {
@@ -1587,15 +1649,19 @@ export default function TenderCommitteeAssignment() {
                   <SelectValue placeholder="Select committee template" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="CT-2024-001">
-                    Medical Equipment Committee
-                  </SelectItem>
-                  <SelectItem value="CT-2024-002">
-                    Infrastructure Committee
-                  </SelectItem>
-                  <SelectItem value="CT-2024-003">
-                    Educational Committee
-                  </SelectItem>
+                  {committeeTemplates.map((template) => (
+                    <SelectItem key={template.id} value={template.id}>
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">{template.name}</span>
+                        <span className="text-sm text-gray-600">
+                          {template.description}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {template.category} • {template.status}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
