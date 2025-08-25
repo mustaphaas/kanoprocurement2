@@ -882,6 +882,33 @@ export default function FlexibleQCBSTemplate() {
                 </CardContent>
               </Card>
 
+              {/* Validation Error Alert */}
+              {validationError && (
+                <Alert className="border-red-500 bg-red-50">
+                  <AlertCircle className="h-4 w-4 text-red-600" />
+                  <AlertDescription className="text-red-800 font-medium">
+                    {validationError}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {/* Save Validation Alert */}
+              {editingTemplate && !isTemplateValid(editingTemplate) && (
+                <Alert className="border-orange-500 bg-orange-50">
+                  <AlertTriangle className="h-4 w-4 text-orange-600" />
+                  <AlertDescription className="text-orange-800">
+                    <strong>Cannot Save Template:</strong> Technical criteria must total exactly {TECHNICAL_WEIGHT} points
+                    and Financial criteria must total exactly {FINANCIAL_WEIGHT} points.
+                    Current totals: Technical {editingTemplate.totalTechnicalScore} pts, Financial {editingTemplate.totalFinancialScore} pts.
+                    {(editingTemplate.totalTechnicalScore !== TECHNICAL_WEIGHT || editingTemplate.totalFinancialScore !== FINANCIAL_WEIGHT) && (
+                      <span className="block mt-1">
+                        Click <strong>Normalize Scores</strong> below to automatically fix this.
+                      </span>
+                    )}
+                  </AlertDescription>
+                </Alert>
+              )}
+
               {/* Score Status Alerts */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(() => {
