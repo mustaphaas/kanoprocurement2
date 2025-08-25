@@ -1127,7 +1127,11 @@ export default function TenderCommitteeAssignment() {
           )}
         </div>
         <Button
-          onClick={() => setShowAssignmentModal(true)}
+          onClick={() => {
+            setShowAssignmentModal(true);
+            setErrorMessage("");
+            setSuccessMessage("");
+          }}
           className="bg-primary hover:bg-primary/90"
         >
           <Plus className="h-4 w-4 mr-2" />
