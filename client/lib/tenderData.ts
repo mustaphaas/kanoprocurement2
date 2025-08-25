@@ -413,14 +413,26 @@ export const getClosedTenders = (): ClosedTender[] => {
   };
 
   // Get all tenders (including localStorage) and filter for closed ones
-  return getAllTendersWithLocalStorage()
+  const allTenders = getAllTendersWithLocalStorage();
+  console.log('All tenders for closed tender filtering:', allTenders.length);
+
+  const closedTenders = allTenders
     .filter((tender) => {
       // Check if tender should be closed based on closing date
       const closingDate = new Date(tender.closingDate);
       const today = new Date();
-      return closingDate < today;
+      const isClosed = closingDate < today;
+
+      if (isClosed) {
+        console.log(`Found closed tender: ${tender.id} - ${tender.title} (closed: ${tender.closingDate})`);
+      }
+
+      return isClosed;
     })
     .map(convertToClosedTender);
+
+  console.log(`Total closed tenders found: ${closedTenders.length}`);
+  return closedTenders;
 };
 
 // Get tenders by category
