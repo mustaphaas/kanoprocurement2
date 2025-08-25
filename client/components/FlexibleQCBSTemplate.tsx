@@ -711,6 +711,12 @@ export default function FlexibleQCBSTemplate() {
                         <CardTitle className="text-lg">{template.name}</CardTitle>
                         {getStatusBadge(template.status)}
                         <Badge variant="outline">v1.0</Badge>
+                        {!isTemplateValid(template) && (
+                          <Badge variant="destructive" className="text-xs">
+                            <AlertTriangle className="h-3 w-3 mr-1" />
+                            Invalid Scores
+                          </Badge>
+                        )}
                         {template.usageCount > 0 && (
                           <Badge variant="secondary">{template.usageCount} uses</Badge>
                         )}
