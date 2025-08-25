@@ -253,6 +253,8 @@ export default function TenderCommitteeAssignment() {
     useState<TenderCommitteeAssignment | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Form states
   const [assignmentForm, setAssignmentForm] = useState({
