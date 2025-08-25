@@ -865,7 +865,11 @@ export default function FlexibleQCBSTemplate() {
                       <p className="text-xs text-gray-500 mt-1">Category: {editingTemplate.category}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button onClick={saveTemplate} className="bg-green-600 hover:bg-green-700">
+                      <Button
+                        onClick={saveTemplate}
+                        className="bg-green-600 hover:bg-green-700"
+                        disabled={!isTemplateValid(editingTemplate)}
+                      >
                         <Save className="h-4 w-4 mr-2" />
                         Save Template
                       </Button>
