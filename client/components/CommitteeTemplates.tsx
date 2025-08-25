@@ -1082,7 +1082,7 @@ export default function CommitteeTemplates() {
                     Committee Roles ({template.roles?.length || 0})
                   </h4>
                   <div className="space-y-2">
-                    {template.roles.map((role) => (
+                    {(template.roles || []).map((role) => (
                       <div
                         key={role.id}
                         className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -1170,7 +1170,7 @@ export default function CommitteeTemplates() {
                   <div>
                     <h4 className="font-medium mb-2">Applicable Types</h4>
                     <div className="flex flex-wrap gap-2">
-                      {template.applicableTypes.map((type) => (
+                      {(template.applicableTypes || []).map((type) => (
                         <Badge key={type} variant="outline">
                           {type}
                         </Badge>
@@ -1186,7 +1186,7 @@ export default function CommitteeTemplates() {
                       Governance Rules ({template.governanceRules?.length || 0})
                     </h4>
                     <div className="space-y-1">
-                      {template.governanceRules.map((rule) => (
+                      {(template.governanceRules || []).map((rule) => (
                         <div
                           key={rule.id}
                           className="flex items-center justify-between text-sm p-2 bg-yellow-50 rounded"
