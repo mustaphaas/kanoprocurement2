@@ -253,6 +253,8 @@ export default function TenderCommitteeAssignment() {
     useState<TenderCommitteeAssignment | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Form states
   const [assignmentForm, setAssignmentForm] = useState({
@@ -876,6 +878,37 @@ export default function TenderCommitteeAssignment() {
   // Removed createSampleClosedTenders - now using unified data source from @/lib/tenderData
 
   const createAssignment = () => {
+    // Clear previous messages
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    // Validate required fields
+    if (!assignmentForm.tenderId) {
+      setErrorMessage("Please select a closed tender.");
+      return;
+    }
+    if (!assignmentForm.committeeTemplateId) {
+      setErrorMessage("Please select a committee template.");
+      return;
+    }
+    if (!assignmentForm.evaluationStartDate) {
+      setErrorMessage("Please set an evaluation start date.");
+      return;
+    }
+    if (!assignmentForm.evaluationEndDate) {
+      setErrorMessage("Please set an evaluation end date.");
+      return;
+    }
+
+    // Validate date logic
+    if (
+      new Date(assignmentForm.evaluationStartDate) >=
+      new Date(assignmentForm.evaluationEndDate)
+    ) {
+      setErrorMessage("Evaluation end date must be after start date.");
+      return;
+    }
+
     // Find the selected template to get its name
     const selectedTemplate = committeeTemplates.find(
       (t) => t.id === assignmentForm.committeeTemplateId,
@@ -918,6 +951,10 @@ export default function TenderCommitteeAssignment() {
     setAssignments(updatedAssignments);
     saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
 
+    // Log for debugging
+    console.log("Created new assignment:", newAssignment);
+    console.log("Updated assignments array:", updatedAssignments);
+
     setAssignmentForm({
       tenderId: "",
       tenderTitle: "",
@@ -928,6 +965,9 @@ export default function TenderCommitteeAssignment() {
       assignmentNotes: "",
     });
     setShowAssignmentModal(false);
+
+    // Show success message
+    setSuccessMessage("Committee assignment created successfully!");
 
     // Refresh committee templates after creating assignment
     loadCommitteeTemplates();
@@ -1041,23 +1081,38 @@ export default function TenderCommitteeAssignment() {
   };
 
   const filteredAssignments = assignments.filter((assignment) => {
+    // Handle empty or undefined values gracefully
+    const tenderTitle = assignment.tenderTitle || "";
+    const tenderId = assignment.tenderId || "";
+    const searchTermLower = searchTerm.toLowerCase().trim();
+
     const matchesSearch =
-      assignment.tenderTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      assignment.tenderId.toLowerCase().includes(searchTerm.toLowerCase());
+      searchTermLower === "" || // Show all if no search term
+      tenderTitle.toLowerCase().includes(searchTermLower) ||
+      tenderId.toLowerCase().includes(searchTermLower) ||
+      assignment.templateName?.toLowerCase().includes(searchTermLower) ||
+      assignment.tenderCategory?.toLowerCase().includes(searchTermLower);
+
     const matchesFilter =
       filterStatus === "all" || assignment.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
   // Debug: Log current state
-  console.log(
-    "TenderCommitteeAssignment - Closed tenders:",
-    closedTenders.length,
-  );
-  console.log(
-    "TenderCommitteeAssignment - Committee templates:",
-    committeeTemplates.length,
-  );
+  console.log("TenderCommitteeAssignment - Debug Info:", {
+    closedTenders: closedTenders.length,
+    committeeTemplates: committeeTemplates.length,
+    totalAssignments: assignments.length,
+    filteredAssignments: filteredAssignments.length,
+    searchTerm,
+    filterStatus,
+    assignments: assignments.map((a) => ({
+      id: a.id,
+      tenderId: a.tenderId,
+      tenderTitle: a.tenderTitle,
+      status: a.status,
+    })),
+  });
 
   return (
     <div className="space-y-6">
@@ -1081,7 +1136,11 @@ export default function TenderCommitteeAssignment() {
           )}
         </div>
         <Button
-          onClick={() => setShowAssignmentModal(true)}
+          onClick={() => {
+            setShowAssignmentModal(true);
+            setErrorMessage("");
+            setSuccessMessage("");
+          }}
           className="bg-primary hover:bg-primary/90"
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -1137,202 +1196,232 @@ export default function TenderCommitteeAssignment() {
           </div>
 
           <div className="grid gap-4">
-            {filteredAssignments.map((assignment) => (
-              <Card
-                key={assignment.id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg">
-                          {assignment.tenderTitle}
-                        </CardTitle>
-                        {getStatusBadge(assignment.status)}
-                        <Badge variant="outline">
-                          {assignment.tenderCategory}
-                        </Badge>
+            {filteredAssignments.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                {assignments.length === 0 ? (
+                  <div>
+                    <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-lg font-medium mb-2">
+                      No Committee Assignments
+                    </h3>
+                    <p className="text-sm">
+                      Create your first committee assignment to get started.
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-lg font-medium mb-2">
+                      No Matches Found
+                    </h3>
+                    <p className="text-sm">
+                      Try adjusting your search terms or filters.
+                    </p>
+                    <p className="text-xs mt-2">
+                      Total assignments: {assignments.length}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              filteredAssignments.map((assignment) => (
+                <Card
+                  key={assignment.id}
+                  className="hover:shadow-md transition-shadow"
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <CardTitle className="text-lg">
+                            {assignment.tenderTitle}
+                          </CardTitle>
+                          {getStatusBadge(assignment.status)}
+                          <Badge variant="outline">
+                            {assignment.tenderCategory}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Tender ID: {assignment.tenderId} • Template:{" "}
+                          {assignment.templateName}
+                        </p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-500">
+                              Members Assigned
+                            </Label>
+                            <p className="text-sm font-semibold">
+                              {assignment.assignedMembers.length}
+                            </p>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-500">
+                              COI Declarations
+                            </Label>
+                            <p className="text-sm font-semibold">
+                              {assignment.coiDeclarations.length}
+                              {assignment.coiDeclarations.some(
+                                (coi) => coi.hasConflict,
+                              ) && (
+                                <AlertTriangle className="inline h-3 w-3 ml-1 text-yellow-600" />
+                              )}
+                            </p>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-500">
+                              Evaluation Period
+                            </Label>
+                            <p className="text-sm font-semibold">
+                              {assignment.evaluationPeriod.startDate} to{" "}
+                              {assignment.evaluationPeriod.endDate}
+                            </p>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-500">
+                              Conflicts
+                            </Label>
+                            <p className="text-sm font-semibold">
+                              {assignment.conflicts.length}
+                              {assignment.conflicts.some(
+                                (c) => c.severity === "Critical",
+                              ) && (
+                                <XCircle className="inline h-3 w-3 ml-1 text-red-600" />
+                              )}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Tender ID: {assignment.tenderId} • Template:{" "}
-                        {assignment.templateName}
-                      </p>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div>
-                          <Label className="text-xs font-medium text-gray-500">
-                            Members Assigned
-                          </Label>
-                          <p className="text-sm font-semibold">
-                            {assignment.assignedMembers.length}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-xs font-medium text-gray-500">
-                            COI Declarations
-                          </Label>
-                          <p className="text-sm font-semibold">
-                            {assignment.coiDeclarations.length}
-                            {assignment.coiDeclarations.some(
-                              (coi) => coi.hasConflict,
-                            ) && (
-                              <AlertTriangle className="inline h-3 w-3 ml-1 text-yellow-600" />
-                            )}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-xs font-medium text-gray-500">
-                            Evaluation Period
-                          </Label>
-                          <p className="text-sm font-semibold">
-                            {assignment.evaluationPeriod.startDate} to{" "}
-                            {assignment.evaluationPeriod.endDate}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-xs font-medium text-gray-500">
-                            Conflicts
-                          </Label>
-                          <p className="text-sm font-semibold">
-                            {assignment.conflicts.length}
-                            {assignment.conflicts.some(
-                              (c) => c.severity === "Critical",
-                            ) && (
-                              <XCircle className="inline h-3 w-3 ml-1 text-red-600" />
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSelectedAssignment(assignment)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      {assignment.status === "Assigned" && (
+                      <div className="flex flex-col gap-2">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => {
-                            setSelectedAssignment(assignment);
-                            setShowCOIModal(true);
-                          }}
+                          onClick={() => setSelectedAssignment(assignment)}
                         >
-                          <Shield className="h-4 w-4" />
+                          <Eye className="h-4 w-4" />
                         </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium mb-2">Assigned Members</h4>
-                      <div className="space-y-2">
-                        {assignment.assignedMembers
-                          .slice(0, 3)
-                          .map((member) => (
-                            <div
-                              key={member.id}
-                              className="flex items-center justify-between p-2 bg-gray-50 rounded"
-                            >
-                              <div className="flex items-center gap-2">
-                                <User className="h-4 w-4 text-gray-400" />
-                                <div>
-                                  <span className="font-medium">
-                                    {member.memberName}
-                                  </span>
-                                  <span className="text-sm text-gray-600 ml-2">
-                                    ({member.roleTitle})
-                                  </span>
-                                  <div className="text-xs text-gray-500">
-                                    {member.department} • {member.experience}+
-                                    years
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                {getStatusBadge(member.status)}
-                                {member.status === "COI_Declared" && (
-                                  <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        {assignment.assignedMembers.length > 3 && (
-                          <div className="text-sm text-gray-500 text-center py-1">
-                            +{assignment.assignedMembers.length - 3} more
-                            members
-                          </div>
+                        {assignment.status === "Assigned" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedAssignment(assignment);
+                              setShowCOIModal(true);
+                            }}
+                          >
+                            <Shield className="h-4 w-4" />
+                          </Button>
                         )}
                       </div>
                     </div>
-
-                    {assignment.coiDeclarations.length > 0 && (
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
                       <div>
-                        <h4 className="font-medium mb-2 flex items-center gap-2">
-                          <Shield className="h-4 w-4" />
-                          COI Declarations ({assignment.coiDeclarations.length})
-                        </h4>
+                        <h4 className="font-medium mb-2">Assigned Members</h4>
                         <div className="space-y-2">
-                          {assignment.coiDeclarations.map((coi) => (
-                            <div
-                              key={coi.id}
-                              className="flex items-center justify-between p-2 bg-yellow-50 rounded"
-                            >
-                              <div>
-                                <span className="font-medium">
-                                  {coi.memberName}
-                                </span>
-                                <span className="text-sm text-gray-600 ml-2">
-                                  {coi.hasConflict
-                                    ? "Conflict Declared"
-                                    : "No Conflict"}
-                                </span>
-                                {coi.hasConflict && (
-                                  <div className="text-xs text-gray-500">
-                                    {coi.conflictDetails
-                                      .map((detail) => detail.type)
-                                      .join(", ")}
+                          {assignment.assignedMembers
+                            .slice(0, 3)
+                            .map((member) => (
+                              <div
+                                key={member.id}
+                                className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <User className="h-4 w-4 text-gray-400" />
+                                  <div>
+                                    <span className="font-medium">
+                                      {member.memberName}
+                                    </span>
+                                    <span className="text-sm text-gray-600 ml-2">
+                                      ({member.roleTitle})
+                                    </span>
+                                    <div className="text-xs text-gray-500">
+                                      {member.department} • {member.experience}+
+                                      years
+                                    </div>
                                   </div>
-                                )}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {getStatusBadge(member.status)}
+                                  {member.status === "COI_Declared" && (
+                                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                                  )}
+                                </div>
                               </div>
-                              <div className="flex items-center gap-2">
-                                {getRiskBadge(coi.riskLevel)}
-                                <Badge
-                                  variant={
-                                    coi.reviewStatus === "Approved"
-                                      ? "default"
-                                      : "outline"
-                                  }
-                                  className="text-xs"
-                                >
-                                  {coi.reviewStatus}
-                                </Badge>
-                              </div>
+                            ))}
+                          {assignment.assignedMembers.length > 3 && (
+                            <div className="text-sm text-gray-500 text-center py-1">
+                              +{assignment.assignedMembers.length - 3} more
+                              members
                             </div>
-                          ))}
+                          )}
                         </div>
                       </div>
-                    )}
 
-                    {assignment.conflicts.length > 0 && (
-                      <Alert>
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertDescription>
-                          {assignment.conflicts.length} conflict(s) require
-                          attention. Review member assignments and COI
-                          declarations.
-                        </AlertDescription>
-                      </Alert>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                      {assignment.coiDeclarations.length > 0 && (
+                        <div>
+                          <h4 className="font-medium mb-2 flex items-center gap-2">
+                            <Shield className="h-4 w-4" />
+                            COI Declarations (
+                            {assignment.coiDeclarations.length})
+                          </h4>
+                          <div className="space-y-2">
+                            {assignment.coiDeclarations.map((coi) => (
+                              <div
+                                key={coi.id}
+                                className="flex items-center justify-between p-2 bg-yellow-50 rounded"
+                              >
+                                <div>
+                                  <span className="font-medium">
+                                    {coi.memberName}
+                                  </span>
+                                  <span className="text-sm text-gray-600 ml-2">
+                                    {coi.hasConflict
+                                      ? "Conflict Declared"
+                                      : "No Conflict"}
+                                  </span>
+                                  {coi.hasConflict && (
+                                    <div className="text-xs text-gray-500">
+                                      {coi.conflictDetails
+                                        .map((detail) => detail.type)
+                                        .join(", ")}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {getRiskBadge(coi.riskLevel)}
+                                  <Badge
+                                    variant={
+                                      coi.reviewStatus === "Approved"
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    className="text-xs"
+                                  >
+                                    {coi.reviewStatus}
+                                  </Badge>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {assignment.conflicts.length > 0 && (
+                        <Alert>
+                          <AlertTriangle className="h-4 w-4" />
+                          <AlertDescription>
+                            {assignment.conflicts.length} conflict(s) require
+                            attention. Review member assignments and COI
+                            declarations.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </TabsContent>
 
@@ -1748,12 +1837,34 @@ export default function TenderCommitteeAssignment() {
       </Tabs>
 
       {/* Create Assignment Modal */}
-      <Dialog open={showAssignmentModal} onOpenChange={setShowAssignmentModal}>
+      <Dialog
+        open={showAssignmentModal}
+        onOpenChange={(open) => {
+          setShowAssignmentModal(open);
+          if (!open) {
+            setErrorMessage("");
+            setSuccessMessage("");
+          }
+        }}
+      >
         <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader className="flex-shrink-0">
             <DialogTitle>Create Committee Assignment</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 overflow-y-auto flex-1 pr-2">
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-red-800 text-sm">{errorMessage}</p>
+              </div>
+            )}
+
+            {/* Success Message */}
+            {successMessage && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-green-800 text-sm">{successMessage}</p>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="tender-id">Select Closed Tender</Label>
