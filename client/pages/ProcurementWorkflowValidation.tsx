@@ -377,19 +377,16 @@ export default function ProcurementWorkflowValidation() {
 
   const validateNOCGeneration = (): ValidationResult => {
     try {
-      const tenderData = localStorage.getItem("mockTender");
-      const nocData = localStorage.getItem("mockNOCRequest");
+      const tender = readMinistryData<MockTender | null>(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, null);
+      const noc = readMinistryData<MockNOCRequest | null>(MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST, null);
 
-      if (!tenderData || !nocData) {
+      if (!tender || !noc) {
         return {
           stepId: "noc-generation",
           passed: false,
           message: "Required data not found",
         };
       }
-
-      const tender: MockTender = JSON.parse(tenderData);
-      const noc: MockNOCRequest = JSON.parse(nocData);
 
       // Check if evaluated tender generated NOC request
       const tenderEvaluated =
@@ -423,19 +420,16 @@ export default function ProcurementWorkflowValidation() {
 
   const validateContractUnlock = (): ValidationResult => {
     try {
-      const nocData = localStorage.getItem("mockNOCRequest");
-      const contractData = localStorage.getItem("mockContract");
+      const noc = readMinistryData<MockNOCRequest | null>(MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST, null);
+      const contract = readMinistryData<MockContract | null>(MINISTRY_SPECIFIC_KEYS.MOCK_CONTRACT, null);
 
-      if (!nocData || !contractData) {
+      if (!noc || !contract) {
         return {
           stepId: "contract-unlock",
           passed: false,
           message: "Required data not found",
         };
       }
-
-      const noc: MockNOCRequest = JSON.parse(nocData);
-      const contract: MockContract = JSON.parse(contractData);
 
       // Check if NOC approval unlocked contract creation
       const nocApproved = noc.status === "approved";
