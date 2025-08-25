@@ -193,6 +193,68 @@ export const getAllTenders = (): Tender[] => [
       "Solar power installation for all schools",
     ],
   },
+  {
+    id: "MOE-2023-015",
+    title: "School Furniture Procurement Program",
+    category: "Education",
+    value: "₦680M",
+    deadline: "2023-12-15", // Past date
+    location: "Statewide",
+    views: 98,
+    status: "Active" as TenderStatus, // Will be auto-converted to Closed
+    description:
+      "Supply of classroom furniture including desks, chairs, and storage units for government schools.",
+    publishDate: "2023-11-01",
+    closingDate: "2023-12-15", // Past date
+    tenderFee: "₦12,000",
+    procuringEntity: "Kano State Ministry of Education",
+    duration: "4 months",
+    eligibility: "Furniture manufacturers and suppliers",
+    requirements: [
+      "Manufacturing capability certification",
+      "Quality standards compliance",
+      "Delivery logistics capability",
+      "After-sales service provision",
+    ],
+    technicalSpecs: [
+      "Student desks: 5,000 units",
+      "Student chairs: 10,000 units",
+      "Teacher tables: 500 units",
+      "Storage cabinets: 200 units",
+      "Ergonomic design compliance",
+    ],
+  },
+  {
+    id: "MOWI-2023-018",
+    title: "Bridge Construction and Maintenance",
+    category: "Infrastructure",
+    value: "₦1.2B",
+    deadline: "2023-11-30", // Past date
+    location: "Kano South",
+    views: 178,
+    status: "Active" as TenderStatus, // Will be auto-converted to Closed
+    description:
+      "Construction of new bridges and maintenance of existing ones across major rivers in Kano South.",
+    publishDate: "2023-10-15",
+    closingDate: "2023-11-30", // Past date
+    tenderFee: "₦18,000",
+    procuringEntity: "Kano State Ministry of Works",
+    duration: "14 months",
+    eligibility: "Category A contractors with bridge construction experience",
+    requirements: [
+      "Structural engineering expertise",
+      "Heavy equipment availability",
+      "Safety compliance certification",
+      "Environmental impact assessment",
+    ],
+    technicalSpecs: [
+      "Concrete bridge construction: 3 bridges",
+      "Steel reinforcement: Grade 60",
+      "Foundation depth: 15 meters minimum",
+      "Load capacity: 40 tons",
+      "Seismic resistance compliance",
+    ],
+  },
 ];
 
 // Convert tender to closed tender format for committee assignment
