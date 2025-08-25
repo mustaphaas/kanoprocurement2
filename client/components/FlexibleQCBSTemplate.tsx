@@ -345,7 +345,9 @@ export default function FlexibleQCBSTemplate() {
     setTemplateForm({ name: "", description: "", category: "" });
     setShowTemplateModal(false);
     setEditingTemplate(newTemplate);
+    setSelectedTemplate(newTemplate); // Also set for preview
     setCurrentEditingTemplateId(newTemplate.id);
+    setActiveTab("builder"); // Switch to builder tab
   };
 
   const addCriterion = () => {
