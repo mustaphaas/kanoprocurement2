@@ -605,6 +605,9 @@ export default function CommitteeTemplates() {
   };
 
   const createTemplate = () => {
+    const currentUser = "Current User"; // In a real app, get from auth context
+    const currentDate = new Date().toISOString().split("T")[0];
+
     const newTemplate: CommitteeTemplate = {
       id: `CT-${Date.now()}`,
       name: templateForm.name,
@@ -617,24 +620,44 @@ export default function CommitteeTemplates() {
       roles: [],
       evaluationFramework: {
         methodology: templateForm.methodology,
-        technicalWeightPercent: templateForm.technicalWeightPercent,
-        financialWeightPercent: templateForm.financialWeightPercent,
+        defaultTechnicalWeight: templateForm.technicalWeightPercent,
+        defaultFinancialWeight: templateForm.financialWeightPercent,
+        allowWeightCustomization: true,
         passingTechnicalScore: templateForm.passingTechnicalScore,
         scoringScale: 100,
         evaluationCriteria: [],
         consensusRules: [],
       },
       approvalLevels: [],
-      createdDate: new Date().toISOString().split("T")[0],
-      lastModified: new Date().toISOString().split("T")[0],
+      createdDate: currentDate,
+      lastModified: currentDate,
       status: "Draft",
       usageCount: 0,
       governanceRules: [],
+      templateCategory: (templateForm.category === "Healthcare" ? "Goods" :
+                        templateForm.category === "Infrastructure" ? "Works" :
+                        templateForm.category === "Education" ? "Goods" : "Services") as "Goods" | "Works" | "Services" | "Consultancy",
+      auditTrail: {
+        createdBy: currentUser,
+        createdDate: currentDate,
+        lastModifiedBy: currentUser,
+        lastModifiedDate: currentDate,
+        versionHistory: [{
+          version: 1,
+          modifiedBy: currentUser,
+          modifiedDate: currentDate,
+          changes: "Initial template creation",
+          reason: "New template created"
+        }]
+      }
     };
 
     const updatedTemplates = [...templates, newTemplate];
     setTemplates(updatedTemplates);
     saveTemplates(updatedTemplates);
+
+    console.log('Created new template:', newTemplate);
+    console.log('Updated templates list:', updatedTemplates);
 
     setTemplateForm({
       name: "",
@@ -662,21 +685,43 @@ export default function CommitteeTemplates() {
       requiredExpertise: roleForm.requiredExpertise,
       minimumExperience: roleForm.minimumExperience,
       mandatoryRole: roleForm.mandatoryRole,
-      maxConflictScore: roleForm.maxConflictScore,
+      conflictOfInterestAllowed: roleForm.maxConflictScore > 0,
+      minimumRequired: 1,
     };
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const currentUser = "Current User";
 
     const updatedTemplates = templates.map((template) =>
       template.id === templateId
         ? {
             ...template,
             roles: [...template.roles, newRole],
-            lastModified: new Date().toISOString().split("T")[0],
+            lastModified: currentDate,
+            auditTrail: {
+              ...template.auditTrail,
+              lastModifiedBy: currentUser,
+              lastModifiedDate: currentDate,
+              versionHistory: [
+                ...template.auditTrail.versionHistory,
+                {
+                  version: template.auditTrail.versionHistory.length + 1,
+                  modifiedBy: currentUser,
+                  modifiedDate: currentDate,
+                  changes: `Added role: ${newRole.title}`,
+                  reason: "Role addition"
+                }
+              ]
+            }
           }
         : template,
     );
 
     setTemplates(updatedTemplates);
     saveTemplates(updatedTemplates);
+
+    console.log('Added role to template:', templateId, newRole);
+    console.log('Updated templates after role addition:', updatedTemplates);
 
     setRoleForm({
       title: "",
