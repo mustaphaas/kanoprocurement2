@@ -774,9 +774,9 @@ export default function CommitteeTemplates() {
               lastModifiedBy: currentUser,
               lastModifiedDate: currentDate,
               versionHistory: [
-                ...template.auditTrail.versionHistory,
+                ...(template.auditTrail?.versionHistory || []),
                 {
-                  version: template.auditTrail.versionHistory.length + 1,
+                  version: (template.auditTrail?.versionHistory?.length || 0) + 1,
                   modifiedBy: currentUser,
                   modifiedDate: currentDate,
                   changes: "Template activated",
