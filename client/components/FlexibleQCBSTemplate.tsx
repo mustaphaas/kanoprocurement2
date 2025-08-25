@@ -774,21 +774,31 @@ export default function FlexibleQCBSTemplate() {
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span>Technical ({template.technicalCriteria.length} criteria)</span>
-                            <span className="font-medium">{template.totalTechnicalScore} pts</span>
+                            <span className={`font-medium ${template.totalTechnicalScore === TECHNICAL_WEIGHT ? 'text-green-600' : 'text-red-600'}`}>
+                              {template.totalTechnicalScore} pts
+                              {template.totalTechnicalScore !== TECHNICAL_WEIGHT && (
+                                <span className="text-xs ml-1">(should be {TECHNICAL_WEIGHT})</span>
+                              )}
+                            </span>
                           </div>
                           <Progress
                             value={(template.totalTechnicalScore / TECHNICAL_WEIGHT) * 100}
-                            className="h-2"
+                            className={`h-2 ${template.totalTechnicalScore !== TECHNICAL_WEIGHT ? 'bg-red-100' : ''}`}
                           />
                         </div>
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span>Financial ({template.financialCriteria.length} criteria)</span>
-                            <span className="font-medium">{template.totalFinancialScore} pts</span>
+                            <span className={`font-medium ${template.totalFinancialScore === FINANCIAL_WEIGHT ? 'text-green-600' : 'text-red-600'}`}>
+                              {template.totalFinancialScore} pts
+                              {template.totalFinancialScore !== FINANCIAL_WEIGHT && (
+                                <span className="text-xs ml-1">(should be {FINANCIAL_WEIGHT})</span>
+                              )}
+                            </span>
                           </div>
                           <Progress
                             value={(template.totalFinancialScore / FINANCIAL_WEIGHT) * 100}
-                            className="h-2"
+                            className={`h-2 ${template.totalFinancialScore !== FINANCIAL_WEIGHT ? 'bg-red-100' : ''}`}
                           />
                         </div>
                       </div>
