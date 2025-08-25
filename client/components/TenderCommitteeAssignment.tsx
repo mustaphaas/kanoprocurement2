@@ -322,13 +322,31 @@ export default function TenderCommitteeAssignment() {
       const storedTemplates = localStorage.getItem(templatesKey);
       if (storedTemplates) {
         const parsedTemplates = JSON.parse(storedTemplates);
-        setCommitteeTemplates(parsedTemplates);
-        console.log("Loaded committee templates:", parsedTemplates);
+
+        // Filter templates to ensure only ministry-specific ones are loaded
+        const ministrySpecificTemplates = parsedTemplates.filter((template: any) => {
+          // Check if template ID starts with ministry code or if it belongs to current ministry
+          const belongsToMinistry =
+            template.id?.startsWith(ministryCode) ||
+            (ministryCode === "MOH" && template.category === "Healthcare") ||
+            (ministryCode === "MOWI" && template.category === "Infrastructure") ||
+            (ministryCode === "MOE" && template.category === "Education");
+
+          console.log(`Template ${template.id} (${template.category}) belongs to ${ministryCode}:`, belongsToMinistry);
+          return belongsToMinistry;
+        });
+
+        setCommitteeTemplates(ministrySpecificTemplates);
+        console.log(`Loaded ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}:`, ministrySpecificTemplates);
+
+        // Save the filtered templates back to ensure cleanup
+        localStorage.setItem(templatesKey, JSON.stringify(ministrySpecificTemplates));
       } else {
         // Create default templates if none exist
         const defaultTemplates = createDefaultCommitteeTemplates(ministryCode);
         setCommitteeTemplates(defaultTemplates);
         localStorage.setItem(templatesKey, JSON.stringify(defaultTemplates));
+        console.log(`Created default committee templates for ${ministryCode}:`, defaultTemplates);
       }
     } catch (error) {
       console.error("Error loading data:", error);
