@@ -158,6 +158,7 @@ export default function CommitteeTemplates() {
     useState<CommitteeTemplate | null>(null);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [editingTemplate, setEditingTemplate] =
     useState<CommitteeTemplate | null>(null);
 
@@ -737,6 +738,124 @@ export default function CommitteeTemplates() {
     setShowRoleModal(false);
   };
 
+  const activateTemplate = (templateId: string) => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    const currentUser = "Current User";
+
+    const updatedTemplates = templates.map((template) =>
+      template.id === templateId
+        ? {
+            ...template,
+            status: "Active" as const,
+            lastModified: currentDate,
+            auditTrail: {
+              ...template.auditTrail,
+              lastModifiedBy: currentUser,
+              lastModifiedDate: currentDate,
+              versionHistory: [
+                ...template.auditTrail.versionHistory,
+                {
+                  version: template.auditTrail.versionHistory.length + 1,
+                  modifiedBy: currentUser,
+                  modifiedDate: currentDate,
+                  changes: "Template activated",
+                  reason: "Status change to Active"
+                }
+              ]
+            }
+          }
+        : template,
+    );
+
+    setTemplates(updatedTemplates);
+    saveTemplates(updatedTemplates);
+    console.log('Activated template:', templateId);
+  };
+
+  const editTemplate = (template: CommitteeTemplate) => {
+    setEditingTemplate(template);
+    setTemplateForm({
+      name: template.name,
+      description: template.description,
+      category: template.category,
+      applicableTypes: template.applicableTypes,
+      minimumMembers: template.minimumMembers,
+      maximumMembers: template.maximumMembers,
+      quorumRequirement: template.quorumRequirement,
+      methodology: template.evaluationFramework?.methodology || "QCBS",
+      technicalWeightPercent: template.evaluationFramework?.defaultTechnicalWeight || 70,
+      financialWeightPercent: template.evaluationFramework?.defaultFinancialWeight || 30,
+      passingTechnicalScore: template.evaluationFramework?.passingTechnicalScore || 75,
+    });
+    setShowEditModal(true);
+  };
+
+  const updateTemplate = () => {
+    if (!editingTemplate) return;
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const currentUser = "Current User";
+
+    const updatedTemplate: CommitteeTemplate = {
+      ...editingTemplate,
+      name: templateForm.name,
+      description: templateForm.description,
+      category: templateForm.category,
+      applicableTypes: templateForm.applicableTypes,
+      minimumMembers: templateForm.minimumMembers,
+      maximumMembers: templateForm.maximumMembers,
+      quorumRequirement: templateForm.quorumRequirement,
+      evaluationFramework: {
+        ...editingTemplate.evaluationFramework,
+        methodology: templateForm.methodology,
+        defaultTechnicalWeight: templateForm.technicalWeightPercent,
+        defaultFinancialWeight: templateForm.financialWeightPercent,
+        passingTechnicalScore: templateForm.passingTechnicalScore,
+      },
+      lastModified: currentDate,
+      auditTrail: {
+        ...editingTemplate.auditTrail,
+        lastModifiedBy: currentUser,
+        lastModifiedDate: currentDate,
+        versionHistory: [
+          ...editingTemplate.auditTrail.versionHistory,
+          {
+            version: editingTemplate.auditTrail.versionHistory.length + 1,
+            modifiedBy: currentUser,
+            modifiedDate: currentDate,
+            changes: "Template details updated",
+            reason: "Template editing"
+          }
+        ]
+      }
+    };
+
+    const updatedTemplates = templates.map((template) =>
+      template.id === editingTemplate.id ? updatedTemplate : template,
+    );
+
+    setTemplates(updatedTemplates);
+    saveTemplates(updatedTemplates);
+
+    setEditingTemplate(null);
+    setTemplateForm({
+      name: "",
+      description: "",
+      category: "",
+      applicableTypes: [],
+      minimumMembers: 3,
+      maximumMembers: 7,
+      quorumRequirement: 3,
+      methodology: "QCBS",
+      technicalWeightPercent: 70,
+      financialWeightPercent: 30,
+      passingTechnicalScore: 75,
+    });
+    setShowEditModal(false);
+
+    console.log('Updated template:', updatedTemplate);
+  };
+
   const getStatusBadge = (status: string) => {
     const variants = {
       Draft: "secondary",
@@ -843,8 +962,17 @@ export default function CommitteeTemplates() {
                     variant="outline"
                     size="sm"
                     onClick={() => setSelectedTemplate(template)}
+                    title="View Details"
                   >
                     <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => editTemplate(template)}
+                    title="Edit Template"
+                  >
+                    <Edit className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
@@ -853,9 +981,21 @@ export default function CommitteeTemplates() {
                       setSelectedTemplate(template);
                       setShowRoleModal(true);
                     }}
+                    title="Add Role"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
+                  {template.status === "Draft" && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => activateTemplate(template.id)}
+                      title="Activate Template"
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardHeader>
