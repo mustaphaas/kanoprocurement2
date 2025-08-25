@@ -868,13 +868,18 @@ export default function TenderCommitteeAssignment() {
   // Removed createSampleClosedTenders - now using unified data source from @/lib/tenderData
 
   const createAssignment = () => {
+    // Find the selected template to get its name
+    const selectedTemplate = committeeTemplates.find(
+      t => t.id === assignmentForm.committeeTemplateId
+    );
+
     const newAssignment: TenderCommitteeAssignment = {
       id: `TCA-${Date.now()}`,
       tenderId: assignmentForm.tenderId,
       tenderTitle: assignmentForm.tenderTitle,
       tenderCategory: assignmentForm.tenderCategory,
       committeeTemplateId: assignmentForm.committeeTemplateId,
-      templateName: "Committee Template",
+      templateName: selectedTemplate?.name || "Unknown Template",
       assignedMembers: [],
       assignmentDate: new Date().toISOString().split("T")[0],
       assignedBy: "Current User",
@@ -915,7 +920,36 @@ export default function TenderCommitteeAssignment() {
       assignmentNotes: "",
     });
     setShowAssignmentModal(false);
+
+    // Refresh committee templates after creating assignment
+    loadCommitteeTemplates();
   };
+
+  const loadCommitteeTemplates = () => {
+    try {
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
+      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+
+      const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
+      const storedTemplates = localStorage.getItem(templatesKey);
+      if (storedTemplates) {
+        const parsedTemplates = JSON.parse(storedTemplates);
+        setCommitteeTemplates(parsedTemplates);
+        console.log('Refreshed committee templates:', parsedTemplates);
+      }
+    } catch (error) {
+      console.error('Error loading committee templates:', error);
+    }
+  };
+
+  // Add effect to refresh templates when modal opens
+  useEffect(() => {
+    if (showAssignmentModal) {
+      loadCommitteeTemplates();
+    }
+  }, [showAssignmentModal]);
 
   const submitCOIDeclaration = (assignmentId: string) => {
     const newDeclaration: COIDeclaration = {
