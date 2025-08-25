@@ -878,27 +878,31 @@ export default function TenderCommitteeAssignment() {
   // Removed createSampleClosedTenders - now using unified data source from @/lib/tenderData
 
   const createAssignment = () => {
+    // Clear previous messages
+    setErrorMessage("");
+    setSuccessMessage("");
+
     // Validate required fields
     if (!assignmentForm.tenderId) {
-      alert("Please select a closed tender.");
+      setErrorMessage("Please select a closed tender.");
       return;
     }
     if (!assignmentForm.committeeTemplateId) {
-      alert("Please select a committee template.");
+      setErrorMessage("Please select a committee template.");
       return;
     }
     if (!assignmentForm.evaluationStartDate) {
-      alert("Please set an evaluation start date.");
+      setErrorMessage("Please set an evaluation start date.");
       return;
     }
     if (!assignmentForm.evaluationEndDate) {
-      alert("Please set an evaluation end date.");
+      setErrorMessage("Please set an evaluation end date.");
       return;
     }
 
     // Validate date logic
     if (new Date(assignmentForm.evaluationStartDate) >= new Date(assignmentForm.evaluationEndDate)) {
-      alert("Evaluation end date must be after start date.");
+      setErrorMessage("Evaluation end date must be after start date.");
       return;
     }
 
