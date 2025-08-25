@@ -1072,9 +1072,18 @@ export default function TenderCommitteeAssignment() {
   };
 
   const filteredAssignments = assignments.filter((assignment) => {
+    // Handle empty or undefined values gracefully
+    const tenderTitle = assignment.tenderTitle || "";
+    const tenderId = assignment.tenderId || "";
+    const searchTermLower = searchTerm.toLowerCase().trim();
+
     const matchesSearch =
-      assignment.tenderTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      assignment.tenderId.toLowerCase().includes(searchTerm.toLowerCase());
+      searchTermLower === "" || // Show all if no search term
+      tenderTitle.toLowerCase().includes(searchTermLower) ||
+      tenderId.toLowerCase().includes(searchTermLower) ||
+      assignment.templateName?.toLowerCase().includes(searchTermLower) ||
+      assignment.tenderCategory?.toLowerCase().includes(searchTermLower);
+
     const matchesFilter =
       filterStatus === "all" || assignment.status === filterStatus;
     return matchesSearch && matchesFilter;
