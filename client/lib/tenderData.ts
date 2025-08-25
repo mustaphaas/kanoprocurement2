@@ -385,7 +385,7 @@ export const getClosedTenders = (): ClosedTender[] => {
         console.log(`Loaded ministry-specific stored tenders for ${ministryCode}: ${parsedTenders.length} tenders`);
 
         // Apply currency formatting and automatic status transitions
-        const formattedParsedTenders = storedTendersForMinistry.map((tender: Tender) => {
+        const formattedParsedTenders = parsedTenders.map((tender: Tender) => {
           const formatted = {
             ...tender,
             value: formatCurrency(tender.value),
