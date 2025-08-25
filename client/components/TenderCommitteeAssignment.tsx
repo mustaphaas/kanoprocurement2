@@ -289,6 +289,13 @@ export default function TenderCommitteeAssignment() {
       // One-time cleanup: remove any cross-ministry contamination
       cleanupCrossMinistryContamination(ministryCode);
 
+      // Clean up any legacy global committee templates
+      const globalTemplatesKey = "committeeTemplates";
+      if (localStorage.getItem(globalTemplatesKey)) {
+        console.log("Removing legacy global committee templates");
+        localStorage.removeItem(globalTemplatesKey);
+      }
+
       // Load tender committee assignments
       const assignmentsKey = `${ministryCode}_${STORAGE_KEYS.TENDER_ASSIGNMENTS}`;
       const storedAssignments = localStorage.getItem(assignmentsKey);
