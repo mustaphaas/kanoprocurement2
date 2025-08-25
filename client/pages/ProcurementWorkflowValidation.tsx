@@ -232,12 +232,15 @@ export default function ProcurementWorkflowValidation() {
       createdDate: "2024-02-10",
     };
 
-    // Store in localStorage
-    localStorage.setItem("mockProcurementPlan", JSON.stringify(mockPlan));
-    localStorage.setItem("mockTender", JSON.stringify(mockTender));
-    localStorage.setItem("mockNOCRequest", JSON.stringify(mockNOC));
-    localStorage.setItem("mockContract", JSON.stringify(mockContract));
-    localStorage.setItem("mockUsers", JSON.stringify(mockUsers));
+    // Store in ministry-specific localStorage to prevent cross-contamination
+    const ministryContext = getCurrentMinistryContext();
+    console.log(`Generating mock data for ${ministryContext.ministryName} (${ministryContext.ministryCode})`);
+
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_PROCUREMENT_PLAN, mockPlan);
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, mockTender);
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST, mockNOC);
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_CONTRACT, mockContract);
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_USERS, mockUsers);
 
     // Update existing application data to include mock records
     updateApplicationData(mockPlan, mockTender, mockNOC, mockContract);
