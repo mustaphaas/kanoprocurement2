@@ -1193,7 +1193,25 @@ export default function TenderCommitteeAssignment() {
           </div>
 
           <div className="grid gap-4">
-            {filteredAssignments.map((assignment) => (
+            {filteredAssignments.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                {assignments.length === 0 ? (
+                  <div>
+                    <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-lg font-medium mb-2">No Committee Assignments</h3>
+                    <p className="text-sm">Create your first committee assignment to get started.</p>
+                  </div>
+                ) : (
+                  <div>
+                    <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-lg font-medium mb-2">No Matches Found</h3>
+                    <p className="text-sm">Try adjusting your search terms or filters.</p>
+                    <p className="text-xs mt-2">Total assignments: {assignments.length}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              filteredAssignments.map((assignment) => (
               <Card
                 key={assignment.id}
                 className="hover:shadow-md transition-shadow"
@@ -1388,7 +1406,7 @@ export default function TenderCommitteeAssignment() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            )))}
           </div>
         </TabsContent>
 
