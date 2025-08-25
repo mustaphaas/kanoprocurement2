@@ -696,6 +696,7 @@ export default function FlexibleQCBSTemplate() {
                         size="sm"
                         onClick={() => {
                           setEditingTemplate(template);
+                          setSelectedTemplate(template);
                           setCurrentEditingTemplateId(template.id);
                           setActiveTab("builder");
                         }}
