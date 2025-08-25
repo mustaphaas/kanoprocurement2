@@ -53,7 +53,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BudgetAllocation from "./BudgetAllocation";
 import CommitteeTemplates from "./CommitteeTemplates";
-import QCBSFrameworkDefinition from "./QCBSFrameworkDefinition";
+import FlexibleQCBSTemplate from "./FlexibleQCBSTemplate";
 import TenderCommitteeAssignment from "./TenderCommitteeAssignment";
 
 // Types
