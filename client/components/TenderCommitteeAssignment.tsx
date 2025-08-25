@@ -1096,14 +1096,20 @@ export default function TenderCommitteeAssignment() {
   });
 
   // Debug: Log current state
-  console.log(
-    "TenderCommitteeAssignment - Closed tenders:",
-    closedTenders.length,
-  );
-  console.log(
-    "TenderCommitteeAssignment - Committee templates:",
-    committeeTemplates.length,
-  );
+  console.log("TenderCommitteeAssignment - Debug Info:", {
+    closedTenders: closedTenders.length,
+    committeeTemplates: committeeTemplates.length,
+    totalAssignments: assignments.length,
+    filteredAssignments: filteredAssignments.length,
+    searchTerm,
+    filterStatus,
+    assignments: assignments.map(a => ({
+      id: a.id,
+      tenderId: a.tenderId,
+      tenderTitle: a.tenderTitle,
+      status: a.status
+    }))
+  });
 
   return (
     <div className="space-y-6">
