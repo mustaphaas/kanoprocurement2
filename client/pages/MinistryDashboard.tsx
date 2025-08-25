@@ -2476,8 +2476,10 @@ export default function MinistryDashboard() {
     // Store cleanup function for later use
     (window as any).ministryDashboardCleanup = cleanupSync;
 
-    // Load tenders from localStorage if available, otherwise use mock data
-    const storedTenders = localStorage.getItem("ministryTenders");
+    // Load tenders from ministry-specific localStorage to prevent cross-contamination
+    const { ministry: tenderMinistry } = getMinistryMockData();
+    const ministryTendersKey = `${tenderMinistry.code}_tenders`;
+    const storedTenders = localStorage.getItem(ministryTendersKey);
 
     if (storedTenders) {
       const parsedTenders = JSON.parse(storedTenders);
@@ -2492,12 +2494,7 @@ export default function MinistryDashboard() {
       setTenders(allTenders);
     } else {
       setTenders(mockTenders);
-      // Save initial mock tenders to localStorage
-      localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
-
-      // Also save with ministry-specific key for NOC system access
-      const { ministry: tenderMinistry } = getMinistryMockData();
-      const ministryTendersKey = `${tenderMinistry.code}_tenders`;
+      // Save initial mock tenders to ministry-specific localStorage only
       localStorage.setItem(ministryTendersKey, JSON.stringify(mockTenders));
     }
 
