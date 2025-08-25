@@ -2564,13 +2564,13 @@ export default function MinistryDashboard() {
         }
       });
 
-      // Save the updated arrays back to localStorage
+      // Save the updated arrays back to ministry-specific localStorage
       localStorage.setItem(
-        "featuredTenders",
+        featuredTendersKey,
         JSON.stringify(existingFeatured.slice(0, 5)),
       );
       localStorage.setItem(
-        "recentTenders",
+        recentTendersKey,
         JSON.stringify(existingRecent.slice(0, 10)),
       );
     };
