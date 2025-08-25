@@ -1794,7 +1794,16 @@ export default function TenderCommitteeAssignment() {
       </Tabs>
 
       {/* Create Assignment Modal */}
-      <Dialog open={showAssignmentModal} onOpenChange={setShowAssignmentModal}>
+      <Dialog
+        open={showAssignmentModal}
+        onOpenChange={(open) => {
+          setShowAssignmentModal(open);
+          if (!open) {
+            setErrorMessage("");
+            setSuccessMessage("");
+          }
+        }}
+      >
         <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader className="flex-shrink-0">
             <DialogTitle>Create Committee Assignment</DialogTitle>
