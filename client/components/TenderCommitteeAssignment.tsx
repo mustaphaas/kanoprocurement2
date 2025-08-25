@@ -1800,6 +1800,19 @@ export default function TenderCommitteeAssignment() {
             <DialogTitle>Create Committee Assignment</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 overflow-y-auto flex-1 pr-2">
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-red-800 text-sm">{errorMessage}</p>
+              </div>
+            )}
+
+            {/* Success Message */}
+            {successMessage && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-green-800 text-sm">{successMessage}</p>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="tender-id">Select Closed Tender</Label>
