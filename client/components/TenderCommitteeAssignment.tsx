@@ -1110,8 +1110,22 @@ export default function TenderCommitteeAssignment() {
       const storedTemplates = localStorage.getItem(templatesKey);
       if (storedTemplates) {
         const parsedTemplates = JSON.parse(storedTemplates);
-        setCommitteeTemplates(parsedTemplates);
-        console.log("Refreshed committee templates:", parsedTemplates);
+
+        // Filter templates to ensure only ministry-specific ones are loaded
+        const ministrySpecificTemplates = parsedTemplates.filter((template: any) => {
+          const belongsToMinistry =
+            template.id?.startsWith(ministryCode) ||
+            (ministryCode === "MOH" && template.category === "Healthcare") ||
+            (ministryCode === "MOWI" && template.category === "Infrastructure") ||
+            (ministryCode === "MOE" && template.category === "Education");
+          return belongsToMinistry;
+        });
+
+        setCommitteeTemplates(ministrySpecificTemplates);
+        console.log(`Refreshed ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}`);
+
+        // Save the filtered templates back to ensure cleanup
+        localStorage.setItem(templatesKey, JSON.stringify(ministrySpecificTemplates));
       }
     } catch (error) {
       console.error("Error loading committee templates:", error);
