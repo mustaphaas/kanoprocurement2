@@ -554,15 +554,25 @@ export default function MinistryDashboard() {
       setIsMobile(window.innerWidth < 768);
     };
 
+    // Debounce resize handler to prevent ResizeObserver loops
+    let timeoutId: NodeJS.Timeout;
+    const debouncedCheckMobile = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(checkMobile, 100);
+    };
+
     checkMobile();
-    window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", debouncedCheckMobile);
 
     // Simulate initial loading
     setTimeout(() => {
       setIsLoading(false);
     }, 1500);
 
-    return () => window.removeEventListener("resize", checkMobile);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", debouncedCheckMobile);
+    };
   }, []);
 
   // Handle view change with loading state
@@ -1359,7 +1369,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "�������255,000,000",
+            amount: "���������255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -2466,8 +2476,10 @@ export default function MinistryDashboard() {
     // Store cleanup function for later use
     (window as any).ministryDashboardCleanup = cleanupSync;
 
-    // Load tenders from localStorage if available, otherwise use mock data
-    const storedTenders = localStorage.getItem("ministryTenders");
+    // Load tenders from ministry-specific localStorage to prevent cross-contamination
+    const { ministry: tenderMinistry } = getMinistryMockData();
+    const ministryTendersKey = `${tenderMinistry.code}_tenders`;
+    const storedTenders = localStorage.getItem(ministryTendersKey);
 
     if (storedTenders) {
       const parsedTenders = JSON.parse(storedTenders);
@@ -2482,25 +2494,25 @@ export default function MinistryDashboard() {
       setTenders(allTenders);
     } else {
       setTenders(mockTenders);
-      // Save initial mock tenders to localStorage
-      localStorage.setItem("ministryTenders", JSON.stringify(mockTenders));
-
-      // Also save with ministry-specific key for NOC system access
-      const { ministry: tenderMinistry } = getMinistryMockData();
-      const ministryTendersKey = `${tenderMinistry.code}_tenders`;
+      // Save initial mock tenders to ministry-specific localStorage only
       localStorage.setItem(ministryTendersKey, JSON.stringify(mockTenders));
     }
 
     // Sync any ministry tenders that might be missing from featured/recent tenders
     const syncTendersToPublicKeys = () => {
+      const { ministry: syncMinistry } = getMinistryMockData();
+      const ministryTendersKey = `${syncMinistry.code}_tenders`;
+      const featuredTendersKey = `${syncMinistry.code}_featuredTenders`;
+      const recentTendersKey = `${syncMinistry.code}_recentTenders`;
+
       const ministryTenders = JSON.parse(
-        localStorage.getItem("ministryTenders") || "[]",
+        localStorage.getItem(ministryTendersKey) || "[]",
       );
       const existingFeatured = JSON.parse(
-        localStorage.getItem("featuredTenders") || "[]",
+        localStorage.getItem(featuredTendersKey) || "[]",
       );
       const existingRecent = JSON.parse(
-        localStorage.getItem("recentTenders") || "[]",
+        localStorage.getItem(recentTendersKey) || "[]",
       );
 
       ministryTenders.forEach((tender: any) => {
@@ -2552,13 +2564,13 @@ export default function MinistryDashboard() {
         }
       });
 
-      // Save the updated arrays back to localStorage
+      // Save the updated arrays back to ministry-specific localStorage
       localStorage.setItem(
-        "featuredTenders",
+        featuredTendersKey,
         JSON.stringify(existingFeatured.slice(0, 5)),
       );
       localStorage.setItem(
-        "recentTenders",
+        recentTendersKey,
         JSON.stringify(existingRecent.slice(0, 10)),
       );
     };
@@ -2798,7 +2810,6 @@ export default function MinistryDashboard() {
       );
 
       if (hasStatusChanges) {
-        localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
         const { ministry: statusMinistry } = getMinistryMockData();
         const ministryTendersKey = `${statusMinistry.code}_tenders`;
         localStorage.setItem(
@@ -3966,13 +3977,20 @@ export default function MinistryDashboard() {
       // Add to local tenders
       setTenders((prev) => {
         const updatedTenders = [tender, ...prev];
-        // Save to localStorage for ministry dashboard persistence
-        localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+        // Save to ministry-specific localStorage for proper isolation
+        const { ministry: saveMinistry } = getMinistryMockData();
+        const ministryTendersKey = `${saveMinistry.code}_tenders`;
+        localStorage.setItem(
+          ministryTendersKey,
+          JSON.stringify(updatedTenders),
+        );
         return updatedTenders;
       });
 
-      // Store in localStorage for cross-page access
-      const existingTenders = localStorage.getItem("featuredTenders") || "[]";
+      // Store in ministry-specific localStorage for proper isolation
+      const { ministry: featuredMinistry } = getMinistryMockData();
+      const featuredTendersKey = `${featuredMinistry.code}_featuredTenders`;
+      const existingTenders = localStorage.getItem(featuredTendersKey) || "[]";
       const tendersList = JSON.parse(existingTenders);
       const featuredTender = {
         id: tender.id,
@@ -3991,13 +4009,14 @@ export default function MinistryDashboard() {
             : "bg-gray-100 text-gray-800",
         category: tender.category,
         ministry: ministryInfo.name,
+        ministryCode: featuredMinistry.code, // Track ministry for this tender
         createdAt: Date.now(),
       };
 
       tendersList.unshift(featuredTender);
       // Keep only the last 5 tenders
       const latestTenders = tendersList.slice(0, 5);
-      localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
+      localStorage.setItem(featuredTendersKey, JSON.stringify(latestTenders));
 
       // Also store in recentTenders with more detailed information
       const existingRecentTenders =
@@ -4190,8 +4209,10 @@ export default function MinistryDashboard() {
       const updatedTenders = prev.map((tender) =>
         tender.id === selectedTenderForAward.id ? updatedTender : tender,
       );
-      // Save to localStorage
-      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      // Save to ministry-specific localStorage
+      const { ministry: awardMinistry } = getMinistryMockData();
+      const ministryTendersKey = `${awardMinistry.code}_tenders`;
+      localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
       return updatedTenders;
     });
 
@@ -4341,8 +4362,10 @@ export default function MinistryDashboard() {
           ? { ...tender, status: "Evaluated" as any }
           : tender,
       );
-      // Save to localStorage
-      localStorage.setItem("ministryTenders", JSON.stringify(updatedTenders));
+      // Save to ministry-specific localStorage
+      const { ministry: evalMinistry } = getMinistryMockData();
+      const ministryTendersKey = `${evalMinistry.code}_tenders`;
+      localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
       return updatedTenders;
     });
 
@@ -10126,7 +10149,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       <li>����� 90% faster processing</li>
                       <li>��� Reduced human errors</li>
                       <li>• Real-time notifications</li>
-                      <li>��� Automatic compliance checks</li>
+                      <li>���� Automatic compliance checks</li>
                     </ul>
                   </div>
                 </div>

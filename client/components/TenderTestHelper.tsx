@@ -53,14 +53,25 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
       createdAt: Date.now(),
     };
 
-    // Store in recentTenders (what CompanyDashboard looks for)
-    const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
+    // Get current ministry context for proper isolation
+    const ministryUser = JSON.parse(
+      localStorage.getItem("ministryUser") || "{}",
+    );
+    const ministryCode =
+      ministryUser.ministryCode ||
+      ministryUser.ministryId?.toUpperCase() ||
+      "MOH";
+
+    // Store in ministry-specific recentTenders to prevent cross-contamination
+    const recentTendersKey = `${ministryCode}_recentTenders`;
+    const existingRecentTenders =
+      localStorage.getItem(recentTendersKey) || "[]";
     const recentTendersList = JSON.parse(existingRecentTenders);
     recentTendersList.unshift(testTender);
 
     // Keep only the last 10 recent tenders
     const latestRecentTenders = recentTendersList.slice(0, 10);
-    localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+    localStorage.setItem(recentTendersKey, JSON.stringify(latestRecentTenders));
 
     // Also store in ministryTenders (what MinistryDashboard looks for)
     const ministryTenderFormat = {
@@ -77,15 +88,17 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
       procuringEntity: testTender.procuringEntity,
     };
 
+    // Store in ministry-specific tenders to prevent cross-contamination
+    const ministryTendersKey = `${ministryCode}_tenders`;
     const existingMinistryTenders =
-      localStorage.getItem("ministryTenders") || "[]";
+      localStorage.getItem(ministryTendersKey) || "[]";
     const ministryTendersList = JSON.parse(existingMinistryTenders);
     ministryTendersList.unshift(ministryTenderFormat);
 
     // Keep only the last 10 ministry tenders
     const latestMinistryTenders = ministryTendersList.slice(0, 10);
     localStorage.setItem(
-      "ministryTenders",
+      ministryTendersKey,
       JSON.stringify(latestMinistryTenders),
     );
 
@@ -107,39 +120,56 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
       createdAt: Date.now(),
     };
 
+    // Store in ministry-specific featured tenders to prevent cross-contamination
+    const featuredTendersKey = `${ministryCode}_featuredTenders`;
     const existingFeaturedTenders =
-      localStorage.getItem("featuredTenders") || "[]";
+      localStorage.getItem(featuredTendersKey) || "[]";
     const featuredTendersList = JSON.parse(existingFeaturedTenders);
     featuredTendersList.unshift(featuredTenderFormat);
 
     // Keep only the last 5 featured tenders
     const latestFeaturedTenders = featuredTendersList.slice(0, 5);
     localStorage.setItem(
-      "featuredTenders",
+      featuredTendersKey,
       JSON.stringify(latestFeaturedTenders),
     );
 
     console.log("Test tender created:", testTender);
-    console.log("Stored in localStorage with keys:");
-    console.log("- 'recentTenders' (for CompanyDashboard)");
-    console.log("- 'ministryTenders' (for MinistryDashboard)");
-    console.log("- 'featuredTenders' (for Index page)");
+    console.log(
+      `Stored in ministry-specific localStorage keys for ${ministryCode}:`,
+    );
+    console.log(`- '${recentTendersKey}' (for CompanyDashboard)`);
+    console.log(`- '${ministryTendersKey}' (for MinistryDashboard)`);
+    console.log(`- '${featuredTendersKey}' (for Index page)`);
 
     setIsCreating(false);
     onTenderCreated();
 
     alert(
-      `Test tender "${testTender.title}" created successfully! Now visible in:\n• Company dashboards (for active users)\n• Ministry dashboard\n• Main index page`,
+      `Test tender "${testTender.title}" created successfully for ${ministryCode}! Now visible in:\n• Company dashboards (for active users)\n• Ministry dashboard\n• Main index page`,
     );
   };
 
   const clearAllTenders = () => {
-    localStorage.removeItem("recentTenders");
-    localStorage.removeItem("featuredTenders");
-    localStorage.removeItem("ministryTenders");
+    // Get current ministry context for proper cleanup
+    const ministryUser = JSON.parse(
+      localStorage.getItem("ministryUser") || "{}",
+    );
+    const ministryCode =
+      ministryUser.ministryCode ||
+      ministryUser.ministryId?.toUpperCase() ||
+      "MOH";
+
+    const recentTendersKey = `${ministryCode}_recentTenders`;
+    const featuredTendersKey = `${ministryCode}_featuredTenders`;
+    const ministryTendersKey = `${ministryCode}_tenders`;
+
+    localStorage.removeItem(recentTendersKey);
+    localStorage.removeItem(featuredTendersKey);
+    localStorage.removeItem(ministryTendersKey);
     onTenderCreated();
     alert(
-      "All tenders cleared from localStorage:\n• recentTenders\n• featuredTenders\n• ministryTenders",
+      `All tenders cleared from ${ministryCode} localStorage:\n• ${recentTendersKey}\n• ${featuredTendersKey}\n• ${ministryTendersKey}`,
     );
   };
 

@@ -373,10 +373,20 @@ export const getClosedTenders = (): ClosedTender[] => {
 
   // Get all tenders using the same logic as AllTenders page
   const getAllTendersWithLocalStorage = (): Tender[] => {
-    const storedTenders = localStorage.getItem("recentTenders");
+    const { ministryCode, ministryName, ministryId } =
+      getCurrentMinistryContext();
+
+    // Use ministry-specific key to prevent cross-contamination
+    const recentTendersKey = `${ministryCode}_recentTenders`;
+    const storedTenders = localStorage.getItem(recentTendersKey);
+
     if (storedTenders) {
-      const parsedTenders = JSON.parse(storedTenders);
+      const parsedTenders = JSON.parse(storedTenders) as Tender[];
       if (parsedTenders.length > 0) {
+        console.log(
+          `Loaded ministry-specific stored tenders for ${ministryCode}: ${parsedTenders.length} tenders`,
+        );
+
         // Apply currency formatting and automatic status transitions
         const formattedParsedTenders = parsedTenders.map((tender: Tender) => {
           const formatted = {

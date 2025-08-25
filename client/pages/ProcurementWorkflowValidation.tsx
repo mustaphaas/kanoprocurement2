@@ -22,6 +22,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  writeMinistryData,
+  readMinistryData,
+  getCurrentMinistryContext,
+  MINISTRY_SPECIFIC_KEYS,
+  clearMinistryMockData,
+} from "@/lib/ministryStorageHelper";
 
 // Types for workflow validation
 interface WorkflowStep {
@@ -225,18 +232,45 @@ export default function ProcurementWorkflowValidation() {
       createdDate: "2024-02-10",
     };
 
-    // Store in localStorage
-    localStorage.setItem("mockProcurementPlan", JSON.stringify(mockPlan));
-    localStorage.setItem("mockTender", JSON.stringify(mockTender));
-    localStorage.setItem("mockNOCRequest", JSON.stringify(mockNOC));
-    localStorage.setItem("mockContract", JSON.stringify(mockContract));
-    localStorage.setItem("mockUsers", JSON.stringify(mockUsers));
+    // Store in ministry-specific localStorage to prevent cross-contamination
+    const ministryContext = getCurrentMinistryContext();
+    console.log(
+      `Generating mock data for ${ministryContext.ministryName} (${ministryContext.ministryCode})`,
+    );
+
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_PROCUREMENT_PLAN, mockPlan);
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, mockTender);
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST, mockNOC);
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_CONTRACT, mockContract);
+    writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_USERS, mockUsers);
 
     // Update existing application data to include mock records
     updateApplicationData(mockPlan, mockTender, mockNOC, mockContract);
 
     setMockDataGenerated(true);
-    alert("Mock data generated successfully!");
+    alert(
+      `Mock data generated successfully for ${ministryContext.ministryName}!`,
+    );
+  };
+
+  // Clear ministry-specific mock data
+  const clearMockData = () => {
+    const ministryContext = getCurrentMinistryContext();
+    clearMinistryMockData();
+    setMockDataGenerated(false);
+    setValidationResults([]);
+
+    // Reset workflow steps
+    setWorkflowSteps((prev) =>
+      prev.map((step) => ({
+        ...step,
+        status: "pending" as const,
+        details: undefined,
+        timestamp: undefined,
+      })),
+    );
+
+    alert(`Mock data cleared for ${ministryContext.ministryName}!`);
   };
 
   const updateApplicationData = (
@@ -245,10 +279,13 @@ export default function ProcurementWorkflowValidation() {
     noc: MockNOCRequest,
     contract: MockContract,
   ) => {
-    // Add to featured tenders
-    const existingTenders = JSON.parse(
-      localStorage.getItem("featuredTenders") || "[]",
+    // Add to ministry-specific featured tenders to prevent cross-contamination
+    const ministryContext = getCurrentMinistryContext();
+    const existingTenders = readMinistryData(
+      MINISTRY_SPECIFIC_KEYS.FEATURED_TENDERS,
+      [],
     );
+
     const featuredTender = {
       id: tender.id,
       title: tender.title,
@@ -259,12 +296,13 @@ export default function ProcurementWorkflowValidation() {
       statusColor: "bg-purple-100 text-purple-800",
       category: "Medical Equipment",
       ministry: plan.ministry,
+      ministryCode: ministryContext.ministryCode, // Track ministry for this tender
       createdAt: Date.now(),
     };
     existingTenders.unshift(featuredTender);
-    localStorage.setItem(
-      "featuredTenders",
-      JSON.stringify(existingTenders.slice(0, 5)),
+    writeMinistryData(
+      MINISTRY_SPECIFIC_KEYS.FEATURED_TENDERS,
+      existingTenders.slice(0, 5),
     );
 
     // Add to NOC requests (for central system)
@@ -290,19 +328,22 @@ export default function ProcurementWorkflowValidation() {
   // Validation functions
   const validateProcurementPlanToTender = (): ValidationResult => {
     try {
-      const planData = localStorage.getItem("mockProcurementPlan");
-      const tenderData = localStorage.getItem("mockTender");
+      const plan = readMinistryData<MockProcurementPlan | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_PROCUREMENT_PLAN,
+        null,
+      );
+      const tender = readMinistryData<MockTender | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_TENDER,
+        null,
+      );
 
-      if (!planData || !tenderData) {
+      if (!plan || !tender) {
         return {
           stepId: "procurement-planning",
           passed: false,
           message: "Mock data not found. Generate mock data first.",
         };
       }
-
-      const plan: MockProcurementPlan = JSON.parse(planData);
-      const tender: MockTender = JSON.parse(tenderData);
 
       // Check if approved plan has linked tender
       const isLinked = plan.status === "approved" && tender.planId === plan.id;
@@ -328,17 +369,18 @@ export default function ProcurementWorkflowValidation() {
 
   const validateTenderProgression = (): ValidationResult => {
     try {
-      const tenderData = localStorage.getItem("mockTender");
+      const tender = readMinistryData<MockTender | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_TENDER,
+        null,
+      );
 
-      if (!tenderData) {
+      if (!tender) {
         return {
           stepId: "tender-progression",
           passed: false,
           message: "Tender data not found",
         };
       }
-
-      const tender: MockTender = JSON.parse(tenderData);
 
       // Check tender has progressed through stages and has evaluation results
       const hasEvaluationResults = !!tender.evaluationResults;
@@ -374,19 +416,22 @@ export default function ProcurementWorkflowValidation() {
 
   const validateNOCGeneration = (): ValidationResult => {
     try {
-      const tenderData = localStorage.getItem("mockTender");
-      const nocData = localStorage.getItem("mockNOCRequest");
+      const tender = readMinistryData<MockTender | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_TENDER,
+        null,
+      );
+      const noc = readMinistryData<MockNOCRequest | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST,
+        null,
+      );
 
-      if (!tenderData || !nocData) {
+      if (!tender || !noc) {
         return {
           stepId: "noc-generation",
           passed: false,
           message: "Required data not found",
         };
       }
-
-      const tender: MockTender = JSON.parse(tenderData);
-      const noc: MockNOCRequest = JSON.parse(nocData);
 
       // Check if evaluated tender generated NOC request
       const tenderEvaluated =
@@ -420,19 +465,22 @@ export default function ProcurementWorkflowValidation() {
 
   const validateContractUnlock = (): ValidationResult => {
     try {
-      const nocData = localStorage.getItem("mockNOCRequest");
-      const contractData = localStorage.getItem("mockContract");
+      const noc = readMinistryData<MockNOCRequest | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST,
+        null,
+      );
+      const contract = readMinistryData<MockContract | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_CONTRACT,
+        null,
+      );
 
-      if (!nocData || !contractData) {
+      if (!noc || !contract) {
         return {
           stepId: "contract-unlock",
           passed: false,
           message: "Required data not found",
         };
       }
-
-      const noc: MockNOCRequest = JSON.parse(nocData);
-      const contract: MockContract = JSON.parse(contractData);
 
       // Check if NOC approval unlocked contract creation
       const nocApproved = noc.status === "approved";
@@ -627,6 +675,14 @@ export default function ProcurementWorkflowValidation() {
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
                     Reset
+                  </Button>
+                  <Button
+                    onClick={clearMockData}
+                    variant="outline"
+                    disabled={isRunningTests}
+                  >
+                    <XCircle className="h-4 w-4 mr-2" />
+                    Clear Mock Data
                   </Button>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-600">Mock Data:</span>

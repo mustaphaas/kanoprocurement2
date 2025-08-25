@@ -202,7 +202,52 @@ export default function CommitteeTemplates() {
 
       const stored = localStorage.getItem(storageKey);
       if (stored) {
-        setTemplates(JSON.parse(stored));
+        const parsedTemplates = JSON.parse(stored);
+        // Ensure all templates have auditTrail property for backwards compatibility
+        const templatesWithAuditTrail = parsedTemplates.map((template: any) => {
+          const migratedTemplate = { ...template };
+
+          // Ensure auditTrail exists
+          if (!migratedTemplate.auditTrail) {
+            migratedTemplate.auditTrail = {
+              createdBy: "Legacy",
+              createdDate: template.createdDate || "2024-01-01",
+              lastModifiedBy: "Legacy",
+              lastModifiedDate: template.lastModified || "2024-01-01",
+              versionHistory: [
+                {
+                  version: 1,
+                  modifiedBy: "Legacy",
+                  modifiedDate: template.createdDate || "2024-01-01",
+                  changes: "Legacy template migration",
+                  reason: "Added missing auditTrail",
+                },
+              ],
+            };
+          }
+
+          // Ensure all array properties exist
+          if (!migratedTemplate.roles) {
+            migratedTemplate.roles = [];
+          }
+          if (!migratedTemplate.applicableTypes) {
+            migratedTemplate.applicableTypes = [];
+          }
+          if (!migratedTemplate.governanceRules) {
+            migratedTemplate.governanceRules = [];
+          }
+          if (!migratedTemplate.approvalLevels) {
+            migratedTemplate.approvalLevels = [];
+          }
+
+          return migratedTemplate;
+        });
+        setTemplates(templatesWithAuditTrail);
+        // Save the migrated templates back to localStorage
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify(templatesWithAuditTrail),
+        );
       } else {
         const sampleTemplates = createSampleTemplates(ministryCode);
         setTemplates(sampleTemplates);
@@ -538,6 +583,21 @@ export default function CommitteeTemplates() {
           penalty: "Committee reconstitution required",
         },
       ],
+      auditTrail: {
+        createdBy: "System",
+        createdDate: "2024-01-15",
+        lastModifiedBy: "System",
+        lastModifiedDate: "2024-02-10",
+        versionHistory: [
+          {
+            version: 1,
+            modifiedBy: "System",
+            modifiedDate: "2024-01-15",
+            changes: "Initial template creation",
+            reason: "Sample template generated",
+          },
+        ],
+      },
     };
 
     // Customize for different ministries
@@ -554,7 +614,7 @@ export default function CommitteeTemplates() {
 
       baseTemplate.roles = [
         {
-          ...baseTemplate.roles[0],
+          ...(baseTemplate.roles?.[0] || {}),
           title: "Chief Engineer (Chair)",
           description:
             "Senior civil engineer responsible for leading technical evaluations",
@@ -584,7 +644,7 @@ export default function CommitteeTemplates() {
 
       baseTemplate.roles = [
         {
-          ...baseTemplate.roles[0],
+          ...(baseTemplate.roles?.[0] || {}),
           title: "Education Director (Chair)",
           description:
             "Senior education professional responsible for leading evaluations",
@@ -711,9 +771,10 @@ export default function CommitteeTemplates() {
               lastModifiedBy: currentUser,
               lastModifiedDate: currentDate,
               versionHistory: [
-                ...template.auditTrail.versionHistory,
+                ...(template.auditTrail?.versionHistory || []),
                 {
-                  version: template.auditTrail.versionHistory.length + 1,
+                  version:
+                    (template.auditTrail?.versionHistory?.length || 0) + 1,
                   modifiedBy: currentUser,
                   modifiedDate: currentDate,
                   changes: `Added role: ${newRole.title}`,
@@ -759,9 +820,10 @@ export default function CommitteeTemplates() {
               lastModifiedBy: currentUser,
               lastModifiedDate: currentDate,
               versionHistory: [
-                ...template.auditTrail.versionHistory,
+                ...(template.auditTrail?.versionHistory || []),
                 {
-                  version: template.auditTrail.versionHistory.length + 1,
+                  version:
+                    (template.auditTrail?.versionHistory?.length || 0) + 1,
                   modifiedBy: currentUser,
                   modifiedDate: currentDate,
                   changes: "Template activated",
@@ -827,9 +889,10 @@ export default function CommitteeTemplates() {
         lastModifiedBy: currentUser,
         lastModifiedDate: currentDate,
         versionHistory: [
-          ...editingTemplate.auditTrail.versionHistory,
+          ...(editingTemplate.auditTrail?.versionHistory || []),
           {
-            version: editingTemplate.auditTrail.versionHistory.length + 1,
+            version:
+              (editingTemplate.auditTrail?.versionHistory?.length || 0) + 1,
             modifiedBy: currentUser,
             modifiedDate: currentDate,
             changes: "Template details updated",
@@ -935,7 +998,7 @@ export default function CommitteeTemplates() {
                         Roles Defined
                       </Label>
                       <p className="text-sm font-semibold">
-                        {template.roles.length}
+                        {template.roles?.length || 0}
                       </p>
                     </div>
                     <div>
@@ -1022,10 +1085,10 @@ export default function CommitteeTemplates() {
                 <div>
                   <h4 className="font-medium mb-2 flex items-center gap-2">
                     <Users className="h-4 w-4" />
-                    Committee Roles ({template.roles.length})
+                    Committee Roles ({template.roles?.length || 0})
                   </h4>
                   <div className="space-y-2">
-                    {template.roles.map((role) => (
+                    {(template.roles || []).map((role) => (
                       <div
                         key={role.id}
                         className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -1109,11 +1172,11 @@ export default function CommitteeTemplates() {
                   </div>
                 </div>
 
-                {template.applicableTypes.length > 0 && (
+                {(template.applicableTypes?.length || 0) > 0 && (
                   <div>
                     <h4 className="font-medium mb-2">Applicable Types</h4>
                     <div className="flex flex-wrap gap-2">
-                      {template.applicableTypes.map((type) => (
+                      {(template.applicableTypes || []).map((type) => (
                         <Badge key={type} variant="outline">
                           {type}
                         </Badge>
@@ -1122,14 +1185,14 @@ export default function CommitteeTemplates() {
                   </div>
                 )}
 
-                {template.governanceRules.length > 0 && (
+                {(template.governanceRules?.length || 0) > 0 && (
                   <div>
                     <h4 className="font-medium mb-2 flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4" />
-                      Governance Rules ({template.governanceRules.length})
+                      Governance Rules ({template.governanceRules?.length || 0})
                     </h4>
                     <div className="space-y-1">
-                      {template.governanceRules.map((rule) => (
+                      {(template.governanceRules || []).map((rule) => (
                         <div
                           key={rule.id}
                           className="flex items-center justify-between text-sm p-2 bg-yellow-50 rounded"
