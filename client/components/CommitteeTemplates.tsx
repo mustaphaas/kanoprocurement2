@@ -792,7 +792,7 @@ export default function CommitteeTemplates() {
                   <div className="flex items-center gap-3 mb-2">
                     <CardTitle className="text-lg">{template.name}</CardTitle>
                     {getStatusBadge(template.status)}
-                    {getMethodologyBadge(
+                    {template.evaluationFramework?.methodology && getMethodologyBadge(
                       template.evaluationFramework.methodology,
                     )}
                   </div>
@@ -822,9 +822,9 @@ export default function CommitteeTemplates() {
                         QCBS Weights
                       </Label>
                       <p className="text-sm font-semibold">
-                        T:{template.evaluationFramework.technicalWeightPercent}%
+                        T:{template.evaluationFramework?.defaultTechnicalWeight || template.evaluationFramework?.technicalWeightPercent || 70}%
                         / F:
-                        {template.evaluationFramework.financialWeightPercent}%
+                        {template.evaluationFramework?.defaultFinancialWeight || template.evaluationFramework?.financialWeightPercent || 30}%
                       </p>
                     </div>
                     <div>
@@ -909,7 +909,7 @@ export default function CommitteeTemplates() {
                         Technical Weight
                       </Label>
                       <p className="font-semibold text-blue-900">
-                        {template.evaluationFramework.technicalWeightPercent}%
+                        {template.evaluationFramework?.defaultTechnicalWeight || template.evaluationFramework?.technicalWeightPercent || 70}%
                       </p>
                     </div>
                     <div>
@@ -917,7 +917,7 @@ export default function CommitteeTemplates() {
                         Financial Weight
                       </Label>
                       <p className="font-semibold text-blue-900">
-                        {template.evaluationFramework.financialWeightPercent}%
+                        {template.evaluationFramework?.defaultFinancialWeight || template.evaluationFramework?.financialWeightPercent || 30}%
                       </p>
                     </div>
                     <div>
@@ -925,7 +925,7 @@ export default function CommitteeTemplates() {
                         Passing Score
                       </Label>
                       <p className="font-semibold text-blue-900">
-                        {template.evaluationFramework.passingTechnicalScore}%
+                        {template.evaluationFramework?.passingTechnicalScore || 75}%
                       </p>
                     </div>
                     <div>
@@ -933,7 +933,7 @@ export default function CommitteeTemplates() {
                         Criteria
                       </Label>
                       <p className="font-semibold text-blue-900">
-                        {template.evaluationFramework.evaluationCriteria.length}
+                        {template.evaluationFramework?.evaluationCriteria?.length || 0}
                       </p>
                     </div>
                   </div>
