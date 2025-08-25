@@ -1081,7 +1081,7 @@ export default function ProcurementPlanning() {
         </TabsContent>
 
         <TabsContent value="qcbs" className="space-y-4">
-          <QCBSFrameworkDefinition />
+          <FlexibleQCBSTemplate />
         </TabsContent>
 
         <TabsContent value="assignments" className="space-y-4">
