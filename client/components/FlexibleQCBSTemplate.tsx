@@ -387,6 +387,10 @@ export default function FlexibleQCBSTemplate() {
 
     setTemplates(updatedTemplates);
     setEditingTemplate(updatedTemplate);
+    // Also update selectedTemplate if it's the same template being edited
+    if (selectedTemplate && selectedTemplate.id === editingTemplate.id) {
+      setSelectedTemplate(updatedTemplate);
+    }
     saveTemplates(updatedTemplates);
 
     setCriterionForm({
