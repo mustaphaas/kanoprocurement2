@@ -645,6 +645,14 @@ export default function ProcurementWorkflowValidation() {
                     <RefreshCw className="h-4 w-4 mr-2" />
                     Reset
                   </Button>
+                  <Button
+                    onClick={clearMockData}
+                    variant="outline"
+                    disabled={isRunningTests}
+                  >
+                    <XCircle className="h-4 w-4 mr-2" />
+                    Clear Mock Data
+                  </Button>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-600">Mock Data:</span>
                     <Badge
