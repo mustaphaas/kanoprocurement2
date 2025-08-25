@@ -246,7 +246,27 @@ export default function ProcurementWorkflowValidation() {
     updateApplicationData(mockPlan, mockTender, mockNOC, mockContract);
 
     setMockDataGenerated(true);
-    alert("Mock data generated successfully!");
+    alert(`Mock data generated successfully for ${ministryContext.ministryName}!`);
+  };
+
+  // Clear ministry-specific mock data
+  const clearMockData = () => {
+    const ministryContext = getCurrentMinistryContext();
+    clearMinistryMockData();
+    setMockDataGenerated(false);
+    setValidationResults([]);
+
+    // Reset workflow steps
+    setWorkflowSteps(prev =>
+      prev.map(step => ({
+        ...step,
+        status: "pending" as const,
+        details: undefined,
+        timestamp: undefined
+      }))
+    );
+
+    alert(`Mock data cleared for ${ministryContext.ministryName}!`);
   };
 
   const updateApplicationData = (
