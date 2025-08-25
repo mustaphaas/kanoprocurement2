@@ -662,6 +662,44 @@ export default function TenderCommitteeAssignment() {
     return [baseAssignment];
   };
 
+  const cleanupCrossMinistryContamination = (currentMinistryCode: string) => {
+    try {
+      const allMinistryCodes = ["MOH", "MOWI", "MOE"];
+
+      allMinistryCodes.forEach(ministryCode => {
+        const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
+        const storedTemplates = localStorage.getItem(templatesKey);
+
+        if (storedTemplates) {
+          const parsedTemplates = JSON.parse(storedTemplates);
+
+          // Filter out templates that don't belong to this ministry
+          const cleanedTemplates = parsedTemplates.filter((template: any) => {
+            const belongsToThisMinistry =
+              template.id?.startsWith(ministryCode) ||
+              (ministryCode === "MOH" && template.category === "Healthcare") ||
+              (ministryCode === "MOWI" && template.category === "Infrastructure") ||
+              (ministryCode === "MOE" && template.category === "Education");
+
+            if (!belongsToThisMinistry) {
+              console.log(`Removing contaminated template ${template.id} from ${ministryCode} storage`);
+            }
+
+            return belongsToThisMinistry;
+          });
+
+          // Save cleaned templates if any changes were made
+          if (cleanedTemplates.length !== parsedTemplates.length) {
+            localStorage.setItem(templatesKey, JSON.stringify(cleanedTemplates));
+            console.log(`Cleaned up ${ministryCode} templates: ${parsedTemplates.length} -> ${cleanedTemplates.length}`);
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error during cross-ministry cleanup:", error);
+    }
+  };
+
   const createDefaultCommitteeTemplates = (
     ministryCode: string,
   ): CommitteeTemplate[] => {
