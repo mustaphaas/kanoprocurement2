@@ -537,6 +537,21 @@ export default function FlexibleQCBSTemplate() {
   const saveTemplate = () => {
     if (!editingTemplate) return;
 
+    // Validate score distribution before saving
+    const technicalTotal = editingTemplate.totalTechnicalScore;
+    const financialTotal = editingTemplate.totalFinancialScore;
+
+    if (technicalTotal !== TECHNICAL_WEIGHT || financialTotal !== FINANCIAL_WEIGHT) {
+      setValidationError(
+        `Cannot save template: Score distribution must be exactly ${TECHNICAL_WEIGHT}% technical and ${FINANCIAL_WEIGHT}% financial. ` +
+        `Current: ${technicalTotal} technical, ${financialTotal} financial. Please normalize scores first.`
+      );
+      return;
+    }
+
+    // Clear any existing validation errors
+    setValidationError(null);
+
     const updatedTemplate = {
       ...editingTemplate,
       status: "Active" as const,
