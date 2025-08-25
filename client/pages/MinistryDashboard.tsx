@@ -554,15 +554,25 @@ export default function MinistryDashboard() {
       setIsMobile(window.innerWidth < 768);
     };
 
+    // Debounce resize handler to prevent ResizeObserver loops
+    let timeoutId: NodeJS.Timeout;
+    const debouncedCheckMobile = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(checkMobile, 100);
+    };
+
     checkMobile();
-    window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", debouncedCheckMobile);
 
     // Simulate initial loading
     setTimeout(() => {
       setIsLoading(false);
     }, 1500);
 
-    return () => window.removeEventListener("resize", checkMobile);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", debouncedCheckMobile);
+    };
   }, []);
 
   // Handle view change with loading state
@@ -10126,7 +10136,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       <li>����� 90% faster processing</li>
                       <li>��� Reduced human errors</li>
                       <li>• Real-time notifications</li>
-                      <li>��� Automatic compliance checks</li>
+                      <li>���� Automatic compliance checks</li>
                     </ul>
                   </div>
                 </div>

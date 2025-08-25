@@ -1098,21 +1098,17 @@ export default function TenderCommitteeAssignment() {
     return matchesSearch && matchesFilter;
   });
 
-  // Debug: Log current state
-  console.log("TenderCommitteeAssignment - Debug Info:", {
-    closedTenders: closedTenders.length,
-    committeeTemplates: committeeTemplates.length,
-    totalAssignments: assignments.length,
-    filteredAssignments: filteredAssignments.length,
-    searchTerm,
-    filterStatus,
-    assignments: assignments.map((a) => ({
-      id: a.id,
-      tenderId: a.tenderId,
-      tenderTitle: a.tenderTitle,
-      status: a.status,
-    })),
-  });
+  // Debug: Log current state (only in development)
+  if (process.env.NODE_ENV === 'development') {
+    console.log("TenderCommitteeAssignment - Debug Info:", {
+      closedTenders: closedTenders.length,
+      committeeTemplates: committeeTemplates.length,
+      totalAssignments: assignments.length,
+      filteredAssignments: filteredAssignments.length,
+      searchTerm,
+      filterStatus,
+    });
+  }
 
   return (
     <div className="space-y-6">
