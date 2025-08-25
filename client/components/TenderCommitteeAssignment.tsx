@@ -334,29 +334,44 @@ export default function TenderCommitteeAssignment() {
         const parsedTemplates = JSON.parse(storedTemplates);
 
         // Filter templates to ensure only ministry-specific ones are loaded
-        const ministrySpecificTemplates = parsedTemplates.filter((template: any) => {
-          // Check if template ID starts with ministry code or if it belongs to current ministry
-          const belongsToMinistry =
-            template.id?.startsWith(ministryCode) ||
-            (ministryCode === "MOH" && template.category === "Healthcare") ||
-            (ministryCode === "MOWI" && template.category === "Infrastructure") ||
-            (ministryCode === "MOE" && template.category === "Education");
+        const ministrySpecificTemplates = parsedTemplates.filter(
+          (template: any) => {
+            // Check if template ID starts with ministry code or if it belongs to current ministry
+            const belongsToMinistry =
+              template.id?.startsWith(ministryCode) ||
+              (ministryCode === "MOH" && template.category === "Healthcare") ||
+              (ministryCode === "MOWI" &&
+                template.category === "Infrastructure") ||
+              (ministryCode === "MOE" && template.category === "Education");
 
-          console.log(`Template ${template.id} (${template.category}) belongs to ${ministryCode}:`, belongsToMinistry);
-          return belongsToMinistry;
-        });
+            console.log(
+              `Template ${template.id} (${template.category}) belongs to ${ministryCode}:`,
+              belongsToMinistry,
+            );
+            return belongsToMinistry;
+          },
+        );
 
         setCommitteeTemplates(ministrySpecificTemplates);
-        console.log(`Loaded ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}:`, ministrySpecificTemplates);
+        console.log(
+          `Loaded ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}:`,
+          ministrySpecificTemplates,
+        );
 
         // Save the filtered templates back to ensure cleanup
-        localStorage.setItem(templatesKey, JSON.stringify(ministrySpecificTemplates));
+        localStorage.setItem(
+          templatesKey,
+          JSON.stringify(ministrySpecificTemplates),
+        );
       } else {
         // Create default templates if none exist
         const defaultTemplates = createDefaultCommitteeTemplates(ministryCode);
         setCommitteeTemplates(defaultTemplates);
         localStorage.setItem(templatesKey, JSON.stringify(defaultTemplates));
-        console.log(`Created default committee templates for ${ministryCode}:`, defaultTemplates);
+        console.log(
+          `Created default committee templates for ${ministryCode}:`,
+          defaultTemplates,
+        );
       }
     } catch (error) {
       console.error("Error loading data:", error);
@@ -676,7 +691,7 @@ export default function TenderCommitteeAssignment() {
     try {
       const allMinistryCodes = ["MOH", "MOWI", "MOE"];
 
-      allMinistryCodes.forEach(ministryCode => {
+      allMinistryCodes.forEach((ministryCode) => {
         const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
         const storedTemplates = localStorage.getItem(templatesKey);
 
@@ -688,11 +703,14 @@ export default function TenderCommitteeAssignment() {
             const belongsToThisMinistry =
               template.id?.startsWith(ministryCode) ||
               (ministryCode === "MOH" && template.category === "Healthcare") ||
-              (ministryCode === "MOWI" && template.category === "Infrastructure") ||
+              (ministryCode === "MOWI" &&
+                template.category === "Infrastructure") ||
               (ministryCode === "MOE" && template.category === "Education");
 
             if (!belongsToThisMinistry) {
-              console.log(`Removing contaminated template ${template.id} from ${ministryCode} storage`);
+              console.log(
+                `Removing contaminated template ${template.id} from ${ministryCode} storage`,
+              );
             }
 
             return belongsToThisMinistry;
@@ -700,8 +718,13 @@ export default function TenderCommitteeAssignment() {
 
           // Save cleaned templates if any changes were made
           if (cleanedTemplates.length !== parsedTemplates.length) {
-            localStorage.setItem(templatesKey, JSON.stringify(cleanedTemplates));
-            console.log(`Cleaned up ${ministryCode} templates: ${parsedTemplates.length} -> ${cleanedTemplates.length}`);
+            localStorage.setItem(
+              templatesKey,
+              JSON.stringify(cleanedTemplates),
+            );
+            console.log(
+              `Cleaned up ${ministryCode} templates: ${parsedTemplates.length} -> ${cleanedTemplates.length}`,
+            );
           }
         }
       });
@@ -723,7 +746,11 @@ export default function TenderCommitteeAssignment() {
           category: "Healthcare",
           status: "Active",
           roles: [],
-          applicableTypes: ["Medical Devices", "Laboratory Equipment", "Pharmaceuticals"],
+          applicableTypes: [
+            "Medical Devices",
+            "Laboratory Equipment",
+            "Pharmaceuticals",
+          ],
           minimumMembers: 5,
           maximumMembers: 7,
           quorumRequirement: 4,
@@ -765,11 +792,16 @@ export default function TenderCommitteeAssignment() {
         {
           id: `${ministryCode}-CT-2024-001`,
           name: "Infrastructure Procurement Committee",
-          description: "Template for infrastructure and construction procurement",
+          description:
+            "Template for infrastructure and construction procurement",
           category: "Infrastructure",
           status: "Active",
           roles: [],
-          applicableTypes: ["Road Construction", "Bridge Construction", "Building Construction"],
+          applicableTypes: [
+            "Road Construction",
+            "Bridge Construction",
+            "Building Construction",
+          ],
           minimumMembers: 5,
           maximumMembers: 7,
           quorumRequirement: 4,
@@ -800,7 +832,8 @@ export default function TenderCommitteeAssignment() {
                 modifiedBy: "System",
                 modifiedDate: new Date().toISOString().split("T")[0],
                 changes: "Initial template creation",
-                reason: "Default template for Ministry of Works and Infrastructure",
+                reason:
+                  "Default template for Ministry of Works and Infrastructure",
               },
             ],
           },
@@ -811,11 +844,16 @@ export default function TenderCommitteeAssignment() {
         {
           id: `${ministryCode}-CT-2024-001`,
           name: "Educational Procurement Committee",
-          description: "Template for educational equipment and materials procurement",
+          description:
+            "Template for educational equipment and materials procurement",
           category: "Education",
           status: "Active",
           roles: [],
-          applicableTypes: ["Educational Technology", "School Furniture", "Learning Materials"],
+          applicableTypes: [
+            "Educational Technology",
+            "School Furniture",
+            "Learning Materials",
+          ],
           minimumMembers: 5,
           maximumMembers: 7,
           quorumRequirement: 4,
@@ -1160,20 +1198,28 @@ export default function TenderCommitteeAssignment() {
         const parsedTemplates = JSON.parse(storedTemplates);
 
         // Filter templates to ensure only ministry-specific ones are loaded
-        const ministrySpecificTemplates = parsedTemplates.filter((template: any) => {
-          const belongsToMinistry =
-            template.id?.startsWith(ministryCode) ||
-            (ministryCode === "MOH" && template.category === "Healthcare") ||
-            (ministryCode === "MOWI" && template.category === "Infrastructure") ||
-            (ministryCode === "MOE" && template.category === "Education");
-          return belongsToMinistry;
-        });
+        const ministrySpecificTemplates = parsedTemplates.filter(
+          (template: any) => {
+            const belongsToMinistry =
+              template.id?.startsWith(ministryCode) ||
+              (ministryCode === "MOH" && template.category === "Healthcare") ||
+              (ministryCode === "MOWI" &&
+                template.category === "Infrastructure") ||
+              (ministryCode === "MOE" && template.category === "Education");
+            return belongsToMinistry;
+          },
+        );
 
         setCommitteeTemplates(ministrySpecificTemplates);
-        console.log(`Refreshed ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}`);
+        console.log(
+          `Refreshed ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}`,
+        );
 
         // Save the filtered templates back to ensure cleanup
-        localStorage.setItem(templatesKey, JSON.stringify(ministrySpecificTemplates));
+        localStorage.setItem(
+          templatesKey,
+          JSON.stringify(ministrySpecificTemplates),
+        );
       }
     } catch (error) {
       console.error("Error loading committee templates:", error);
@@ -1287,7 +1333,7 @@ export default function TenderCommitteeAssignment() {
   });
 
   // Debug: Log current state (only in development)
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     console.log("TenderCommitteeAssignment - Debug Info:", {
       closedTenders: closedTenders.length,
       committeeTemplates: committeeTemplates.length,

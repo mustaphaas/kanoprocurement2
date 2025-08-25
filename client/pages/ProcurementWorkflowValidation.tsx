@@ -27,7 +27,7 @@ import {
   readMinistryData,
   getCurrentMinistryContext,
   MINISTRY_SPECIFIC_KEYS,
-  clearMinistryMockData
+  clearMinistryMockData,
 } from "@/lib/ministryStorageHelper";
 
 // Types for workflow validation
@@ -234,7 +234,9 @@ export default function ProcurementWorkflowValidation() {
 
     // Store in ministry-specific localStorage to prevent cross-contamination
     const ministryContext = getCurrentMinistryContext();
-    console.log(`Generating mock data for ${ministryContext.ministryName} (${ministryContext.ministryCode})`);
+    console.log(
+      `Generating mock data for ${ministryContext.ministryName} (${ministryContext.ministryCode})`,
+    );
 
     writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_PROCUREMENT_PLAN, mockPlan);
     writeMinistryData(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, mockTender);
@@ -246,7 +248,9 @@ export default function ProcurementWorkflowValidation() {
     updateApplicationData(mockPlan, mockTender, mockNOC, mockContract);
 
     setMockDataGenerated(true);
-    alert(`Mock data generated successfully for ${ministryContext.ministryName}!`);
+    alert(
+      `Mock data generated successfully for ${ministryContext.ministryName}!`,
+    );
   };
 
   // Clear ministry-specific mock data
@@ -257,13 +261,13 @@ export default function ProcurementWorkflowValidation() {
     setValidationResults([]);
 
     // Reset workflow steps
-    setWorkflowSteps(prev =>
-      prev.map(step => ({
+    setWorkflowSteps((prev) =>
+      prev.map((step) => ({
         ...step,
         status: "pending" as const,
         details: undefined,
-        timestamp: undefined
-      }))
+        timestamp: undefined,
+      })),
     );
 
     alert(`Mock data cleared for ${ministryContext.ministryName}!`);
@@ -277,7 +281,10 @@ export default function ProcurementWorkflowValidation() {
   ) => {
     // Add to ministry-specific featured tenders to prevent cross-contamination
     const ministryContext = getCurrentMinistryContext();
-    const existingTenders = readMinistryData(MINISTRY_SPECIFIC_KEYS.FEATURED_TENDERS, []);
+    const existingTenders = readMinistryData(
+      MINISTRY_SPECIFIC_KEYS.FEATURED_TENDERS,
+      [],
+    );
 
     const featuredTender = {
       id: tender.id,
@@ -293,7 +300,10 @@ export default function ProcurementWorkflowValidation() {
       createdAt: Date.now(),
     };
     existingTenders.unshift(featuredTender);
-    writeMinistryData(MINISTRY_SPECIFIC_KEYS.FEATURED_TENDERS, existingTenders.slice(0, 5));
+    writeMinistryData(
+      MINISTRY_SPECIFIC_KEYS.FEATURED_TENDERS,
+      existingTenders.slice(0, 5),
+    );
 
     // Add to NOC requests (for central system)
     const centralNOCs = JSON.parse(
@@ -318,8 +328,14 @@ export default function ProcurementWorkflowValidation() {
   // Validation functions
   const validateProcurementPlanToTender = (): ValidationResult => {
     try {
-      const plan = readMinistryData<MockProcurementPlan | null>(MINISTRY_SPECIFIC_KEYS.MOCK_PROCUREMENT_PLAN, null);
-      const tender = readMinistryData<MockTender | null>(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, null);
+      const plan = readMinistryData<MockProcurementPlan | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_PROCUREMENT_PLAN,
+        null,
+      );
+      const tender = readMinistryData<MockTender | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_TENDER,
+        null,
+      );
 
       if (!plan || !tender) {
         return {
@@ -353,7 +369,10 @@ export default function ProcurementWorkflowValidation() {
 
   const validateTenderProgression = (): ValidationResult => {
     try {
-      const tender = readMinistryData<MockTender | null>(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, null);
+      const tender = readMinistryData<MockTender | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_TENDER,
+        null,
+      );
 
       if (!tender) {
         return {
@@ -397,8 +416,14 @@ export default function ProcurementWorkflowValidation() {
 
   const validateNOCGeneration = (): ValidationResult => {
     try {
-      const tender = readMinistryData<MockTender | null>(MINISTRY_SPECIFIC_KEYS.MOCK_TENDER, null);
-      const noc = readMinistryData<MockNOCRequest | null>(MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST, null);
+      const tender = readMinistryData<MockTender | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_TENDER,
+        null,
+      );
+      const noc = readMinistryData<MockNOCRequest | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST,
+        null,
+      );
 
       if (!tender || !noc) {
         return {
@@ -440,8 +465,14 @@ export default function ProcurementWorkflowValidation() {
 
   const validateContractUnlock = (): ValidationResult => {
     try {
-      const noc = readMinistryData<MockNOCRequest | null>(MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST, null);
-      const contract = readMinistryData<MockContract | null>(MINISTRY_SPECIFIC_KEYS.MOCK_CONTRACT, null);
+      const noc = readMinistryData<MockNOCRequest | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_NOC_REQUEST,
+        null,
+      );
+      const contract = readMinistryData<MockContract | null>(
+        MINISTRY_SPECIFIC_KEYS.MOCK_CONTRACT,
+        null,
+      );
 
       if (!noc || !contract) {
         return {

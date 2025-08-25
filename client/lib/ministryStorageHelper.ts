@@ -19,7 +19,8 @@ export const getCurrentMinistryContext = (): MinistryContext => {
       const userData = JSON.parse(ministryUser);
       return {
         ministryId: userData.ministryId,
-        ministryCode: userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH",
+        ministryCode:
+          userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH",
         ministryName: userData.ministryName,
       };
     }
@@ -38,7 +39,10 @@ export const getCurrentMinistryContext = (): MinistryContext => {
 /**
  * Generate ministry-scoped localStorage key
  */
-export const getMinistryStorageKey = (key: string, ministryCode?: string): string => {
+export const getMinistryStorageKey = (
+  key: string,
+  ministryCode?: string,
+): string => {
   const context = ministryCode ? { ministryCode } : getCurrentMinistryContext();
   return `${context.ministryCode}_${key}`;
 };
@@ -46,7 +50,11 @@ export const getMinistryStorageKey = (key: string, ministryCode?: string): strin
 /**
  * Read ministry-specific data from localStorage
  */
-export const readMinistryData = <T>(key: string, defaultValue: T, ministryCode?: string): T => {
+export const readMinistryData = <T>(
+  key: string,
+  defaultValue: T,
+  ministryCode?: string,
+): T => {
   try {
     const storageKey = getMinistryStorageKey(key, ministryCode);
     const stored = localStorage.getItem(storageKey);
@@ -60,7 +68,11 @@ export const readMinistryData = <T>(key: string, defaultValue: T, ministryCode?:
 /**
  * Write ministry-specific data to localStorage
  */
-export const writeMinistryData = <T>(key: string, data: T, ministryCode?: string): void => {
+export const writeMinistryData = <T>(
+  key: string,
+  data: T,
+  ministryCode?: string,
+): void => {
   try {
     const storageKey = getMinistryStorageKey(key, ministryCode);
     localStorage.setItem(storageKey, JSON.stringify(data));
@@ -72,7 +84,10 @@ export const writeMinistryData = <T>(key: string, data: T, ministryCode?: string
 /**
  * Remove ministry-specific data from localStorage
  */
-export const removeMinistryData = (key: string, ministryCode?: string): void => {
+export const removeMinistryData = (
+  key: string,
+  ministryCode?: string,
+): void => {
   try {
     const storageKey = getMinistryStorageKey(key, ministryCode);
     localStorage.removeItem(storageKey);
@@ -86,18 +101,19 @@ export const removeMinistryData = (key: string, ministryCode?: string): void => 
  */
 export const getMinistryCodesWithData = (key: string): string[] => {
   const ministryCodes: string[] = [];
-  
+
   // Check all localStorage keys for the pattern
   for (let i = 0; i < localStorage.length; i++) {
     const storageKey = localStorage.key(i);
     if (storageKey && storageKey.endsWith(`_${key}`)) {
-      const ministryCode = storageKey.replace(`_${key}`, '');
-      if (ministryCode.length <= 10) { // Reasonable ministry code length
+      const ministryCode = storageKey.replace(`_${key}`, "");
+      if (ministryCode.length <= 10) {
+        // Reasonable ministry code length
         ministryCodes.push(ministryCode);
       }
     }
   }
-  
+
   return ministryCodes;
 };
 
@@ -109,20 +125,27 @@ export const migrateGlobalToMinistryData = <T>(
   globalKey: string,
   ministryKey: string,
   defaultMinistryCode: string = "MOH",
-  dataProcessor?: (data: T, ministryCode: string) => T
+  dataProcessor?: (data: T, ministryCode: string) => T,
 ): void => {
   try {
     const globalData = localStorage.getItem(globalKey);
     if (!globalData) return;
 
     const parsedData = JSON.parse(globalData) as T;
-    const processedData = dataProcessor ? dataProcessor(parsedData, defaultMinistryCode) : parsedData;
-    
+    const processedData = dataProcessor
+      ? dataProcessor(parsedData, defaultMinistryCode)
+      : parsedData;
+
     writeMinistryData(ministryKey, processedData, defaultMinistryCode);
-    
-    console.log(`Migrated ${globalKey} to ${getMinistryStorageKey(ministryKey, defaultMinistryCode)}`);
+
+    console.log(
+      `Migrated ${globalKey} to ${getMinistryStorageKey(ministryKey, defaultMinistryCode)}`,
+    );
   } catch (error) {
-    console.error(`Error migrating ${globalKey} to ministry-specific storage:`, error);
+    console.error(
+      `Error migrating ${globalKey} to ministry-specific storage:`,
+      error,
+    );
   }
 };
 
@@ -131,34 +154,36 @@ export const migrateGlobalToMinistryData = <T>(
  */
 export const clearMinistryMockData = (ministryCode?: string): void => {
   const mockKeys = [
-    'mockProcurementPlan',
-    'mockTender', 
-    'mockNOCRequest',
-    'mockContract',
-    'mockUsers'
+    "mockProcurementPlan",
+    "mockTender",
+    "mockNOCRequest",
+    "mockContract",
+    "mockUsers",
   ];
 
-  mockKeys.forEach(key => removeMinistryData(key, ministryCode));
-  console.log(`Cleared mock data for ministry ${ministryCode || getCurrentMinistryContext().ministryCode}`);
+  mockKeys.forEach((key) => removeMinistryData(key, ministryCode));
+  console.log(
+    `Cleared mock data for ministry ${ministryCode || getCurrentMinistryContext().ministryCode}`,
+  );
 };
 
 /**
  * Storage keys that should be ministry-specific
  */
 export const MINISTRY_SPECIFIC_KEYS = {
-  TENDERS: 'tenders',
-  COMMITTEE_TEMPLATES: 'committeeTemplates', 
-  COMMITTEE_ASSIGNMENTS: 'tenderCommitteeAssignments',
-  MEMBER_POOL: 'memberPool',
-  CLOSED_TENDERS: 'closedTenders',
-  NOC_REQUESTS: 'NOCRequests',
-  COMMITTEES: 'committees',
-  EVALUATION_SESSIONS: 'evaluationSessions',
-  FEATURED_TENDERS: 'featuredTenders',
-  RECENT_TENDERS: 'recentTenders',
-  MOCK_PROCUREMENT_PLAN: 'mockProcurementPlan',
-  MOCK_TENDER: 'mockTender',
-  MOCK_NOC_REQUEST: 'mockNOCRequest', 
-  MOCK_CONTRACT: 'mockContract',
-  MOCK_USERS: 'mockUsers'
+  TENDERS: "tenders",
+  COMMITTEE_TEMPLATES: "committeeTemplates",
+  COMMITTEE_ASSIGNMENTS: "tenderCommitteeAssignments",
+  MEMBER_POOL: "memberPool",
+  CLOSED_TENDERS: "closedTenders",
+  NOC_REQUESTS: "NOCRequests",
+  COMMITTEES: "committees",
+  EVALUATION_SESSIONS: "evaluationSessions",
+  FEATURED_TENDERS: "featuredTenders",
+  RECENT_TENDERS: "recentTenders",
+  MOCK_PROCUREMENT_PLAN: "mockProcurementPlan",
+  MOCK_TENDER: "mockTender",
+  MOCK_NOC_REQUEST: "mockNOCRequest",
+  MOCK_CONTRACT: "mockContract",
+  MOCK_USERS: "mockUsers",
 } as const;

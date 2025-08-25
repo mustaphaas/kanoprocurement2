@@ -4,7 +4,7 @@
  * Run this once to fix existing contaminated data
  */
 
-import { getCurrentMinistryContext } from './ministryStorageHelper';
+import { getCurrentMinistryContext } from "./ministryStorageHelper";
 
 interface MigrationResult {
   key: string;
@@ -24,49 +24,60 @@ export const migrateTenderData = (): MigrationResult[] => {
 
   // Keys to migrate
   const migrationMap = {
-    'ministryTenders': `${ministryCode}_tenders`,
-    'recentTenders': `${ministryCode}_recentTenders`, 
-    'featuredTenders': `${ministryCode}_featuredTenders`,
+    ministryTenders: `${ministryCode}_tenders`,
+    recentTenders: `${ministryCode}_recentTenders`,
+    featuredTenders: `${ministryCode}_featuredTenders`,
   };
 
   Object.entries(migrationMap).forEach(([fromKey, toKey]) => {
     try {
       const globalData = localStorage.getItem(fromKey);
-      
+
       if (globalData) {
         const parsedData = JSON.parse(globalData);
-        
+
         // Filter data to only include current ministry's items
-        const filteredData = Array.isArray(parsedData) 
+        const filteredData = Array.isArray(parsedData)
           ? parsedData.filter((item: any) => {
               // Check if item belongs to current ministry
-              const idMatches = item.id && item.id.toUpperCase().startsWith(ministryCode);
-              const ministryMatches = item.ministry && item.ministry.includes(getCurrentMinistryContext().ministryName || '');
-              const procuringMatches = item.procuringEntity && item.procuringEntity.includes(getCurrentMinistryContext().ministryName || '');
-              
+              const idMatches =
+                item.id && item.id.toUpperCase().startsWith(ministryCode);
+              const ministryMatches =
+                item.ministry &&
+                item.ministry.includes(
+                  getCurrentMinistryContext().ministryName || "",
+                );
+              const procuringMatches =
+                item.procuringEntity &&
+                item.procuringEntity.includes(
+                  getCurrentMinistryContext().ministryName || "",
+                );
+
               return idMatches || ministryMatches || procuringMatches;
             })
           : parsedData;
 
         // Store in ministry-specific key
         localStorage.setItem(toKey, JSON.stringify(filteredData));
-        
+
         results.push({
           key: fromKey,
           success: true,
           fromKey,
           toKey,
-          itemCount: Array.isArray(filteredData) ? filteredData.length : 1
+          itemCount: Array.isArray(filteredData) ? filteredData.length : 1,
         });
 
-        console.log(`✅ Migrated ${fromKey} to ${toKey}: ${Array.isArray(filteredData) ? filteredData.length : 1} items`);
+        console.log(
+          `✅ Migrated ${fromKey} to ${toKey}: ${Array.isArray(filteredData) ? filteredData.length : 1} items`,
+        );
       } else {
         results.push({
           key: fromKey,
           success: true,
           fromKey,
           toKey,
-          itemCount: 0
+          itemCount: 0,
         });
         console.log(`ℹ️ No data found for ${fromKey}`);
       }
@@ -76,7 +87,7 @@ export const migrateTenderData = (): MigrationResult[] => {
         success: false,
         fromKey,
         toKey,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       });
       console.error(`❌ Failed to migrate ${fromKey}:`, error);
     }
@@ -93,27 +104,27 @@ export const migrateMockData = (): MigrationResult[] => {
   const results: MigrationResult[] = [];
 
   const mockKeys = [
-    'mockProcurementPlan',
-    'mockTender',
-    'mockNOCRequest', 
-    'mockContract',
-    'mockUsers'
+    "mockProcurementPlan",
+    "mockTender",
+    "mockNOCRequest",
+    "mockContract",
+    "mockUsers",
   ];
 
-  mockKeys.forEach(key => {
+  mockKeys.forEach((key) => {
     try {
       const mockData = localStorage.getItem(key);
-      
+
       if (mockData) {
         const toKey = `${ministryCode}_${key}`;
         localStorage.setItem(toKey, mockData);
-        
+
         results.push({
           key,
           success: true,
           fromKey: key,
           toKey,
-          itemCount: 1
+          itemCount: 1,
         });
 
         console.log(`✅ Migrated ${key} to ${toKey}`);
@@ -123,7 +134,7 @@ export const migrateMockData = (): MigrationResult[] => {
           success: true,
           fromKey: key,
           toKey: `${ministryCode}_${key}`,
-          itemCount: 0
+          itemCount: 0,
         });
       }
     } catch (error) {
@@ -132,7 +143,7 @@ export const migrateMockData = (): MigrationResult[] => {
         success: false,
         fromKey: key,
         toKey: `${ministryCode}_${key}`,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       });
       console.error(`❌ Failed to migrate ${key}:`, error);
     }
@@ -147,23 +158,25 @@ export const migrateMockData = (): MigrationResult[] => {
  */
 export const cleanupGlobalKeys = (confirm: boolean = false): void => {
   if (!confirm) {
-    console.warn('⚠️ cleanupGlobalKeys requires explicit confirmation. Pass true as parameter.');
+    console.warn(
+      "⚠️ cleanupGlobalKeys requires explicit confirmation. Pass true as parameter.",
+    );
     return;
   }
 
   const keysToCleanup = [
-    'ministryTenders',
-    'recentTenders', 
-    'featuredTenders',
-    'mockProcurementPlan',
-    'mockTender',
-    'mockNOCRequest',
-    'mockContract', 
-    'mockUsers'
+    "ministryTenders",
+    "recentTenders",
+    "featuredTenders",
+    "mockProcurementPlan",
+    "mockTender",
+    "mockNOCRequest",
+    "mockContract",
+    "mockUsers",
   ];
 
   let cleanedCount = 0;
-  keysToCleanup.forEach(key => {
+  keysToCleanup.forEach((key) => {
     if (localStorage.getItem(key)) {
       localStorage.removeItem(key);
       cleanedCount++;
@@ -182,34 +195,40 @@ export const runCompleteMigration = (): {
   mockResults: MigrationResult[];
   summary: string;
 } => {
-  console.log('🚀 Starting data migration to ministry-specific storage...');
-  
+  console.log("🚀 Starting data migration to ministry-specific storage...");
+
   const { ministryCode, ministryName } = getCurrentMinistryContext();
   console.log(`📍 Current ministry: ${ministryName} (${ministryCode})`);
 
   const tenderResults = migrateTenderData();
   const mockResults = migrateMockData();
 
-  const totalItems = [...tenderResults, ...mockResults]
-    .reduce((sum, result) => sum + (result.itemCount || 0), 0);
-  
-  const failures = [...tenderResults, ...mockResults]
-    .filter(result => !result.success);
+  const totalItems = [...tenderResults, ...mockResults].reduce(
+    (sum, result) => sum + (result.itemCount || 0),
+    0,
+  );
 
-  const summary = failures.length > 0
-    ? `⚠️ Migration completed with ${failures.length} failures. ${totalItems} items migrated successfully.`
-    : `✅ Migration completed successfully! ${totalItems} items migrated to ministry-specific storage.`;
+  const failures = [...tenderResults, ...mockResults].filter(
+    (result) => !result.success,
+  );
+
+  const summary =
+    failures.length > 0
+      ? `⚠️ Migration completed with ${failures.length} failures. ${totalItems} items migrated successfully.`
+      : `✅ Migration completed successfully! ${totalItems} items migrated to ministry-specific storage.`;
 
   console.log(summary);
-  
+
   if (failures.length === 0) {
-    console.log('💡 You can now run cleanupGlobalKeys(true) to remove the old global keys.');
+    console.log(
+      "💡 You can now run cleanupGlobalKeys(true) to remove the old global keys.",
+    );
   }
 
   return {
     tenderResults,
-    mockResults, 
-    summary
+    mockResults,
+    summary,
   };
 };
 
@@ -218,15 +237,15 @@ export const runCompleteMigration = (): {
  */
 export const checkMigrationNeeded = (): boolean => {
   const globalKeys = [
-    'ministryTenders',
-    'recentTenders',
-    'featuredTenders',
-    'mockProcurementPlan',
-    'mockTender',
-    'mockNOCRequest',
-    'mockContract',
-    'mockUsers'
+    "ministryTenders",
+    "recentTenders",
+    "featuredTenders",
+    "mockProcurementPlan",
+    "mockTender",
+    "mockNOCRequest",
+    "mockContract",
+    "mockUsers",
   ];
 
-  return globalKeys.some(key => localStorage.getItem(key) !== null);
+  return globalKeys.some((key) => localStorage.getItem(key) !== null);
 };

@@ -2812,7 +2812,10 @@ export default function MinistryDashboard() {
       if (hasStatusChanges) {
         const { ministry: statusMinistry } = getMinistryMockData();
         const ministryTendersKey = `${statusMinistry.code}_tenders`;
-        localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
+        localStorage.setItem(
+          ministryTendersKey,
+          JSON.stringify(updatedTenders),
+        );
       }
 
       return updatedTenders;
@@ -3977,7 +3980,10 @@ export default function MinistryDashboard() {
         // Save to ministry-specific localStorage for proper isolation
         const { ministry: saveMinistry } = getMinistryMockData();
         const ministryTendersKey = `${saveMinistry.code}_tenders`;
-        localStorage.setItem(ministryTendersKey, JSON.stringify(updatedTenders));
+        localStorage.setItem(
+          ministryTendersKey,
+          JSON.stringify(updatedTenders),
+        );
         return updatedTenders;
       });
 

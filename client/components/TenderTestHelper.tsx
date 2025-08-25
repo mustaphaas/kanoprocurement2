@@ -54,12 +54,18 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
     };
 
     // Get current ministry context for proper isolation
-    const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
-    const ministryCode = ministryUser.ministryCode || ministryUser.ministryId?.toUpperCase() || "MOH";
+    const ministryUser = JSON.parse(
+      localStorage.getItem("ministryUser") || "{}",
+    );
+    const ministryCode =
+      ministryUser.ministryCode ||
+      ministryUser.ministryId?.toUpperCase() ||
+      "MOH";
 
     // Store in ministry-specific recentTenders to prevent cross-contamination
     const recentTendersKey = `${ministryCode}_recentTenders`;
-    const existingRecentTenders = localStorage.getItem(recentTendersKey) || "[]";
+    const existingRecentTenders =
+      localStorage.getItem(recentTendersKey) || "[]";
     const recentTendersList = JSON.parse(existingRecentTenders);
     recentTendersList.unshift(testTender);
 
@@ -84,13 +90,17 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
 
     // Store in ministry-specific tenders to prevent cross-contamination
     const ministryTendersKey = `${ministryCode}_tenders`;
-    const existingMinistryTenders = localStorage.getItem(ministryTendersKey) || "[]";
+    const existingMinistryTenders =
+      localStorage.getItem(ministryTendersKey) || "[]";
     const ministryTendersList = JSON.parse(existingMinistryTenders);
     ministryTendersList.unshift(ministryTenderFormat);
 
     // Keep only the last 10 ministry tenders
     const latestMinistryTenders = ministryTendersList.slice(0, 10);
-    localStorage.setItem(ministryTendersKey, JSON.stringify(latestMinistryTenders));
+    localStorage.setItem(
+      ministryTendersKey,
+      JSON.stringify(latestMinistryTenders),
+    );
 
     // Also store in featuredTenders for the main index page
     const featuredTenderFormat = {
@@ -112,16 +122,22 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
 
     // Store in ministry-specific featured tenders to prevent cross-contamination
     const featuredTendersKey = `${ministryCode}_featuredTenders`;
-    const existingFeaturedTenders = localStorage.getItem(featuredTendersKey) || "[]";
+    const existingFeaturedTenders =
+      localStorage.getItem(featuredTendersKey) || "[]";
     const featuredTendersList = JSON.parse(existingFeaturedTenders);
     featuredTendersList.unshift(featuredTenderFormat);
 
     // Keep only the last 5 featured tenders
     const latestFeaturedTenders = featuredTendersList.slice(0, 5);
-    localStorage.setItem(featuredTendersKey, JSON.stringify(latestFeaturedTenders));
+    localStorage.setItem(
+      featuredTendersKey,
+      JSON.stringify(latestFeaturedTenders),
+    );
 
     console.log("Test tender created:", testTender);
-    console.log(`Stored in ministry-specific localStorage keys for ${ministryCode}:`);
+    console.log(
+      `Stored in ministry-specific localStorage keys for ${ministryCode}:`,
+    );
     console.log(`- '${recentTendersKey}' (for CompanyDashboard)`);
     console.log(`- '${ministryTendersKey}' (for MinistryDashboard)`);
     console.log(`- '${featuredTendersKey}' (for Index page)`);
@@ -136,8 +152,13 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
 
   const clearAllTenders = () => {
     // Get current ministry context for proper cleanup
-    const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
-    const ministryCode = ministryUser.ministryCode || ministryUser.ministryId?.toUpperCase() || "MOH";
+    const ministryUser = JSON.parse(
+      localStorage.getItem("ministryUser") || "{}",
+    );
+    const ministryCode =
+      ministryUser.ministryCode ||
+      ministryUser.ministryId?.toUpperCase() ||
+      "MOH";
 
     const recentTendersKey = `${ministryCode}_recentTenders`;
     const featuredTendersKey = `${ministryCode}_featuredTenders`;

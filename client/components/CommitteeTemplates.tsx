@@ -244,7 +244,10 @@ export default function CommitteeTemplates() {
         });
         setTemplates(templatesWithAuditTrail);
         // Save the migrated templates back to localStorage
-        localStorage.setItem(storageKey, JSON.stringify(templatesWithAuditTrail));
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify(templatesWithAuditTrail),
+        );
       } else {
         const sampleTemplates = createSampleTemplates(ministryCode);
         setTemplates(sampleTemplates);
@@ -770,7 +773,8 @@ export default function CommitteeTemplates() {
               versionHistory: [
                 ...(template.auditTrail?.versionHistory || []),
                 {
-                  version: (template.auditTrail?.versionHistory?.length || 0) + 1,
+                  version:
+                    (template.auditTrail?.versionHistory?.length || 0) + 1,
                   modifiedBy: currentUser,
                   modifiedDate: currentDate,
                   changes: `Added role: ${newRole.title}`,
@@ -818,7 +822,8 @@ export default function CommitteeTemplates() {
               versionHistory: [
                 ...(template.auditTrail?.versionHistory || []),
                 {
-                  version: (template.auditTrail?.versionHistory?.length || 0) + 1,
+                  version:
+                    (template.auditTrail?.versionHistory?.length || 0) + 1,
                   modifiedBy: currentUser,
                   modifiedDate: currentDate,
                   changes: "Template activated",
@@ -886,7 +891,8 @@ export default function CommitteeTemplates() {
         versionHistory: [
           ...(editingTemplate.auditTrail?.versionHistory || []),
           {
-            version: (editingTemplate.auditTrail?.versionHistory?.length || 0) + 1,
+            version:
+              (editingTemplate.auditTrail?.versionHistory?.length || 0) + 1,
             modifiedBy: currentUser,
             modifiedDate: currentDate,
             changes: "Template details updated",
