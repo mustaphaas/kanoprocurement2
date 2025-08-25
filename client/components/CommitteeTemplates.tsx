@@ -842,9 +842,9 @@ export default function CommitteeTemplates() {
         lastModifiedBy: currentUser,
         lastModifiedDate: currentDate,
         versionHistory: [
-          ...editingTemplate.auditTrail.versionHistory,
+          ...(editingTemplate.auditTrail?.versionHistory || []),
           {
-            version: editingTemplate.auditTrail.versionHistory.length + 1,
+            version: (editingTemplate.auditTrail?.versionHistory?.length || 0) + 1,
             modifiedBy: currentUser,
             modifiedDate: currentDate,
             changes: "Template details updated",
