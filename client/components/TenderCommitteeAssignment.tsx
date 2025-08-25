@@ -1041,6 +1041,10 @@ export default function TenderCommitteeAssignment() {
     return matchesSearch && matchesFilter;
   });
 
+  // Debug: Log current state
+  console.log('TenderCommitteeAssignment - Closed tenders:', closedTenders.length);
+  console.log('TenderCommitteeAssignment - Committee templates:', committeeTemplates.length);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -1051,6 +1055,16 @@ export default function TenderCommitteeAssignment() {
           <p className="text-gray-600">
             Assign committee members to specific tenders with COI management
           </p>
+          {closedTenders.length === 0 && (
+            <p className="text-sm text-yellow-600 mt-1">
+              ⚠️ No closed tenders available for assignment
+            </p>
+          )}
+          {committeeTemplates.length === 0 && (
+            <p className="text-sm text-yellow-600 mt-1">
+              ⚠️ No committee templates available
+            </p>
+          )}
         </div>
         <Button
           onClick={() => setShowAssignmentModal(true)}
