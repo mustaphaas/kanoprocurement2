@@ -611,7 +611,7 @@ export default function CommitteeTemplates() {
 
       baseTemplate.roles = [
         {
-          ...baseTemplate.roles[0],
+          ...(baseTemplate.roles?.[0] || {}),
           title: "Chief Engineer (Chair)",
           description:
             "Senior civil engineer responsible for leading technical evaluations",
@@ -641,7 +641,7 @@ export default function CommitteeTemplates() {
 
       baseTemplate.roles = [
         {
-          ...baseTemplate.roles[0],
+          ...(baseTemplate.roles?.[0] || {}),
           title: "Education Director (Chair)",
           description:
             "Senior education professional responsible for leading evaluations",
