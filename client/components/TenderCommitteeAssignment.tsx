@@ -876,6 +876,30 @@ export default function TenderCommitteeAssignment() {
   // Removed createSampleClosedTenders - now using unified data source from @/lib/tenderData
 
   const createAssignment = () => {
+    // Validate required fields
+    if (!assignmentForm.tenderId) {
+      alert("Please select a closed tender.");
+      return;
+    }
+    if (!assignmentForm.committeeTemplateId) {
+      alert("Please select a committee template.");
+      return;
+    }
+    if (!assignmentForm.evaluationStartDate) {
+      alert("Please set an evaluation start date.");
+      return;
+    }
+    if (!assignmentForm.evaluationEndDate) {
+      alert("Please set an evaluation end date.");
+      return;
+    }
+
+    // Validate date logic
+    if (new Date(assignmentForm.evaluationStartDate) >= new Date(assignmentForm.evaluationEndDate)) {
+      alert("Evaluation end date must be after start date.");
+      return;
+    }
+
     // Find the selected template to get its name
     const selectedTemplate = committeeTemplates.find(
       (t) => t.id === assignmentForm.committeeTemplateId,
@@ -918,6 +942,10 @@ export default function TenderCommitteeAssignment() {
     setAssignments(updatedAssignments);
     saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
 
+    // Log for debugging
+    console.log("Created new assignment:", newAssignment);
+    console.log("Updated assignments array:", updatedAssignments);
+
     setAssignmentForm({
       tenderId: "",
       tenderTitle: "",
@@ -928,6 +956,9 @@ export default function TenderCommitteeAssignment() {
       assignmentNotes: "",
     });
     setShowAssignmentModal(false);
+
+    // Show success message
+    alert("Committee assignment created successfully!");
 
     // Refresh committee templates after creating assignment
     loadCommitteeTemplates();
