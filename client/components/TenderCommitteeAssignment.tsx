@@ -245,6 +245,8 @@ export default function TenderCommitteeAssignment() {
   const [showCOIModal, setShowCOIModal] = useState(false);
   const [showMemberSearchModal, setShowMemberSearchModal] = useState(false);
   const [activeTab, setActiveTab] = useState("assignments");
+  const [showMemberAssignmentModal, setShowMemberAssignmentModal] = useState(false);
+  const [selectedAssignmentForMembers, setSelectedAssignmentForMembers] = useState<TenderCommitteeAssignment | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
@@ -1076,10 +1078,14 @@ export default function TenderCommitteeAssignment() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="assignments" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Committee Assignments
+          </TabsTrigger>
+          <TabsTrigger value="members" className="flex items-center gap-2">
+            <UserCheck className="h-4 w-4" />
+            Member Assignment
           </TabsTrigger>
           <TabsTrigger value="coi" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
