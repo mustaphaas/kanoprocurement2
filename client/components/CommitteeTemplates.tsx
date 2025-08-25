@@ -977,7 +977,7 @@ export default function CommitteeTemplates() {
                         Roles Defined
                       </Label>
                       <p className="text-sm font-semibold">
-                        {template.roles.length}
+                        {template.roles?.length || 0}
                       </p>
                     </div>
                     <div>
@@ -1064,7 +1064,7 @@ export default function CommitteeTemplates() {
                 <div>
                   <h4 className="font-medium mb-2 flex items-center gap-2">
                     <Users className="h-4 w-4" />
-                    Committee Roles ({template.roles.length})
+                    Committee Roles ({template.roles?.length || 0})
                   </h4>
                   <div className="space-y-2">
                     {template.roles.map((role) => (
@@ -1151,7 +1151,7 @@ export default function CommitteeTemplates() {
                   </div>
                 </div>
 
-                {template.applicableTypes.length > 0 && (
+                {(template.applicableTypes?.length || 0) > 0 && (
                   <div>
                     <h4 className="font-medium mb-2">Applicable Types</h4>
                     <div className="flex flex-wrap gap-2">
@@ -1164,11 +1164,11 @@ export default function CommitteeTemplates() {
                   </div>
                 )}
 
-                {template.governanceRules.length > 0 && (
+                {(template.governanceRules?.length || 0) > 0 && (
                   <div>
                     <h4 className="font-medium mb-2 flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4" />
-                      Governance Rules ({template.governanceRules.length})
+                      Governance Rules ({template.governanceRules?.length || 0})
                     </h4>
                     <div className="space-y-1">
                       {template.governanceRules.map((rule) => (
