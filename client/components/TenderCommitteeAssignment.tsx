@@ -1324,6 +1324,119 @@ export default function TenderCommitteeAssignment() {
           </div>
         </TabsContent>
 
+        <TabsContent value="members" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">
+              Member Assignment to Committees
+            </h3>
+            <Button
+              onClick={() => setShowMemberAssignmentModal(true)}
+              variant="outline"
+            >
+              <UserCheck className="h-4 w-4 mr-2" />
+              Assign Members
+            </Button>
+          </div>
+
+          <div className="grid gap-4">
+            {assignments.map((assignment) => (
+              <Card key={assignment.id}>
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Users className="h-5 w-5" />
+                        {assignment.tenderTitle}
+                      </CardTitle>
+                      <p className="text-sm text-gray-600">
+                        {assignment.tenderId} • {assignment.templateName}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {getStatusBadge(assignment.status)}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedAssignmentForMembers(assignment);
+                          setShowMemberAssignmentModal(true);
+                        }}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <UserCheck className="h-4 w-4" />
+                        Current Committee Members ({assignment.assignedMembers.length})
+                      </h4>
+                      {assignment.assignedMembers.length === 0 ? (
+                        <div className="text-center py-8 text-gray-500">
+                          <Users className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                          <p>No members assigned yet</p>
+                          <Button
+                            variant="outline"
+                            className="mt-2"
+                            onClick={() => {
+                              setSelectedAssignmentForMembers(assignment);
+                              setShowMemberAssignmentModal(true);
+                            }}
+                          >
+                            <Plus className="h-4 w-4 mr-2" />
+                            Assign First Member
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          {assignment.assignedMembers.map((member) => (
+                            <div
+                              key={member.id}
+                              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                            >
+                              <div className="flex items-center gap-3">
+                                <User className="h-5 w-5 text-gray-400" />
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium">
+                                      {member.memberName}
+                                    </span>
+                                    <Badge variant="outline" className="text-xs">
+                                      {member.roleTitle}
+                                    </Badge>
+                                    {getStatusBadge(member.status)}
+                                  </div>
+                                  <div className="text-sm text-gray-600">
+                                    {member.department} • {member.experience}+ years
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    Expertise: {member.expertise.join(", ")}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button variant="ghost" size="sm">
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm" className="text-red-600">
+                                  <XCircle className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
         <TabsContent value="coi" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">
