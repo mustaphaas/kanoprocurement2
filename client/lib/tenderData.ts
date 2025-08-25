@@ -228,7 +228,7 @@ export const getAllTenders = (): Tender[] => [
     id: "MOWI-2023-018",
     title: "Bridge Construction and Maintenance",
     category: "Infrastructure",
-    value: "₦1.2B",
+    value: "��1.2B",
     deadline: "2023-11-30", // Past date
     location: "Kano South",
     views: 178,
@@ -421,10 +421,14 @@ export const getClosedTenders = (): ClosedTender[] => {
       // Check if tender should be closed based on closing date
       const closingDate = new Date(tender.closingDate);
       const today = new Date();
-      const isClosed = closingDate < today;
+      today.setHours(23, 59, 59, 999); // Set to end of today to include today's closures
+
+      const isClosed = closingDate < today || tender.status === "Closed" || tender.status === "Evaluation_Complete" || tender.status === "Awarded";
+
+      console.log(`Tender ${tender.id}: closing=${tender.closingDate}, today=${today.toISOString().split('T')[0]}, status=${tender.status}, isClosed=${isClosed}`);
 
       if (isClosed) {
-        console.log(`Found closed tender: ${tender.id} - ${tender.title} (closed: ${tender.closingDate})`);
+        console.log(`✓ Found closed tender: ${tender.id} - ${tender.title} (closed: ${tender.closingDate}, status: ${tender.status})`);
       }
 
       return isClosed;
