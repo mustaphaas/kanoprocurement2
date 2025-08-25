@@ -202,7 +202,34 @@ export default function CommitteeTemplates() {
 
       const stored = localStorage.getItem(storageKey);
       if (stored) {
-        setTemplates(JSON.parse(stored));
+        const parsedTemplates = JSON.parse(stored);
+        // Ensure all templates have auditTrail property for backwards compatibility
+        const templatesWithAuditTrail = parsedTemplates.map((template: any) => {
+          if (!template.auditTrail) {
+            return {
+              ...template,
+              auditTrail: {
+                createdBy: "Legacy",
+                createdDate: template.createdDate || "2024-01-01",
+                lastModifiedBy: "Legacy",
+                lastModifiedDate: template.lastModified || "2024-01-01",
+                versionHistory: [
+                  {
+                    version: 1,
+                    modifiedBy: "Legacy",
+                    modifiedDate: template.createdDate || "2024-01-01",
+                    changes: "Legacy template migration",
+                    reason: "Added missing auditTrail",
+                  },
+                ],
+              },
+            };
+          }
+          return template;
+        });
+        setTemplates(templatesWithAuditTrail);
+        // Save the migrated templates back to localStorage
+        localStorage.setItem(storageKey, JSON.stringify(templatesWithAuditTrail));
       } else {
         const sampleTemplates = createSampleTemplates(ministryCode);
         setTemplates(sampleTemplates);
