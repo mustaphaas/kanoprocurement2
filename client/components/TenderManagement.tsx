@@ -785,6 +785,26 @@ const TenderManagement = () => {
     // Synchronize all tender stores
     synchronizeAllTenderStores();
 
+    // Trigger storage events to notify other pages about the new tender
+    const ministryInfo = getMinistryInfo();
+    const ministryCode = ministryInfo.code;
+
+    setTimeout(() => {
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: `${ministryCode}_recentTenders`,
+          newValue: localStorage.getItem(`${ministryCode}_recentTenders`),
+        }),
+      );
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: `${ministryCode}_featuredTenders`,
+          newValue: localStorage.getItem(`${ministryCode}_featuredTenders`),
+        }),
+      );
+      console.log(`📡 Notified other pages about new tender for ministry ${ministryCode}`);
+    }, 100); // Small delay to ensure localStorage is updated first
+
     // Note: Global tender creation and storage is now handled by synchronizeAllTenderStores()
 
     // Reset form

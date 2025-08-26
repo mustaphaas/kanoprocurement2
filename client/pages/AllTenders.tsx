@@ -92,7 +92,24 @@ export default function AllTenders() {
 
     // Set up interval to refresh tenders every 30 seconds
     const interval = setInterval(loadAllTenders, 30000);
-    return () => clearInterval(interval);
+
+    // Listen for localStorage changes (when tenders are published from other tabs/components)
+    const handleStorageChange = (e: StorageEvent) => {
+      const { ministryCode } = getCurrentMinistryContext();
+      const recentTendersKey = getMinistryStorageKey("recentTenders");
+
+      if (e.key === recentTendersKey) {
+        console.log(`Recent tenders updated for ministry ${ministryCode}, reloading...`);
+        loadAllTenders();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const categories = [
