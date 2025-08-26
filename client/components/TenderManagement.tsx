@@ -516,9 +516,9 @@ const TenderManagement = () => {
             "Procurement of modern medical equipment for state hospitals",
           budget: 150000000,
           status: "Open",
-          createdDate: "2024-01-10",
-          publishedDate: "2024-01-15",
-          closingDate: "2024-02-15",
+          createdDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          publishedDate: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          closingDate: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
           ministry: "Ministry of Health",
           department: "Medical Equipment",
           tenderType: "Open",
@@ -542,8 +542,10 @@ const TenderManagement = () => {
 
       setTenders(mockTenders);
       saveToStorage(STORAGE_KEYS.TENDERS, mockTenders);
+    } else {
+      setTenders(existingTenders);
     }
-  }, [tenders.length]);
+  }, []);
 
   // Get ministry info from localStorage (same logic as MinistryDashboard)
   const getMinistryInfo = () => {
