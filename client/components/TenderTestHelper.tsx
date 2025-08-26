@@ -325,6 +325,17 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
         >
           Verify Hooks Fix
         </button>
+
+        <button
+          onClick={() => {
+            const result = verifyTemporalDeadZoneFix();
+            logTemporalDeadZoneFixStatus();
+            alert(`Temporal Dead Zone Fix Verification:\n\n${result.success ? "✅ INITIALIZATION ERROR FIXED" : "❌ INITIALIZATION ISSUES DETECTED"}\n\n${result.message}\n\nCheck console for detailed test instructions.`);
+          }}
+          className="w-full px-3 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
+        >
+          Verify Initialization Fix
+        </button>
       </div>
 
       <div className="mt-4 p-3 bg-blue-50 rounded text-xs text-gray-600">
