@@ -8687,7 +8687,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  ���������� Evaluation Report - {selectedTenderForDetails.title}
+                  ���������� Evaluation Report -{" "}
+                  {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}

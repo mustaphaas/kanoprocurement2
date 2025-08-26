@@ -48,7 +48,11 @@ import {
   CreditCard,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { readMinistryData, writeMinistryData, getCurrentMinistryContext } from "@/lib/ministryStorageHelper";
+import {
+  readMinistryData,
+  writeMinistryData,
+  getCurrentMinistryContext,
+} from "@/lib/ministryStorageHelper";
 
 // Import the PaymentRequest interface from the company component
 interface PaymentRequest {
@@ -67,7 +71,14 @@ interface PaymentRequest {
   charges: PaymentCharges;
   netAmount: number;
   totalAmount: number;
-  status: "Draft" | "Submitted" | "Under Review" | "Ministry Approved" | "Finance Approved" | "Paid" | "Rejected";
+  status:
+    | "Draft"
+    | "Submitted"
+    | "Under Review"
+    | "Ministry Approved"
+    | "Finance Approved"
+    | "Paid"
+    | "Rejected";
   submittedDate?: string;
   ministryApprovalDate?: string;
   financeApprovalDate?: string;
@@ -94,7 +105,12 @@ interface PaymentRequest {
 interface PaymentDocument {
   id: string;
   name: string;
-  type: "Invoice" | "Work Completion Certificate" | "Progress Report" | "Photos" | "Other";
+  type:
+    | "Invoice"
+    | "Work Completion Certificate"
+    | "Progress Report"
+    | "Photos"
+    | "Other";
   uploadDate: string;
   size: string;
   url?: string;
@@ -122,17 +138,21 @@ interface PaymentRequestApprovalProps {
   ministryName?: string;
 }
 
-export default function PaymentRequestApproval({ 
-  ministryCode, 
-  ministryName 
+export default function PaymentRequestApproval({
+  ministryCode,
+  ministryName,
 }: PaymentRequestApprovalProps) {
   const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([]);
-  const [filteredRequests, setFilteredRequests] = useState<PaymentRequest[]>([]);
-  const [selectedRequest, setSelectedRequest] = useState<PaymentRequest | null>(null);
+  const [filteredRequests, setFilteredRequests] = useState<PaymentRequest[]>(
+    [],
+  );
+  const [selectedRequest, setSelectedRequest] = useState<PaymentRequest | null>(
+    null,
+  );
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -140,7 +160,9 @@ export default function PaymentRequestApproval({
   const [dateRangeFilter, setDateRangeFilter] = useState<string>("all");
 
   // Approval form states
-  const [approvalAction, setApprovalAction] = useState<"approve" | "reject" | "">("");
+  const [approvalAction, setApprovalAction] = useState<
+    "approve" | "reject" | ""
+  >("");
   const [approvalComments, setApprovalComments] = useState("");
   const [financeForwardFlag, setFinanceForwardFlag] = useState(true);
 
@@ -159,87 +181,109 @@ export default function PaymentRequestApproval({
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(req => 
-        req.contractTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        req.companyDetails.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        req.id.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (req) =>
+          req.contractTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          req.companyDetails.name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          req.id.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
     // Status filter
     if (statusFilter !== "all") {
-      filtered = filtered.filter(req => req.status === statusFilter);
+      filtered = filtered.filter((req) => req.status === statusFilter);
     }
 
     // Priority filter
     if (priorityFilter !== "all") {
-      filtered = filtered.filter(req => req.priority === priorityFilter);
+      filtered = filtered.filter((req) => req.priority === priorityFilter);
     }
 
     // Date range filter
     if (dateRangeFilter !== "all") {
       const now = new Date();
       const filterDate = new Date();
-      
+
       switch (dateRangeFilter) {
         case "today":
           filterDate.setHours(0, 0, 0, 0);
-          filtered = filtered.filter(req => 
-            req.submittedDate && new Date(req.submittedDate) >= filterDate
+          filtered = filtered.filter(
+            (req) =>
+              req.submittedDate && new Date(req.submittedDate) >= filterDate,
           );
           break;
         case "week":
           filterDate.setDate(now.getDate() - 7);
-          filtered = filtered.filter(req => 
-            req.submittedDate && new Date(req.submittedDate) >= filterDate
+          filtered = filtered.filter(
+            (req) =>
+              req.submittedDate && new Date(req.submittedDate) >= filterDate,
           );
           break;
         case "month":
           filterDate.setMonth(now.getMonth() - 1);
-          filtered = filtered.filter(req => 
-            req.submittedDate && new Date(req.submittedDate) >= filterDate
+          filtered = filtered.filter(
+            (req) =>
+              req.submittedDate && new Date(req.submittedDate) >= filterDate,
           );
           break;
       }
     }
 
     setFilteredRequests(filtered);
-  }, [paymentRequests, searchTerm, statusFilter, priorityFilter, dateRangeFilter]);
+  }, [
+    paymentRequests,
+    searchTerm,
+    statusFilter,
+    priorityFilter,
+    dateRangeFilter,
+  ]);
 
   const loadPaymentRequests = () => {
     try {
       // Load payment requests for this ministry
       const ministryRequests = readMinistryData<PaymentRequest[]>(
-        `paymentRequests_ministry`, 
-        [], 
-        effectiveMinistryCode
+        `paymentRequests_ministry`,
+        [],
+        effectiveMinistryCode,
       );
 
       // Also check for any new requests from companies that need to be imported
       const companies = ["approved@company.com", "company@example.com"]; // In real app, this would come from a proper source
       let allRequests = [...ministryRequests];
 
-      companies.forEach(companyEmail => {
+      companies.forEach((companyEmail) => {
         try {
           const companyRequests = JSON.parse(
-            localStorage.getItem(`paymentRequests_${companyEmail}`) || "[]"
+            localStorage.getItem(`paymentRequests_${companyEmail}`) || "[]",
           ) as PaymentRequest[];
-          
+
           // Find requests that should be in this ministry but aren't yet
-          const relevantRequests = companyRequests.filter(req => {
+          const relevantRequests = companyRequests.filter((req) => {
             // Extract ministry from contract title or use other logic to determine ministry
-            const contractMinistry = determineMinistryFromContract(req.contractTitle);
-            return contractMinistry === effectiveMinistryCode && 
-                   !allRequests.find(existingReq => existingReq.id === req.id);
+            const contractMinistry = determineMinistryFromContract(
+              req.contractTitle,
+            );
+            return (
+              contractMinistry === effectiveMinistryCode &&
+              !allRequests.find((existingReq) => existingReq.id === req.id)
+            );
           });
 
           if (relevantRequests.length > 0) {
-            allRequests = [...allRequests, ...relevantRequests.map(req => ({
-              ...req,
-              status: req.status === "Submitted" ? "Under Review" as const : req.status,
-              priority: determinePriority(req),
-              reviewDeadline: calculateReviewDeadline(req),
-            }))];
+            allRequests = [
+              ...allRequests,
+              ...relevantRequests.map((req) => ({
+                ...req,
+                status:
+                  req.status === "Submitted"
+                    ? ("Under Review" as const)
+                    : req.status,
+                priority: determinePriority(req),
+                reviewDeadline: calculateReviewDeadline(req),
+              })),
+            ];
           }
         } catch (error) {
           console.error(`Error loading requests for ${companyEmail}:`, error);
@@ -247,10 +291,14 @@ export default function PaymentRequestApproval({
       });
 
       setPaymentRequests(allRequests);
-      
+
       // Save the updated ministry requests
       if (allRequests.length !== ministryRequests.length) {
-        writeMinistryData(`paymentRequests_ministry`, allRequests, effectiveMinistryCode);
+        writeMinistryData(
+          `paymentRequests_ministry`,
+          allRequests,
+          effectiveMinistryCode,
+        );
       }
     } catch (error) {
       console.error("Error loading payment requests:", error);
@@ -259,23 +307,37 @@ export default function PaymentRequestApproval({
 
   // Helper function to determine ministry from contract title
   const determineMinistryFromContract = (contractTitle: string): string => {
-    if (contractTitle.toLowerCase().includes("health") || contractTitle.toLowerCase().includes("medical")) {
+    if (
+      contractTitle.toLowerCase().includes("health") ||
+      contractTitle.toLowerCase().includes("medical")
+    ) {
       return "MOH";
     }
-    if (contractTitle.toLowerCase().includes("road") || contractTitle.toLowerCase().includes("infrastructure")) {
+    if (
+      contractTitle.toLowerCase().includes("road") ||
+      contractTitle.toLowerCase().includes("infrastructure")
+    ) {
       return "MOWI";
     }
-    if (contractTitle.toLowerCase().includes("education") || contractTitle.toLowerCase().includes("school")) {
+    if (
+      contractTitle.toLowerCase().includes("education") ||
+      contractTitle.toLowerCase().includes("school")
+    ) {
       return "MOE";
     }
-    if (contractTitle.toLowerCase().includes("ict") || contractTitle.toLowerCase().includes("technology")) {
+    if (
+      contractTitle.toLowerCase().includes("ict") ||
+      contractTitle.toLowerCase().includes("technology")
+    ) {
       return "MOST";
     }
     return "MOH"; // Default fallback
   };
 
   // Helper function to determine priority
-  const determinePriority = (request: PaymentRequest): PaymentRequest["priority"] => {
+  const determinePriority = (
+    request: PaymentRequest,
+  ): PaymentRequest["priority"] => {
     const amount = request.requestedAmount;
     if (amount >= 1000000000) return "Urgent"; // 1B+
     if (amount >= 500000000) return "High"; // 500M+
@@ -287,7 +349,7 @@ export default function PaymentRequestApproval({
   const calculateReviewDeadline = (request: PaymentRequest): string => {
     const submittedDate = new Date(request.submittedDate || Date.now());
     const deadline = new Date(submittedDate);
-    
+
     // Set deadline based on priority
     switch (request.priority || determinePriority(request)) {
       case "Urgent":
@@ -302,7 +364,7 @@ export default function PaymentRequestApproval({
       default:
         deadline.setDate(submittedDate.getDate() + 14); // 14 days
     }
-    
+
     return deadline.toISOString();
   };
 
@@ -317,31 +379,39 @@ export default function PaymentRequestApproval({
       ministryApprovalDate: new Date().toISOString(),
       ministryReviewer: "Current User", // In real app, get from auth context
       ministryComments: approvalComments,
-      rejectionReason: approvalAction === "reject" ? approvalComments : undefined,
+      rejectionReason:
+        approvalAction === "reject" ? approvalComments : undefined,
     };
 
     // Update the payment requests list
-    const updatedRequests = paymentRequests.map(req => 
-      req.id === selectedRequest.id ? updatedRequest : req
+    const updatedRequests = paymentRequests.map((req) =>
+      req.id === selectedRequest.id ? updatedRequest : req,
     );
-    
+
     setPaymentRequests(updatedRequests);
-    
+
     // Save to ministry storage
-    writeMinistryData(`paymentRequests_ministry`, updatedRequests, effectiveMinistryCode);
+    writeMinistryData(
+      `paymentRequests_ministry`,
+      updatedRequests,
+      effectiveMinistryCode,
+    );
 
     // Also update the company's copy
     try {
       const companyEmail = selectedRequest.companyDetails.email;
       const companyRequests = JSON.parse(
-        localStorage.getItem(`paymentRequests_${companyEmail}`) || "[]"
+        localStorage.getItem(`paymentRequests_${companyEmail}`) || "[]",
       ) as PaymentRequest[];
-      
-      const updatedCompanyRequests = companyRequests.map(req => 
-        req.id === selectedRequest.id ? updatedRequest : req
+
+      const updatedCompanyRequests = companyRequests.map((req) =>
+        req.id === selectedRequest.id ? updatedRequest : req,
       );
-      
-      localStorage.setItem(`paymentRequests_${companyEmail}`, JSON.stringify(updatedCompanyRequests));
+
+      localStorage.setItem(
+        `paymentRequests_${companyEmail}`,
+        JSON.stringify(updatedCompanyRequests),
+      );
     } catch (error) {
       console.error("Error updating company payment request:", error);
     }
@@ -363,35 +433,54 @@ export default function PaymentRequestApproval({
 
   const getStatusColor = (status: PaymentRequest["status"]) => {
     switch (status) {
-      case "Submitted": return "bg-blue-100 text-blue-800";
-      case "Under Review": return "bg-yellow-100 text-yellow-800";
-      case "Ministry Approved": return "bg-purple-100 text-purple-800";
-      case "Finance Approved": return "bg-green-100 text-green-800";
-      case "Paid": return "bg-green-100 text-green-800";
-      case "Rejected": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "Submitted":
+        return "bg-blue-100 text-blue-800";
+      case "Under Review":
+        return "bg-yellow-100 text-yellow-800";
+      case "Ministry Approved":
+        return "bg-purple-100 text-purple-800";
+      case "Finance Approved":
+        return "bg-green-100 text-green-800";
+      case "Paid":
+        return "bg-green-100 text-green-800";
+      case "Rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusIcon = (status: PaymentRequest["status"]) => {
     switch (status) {
-      case "Submitted": return <Clock className="h-4 w-4" />;
-      case "Under Review": return <AlertTriangle className="h-4 w-4" />;
-      case "Ministry Approved": return <CheckCircle className="h-4 w-4" />;
-      case "Finance Approved": return <CheckCircle className="h-4 w-4" />;
-      case "Paid": return <CheckCircle className="h-4 w-4" />;
-      case "Rejected": return <XCircle className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
+      case "Submitted":
+        return <Clock className="h-4 w-4" />;
+      case "Under Review":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "Ministry Approved":
+        return <CheckCircle className="h-4 w-4" />;
+      case "Finance Approved":
+        return <CheckCircle className="h-4 w-4" />;
+      case "Paid":
+        return <CheckCircle className="h-4 w-4" />;
+      case "Rejected":
+        return <XCircle className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
     }
   };
 
   const getPriorityColor = (priority: PaymentRequest["priority"]) => {
     switch (priority) {
-      case "Urgent": return "bg-red-100 text-red-800 border-red-200";
-      case "High": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "Medium": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "Low": return "bg-green-100 text-green-800 border-green-200";
-      default: return "bg-gray-100 text-gray-800 border-gray-200";
+      case "Urgent":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "High":
+        return "bg-orange-100 text-orange-800 border-orange-200";
+      case "Medium":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "Low":
+        return "bg-green-100 text-green-800 border-green-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
@@ -399,17 +488,20 @@ export default function PaymentRequestApproval({
     return new Date(deadline) < new Date();
   };
 
-  const pendingApprovalCount = paymentRequests.filter(req => 
-    req.status === "Submitted" || req.status === "Under Review"
+  const pendingApprovalCount = paymentRequests.filter(
+    (req) => req.status === "Submitted" || req.status === "Under Review",
   ).length;
 
-  const overdueCount = paymentRequests.filter(req => 
-    (req.status === "Submitted" || req.status === "Under Review") && 
-    isOverdue(req.reviewDeadline)
+  const overdueCount = paymentRequests.filter(
+    (req) =>
+      (req.status === "Submitted" || req.status === "Under Review") &&
+      isOverdue(req.reviewDeadline),
   ).length;
 
   const totalValuePending = paymentRequests
-    .filter(req => req.status === "Submitted" || req.status === "Under Review")
+    .filter(
+      (req) => req.status === "Submitted" || req.status === "Under Review",
+    )
     .reduce((sum, req) => sum + req.requestedAmount, 0);
 
   return (
@@ -423,13 +515,16 @@ export default function PaymentRequestApproval({
                 <Receipt className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <CardTitle className="text-xl">Payment Request Approvals</CardTitle>
+                <CardTitle className="text-xl">
+                  Payment Request Approvals
+                </CardTitle>
                 <p className="text-sm text-gray-600">
-                  Review and approve payment requests from contractors - {effectiveMinistryName}
+                  Review and approve payment requests from contractors -{" "}
+                  {effectiveMinistryName}
                 </p>
               </div>
             </div>
-            <Button 
+            <Button
               onClick={loadPaymentRequests}
               variant="outline"
               className="flex items-center space-x-2"
@@ -447,8 +542,12 @@ export default function PaymentRequestApproval({
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Pending Approval</p>
-                <p className="text-3xl font-bold text-blue-600">{pendingApprovalCount}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Pending Approval
+                </p>
+                <p className="text-3xl font-bold text-blue-600">
+                  {pendingApprovalCount}
+                </p>
               </div>
               <Clock className="h-8 w-8 text-blue-600" />
             </div>
@@ -460,7 +559,9 @@ export default function PaymentRequestApproval({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Overdue</p>
-                <p className="text-3xl font-bold text-red-600">{overdueCount}</p>
+                <p className="text-3xl font-bold text-red-600">
+                  {overdueCount}
+                </p>
               </div>
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
@@ -471,8 +572,12 @@ export default function PaymentRequestApproval({
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Value Pending</p>
-                <p className="text-xl font-bold text-green-600">{formatCurrency(totalValuePending)}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Value Pending
+                </p>
+                <p className="text-xl font-bold text-green-600">
+                  {formatCurrency(totalValuePending)}
+                </p>
               </div>
               <DollarSign className="h-8 w-8 text-green-600" />
             </div>
@@ -483,13 +588,19 @@ export default function PaymentRequestApproval({
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Approved This Month</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Approved This Month
+                </p>
                 <p className="text-3xl font-bold text-purple-600">
-                  {paymentRequests.filter(req => 
-                    req.status === "Ministry Approved" && 
-                    req.ministryApprovalDate && 
-                    new Date(req.ministryApprovalDate).getMonth() === new Date().getMonth()
-                  ).length}
+                  {
+                    paymentRequests.filter(
+                      (req) =>
+                        req.status === "Ministry Approved" &&
+                        req.ministryApprovalDate &&
+                        new Date(req.ministryApprovalDate).getMonth() ===
+                          new Date().getMonth(),
+                    ).length
+                  }
                 </p>
               </div>
               <CheckCircle className="h-8 w-8 text-purple-600" />
@@ -510,7 +621,7 @@ export default function PaymentRequestApproval({
                 className="w-full"
               />
             </div>
-            
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-48">
                 <SelectValue placeholder="Filter by status" />
@@ -519,8 +630,12 @@ export default function PaymentRequestApproval({
                 <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="Submitted">Submitted</SelectItem>
                 <SelectItem value="Under Review">Under Review</SelectItem>
-                <SelectItem value="Ministry Approved">Ministry Approved</SelectItem>
-                <SelectItem value="Finance Approved">Finance Approved</SelectItem>
+                <SelectItem value="Ministry Approved">
+                  Ministry Approved
+                </SelectItem>
+                <SelectItem value="Finance Approved">
+                  Finance Approved
+                </SelectItem>
                 <SelectItem value="Paid">Paid</SelectItem>
                 <SelectItem value="Rejected">Rejected</SelectItem>
               </SelectContent>
@@ -573,40 +688,63 @@ export default function PaymentRequestApproval({
             <TableBody>
               {filteredRequests.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-gray-500">
+                  <TableCell
+                    colSpan={8}
+                    className="text-center py-8 text-gray-500"
+                  >
                     No payment requests found matching your criteria.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredRequests.map((request) => (
-                  <TableRow key={request.id} className={isOverdue(request.reviewDeadline) && 
-                    (request.status === "Submitted" || request.status === "Under Review") ? 
-                    "bg-red-50" : ""}>
+                  <TableRow
+                    key={request.id}
+                    className={
+                      isOverdue(request.reviewDeadline) &&
+                      (request.status === "Submitted" ||
+                        request.status === "Under Review")
+                        ? "bg-red-50"
+                        : ""
+                    }
+                  >
                     <TableCell className="font-medium">{request.id}</TableCell>
                     <TableCell>
                       <div>
-                        <div className="font-medium">{request.companyDetails.name}</div>
-                        <div className="text-sm text-gray-500">{request.companyDetails.email}</div>
+                        <div className="font-medium">
+                          {request.companyDetails.name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {request.companyDetails.email}
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div>
-                        <div className="font-medium">{request.contractTitle}</div>
+                        <div className="font-medium">
+                          {request.contractTitle}
+                        </div>
                         {request.milestoneTitle && (
-                          <div className="text-sm text-gray-500">{request.milestoneTitle}</div>
+                          <div className="text-sm text-gray-500">
+                            {request.milestoneTitle}
+                          </div>
                         )}
                       </div>
                     </TableCell>
                     <TableCell>
                       <div>
-                        <div className="font-medium">{formatCurrency(request.requestedAmount)}</div>
+                        <div className="font-medium">
+                          {formatCurrency(request.requestedAmount)}
+                        </div>
                         <div className="text-sm text-gray-500">
                           Net: {formatCurrency(request.netAmount)}
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={getPriorityColor(request.priority)}>
+                      <Badge
+                        variant="outline"
+                        className={getPriorityColor(request.priority)}
+                      >
                         {request.priority}
                       </Badge>
                     </TableCell>
@@ -617,14 +755,21 @@ export default function PaymentRequestApproval({
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className={isOverdue(request.reviewDeadline) && 
-                        (request.status === "Submitted" || request.status === "Under Review") ? 
-                        "text-red-600 font-medium" : ""}>
+                      <div
+                        className={
+                          isOverdue(request.reviewDeadline) &&
+                          (request.status === "Submitted" ||
+                            request.status === "Under Review")
+                            ? "text-red-600 font-medium"
+                            : ""
+                        }
+                      >
                         {new Date(request.reviewDeadline).toLocaleDateString()}
-                        {isOverdue(request.reviewDeadline) && 
-                         (request.status === "Submitted" || request.status === "Under Review") && (
-                          <div className="text-xs text-red-500">Overdue</div>
-                        )}
+                        {isOverdue(request.reviewDeadline) &&
+                          (request.status === "Submitted" ||
+                            request.status === "Under Review") && (
+                            <div className="text-xs text-red-500">Overdue</div>
+                          )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -639,7 +784,8 @@ export default function PaymentRequestApproval({
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        {(request.status === "Submitted" || request.status === "Under Review") && (
+                        {(request.status === "Submitted" ||
+                          request.status === "Under Review") && (
                           <Button
                             size="sm"
                             onClick={() => {
@@ -667,46 +813,81 @@ export default function PaymentRequestApproval({
           {selectedRequest && (
             <>
               <DialogHeader>
-                <DialogTitle>Payment Request Details - {selectedRequest.id}</DialogTitle>
+                <DialogTitle>
+                  Payment Request Details - {selectedRequest.id}
+                </DialogTitle>
               </DialogHeader>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Company</Label>
-                    <p className="text-sm">{selectedRequest.companyDetails.name}</p>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Company
+                    </Label>
+                    <p className="text-sm">
+                      {selectedRequest.companyDetails.name}
+                    </p>
                   </div>
-                  
+
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Contract</Label>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Contract
+                    </Label>
                     <p className="text-sm">{selectedRequest.contractTitle}</p>
                   </div>
-                  
+
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Work Description</Label>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Work Description
+                    </Label>
                     <p className="text-sm">{selectedRequest.workDescription}</p>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-sm font-medium text-gray-700">Work Period</Label>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Work Period
+                      </Label>
                       <p className="text-sm">
-                        {new Date(selectedRequest.workPeriod.from).toLocaleDateString()} - 
-                        {new Date(selectedRequest.workPeriod.to).toLocaleDateString()}
+                        {new Date(
+                          selectedRequest.workPeriod.from,
+                        ).toLocaleDateString()}{" "}
+                        -
+                        {new Date(
+                          selectedRequest.workPeriod.to,
+                        ).toLocaleDateString()}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-700">Completion</Label>
-                      <p className="text-sm">{selectedRequest.workCompletionPercentage}%</p>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Completion
+                      </Label>
+                      <p className="text-sm">
+                        {selectedRequest.workCompletionPercentage}%
+                      </p>
                     </div>
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Bank Details</Label>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Bank Details
+                    </Label>
                     <div className="text-sm space-y-1">
-                      <p><strong>Account:</strong> {selectedRequest.companyDetails.bankDetails.accountName}</p>
-                      <p><strong>Number:</strong> {selectedRequest.companyDetails.bankDetails.accountNumber}</p>
-                      <p><strong>Bank:</strong> {selectedRequest.companyDetails.bankDetails.bankName}</p>
+                      <p>
+                        <strong>Account:</strong>{" "}
+                        {selectedRequest.companyDetails.bankDetails.accountName}
+                      </p>
+                      <p>
+                        <strong>Number:</strong>{" "}
+                        {
+                          selectedRequest.companyDetails.bankDetails
+                            .accountNumber
+                        }
+                      </p>
+                      <p>
+                        <strong>Bank:</strong>{" "}
+                        {selectedRequest.companyDetails.bankDetails.bankName}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -714,33 +895,53 @@ export default function PaymentRequestApproval({
                 <div className="space-y-4">
                   <Card>
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-sm">Payment Breakdown</CardTitle>
+                      <CardTitle className="text-sm">
+                        Payment Breakdown
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span>Requested Amount:</span>
-                        <span className="font-medium">{formatCurrency(selectedRequest.requestedAmount)}</span>
+                        <span className="font-medium">
+                          {formatCurrency(selectedRequest.requestedAmount)}
+                        </span>
                       </div>
                       <div className="border-t pt-2 space-y-1 text-xs text-gray-600">
                         <div className="flex justify-between">
                           <span>Tender Fee (2%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.tenderFee)}</span>
+                          <span>
+                            -{formatCurrency(selectedRequest.charges.tenderFee)}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Stamp Duty (1%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.stampDuty)}</span>
+                          <span>
+                            -{formatCurrency(selectedRequest.charges.stampDuty)}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>WHT (2.5%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.withholdingTax)}</span>
+                          <span>
+                            -
+                            {formatCurrency(
+                              selectedRequest.charges.withholdingTax,
+                            )}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>ETF (2%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.educationTaxFund)}</span>
+                          <span>
+                            -
+                            {formatCurrency(
+                              selectedRequest.charges.educationTaxFund,
+                            )}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>VAT (7.5%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.vat)}</span>
+                          <span>
+                            -{formatCurrency(selectedRequest.charges.vat)}
+                          </span>
                         </div>
                       </div>
                       <div className="border-t pt-2 flex justify-between font-medium text-green-600">
@@ -751,13 +952,18 @@ export default function PaymentRequestApproval({
                   </Card>
 
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Status & Priority</Label>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Status & Priority
+                    </Label>
                     <div className="flex space-x-2 mt-1">
                       <Badge className={getStatusColor(selectedRequest.status)}>
                         {getStatusIcon(selectedRequest.status)}
                         <span className="ml-1">{selectedRequest.status}</span>
                       </Badge>
-                      <Badge variant="outline" className={getPriorityColor(selectedRequest.priority)}>
+                      <Badge
+                        variant="outline"
+                        className={getPriorityColor(selectedRequest.priority)}
+                      >
                         {selectedRequest.priority}
                       </Badge>
                     </div>
@@ -765,15 +971,23 @@ export default function PaymentRequestApproval({
 
                   {selectedRequest.ministryComments && (
                     <div>
-                      <Label className="text-sm font-medium text-gray-700">Ministry Comments</Label>
-                      <p className="text-sm">{selectedRequest.ministryComments}</p>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Ministry Comments
+                      </Label>
+                      <p className="text-sm">
+                        {selectedRequest.ministryComments}
+                      </p>
                     </div>
                   )}
 
                   {selectedRequest.rejectionReason && (
                     <div>
-                      <Label className="text-sm font-medium text-red-700">Rejection Reason</Label>
-                      <p className="text-sm text-red-600">{selectedRequest.rejectionReason}</p>
+                      <Label className="text-sm font-medium text-red-700">
+                        Rejection Reason
+                      </Label>
+                      <p className="text-sm text-red-600">
+                        {selectedRequest.rejectionReason}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -789,35 +1003,52 @@ export default function PaymentRequestApproval({
           {selectedRequest && (
             <>
               <DialogHeader>
-                <DialogTitle>Review Payment Request - {selectedRequest.id}</DialogTitle>
+                <DialogTitle>
+                  Review Payment Request - {selectedRequest.id}
+                </DialogTitle>
               </DialogHeader>
-              
+
               <div className="space-y-4">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-2">Request Summary</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Request Summary
+                  </h4>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-600">Company:</span>
-                      <p className="font-medium">{selectedRequest.companyDetails.name}</p>
+                      <p className="font-medium">
+                        {selectedRequest.companyDetails.name}
+                      </p>
                     </div>
                     <div>
                       <span className="text-gray-600">Amount:</span>
-                      <p className="font-medium">{formatCurrency(selectedRequest.requestedAmount)}</p>
+                      <p className="font-medium">
+                        {formatCurrency(selectedRequest.requestedAmount)}
+                      </p>
                     </div>
                     <div>
                       <span className="text-gray-600">Contract:</span>
-                      <p className="font-medium">{selectedRequest.contractTitle}</p>
+                      <p className="font-medium">
+                        {selectedRequest.contractTitle}
+                      </p>
                     </div>
                     <div>
                       <span className="text-gray-600">Net Amount:</span>
-                      <p className="font-medium text-green-600">{formatCurrency(selectedRequest.netAmount)}</p>
+                      <p className="font-medium text-green-600">
+                        {formatCurrency(selectedRequest.netAmount)}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div>
                   <Label htmlFor="approvalAction">Decision *</Label>
-                  <Select value={approvalAction} onValueChange={(value: "approve" | "reject") => setApprovalAction(value)}>
+                  <Select
+                    value={approvalAction}
+                    onValueChange={(value: "approve" | "reject") =>
+                      setApprovalAction(value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select decision" />
                     </SelectTrigger>
@@ -840,14 +1071,17 @@ export default function PaymentRequestApproval({
 
                 <div>
                   <Label htmlFor="comments">
-                    {approvalAction === "approve" ? "Approval Comments" : "Rejection Reason"} *
+                    {approvalAction === "approve"
+                      ? "Approval Comments"
+                      : "Rejection Reason"}{" "}
+                    *
                   </Label>
                   <Textarea
                     id="comments"
                     value={approvalComments}
                     onChange={(e) => setApprovalComments(e.target.value)}
                     placeholder={
-                      approvalAction === "approve" 
+                      approvalAction === "approve"
                         ? "Add any comments or conditions for approval..."
                         : "Provide detailed reason for rejection..."
                     }
@@ -865,26 +1099,35 @@ export default function PaymentRequestApproval({
                       className="rounded"
                     />
                     <label htmlFor="financeForward" className="text-sm">
-                      Forward to Finance for final approval and payment processing
+                      Forward to Finance for final approval and payment
+                      processing
                     </label>
                   </div>
                 )}
 
                 <div className="flex justify-end space-x-3">
-                  <Button variant="outline" onClick={() => setShowApprovalModal(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowApprovalModal(false)}
+                  >
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     onClick={handleApproveRequest}
-                    disabled={loading || !approvalAction || !approvalComments.trim()}
-                    className={approvalAction === "approve" ? 
-                      "bg-green-600 hover:bg-green-700" : 
-                      "bg-red-600 hover:bg-red-700"
+                    disabled={
+                      loading || !approvalAction || !approvalComments.trim()
+                    }
+                    className={
+                      approvalAction === "approve"
+                        ? "bg-green-600 hover:bg-green-700"
+                        : "bg-red-600 hover:bg-red-700"
                     }
                   >
-                    {loading ? "Processing..." : 
-                     approvalAction === "approve" ? "Approve Request" : "Reject Request"
-                    }
+                    {loading
+                      ? "Processing..."
+                      : approvalAction === "approve"
+                        ? "Approve Request"
+                        : "Reject Request"}
                   </Button>
                 </div>
               </div>

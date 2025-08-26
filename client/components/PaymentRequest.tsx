@@ -63,7 +63,14 @@ export interface PaymentRequest {
   charges: PaymentCharges;
   netAmount: number;
   totalAmount: number;
-  status: "Draft" | "Submitted" | "Under Review" | "Ministry Approved" | "Finance Approved" | "Paid" | "Rejected";
+  status:
+    | "Draft"
+    | "Submitted"
+    | "Under Review"
+    | "Ministry Approved"
+    | "Finance Approved"
+    | "Paid"
+    | "Rejected";
   submittedDate?: string;
   ministryApprovalDate?: string;
   financeApprovalDate?: string;
@@ -85,7 +92,12 @@ export interface PaymentRequest {
 interface PaymentDocument {
   id: string;
   name: string;
-  type: "Invoice" | "Work Completion Certificate" | "Progress Report" | "Photos" | "Other";
+  type:
+    | "Invoice"
+    | "Work Completion Certificate"
+    | "Progress Report"
+    | "Photos"
+    | "Other";
   uploadDate: string;
   size: string;
   url?: string;
@@ -130,9 +142,9 @@ const calculateCharges = (amount: number): PaymentCharges => {
   const withholdingTax = amount * 0.025; // 2.5%
   const educationTaxFund = amount * 0.02; // 2%
   const vat = amount * 0.075; // 7.5%
-  
+
   const total = tenderFee + stampDuty + withholdingTax + educationTaxFund + vat;
-  
+
   return {
     tenderFee,
     stampDuty,
@@ -148,12 +160,17 @@ interface PaymentRequestProps {
   companyName: string;
 }
 
-export default function PaymentRequest({ companyEmail, companyName }: PaymentRequestProps) {
+export default function PaymentRequest({
+  companyEmail,
+  companyName,
+}: PaymentRequestProps) {
   const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([]);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<PaymentRequest | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<PaymentRequest | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
 
   // Form state
@@ -263,7 +280,10 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
 
   const savePaymentRequests = (requests: PaymentRequest[]) => {
     try {
-      localStorage.setItem(`paymentRequests_${companyEmail}`, JSON.stringify(requests));
+      localStorage.setItem(
+        `paymentRequests_${companyEmail}`,
+        JSON.stringify(requests),
+      );
       setPaymentRequests(requests);
     } catch (error) {
       console.error("Error saving payment requests:", error);
@@ -271,14 +291,20 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
   };
 
   const handleCreateRequest = () => {
-    if (!formData.contractId || !formData.requestedAmount || !formData.workDescription) {
+    if (
+      !formData.contractId ||
+      !formData.requestedAmount ||
+      !formData.workDescription
+    ) {
       alert("Please fill in all required fields");
       return;
     }
 
     setLoading(true);
 
-    const selectedContract = contracts.find(c => c.id === formData.contractId);
+    const selectedContract = contracts.find(
+      (c) => c.id === formData.contractId,
+    );
     if (!selectedContract) {
       alert("Selected contract not found");
       setLoading(false);
@@ -299,8 +325,10 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
         to: formData.workPeriodTo,
       },
       milestoneId: formData.milestoneId || undefined,
-      milestoneTitle: formData.milestoneId ? 
-        selectedContract.milestones.find(m => m.id === formData.milestoneId)?.title : undefined,
+      milestoneTitle: formData.milestoneId
+        ? selectedContract.milestones.find((m) => m.id === formData.milestoneId)
+            ?.title
+        : undefined,
       supportingDocuments: documents,
       charges,
       netAmount,
@@ -344,7 +372,7 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
   };
 
   const handleSubmitRequest = (requestId: string) => {
-    const updatedRequests = paymentRequests.map(req => {
+    const updatedRequests = paymentRequests.map((req) => {
       if (req.id === requestId) {
         return {
           ...req,
@@ -359,32 +387,49 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
 
   const getStatusColor = (status: PaymentRequest["status"]) => {
     switch (status) {
-      case "Draft": return "bg-gray-100 text-gray-800";
-      case "Submitted": return "bg-blue-100 text-blue-800";
-      case "Under Review": return "bg-yellow-100 text-yellow-800";
-      case "Ministry Approved": return "bg-purple-100 text-purple-800";
-      case "Finance Approved": return "bg-green-100 text-green-800";
-      case "Paid": return "bg-green-100 text-green-800";
-      case "Rejected": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "Draft":
+        return "bg-gray-100 text-gray-800";
+      case "Submitted":
+        return "bg-blue-100 text-blue-800";
+      case "Under Review":
+        return "bg-yellow-100 text-yellow-800";
+      case "Ministry Approved":
+        return "bg-purple-100 text-purple-800";
+      case "Finance Approved":
+        return "bg-green-100 text-green-800";
+      case "Paid":
+        return "bg-green-100 text-green-800";
+      case "Rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusIcon = (status: PaymentRequest["status"]) => {
     switch (status) {
-      case "Draft": return <FileText className="h-4 w-4" />;
-      case "Submitted": return <Clock className="h-4 w-4" />;
-      case "Under Review": return <AlertTriangle className="h-4 w-4" />;
-      case "Ministry Approved": return <CheckCircle className="h-4 w-4" />;
-      case "Finance Approved": return <CheckCircle className="h-4 w-4" />;
-      case "Paid": return <CheckCircle className="h-4 w-4" />;
-      case "Rejected": return <XCircle className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
+      case "Draft":
+        return <FileText className="h-4 w-4" />;
+      case "Submitted":
+        return <Clock className="h-4 w-4" />;
+      case "Under Review":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "Ministry Approved":
+        return <CheckCircle className="h-4 w-4" />;
+      case "Finance Approved":
+        return <CheckCircle className="h-4 w-4" />;
+      case "Paid":
+        return <CheckCircle className="h-4 w-4" />;
+      case "Rejected":
+        return <XCircle className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
     }
   };
 
-  const selectedContract = formData.contractId ? 
-    contracts.find(c => c.id === formData.contractId) : null;
+  const selectedContract = formData.contractId
+    ? contracts.find((c) => c.id === formData.contractId)
+    : null;
 
   return (
     <div className="space-y-6">
@@ -414,23 +459,29 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                 <DialogHeader>
                   <DialogTitle>Create Payment Request</DialogTitle>
                 </DialogHeader>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Left Column */}
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="contract">Contract *</Label>
-                      <Select 
-                        value={formData.contractId} 
-                        onValueChange={(value) => setFormData(prev => ({ ...prev, contractId: value }))}
+                      <Select
+                        value={formData.contractId}
+                        onValueChange={(value) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            contractId: value,
+                          }))
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select contract" />
                         </SelectTrigger>
                         <SelectContent>
-                          {contracts.map(contract => (
+                          {contracts.map((contract) => (
                             <SelectItem key={contract.id} value={contract.id}>
-                              {contract.title} - {formatCurrency(contract.contractValue)}
+                              {contract.title} -{" "}
+                              {formatCurrency(contract.contractValue)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -440,17 +491,27 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                     {selectedContract && (
                       <div>
                         <Label htmlFor="milestone">Milestone (Optional)</Label>
-                        <Select 
-                          value={formData.milestoneId} 
-                          onValueChange={(value) => setFormData(prev => ({ ...prev, milestoneId: value }))}
+                        <Select
+                          value={formData.milestoneId}
+                          onValueChange={(value) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              milestoneId: value,
+                            }))
+                          }
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select milestone" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">No specific milestone</SelectItem>
-                            {selectedContract.milestones.map(milestone => (
-                              <SelectItem key={milestone.id} value={milestone.id}>
+                            <SelectItem value="">
+                              No specific milestone
+                            </SelectItem>
+                            {selectedContract.milestones.map((milestone) => (
+                              <SelectItem
+                                key={milestone.id}
+                                value={milestone.id}
+                              >
                                 {milestone.title} ({milestone.percentage}%)
                               </SelectItem>
                             ))}
@@ -461,18 +522,28 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
 
                     <div>
                       <Label htmlFor="requestType">Request Type *</Label>
-                      <Select 
-                        value={formData.requestType} 
-                        onValueChange={(value: PaymentRequest["requestType"]) => 
-                          setFormData(prev => ({ ...prev, requestType: value }))}
+                      <Select
+                        value={formData.requestType}
+                        onValueChange={(value: PaymentRequest["requestType"]) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            requestType: value,
+                          }))
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Advance">Advance Payment</SelectItem>
-                          <SelectItem value="Interim">Interim Payment</SelectItem>
-                          <SelectItem value="Milestone">Milestone Payment</SelectItem>
+                          <SelectItem value="Advance">
+                            Advance Payment
+                          </SelectItem>
+                          <SelectItem value="Interim">
+                            Interim Payment
+                          </SelectItem>
+                          <SelectItem value="Milestone">
+                            Milestone Payment
+                          </SelectItem>
                           <SelectItem value="Final">Final Payment</SelectItem>
                         </SelectContent>
                       </Select>
@@ -484,25 +555,31 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                         id="amount"
                         type="number"
                         value={formData.requestedAmount || ""}
-                        onChange={(e) => setFormData(prev => ({ 
-                          ...prev, 
-                          requestedAmount: parseFloat(e.target.value) || 0 
-                        }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            requestedAmount: parseFloat(e.target.value) || 0,
+                          }))
+                        }
                         placeholder="Enter amount"
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="workPeriodFrom">Work Period From *</Label>
+                        <Label htmlFor="workPeriodFrom">
+                          Work Period From *
+                        </Label>
                         <Input
                           id="workPeriodFrom"
                           type="date"
                           value={formData.workPeriodFrom}
-                          onChange={(e) => setFormData(prev => ({ 
-                            ...prev, 
-                            workPeriodFrom: e.target.value 
-                          }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              workPeriodFrom: e.target.value,
+                            }))
+                          }
                         />
                       </div>
                       <div>
@@ -511,10 +588,12 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                           id="workPeriodTo"
                           type="date"
                           value={formData.workPeriodTo}
-                          onChange={(e) => setFormData(prev => ({ 
-                            ...prev, 
-                            workPeriodTo: e.target.value 
-                          }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              workPeriodTo: e.target.value,
+                            }))
+                          }
                         />
                       </div>
                     </div>
@@ -527,10 +606,13 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                         min="0"
                         max="100"
                         value={formData.workCompletionPercentage || ""}
-                        onChange={(e) => setFormData(prev => ({ 
-                          ...prev, 
-                          workCompletionPercentage: parseFloat(e.target.value) || 0 
-                        }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            workCompletionPercentage:
+                              parseFloat(e.target.value) || 0,
+                          }))
+                        }
                         placeholder="Percentage completed"
                       />
                     </div>
@@ -540,10 +622,12 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                       <Input
                         id="invoiceNumber"
                         value={formData.invoiceNumber}
-                        onChange={(e) => setFormData(prev => ({ 
-                          ...prev, 
-                          invoiceNumber: e.target.value 
-                        }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            invoiceNumber: e.target.value,
+                          }))
+                        }
                         placeholder="Invoice reference number"
                       />
                     </div>
@@ -552,14 +636,18 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                   {/* Right Column */}
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="workDescription">Work Description *</Label>
+                      <Label htmlFor="workDescription">
+                        Work Description *
+                      </Label>
                       <Textarea
                         id="workDescription"
                         value={formData.workDescription}
-                        onChange={(e) => setFormData(prev => ({ 
-                          ...prev, 
-                          workDescription: e.target.value 
-                        }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            workDescription: e.target.value,
+                          }))
+                        }
                         placeholder="Describe the work completed for this payment request"
                         rows={4}
                       />
@@ -567,39 +655,61 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
 
                     {/* Bank Details */}
                     <div className="space-y-3">
-                      <Label className="text-sm font-medium">Bank Details</Label>
+                      <Label className="text-sm font-medium">
+                        Bank Details
+                      </Label>
                       <div className="grid grid-cols-1 gap-3">
                         <Input
                           placeholder="Account Name"
                           value={formData.bankDetails.accountName}
-                          onChange={(e) => setFormData(prev => ({ 
-                            ...prev, 
-                            bankDetails: { ...prev.bankDetails, accountName: e.target.value }
-                          }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              bankDetails: {
+                                ...prev.bankDetails,
+                                accountName: e.target.value,
+                              },
+                            }))
+                          }
                         />
                         <Input
                           placeholder="Account Number"
                           value={formData.bankDetails.accountNumber}
-                          onChange={(e) => setFormData(prev => ({ 
-                            ...prev, 
-                            bankDetails: { ...prev.bankDetails, accountNumber: e.target.value }
-                          }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              bankDetails: {
+                                ...prev.bankDetails,
+                                accountNumber: e.target.value,
+                              },
+                            }))
+                          }
                         />
                         <Input
                           placeholder="Bank Name"
                           value={formData.bankDetails.bankName}
-                          onChange={(e) => setFormData(prev => ({ 
-                            ...prev, 
-                            bankDetails: { ...prev.bankDetails, bankName: e.target.value }
-                          }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              bankDetails: {
+                                ...prev.bankDetails,
+                                bankName: e.target.value,
+                              },
+                            }))
+                          }
                         />
                         <Input
                           placeholder="Sort Code (Optional)"
                           value={formData.bankDetails.sortCode}
-                          onChange={(e) => setFormData(prev => ({ 
-                            ...prev, 
-                            bankDetails: { ...prev.bankDetails, sortCode: e.target.value }
-                          }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              bankDetails: {
+                                ...prev.bankDetails,
+                                sortCode: e.target.value,
+                              },
+                            }))
+                          }
                         />
                       </div>
                     </div>
@@ -615,30 +725,44 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                         </CardHeader>
                         <CardContent className="space-y-2 text-sm">
                           {(() => {
-                            const charges = calculateCharges(formData.requestedAmount);
-                            const netAmount = formData.requestedAmount - charges.total;
+                            const charges = calculateCharges(
+                              formData.requestedAmount,
+                            );
+                            const netAmount =
+                              formData.requestedAmount - charges.total;
                             return (
                               <>
                                 <div className="flex justify-between">
                                   <span>Requested Amount:</span>
-                                  <span className="font-medium">{formatCurrency(formData.requestedAmount)}</span>
+                                  <span className="font-medium">
+                                    {formatCurrency(formData.requestedAmount)}
+                                  </span>
                                 </div>
                                 <div className="border-t pt-2 space-y-1 text-xs text-gray-600">
                                   <div className="flex justify-between">
                                     <span>Tender Fee (2%):</span>
-                                    <span>-{formatCurrency(charges.tenderFee)}</span>
+                                    <span>
+                                      -{formatCurrency(charges.tenderFee)}
+                                    </span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span>Stamp Duty (1%):</span>
-                                    <span>-{formatCurrency(charges.stampDuty)}</span>
+                                    <span>
+                                      -{formatCurrency(charges.stampDuty)}
+                                    </span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span>WHT (2.5%):</span>
-                                    <span>-{formatCurrency(charges.withholdingTax)}</span>
+                                    <span>
+                                      -{formatCurrency(charges.withholdingTax)}
+                                    </span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span>ETF (2%):</span>
-                                    <span>-{formatCurrency(charges.educationTaxFund)}</span>
+                                    <span>
+                                      -
+                                      {formatCurrency(charges.educationTaxFund)}
+                                    </span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span>VAT (7.5%):</span>
@@ -659,10 +783,13 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                 </div>
 
                 <div className="flex justify-end space-x-3 mt-6">
-                  <Button variant="outline" onClick={() => setShowCreateModal(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowCreateModal(false)}
+                  >
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     onClick={handleCreateRequest}
                     disabled={loading}
                     className="bg-green-600 hover:bg-green-700"
@@ -694,8 +821,12 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
             <TableBody>
               {paymentRequests.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-gray-500">
-                    No payment requests found. Create your first payment request above.
+                  <TableCell
+                    colSpan={7}
+                    className="text-center py-8 text-gray-500"
+                  >
+                    No payment requests found. Create your first payment request
+                    above.
                   </TableCell>
                 </TableRow>
               ) : (
@@ -704,15 +835,21 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                     <TableCell className="font-medium">{request.id}</TableCell>
                     <TableCell>
                       <div>
-                        <div className="font-medium">{request.contractTitle}</div>
+                        <div className="font-medium">
+                          {request.contractTitle}
+                        </div>
                         {request.milestoneTitle && (
-                          <div className="text-sm text-gray-500">{request.milestoneTitle}</div>
+                          <div className="text-sm text-gray-500">
+                            {request.milestoneTitle}
+                          </div>
                         )}
                       </div>
                     </TableCell>
                     <TableCell>
                       <div>
-                        <div className="font-medium">{formatCurrency(request.requestedAmount)}</div>
+                        <div className="font-medium">
+                          {formatCurrency(request.requestedAmount)}
+                        </div>
                         <div className="text-sm text-gray-500">
                           Net: {formatCurrency(request.netAmount)}
                         </div>
@@ -728,10 +865,9 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {request.submittedDate ? 
-                        new Date(request.submittedDate).toLocaleDateString() : 
-                        'Draft'
-                      }
+                      {request.submittedDate
+                        ? new Date(request.submittedDate).toLocaleDateString()
+                        : "Draft"}
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
@@ -770,41 +906,72 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
           {selectedRequest && (
             <>
               <DialogHeader>
-                <DialogTitle>Payment Request Details - {selectedRequest.id}</DialogTitle>
+                <DialogTitle>
+                  Payment Request Details - {selectedRequest.id}
+                </DialogTitle>
               </DialogHeader>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Contract</Label>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Contract
+                    </Label>
                     <p className="text-sm">{selectedRequest.contractTitle}</p>
                   </div>
-                  
+
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Work Description</Label>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Work Description
+                    </Label>
                     <p className="text-sm">{selectedRequest.workDescription}</p>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-sm font-medium text-gray-700">Work Period</Label>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Work Period
+                      </Label>
                       <p className="text-sm">
-                        {new Date(selectedRequest.workPeriod.from).toLocaleDateString()} - 
-                        {new Date(selectedRequest.workPeriod.to).toLocaleDateString()}
+                        {new Date(
+                          selectedRequest.workPeriod.from,
+                        ).toLocaleDateString()}{" "}
+                        -
+                        {new Date(
+                          selectedRequest.workPeriod.to,
+                        ).toLocaleDateString()}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-700">Completion</Label>
-                      <p className="text-sm">{selectedRequest.workCompletionPercentage}%</p>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Completion
+                      </Label>
+                      <p className="text-sm">
+                        {selectedRequest.workCompletionPercentage}%
+                      </p>
                     </div>
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Bank Details</Label>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Bank Details
+                    </Label>
                     <div className="text-sm space-y-1">
-                      <p><strong>Account:</strong> {selectedRequest.companyDetails.bankDetails.accountName}</p>
-                      <p><strong>Number:</strong> {selectedRequest.companyDetails.bankDetails.accountNumber}</p>
-                      <p><strong>Bank:</strong> {selectedRequest.companyDetails.bankDetails.bankName}</p>
+                      <p>
+                        <strong>Account:</strong>{" "}
+                        {selectedRequest.companyDetails.bankDetails.accountName}
+                      </p>
+                      <p>
+                        <strong>Number:</strong>{" "}
+                        {
+                          selectedRequest.companyDetails.bankDetails
+                            .accountNumber
+                        }
+                      </p>
+                      <p>
+                        <strong>Bank:</strong>{" "}
+                        {selectedRequest.companyDetails.bankDetails.bankName}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -812,33 +979,53 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                 <div className="space-y-4">
                   <Card>
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-sm">Payment Breakdown</CardTitle>
+                      <CardTitle className="text-sm">
+                        Payment Breakdown
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span>Requested Amount:</span>
-                        <span className="font-medium">{formatCurrency(selectedRequest.requestedAmount)}</span>
+                        <span className="font-medium">
+                          {formatCurrency(selectedRequest.requestedAmount)}
+                        </span>
                       </div>
                       <div className="border-t pt-2 space-y-1 text-xs text-gray-600">
                         <div className="flex justify-between">
                           <span>Tender Fee (2%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.tenderFee)}</span>
+                          <span>
+                            -{formatCurrency(selectedRequest.charges.tenderFee)}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Stamp Duty (1%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.stampDuty)}</span>
+                          <span>
+                            -{formatCurrency(selectedRequest.charges.stampDuty)}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>WHT (2.5%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.withholdingTax)}</span>
+                          <span>
+                            -
+                            {formatCurrency(
+                              selectedRequest.charges.withholdingTax,
+                            )}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>ETF (2%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.educationTaxFund)}</span>
+                          <span>
+                            -
+                            {formatCurrency(
+                              selectedRequest.charges.educationTaxFund,
+                            )}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>VAT (7.5%):</span>
-                          <span>-{formatCurrency(selectedRequest.charges.vat)}</span>
+                          <span>
+                            -{formatCurrency(selectedRequest.charges.vat)}
+                          </span>
                         </div>
                       </div>
                       <div className="border-t pt-2 flex justify-between font-medium text-green-600">
@@ -849,7 +1036,9 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
                   </Card>
 
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Status</Label>
+                    <Label className="text-sm font-medium text-gray-700">
+                      Status
+                    </Label>
                     <Badge className={getStatusColor(selectedRequest.status)}>
                       {getStatusIcon(selectedRequest.status)}
                       <span className="ml-1">{selectedRequest.status}</span>
@@ -858,8 +1047,12 @@ export default function PaymentRequest({ companyEmail, companyName }: PaymentReq
 
                   {selectedRequest.rejectionReason && (
                     <div>
-                      <Label className="text-sm font-medium text-red-700">Rejection Reason</Label>
-                      <p className="text-sm text-red-600">{selectedRequest.rejectionReason}</p>
+                      <Label className="text-sm font-medium text-red-700">
+                        Rejection Reason
+                      </Label>
+                      <p className="text-sm text-red-600">
+                        {selectedRequest.rejectionReason}
+                      </p>
                     </div>
                   )}
                 </div>
