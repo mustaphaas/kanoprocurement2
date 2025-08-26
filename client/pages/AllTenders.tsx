@@ -6,6 +6,7 @@ import {
   getMinistryTenders,
   type Tender as UnifiedTender,
 } from "@/lib/tenderData";
+import { getCurrentMinistryContext, getMinistryStorageKey } from "@/lib/ministryStorageHelper";
 import {
   Building2,
   FileText,
@@ -55,10 +56,13 @@ export default function AllTenders() {
     };
   };
 
-  // Load tenders from localStorage
+  // Load tenders from ministry-specific localStorage
   useEffect(() => {
     const loadAllTenders = () => {
-      const storedTenders = localStorage.getItem("recentTenders");
+      const { ministryCode } = getCurrentMinistryContext();
+      const ministryStorageKey = getMinistryStorageKey("recentTenders");
+
+      const storedTenders = localStorage.getItem(ministryStorageKey);
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
@@ -73,30 +77,13 @@ export default function AllTenders() {
             },
           );
 
-          // Combine stored tenders with default ones, removing duplicates
-          const defaultTenders = getDefaultTenders().map(
-            applyStatusTransitions,
-          );
-          const allUniqueTenders = [...formattedParsedTenders];
-
-          // Add default tenders that don't exist in stored tenders
-          defaultTenders.forEach((defaultTender) => {
-            if (
-              !formattedParsedTenders.find(
-                (t: UnifiedTender) => t.id === defaultTender.id,
-              )
-            ) {
-              allUniqueTenders.push(defaultTender);
-            }
-          });
-
-          setAllTenders(allUniqueTenders);
+          setAllTenders(formattedParsedTenders);
         } else {
-          // If no stored tenders, just use defaults with status transitions
+          // If no stored tenders, use ministry-specific default tenders
           setAllTenders(getDefaultTenders().map(applyStatusTransitions));
         }
       } else {
-        // If no stored tenders, just use defaults with status transitions
+        // If no stored tenders, use ministry-specific default tenders
         setAllTenders(getDefaultTenders().map(applyStatusTransitions));
       }
     };
