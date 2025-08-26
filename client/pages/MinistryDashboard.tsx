@@ -5305,12 +5305,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
     };
   };
 
-  const renderOverview = () => {
-    // Recalculate overview data when refresh trigger changes
-    const overviewData = useMemo(() => {
-      return getEnhancedOverviewData();
-    }, [overviewRefreshTrigger, tenders, nocRequests, contracts]);
+  // FIXED: Move useMemo to top level to avoid hook rule violation
+  const overviewData = useMemo(() => {
+    return getEnhancedOverviewData();
+  }, [overviewRefreshTrigger, tenders, nocRequests, contracts]);
 
+  const renderOverview = () => {
     return (
       <EnhancedMinistryOverview
         data={overviewData}
