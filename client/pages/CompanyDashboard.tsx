@@ -539,20 +539,19 @@ export default function CompanyDashboard() {
         localStorage.getItem("lastProcessedTenders") || "[]",
       );
 
-      if (allMinistryTenders.length > 0) {
+      if (allTenders.length > 0) {
         // Check for new tenders and create notifications
-        allMinistryTenders.forEach((recentTender: any) => {
-          if (!lastProcessedTenders.includes(recentTender.id)) {
+        allTenders.forEach((tender: any) => {
+          if (!lastProcessedTenders.includes(tender.id)) {
             // This is a new tender, create a "bid created" notification
             messageService.createBidCreatedMessage(
               {
-                id: recentTender.id,
-                title: recentTender.title,
-                ministry:
-                  recentTender.procuringEntity || "Kano State Government",
-                category: recentTender.category,
-                value: formatCurrency(recentTender.value),
-                deadline: recentTender.deadline,
+                id: tender.id,
+                title: tender.title,
+                ministry: tender.ministry || "Kano State Government",
+                category: tender.category || "General",
+                value: formatCurrency(tender.budget),
+                deadline: tender.closingDate,
               },
               companyData.email,
             );
@@ -560,48 +559,50 @@ export default function CompanyDashboard() {
         });
 
         // Update processed tenders list
-        const currentTenderIds = allMinistryTenders.map((t: any) => t.id);
+        const currentTenderIds = allTenders.map((t: any) => t.id);
         localStorage.setItem(
           "lastProcessedTenders",
           JSON.stringify(currentTenderIds),
         );
-        // Convert recent tender format to company dashboard tender format
-        const formattedTenders = allMinistryTenders.map(
-          (recentTender: any) => ({
-            id: recentTender.id,
-            title: recentTender.title,
-            ministry: recentTender.procuringEntity || "Kano State Government",
-            category: recentTender.category,
-            value: formatCurrency(recentTender.value),
-            deadline: recentTender.deadline,
-            location: recentTender.location || "Kano State",
-            status:
-              recentTender.status === "Open" ||
-              recentTender.status === "Published"
-                ? "Open"
-                : "Closed",
-            hasExpressedInterest:
-              tenderStates[recentTender.id]?.hasExpressedInterest || false,
-            hasBid: tenderStates[recentTender.id]?.hasBid || false,
-            unspscCode: "72141100", // Default UNSPSC code
-            procurementMethod: "Open Tendering",
-          }),
-        );
+
+        // Convert main tender format to company dashboard tender format
+        const formattedTenders = allTenders.map((tender: any) => ({
+          id: tender.id,
+          title: tender.title,
+          ministry: tender.ministry || "Kano State Government",
+          category: tender.category || "General",
+          value: formatCurrency(tender.budget),
+          deadline: tender.closingDate,
+          location: "Kano State",
+          status:
+            tender.status === "Open" ||
+            tender.status === "Published"
+              ? "Open"
+              : "Closed",
+          hasExpressedInterest:
+            tenderStates[tender.id]?.hasExpressedInterest || false,
+          hasBid: tenderStates[tender.id]?.hasBid || false,
+          unspscCode: "72141100", // Default UNSPSC code
+          procurementMethod: "Open Tendering",
+        }));
 
         // Combine with default tenders, avoid duplicates
         const defaultTenders = getDefaultTenders();
-        const allTenders = [...formattedTenders];
+        const finalTenders = [...formattedTenders];
 
         // Add default tenders that don't exist in stored tenders
         defaultTenders.forEach((defaultTender) => {
           if (
             !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
           ) {
-            allTenders.push(defaultTender);
+            finalTenders.push(defaultTender);
           }
         });
 
-        setTenders(allTenders);
+        setTenders(finalTenders);
+      } else {
+        // If no main tenders, use defaults
+        setTenders(getDefaultTenders());
       }
     };
 
