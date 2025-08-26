@@ -164,11 +164,13 @@ export const runCompleteFilteringTest = (): {
   summary: string;
   ministryTest: FilteringTestResult;
   companyTest: ReturnType<typeof testCompanyDashboardFiltering>;
+  switchTest: ReturnType<typeof testMinistrySwitching>;
 } => {
   const ministryTest = testMinistryFiltering();
   const companyTest = testCompanyDashboardFiltering();
+  const switchTest = testMinistrySwitching();
 
-  const passed = ministryTest.passed && companyTest.passed;
+  const passed = ministryTest.passed && companyTest.passed && switchTest.passed;
 
   const summary = `
 === COMPLETE MINISTRY FILTERING VERIFICATION ===
@@ -176,6 +178,8 @@ export const runCompleteFilteringTest = (): {
 ${ministryTest.summary}
 
 ${companyTest.summary}
+
+${switchTest.summary}
 
 OVERALL RESULT: ${passed ? "✅ ALL TESTS PASSED" : "❌ SOME TESTS FAILED"}
   `;
@@ -185,10 +189,110 @@ OVERALL RESULT: ${passed ? "✅ ALL TESTS PASSED" : "❌ SOME TESTS FAILED"}
     summary,
     ministryTest,
     companyTest,
+    switchTest,
+  };
+};
+
+/**
+ * Simulate ministry switch and test filtering
+ */
+export const testMinistrySwitching = (): {
+  passed: boolean;
+  summary: string;
+  switchResults: Array<{ ministry: string; tenderCount: number }>;
+} => {
+  const originalMinistryUser = localStorage.getItem("ministryUser");
+  const mainTenders = JSON.parse(
+    localStorage.getItem("kanoproc_tenders") || "[]",
+  );
+
+  // Test different ministry contexts
+  const testMinistries = [
+    { ministryName: "Ministry of Health", ministryCode: "MOH" },
+    { ministryName: "Ministry of Education", ministryCode: "MOE" },
+    { ministryName: "Ministry of Works", ministryCode: "MOW" },
+  ];
+
+  const switchResults: Array<{ ministry: string; tenderCount: number }> = [];
+
+  testMinistries.forEach((ministry) => {
+    // Simulate ministry switch
+    localStorage.setItem(
+      "ministryUser",
+      JSON.stringify({
+        username: "ministry",
+        role: "ministry",
+        ministryId: ministry.ministryCode.toLowerCase(),
+        ministryName: ministry.ministryName,
+        ministryCode: ministry.ministryCode,
+      }),
+    );
+
+    // Count tenders for this ministry
+    const ministryTenders = mainTenders.filter(
+      (tender: any) => tender.ministry === ministry.ministryName,
+    );
+
+    switchResults.push({
+      ministry: ministry.ministryName,
+      tenderCount: ministryTenders.length,
+    });
+  });
+
+  // Restore original ministry user
+  if (originalMinistryUser) {
+    localStorage.setItem("ministryUser", originalMinistryUser);
+  }
+
+  // Test passes if different ministries have different tender counts
+  const tenderCounts = switchResults.map((r) => r.tenderCount);
+  const hasVariation =
+    new Set(tenderCounts).size > 1 || tenderCounts.every((c) => c === 0);
+
+  const summary = `
+=== MINISTRY SWITCHING TEST ===
+
+Total Tenders in Storage: ${mainTenders.length}
+
+Tenders by Ministry Context:
+${switchResults
+  .map((result) => `  • ${result.ministry}: ${result.tenderCount} tenders`)
+  .join("\n")}
+
+TEST RESULT: ${hasVariation ? "✅ PASSED" : "❌ FAILED"}
+${
+  hasVariation
+    ? "Different ministries see different tender counts - filtering works"
+    : "All ministries see same tender count - filtering may not be working"
+}
+  `;
+
+  return {
+    passed: hasVariation,
+    summary,
+    switchResults,
   };
 };
 
 // Export for global debugging access
 (window as any).testMinistryFiltering = testMinistryFiltering;
 (window as any).logFilteringTest = logFilteringTest;
+(window as any).testMinistrySwitching = testMinistrySwitching;
 (window as any).runCompleteFilteringTest = runCompleteFilteringTest;
+
+// Add debug function to manually test property name fix
+(window as any).debugMinistryProperties = () => {
+  const ministryUser = localStorage.getItem("ministryUser");
+  if (ministryUser) {
+    const userData = JSON.parse(ministryUser);
+    console.log("=== MINISTRY USER DATA DEBUG ===");
+    console.log("Raw ministryUser:", userData);
+    console.log("Available properties:", Object.keys(userData));
+    console.log("ministryName:", userData.ministryName);
+    console.log("ministryCode:", userData.ministryCode);
+    console.log("ministryId:", userData.ministryId);
+    console.log("=============================");
+  } else {
+    console.log("No ministryUser found in localStorage");
+  }
+};

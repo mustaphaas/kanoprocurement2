@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
@@ -322,6 +322,10 @@ export default function MinistryDashboard() {
   // Mobile navigation
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Data refresh triggers
+  const [overviewRefreshTrigger, setOverviewRefreshTrigger] = useState(0);
+
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
@@ -742,7 +746,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "EduTech Solutions Ltd",
-          bidAmount: "₦2,000,000,000",
+          bidAmount: "���2,000,000,000",
           technicalScore: 95,
           financialScore: 92,
           totalScore: 93.5,
@@ -1635,7 +1639,7 @@ export default function MinistryDashboard() {
               projectTitle: "Hospital Equipment Supply - Phase 1",
               requestDate: "2024-01-25",
               status: "Approved",
-              projectValue: "₦850,000,000",
+              projectValue: "���850,000,000",
               contractorName: "PrimeCare Medical Ltd",
               expectedDuration: "6 months",
               approvalDate: "2024-01-28",
@@ -2688,6 +2692,50 @@ export default function MinistryDashboard() {
         (window as any).ministryDashboardCleanup();
         delete (window as any).ministryDashboardCleanup;
       }
+    };
+  }, []);
+
+  // Listen for changes to main tender storage and refresh overview
+  useEffect(() => {
+    const handleMainTenderStorageChange = (event: StorageEvent) => {
+      // Refresh overview when main tender storage changes
+      if (event.key === "kanoproc_tenders") {
+        console.log("🔄 Main tender storage changed, refreshing overview...");
+        setOverviewRefreshTrigger((prev) => prev + 1);
+      }
+    };
+
+    // Listen for storage events from other tabs/windows
+    window.addEventListener("storage", handleMainTenderStorageChange);
+
+    // Also listen for same-tab changes (when TenderManagement updates storage)
+    const handleSameTabChange = () => {
+      setOverviewRefreshTrigger((prev) => prev + 1);
+    };
+
+    // Set up an interval to check for changes (fallback for same-tab updates)
+    let lastTenderCount = 0;
+    const checkInterval = setInterval(() => {
+      const mainTenders = JSON.parse(
+        localStorage.getItem("kanoproc_tenders") || "[]",
+      );
+      const ministryInfo = getMinistryInfo();
+      const currentMinistryTenders = mainTenders.filter(
+        (tender: any) => tender.ministry === ministryInfo.name,
+      );
+
+      if (currentMinistryTenders.length !== lastTenderCount) {
+        console.log(
+          `🔄 Tender count changed: ${lastTenderCount} → ${currentMinistryTenders.length}`,
+        );
+        lastTenderCount = currentMinistryTenders.length;
+        setOverviewRefreshTrigger((prev) => prev + 1);
+      }
+    }, 2000); // Check every 2 seconds
+
+    return () => {
+      window.removeEventListener("storage", handleMainTenderStorageChange);
+      clearInterval(checkInterval);
     };
   }, []);
 
@@ -4957,12 +5005,22 @@ Penalty Clause: 0.5% per week for delayed completion`,
   const getEnhancedOverviewData = () => {
     const { ministryId, ministry } = getMinistryMockData();
 
+    // FIXED: Read from main tender storage and filter by current ministry
+    const mainTenders = JSON.parse(
+      localStorage.getItem("kanoproc_tenders") || "[]",
+    );
+    const ministryInfo = getMinistryInfo();
+    const currentMinistryTenders = mainTenders.filter(
+      (tender: any) => tender.ministry === ministryInfo.name,
+    );
+
     const summaryData = {
       totalProcurementPlans:
         ministryId === "ministry2" ? 24 : ministryId === "ministry3" ? 18 : 15,
-      tendersCreated: tenders.length,
-      tendersUnderEvaluation: tenders.filter((t) => t.status === "Evaluated")
-        .length,
+      tendersCreated: currentMinistryTenders.length, // Use filtered tenders from main storage
+      tendersUnderEvaluation: currentMinistryTenders.filter(
+        (t: any) => t.status === "Evaluated",
+      ).length,
       nocPending: nocRequests.filter((n) => n.status === "Pending").length,
       nocApproved: nocRequests.filter((n) => n.status === "Approved").length,
       nocRejected: nocRequests.filter((n) => n.status === "Rejected").length,
@@ -5254,9 +5312,12 @@ Penalty Clause: 0.5% per week for delayed completion`,
     };
   };
 
-  const renderOverview = () => {
-    const overviewData = getEnhancedOverviewData();
+  // FIXED: Place useMemo after function definition to avoid temporal dead zone
+  const overviewData = useMemo(() => {
+    return getEnhancedOverviewData();
+  }, [overviewRefreshTrigger, tenders, nocRequests, contracts]);
 
+  const renderOverview = () => {
     return (
       <EnhancedMinistryOverview
         data={overviewData}
@@ -8998,7 +9059,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            ��� Contract Management
+            ���� Contract Management
           </h1>
           <p className="text-gray-600">
             Comprehensive contract lifecycle management with digital signatures

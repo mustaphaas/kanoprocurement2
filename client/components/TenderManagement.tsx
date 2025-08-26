@@ -727,10 +727,10 @@ const TenderManagement = () => {
 
     try {
       const userData = JSON.parse(ministryUser);
-      // You would need to import getMinistryById function or implement similar logic here
+      // FIXED: Properly read ministryName and ministryCode from stored user data
       return {
-        name: "Ministry of Health", // fallback for now
-        code: "MOH",
+        name: userData.ministryName || "Ministry of Health", // Use stored ministryName
+        code: userData.ministryCode || "MOH", // Use stored ministryCode
         contactEmail: "health@kanostate.gov.ng",
         contactPhone: "08012345678",
         address: "Kano State Secretariat, Kano",
@@ -823,9 +823,16 @@ const TenderManagement = () => {
       timeline: [],
     };
 
-    const updatedTenders = [...tenders, newTender];
-    setTenders(updatedTenders);
-    saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+    // FIXED: Add to local state (filtered tenders)
+    const updatedLocalTenders = [...tenders, newTender];
+    setTenders(updatedLocalTenders);
+
+    // FIXED: Add to global storage (all tenders from all ministries)
+    const allExistingTenders = JSON.parse(
+      localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+    );
+    const updatedGlobalTenders = [...allExistingTenders, newTender];
+    saveToStorage(STORAGE_KEYS.TENDERS, updatedGlobalTenders);
 
     // Synchronize all tender stores
     synchronizeAllTenderStores();
