@@ -998,19 +998,24 @@ const TenderManagement = () => {
                   const ministryTenders = JSON.parse(localStorage.getItem(`${ministryCode}_tenders`) || "[]");
 
                   console.log("Storage Debug:", {
-                    mainTenders,
-                    recentTenders,
-                    featuredTenders,
-                    ministryTenders,
-                    currentState: tenders
+                    mainTenders: mainTenders.map(t => ({id: t.id, title: t.title, status: t.status})),
+                    recentTenders: recentTenders.map(t => ({id: t.id, title: t.title, status: t.status})),
+                    featuredTenders: featuredTenders.map(t => ({id: t.id, title: t.title, status: t.status})),
+                    ministryTenders: ministryTenders.map(t => ({id: t.id, title: t.title, status: t.status})),
+                    currentState: tenders.map(t => ({id: t.id, title: t.title, status: t.status}))
                   });
 
-                  alert(`Storage Debug:\n\nMain Store (${STORAGE_KEYS.TENDERS}): ${mainTenders.length} tenders\nRecent Tenders: ${recentTenders.length} tenders\nFeatured Tenders: ${featuredTenders.length} tenders\nMinistry Tenders (${ministryCode}): ${ministryTenders.length} tenders\nCurrent Component State: ${tenders.length} tenders\n\nCheck console for details.`);
+                  // Check if tenders have proper data format for Company Dashboard
+                  const sampleRecentTender = recentTenders[0];
+                  const recentTenderHasReqFields = sampleRecentTender ?
+                    'procuringEntity' in sampleRecentTender && 'deadline' in sampleRecentTender : false;
+
+                  alert(`Storage Debug:\n\nMain Store (${STORAGE_KEYS.TENDERS}): ${mainTenders.length} tenders\nRecent Tenders (Company Dashboard): ${recentTenders.length} tenders\nFeatured Tenders (Homepage): ${featuredTenders.length} tenders\nMinistry Tenders (${ministryCode}): ${ministryTenders.length} tenders\nCurrent Component State: ${tenders.length} tenders\n\nRecent Tenders Format OK: ${recentTenderHasReqFields}\n\nCheck console for details.`);
                 }}
                 className="px-4 py-3"
               >
                 <Eye className="h-5 w-5 mr-2" />
-                Debug Storage
+                Debug All Storage
               </Button>
               <Button
                 variant="outline"
