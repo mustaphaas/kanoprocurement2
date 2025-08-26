@@ -9,6 +9,7 @@ import { tenderStatusChecker, TenderStatusInfo } from "@/lib/tenderSettings";
 import { messageService } from "@/lib/messageService";
 import { getAggregatedMinistryTenders } from "@/lib/companyTenderAggregator";
 import CompanyMessageCenter from "@/components/CompanyMessageCenter";
+import PaymentRequest from "@/components/PaymentRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
