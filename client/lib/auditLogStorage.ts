@@ -67,7 +67,8 @@ class AuditLogStorage {
       timestamp,
       ...entry,
       ipAddress: "127.0.0.1", // In a real app, this would be the actual IP
-      userAgent: navigator.userAgent,
+      userAgent:
+        typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
     };
 
     const logs = this.getAllLogs();

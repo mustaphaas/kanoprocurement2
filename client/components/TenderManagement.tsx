@@ -189,7 +189,7 @@ const STORAGE_KEYS = {
 };
 
 const TenderManagement = () => {
-  const [activeTab, setActiveTab] = useState("creation");
+  const [activeTab, setActiveTab] = useState("overview");
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -197,6 +197,143 @@ const TenderManagement = () => {
   const [showTenderModal, setShowTenderModal] = useState(false);
   const [showAmendmentModal, setShowAmendmentModal] = useState(false);
   const [showEvaluationModal, setShowEvaluationModal] = useState(false);
+
+  // Function to get bid count for a specific tender
+  const getBidCount = (tenderId: string): number => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return 0;
+
+      const bids = JSON.parse(storedBids);
+      return bids.filter((bid: any) => bid.tenderId === tenderId).length;
+    } catch (error) {
+      console.error("Error reading bids:", error);
+      return 0;
+    }
+  };
+
+  // Function to get all bids for a specific tender
+  const getBidsForTender = (tenderId: string): any[] => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return [];
+
+      const bids = JSON.parse(storedBids);
+      return bids.filter((bid: any) => bid.tenderId === tenderId);
+    } catch (error) {
+      console.error("Error reading bids:", error);
+      return [];
+    }
+  };
+
+  // Function to synchronize tender data across all storage locations
+  const synchronizeAllTenderStores = () => {
+    try {
+      // Get ministry info for prefixing
+      const ministryInfo = getMinistryInfo();
+      const ministryCode = ministryInfo.code;
+
+      // Load tenders from main store
+      const mainTenders = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+      );
+
+      // Convert to Company Dashboard format (recentTenders)
+      const recentTendersFormat = mainTenders.map((tender: any) => ({
+        id: tender.id,
+        title: tender.title,
+        description: tender.description,
+        category: "General",
+        value: tender.budget.toString(), // Company Dashboard expects string
+        deadline: tender.closingDate,
+        location: "Kano State",
+        views: Math.floor(Math.random() * 200) + 50,
+        status: tender.status === "Published" ? "Open" : tender.status,
+        publishDate: tender.publishedDate || tender.createdDate,
+        closingDate: tender.closingDate,
+        tenderFee: "₦25,000",
+        procuringEntity: tender.ministry,
+        duration: "12 months",
+        eligibility: "Qualified contractors with relevant experience",
+        requirements: [
+          "Valid CAC certificate",
+          "Tax clearance for last 3 years",
+          "Professional license",
+          "Evidence of similar projects",
+          "Financial capacity documentation",
+        ],
+        technicalSpecs: [
+          "Project specifications as detailed in tender document",
+          "Quality standards must meet government requirements",
+          "Timeline adherence is mandatory",
+        ],
+      }));
+
+      // Convert to Homepage format (featuredTenders)
+      const featuredTendersFormat = mainTenders.map((tender: any) => ({
+        id: tender.id,
+        title: tender.title,
+        description: tender.description,
+        value: formatCurrency(tender.budget),
+        deadline: new Date(tender.closingDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }),
+        status: tender.status === "Published" ? "Open" : tender.status,
+        statusColor:
+          tender.status === "Open" || tender.status === "Published"
+            ? "bg-green-100 text-green-800"
+            : tender.status === "Closing Soon"
+              ? "bg-orange-100 text-orange-800"
+              : "bg-gray-100 text-gray-800",
+        category: "General",
+        ministry: tender.ministry,
+        createdAt: Date.now(),
+      }));
+
+      // Update all storage locations with proper formats
+      localStorage.setItem(
+        "recentTenders",
+        JSON.stringify(recentTendersFormat),
+      );
+      localStorage.setItem(
+        "featuredTenders",
+        JSON.stringify(featuredTendersFormat.slice(0, 5)),
+      );
+      localStorage.setItem(
+        `${ministryCode}_recentTenders`,
+        JSON.stringify(recentTendersFormat),
+      );
+      localStorage.setItem(
+        `${ministryCode}_tenders`,
+        JSON.stringify(mainTenders),
+      );
+      localStorage.setItem(
+        `${ministryCode}_featuredTenders`,
+        JSON.stringify(featuredTendersFormat.slice(0, 5)),
+      );
+
+      console.log("Synchronized tender data across all stores");
+      return mainTenders;
+    } catch (error) {
+      console.error("Error synchronizing tender stores:", error);
+      return [];
+    }
+  };
+
+  // Function to force refresh tenders from storage
+  const forceRefreshTenders = () => {
+    const storedTenders = JSON.parse(
+      localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+    );
+    const syncedTenders = storedTenders.map((tender: any) =>
+      synchronizeTenderStatus(tender),
+    );
+    setTenders(syncedTenders);
+    synchronizeAllTenderStores();
+    return syncedTenders;
+  };
 
   // Stepper state for evaluation workflow
   const [currentStep, setCurrentStep] = useState(1);
@@ -280,16 +417,21 @@ const TenderManagement = () => {
     // First apply automatic date-based status transitions
     let updatedTender = { ...tender };
 
+    // Convert Published to Open for ministry display
+    if (tender.status === "Published") {
+      updatedTender.status = "Open" as TenderStatus;
+    }
+
     // Apply automatic status transitions based on dates
     if (tender.closingDate) {
       const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
-        tender.status,
+        updatedTender.status,
         tender.closingDate,
         tender.publishedDate,
       );
 
       // Update status if it changed due to automatic transition
-      if (automaticStatus !== tender.status) {
+      if (automaticStatus !== updatedTender.status) {
         updatedTender.status = automaticStatus;
         updatedTender.lastUpdated = new Date().toISOString();
 
@@ -436,7 +578,15 @@ const TenderManagement = () => {
 
   // Mock data for initial load
   useEffect(() => {
-    if (tenders.length === 0) {
+    const loadFromStorage = (key: string) => {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : [];
+    };
+
+    const existingTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
+
+    if (existingTenders.length === 0) {
+      const now = new Date();
       const mockTenders: Tender[] = [
         {
           id: "T001",
@@ -445,9 +595,15 @@ const TenderManagement = () => {
             "Construction of 5 primary healthcare centers across rural communities",
           budget: 250000000,
           status: "Published",
-          createdDate: "2024-01-15",
-          publishedDate: "2024-01-20",
-          closingDate: "2024-02-20",
+          createdDate: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          publishedDate: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          closingDate: new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           openingDate: "2024-02-21",
           ministry: "Ministry of Health",
           department: "Primary Healthcare Development",
@@ -475,9 +631,15 @@ const TenderManagement = () => {
             "Procurement of modern medical equipment for state hospitals",
           budget: 150000000,
           status: "Open",
-          createdDate: "2024-01-10",
-          publishedDate: "2024-01-15",
-          closingDate: "2024-02-15",
+          createdDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          publishedDate: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          closingDate: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           ministry: "Ministry of Health",
           department: "Medical Equipment",
           tenderType: "Open",
@@ -499,10 +661,20 @@ const TenderManagement = () => {
         },
       ];
 
-      setTenders(mockTenders);
-      saveToStorage(STORAGE_KEYS.TENDERS, mockTenders);
+      const syncedMockTenders = mockTenders.map((tender) =>
+        synchronizeTenderStatus(tender),
+      );
+      setTenders(syncedMockTenders);
+      saveToStorage(STORAGE_KEYS.TENDERS, syncedMockTenders);
+      synchronizeAllTenderStores();
+    } else {
+      const syncedExistingTenders = existingTenders.map((tender: any) =>
+        synchronizeTenderStatus(tender),
+      );
+      setTenders(syncedExistingTenders);
+      synchronizeAllTenderStores();
     }
-  }, [tenders.length]);
+  }, []);
 
   // Get ministry info from localStorage (same logic as MinistryDashboard)
   const getMinistryInfo = () => {
@@ -610,85 +782,10 @@ const TenderManagement = () => {
     setTenders(updatedTenders);
     saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
 
-    // Also create tender for global app state (same as MinistryDashboard does)
-    const globalTender = {
-      id: tenderId,
-      title: tenderForm.title,
-      description: tenderForm.description,
-      category: "General", // Could be made configurable
-      estimatedValue: formatCurrency(tenderForm.budget),
-      status: isDraft ? "Draft" : "Published",
-      publishDate: new Date().toISOString().split("T")[0],
-      closeDate: tenderForm.closingDate,
-      bidsReceived: getBidCountForTender(tenderId),
-      ministry: ministryInfo.name,
-      procuringEntity: ministryInfo.name,
-    };
+    // Synchronize all tender stores
+    synchronizeAllTenderStores();
 
-    // Store in localStorage for cross-page access (same as MinistryDashboard)
-    const existingTenders = localStorage.getItem("featuredTenders") || "[]";
-    const tendersList = JSON.parse(existingTenders);
-    const featuredTender = {
-      id: globalTender.id,
-      title: globalTender.title,
-      description: globalTender.description,
-      value: globalTender.estimatedValue,
-      deadline: new Date(globalTender.closeDate).toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }),
-      status: globalTender.status === "Published" ? "Open" : "Draft",
-      statusColor:
-        globalTender.status === "Published"
-          ? "bg-green-100 text-green-800"
-          : "bg-gray-100 text-gray-800",
-      category: "General",
-      ministry: ministryInfo.name,
-      createdAt: Date.now(),
-    };
-
-    tendersList.unshift(featuredTender);
-    const latestTenders = tendersList.slice(0, 5);
-    localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
-
-    // Also store in recentTenders
-    const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
-    const recentTendersList = JSON.parse(existingRecentTenders);
-    const recentTender = {
-      id: globalTender.id,
-      title: globalTender.title,
-      category: "General",
-      value: globalTender.estimatedValue,
-      deadline: globalTender.closeDate,
-      location: "Kano State",
-      views: 0,
-      status: globalTender.status === "Published" ? "Open" : "Draft",
-      description: globalTender.description,
-      publishDate: globalTender.publishDate,
-      closingDate: globalTender.closeDate,
-      tenderFee: formatCurrency(25000),
-      procuringEntity: ministryInfo.name,
-      duration: "12 months",
-      eligibility: "Qualified contractors with relevant experience",
-      requirements: [
-        "Valid CAC certificate",
-        "Tax clearance for last 3 years",
-        "Professional license",
-        "Evidence of similar projects",
-        "Financial capacity documentation",
-      ],
-      technicalSpecs: [
-        "Project specifications as detailed in tender document",
-        "Quality standards must meet government requirements",
-        "Timeline adherence is mandatory",
-      ],
-      createdAt: Date.now(),
-    };
-
-    recentTendersList.unshift(recentTender);
-    const latestRecentTenders = recentTendersList.slice(0, 10);
-    localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
+    // Note: Global tender creation and storage is now handled by synchronizeAllTenderStores()
 
     // Reset form
     setTenderForm({
@@ -721,6 +818,9 @@ const TenderManagement = () => {
 
     setTenders(updatedTenders);
     saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+
+    // Synchronize all tender stores after status update
+    synchronizeAllTenderStores();
   };
 
   const filteredTenders = tenders.filter((tender) => {
@@ -808,7 +908,7 @@ const TenderManagement = () => {
         bg: "bg-gradient-to-r from-blue-100 to-cyan-100",
         text: "text-blue-700",
         border: "border-blue-200",
-        icon: "📋",
+        icon: "���",
       },
       "Contract Signed": {
         bg: "bg-gradient-to-r from-blue-100 to-blue-100",
@@ -925,6 +1025,116 @@ const TenderManagement = () => {
             </div>
             <div className="flex gap-3">
               <Button
+                variant="outline"
+                onClick={() => {
+                  const ministryInfo = getMinistryInfo();
+                  const ministryCode = ministryInfo.code;
+
+                  const mainTenders = JSON.parse(
+                    localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+                  );
+                  const recentTenders = JSON.parse(
+                    localStorage.getItem("recentTenders") || "[]",
+                  );
+                  const featuredTenders = JSON.parse(
+                    localStorage.getItem("featuredTenders") || "[]",
+                  );
+                  const ministryTenders = JSON.parse(
+                    localStorage.getItem(`${ministryCode}_tenders`) || "[]",
+                  );
+
+                  console.log("Storage Debug:", {
+                    mainTenders: mainTenders.map((t) => ({
+                      id: t.id,
+                      title: t.title,
+                      status: t.status,
+                    })),
+                    recentTenders: recentTenders.map((t) => ({
+                      id: t.id,
+                      title: t.title,
+                      status: t.status,
+                    })),
+                    featuredTenders: featuredTenders.map((t) => ({
+                      id: t.id,
+                      title: t.title,
+                      status: t.status,
+                    })),
+                    ministryTenders: ministryTenders.map((t) => ({
+                      id: t.id,
+                      title: t.title,
+                      status: t.status,
+                    })),
+                    currentState: tenders.map((t) => ({
+                      id: t.id,
+                      title: t.title,
+                      status: t.status,
+                    })),
+                  });
+
+                  // Check if tenders have proper data format for Company Dashboard
+                  const sampleRecentTender = recentTenders[0];
+                  const recentTenderHasReqFields = sampleRecentTender
+                    ? "procuringEntity" in sampleRecentTender &&
+                      "deadline" in sampleRecentTender
+                    : false;
+
+                  alert(
+                    `Storage Debug:\n\nMain Store (${STORAGE_KEYS.TENDERS}): ${mainTenders.length} tenders\nRecent Tenders (Company Dashboard): ${recentTenders.length} tenders\nFeatured Tenders (Homepage): ${featuredTenders.length} tenders\nMinistry Tenders (${ministryCode}): ${ministryTenders.length} tenders\nCurrent Component State: ${tenders.length} tenders\n\nRecent Tenders Format OK: ${recentTenderHasReqFields}\n\nCheck console for details.`,
+                  );
+                }}
+                className="px-4 py-3"
+              >
+                <Eye className="h-5 w-5 mr-2" />
+                Debug All Storage
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const refreshedTenders = forceRefreshTenders();
+
+                  // Debug info
+                  const tenderTitles = refreshedTenders.map(
+                    (t: any) => `${t.id}: ${t.title} (${t.status})`,
+                  );
+                  console.log("All tenders after refresh:", refreshedTenders);
+                  alert(
+                    `Refreshed and Synchronized! Found ${refreshedTenders.length} tenders:\n\n${tenderTitles.join("\n")}\n\nAll storage locations updated.`,
+                  );
+                }}
+                className="px-6 py-3"
+              >
+                <Search className="h-5 w-5 mr-2" />
+                Force Refresh
+              </Button>
+              <Button
+                onClick={() => {
+                  // Force synchronization and trigger page refresh
+                  forceRefreshTenders();
+
+                  // Trigger storage events to notify other components
+                  window.dispatchEvent(
+                    new StorageEvent("storage", {
+                      key: "recentTenders",
+                      newValue: localStorage.getItem("recentTenders"),
+                    }),
+                  );
+                  window.dispatchEvent(
+                    new StorageEvent("storage", {
+                      key: "featuredTenders",
+                      newValue: localStorage.getItem("featuredTenders"),
+                    }),
+                  );
+
+                  alert(
+                    "Full sync completed! Data should now appear on Company Dashboard and Homepage.\n\nYou may need to refresh those pages to see updates.",
+                  );
+                }}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+              >
+                <CheckCircle className="h-5 w-5 mr-2" />
+                Full Sync & Notify
+              </Button>
+              <Button
                 onClick={() => setShowTenderModal(true)}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
               >
@@ -937,15 +1147,20 @@ const TenderManagement = () => {
       </div>
 
       {/* Enhanced Tabs Navigation */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        defaultValue="overview"
+        className="w-full"
+      >
         <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-blue-100 shadow-lg p-2">
           <TabsList className="grid w-full grid-cols-8 bg-transparent gap-1">
             <TabsTrigger
-              value="creation"
+              value="overview"
               className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-50 border border-transparent data-[state=active]:border-blue-200"
             >
-              <FileText className="h-4 w-4" />
-              <span className="font-medium">Creation</span>
+              <Eye className="h-4 w-4" />
+              <span className="font-medium">Overview</span>
             </TabsTrigger>
             <TabsTrigger
               value="administration"
@@ -1000,7 +1215,7 @@ const TenderManagement = () => {
         </div>
 
         {/* Enhanced Tender Creation & Publication */}
-        <TabsContent value="creation" className="space-y-6">
+        <TabsContent value="overview" className="space-y-6">
           {/* Quick Actions Bar */}
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-blue-100 shadow-md p-6">
             <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
@@ -1098,7 +1313,7 @@ const TenderManagement = () => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
                         <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
                           <DollarSign className="h-4 w-4 text-emerald-600" />
                           <div>
@@ -1129,6 +1344,17 @@ const TenderManagement = () => {
                             </p>
                             <p className="text-sm font-bold text-blue-800">
                               {tender.tenderType}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 border border-purple-200 rounded-lg">
+                          <Users className="h-4 w-4 text-purple-600" />
+                          <div>
+                            <p className="text-xs text-purple-600 font-medium">
+                              Bids Received
+                            </p>
+                            <p className="text-sm font-bold text-purple-800">
+                              {getBidCount(tender.id)}
                             </p>
                           </div>
                         </div>
@@ -1164,6 +1390,21 @@ const TenderManagement = () => {
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
+                        {getBidCount(tender.id) > 0 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const bids = getBidsForTender(tender.id);
+                              alert(
+                                `Bids for ${tender.title}:\n\n${bids.map((bid) => `• ${bid.companyName} - ${bid.bidAmount} (${bid.status})`).join("\n")}`,
+                              );
+                            }}
+                            className="hover:bg-purple-50 hover:border-purple-300 transition-colors"
+                          >
+                            <Users className="h-4 w-4" />
+                          </Button>
+                        )}
                         {tender.status === "Draft" && (
                           <Button
                             variant="outline"
@@ -1185,6 +1426,9 @@ const TenderManagement = () => {
                                 STORAGE_KEYS.TENDERS,
                                 updatedTenders,
                               );
+
+                              // Synchronize all tender stores after publishing
+                              synchronizeAllTenderStores();
                             }}
                             className="hover:bg-green-50 hover:border-green-300 transition-colors"
                           >
@@ -2496,7 +2740,7 @@ const TenderManagement = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="budget">Budget (₦)</Label>
+                <Label htmlFor="budget">Budget (���)</Label>
                 <Input
                   id="budget"
                   type="number"
