@@ -314,12 +314,21 @@ const TenderManagement = () => {
     }
   };
 
-  // Function to force refresh tenders from storage
+  // Function to force refresh tenders from storage (with ministry filtering)
   const forceRefreshTenders = () => {
-    const storedTenders = JSON.parse(
+    const allTenders = JSON.parse(
       localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
     );
-    const syncedTenders = storedTenders.map((tender: any) =>
+
+    // Filter by current ministry
+    const ministryInfo = getMinistryInfo();
+    const ministryTenders = allTenders.filter((tender: any) =>
+      tender.ministry === ministryInfo.name
+    );
+
+    console.log(`🔄 Force refresh: ${allTenders.length} total tenders → ${ministryTenders.length} for ${ministryInfo.name}`);
+
+    const syncedTenders = ministryTenders.map((tender: any) =>
       synchronizeTenderStatus(tender),
     );
     setTenders(syncedTenders);
