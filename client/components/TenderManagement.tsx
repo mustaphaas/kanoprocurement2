@@ -1024,15 +1024,18 @@ const TenderManagement = () => {
                   const synchronizedTenders = existingTenders.map((tender: Tender) => synchronizeTenderStatus(tender));
                   setTenders(synchronizedTenders);
 
+                  // Synchronize all tender stores
+                  synchronizeAllTenderStores();
+
                   // Debug info
                   const tenderTitles = existingTenders.map((t: any) => `${t.id}: ${t.title} (${t.status})`);
                   console.log("All tenders in localStorage:", existingTenders);
-                  alert(`Refreshed! Found ${synchronizedTenders.length} tenders:\n\n${tenderTitles.join('\n')}`);
+                  alert(`Refreshed and Synchronized! Found ${synchronizedTenders.length} tenders:\n\n${tenderTitles.join('\n')}\n\nAll storage locations updated.`);
                 }}
                 className="px-6 py-3"
               >
                 <Search className="h-5 w-5 mr-2" />
-                Refresh & Debug
+                Refresh & Sync
               </Button>
               <Button
                 onClick={() => setShowTenderModal(true)}
