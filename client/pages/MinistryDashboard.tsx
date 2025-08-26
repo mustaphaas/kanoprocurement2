@@ -1575,7 +1575,7 @@ export default function MinistryDashboard() {
               projectTitle: "Urban Drainage System Development",
               requestDate: "2024-02-08",
               status: "Pending",
-              projectValue: "���12,300,000,000",
+              projectValue: "₦12,300,000,000",
               contractorName: "Emirate Construction Co",
               expectedDuration: "15 months",
             },
@@ -10217,7 +10217,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       <li>����� 90% faster processing</li>
                       <li>��� Reduced human errors</li>
                       <li>• Real-time notifications</li>
-                      <li>����� Automatic compliance checks</li>
+                      <li>���� Automatic compliance checks</li>
                     </ul>
                   </div>
                 </div>
@@ -11258,6 +11258,15 @@ Blockchain Timestamp: ${Date.now()}
                   hoverGradient: "from-teal-50 to-blue-50",
                   textColor: "text-teal-700",
                   borderColor: "border-teal-200",
+                },
+                {
+                  key: "payment-requests",
+                  label: "Payment Requests",
+                  icon: CreditCard,
+                  gradient: "from-green-600 to-emerald-600",
+                  hoverGradient: "from-green-50 to-emerald-50",
+                  textColor: "text-green-700",
+                  borderColor: "border-green-200",
                 },
                 {
                   key: "reports",
