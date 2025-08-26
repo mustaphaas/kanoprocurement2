@@ -226,7 +226,7 @@ const TenderManagement = () => {
     }
   };
 
-  // Function to synchronize tender data across all storage locations
+  // Function to synchronize tender data to ministry-specific storage only
   const synchronizeAllTenderStores = () => {
     try {
       // Get ministry info for prefixing
@@ -306,7 +306,7 @@ const TenderManagement = () => {
         JSON.stringify(featuredTendersFormat.slice(0, 5)),
       );
 
-      console.log(`Synchronized tender data for ministry ${ministryCode} only`);
+      console.log(`✅ Synchronized tender data for ministry ${ministryCode} only (no global keys)`);
       return mainTenders;
     } catch (error) {
       console.error("Error synchronizing tender stores:", error);
