@@ -59,6 +59,7 @@ import {
   Archive,
   Lock,
   RefreshCw,
+  Receipt,
 } from "lucide-react";
 
 type CompanyStatus = "Pending" | "Approved" | "Suspended" | "Blacklisted";
