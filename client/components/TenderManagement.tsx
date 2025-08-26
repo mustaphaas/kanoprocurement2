@@ -1000,7 +1000,7 @@ const TenderManagement = () => {
         </div>
 
         {/* Enhanced Tender Creation & Publication */}
-        <TabsContent value="creation" className="space-y-6">
+        <TabsContent value="overview" className="space-y-6">
           {/* Quick Actions Bar */}
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-blue-100 shadow-md p-6">
             <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
