@@ -39,6 +39,7 @@ import {
   Crown,
 } from "lucide-react";
 import { tenderStatusChecker, TenderStatus } from "@/lib/tenderSettings";
+import { getCurrentMinistryContext, getMinistryStorageKey } from "@/lib/ministryStorageHelper";
 
 interface FeaturedTender {
   id: string;
