@@ -874,7 +874,16 @@ export default function CompanyDashboard() {
     };
     localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
 
-    // Update company stats and add notification
+    // Create bid confirmation message using message service
+    messageService.createBidConfirmationMessage({
+      id: bidData.id,
+      tenderId: selectedTender.id,
+      tenderTitle: selectedTender.title,
+      bidAmount: bidData.bidAmount,
+      ministry: selectedTender.ministry,
+    }, companyData.email);
+
+    // Legacy notification for backwards compatibility
     setNotifications((prev) => [
       {
         id: Date.now().toString(),
