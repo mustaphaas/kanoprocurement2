@@ -107,7 +107,8 @@ type CurrentView =
   | "users"
   | "procurement-planning"
   | "tender-management"
-  | "contract-management";
+  | "contract-management"
+  | "payment-requests";
 
 type TenderSubView =
   | "list"
