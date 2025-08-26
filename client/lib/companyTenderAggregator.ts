@@ -12,15 +12,18 @@ const discoverMinistryCodesWithTenders = (): string[] => {
   // Scan all localStorage keys for pattern *_recentTenders
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key && key.endsWith('_recentTenders')) {
-      const ministryCode = key.replace('_recentTenders', '');
-      if (ministryCode.length <= 10) { // Reasonable ministry code length
+    if (key && key.endsWith("_recentTenders")) {
+      const ministryCode = key.replace("_recentTenders", "");
+      if (ministryCode.length <= 10) {
+        // Reasonable ministry code length
         ministryCodes.push(ministryCode);
       }
     }
   }
 
-  console.log(`🔍 Discovered ministry codes with tender data: ${ministryCodes.join(', ')}`);
+  console.log(
+    `🔍 Discovered ministry codes with tender data: ${ministryCodes.join(", ")}`,
+  );
   return ministryCodes;
 };
 
@@ -34,7 +37,9 @@ export const getMinistryTenders = (ministryCode: string) => {
   if (storedTenders) {
     try {
       const parsedTenders = JSON.parse(storedTenders);
-      console.log(`📋 Found ${parsedTenders.length} tenders for ministry ${ministryCode}`);
+      console.log(
+        `📋 Found ${parsedTenders.length} tenders for ministry ${ministryCode}`,
+      );
       return parsedTenders;
     } catch (error) {
       console.error(
@@ -52,7 +57,10 @@ export const getMinistryTenders = (ministryCode: string) => {
 /**
  * Get all storage keys that match the ministry tender pattern
  */
-export const getMinistryStorageKey = (ministryCode: string, keyType: string): string => {
+export const getMinistryStorageKey = (
+  ministryCode: string,
+  keyType: string,
+): string => {
   return `${ministryCode}_${keyType}`;
 };
 

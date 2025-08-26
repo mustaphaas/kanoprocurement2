@@ -70,11 +70,13 @@ export default function AllTenders() {
         const allTenders = JSON.parse(mainTenders);
 
         // Filter by current ministry
-        const ministryTenders = allTenders.filter((tender: any) =>
-          tender.ministry === ministryName
+        const ministryTenders = allTenders.filter(
+          (tender: any) => tender.ministry === ministryName,
         );
 
-        console.log(`🏛️ AllTenders: ${allTenders.length} total → ${ministryTenders.length} for ${ministryName}`);
+        console.log(
+          `🏛️ AllTenders: ${allTenders.length} total → ${ministryTenders.length} for ${ministryName}`,
+        );
 
         if (ministryTenders.length > 0) {
           // Convert to AllTenders format and apply status transitions
@@ -132,7 +134,9 @@ export default function AllTenders() {
       // Monitor main tender storage for changes
 
       if (e.key === "kanoproc_tenders") {
-        console.log("Main tender storage updated, reloading ministry-filtered view...");
+        console.log(
+          "Main tender storage updated, reloading ministry-filtered view...",
+        );
         loadAllTenders();
       }
     };

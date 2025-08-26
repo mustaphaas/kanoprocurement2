@@ -440,9 +440,11 @@ class MessageService {
         // Scan all ministry-specific recentTenders keys
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
-          if (key && key.endsWith('_recentTenders')) {
+          if (key && key.endsWith("_recentTenders")) {
             try {
-              const ministryTenders = JSON.parse(localStorage.getItem(key) || '[]');
+              const ministryTenders = JSON.parse(
+                localStorage.getItem(key) || "[]",
+              );
               allTenders.push(...ministryTenders);
             } catch (error) {
               console.error(`Error parsing tenders for key ${key}:`, error);

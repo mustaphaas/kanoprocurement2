@@ -4063,7 +4063,9 @@ export default function MinistryDashboard() {
         JSON.stringify(latestRecentTenders),
       );
 
-      console.log(`✅ Tender ${tender.id} stored in ministry-specific key: ${recentTendersKey}`);
+      console.log(
+        `✅ Tender ${tender.id} stored in ministry-specific key: ${recentTendersKey}`,
+      );
 
       // Reset form
       setNewTender({

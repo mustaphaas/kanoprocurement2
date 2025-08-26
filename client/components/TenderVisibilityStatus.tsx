@@ -13,7 +13,11 @@ export const TenderVisibilityStatus: React.FC = () => {
           const ministryUser = localStorage.getItem("ministryUser");
           if (ministryUser) {
             const userData = JSON.parse(ministryUser);
-            return userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH";
+            return (
+              userData.ministryCode ||
+              userData.ministryId?.toUpperCase() ||
+              "MOH"
+            );
           }
         } catch (error) {
           console.error("Error getting ministry context:", error);

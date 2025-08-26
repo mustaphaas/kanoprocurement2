@@ -1017,7 +1017,9 @@ export default function NOCRequestsTab() {
         const ministryUser = localStorage.getItem("ministryUser");
         if (ministryUser) {
           const userData = JSON.parse(ministryUser);
-          return userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH";
+          return (
+            userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH"
+          );
         }
       } catch (error) {
         console.error("Error getting ministry context:", error);
@@ -1040,7 +1042,9 @@ export default function NOCRequestsTab() {
         : tender,
     );
     localStorage.setItem(featuredTendersKey, JSON.stringify(updatedFeatured));
-    console.log(`✅ Updated tender ${tenderId} status in ministry-specific key: ${featuredTendersKey}`);
+    console.log(
+      `✅ Updated tender ${tenderId} status in ministry-specific key: ${featuredTendersKey}`,
+    );
   };
 
   const triggerContractNotification = (contractData: any) => {

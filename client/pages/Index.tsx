@@ -233,50 +233,57 @@ export default function Index() {
   const loadRecentTenders = () => {
     try {
       // Import the aggregator function
-      import("@/lib/companyTenderAggregator").then(({ getAggregatedMinistryTenders }) => {
-        const aggregatedTenders = getAggregatedMinistryTenders();
+      import("@/lib/companyTenderAggregator").then(
+        ({ getAggregatedMinistryTenders }) => {
+          const aggregatedTenders = getAggregatedMinistryTenders();
 
-        if (aggregatedTenders && aggregatedTenders.length > 0) {
-          console.log(
-            "✅ Loaded aggregated recent tenders from all ministries:",
-            aggregatedTenders.length,
-          );
+          if (aggregatedTenders && aggregatedTenders.length > 0) {
+            console.log(
+              "✅ Loaded aggregated recent tenders from all ministries:",
+              aggregatedTenders.length,
+            );
 
-          // Convert to homepage format if needed
-          const homepageFormat = aggregatedTenders.map((tender: any) => ({
-            id: tender.id,
-            title: tender.title,
-            description: tender.description,
-            category: tender.category,
-            value: tender.value,
-            deadline: tender.deadline,
-            location: tender.location || "Kano State",
-            views: tender.views || Math.floor(Math.random() * 200) + 50,
-            status: tender.status || "Open",
-            publishDate: tender.publishDate || tender.publishedDate,
-            closingDate: tender.closingDate || tender.deadline,
-            tenderFee: tender.tenderFee || "₦25,000",
-            procuringEntity: tender.procuringEntity || tender.ministry || "Kano State Government",
-            duration: tender.duration || "12 months",
-            eligibility: tender.eligibility || "Qualified contractors with relevant experience",
-            requirements: tender.requirements || [
-              "Valid CAC certificate",
-              "Tax clearance for last 3 years",
-              "Professional license",
-              "Evidence of similar projects",
-              "Financial capacity documentation",
-            ],
-            technicalSpecs: tender.technicalSpecs || [
-              "Project specifications as detailed in tender document",
-              "Quality standards must meet government requirements",
-              "Timeline adherence is mandatory",
-            ],
-          }));
+            // Convert to homepage format if needed
+            const homepageFormat = aggregatedTenders.map((tender: any) => ({
+              id: tender.id,
+              title: tender.title,
+              description: tender.description,
+              category: tender.category,
+              value: tender.value,
+              deadline: tender.deadline,
+              location: tender.location || "Kano State",
+              views: tender.views || Math.floor(Math.random() * 200) + 50,
+              status: tender.status || "Open",
+              publishDate: tender.publishDate || tender.publishedDate,
+              closingDate: tender.closingDate || tender.deadline,
+              tenderFee: tender.tenderFee || "₦25,000",
+              procuringEntity:
+                tender.procuringEntity ||
+                tender.ministry ||
+                "Kano State Government",
+              duration: tender.duration || "12 months",
+              eligibility:
+                tender.eligibility ||
+                "Qualified contractors with relevant experience",
+              requirements: tender.requirements || [
+                "Valid CAC certificate",
+                "Tax clearance for last 3 years",
+                "Professional license",
+                "Evidence of similar projects",
+                "Financial capacity documentation",
+              ],
+              technicalSpecs: tender.technicalSpecs || [
+                "Project specifications as detailed in tender document",
+                "Quality standards must meet government requirements",
+                "Timeline adherence is mandatory",
+              ],
+            }));
 
-          setRecentTenders(homepageFormat);
-          return;
-        }
-      });
+            setRecentTenders(homepageFormat);
+            return;
+          }
+        },
+      );
     } catch (error) {
       console.error("Error loading aggregated recent tenders:", error);
     }
@@ -295,9 +302,11 @@ export default function Index() {
     // Listen for localStorage changes (when tenders are published from other tabs/components)
     const handleStorageChange = (e: StorageEvent) => {
       // Listen for any ministry-specific tender updates
-      if (e.key && e.key.endsWith('_recentTenders')) {
-        const ministryCode = e.key.replace('_recentTenders', '');
-        console.log(`Recent tenders updated for ministry ${ministryCode}, reloading...`);
+      if (e.key && e.key.endsWith("_recentTenders")) {
+        const ministryCode = e.key.replace("_recentTenders", "");
+        console.log(
+          `Recent tenders updated for ministry ${ministryCode}, reloading...`,
+        );
         loadRecentTenders();
       }
     };
@@ -414,8 +423,8 @@ export default function Index() {
       // Check localStorage for all ministry featured tender keys
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.endsWith('_featuredTenders')) {
-          const ministryCode = key.replace('_featuredTenders', '');
+        if (key && key.endsWith("_featuredTenders")) {
+          const ministryCode = key.replace("_featuredTenders", "");
           const storedTenders = localStorage.getItem(key);
 
           if (storedTenders) {
@@ -430,7 +439,10 @@ export default function Index() {
                 allFeaturedTenders.push(...tendersWithSource);
               }
             } catch (parseError) {
-              console.error(`Error parsing featured tenders for ministry ${ministryCode}:`, parseError);
+              console.error(
+                `Error parsing featured tenders for ministry ${ministryCode}:`,
+                parseError,
+              );
             }
           }
         }
@@ -443,7 +455,9 @@ export default function Index() {
             index === self.findIndex((t) => t.id === tender.id),
         );
 
-        const tendersWithUpdatedStatus = uniqueTenders.map(applyStatusTransition);
+        const tendersWithUpdatedStatus = uniqueTenders.map(
+          applyStatusTransition,
+        );
 
         // Limit to 5 most recent tenders for featured section
         const featuredSubset = tendersWithUpdatedStatus.slice(0, 5);
@@ -472,9 +486,11 @@ export default function Index() {
     // Listen for localStorage changes (when tenders are published from other tabs/components)
     const handleStorageChange = (e: StorageEvent) => {
       // Listen for any ministry-specific featured tender updates
-      if (e.key && e.key.endsWith('_featuredTenders')) {
-        const ministryCode = e.key.replace('_featuredTenders', '');
-        console.log(`Featured tenders updated for ministry ${ministryCode}, reloading...`);
+      if (e.key && e.key.endsWith("_featuredTenders")) {
+        const ministryCode = e.key.replace("_featuredTenders", "");
+        console.log(
+          `Featured tenders updated for ministry ${ministryCode}, reloading...`,
+        );
         loadFeaturedTenders();
       }
     };

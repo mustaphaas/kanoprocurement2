@@ -11,21 +11,21 @@ export const checkForGlobalKeyContamination = (): {
   contaminatedKeys: string[];
   report: string;
 } => {
-  const LEGACY_GLOBAL_KEYS = ['recentTenders', 'featuredTenders'];
+  const LEGACY_GLOBAL_KEYS = ["recentTenders", "featuredTenders"];
   const contaminatedKeys: string[] = [];
-  
-  LEGACY_GLOBAL_KEYS.forEach(key => {
+
+  LEGACY_GLOBAL_KEYS.forEach((key) => {
     const data = localStorage.getItem(key);
-    if (data && data !== '[]' && data !== 'null') {
+    if (data && data !== "[]" && data !== "null") {
       contaminatedKeys.push(key);
     }
   });
-  
+
   const hasContamination = contaminatedKeys.length > 0;
   const report = hasContamination
-    ? `❌ CONTAMINATION DETECTED: Found data in legacy global keys: ${contaminatedKeys.join(', ')}`
+    ? `❌ CONTAMINATION DETECTED: Found data in legacy global keys: ${contaminatedKeys.join(", ")}`
     : `✅ NO CONTAMINATION: All legacy global keys are clean`;
-    
+
   return { hasContamination, contaminatedKeys, report };
 };
 
@@ -34,17 +34,18 @@ export const checkForGlobalKeyContamination = (): {
  */
 export const getMinistryCodesWithData = (): string[] => {
   const ministryCodes: string[] = [];
-  
+
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key && key.endsWith('_recentTenders')) {
-      const ministryCode = key.replace('_recentTenders', '');
-      if (ministryCode.length <= 10) { // Reasonable ministry code length
+    if (key && key.endsWith("_recentTenders")) {
+      const ministryCode = key.replace("_recentTenders", "");
+      if (ministryCode.length <= 10) {
+        // Reasonable ministry code length
         ministryCodes.push(ministryCode);
       }
     }
   }
-  
+
   return ministryCodes;
 };
 
@@ -58,19 +59,19 @@ export const verifyMinistryIsolation = (): {
 } => {
   const ministryCodes = getMinistryCodesWithData();
   const details: { ministryCode: string; tenderCount: number }[] = [];
-  
-  ministryCodes.forEach(ministryCode => {
+
+  ministryCodes.forEach((ministryCode) => {
     const recentTendersKey = `${ministryCode}_recentTenders`;
     const data = localStorage.getItem(recentTendersKey);
     const tenderCount = data ? JSON.parse(data).length : 0;
     details.push({ ministryCode, tenderCount });
   });
-  
+
   const isIsolated = ministryCodes.length > 0;
   const report = isIsolated
-    ? `✅ ISOLATION VERIFIED: Found ${ministryCodes.length} ministries with isolated data: ${ministryCodes.join(', ')}`
+    ? `✅ ISOLATION VERIFIED: Found ${ministryCodes.length} ministries with isolated data: ${ministryCodes.join(", ")}`
     : `⚠️ NO MINISTRY DATA: No ministry-specific data found`;
-    
+
   return { isIsolated, report, details };
 };
 
@@ -87,27 +88,29 @@ export const runFullVerification = (): {
 } => {
   const globalKeyCheck = checkForGlobalKeyContamination();
   const isolationCheck = verifyMinistryIsolation();
-  
+
   const passed = !globalKeyCheck.hasContamination && isolationCheck.isIsolated;
-  
+
   const summary = `
 === MINISTRY DATA ISOLATION VERIFICATION ===
 
 ${globalKeyCheck.report}
 ${isolationCheck.report}
 
-${isolationCheck.details.length > 0 ? 
-  `Ministry Data Summary:
-${isolationCheck.details.map(d => `  • ${d.ministryCode}: ${d.tenderCount} tenders`).join('\n')}` 
-  : 'No ministry data found'}
+${
+  isolationCheck.details.length > 0
+    ? `Ministry Data Summary:
+${isolationCheck.details.map((d) => `  • ${d.ministryCode}: ${d.tenderCount} tenders`).join("\n")}`
+    : "No ministry data found"
+}
 
-OVERALL STATUS: ${passed ? '✅ PASSED' : '❌ FAILED'}
+OVERALL STATUS: ${passed ? "✅ PASSED" : "❌ FAILED"}
   `;
-  
+
   return {
     passed,
     summary,
-    details: { globalKeyCheck, isolationCheck }
+    details: { globalKeyCheck, isolationCheck },
   };
 };
 
@@ -117,15 +120,18 @@ OVERALL STATUS: ${passed ? '✅ PASSED' : '❌ FAILED'}
 export const logVerificationReport = (): void => {
   const result = runFullVerification();
   console.log(result.summary);
-  
+
   if (!result.passed) {
-    console.warn('❌ Ministry isolation verification failed!');
+    console.warn("❌ Ministry isolation verification failed!");
     if (result.details.globalKeyCheck.hasContamination) {
-      console.warn('  - Legacy global keys still contain data');
-      console.warn('  - Contaminated keys:', result.details.globalKeyCheck.contaminatedKeys);
+      console.warn("  - Legacy global keys still contain data");
+      console.warn(
+        "  - Contaminated keys:",
+        result.details.globalKeyCheck.contaminatedKeys,
+      );
     }
   } else {
-    console.log('✅ Ministry isolation verification passed!');
+    console.log("✅ Ministry isolation verification passed!");
   }
 };
 

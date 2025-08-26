@@ -30,7 +30,7 @@ const getCurrentMinistryInfo = () => {
   } catch (error) {
     console.error("Error getting ministry context:", error);
   }
-  
+
   return {
     ministryName: "Ministry of Health",
     ministryCode: "MOH",
@@ -42,25 +42,29 @@ const getCurrentMinistryInfo = () => {
  */
 export const testMinistryFiltering = (): FilteringTestResult => {
   const { ministryName, ministryCode } = getCurrentMinistryInfo();
-  
+
   // Get all tenders from main storage
-  const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
-  
+  const mainTenders = JSON.parse(
+    localStorage.getItem("kanoproc_tenders") || "[]",
+  );
+
   // Count tenders by ministry
   const tendersByMinistry: { [ministry: string]: number } = {};
   let filteredTenders = 0;
-  
+
   mainTenders.forEach((tender: any) => {
     const tenderMinistry = tender.ministry || "Unknown";
-    tendersByMinistry[tenderMinistry] = (tendersByMinistry[tenderMinistry] || 0) + 1;
-    
+    tendersByMinistry[tenderMinistry] =
+      (tendersByMinistry[tenderMinistry] || 0) + 1;
+
     if (tenderMinistry === ministryName) {
       filteredTenders++;
     }
   });
-  
-  const passed = filteredTenders < mainTenders.length || mainTenders.length === 0;
-  
+
+  const passed =
+    filteredTenders < mainTenders.length || mainTenders.length === 0;
+
   const summary = `
 === MINISTRY FILTERING TEST ===
 
@@ -71,14 +75,16 @@ Tenders for Current Ministry: ${filteredTenders}
 Tenders by Ministry:
 ${Object.entries(tendersByMinistry)
   .map(([ministry, count]) => `  • ${ministry}: ${count} tenders`)
-  .join('\n')}
+  .join("\n")}
 
-TEST RESULT: ${passed ? '✅ PASSED' : '❌ FAILED'}
-${passed 
-  ? 'Ministry filtering is working correctly - not all tenders belong to current ministry' 
-  : 'ISSUE: All tenders appear to belong to current ministry or no filtering detected'}
+TEST RESULT: ${passed ? "✅ PASSED" : "❌ FAILED"}
+${
+  passed
+    ? "Ministry filtering is working correctly - not all tenders belong to current ministry"
+    : "ISSUE: All tenders appear to belong to current ministry or no filtering detected"
+}
   `;
-  
+
   return {
     passed,
     summary,
@@ -87,7 +93,7 @@ ${passed
       currentMinistry: ministryName,
       filteredTenders,
       tendersByMinistry,
-    }
+    },
   };
 };
 
@@ -97,12 +103,14 @@ ${passed
 export const logFilteringTest = (): void => {
   const result = testMinistryFiltering();
   console.log(result.summary);
-  
+
   if (!result.passed) {
-    console.warn('❌ Ministry filtering test failed!');
-    console.warn('This suggests all tenders are showing in ministry dashboards');
+    console.warn("❌ Ministry filtering test failed!");
+    console.warn(
+      "This suggests all tenders are showing in ministry dashboards",
+    );
   } else {
-    console.log('✅ Ministry filtering test passed!');
+    console.log("✅ Ministry filtering test passed!");
   }
 };
 
@@ -116,26 +124,30 @@ export const testCompanyDashboardFiltering = (): {
   totalTenderCount: number;
 } => {
   // Simulate how CompanyDashboard loads tenders
-  const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
-  
+  const mainTenders = JSON.parse(
+    localStorage.getItem("kanoproc_tenders") || "[]",
+  );
+
   // Company dashboard should show ALL tenders (no filtering)
   const companyTenderCount = mainTenders.length; // CompanyDashboard shows all
   const totalTenderCount = mainTenders.length;
-  
+
   const passed = companyTenderCount === totalTenderCount;
-  
+
   const summary = `
 === COMPANY DASHBOARD TEST ===
 
 Total Tenders in Storage: ${totalTenderCount}
 Tenders Shown to Companies: ${companyTenderCount}
 
-TEST RESULT: ${passed ? '✅ PASSED' : '❌ FAILED'}
-${passed 
-  ? 'Company dashboard correctly shows ALL tenders from all ministries' 
-  : 'ISSUE: Company dashboard is not showing all available tenders'}
+TEST RESULT: ${passed ? "✅ PASSED" : "❌ FAILED"}
+${
+  passed
+    ? "Company dashboard correctly shows ALL tenders from all ministries"
+    : "ISSUE: Company dashboard is not showing all available tenders"
+}
   `;
-  
+
   return {
     passed,
     summary,
@@ -155,9 +167,9 @@ export const runCompleteFilteringTest = (): {
 } => {
   const ministryTest = testMinistryFiltering();
   const companyTest = testCompanyDashboardFiltering();
-  
+
   const passed = ministryTest.passed && companyTest.passed;
-  
+
   const summary = `
 === COMPLETE MINISTRY FILTERING VERIFICATION ===
 
@@ -165,9 +177,9 @@ ${ministryTest.summary}
 
 ${companyTest.summary}
 
-OVERALL RESULT: ${passed ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}
+OVERALL RESULT: ${passed ? "✅ ALL TESTS PASSED" : "❌ SOME TESTS FAILED"}
   `;
-  
+
   return {
     passed,
     summary,

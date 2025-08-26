@@ -527,7 +527,9 @@ export default function CompanyDashboard() {
       if (mainTenders) {
         try {
           allTenders = JSON.parse(mainTenders);
-          console.log(`🏢 CompanyDashboard: Loaded ${allTenders.length} tenders from ALL ministries`);
+          console.log(
+            `🏢 CompanyDashboard: Loaded ${allTenders.length} tenders from ALL ministries`,
+          );
         } catch (error) {
           console.error("Error parsing main tenders:", error);
         }
@@ -575,8 +577,7 @@ export default function CompanyDashboard() {
           deadline: tender.closingDate,
           location: "Kano State",
           status:
-            tender.status === "Open" ||
-            tender.status === "Published"
+            tender.status === "Open" || tender.status === "Published"
               ? "Open"
               : "Closed",
           hasExpressedInterest:
