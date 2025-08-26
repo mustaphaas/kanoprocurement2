@@ -129,13 +129,10 @@ export default function AllTenders() {
 
     // Listen for localStorage changes (when tenders are published from other tabs/components)
     const handleStorageChange = (e: StorageEvent) => {
-      const { ministryCode } = getCurrentMinistryContext();
-      const recentTendersKey = getMinistryStorageKey("recentTenders");
+      // Monitor main tender storage for changes
 
-      if (e.key === recentTendersKey) {
-        console.log(
-          `Recent tenders updated for ministry ${ministryCode}, reloading...`,
-        );
+      if (e.key === "kanoproc_tenders") {
+        console.log("Main tender storage updated, reloading ministry-filtered view...");
         loadAllTenders();
       }
     };
