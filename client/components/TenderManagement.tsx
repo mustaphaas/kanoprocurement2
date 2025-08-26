@@ -189,7 +189,7 @@ const STORAGE_KEYS = {
 };
 
 const TenderManagement = () => {
-  const [activeTab, setActiveTab] = useState("creation");
+  const [activeTab, setActiveTab] = useState("overview");
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -197,6 +197,34 @@ const TenderManagement = () => {
   const [showTenderModal, setShowTenderModal] = useState(false);
   const [showAmendmentModal, setShowAmendmentModal] = useState(false);
   const [showEvaluationModal, setShowEvaluationModal] = useState(false);
+
+  // Function to get bid count for a specific tender
+  const getBidCount = (tenderId: string): number => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return 0;
+
+      const bids = JSON.parse(storedBids);
+      return bids.filter((bid: any) => bid.tenderId === tenderId).length;
+    } catch (error) {
+      console.error("Error reading bids:", error);
+      return 0;
+    }
+  };
+
+  // Function to get all bids for a specific tender
+  const getBidsForTender = (tenderId: string): any[] => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return [];
+
+      const bids = JSON.parse(storedBids);
+      return bids.filter((bid: any) => bid.tenderId === tenderId);
+    } catch (error) {
+      console.error("Error reading bids:", error);
+      return [];
+    }
+  };
 
   // Stepper state for evaluation workflow
   const [currentStep, setCurrentStep] = useState(1);
