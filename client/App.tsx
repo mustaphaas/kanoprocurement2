@@ -24,10 +24,13 @@ import FirebaseSetup from "./pages/FirebaseSetup";
 import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation";
 import TenderStatusDemo from "./pages/TenderStatusDemo";
 import { performFullMigration } from "@/lib/tenderMigration";
+import { runCleanupIfNeeded } from "@/lib/globalKeyCleanup";
 
 // Trigger tender system migration on app startup
 try {
   performFullMigration();
+  // Clean up legacy global keys to prevent ministry data leakage
+  runCleanupIfNeeded();
 } catch (error) {
   console.error("Error during tender migration:", error);
 }
