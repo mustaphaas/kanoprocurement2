@@ -43,6 +43,7 @@ import {
   getCurrentMinistryContext,
   getMinistryStorageKey,
 } from "@/lib/ministryStorageHelper";
+import "@/lib/consoleTenderDebug";
 
 interface FeaturedTender {
   id: string;
