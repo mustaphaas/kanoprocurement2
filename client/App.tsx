@@ -26,6 +26,7 @@ import TenderStatusDemo from "./pages/TenderStatusDemo";
 import { performFullMigration } from "@/lib/tenderMigration";
 import { runCleanupIfNeeded } from "@/lib/globalKeyCleanup";
 import { logVerificationReport } from "@/lib/ministryIsolationVerification";
+import { logFilteringTest } from "@/lib/ministryFilteringTest";
 
 // Trigger tender system migration on app startup
 try {
@@ -33,7 +34,10 @@ try {
   // Clean up legacy global keys to prevent ministry data leakage
   runCleanupIfNeeded();
   // Verify ministry data isolation is working properly
-  setTimeout(() => logVerificationReport(), 1000); // Delay to let initial data load
+  setTimeout(() => {
+    logVerificationReport();
+    logFilteringTest(); // Test ministry filtering logic
+  }, 1000); // Delay to let initial data load
 } catch (error) {
   console.error("Error during tender migration:", error);
 }
