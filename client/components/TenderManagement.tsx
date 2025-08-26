@@ -589,8 +589,10 @@ const TenderManagement = () => {
 
       setTenders(mockTenders);
       saveToStorage(STORAGE_KEYS.TENDERS, mockTenders);
+      synchronizeAllTenderStores();
     } else {
       setTenders(existingTenders);
+      synchronizeAllTenderStores();
     }
   }, []);
 
