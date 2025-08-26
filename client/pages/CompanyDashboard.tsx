@@ -779,7 +779,16 @@ export default function CompanyDashboard() {
     };
     localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
 
-    // Update company stats
+    // Create EOI confirmation message using message service
+    messageService.createEOIConfirmationMessage({
+      id: selectedTender.id,
+      title: selectedTender.title,
+      ministry: selectedTender.ministry,
+      deadline: selectedTender.deadline,
+      value: selectedTender.value,
+    }, companyData.email);
+
+    // Legacy notification for backwards compatibility
     setNotifications((prev) => [
       {
         id: Date.now().toString(),
