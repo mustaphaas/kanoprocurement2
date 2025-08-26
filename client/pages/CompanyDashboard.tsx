@@ -517,11 +517,21 @@ export default function CompanyDashboard() {
 
   const [tenders, setTenders] = useState<Tender[]>(getDefaultTenders());
 
-  // Load tenders from localStorage (recent tenders created by ministries)
+  // Load tenders from localStorage (ALL tenders from main storage for companies)
   useEffect(() => {
     const loadTenders = () => {
-      // Load from all ministry-specific storage keys to show all available tenders to companies
-      const allMinistryTenders = getAggregatedMinistryTenders();
+      // Companies should see ALL tenders from ALL ministries
+      const mainTenders = localStorage.getItem("kanoproc_tenders");
+      let allTenders: any[] = [];
+
+      if (mainTenders) {
+        try {
+          allTenders = JSON.parse(mainTenders);
+          console.log(`🏢 CompanyDashboard: Loaded ${allTenders.length} tenders from ALL ministries`);
+        } catch (error) {
+          console.error("Error parsing main tenders:", error);
+        }
+      }
       const storedTenderStates =
         localStorage.getItem("companyTenderStates") || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
