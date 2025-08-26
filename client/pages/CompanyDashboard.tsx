@@ -590,7 +590,7 @@ export default function CompanyDashboard() {
     // Set up interval to refresh tenders every 30 seconds
     const interval = setInterval(loadTenders, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [companyData.email]);
 
   // Log dashboard access
   useEffect(() => {
