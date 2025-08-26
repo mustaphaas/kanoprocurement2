@@ -704,45 +704,6 @@ const TenderManagement = () => {
     synchronizeAllTenderStores();
 
     // Note: Global tender creation and storage is now handled by synchronizeAllTenderStores()
-    localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
-
-    // Also store in recentTenders
-    const existingRecentTenders = localStorage.getItem("recentTenders") || "[]";
-    const recentTendersList = JSON.parse(existingRecentTenders);
-    const recentTender = {
-      id: globalTender.id,
-      title: globalTender.title,
-      category: "General",
-      value: globalTender.estimatedValue,
-      deadline: globalTender.closeDate,
-      location: "Kano State",
-      views: 0,
-      status: globalTender.status === "Published" ? "Open" : "Draft",
-      description: globalTender.description,
-      publishDate: globalTender.publishDate,
-      closingDate: globalTender.closeDate,
-      tenderFee: formatCurrency(25000),
-      procuringEntity: ministryInfo.name,
-      duration: "12 months",
-      eligibility: "Qualified contractors with relevant experience",
-      requirements: [
-        "Valid CAC certificate",
-        "Tax clearance for last 3 years",
-        "Professional license",
-        "Evidence of similar projects",
-        "Financial capacity documentation",
-      ],
-      technicalSpecs: [
-        "Project specifications as detailed in tender document",
-        "Quality standards must meet government requirements",
-        "Timeline adherence is mandatory",
-      ],
-      createdAt: Date.now(),
-    };
-
-    recentTendersList.unshift(recentTender);
-    const latestRecentTenders = recentTendersList.slice(0, 10);
-    localStorage.setItem("recentTenders", JSON.stringify(latestRecentTenders));
 
     // Reset form
     setTenderForm({
