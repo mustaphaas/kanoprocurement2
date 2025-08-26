@@ -746,7 +746,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "EduTech Solutions Ltd",
-          bidAmount: "₦2,000,000,000",
+          bidAmount: "���2,000,000,000",
           technicalScore: 95,
           financialScore: 92,
           totalScore: 93.5,
@@ -5305,6 +5305,11 @@ Penalty Clause: 0.5% per week for delayed completion`,
     };
   };
 
+  // FIXED: Place useMemo after function definition to avoid temporal dead zone
+  const overviewData = useMemo(() => {
+    return getEnhancedOverviewData();
+  }, [overviewRefreshTrigger, tenders, nocRequests, contracts]);
+
   const renderOverview = () => {
     return (
       <EnhancedMinistryOverview
@@ -9047,7 +9052,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            ��� Contract Management
+            ���� Contract Management
           </h1>
           <p className="text-gray-600">
             Comprehensive contract lifecycle management with digital signatures
