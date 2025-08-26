@@ -523,10 +523,29 @@ export default function CompanyDashboard() {
       const storedTenderStates =
         localStorage.getItem("companyTenderStates") || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
+      const lastProcessedTenders = JSON.parse(localStorage.getItem("lastProcessedTenders") || "[]");
 
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
+          // Check for new tenders and create notifications
+          parsedTenders.forEach((recentTender: any) => {
+            if (!lastProcessedTenders.includes(recentTender.id)) {
+              // This is a new tender, create a "bid created" notification
+              messageService.createBidCreatedMessage({
+                id: recentTender.id,
+                title: recentTender.title,
+                ministry: recentTender.procuringEntity || "Kano State Government",
+                category: recentTender.category,
+                value: formatCurrency(recentTender.value),
+                deadline: recentTender.deadline,
+              }, companyData.email);
+            }
+          });
+
+          // Update processed tenders list
+          const currentTenderIds = parsedTenders.map((t: any) => t.id);
+          localStorage.setItem("lastProcessedTenders", JSON.stringify(currentTenderIds));
           // Convert recent tender format to company dashboard tender format
           const formattedTenders = parsedTenders.map((recentTender: any) => ({
             id: recentTender.id,
