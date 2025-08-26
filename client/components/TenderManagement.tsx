@@ -680,7 +680,17 @@ const TenderManagement = () => {
       const syncedMockTenders = mockTenders.map((tender) =>
         synchronizeTenderStatus(tender),
       );
-      setTenders(syncedMockTenders);
+
+      // Filter mock tenders by current ministry before setting
+      const ministryInfo = getMinistryInfo();
+      const ministryMockTenders = syncedMockTenders.filter((tender) =>
+        tender.ministry === ministryInfo.name
+      );
+
+      console.log(`🎭 Mock data: ${syncedMockTenders.length} total → ${ministryMockTenders.length} for ${ministryInfo.name}`);
+
+      setTenders(ministryMockTenders);
+      // Note: Still save all mock tenders to storage so other ministries can see theirs
       saveToStorage(STORAGE_KEYS.TENDERS, syncedMockTenders);
       synchronizeAllTenderStores();
     } else {
