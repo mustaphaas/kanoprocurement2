@@ -4404,6 +4404,22 @@ export default function CompanyDashboard() {
             </button>
 
             <button
+              onClick={() => setActiveSection("payment-requests")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "payment-requests"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status !== "Approved"}
+            >
+              <Receipt className="h-4 w-4 mr-3" />
+              Payment Requests
+              {companyData.status !== "Approved" && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <button
               onClick={() => setActiveSection("annual-report")}
               className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
                 activeSection === "annual-report"
