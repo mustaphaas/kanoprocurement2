@@ -520,6 +520,8 @@ export default function CompanyDashboard() {
   // Load tenders from localStorage (recent tenders created by ministries)
   useEffect(() => {
     const loadTenders = () => {
+      // Load from all ministry-specific storage keys to show all available tenders to companies
+      const allMinistryTenders = getAggregatedMinistryTenders();
       const storedTenders = localStorage.getItem("recentTenders");
       const storedTenderStates =
         localStorage.getItem("companyTenderStates") || "{}";
@@ -1728,7 +1730,7 @@ export default function CompanyDashboard() {
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">Project Value</option>
                       <option value="0-100m">₦0 - ₦100M</option>
-                      <option value="100m-1b">₦100M - ₦1B</option>
+                      <option value="100m-1b">₦100M - ���1B</option>
                       <option value="1b+">₦1B+</option>
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
