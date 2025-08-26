@@ -1033,11 +1033,11 @@ const TenderManagement = () => {
                   const mainTenders = JSON.parse(
                     localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
                   );
-                  const recentTenders = JSON.parse(
-                    localStorage.getItem("recentTenders") || "[]",
+                  const ministryRecentTenders = JSON.parse(
+                    localStorage.getItem(`${ministryCode}_recentTenders`) || "[]",
                   );
-                  const featuredTenders = JSON.parse(
-                    localStorage.getItem("featuredTenders") || "[]",
+                  const ministryFeaturedTenders = JSON.parse(
+                    localStorage.getItem(`${ministryCode}_featuredTenders`) || "[]",
                   );
                   const ministryTenders = JSON.parse(
                     localStorage.getItem(`${ministryCode}_tenders`) || "[]",
@@ -1049,12 +1049,12 @@ const TenderManagement = () => {
                       title: t.title,
                       status: t.status,
                     })),
-                    recentTenders: recentTenders.map((t) => ({
+                    [`${ministryCode}_recentTenders`]: ministryRecentTenders.map((t) => ({
                       id: t.id,
                       title: t.title,
                       status: t.status,
                     })),
-                    featuredTenders: featuredTenders.map((t) => ({
+                    [`${ministryCode}_featuredTenders`]: ministryFeaturedTenders.map((t) => ({
                       id: t.id,
                       title: t.title,
                       status: t.status,
@@ -1072,14 +1072,14 @@ const TenderManagement = () => {
                   });
 
                   // Check if tenders have proper data format for Company Dashboard
-                  const sampleRecentTender = recentTenders[0];
+                  const sampleRecentTender = ministryRecentTenders[0];
                   const recentTenderHasReqFields = sampleRecentTender
                     ? "procuringEntity" in sampleRecentTender &&
                       "deadline" in sampleRecentTender
                     : false;
 
                   alert(
-                    `Storage Debug:\n\nMain Store (${STORAGE_KEYS.TENDERS}): ${mainTenders.length} tenders\nRecent Tenders (Company Dashboard): ${recentTenders.length} tenders\nFeatured Tenders (Homepage): ${featuredTenders.length} tenders\nMinistry Tenders (${ministryCode}): ${ministryTenders.length} tenders\nCurrent Component State: ${tenders.length} tenders\n\nRecent Tenders Format OK: ${recentTenderHasReqFields}\n\nCheck console for details.`,
+                    `Storage Debug for ${ministryCode}:\n\nMain Store (${STORAGE_KEYS.TENDERS}): ${mainTenders.length} tenders\n${ministryCode} Recent Tenders: ${ministryRecentTenders.length} tenders\n${ministryCode} Featured Tenders: ${ministryFeaturedTenders.length} tenders\n${ministryCode} Tenders: ${ministryTenders.length} tenders\nCurrent Component State: ${tenders.length} tenders\n\nRecent Tenders Format OK: ${recentTenderHasReqFields}\n\nCheck console for details.`,
                   );
                 }}
                 className="px-4 py-3"
@@ -1111,17 +1111,17 @@ const TenderManagement = () => {
                   // Force synchronization and trigger page refresh
                   forceRefreshTenders();
 
-                  // Trigger storage events to notify other components
+                  // Trigger storage events to notify other components (ministry-specific)
                   window.dispatchEvent(
                     new StorageEvent("storage", {
-                      key: "recentTenders",
-                      newValue: localStorage.getItem("recentTenders"),
+                      key: `${ministryCode}_recentTenders`,
+                      newValue: localStorage.getItem(`${ministryCode}_recentTenders`),
                     }),
                   );
                   window.dispatchEvent(
                     new StorageEvent("storage", {
-                      key: "featuredTenders",
-                      newValue: localStorage.getItem("featuredTenders"),
+                      key: `${ministryCode}_featuredTenders`,
+                      newValue: localStorage.getItem(`${ministryCode}_featuredTenders`),
                     }),
                   );
 
