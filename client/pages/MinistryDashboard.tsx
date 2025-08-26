@@ -11418,6 +11418,12 @@ Blockchain Timestamp: ${Date.now()}
                       gradient: "from-teal-600 to-blue-600",
                     },
                     {
+                      key: "payment-requests",
+                      label: "Payment Requests",
+                      icon: CreditCard,
+                      gradient: "from-green-600 to-emerald-600",
+                    },
+                    {
                       key: "reports",
                       label: "Reports",
                       icon: TrendingUp,
