@@ -4322,6 +4322,11 @@ export default function CompanyDashboard() {
               {companyData.status === "Approved"
                 ? "Messages"
                 : "Notifications Center"}
+              {unreadMessageCount > 0 && (
+                <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] h-5 flex items-center justify-center">
+                  {unreadMessageCount}
+                </span>
+              )}
             </button>
 
             <div className="pt-4 mb-4">
