@@ -322,6 +322,10 @@ export default function MinistryDashboard() {
   // Mobile navigation
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Data refresh triggers
+  const [overviewRefreshTrigger, setOverviewRefreshTrigger] = useState(0);
+
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [nocRequests, setNOCRequests] = useState<NOCRequest[]>([]);
