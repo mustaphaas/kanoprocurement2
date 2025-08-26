@@ -444,43 +444,29 @@ export default function CompanyDashboard() {
     return getCompanyDetails();
   }, [statusUpdateTrigger, user?.email]);
 
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      type: "info",
-      title: "New Addendum",
-      message: "New Addendum issued for Hospital Equipment Supply tender.",
-      date: "2024-01-22",
-      read: false,
-    },
-    {
-      id: "2",
-      type: "warning",
-      title: "Bid Under Evaluation",
-      message:
-        "Your bid for Road Construction Project is currently under evaluation.",
-      date: "2024-01-21",
-      read: false,
-    },
-    {
-      id: "3",
-      type: "success",
-      title: "Contract Awarded",
-      message:
-        "Congratulations! You have been awarded the contract for ICT Infrastructure Upgrade.",
-      date: "2024-01-20",
-      read: true,
-    },
-    {
-      id: "4",
-      type: "warning",
-      title: "Document Expiry Alert",
-      message:
-        "Important: Your Tax Clearance Certificate expires on 2024-03-15. Please upload an updated copy to avoid automatic suspension.",
-      date: "2024-01-19",
-      read: false,
-    },
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
+
+  // Monitor message updates
+  useEffect(() => {
+    const updateMessageCount = () => {
+      const count = messageService.getUnreadCount(companyData.email);
+      setUnreadMessageCount(count);
+    };
+
+    updateMessageCount();
+    const unsubscribe = messageService.subscribe(updateMessageCount);
+    return unsubscribe;
+  }, [companyData.email]);
+
+  // Monitor tender status changes and create notifications
+  useEffect(() => {
+    const monitorInterval = setInterval(() => {
+      messageService.monitorTenderStatusChanges();
+    }, 30000); // Check every 30 seconds
+
+    return () => clearInterval(monitorInterval);
+  }, []);
 
   // Default tenders for fallback
   const getDefaultTenders = (): Tender[] => [
