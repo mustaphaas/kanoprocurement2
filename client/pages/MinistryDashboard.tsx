@@ -11,6 +11,7 @@ import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManag
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
 import NOCRequestsModule from "@/components/NOCRequestsModule";
 import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistryOverview";
+import PaymentRequestApproval from "@/components/ministry/PaymentRequestApproval";
 import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
@@ -107,7 +108,8 @@ type CurrentView =
   | "users"
   | "procurement-planning"
   | "tender-management"
-  | "contract-management";
+  | "contract-management"
+  | "payment-requests";
 
 type TenderSubView =
   | "list"
@@ -3009,7 +3011,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-010",
           companyName: "EduTech Solutions Ltd",
-          bidAmount: "���2,000,000,000",
+          bidAmount: "����2,000,000,000",
           technicalScore: 95,
           financialScore: 92,
           totalScore: 93.5,
@@ -8685,7 +8687,8 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  �������� Evaluation Report - {selectedTenderForDetails.title}
+                  ���������� Evaluation Report -{" "}
+                  {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
@@ -11018,6 +11021,8 @@ Blockchain Timestamp: ${Date.now()}
       return <TenderManagement />;
     } else if (currentView === "contract-management") {
       return <ContractManagement />;
+    } else if (currentView === "payment-requests") {
+      return <PaymentRequestApproval />;
     }
     return null;
   };
@@ -11258,6 +11263,15 @@ Blockchain Timestamp: ${Date.now()}
                   borderColor: "border-teal-200",
                 },
                 {
+                  key: "payment-requests",
+                  label: "Payment Requests",
+                  icon: CreditCard,
+                  gradient: "from-green-600 to-emerald-600",
+                  hoverGradient: "from-green-50 to-emerald-50",
+                  textColor: "text-green-700",
+                  borderColor: "border-green-200",
+                },
+                {
                   key: "reports",
                   label: "Reports",
                   icon: TrendingUp,
@@ -11405,6 +11419,12 @@ Blockchain Timestamp: ${Date.now()}
                       label: "Contract Management",
                       icon: Handshake,
                       gradient: "from-teal-600 to-blue-600",
+                    },
+                    {
+                      key: "payment-requests",
+                      label: "Payment Requests",
+                      icon: CreditCard,
+                      gradient: "from-green-600 to-emerald-600",
                     },
                     {
                       key: "reports",

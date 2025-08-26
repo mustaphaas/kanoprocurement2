@@ -9,6 +9,7 @@ import { tenderStatusChecker, TenderStatusInfo } from "@/lib/tenderSettings";
 import { messageService } from "@/lib/messageService";
 import { getAggregatedMinistryTenders } from "@/lib/companyTenderAggregator";
 import CompanyMessageCenter from "@/components/CompanyMessageCenter";
+import PaymentRequest from "@/components/PaymentRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
@@ -58,6 +59,7 @@ import {
   Archive,
   Lock,
   RefreshCw,
+  Receipt,
 } from "lucide-react";
 
 type CompanyStatus = "Pending" | "Approved" | "Suspended" | "Blacklisted";
@@ -74,6 +76,7 @@ type ActiveSection =
   | "messages"
   | "transaction-history"
   | "contracts-awarded"
+  | "payment-requests"
   | "annual-report"
   | "grievance"
   | "eportal"
@@ -4044,6 +4047,14 @@ export default function CompanyDashboard() {
           />
         );
 
+      case "payment-requests":
+        return (
+          <PaymentRequest
+            companyEmail={companyData.email}
+            companyName={companyData.name}
+          />
+        );
+
       default:
         return (
           <div className="text-center py-12">
@@ -4164,9 +4175,9 @@ export default function CompanyDashboard() {
       <div className="flex">
         {/* Sidebar */}
         <div
-          className={`${sidebarOpen ? "w-64" : "w-0"} overflow-hidden transition-all duration-300 bg-white border-r border-gray-200 h-screen sticky top-16`}
+          className={`${sidebarOpen ? "w-64" : "w-0"} overflow-x-hidden transition-all duration-300 bg-white border-r border-gray-200 sticky top-16 max-h-[calc(100vh-4rem)]`}
         >
-          <nav className="p-4 space-y-2">
+          <nav className="p-4 space-y-2 overflow-y-auto h-full">
             <div className="mb-4">
               <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Bid Activity
@@ -4397,6 +4408,22 @@ export default function CompanyDashboard() {
                 ? "Contracts Awarded"
                 : "Contract History"}
               {companyData.status === "Blacklisted" && (
+                <Lock className="h-4 w-4 ml-2 text-gray-400" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveSection("payment-requests")}
+              className={`w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                activeSection === "payment-requests"
+                  ? "bg-green-100 text-green-700"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              disabled={companyData.status !== "Approved"}
+            >
+              <Receipt className="h-4 w-4 mr-3" />
+              Payment Requests
+              {companyData.status !== "Approved" && (
                 <Lock className="h-4 w-4 ml-2 text-gray-400" />
               )}
             </button>
