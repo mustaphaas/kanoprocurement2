@@ -433,9 +433,27 @@ class MessageService {
       const companyTenderStates = JSON.parse(
         localStorage.getItem("companyTenderStates") || "{}",
       );
-      const recentTenders = JSON.parse(
-        localStorage.getItem("recentTenders") || "[]",
-      );
+      // Get tenders from all ministries (aggregated approach)
+      const getAggregatedTenders = () => {
+        const allTenders: any[] = [];
+
+        // Scan all ministry-specific recentTenders keys
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.endsWith('_recentTenders')) {
+            try {
+              const ministryTenders = JSON.parse(localStorage.getItem(key) || '[]');
+              allTenders.push(...ministryTenders);
+            } catch (error) {
+              console.error(`Error parsing tenders for key ${key}:`, error);
+            }
+          }
+        }
+
+        return allTenders;
+      };
+
+      const recentTenders = getAggregatedTenders();
 
       recentTenders.forEach((tender: any) => {
         const tenderState = companyTenderStates[tender.id];
