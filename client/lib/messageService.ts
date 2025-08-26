@@ -2,7 +2,15 @@ import { logUserAction } from "./auditLogStorage";
 
 export interface CompanyMessage {
   id: string;
-  type: "bid_created" | "tender_closing_soon" | "tender_closed" | "eoi_confirmed" | "bid_confirmed" | "bid_evaluated" | "contract_awarded" | "general";
+  type:
+    | "bid_created"
+    | "tender_closing_soon"
+    | "tender_closed"
+    | "eoi_confirmed"
+    | "bid_confirmed"
+    | "bid_evaluated"
+    | "contract_awarded"
+    | "general";
   category: "info" | "success" | "warning" | "error" | "urgent";
   title: string;
   message: string;
@@ -18,7 +26,12 @@ export interface CompanyMessage {
 export interface MessageAction {
   id: string;
   label: string;
-  action: "view_tender" | "view_bid" | "download_document" | "contact_support" | "mark_read";
+  action:
+    | "view_tender"
+    | "view_bid"
+    | "download_document"
+    | "contact_support"
+    | "mark_read";
   url?: string;
   data?: Record<string, any>;
 }
@@ -50,14 +63,14 @@ class MessageService {
   public subscribe(listener: (messages: CompanyMessage[]) => void): () => void {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+      this.listeners = this.listeners.filter((l) => l !== listener);
     };
   }
 
   // Notify all listeners of message updates
   private notifyListeners(): void {
     const messages = this.getMessages();
-    this.listeners.forEach(listener => listener(messages));
+    this.listeners.forEach((listener) => listener(messages));
   }
 
   // Get all messages for current company
@@ -76,7 +89,10 @@ class MessageService {
   }
 
   // Save messages for current company
-  private saveMessages(messages: CompanyMessage[], companyEmail?: string): void {
+  private saveMessages(
+    messages: CompanyMessage[],
+    companyEmail?: string,
+  ): void {
     try {
       const email = companyEmail || this.getCurrentCompanyEmail();
       const key = `${this.storageKey}_${email}`;
@@ -88,7 +104,10 @@ class MessageService {
   }
 
   // Add a new message
-  public addMessage(message: Omit<CompanyMessage, "id" | "timestamp">, companyEmail?: string): string {
+  public addMessage(
+    message: Omit<CompanyMessage, "id" | "timestamp">,
+    companyEmail?: string,
+  ): string {
     const newMessage: CompanyMessage = {
       ...message,
       id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -115,7 +134,7 @@ class MessageService {
         title: message.title,
         tenderId: message.tenderId,
         bidId: message.bidId,
-      }
+      },
     );
 
     return newMessage.id;
@@ -124,7 +143,7 @@ class MessageService {
   // Mark message as read
   public markAsRead(messageId: string, companyEmail?: string): void {
     const messages = this.getMessages(companyEmail);
-    const messageIndex = messages.findIndex(m => m.id === messageId);
+    const messageIndex = messages.findIndex((m) => m.id === messageId);
     if (messageIndex !== -1) {
       messages[messageIndex].read = true;
       this.saveMessages(messages, companyEmail);
@@ -134,20 +153,20 @@ class MessageService {
   // Mark all messages as read
   public markAllAsRead(companyEmail?: string): void {
     const messages = this.getMessages(companyEmail);
-    messages.forEach(message => message.read = true);
+    messages.forEach((message) => (message.read = true));
     this.saveMessages(messages, companyEmail);
   }
 
   // Get unread message count
   public getUnreadCount(companyEmail?: string): number {
     const messages = this.getMessages(companyEmail);
-    return messages.filter(m => !m.read).length;
+    return messages.filter((m) => !m.read).length;
   }
 
   // Delete a message
   public deleteMessage(messageId: string, companyEmail?: string): void {
     const messages = this.getMessages(companyEmail);
-    const filteredMessages = messages.filter(m => m.id !== messageId);
+    const filteredMessages = messages.filter((m) => m.id !== messageId);
     this.saveMessages(filteredMessages, companyEmail);
   }
 
@@ -167,82 +186,97 @@ class MessageService {
   }
 
   // Create EOI confirmation message
-  public createEOIConfirmationMessage(tenderData: {
-    id: string;
-    title: string;
-    ministry: string;
-    deadline: string;
-    value: string;
-  }, companyEmail?: string): string {
-    return this.addMessage({
-      type: "eoi_confirmed",
-      category: "success",
-      title: "Expression of Interest Confirmed",
-      message: `Your expression of interest for "${tenderData.title}" has been successfully submitted to ${tenderData.ministry}. You can now proceed to submit your bid before the deadline on ${new Date(tenderData.deadline).toLocaleDateString()}.`,
-      tenderId: tenderData.id,
-      actions: [
-        {
-          id: "view_tender",
-          label: "View Tender Details",
-          action: "view_tender",
-          data: { tenderId: tenderData.id }
+  public createEOIConfirmationMessage(
+    tenderData: {
+      id: string;
+      title: string;
+      ministry: string;
+      deadline: string;
+      value: string;
+    },
+    companyEmail?: string,
+  ): string {
+    return this.addMessage(
+      {
+        type: "eoi_confirmed",
+        category: "success",
+        title: "Expression of Interest Confirmed",
+        message: `Your expression of interest for "${tenderData.title}" has been successfully submitted to ${tenderData.ministry}. You can now proceed to submit your bid before the deadline on ${new Date(tenderData.deadline).toLocaleDateString()}.`,
+        tenderId: tenderData.id,
+        actions: [
+          {
+            id: "view_tender",
+            label: "View Tender Details",
+            action: "view_tender",
+            data: { tenderId: tenderData.id },
+          },
+          {
+            id: "submit_bid",
+            label: "Submit Bid",
+            action: "view_tender",
+            data: { tenderId: tenderData.id, action: "submit_bid" },
+          },
+        ],
+        metadata: {
+          tenderTitle: tenderData.title,
+          ministry: tenderData.ministry,
+          deadline: tenderData.deadline,
+          value: tenderData.value,
         },
-        {
-          id: "submit_bid",
-          label: "Submit Bid",
-          action: "view_tender", 
-          data: { tenderId: tenderData.id, action: "submit_bid" }
-        }
-      ],
-      metadata: {
-        tenderTitle: tenderData.title,
-        ministry: tenderData.ministry,
-        deadline: tenderData.deadline,
-        value: tenderData.value
-      }
-    }, companyEmail);
+      },
+      companyEmail,
+    );
   }
 
   // Create bid confirmation message
-  public createBidConfirmationMessage(bidData: {
-    id: string;
-    tenderId: string;
-    tenderTitle: string;
-    bidAmount: string;
-    ministry: string;
-  }, companyEmail?: string): string {
-    return this.addMessage({
-      type: "bid_confirmed",
-      category: "success",
-      title: "Bid Successfully Submitted",
-      message: `Your bid of ${bidData.bidAmount} for "${bidData.tenderTitle}" has been successfully submitted and is now under evaluation. You will be notified of the evaluation results.`,
-      tenderId: bidData.tenderId,
-      bidId: bidData.id,
-      actions: [
-        {
-          id: "view_bid",
-          label: "View Bid Details",
-          action: "view_bid",
-          data: { bidId: bidData.id, tenderId: bidData.tenderId }
+  public createBidConfirmationMessage(
+    bidData: {
+      id: string;
+      tenderId: string;
+      tenderTitle: string;
+      bidAmount: string;
+      ministry: string;
+    },
+    companyEmail?: string,
+  ): string {
+    return this.addMessage(
+      {
+        type: "bid_confirmed",
+        category: "success",
+        title: "Bid Successfully Submitted",
+        message: `Your bid of ${bidData.bidAmount} for "${bidData.tenderTitle}" has been successfully submitted and is now under evaluation. You will be notified of the evaluation results.`,
+        tenderId: bidData.tenderId,
+        bidId: bidData.id,
+        actions: [
+          {
+            id: "view_bid",
+            label: "View Bid Details",
+            action: "view_bid",
+            data: { bidId: bidData.id, tenderId: bidData.tenderId },
+          },
+          {
+            id: "track_status",
+            label: "Track Evaluation Status",
+            action: "view_tender",
+            data: { tenderId: bidData.tenderId },
+          },
+        ],
+        metadata: {
+          tenderTitle: bidData.tenderTitle,
+          bidAmount: bidData.bidAmount,
+          ministry: bidData.ministry,
+          submissionDate: new Date().toISOString(),
         },
-        {
-          id: "track_status",
-          label: "Track Evaluation Status",
-          action: "view_tender",
-          data: { tenderId: bidData.tenderId }
-        }
-      ],
-      metadata: {
-        tenderTitle: bidData.tenderTitle,
-        bidAmount: bidData.bidAmount,
-        ministry: bidData.ministry,
-        submissionDate: new Date().toISOString()
-      }
-    }, companyEmail);
+      },
+      companyEmail,
+    );
   }
 
   // Create tender status update message
-  public createTenderStatusUpdateMessage(update: TenderStatusUpdate, companyEmail?: string): string {
+  public createTenderStatusUpdateMessage(
+    update: TenderStatusUpdate,
+    companyEmail?: string,
+  ): string {
     let messageConfig: {
       category: "info" | "warning" | "urgent";
       title: string;
@@ -255,21 +289,21 @@ class MessageService {
         messageConfig = {
           category: "warning",
           title: "Tender Closing Soon",
-          message: `The tender "${update.tenderTitle}" is closing soon. Deadline: ${update.deadline ? new Date(update.deadline).toLocaleDateString() : 'Check tender details'}. Make sure to submit your bid before the deadline.`,
+          message: `The tender "${update.tenderTitle}" is closing soon. Deadline: ${update.deadline ? new Date(update.deadline).toLocaleDateString() : "Check tender details"}. Make sure to submit your bid before the deadline.`,
           actions: [
             {
               id: "view_tender",
               label: "View Tender",
               action: "view_tender",
-              data: { tenderId: update.tenderId }
+              data: { tenderId: update.tenderId },
             },
             {
               id: "submit_bid",
               label: "Submit Bid Now",
               action: "view_tender",
-              data: { tenderId: update.tenderId, action: "submit_bid" }
-            }
-          ]
+              data: { tenderId: update.tenderId, action: "submit_bid" },
+            },
+          ],
         };
         break;
 
@@ -283,9 +317,9 @@ class MessageService {
               id: "view_results",
               label: "Check Results",
               action: "view_tender",
-              data: { tenderId: update.tenderId }
-            }
-          ]
+              data: { tenderId: update.tenderId },
+            },
+          ],
         };
         break;
 
@@ -299,9 +333,9 @@ class MessageService {
               id: "view_results",
               label: "View Results",
               action: "view_tender",
-              data: { tenderId: update.tenderId }
-            }
-          ]
+              data: { tenderId: update.tenderId },
+            },
+          ],
         };
         break;
 
@@ -315,67 +349,80 @@ class MessageService {
               id: "view_tender",
               label: "View Details",
               action: "view_tender",
-              data: { tenderId: update.tenderId }
-            }
-          ]
+              data: { tenderId: update.tenderId },
+            },
+          ],
         };
     }
 
-    return this.addMessage({
-      type: update.newStatus.toLowerCase() === "closing soon" ? "tender_closing_soon" : 
-            update.newStatus.toLowerCase() === "closed" ? "tender_closed" : "general",
-      category: messageConfig.category,
-      title: messageConfig.title,
-      message: messageConfig.message,
-      tenderId: update.tenderId,
-      actions: messageConfig.actions,
-      metadata: {
-        tenderTitle: update.tenderTitle,
-        oldStatus: update.oldStatus,
-        newStatus: update.newStatus,
-        ministry: update.ministry,
-        deadline: update.deadline
-      }
-    }, companyEmail);
+    return this.addMessage(
+      {
+        type:
+          update.newStatus.toLowerCase() === "closing soon"
+            ? "tender_closing_soon"
+            : update.newStatus.toLowerCase() === "closed"
+              ? "tender_closed"
+              : "general",
+        category: messageConfig.category,
+        title: messageConfig.title,
+        message: messageConfig.message,
+        tenderId: update.tenderId,
+        actions: messageConfig.actions,
+        metadata: {
+          tenderTitle: update.tenderTitle,
+          oldStatus: update.oldStatus,
+          newStatus: update.newStatus,
+          ministry: update.ministry,
+          deadline: update.deadline,
+        },
+      },
+      companyEmail,
+    );
   }
 
   // Create bid created message (when Ministry creates a new tender)
-  public createBidCreatedMessage(tenderData: {
-    id: string;
-    title: string;
-    ministry: string;
-    category: string;
-    value: string;
-    deadline: string;
-  }, companyEmail?: string): string {
-    return this.addMessage({
-      type: "bid_created",
-      category: "info",
-      title: "New Tender Available",
-      message: `A new tender "${tenderData.title}" worth ${tenderData.value} has been published by ${tenderData.ministry}. Deadline: ${new Date(tenderData.deadline).toLocaleDateString()}. Express your interest to participate.`,
-      tenderId: tenderData.id,
-      actions: [
-        {
-          id: "view_tender",
-          label: "View Tender",
-          action: "view_tender",
-          data: { tenderId: tenderData.id }
+  public createBidCreatedMessage(
+    tenderData: {
+      id: string;
+      title: string;
+      ministry: string;
+      category: string;
+      value: string;
+      deadline: string;
+    },
+    companyEmail?: string,
+  ): string {
+    return this.addMessage(
+      {
+        type: "bid_created",
+        category: "info",
+        title: "New Tender Available",
+        message: `A new tender "${tenderData.title}" worth ${tenderData.value} has been published by ${tenderData.ministry}. Deadline: ${new Date(tenderData.deadline).toLocaleDateString()}. Express your interest to participate.`,
+        tenderId: tenderData.id,
+        actions: [
+          {
+            id: "view_tender",
+            label: "View Tender",
+            action: "view_tender",
+            data: { tenderId: tenderData.id },
+          },
+          {
+            id: "express_interest",
+            label: "Express Interest",
+            action: "view_tender",
+            data: { tenderId: tenderData.id, action: "express_interest" },
+          },
+        ],
+        metadata: {
+          tenderTitle: tenderData.title,
+          ministry: tenderData.ministry,
+          category: tenderData.category,
+          value: tenderData.value,
+          deadline: tenderData.deadline,
         },
-        {
-          id: "express_interest",
-          label: "Express Interest",
-          action: "view_tender",
-          data: { tenderId: tenderData.id, action: "express_interest" }
-        }
-      ],
-      metadata: {
-        tenderTitle: tenderData.title,
-        ministry: tenderData.ministry,
-        category: tenderData.category,
-        value: tenderData.value,
-        deadline: tenderData.deadline
-      }
-    }, companyEmail);
+      },
+      companyEmail,
+    );
   }
 
   // Auto-generate messages for tenders that companies have expressed interest in
@@ -383,16 +430,25 @@ class MessageService {
     // This function should be called periodically to check for tender status changes
     // and generate appropriate messages for companies that have expressed interest
     try {
-      const companyTenderStates = JSON.parse(localStorage.getItem("companyTenderStates") || "{}");
-      const recentTenders = JSON.parse(localStorage.getItem("recentTenders") || "[]");
-      
+      const companyTenderStates = JSON.parse(
+        localStorage.getItem("companyTenderStates") || "{}",
+      );
+      const recentTenders = JSON.parse(
+        localStorage.getItem("recentTenders") || "[]",
+      );
+
       recentTenders.forEach((tender: any) => {
         const tenderState = companyTenderStates[tender.id];
-        if (tenderState && (tenderState.hasExpressedInterest || tenderState.hasBid)) {
+        if (
+          tenderState &&
+          (tenderState.hasExpressedInterest || tenderState.hasBid)
+        ) {
           // Check if tender status has changed and should trigger a notification
           const currentStatus = tender.status;
-          const lastNotifiedStatus = localStorage.getItem(`lastNotifiedStatus_${tender.id}`);
-          
+          const lastNotifiedStatus = localStorage.getItem(
+            `lastNotifiedStatus_${tender.id}`,
+          );
+
           if (lastNotifiedStatus !== currentStatus) {
             // Create status update message
             this.createTenderStatusUpdateMessage({
@@ -401,11 +457,14 @@ class MessageService {
               oldStatus: lastNotifiedStatus || "Unknown",
               newStatus: currentStatus,
               deadline: tender.deadline,
-              ministry: tender.procuringEntity || tender.ministry
+              ministry: tender.procuringEntity || tender.ministry,
             });
-            
+
             // Update last notified status
-            localStorage.setItem(`lastNotifiedStatus_${tender.id}`, currentStatus);
+            localStorage.setItem(
+              `lastNotifiedStatus_${tender.id}`,
+              currentStatus,
+            );
           }
         }
       });

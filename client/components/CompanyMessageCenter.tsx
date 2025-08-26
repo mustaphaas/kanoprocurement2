@@ -42,7 +42,11 @@ import {
   MarkComplete,
   Check,
 } from "lucide-react";
-import { messageService, type CompanyMessage, type MessageAction } from "@/lib/messageService";
+import {
+  messageService,
+  type CompanyMessage,
+  type MessageAction,
+} from "@/lib/messageService";
 import { formatCurrency } from "@/lib/utils";
 
 interface CompanyMessageCenterProps {
@@ -55,11 +59,15 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
   onActionClick,
 }) => {
   const [messages, setMessages] = useState<CompanyMessage[]>([]);
-  const [filteredMessages, setFilteredMessages] = useState<CompanyMessage[]>([]);
+  const [filteredMessages, setFilteredMessages] = useState<CompanyMessage[]>(
+    [],
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
-  const [selectedMessage, setSelectedMessage] = useState<CompanyMessage | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<CompanyMessage | null>(
+    null,
+  );
   const [showDetails, setShowDetails] = useState(false);
 
   // Load messages on component mount and subscribe to updates
@@ -70,10 +78,10 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
     };
 
     loadMessages();
-    
+
     // Subscribe to message updates
     const unsubscribe = messageService.subscribe(loadMessages);
-    
+
     return unsubscribe;
   }, [companyEmail]);
 
@@ -83,27 +91,33 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
 
     // Apply search filter
     if (searchTerm) {
-      filtered = filtered.filter(message =>
-        message.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        message.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (message.metadata?.tenderTitle && message.metadata.tenderTitle.toLowerCase().includes(searchTerm.toLowerCase()))
+      filtered = filtered.filter(
+        (message) =>
+          message.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          message.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (message.metadata?.tenderTitle &&
+            message.metadata.tenderTitle
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())),
       );
     }
 
     // Apply type filter
     if (filterType !== "all") {
       if (filterType === "unread") {
-        filtered = filtered.filter(message => !message.read);
+        filtered = filtered.filter((message) => !message.read);
       } else if (filterType === "read") {
-        filtered = filtered.filter(message => message.read);
+        filtered = filtered.filter((message) => message.read);
       } else {
-        filtered = filtered.filter(message => message.type === filterType);
+        filtered = filtered.filter((message) => message.type === filterType);
       }
     }
 
     // Apply category filter
     if (filterCategory !== "all") {
-      filtered = filtered.filter(message => message.category === filterCategory);
+      filtered = filtered.filter(
+        (message) => message.category === filterCategory,
+      );
     }
 
     setFilteredMessages(filtered);
@@ -159,7 +173,10 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
     }
   };
 
-  const handleActionClick = (action: MessageAction, message: CompanyMessage) => {
+  const handleActionClick = (
+    action: MessageAction,
+    message: CompanyMessage,
+  ) => {
     if (onActionClick) {
       onActionClick(action, message);
     } else {
@@ -183,19 +200,31 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays === 1) {
-      return "Today " + date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      return (
+        "Today " +
+        date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      );
     } else if (diffDays === 2) {
-      return "Yesterday " + date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      return (
+        "Yesterday " +
+        date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      );
     } else if (diffDays < 7) {
-      return date.toLocaleDateString([], { weekday: "short" }) + " " + 
-             date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      return (
+        date.toLocaleDateString([], { weekday: "short" }) +
+        " " +
+        date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      );
     } else {
-      return date.toLocaleDateString() + " " + 
-             date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      return (
+        date.toLocaleDateString() +
+        " " +
+        date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      );
     }
   };
 
-  const unreadCount = messages.filter(m => !m.read).length;
+  const unreadCount = messages.filter((m) => !m.read).length;
 
   return (
     <div className="space-y-6">
@@ -212,11 +241,7 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
         </div>
         <div className="flex items-center space-x-2">
           {unreadCount > 0 && (
-            <Button
-              onClick={handleMarkAllAsRead}
-              variant="outline"
-              size="sm"
-            >
+            <Button onClick={handleMarkAllAsRead} variant="outline" size="sm">
               <Check className="h-4 w-4 mr-2" />
               Mark All Read ({unreadCount})
             </Button>
@@ -233,8 +258,12 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Messages</p>
-                <p className="text-2xl font-bold text-blue-600">{messages.length}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Messages
+                </p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {messages.length}
+                </p>
               </div>
               <MessageSquare className="h-8 w-8 text-blue-600" />
             </div>
@@ -246,7 +275,9 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Unread</p>
-                <p className="text-2xl font-bold text-orange-600">{unreadCount}</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {unreadCount}
+                </p>
               </div>
               <Bell className="h-8 w-8 text-orange-600" />
             </div>
@@ -257,13 +288,18 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Tender Updates</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Tender Updates
+                </p>
                 <p className="text-2xl font-bold text-green-600">
-                  {messages.filter(m => 
-                    m.type === "tender_closing_soon" || 
-                    m.type === "tender_closed" || 
-                    m.type === "bid_created"
-                  ).length}
+                  {
+                    messages.filter(
+                      (m) =>
+                        m.type === "tender_closing_soon" ||
+                        m.type === "tender_closed" ||
+                        m.type === "bid_created",
+                    ).length
+                  }
                 </p>
               </div>
               <Clock className="h-8 w-8 text-green-600" />
@@ -275,12 +311,17 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Confirmations</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Confirmations
+                </p>
                 <p className="text-2xl font-bold text-purple-600">
-                  {messages.filter(m => 
-                    m.type === "eoi_confirmed" || 
-                    m.type === "bid_confirmed"
-                  ).length}
+                  {
+                    messages.filter(
+                      (m) =>
+                        m.type === "eoi_confirmed" ||
+                        m.type === "bid_confirmed",
+                    ).length
+                  }
                 </p>
               </div>
               <CheckCircle className="h-8 w-8 text-purple-600" />
@@ -312,7 +353,9 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
                 <SelectItem value="unread">Unread ({unreadCount})</SelectItem>
                 <SelectItem value="read">Read</SelectItem>
                 <SelectItem value="bid_created">New Tenders</SelectItem>
-                <SelectItem value="tender_closing_soon">Closing Soon</SelectItem>
+                <SelectItem value="tender_closing_soon">
+                  Closing Soon
+                </SelectItem>
                 <SelectItem value="tender_closed">Closed Tenders</SelectItem>
                 <SelectItem value="eoi_confirmed">EOI Confirmations</SelectItem>
                 <SelectItem value="bid_confirmed">Bid Confirmations</SelectItem>
@@ -352,7 +395,7 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
               <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-300" />
               <p className="text-lg font-medium mb-2">No messages found</p>
               <p className="text-sm">
-                {searchTerm || filterType !== "all" || filterCategory !== "all" 
+                {searchTerm || filterType !== "all" || filterCategory !== "all"
                   ? "Try adjusting your filters to see more messages."
                   : "You'll receive notifications here when tenders are created, closed, or when you submit bids."}
               </p>
@@ -364,7 +407,9 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
                   key={message.id}
                   onClick={() => handleMessageClick(message)}
                   className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
-                    !message.read ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
+                    !message.read
+                      ? "bg-blue-50 border-l-4 border-l-blue-500"
+                      : ""
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -374,7 +419,9 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-2 mb-1">
-                          <h4 className={`text-sm font-medium text-gray-900 ${!message.read ? "font-bold" : ""}`}>
+                          <h4
+                            className={`text-sm font-medium text-gray-900 ${!message.read ? "font-bold" : ""}`}
+                          >
                             {message.title}
                           </h4>
                           <Badge className={getCategoryColor(message.category)}>
@@ -429,7 +476,7 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
                       </Button>
                     </div>
                   </div>
-                  
+
                   {/* Quick Actions */}
                   {message.actions && message.actions.length > 0 && (
                     <div className="mt-3 flex items-center space-x-2">
@@ -444,9 +491,15 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
                           }}
                           className="text-xs"
                         >
-                          {action.action === "view_tender" && <ExternalLink className="h-3 w-3 mr-1" />}
-                          {action.action === "download_document" && <Download className="h-3 w-3 mr-1" />}
-                          {action.action === "contact_support" && <Phone className="h-3 w-3 mr-1" />}
+                          {action.action === "view_tender" && (
+                            <ExternalLink className="h-3 w-3 mr-1" />
+                          )}
+                          {action.action === "download_document" && (
+                            <Download className="h-3 w-3 mr-1" />
+                          )}
+                          {action.action === "contact_support" && (
+                            <Phone className="h-3 w-3 mr-1" />
+                          )}
                           {action.label}
                         </Button>
                       ))}
@@ -478,7 +531,7 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
                   {formatTimestamp(selectedMessage.timestamp)}
                 </span>
               </div>
-              
+
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-gray-800">{selectedMessage.message}</p>
               </div>
@@ -488,29 +541,45 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
                   <div className="space-y-2">
                     {selectedMessage.metadata.tenderTitle && (
                       <div>
-                        <label className="text-xs font-medium text-gray-600">Tender</label>
-                        <p className="text-sm text-gray-900">{selectedMessage.metadata.tenderTitle}</p>
+                        <label className="text-xs font-medium text-gray-600">
+                          Tender
+                        </label>
+                        <p className="text-sm text-gray-900">
+                          {selectedMessage.metadata.tenderTitle}
+                        </p>
                       </div>
                     )}
                     {selectedMessage.metadata.ministry && (
                       <div>
-                        <label className="text-xs font-medium text-gray-600">Ministry</label>
-                        <p className="text-sm text-gray-900">{selectedMessage.metadata.ministry}</p>
+                        <label className="text-xs font-medium text-gray-600">
+                          Ministry
+                        </label>
+                        <p className="text-sm text-gray-900">
+                          {selectedMessage.metadata.ministry}
+                        </p>
                       </div>
                     )}
                   </div>
                   <div className="space-y-2">
                     {selectedMessage.metadata.value && (
                       <div>
-                        <label className="text-xs font-medium text-gray-600">Value</label>
-                        <p className="text-sm text-gray-900">{selectedMessage.metadata.value}</p>
+                        <label className="text-xs font-medium text-gray-600">
+                          Value
+                        </label>
+                        <p className="text-sm text-gray-900">
+                          {selectedMessage.metadata.value}
+                        </p>
                       </div>
                     )}
                     {selectedMessage.metadata.deadline && (
                       <div>
-                        <label className="text-xs font-medium text-gray-600">Deadline</label>
+                        <label className="text-xs font-medium text-gray-600">
+                          Deadline
+                        </label>
                         <p className="text-sm text-gray-900">
-                          {new Date(selectedMessage.metadata.deadline).toLocaleDateString()}
+                          {new Date(
+                            selectedMessage.metadata.deadline,
+                          ).toLocaleDateString()}
                         </p>
                       </div>
                     )}
@@ -518,26 +587,37 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
                 </div>
               )}
 
-              {selectedMessage.actions && selectedMessage.actions.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">Available Actions</h4>
-                  <div className="space-y-2">
-                    {selectedMessage.actions.map((action) => (
-                      <Button
-                        key={action.id}
-                        variant="outline"
-                        onClick={() => handleActionClick(action, selectedMessage)}
-                        className="w-full justify-start"
-                      >
-                        {action.action === "view_tender" && <ExternalLink className="h-4 w-4 mr-2" />}
-                        {action.action === "download_document" && <Download className="h-4 w-4 mr-2" />}
-                        {action.action === "contact_support" && <Phone className="h-4 w-4 mr-2" />}
-                        {action.label}
-                      </Button>
-                    ))}
+              {selectedMessage.actions &&
+                selectedMessage.actions.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900 mb-3">
+                      Available Actions
+                    </h4>
+                    <div className="space-y-2">
+                      {selectedMessage.actions.map((action) => (
+                        <Button
+                          key={action.id}
+                          variant="outline"
+                          onClick={() =>
+                            handleActionClick(action, selectedMessage)
+                          }
+                          className="w-full justify-start"
+                        >
+                          {action.action === "view_tender" && (
+                            <ExternalLink className="h-4 w-4 mr-2" />
+                          )}
+                          {action.action === "download_document" && (
+                            <Download className="h-4 w-4 mr-2" />
+                          )}
+                          {action.action === "contact_support" && (
+                            <Phone className="h-4 w-4 mr-2" />
+                          )}
+                          {action.label}
+                        </Button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           )}
         </DialogContent>
