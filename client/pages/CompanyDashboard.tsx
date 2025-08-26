@@ -7,6 +7,7 @@ import { persistentStorage } from "@/lib/persistentStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { tenderStatusChecker, TenderStatusInfo } from "@/lib/tenderSettings";
 import { messageService } from "@/lib/messageService";
+import { getAggregatedMinistryTenders } from "@/lib/companyTenderAggregator";
 import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -519,7 +520,8 @@ export default function CompanyDashboard() {
   // Load tenders from localStorage (recent tenders created by ministries)
   useEffect(() => {
     const loadTenders = () => {
-      const storedTenders = localStorage.getItem("recentTenders");
+      // Load from all ministry-specific storage keys to show all available tenders to companies
+      const allMinistryTenders = getAggregatedMinistryTenders();
       const storedTenderStates =
         localStorage.getItem("companyTenderStates") || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
@@ -527,36 +529,35 @@ export default function CompanyDashboard() {
         localStorage.getItem("lastProcessedTenders") || "[]",
       );
 
-      if (storedTenders) {
-        const parsedTenders = JSON.parse(storedTenders);
-        if (parsedTenders.length > 0) {
-          // Check for new tenders and create notifications
-          parsedTenders.forEach((recentTender: any) => {
-            if (!lastProcessedTenders.includes(recentTender.id)) {
-              // This is a new tender, create a "bid created" notification
-              messageService.createBidCreatedMessage(
-                {
-                  id: recentTender.id,
-                  title: recentTender.title,
-                  ministry:
-                    recentTender.procuringEntity || "Kano State Government",
-                  category: recentTender.category,
-                  value: formatCurrency(recentTender.value),
-                  deadline: recentTender.deadline,
-                },
-                companyData.email,
-              );
-            }
-          });
+      if (allMinistryTenders.length > 0) {
+        // Check for new tenders and create notifications
+        allMinistryTenders.forEach((recentTender: any) => {
+          if (!lastProcessedTenders.includes(recentTender.id)) {
+            // This is a new tender, create a "bid created" notification
+            messageService.createBidCreatedMessage(
+              {
+                id: recentTender.id,
+                title: recentTender.title,
+                ministry:
+                  recentTender.procuringEntity || "Kano State Government",
+                category: recentTender.category,
+                value: formatCurrency(recentTender.value),
+                deadline: recentTender.deadline,
+              },
+              companyData.email,
+            );
+          }
+        });
 
-          // Update processed tenders list
-          const currentTenderIds = parsedTenders.map((t: any) => t.id);
-          localStorage.setItem(
-            "lastProcessedTenders",
-            JSON.stringify(currentTenderIds),
-          );
-          // Convert recent tender format to company dashboard tender format
-          const formattedTenders = parsedTenders.map((recentTender: any) => ({
+        // Update processed tenders list
+        const currentTenderIds = allMinistryTenders.map((t: any) => t.id);
+        localStorage.setItem(
+          "lastProcessedTenders",
+          JSON.stringify(currentTenderIds),
+        );
+        // Convert recent tender format to company dashboard tender format
+        const formattedTenders = allMinistryTenders.map(
+          (recentTender: any) => ({
             id: recentTender.id,
             title: recentTender.title,
             ministry: recentTender.procuringEntity || "Kano State Government",
@@ -574,23 +575,23 @@ export default function CompanyDashboard() {
             hasBid: tenderStates[recentTender.id]?.hasBid || false,
             unspscCode: "72141100", // Default UNSPSC code
             procurementMethod: "Open Tendering",
-          }));
+          }),
+        );
 
-          // Combine with default tenders, avoid duplicates
-          const defaultTenders = getDefaultTenders();
-          const allTenders = [...formattedTenders];
+        // Combine with default tenders, avoid duplicates
+        const defaultTenders = getDefaultTenders();
+        const allTenders = [...formattedTenders];
 
-          // Add default tenders that don't exist in stored tenders
-          defaultTenders.forEach((defaultTender) => {
-            if (
-              !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
-            ) {
-              allTenders.push(defaultTender);
-            }
-          });
+        // Add default tenders that don't exist in stored tenders
+        defaultTenders.forEach((defaultTender) => {
+          if (
+            !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
+          ) {
+            allTenders.push(defaultTender);
+          }
+        });
 
-          setTenders(allTenders);
-        }
+        setTenders(allTenders);
       }
     };
 

@@ -243,7 +243,7 @@ const TenderManagement = () => {
         id: tender.id,
         title: tender.title,
         description: tender.description,
-        category: "General",
+        category: getCategoryFromMinistry(tender.ministry),
         value: tender.budget.toString(), // Company Dashboard expects string
         deadline: tender.closingDate,
         location: "Kano State",
@@ -287,20 +287,12 @@ const TenderManagement = () => {
             : tender.status === "Closing Soon"
               ? "bg-orange-100 text-orange-800"
               : "bg-gray-100 text-gray-800",
-        category: "General",
+        category: getCategoryFromMinistry(tender.ministry),
         ministry: tender.ministry,
         createdAt: Date.now(),
       }));
 
-      // Update all storage locations with proper formats
-      localStorage.setItem(
-        "recentTenders",
-        JSON.stringify(recentTendersFormat),
-      );
-      localStorage.setItem(
-        "featuredTenders",
-        JSON.stringify(featuredTendersFormat.slice(0, 5)),
-      );
+      // ONLY update ministry-specific storage locations (no global keys)
       localStorage.setItem(
         `${ministryCode}_recentTenders`,
         JSON.stringify(recentTendersFormat),
@@ -314,7 +306,7 @@ const TenderManagement = () => {
         JSON.stringify(featuredTendersFormat.slice(0, 5)),
       );
 
-      console.log("Synchronized tender data across all stores");
+      console.log(`Synchronized tender data for ministry ${ministryCode} only`);
       return mainTenders;
     } catch (error) {
       console.error("Error synchronizing tender stores:", error);
@@ -717,6 +709,15 @@ const TenderManagement = () => {
     return `₦${num.toLocaleString()}`;
   };
 
+  // Helper to determine category based on ministry
+  const getCategoryFromMinistry = (ministry: string) => {
+    if (ministry.includes("Health")) return "Healthcare";
+    if (ministry.includes("Works") || ministry.includes("Infrastructure"))
+      return "Infrastructure";
+    if (ministry.includes("Education")) return "Education";
+    return "General";
+  };
+
   const getBidCountForTender = (tenderId: string) => {
     return Math.floor(Math.random() * 8) + 3; // Random number between 3-10
   };
@@ -784,6 +785,27 @@ const TenderManagement = () => {
 
     // Synchronize all tender stores
     synchronizeAllTenderStores();
+
+    // Trigger storage events to notify other pages about the new tender
+    const ministryCode = ministryInfo.code;
+
+    setTimeout(() => {
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: `${ministryCode}_recentTenders`,
+          newValue: localStorage.getItem(`${ministryCode}_recentTenders`),
+        }),
+      );
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: `${ministryCode}_featuredTenders`,
+          newValue: localStorage.getItem(`${ministryCode}_featuredTenders`),
+        }),
+      );
+      console.log(
+        `📡 Notified other pages about new tender for ministry ${ministryCode}`,
+      );
+    }, 100); // Small delay to ensure localStorage is updated first
 
     // Note: Global tender creation and storage is now handled by synchronizeAllTenderStores()
 
@@ -1033,11 +1055,13 @@ const TenderManagement = () => {
                   const mainTenders = JSON.parse(
                     localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
                   );
-                  const recentTenders = JSON.parse(
-                    localStorage.getItem("recentTenders") || "[]",
+                  const ministryRecentTenders = JSON.parse(
+                    localStorage.getItem(`${ministryCode}_recentTenders`) ||
+                      "[]",
                   );
-                  const featuredTenders = JSON.parse(
-                    localStorage.getItem("featuredTenders") || "[]",
+                  const ministryFeaturedTenders = JSON.parse(
+                    localStorage.getItem(`${ministryCode}_featuredTenders`) ||
+                      "[]",
                   );
                   const ministryTenders = JSON.parse(
                     localStorage.getItem(`${ministryCode}_tenders`) || "[]",
@@ -1049,16 +1073,18 @@ const TenderManagement = () => {
                       title: t.title,
                       status: t.status,
                     })),
-                    recentTenders: recentTenders.map((t) => ({
-                      id: t.id,
-                      title: t.title,
-                      status: t.status,
-                    })),
-                    featuredTenders: featuredTenders.map((t) => ({
-                      id: t.id,
-                      title: t.title,
-                      status: t.status,
-                    })),
+                    [`${ministryCode}_recentTenders`]:
+                      ministryRecentTenders.map((t) => ({
+                        id: t.id,
+                        title: t.title,
+                        status: t.status,
+                      })),
+                    [`${ministryCode}_featuredTenders`]:
+                      ministryFeaturedTenders.map((t) => ({
+                        id: t.id,
+                        title: t.title,
+                        status: t.status,
+                      })),
                     ministryTenders: ministryTenders.map((t) => ({
                       id: t.id,
                       title: t.title,
@@ -1072,14 +1098,14 @@ const TenderManagement = () => {
                   });
 
                   // Check if tenders have proper data format for Company Dashboard
-                  const sampleRecentTender = recentTenders[0];
+                  const sampleRecentTender = ministryRecentTenders[0];
                   const recentTenderHasReqFields = sampleRecentTender
                     ? "procuringEntity" in sampleRecentTender &&
                       "deadline" in sampleRecentTender
                     : false;
 
                   alert(
-                    `Storage Debug:\n\nMain Store (${STORAGE_KEYS.TENDERS}): ${mainTenders.length} tenders\nRecent Tenders (Company Dashboard): ${recentTenders.length} tenders\nFeatured Tenders (Homepage): ${featuredTenders.length} tenders\nMinistry Tenders (${ministryCode}): ${ministryTenders.length} tenders\nCurrent Component State: ${tenders.length} tenders\n\nRecent Tenders Format OK: ${recentTenderHasReqFields}\n\nCheck console for details.`,
+                    `Storage Debug for ${ministryCode}:\n\nMain Store (${STORAGE_KEYS.TENDERS}): ${mainTenders.length} tenders\n${ministryCode} Recent Tenders: ${ministryRecentTenders.length} tenders\n${ministryCode} Featured Tenders: ${ministryFeaturedTenders.length} tenders\n${ministryCode} Tenders: ${ministryTenders.length} tenders\nCurrent Component State: ${tenders.length} tenders\n\nRecent Tenders Format OK: ${recentTenderHasReqFields}\n\nCheck console for details.`,
                   );
                 }}
                 className="px-4 py-3"
@@ -1111,17 +1137,21 @@ const TenderManagement = () => {
                   // Force synchronization and trigger page refresh
                   forceRefreshTenders();
 
-                  // Trigger storage events to notify other components
+                  // Trigger storage events to notify other components (ministry-specific)
                   window.dispatchEvent(
                     new StorageEvent("storage", {
-                      key: "recentTenders",
-                      newValue: localStorage.getItem("recentTenders"),
+                      key: `${ministryCode}_recentTenders`,
+                      newValue: localStorage.getItem(
+                        `${ministryCode}_recentTenders`,
+                      ),
                     }),
                   );
                   window.dispatchEvent(
                     new StorageEvent("storage", {
-                      key: "featuredTenders",
-                      newValue: localStorage.getItem("featuredTenders"),
+                      key: `${ministryCode}_featuredTenders`,
+                      newValue: localStorage.getItem(
+                        `${ministryCode}_featuredTenders`,
+                      ),
                     }),
                   );
 
