@@ -361,10 +361,19 @@ const TenderManagement = () => {
       return data ? JSON.parse(data) : [];
     };
 
-    // Load and synchronize tenders with NOC and contract data
+    // Load and synchronize tenders with NOC and contract data (ministry-filtered)
     const loadSynchronizedTenders = () => {
       const rawTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
-      const synchronizedTenders = rawTenders.map((tender: Tender) =>
+
+      // Filter tenders by current ministry
+      const ministryInfo = getMinistryInfo();
+      const ministryFilteredTenders = rawTenders.filter((tender: Tender) =>
+        tender.ministry === ministryInfo.name
+      );
+
+      console.log(`🔍 Loaded ${rawTenders.length} total tenders, filtered to ${ministryFilteredTenders.length} for ministry: ${ministryInfo.name}`);
+
+      const synchronizedTenders = ministryFilteredTenders.map((tender: Tender) =>
         synchronizeTenderStatus(tender),
       );
       return synchronizedTenders;
