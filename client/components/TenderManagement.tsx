@@ -968,6 +968,19 @@ const TenderManagement = () => {
             </div>
             <div className="flex gap-3">
               <Button
+                variant="outline"
+                onClick={() => {
+                  const existingTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+                  const synchronizedTenders = existingTenders.map((tender: Tender) => synchronizeTenderStatus(tender));
+                  setTenders(synchronizedTenders);
+                  alert(`Refreshed! Found ${synchronizedTenders.length} tenders`);
+                }}
+                className="px-6 py-3"
+              >
+                <Search className="h-5 w-5 mr-2" />
+                Refresh Tenders
+              </Button>
+              <Button
                 onClick={() => setShowTenderModal(true)}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
               >
