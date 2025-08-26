@@ -226,6 +226,53 @@ const TenderManagement = () => {
     }
   };
 
+  // Function to synchronize tender data across all storage locations
+  const synchronizeAllTenderStores = () => {
+    try {
+      // Get ministry info for prefixing
+      const ministryInfo = getMinistryInfo();
+      const ministryCode = ministryInfo.code;
+
+      // Load tenders from main store
+      const mainTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+
+      // Convert to different formats for different stores
+      const recentTendersFormat = mainTenders.map((tender: any) => ({
+        id: tender.id,
+        title: tender.title,
+        description: tender.description,
+        category: "General",
+        estimatedValue: formatCurrency(tender.budget),
+        status: tender.status === "Published" ? "Open" : tender.status,
+        publishDate: tender.publishedDate || tender.createdDate,
+        closeDate: tender.closingDate,
+        bidsReceived: getBidCount(tender.id),
+        ministry: tender.ministry,
+        procuringEntity: tender.ministry,
+        value: formatCurrency(tender.budget),
+        deadline: new Date(tender.closingDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }),
+        statusColor: tender.status === "Open" || tender.status === "Published"
+          ? "bg-green-100 text-green-800"
+          : "bg-gray-100 text-gray-800",
+      }));
+
+      // Update all storage locations
+      localStorage.setItem("recentTenders", JSON.stringify(recentTendersFormat));
+      localStorage.setItem("featuredTenders", JSON.stringify(recentTendersFormat.slice(0, 5)));
+      localStorage.setItem(`${ministryCode}_recentTenders`, JSON.stringify(recentTendersFormat));
+      localStorage.setItem(`${ministryCode}_tenders`, JSON.stringify(mainTenders));
+      localStorage.setItem(`${ministryCode}_featuredTenders`, JSON.stringify(recentTendersFormat.slice(0, 5)));
+
+      console.log("Synchronized tender data across all stores");
+    } catch (error) {
+      console.error("Error synchronizing tender stores:", error);
+    }
+  };
+
   // Stepper state for evaluation workflow
   const [currentStep, setCurrentStep] = useState(1);
   const [stepStatus, setStepStatus] = useState({
