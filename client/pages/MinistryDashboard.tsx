@@ -3011,7 +3011,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-010",
           companyName: "EduTech Solutions Ltd",
-          bidAmount: "���2,000,000,000",
+          bidAmount: "����2,000,000,000",
           technicalScore: 95,
           financialScore: 92,
           totalScore: 93.5,
@@ -8687,7 +8687,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  �������� Evaluation Report - {selectedTenderForDetails.title}
+                  ���������� Evaluation Report - {selectedTenderForDetails.title}
                 </h3>
                 <button
                   onClick={() => setShowEvaluationReportModal(false)}
@@ -11020,6 +11020,8 @@ Blockchain Timestamp: ${Date.now()}
       return <TenderManagement />;
     } else if (currentView === "contract-management") {
       return <ContractManagement />;
+    } else if (currentView === "payment-requests") {
+      return <PaymentRequestApproval />;
     }
     return null;
   };
