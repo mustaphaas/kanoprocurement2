@@ -1,34 +1,82 @@
 /**
- * Global Key Cleanup - Remove legacy global tender keys to prevent data leakage
- * This ensures complete ministry data isolation
+ * Global Key Cleanup Utility
+ * Removes legacy global localStorage keys to prevent data contamination
+ * between ministries and ensure proper data isolation
  */
 
-export const cleanupLegacyGlobalKeys = () => {
-  const legacyKeys = ["recentTenders", "featuredTenders"];
+const LEGACY_GLOBAL_KEYS = [
+  'recentTenders',
+  'featuredTenders',
+  'tenders', // Generic tenders key
+];
 
-  console.log("🧹 Cleaning up legacy global tender keys...");
-
-  legacyKeys.forEach((key) => {
-    const existingData = localStorage.getItem(key);
-    if (existingData) {
-      console.log(
-        `Removing legacy key: ${key} (had ${JSON.parse(existingData).length} items)`,
-      );
+/**
+ * Remove all legacy global keys that might cause data contamination
+ */
+export const cleanupLegacyGlobalKeys = (): void => {
+  console.log('🧹 Starting cleanup of legacy global keys...');
+  
+  let cleanedCount = 0;
+  
+  LEGACY_GLOBAL_KEYS.forEach((key) => {
+    const value = localStorage.getItem(key);
+    if (value !== null) {
       localStorage.removeItem(key);
+      cleanedCount++;
+      console.log(`🗑️  Removed legacy global key: ${key}`);
     }
   });
-
-  // Mark cleanup as completed
-  localStorage.setItem("legacyKeysCleanedUp", "true");
-  console.log("✅ Legacy global tender keys cleanup completed");
+  
+  if (cleanedCount > 0) {
+    console.log(`✅ Cleanup complete: Removed ${cleanedCount} legacy global keys`);
+  } else {
+    console.log('✅ No legacy global keys found - system is clean');
+  }
 };
 
-export const shouldRunCleanup = (): boolean => {
-  return !localStorage.getItem("legacyKeysCleanedUp");
+/**
+ * Check if any legacy global keys exist
+ */
+export const hasLegacyGlobalKeys = (): boolean => {
+  return LEGACY_GLOBAL_KEYS.some(key => localStorage.getItem(key) !== null);
 };
 
-export const runCleanupIfNeeded = () => {
-  if (shouldRunCleanup()) {
-    cleanupLegacyGlobalKeys();
+/**
+ * Get a report of existing legacy keys
+ */
+export const getLegacyKeysReport = (): { key: string; size: number }[] => {
+  const report: { key: string; size: number }[] = [];
+  
+  LEGACY_GLOBAL_KEYS.forEach((key) => {
+    const value = localStorage.getItem(key);
+    if (value !== null) {
+      report.push({
+        key,
+        size: new Blob([value]).size
+      });
+    }
+  });
+  
+  return report;
+};
+
+/**
+ * Initialize cleanup on app startup
+ * This should be called early in the app lifecycle
+ */
+export const initializeGlobalKeyCleanup = (): void => {
+  // Check if cleanup has been performed in this session
+  const cleanupKey = 'globalKeyCleanupPerformed';
+  const sessionCleanupPerformed = sessionStorage.getItem(cleanupKey);
+  
+  if (!sessionCleanupPerformed) {
+    if (hasLegacyGlobalKeys()) {
+      const report = getLegacyKeysReport();
+      console.log('⚠️  Legacy global keys detected:', report);
+      cleanupLegacyGlobalKeys();
+    }
+    
+    // Mark cleanup as performed for this session
+    sessionStorage.setItem(cleanupKey, 'true');
   }
 };
