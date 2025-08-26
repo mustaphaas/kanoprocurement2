@@ -851,7 +851,7 @@ const TenderManagement = () => {
         bg: "bg-gradient-to-r from-blue-100 to-cyan-100",
         text: "text-blue-700",
         border: "border-blue-200",
-        icon: "📋",
+        icon: "���",
       },
       "Contract Signed": {
         bg: "bg-gradient-to-r from-blue-100 to-blue-100",
@@ -973,12 +973,16 @@ const TenderManagement = () => {
                   const existingTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
                   const synchronizedTenders = existingTenders.map((tender: Tender) => synchronizeTenderStatus(tender));
                   setTenders(synchronizedTenders);
-                  alert(`Refreshed! Found ${synchronizedTenders.length} tenders`);
+
+                  // Debug info
+                  const tenderTitles = existingTenders.map((t: any) => `${t.id}: ${t.title} (${t.status})`);
+                  console.log("All tenders in localStorage:", existingTenders);
+                  alert(`Refreshed! Found ${synchronizedTenders.length} tenders:\n\n${tenderTitles.join('\n')}`);
                 }}
                 className="px-6 py-3"
               >
                 <Search className="h-5 w-5 mr-2" />
-                Refresh Tenders
+                Refresh & Debug
               </Button>
               <Button
                 onClick={() => setShowTenderModal(true)}
