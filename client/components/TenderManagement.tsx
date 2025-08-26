@@ -960,22 +960,17 @@ const TenderManagement = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  const existingTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-                  const synchronizedTenders = existingTenders.map((tender: Tender) => synchronizeTenderStatus(tender));
-                  setTenders(synchronizedTenders);
-
-                  // Synchronize all tender stores
-                  synchronizeAllTenderStores();
+                  const refreshedTenders = forceRefreshTenders();
 
                   // Debug info
-                  const tenderTitles = existingTenders.map((t: any) => `${t.id}: ${t.title} (${t.status})`);
-                  console.log("All tenders in localStorage:", existingTenders);
-                  alert(`Refreshed and Synchronized! Found ${synchronizedTenders.length} tenders:\n\n${tenderTitles.join('\n')}\n\nAll storage locations updated.`);
+                  const tenderTitles = refreshedTenders.map((t: any) => `${t.id}: ${t.title} (${t.status})`);
+                  console.log("All tenders after refresh:", refreshedTenders);
+                  alert(`Refreshed and Synchronized! Found ${refreshedTenders.length} tenders:\n\n${tenderTitles.join('\n')}\n\nAll storage locations updated.`);
                 }}
                 className="px-6 py-3"
               >
                 <Search className="h-5 w-5 mr-2" />
-                Refresh & Sync
+                Force Refresh
               </Button>
               <Button
                 onClick={() => setShowTenderModal(true)}
