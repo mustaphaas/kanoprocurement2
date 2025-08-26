@@ -609,7 +609,9 @@ const TenderManagement = () => {
       `📊 Mock data check: ${allExistingTenders.length} total tenders, ${existingTenders.length} for ${ministryInfo.name}`,
     );
 
-    if (existingTenders.length === 0) {
+    // FIXED: Only create mock data if there are NO tenders in the entire system,
+    // not just no tenders for the current ministry
+    if (allExistingTenders.length === 0) {
       const now = new Date();
       const mockTenders: Tender[] = [
         {
