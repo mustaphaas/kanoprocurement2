@@ -75,6 +75,7 @@ type ActiveSection =
   | "messages"
   | "transaction-history"
   | "contracts-awarded"
+  | "payment-requests"
   | "annual-report"
   | "grievance"
   | "eportal"
