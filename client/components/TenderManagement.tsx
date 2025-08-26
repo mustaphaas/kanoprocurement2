@@ -243,7 +243,7 @@ const TenderManagement = () => {
         id: tender.id,
         title: tender.title,
         description: tender.description,
-        category: "General",
+        category: getCategoryFromMinistry(tender.ministry),
         value: tender.budget.toString(), // Company Dashboard expects string
         deadline: tender.closingDate,
         location: "Kano State",
@@ -287,20 +287,12 @@ const TenderManagement = () => {
             : tender.status === "Closing Soon"
               ? "bg-orange-100 text-orange-800"
               : "bg-gray-100 text-gray-800",
-        category: "General",
+        category: getCategoryFromMinistry(tender.ministry),
         ministry: tender.ministry,
         createdAt: Date.now(),
       }));
 
-      // Update all storage locations with proper formats
-      localStorage.setItem(
-        "recentTenders",
-        JSON.stringify(recentTendersFormat),
-      );
-      localStorage.setItem(
-        "featuredTenders",
-        JSON.stringify(featuredTendersFormat.slice(0, 5)),
-      );
+      // ONLY update ministry-specific storage locations (no global keys)
       localStorage.setItem(
         `${ministryCode}_recentTenders`,
         JSON.stringify(recentTendersFormat),
@@ -314,7 +306,7 @@ const TenderManagement = () => {
         JSON.stringify(featuredTendersFormat.slice(0, 5)),
       );
 
-      console.log("Synchronized tender data across all stores");
+      console.log(`Synchronized tender data for ministry ${ministryCode} only`);
       return mainTenders;
     } catch (error) {
       console.error("Error synchronizing tender stores:", error);
@@ -715,6 +707,14 @@ const TenderManagement = () => {
     const num = typeof amount === "string" ? parseFloat(amount) : amount;
     if (isNaN(num)) return amount;
     return `₦${num.toLocaleString()}`;
+  };
+
+  // Helper to determine category based on ministry
+  const getCategoryFromMinistry = (ministry: string) => {
+    if (ministry.includes("Health")) return "Healthcare";
+    if (ministry.includes("Works") || ministry.includes("Infrastructure")) return "Infrastructure";
+    if (ministry.includes("Education")) return "Education";
+    return "General";
   };
 
   const getBidCountForTender = (tenderId: string) => {
