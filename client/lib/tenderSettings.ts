@@ -174,13 +174,13 @@ export class TenderStatusChecker {
       return "Closing Soon";
     }
 
-    // Active if published and not yet closing soon
+    // Open if published and not yet closing soon
     if (
       currentStatus === "Published" ||
       currentStatus === "Open" ||
       currentStatus === "Active"
     ) {
-      return "Active";
+      return "Open";
     }
 
     return currentStatus;
