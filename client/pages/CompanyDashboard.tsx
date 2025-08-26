@@ -6,6 +6,8 @@ import { getDashboardConfig, type CompanyStatus } from "@/lib/dashboardConfig";
 import { persistentStorage } from "@/lib/persistentStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { tenderStatusChecker, TenderStatusInfo } from "@/lib/tenderSettings";
+import { messageService } from "@/lib/messageService";
+import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
@@ -442,43 +444,29 @@ export default function CompanyDashboard() {
     return getCompanyDetails();
   }, [statusUpdateTrigger, user?.email]);
 
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      type: "info",
-      title: "New Addendum",
-      message: "New Addendum issued for Hospital Equipment Supply tender.",
-      date: "2024-01-22",
-      read: false,
-    },
-    {
-      id: "2",
-      type: "warning",
-      title: "Bid Under Evaluation",
-      message:
-        "Your bid for Road Construction Project is currently under evaluation.",
-      date: "2024-01-21",
-      read: false,
-    },
-    {
-      id: "3",
-      type: "success",
-      title: "Contract Awarded",
-      message:
-        "Congratulations! You have been awarded the contract for ICT Infrastructure Upgrade.",
-      date: "2024-01-20",
-      read: true,
-    },
-    {
-      id: "4",
-      type: "warning",
-      title: "Document Expiry Alert",
-      message:
-        "Important: Your Tax Clearance Certificate expires on 2024-03-15. Please upload an updated copy to avoid automatic suspension.",
-      date: "2024-01-19",
-      read: false,
-    },
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
+
+  // Monitor message updates
+  useEffect(() => {
+    const updateMessageCount = () => {
+      const count = messageService.getUnreadCount(companyData.email);
+      setUnreadMessageCount(count);
+    };
+
+    updateMessageCount();
+    const unsubscribe = messageService.subscribe(updateMessageCount);
+    return unsubscribe;
+  }, [companyData.email]);
+
+  // Monitor tender status changes and create notifications
+  useEffect(() => {
+    const monitorInterval = setInterval(() => {
+      messageService.monitorTenderStatusChanges();
+    }, 30000); // Check every 30 seconds
+
+    return () => clearInterval(monitorInterval);
+  }, []);
 
   // Default tenders for fallback
   const getDefaultTenders = (): Tender[] => [
@@ -535,10 +523,38 @@ export default function CompanyDashboard() {
       const storedTenderStates =
         localStorage.getItem("companyTenderStates") || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
+      const lastProcessedTenders = JSON.parse(
+        localStorage.getItem("lastProcessedTenders") || "[]",
+      );
 
       if (storedTenders) {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
+          // Check for new tenders and create notifications
+          parsedTenders.forEach((recentTender: any) => {
+            if (!lastProcessedTenders.includes(recentTender.id)) {
+              // This is a new tender, create a "bid created" notification
+              messageService.createBidCreatedMessage(
+                {
+                  id: recentTender.id,
+                  title: recentTender.title,
+                  ministry:
+                    recentTender.procuringEntity || "Kano State Government",
+                  category: recentTender.category,
+                  value: formatCurrency(recentTender.value),
+                  deadline: recentTender.deadline,
+                },
+                companyData.email,
+              );
+            }
+          });
+
+          // Update processed tenders list
+          const currentTenderIds = parsedTenders.map((t: any) => t.id);
+          localStorage.setItem(
+            "lastProcessedTenders",
+            JSON.stringify(currentTenderIds),
+          );
           // Convert recent tender format to company dashboard tender format
           const formattedTenders = parsedTenders.map((recentTender: any) => ({
             id: recentTender.id,
@@ -583,7 +599,7 @@ export default function CompanyDashboard() {
     // Set up interval to refresh tenders every 30 seconds
     const interval = setInterval(loadTenders, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [companyData.email]);
 
   // Log dashboard access
   useEffect(() => {
@@ -791,7 +807,19 @@ export default function CompanyDashboard() {
     };
     localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
 
-    // Update company stats
+    // Create EOI confirmation message using message service
+    messageService.createEOIConfirmationMessage(
+      {
+        id: selectedTender.id,
+        title: selectedTender.title,
+        ministry: selectedTender.ministry,
+        deadline: selectedTender.deadline,
+        value: selectedTender.value,
+      },
+      companyData.email,
+    );
+
+    // Legacy notification for backwards compatibility
     setNotifications((prev) => [
       {
         id: Date.now().toString(),
@@ -877,7 +905,19 @@ export default function CompanyDashboard() {
     };
     localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
 
-    // Update company stats and add notification
+    // Create bid confirmation message using message service
+    messageService.createBidConfirmationMessage(
+      {
+        id: bidData.id,
+        tenderId: selectedTender.id,
+        tenderTitle: selectedTender.title,
+        bidAmount: bidData.bidAmount,
+        ministry: selectedTender.ministry,
+      },
+      companyData.email,
+    );
+
+    // Legacy notification for backwards compatibility
     setNotifications((prev) => [
       {
         id: Date.now().toString(),
@@ -3976,6 +4016,21 @@ export default function CompanyDashboard() {
           </div>
         );
 
+      case "messages":
+        return (
+          <CompanyMessageCenter
+            companyEmail={companyData.email}
+            onActionClick={(action, message) => {
+              // Handle message actions
+              if (action.action === "view_tender" && action.data?.tenderId) {
+                setActiveSection("tender-ads");
+                // Could scroll to specific tender or highlight it
+              }
+              console.log("Message action:", action, message);
+            }}
+          />
+        );
+
       default:
         return (
           <div className="text-center py-12">
@@ -4282,6 +4337,11 @@ export default function CompanyDashboard() {
               {companyData.status === "Approved"
                 ? "Messages"
                 : "Notifications Center"}
+              {unreadMessageCount > 0 && (
+                <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] h-5 flex items-center justify-center">
+                  {unreadMessageCount}
+                </span>
+              )}
             </button>
 
             <div className="pt-4 mb-4">
