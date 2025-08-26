@@ -7,7 +7,6 @@ import { persistentStorage } from "@/lib/persistentStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { tenderStatusChecker, TenderStatusInfo } from "@/lib/tenderSettings";
 import { messageService } from "@/lib/messageService";
-import { getCurrentMinistryContext, getMinistryStorageKey } from "@/lib/ministryStorageHelper";
 import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
