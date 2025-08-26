@@ -202,6 +202,7 @@ export class TenderStatusChecker {
         break;
 
       case "Published":
+      case "Open":
       case "Active":
         canExpressInterest = true;
         canSubmitBid = true;
