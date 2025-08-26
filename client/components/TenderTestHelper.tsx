@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { formatCurrency } from "@/lib/utils";
 import { verifyMinistryPropertyFix } from "@/lib/verifyMinistryFix";
 import { runCompleteFilteringTest } from "@/lib/ministryFilteringTest";
+import { verifyTenderVisibility, logTenderVisibilityStatus } from "@/lib/verifyTenderVisibility";
 
 interface TenderTestHelperProps {
   onTenderCreated: () => void;
