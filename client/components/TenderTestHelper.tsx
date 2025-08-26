@@ -301,6 +301,17 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
         >
           Run Full Test Suite
         </button>
+
+        <button
+          onClick={() => {
+            const result = verifyTenderVisibility();
+            logTenderVisibilityStatus();
+            alert(`Tender Visibility Check:\n\n${result.success ? "✅ ALL LOCATIONS WORKING" : "❌ VISIBILITY ISSUES FOUND"}\n\nDetails:\n• Ministry Overview: ${result.details.ministryOverview.willShow} tenders\n• Company Dashboard: ${result.details.companyDashboard.willShow} tenders\n• Main Storage: ${result.details.mainStorage.totalTenders} total\n\nCheck console for full details.`);
+          }}
+          className="w-full px-3 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700"
+        >
+          Check Tender Visibility
+        </button>
       </div>
 
       <div className="mt-4 p-3 bg-blue-50 rounded text-xs text-gray-600">
