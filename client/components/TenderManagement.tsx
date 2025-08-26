@@ -941,11 +941,11 @@ const TenderManagement = () => {
         <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-blue-100 shadow-lg p-2">
           <TabsList className="grid w-full grid-cols-8 bg-transparent gap-1">
             <TabsTrigger
-              value="creation"
+              value="overview"
               className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-50 border border-transparent data-[state=active]:border-blue-200"
             >
-              <FileText className="h-4 w-4" />
-              <span className="font-medium">Creation</span>
+              <Eye className="h-4 w-4" />
+              <span className="font-medium">Overview</span>
             </TabsTrigger>
             <TabsTrigger
               value="administration"
