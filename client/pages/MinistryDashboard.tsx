@@ -2695,6 +2695,46 @@ export default function MinistryDashboard() {
     };
   }, []);
 
+  // Listen for changes to main tender storage and refresh overview
+  useEffect(() => {
+    const handleMainTenderStorageChange = (event: StorageEvent) => {
+      // Refresh overview when main tender storage changes
+      if (event.key === "kanoproc_tenders") {
+        console.log("🔄 Main tender storage changed, refreshing overview...");
+        setOverviewRefreshTrigger(prev => prev + 1);
+      }
+    };
+
+    // Listen for storage events from other tabs/windows
+    window.addEventListener("storage", handleMainTenderStorageChange);
+
+    // Also listen for same-tab changes (when TenderManagement updates storage)
+    const handleSameTabChange = () => {
+      setOverviewRefreshTrigger(prev => prev + 1);
+    };
+
+    // Set up an interval to check for changes (fallback for same-tab updates)
+    let lastTenderCount = 0;
+    const checkInterval = setInterval(() => {
+      const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
+      const ministryInfo = getMinistryInfo();
+      const currentMinistryTenders = mainTenders.filter((tender: any) =>
+        tender.ministry === ministryInfo.name
+      );
+
+      if (currentMinistryTenders.length !== lastTenderCount) {
+        console.log(`🔄 Tender count changed: ${lastTenderCount} → ${currentMinistryTenders.length}`);
+        lastTenderCount = currentMinistryTenders.length;
+        setOverviewRefreshTrigger(prev => prev + 1);
+      }
+    }, 2000); // Check every 2 seconds
+
+    return () => {
+      window.removeEventListener("storage", handleMainTenderStorageChange);
+      clearInterval(checkInterval);
+    };
+  }, []);
+
   // Function to load bids from localStorage for selected tender
   const loadBidsForTender = (tenderId: string) => {
     try {
