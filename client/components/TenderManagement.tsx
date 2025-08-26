@@ -703,46 +703,7 @@ const TenderManagement = () => {
     // Synchronize all tender stores
     synchronizeAllTenderStores();
 
-    // Also create tender for global app state (same as MinistryDashboard does)
-    const globalTender = {
-      id: tenderId,
-      title: tenderForm.title,
-      description: tenderForm.description,
-      category: "General", // Could be made configurable
-      estimatedValue: formatCurrency(tenderForm.budget),
-      status: isDraft ? "Draft" : "Published",
-      publishDate: new Date().toISOString().split("T")[0],
-      closeDate: tenderForm.closingDate,
-      bidsReceived: getBidCountForTender(tenderId),
-      ministry: ministryInfo.name,
-      procuringEntity: ministryInfo.name,
-    };
-
-    // Store in localStorage for cross-page access (same as MinistryDashboard)
-    const existingTenders = localStorage.getItem("featuredTenders") || "[]";
-    const tendersList = JSON.parse(existingTenders);
-    const featuredTender = {
-      id: globalTender.id,
-      title: globalTender.title,
-      description: globalTender.description,
-      value: globalTender.estimatedValue,
-      deadline: new Date(globalTender.closeDate).toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }),
-      status: globalTender.status === "Published" ? "Open" : "Draft",
-      statusColor:
-        globalTender.status === "Published"
-          ? "bg-green-100 text-green-800"
-          : "bg-gray-100 text-gray-800",
-      category: "General",
-      ministry: ministryInfo.name,
-      createdAt: Date.now(),
-    };
-
-    tendersList.unshift(featuredTender);
-    const latestTenders = tendersList.slice(0, 5);
+    // Note: Global tender creation and storage is now handled by synchronizeAllTenderStores()
     localStorage.setItem("featuredTenders", JSON.stringify(latestTenders));
 
     // Also store in recentTenders
