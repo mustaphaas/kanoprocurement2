@@ -308,16 +308,21 @@ const TenderManagement = () => {
     // First apply automatic date-based status transitions
     let updatedTender = { ...tender };
 
+    // Convert Published to Open for ministry display
+    if (tender.status === "Published") {
+      updatedTender.status = "Open" as TenderStatus;
+    }
+
     // Apply automatic status transitions based on dates
     if (tender.closingDate) {
       const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
-        tender.status,
+        updatedTender.status,
         tender.closingDate,
         tender.publishedDate,
       );
 
       // Update status if it changed due to automatic transition
-      if (automaticStatus !== tender.status) {
+      if (automaticStatus !== updatedTender.status) {
         updatedTender.status = automaticStatus;
         updatedTender.lastUpdated = new Date().toISOString();
 
