@@ -552,11 +552,6 @@ export default function MinistryDashboard() {
   ]);
   const navigate = useNavigate();
 
-  // FIXED: Overview data calculation with proper hook placement
-  const overviewData = useMemo(() => {
-    return getEnhancedOverviewData();
-  }, [overviewRefreshTrigger, tenders, nocRequests, contracts]);
-
   // Mobile detection and responsive behavior
   useEffect(() => {
     const checkMobile = () => {
