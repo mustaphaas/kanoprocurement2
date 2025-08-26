@@ -965,7 +965,7 @@ const TenderManagement = () => {
       </div>
 
       {/* Enhanced Tabs Navigation */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="overview" className="w-full">
         <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-blue-100 shadow-lg p-2">
           <TabsList className="grid w-full grid-cols-8 bg-transparent gap-1">
             <TabsTrigger
