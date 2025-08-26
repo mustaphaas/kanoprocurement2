@@ -68,15 +68,20 @@ export const initializeGlobalKeyCleanup = (): void => {
   // Check if cleanup has been performed in this session
   const cleanupKey = 'globalKeyCleanupPerformed';
   const sessionCleanupPerformed = sessionStorage.getItem(cleanupKey);
-  
+
   if (!sessionCleanupPerformed) {
     if (hasLegacyGlobalKeys()) {
       const report = getLegacyKeysReport();
       console.log('⚠️  Legacy global keys detected:', report);
       cleanupLegacyGlobalKeys();
     }
-    
+
     // Mark cleanup as performed for this session
     sessionStorage.setItem(cleanupKey, 'true');
   }
 };
+
+/**
+ * Alternative function name for compatibility with existing App.tsx
+ */
+export const runCleanupIfNeeded = initializeGlobalKeyCleanup;
