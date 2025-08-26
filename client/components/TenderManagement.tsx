@@ -712,7 +712,8 @@ const TenderManagement = () => {
   // Helper to determine category based on ministry
   const getCategoryFromMinistry = (ministry: string) => {
     if (ministry.includes("Health")) return "Healthcare";
-    if (ministry.includes("Works") || ministry.includes("Infrastructure")) return "Infrastructure";
+    if (ministry.includes("Works") || ministry.includes("Infrastructure"))
+      return "Infrastructure";
     if (ministry.includes("Education")) return "Education";
     return "General";
   };
@@ -801,7 +802,9 @@ const TenderManagement = () => {
           newValue: localStorage.getItem(`${ministryCode}_featuredTenders`),
         }),
       );
-      console.log(`📡 Notified other pages about new tender for ministry ${ministryCode}`);
+      console.log(
+        `📡 Notified other pages about new tender for ministry ${ministryCode}`,
+      );
     }, 100); // Small delay to ensure localStorage is updated first
 
     // Note: Global tender creation and storage is now handled by synchronizeAllTenderStores()
@@ -1053,10 +1056,12 @@ const TenderManagement = () => {
                     localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
                   );
                   const ministryRecentTenders = JSON.parse(
-                    localStorage.getItem(`${ministryCode}_recentTenders`) || "[]",
+                    localStorage.getItem(`${ministryCode}_recentTenders`) ||
+                      "[]",
                   );
                   const ministryFeaturedTenders = JSON.parse(
-                    localStorage.getItem(`${ministryCode}_featuredTenders`) || "[]",
+                    localStorage.getItem(`${ministryCode}_featuredTenders`) ||
+                      "[]",
                   );
                   const ministryTenders = JSON.parse(
                     localStorage.getItem(`${ministryCode}_tenders`) || "[]",
@@ -1068,16 +1073,18 @@ const TenderManagement = () => {
                       title: t.title,
                       status: t.status,
                     })),
-                    [`${ministryCode}_recentTenders`]: ministryRecentTenders.map((t) => ({
-                      id: t.id,
-                      title: t.title,
-                      status: t.status,
-                    })),
-                    [`${ministryCode}_featuredTenders`]: ministryFeaturedTenders.map((t) => ({
-                      id: t.id,
-                      title: t.title,
-                      status: t.status,
-                    })),
+                    [`${ministryCode}_recentTenders`]:
+                      ministryRecentTenders.map((t) => ({
+                        id: t.id,
+                        title: t.title,
+                        status: t.status,
+                      })),
+                    [`${ministryCode}_featuredTenders`]:
+                      ministryFeaturedTenders.map((t) => ({
+                        id: t.id,
+                        title: t.title,
+                        status: t.status,
+                      })),
                     ministryTenders: ministryTenders.map((t) => ({
                       id: t.id,
                       title: t.title,
@@ -1134,13 +1141,17 @@ const TenderManagement = () => {
                   window.dispatchEvent(
                     new StorageEvent("storage", {
                       key: `${ministryCode}_recentTenders`,
-                      newValue: localStorage.getItem(`${ministryCode}_recentTenders`),
+                      newValue: localStorage.getItem(
+                        `${ministryCode}_recentTenders`,
+                      ),
                     }),
                   );
                   window.dispatchEvent(
                     new StorageEvent("storage", {
                       key: `${ministryCode}_featuredTenders`,
-                      newValue: localStorage.getItem(`${ministryCode}_featuredTenders`),
+                      newValue: localStorage.getItem(
+                        `${ministryCode}_featuredTenders`,
+                      ),
                     }),
                   );
 

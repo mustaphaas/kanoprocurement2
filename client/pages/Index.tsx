@@ -39,7 +39,10 @@ import {
   Crown,
 } from "lucide-react";
 import { tenderStatusChecker, TenderStatus } from "@/lib/tenderSettings";
-import { getCurrentMinistryContext, getMinistryStorageKey } from "@/lib/ministryStorageHelper";
+import {
+  getCurrentMinistryContext,
+  getMinistryStorageKey,
+} from "@/lib/ministryStorageHelper";
 
 interface FeaturedTender {
   id: string;
@@ -408,7 +411,9 @@ export default function Index() {
       const featuredTendersKey = getMinistryStorageKey("featuredTenders");
 
       if (e.key === featuredTendersKey) {
-        console.log(`Featured tenders updated for ministry ${ministryCode}, reloading...`);
+        console.log(
+          `Featured tenders updated for ministry ${ministryCode}, reloading...`,
+        );
         loadFeaturedTenders();
       }
     };

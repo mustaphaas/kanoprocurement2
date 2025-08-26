@@ -532,31 +532,32 @@ export default function CompanyDashboard() {
       if (allMinistryTenders.length > 0) {
         // Check for new tenders and create notifications
         allMinistryTenders.forEach((recentTender: any) => {
-            if (!lastProcessedTenders.includes(recentTender.id)) {
-              // This is a new tender, create a "bid created" notification
-              messageService.createBidCreatedMessage(
-                {
-                  id: recentTender.id,
-                  title: recentTender.title,
-                  ministry:
-                    recentTender.procuringEntity || "Kano State Government",
-                  category: recentTender.category,
-                  value: formatCurrency(recentTender.value),
-                  deadline: recentTender.deadline,
-                },
-                companyData.email,
-              );
-            }
-          });
+          if (!lastProcessedTenders.includes(recentTender.id)) {
+            // This is a new tender, create a "bid created" notification
+            messageService.createBidCreatedMessage(
+              {
+                id: recentTender.id,
+                title: recentTender.title,
+                ministry:
+                  recentTender.procuringEntity || "Kano State Government",
+                category: recentTender.category,
+                value: formatCurrency(recentTender.value),
+                deadline: recentTender.deadline,
+              },
+              companyData.email,
+            );
+          }
+        });
 
-          // Update processed tenders list
-          const currentTenderIds = allMinistryTenders.map((t: any) => t.id);
-          localStorage.setItem(
-            "lastProcessedTenders",
-            JSON.stringify(currentTenderIds),
-          );
-          // Convert recent tender format to company dashboard tender format
-          const formattedTenders = allMinistryTenders.map((recentTender: any) => ({
+        // Update processed tenders list
+        const currentTenderIds = allMinistryTenders.map((t: any) => t.id);
+        localStorage.setItem(
+          "lastProcessedTenders",
+          JSON.stringify(currentTenderIds),
+        );
+        // Convert recent tender format to company dashboard tender format
+        const formattedTenders = allMinistryTenders.map(
+          (recentTender: any) => ({
             id: recentTender.id,
             title: recentTender.title,
             ministry: recentTender.procuringEntity || "Kano State Government",
@@ -574,22 +575,23 @@ export default function CompanyDashboard() {
             hasBid: tenderStates[recentTender.id]?.hasBid || false,
             unspscCode: "72141100", // Default UNSPSC code
             procurementMethod: "Open Tendering",
-          }));
+          }),
+        );
 
-          // Combine with default tenders, avoid duplicates
-          const defaultTenders = getDefaultTenders();
-          const allTenders = [...formattedTenders];
+        // Combine with default tenders, avoid duplicates
+        const defaultTenders = getDefaultTenders();
+        const allTenders = [...formattedTenders];
 
-          // Add default tenders that don't exist in stored tenders
-          defaultTenders.forEach((defaultTender) => {
-            if (
-              !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
-            ) {
-              allTenders.push(defaultTender);
-            }
-          });
+        // Add default tenders that don't exist in stored tenders
+        defaultTenders.forEach((defaultTender) => {
+          if (
+            !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
+          ) {
+            allTenders.push(defaultTender);
+          }
+        });
 
-          setTenders(allTenders);
+        setTenders(allTenders);
       }
     };
 

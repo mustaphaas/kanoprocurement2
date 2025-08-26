@@ -13,45 +13,52 @@ export const debugTenderStatus = (tender: any) => {
     closingDate: tender.closingDate,
     deadline: tender.deadline,
     publishedDate: tender.publishedDate || tender.publishDate,
-    createdDate: tender.createdDate
+    createdDate: tender.createdDate,
   });
-  
+
   // Check what the current date is
   const now = new Date();
   console.log("Current Date:", now.toISOString().split("T")[0]);
-  
+
   // Check the closing date parsing
   const closingDate = tender.closingDate || tender.deadline;
   console.log("Closing Date String:", closingDate);
-  
+
   if (closingDate) {
     const closingDateObj = new Date(closingDate);
-    console.log("Closing Date Parsed:", closingDateObj.toISOString().split("T")[0]);
-    
+    console.log(
+      "Closing Date Parsed:",
+      closingDateObj.toISOString().split("T")[0],
+    );
+
     // Check days until deadline
-    const daysUntil = tenderStatusChecker.calculateDaysUntilDeadline(closingDate);
+    const daysUntil =
+      tenderStatusChecker.calculateDaysUntilDeadline(closingDate);
     console.log("Days Until Deadline:", daysUntil);
-    
+
     // Check automatic status determination
     const automaticStatus = tenderStatusChecker.determineAutomaticStatus(
       tender.status,
       closingDate,
-      tender.publishedDate || tender.publishDate
+      tender.publishedDate || tender.publishDate,
     );
     console.log("Automatic Status Would Be:", automaticStatus);
-    
+
     // Check status info
-    const statusInfo = tenderStatusChecker.getStatusInfo(automaticStatus, closingDate);
+    const statusInfo = tenderStatusChecker.getStatusInfo(
+      automaticStatus,
+      closingDate,
+    );
     console.log("Status Info:", {
       canExpressInterest: statusInfo.canExpressInterest,
       canSubmitBid: statusInfo.canSubmitBid,
       isActive: statusInfo.isActive,
-      description: statusInfo.description
+      description: statusInfo.description,
     });
   } else {
     console.log("❌ No closing date found!");
   }
-  
+
   console.log("=== END DEBUG ===");
 };
 

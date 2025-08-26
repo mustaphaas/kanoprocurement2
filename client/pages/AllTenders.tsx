@@ -6,7 +6,10 @@ import {
   getMinistryTenders,
   type Tender as UnifiedTender,
 } from "@/lib/tenderData";
-import { getCurrentMinistryContext, getMinistryStorageKey } from "@/lib/ministryStorageHelper";
+import {
+  getCurrentMinistryContext,
+  getMinistryStorageKey,
+} from "@/lib/ministryStorageHelper";
 import {
   Building2,
   FileText,
@@ -99,7 +102,9 @@ export default function AllTenders() {
       const recentTendersKey = getMinistryStorageKey("recentTenders");
 
       if (e.key === recentTendersKey) {
-        console.log(`Recent tenders updated for ministry ${ministryCode}, reloading...`);
+        console.log(
+          `Recent tenders updated for ministry ${ministryCode}, reloading...`,
+        );
         loadAllTenders();
       }
     };
