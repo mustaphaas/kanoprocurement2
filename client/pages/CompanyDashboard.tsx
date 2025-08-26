@@ -4046,6 +4046,14 @@ export default function CompanyDashboard() {
           />
         );
 
+      case "payment-requests":
+        return (
+          <PaymentRequest
+            companyEmail={companyData.email}
+            companyName={companyData.name}
+          />
+        );
+
       default:
         return (
           <div className="text-center py-12">
