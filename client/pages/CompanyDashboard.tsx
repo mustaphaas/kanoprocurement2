@@ -522,7 +522,6 @@ export default function CompanyDashboard() {
     const loadTenders = () => {
       // Load from all ministry-specific storage keys to show all available tenders to companies
       const allMinistryTenders = getAggregatedMinistryTenders();
-      const storedTenders = localStorage.getItem("recentTenders");
       const storedTenderStates =
         localStorage.getItem("companyTenderStates") || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
@@ -530,11 +529,9 @@ export default function CompanyDashboard() {
         localStorage.getItem("lastProcessedTenders") || "[]",
       );
 
-      if (storedTenders) {
-        const parsedTenders = JSON.parse(storedTenders);
-        if (parsedTenders.length > 0) {
-          // Check for new tenders and create notifications
-          allMinistryTenders.forEach((recentTender: any) => {
+      if (allMinistryTenders.length > 0) {
+        // Check for new tenders and create notifications
+        allMinistryTenders.forEach((recentTender: any) => {
             if (!lastProcessedTenders.includes(recentTender.id)) {
               // This is a new tender, create a "bid created" notification
               messageService.createBidCreatedMessage(
@@ -593,7 +590,6 @@ export default function CompanyDashboard() {
           });
 
           setTenders(allTenders);
-        }
       }
     };
 
@@ -1730,7 +1726,7 @@ export default function CompanyDashboard() {
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">Project Value</option>
                       <option value="0-100m">₦0 - ₦100M</option>
-                      <option value="100m-1b">₦100M - ���1B</option>
+                      <option value="100m-1b">₦100M - ₦1B</option>
                       <option value="1b+">₦1B+</option>
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
