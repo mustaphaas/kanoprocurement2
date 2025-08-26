@@ -1160,6 +1160,17 @@ const TenderManagement = () => {
                             </p>
                           </div>
                         </div>
+                        <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 border border-purple-200 rounded-lg">
+                          <Users className="h-4 w-4 text-purple-600" />
+                          <div>
+                            <p className="text-xs text-purple-600 font-medium">
+                              Bids Received
+                            </p>
+                            <p className="text-sm font-bold text-purple-800">
+                              {getBidCount(tender.id)}
+                            </p>
+                          </div>
+                        </div>
                         {tender.closingDate && (
                           <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg">
                             <Clock className="h-4 w-4 text-orange-600" />
