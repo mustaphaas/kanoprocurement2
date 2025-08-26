@@ -278,6 +278,28 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
         >
           Clear All Tenders
         </button>
+
+        <button
+          onClick={() => {
+            const result = verifyMinistryPropertyFix();
+            alert(`Ministry Property Fix Verification:\n\n${result.success ? "✅ SUCCESS" : "❌ FAILED"}\n\n${result.message}\n\nCheck console for detailed results.`);
+            console.log("Ministry Property Fix Result:", result);
+          }}
+          className="w-full px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+        >
+          Verify Ministry Fix
+        </button>
+
+        <button
+          onClick={() => {
+            const result = runCompleteFilteringTest();
+            alert(`Complete Filtering Test:\n\n${result.passed ? "✅ ALL TESTS PASSED" : "❌ SOME TESTS FAILED"}\n\nCheck console for detailed results.`);
+            console.log("Complete Filtering Test Result:", result);
+          }}
+          className="w-full px-3 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+        >
+          Run Full Test Suite
+        </button>
       </div>
 
       <div className="mt-4 p-3 bg-blue-50 rounded text-xs text-gray-600">
