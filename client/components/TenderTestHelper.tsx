@@ -189,8 +189,59 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
     console.log("ministryTenders (MinistryDashboard):", ministryTenders);
     console.log("featuredTenders (Index page):", featuredTenders);
 
+    // Also check ministry-specific keys for debugging
+    const getMinistryCode = () => {
+      try {
+        const ministryUser = localStorage.getItem("ministryUser");
+        if (ministryUser) {
+          const userData = JSON.parse(ministryUser);
+          return (
+            userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH"
+          );
+        }
+      } catch (error) {
+        console.error("Error getting ministry context:", error);
+      }
+      return "MOH";
+    };
+
+    const ministryCode = getMinistryCode();
+    const ministryRecentTenders = JSON.parse(
+      localStorage.getItem(`${ministryCode}_recentTenders`) || "[]",
+    );
+    const ministryFeaturedTenders = JSON.parse(
+      localStorage.getItem(`${ministryCode}_featuredTenders`) || "[]",
+    );
+
+    console.log(`=== ${ministryCode} MINISTRY-SPECIFIC KEYS ===`);
+    console.log(`${ministryCode}_recentTenders:`, ministryRecentTenders);
+    console.log(`${ministryCode}_featuredTenders:`, ministryFeaturedTenders);
+
+    // Test ministry filtering
+    const mainTenders = JSON.parse(
+      localStorage.getItem("kanoproc_tenders") || "[]",
+    );
+    const ministryInfo = JSON.parse(
+      localStorage.getItem("ministryUser") || "{}",
+    );
+    const currentMinistryTenders = mainTenders.filter(
+      (t: any) => t.ministry === ministryInfo.ministryName,
+    );
+
+    console.log(`=== MINISTRY FILTERING TEST ===`);
+    console.log(`Total tenders in kanoproc_tenders: ${mainTenders.length}`);
+    console.log(
+      `Filtered for ${ministryInfo.ministryName}: ${currentMinistryTenders.length}`,
+    );
+    console.log(
+      `Current ministry tenders:`,
+      currentMinistryTenders.map(
+        (t: any) => `${t.id}: ${t.title} (${t.ministry})`,
+      ),
+    );
+
     alert(
-      `Tender Storage Status:\n• Company Dashboard: ${recentTenders.length} tenders\n• Ministry Dashboard: ${ministryTenders.length} tenders\n• Index Page: ${featuredTenders.length} tenders\n\nCheck console for details.`,
+      `Tender Storage & Filtering Status:\n\n🚨 LEGACY GLOBAL KEYS (should be empty):\n• recentTenders: ${recentTenders.length} tenders\n• featuredTenders: ${featuredTenders.length} tenders\n• ministryTenders: ${ministryTenders.length} tenders\n\n✅ MINISTRY-SPECIFIC KEYS (${ministryCode}):\n• ${ministryCode}_recentTenders: ${ministryRecentTenders.length} tenders\n• ${ministryCode}_featuredTenders: ${ministryFeaturedTenders.length} tenders\n\n🎯 MINISTRY FILTERING:\n• Total in kanoproc_tenders: ${mainTenders.length} tenders\n• Filtered for ${ministryInfo.ministryName || ministryCode}: ${currentMinistryTenders.length} tenders\n• Filter working: ${currentMinistryTenders.length < mainTenders.length ? "✅ YES" : "❌ NO"}\n\nCheck console for details.`,
     );
   };
 

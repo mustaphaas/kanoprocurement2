@@ -59,34 +59,67 @@ export default function AllTenders() {
     };
   };
 
-  // Load tenders from ministry-specific localStorage
+  // Load tenders from main storage with ministry filtering
   useEffect(() => {
     const loadAllTenders = () => {
-      const { ministryCode } = getCurrentMinistryContext();
-      const ministryStorageKey = getMinistryStorageKey("recentTenders");
+      const { ministryCode, ministryName } = getCurrentMinistryContext();
 
-      const storedTenders = localStorage.getItem(ministryStorageKey);
-      if (storedTenders) {
-        const parsedTenders = JSON.parse(storedTenders);
-        if (parsedTenders.length > 0) {
-          // Apply currency formatting and automatic status transitions
-          const formattedParsedTenders = parsedTenders.map(
-            (tender: UnifiedTender) => {
-              const formatted = {
-                ...tender,
-                value: formatCurrency(tender.value),
-              };
-              return applyStatusTransitions(formatted);
-            },
-          );
+      // Load from main tender storage (kanoproc_tenders)
+      const mainTenders = localStorage.getItem("kanoproc_tenders");
+      if (mainTenders) {
+        const allTenders = JSON.parse(mainTenders);
 
-          setAllTenders(formattedParsedTenders);
+        // Filter by current ministry
+        const ministryTenders = allTenders.filter(
+          (tender: any) => tender.ministry === ministryName,
+        );
+
+        console.log(
+          `🏛️ AllTenders: ${allTenders.length} total → ${ministryTenders.length} for ${ministryName}`,
+        );
+
+        if (ministryTenders.length > 0) {
+          // Convert to AllTenders format and apply status transitions
+          const formattedTenders = ministryTenders.map((tender: any) => {
+            const formatted = {
+              id: tender.id,
+              title: tender.title,
+              category: tender.category || "General",
+              value: formatCurrency(tender.budget),
+              deadline: tender.closingDate,
+              location: "Kano State",
+              views: Math.floor(Math.random() * 200) + 50,
+              status: tender.status === "Published" ? "Active" : tender.status,
+              description: tender.description,
+              publishDate: tender.publishedDate || tender.createdDate,
+              closingDate: tender.closingDate,
+              tenderFee: "₦25,000",
+              procuringEntity: tender.ministry,
+              duration: "12 months",
+              eligibility: "Qualified contractors with relevant experience",
+              requirements: [
+                "Valid CAC certificate",
+                "Tax clearance for last 3 years",
+                "Professional license",
+                "Evidence of similar projects",
+                "Financial capacity documentation",
+              ],
+              technicalSpecs: [
+                "Project specifications as detailed in tender document",
+                "Quality standards must meet government requirements",
+                "Timeline adherence is mandatory",
+              ],
+            };
+            return applyStatusTransitions(formatted);
+          });
+
+          setAllTenders(formattedTenders);
         } else {
-          // If no stored tenders, use ministry-specific default tenders
+          // If no ministry tenders, use ministry-specific defaults
           setAllTenders(getDefaultTenders().map(applyStatusTransitions));
         }
       } else {
-        // If no stored tenders, use ministry-specific default tenders
+        // If no main tender storage, use ministry-specific defaults
         setAllTenders(getDefaultTenders().map(applyStatusTransitions));
       }
     };
@@ -98,12 +131,11 @@ export default function AllTenders() {
 
     // Listen for localStorage changes (when tenders are published from other tabs/components)
     const handleStorageChange = (e: StorageEvent) => {
-      const { ministryCode } = getCurrentMinistryContext();
-      const recentTendersKey = getMinistryStorageKey("recentTenders");
+      // Monitor main tender storage for changes
 
-      if (e.key === recentTendersKey) {
+      if (e.key === "kanoproc_tenders") {
         console.log(
-          `Recent tenders updated for ministry ${ministryCode}, reloading...`,
+          "Main tender storage updated, reloading ministry-filtered view...",
         );
         loadAllTenders();
       }

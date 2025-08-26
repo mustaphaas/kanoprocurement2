@@ -226,7 +226,7 @@ const TenderManagement = () => {
     }
   };
 
-  // Function to synchronize tender data across all storage locations
+  // Function to synchronize tender data to ministry-specific storage only
   const synchronizeAllTenderStores = () => {
     try {
       // Get ministry info for prefixing
@@ -306,7 +306,9 @@ const TenderManagement = () => {
         JSON.stringify(featuredTendersFormat.slice(0, 5)),
       );
 
-      console.log(`Synchronized tender data for ministry ${ministryCode} only`);
+      console.log(
+        `✅ Synchronized tender data for ministry ${ministryCode} only (no global keys)`,
+      );
       return mainTenders;
     } catch (error) {
       console.error("Error synchronizing tender stores:", error);
@@ -314,12 +316,23 @@ const TenderManagement = () => {
     }
   };
 
-  // Function to force refresh tenders from storage
+  // Function to force refresh tenders from storage (with ministry filtering)
   const forceRefreshTenders = () => {
-    const storedTenders = JSON.parse(
+    const allTenders = JSON.parse(
       localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
     );
-    const syncedTenders = storedTenders.map((tender: any) =>
+
+    // Filter by current ministry
+    const ministryInfo = getMinistryInfo();
+    const ministryTenders = allTenders.filter(
+      (tender: any) => tender.ministry === ministryInfo.name,
+    );
+
+    console.log(
+      `🔄 Force refresh: ${allTenders.length} total tenders → ${ministryTenders.length} for ${ministryInfo.name}`,
+    );
+
+    const syncedTenders = ministryTenders.map((tender: any) =>
       synchronizeTenderStatus(tender),
     );
     setTenders(syncedTenders);
@@ -361,11 +374,22 @@ const TenderManagement = () => {
       return data ? JSON.parse(data) : [];
     };
 
-    // Load and synchronize tenders with NOC and contract data
+    // Load and synchronize tenders with NOC and contract data (ministry-filtered)
     const loadSynchronizedTenders = () => {
       const rawTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
-      const synchronizedTenders = rawTenders.map((tender: Tender) =>
-        synchronizeTenderStatus(tender),
+
+      // Filter tenders by current ministry
+      const ministryInfo = getMinistryInfo();
+      const ministryFilteredTenders = rawTenders.filter(
+        (tender: Tender) => tender.ministry === ministryInfo.name,
+      );
+
+      console.log(
+        `🔍 Loaded ${rawTenders.length} total tenders, filtered to ${ministryFilteredTenders.length} for ministry: ${ministryInfo.name}`,
+      );
+
+      const synchronizedTenders = ministryFilteredTenders.map(
+        (tender: Tender) => synchronizeTenderStatus(tender),
       );
       return synchronizedTenders;
     };
@@ -575,7 +599,15 @@ const TenderManagement = () => {
       return data ? JSON.parse(data) : [];
     };
 
-    const existingTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
+    const allExistingTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
+    const ministryInfo = getMinistryInfo();
+    const existingTenders = allExistingTenders.filter(
+      (tender: any) => tender.ministry === ministryInfo.name,
+    );
+
+    console.log(
+      `📊 Mock data check: ${allExistingTenders.length} total tenders, ${existingTenders.length} for ${ministryInfo.name}`,
+    );
 
     if (existingTenders.length === 0) {
       const now = new Date();
@@ -656,7 +688,19 @@ const TenderManagement = () => {
       const syncedMockTenders = mockTenders.map((tender) =>
         synchronizeTenderStatus(tender),
       );
-      setTenders(syncedMockTenders);
+
+      // Filter mock tenders by current ministry before setting
+      const ministryInfo = getMinistryInfo();
+      const ministryMockTenders = syncedMockTenders.filter(
+        (tender) => tender.ministry === ministryInfo.name,
+      );
+
+      console.log(
+        `🎭 Mock data: ${syncedMockTenders.length} total → ${ministryMockTenders.length} for ${ministryInfo.name}`,
+      );
+
+      setTenders(ministryMockTenders);
+      // Note: Still save all mock tenders to storage so other ministries can see theirs
       saveToStorage(STORAGE_KEYS.TENDERS, syncedMockTenders);
       synchronizeAllTenderStores();
     } else {

@@ -1010,9 +1010,27 @@ export default function NOCRequestsTab() {
     );
     localStorage.setItem("kanoproc_tenders", JSON.stringify(updatedTenders));
 
-    // Update in featured tenders
+    // Update in ministry-specific featured tenders
+    // Get current ministry context to determine the correct key
+    const getMinistryCode = () => {
+      try {
+        const ministryUser = localStorage.getItem("ministryUser");
+        if (ministryUser) {
+          const userData = JSON.parse(ministryUser);
+          return (
+            userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH"
+          );
+        }
+      } catch (error) {
+        console.error("Error getting ministry context:", error);
+      }
+      return "MOH"; // fallback
+    };
+
+    const ministryCode = getMinistryCode();
+    const featuredTendersKey = `${ministryCode}_featuredTenders`;
     const featuredTenders = JSON.parse(
-      localStorage.getItem("featuredTenders") || "[]",
+      localStorage.getItem(featuredTendersKey) || "[]",
     );
     const updatedFeatured = featuredTenders.map((tender: any) =>
       tender.id === tenderId
@@ -1023,7 +1041,10 @@ export default function NOCRequestsTab() {
           }
         : tender,
     );
-    localStorage.setItem("featuredTenders", JSON.stringify(updatedFeatured));
+    localStorage.setItem(featuredTendersKey, JSON.stringify(updatedFeatured));
+    console.log(
+      `✅ Updated tender ${tenderId} status in ministry-specific key: ${featuredTendersKey}`,
+    );
   };
 
   const triggerContractNotification = (contractData: any) => {
