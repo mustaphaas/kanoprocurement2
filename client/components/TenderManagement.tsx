@@ -786,7 +786,6 @@ const TenderManagement = () => {
     synchronizeAllTenderStores();
 
     // Trigger storage events to notify other pages about the new tender
-    const ministryInfo = getMinistryInfo();
     const ministryCode = ministryInfo.code;
 
     setTimeout(() => {
