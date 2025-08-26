@@ -256,7 +256,7 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
         Tender Testing Helper
       </h3>
       <p className="text-sm text-gray-600 mb-4">
-        Test tender creation, visibility, and debug React hooks issues
+        Test tender creation, visibility, and debug React errors & initialization issues
       </p>
 
       <div className="space-y-2">
