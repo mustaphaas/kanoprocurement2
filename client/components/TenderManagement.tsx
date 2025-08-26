@@ -727,10 +727,10 @@ const TenderManagement = () => {
 
     try {
       const userData = JSON.parse(ministryUser);
-      // You would need to import getMinistryById function or implement similar logic here
+      // FIXED: Properly read ministryName and ministryCode from stored user data
       return {
-        name: "Ministry of Health", // fallback for now
-        code: "MOH",
+        name: userData.ministryName || "Ministry of Health", // Use stored ministryName
+        code: userData.ministryCode || "MOH", // Use stored ministryCode
         contactEmail: "health@kanostate.gov.ng",
         contactPhone: "08012345678",
         address: "Kano State Secretariat, Kano",
