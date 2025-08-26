@@ -593,7 +593,13 @@ const TenderManagement = () => {
       return data ? JSON.parse(data) : [];
     };
 
-    const existingTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
+    const allExistingTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
+    const ministryInfo = getMinistryInfo();
+    const existingTenders = allExistingTenders.filter((tender: any) =>
+      tender.ministry === ministryInfo.name
+    );
+
+    console.log(`📊 Mock data check: ${allExistingTenders.length} total tenders, ${existingTenders.length} for ${ministryInfo.name}`);
 
     if (existingTenders.length === 0) {
       const now = new Date();
