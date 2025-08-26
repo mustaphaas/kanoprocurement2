@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
@@ -4916,7 +4916,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         <div class="subject">
-          <strong>SUBJECT: AWARD OF CONTRACT �� ${awardLetterData.tenderTitle}</strong>
+          <strong>SUBJECT: AWARD OF CONTRACT – ${awardLetterData.tenderTitle}</strong>
         </div>
 
         <div class="content">
@@ -10206,7 +10206,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>����� 90% faster processing</li>
-                      <li>����� Reduced human errors</li>
+                      <li>��� Reduced human errors</li>
                       <li>• Real-time notifications</li>
                       <li>���� Automatic compliance checks</li>
                     </ul>
