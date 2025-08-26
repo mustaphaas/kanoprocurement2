@@ -469,7 +469,15 @@ const TenderManagement = () => {
 
   // Mock data for initial load
   useEffect(() => {
-    if (tenders.length === 0) {
+    const loadFromStorage = (key: string) => {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : [];
+    };
+
+    const existingTenders = loadFromStorage(STORAGE_KEYS.TENDERS);
+
+    if (existingTenders.length === 0) {
+      const now = new Date();
       const mockTenders: Tender[] = [
         {
           id: "T001",
@@ -478,9 +486,9 @@ const TenderManagement = () => {
             "Construction of 5 primary healthcare centers across rural communities",
           budget: 250000000,
           status: "Published",
-          createdDate: "2024-01-15",
-          publishedDate: "2024-01-20",
-          closingDate: "2024-02-20",
+          createdDate: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          publishedDate: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          closingDate: new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
           openingDate: "2024-02-21",
           ministry: "Ministry of Health",
           department: "Primary Healthcare Development",
