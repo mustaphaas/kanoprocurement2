@@ -1203,6 +1203,19 @@ const TenderManagement = () => {
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
+                        {getBidCount(tender.id) > 0 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const bids = getBidsForTender(tender.id);
+                              alert(`Bids for ${tender.title}:\n\n${bids.map(bid => `• ${bid.companyName} - ${bid.bidAmount} (${bid.status})`).join('\n')}`);
+                            }}
+                            className="hover:bg-purple-50 hover:border-purple-300 transition-colors"
+                          >
+                            <Users className="h-4 w-4" />
+                          </Button>
+                        )}
                         {tender.status === "Draft" && (
                           <Button
                             variant="outline"
@@ -2535,7 +2548,7 @@ const TenderManagement = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="budget">Budget (₦)</Label>
+                <Label htmlFor="budget">Budget (���)</Label>
                 <Input
                   id="budget"
                   type="number"
