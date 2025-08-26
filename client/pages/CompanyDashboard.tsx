@@ -4177,7 +4177,7 @@ export default function CompanyDashboard() {
         <div
           className={`${sidebarOpen ? "w-64" : "w-0"} overflow-x-hidden transition-all duration-300 bg-white border-r border-gray-200 sticky top-16 max-h-[calc(100vh-4rem)]`}
         >
-          <nav className="p-4 space-y-2">
+          <nav className="p-4 space-y-2 overflow-y-auto h-full">
             <div className="mb-4">
               <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Bid Activity
