@@ -4916,7 +4916,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         </div>
 
         <div class="subject">
-          <strong>SUBJECT: AWARD OF CONTRACT – ${awardLetterData.tenderTitle}</strong>
+          <strong>SUBJECT: AWARD OF CONTRACT �� ${awardLetterData.tenderTitle}</strong>
         </div>
 
         <div class="content">
@@ -5306,7 +5306,10 @@ Penalty Clause: 0.5% per week for delayed completion`,
   };
 
   const renderOverview = () => {
-    const overviewData = getEnhancedOverviewData();
+    // Recalculate overview data when refresh trigger changes
+    const overviewData = useMemo(() => {
+      return getEnhancedOverviewData();
+    }, [overviewRefreshTrigger, tenders, nocRequests, contracts]);
 
     return (
       <EnhancedMinistryOverview
@@ -10203,7 +10206,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                     </h5>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>����� 90% faster processing</li>
-                      <li>��� Reduced human errors</li>
+                      <li>����� Reduced human errors</li>
                       <li>• Real-time notifications</li>
                       <li>���� Automatic compliance checks</li>
                     </ul>
