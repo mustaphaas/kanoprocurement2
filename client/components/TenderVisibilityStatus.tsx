@@ -7,8 +7,24 @@ export const TenderVisibilityStatus: React.FC = () => {
 
   const refreshStatus = () => {
     try {
+      // Get current ministry context to use the correct key
+      const getMinistryCode = () => {
+        try {
+          const ministryUser = localStorage.getItem("ministryUser");
+          if (ministryUser) {
+            const userData = JSON.parse(ministryUser);
+            return userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH";
+          }
+        } catch (error) {
+          console.error("Error getting ministry context:", error);
+        }
+        return "MOH"; // fallback
+      };
+
+      const ministryCode = getMinistryCode();
+      const recentTendersKey = `${ministryCode}_recentTenders`;
       const recentTenders = JSON.parse(
-        localStorage.getItem("recentTenders") || "[]",
+        localStorage.getItem(recentTendersKey) || "[]",
       );
       const publishedTenders = recentTenders.filter(
         (t: any) => t.status === "Open",
