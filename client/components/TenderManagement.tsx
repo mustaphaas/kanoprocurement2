@@ -1033,6 +1033,28 @@ const TenderManagement = () => {
                 Force Refresh
               </Button>
               <Button
+                onClick={() => {
+                  // Force synchronization and trigger page refresh
+                  forceRefreshTenders();
+
+                  // Trigger storage events to notify other components
+                  window.dispatchEvent(new StorageEvent('storage', {
+                    key: 'recentTenders',
+                    newValue: localStorage.getItem('recentTenders')
+                  }));
+                  window.dispatchEvent(new StorageEvent('storage', {
+                    key: 'featuredTenders',
+                    newValue: localStorage.getItem('featuredTenders')
+                  }));
+
+                  alert('Full sync completed! Data should now appear on Company Dashboard and Homepage.\n\nYou may need to refresh those pages to see updates.');
+                }}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+              >
+                <CheckCircle className="h-5 w-5 mr-2" />
+                Full Sync & Notify
+              </Button>
+              <Button
                 onClick={() => setShowTenderModal(true)}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
               >
