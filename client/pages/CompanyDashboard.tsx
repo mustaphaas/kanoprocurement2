@@ -4001,6 +4001,21 @@ export default function CompanyDashboard() {
           </div>
         );
 
+      case "messages":
+        return (
+          <CompanyMessageCenter
+            companyEmail={companyData.email}
+            onActionClick={(action, message) => {
+              // Handle message actions
+              if (action.action === "view_tender" && action.data?.tenderId) {
+                setActiveSection("tender-ads");
+                // Could scroll to specific tender or highlight it
+              }
+              console.log("Message action:", action, message);
+            }}
+          />
+        );
+
       default:
         return (
           <div className="text-center py-12">
