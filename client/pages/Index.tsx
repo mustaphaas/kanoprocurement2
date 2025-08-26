@@ -405,33 +405,61 @@ export default function Index() {
   const [featuredTenders, setFeaturedTenders] =
     useState<FeaturedTender[]>(getDefaultTenders());
 
-  // Load featured tenders from localStorage on component mount
+  // Load featured tenders from all ministries (aggregated for homepage)
   const loadFeaturedTenders = () => {
     try {
-      const { ministryCode } = getCurrentMinistryContext();
-      const featuredTendersKey = getMinistryStorageKey("featuredTenders");
+      // Scan for all ministry featured tenders
+      const allFeaturedTenders: FeaturedTender[] = [];
 
-      const storedFeaturedTenders = localStorage.getItem(featuredTendersKey);
-      if (storedFeaturedTenders) {
-        const parsedTenders = JSON.parse(storedFeaturedTenders);
-        if (parsedTenders && parsedTenders.length > 0) {
-          // Apply automatic status transitions to stored tenders
-          const tendersWithUpdatedStatus = parsedTenders.map(
-            applyStatusTransition,
-          );
-          setFeaturedTenders(tendersWithUpdatedStatus);
-          console.log(
-            `Loaded ${tendersWithUpdatedStatus.length} featured tenders for ministry ${ministryCode}`,
-          );
-          return;
+      // Check localStorage for all ministry featured tender keys
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.endsWith('_featuredTenders')) {
+          const ministryCode = key.replace('_featuredTenders', '');
+          const storedTenders = localStorage.getItem(key);
+
+          if (storedTenders) {
+            try {
+              const parsedTenders = JSON.parse(storedTenders);
+              if (Array.isArray(parsedTenders)) {
+                // Add ministry source info to each tender
+                const tendersWithSource = parsedTenders.map((tender: any) => ({
+                  ...tender,
+                  sourceMinistry: ministryCode,
+                }));
+                allFeaturedTenders.push(...tendersWithSource);
+              }
+            } catch (parseError) {
+              console.error(`Error parsing featured tenders for ministry ${ministryCode}:`, parseError);
+            }
+          }
         }
       }
+
+      if (allFeaturedTenders.length > 0) {
+        // Remove duplicates and apply status transitions
+        const uniqueTenders = allFeaturedTenders.filter(
+          (tender, index, self) =>
+            index === self.findIndex((t) => t.id === tender.id),
+        );
+
+        const tendersWithUpdatedStatus = uniqueTenders.map(applyStatusTransition);
+
+        // Limit to 5 most recent tenders for featured section
+        const featuredSubset = tendersWithUpdatedStatus.slice(0, 5);
+
+        setFeaturedTenders(featuredSubset);
+        console.log(
+          `✅ Loaded ${featuredSubset.length} aggregated featured tenders from all ministries`,
+        );
+        return;
+      }
     } catch (error) {
-      console.error("Error loading featured tenders from localStorage:", error);
+      console.error("Error loading aggregated featured tenders:", error);
     }
 
-    // Fall back to ministry-specific default data if localStorage is empty or has errors
-    console.log("Using ministry-specific default featured tenders");
+    // Fall back to default data if no ministry tenders found
+    console.log("Using default featured tenders (no ministry data found)");
     setFeaturedTenders(getDefaultTenders());
   };
 
