@@ -164,11 +164,13 @@ export const runCompleteFilteringTest = (): {
   summary: string;
   ministryTest: FilteringTestResult;
   companyTest: ReturnType<typeof testCompanyDashboardFiltering>;
+  switchTest: ReturnType<typeof testMinistrySwitching>;
 } => {
   const ministryTest = testMinistryFiltering();
   const companyTest = testCompanyDashboardFiltering();
+  const switchTest = testMinistrySwitching();
 
-  const passed = ministryTest.passed && companyTest.passed;
+  const passed = ministryTest.passed && companyTest.passed && switchTest.passed;
 
   const summary = `
 === COMPLETE MINISTRY FILTERING VERIFICATION ===
@@ -176,6 +178,8 @@ export const runCompleteFilteringTest = (): {
 ${ministryTest.summary}
 
 ${companyTest.summary}
+
+${switchTest.summary}
 
 OVERALL RESULT: ${passed ? "✅ ALL TESTS PASSED" : "❌ SOME TESTS FAILED"}
   `;
@@ -185,6 +189,7 @@ OVERALL RESULT: ${passed ? "✅ ALL TESTS PASSED" : "❌ SOME TESTS FAILED"}
     summary,
     ministryTest,
     companyTest,
+    switchTest,
   };
 };
 
