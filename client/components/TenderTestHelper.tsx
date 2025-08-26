@@ -4,6 +4,7 @@ import { verifyMinistryPropertyFix } from "@/lib/verifyMinistryFix";
 import { runCompleteFilteringTest } from "@/lib/ministryFilteringTest";
 import { verifyTenderVisibility, logTenderVisibilityStatus } from "@/lib/verifyTenderVisibility";
 import { verifyHooksFix, logHooksFixStatus } from "@/lib/verifyHooksFix";
+import { verifyTemporalDeadZoneFix, logTemporalDeadZoneFixStatus } from "@/lib/verifyTemporalDeadZoneFix";
 
 interface TenderTestHelperProps {
   onTenderCreated: () => void;
