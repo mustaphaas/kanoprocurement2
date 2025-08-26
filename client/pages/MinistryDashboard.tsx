@@ -1635,7 +1635,7 @@ export default function MinistryDashboard() {
               projectTitle: "Hospital Equipment Supply - Phase 1",
               requestDate: "2024-01-25",
               status: "Approved",
-              projectValue: "₦850,000,000",
+              projectValue: "���850,000,000",
               contractorName: "PrimeCare Medical Ltd",
               expectedDuration: "6 months",
               approvalDate: "2024-01-28",
@@ -4957,11 +4957,18 @@ Penalty Clause: 0.5% per week for delayed completion`,
   const getEnhancedOverviewData = () => {
     const { ministryId, ministry } = getMinistryMockData();
 
+    // FIXED: Read from main tender storage and filter by current ministry
+    const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
+    const ministryInfo = getMinistryInfo();
+    const currentMinistryTenders = mainTenders.filter((tender: any) =>
+      tender.ministry === ministryInfo.name
+    );
+
     const summaryData = {
       totalProcurementPlans:
         ministryId === "ministry2" ? 24 : ministryId === "ministry3" ? 18 : 15,
-      tendersCreated: tenders.length,
-      tendersUnderEvaluation: tenders.filter((t) => t.status === "Evaluated")
+      tendersCreated: currentMinistryTenders.length, // Use filtered tenders from main storage
+      tendersUnderEvaluation: currentMinistryTenders.filter((t: any) => t.status === "Evaluated")
         .length,
       nocPending: nocRequests.filter((n) => n.status === "Pending").length,
       nocApproved: nocRequests.filter((n) => n.status === "Approved").length,
