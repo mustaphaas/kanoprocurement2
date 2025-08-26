@@ -532,7 +532,7 @@ export default function CompanyDashboard() {
         const parsedTenders = JSON.parse(storedTenders);
         if (parsedTenders.length > 0) {
           // Check for new tenders and create notifications
-          parsedTenders.forEach((recentTender: any) => {
+          allMinistryTenders.forEach((recentTender: any) => {
             if (!lastProcessedTenders.includes(recentTender.id)) {
               // This is a new tender, create a "bid created" notification
               messageService.createBidCreatedMessage(
@@ -551,13 +551,13 @@ export default function CompanyDashboard() {
           });
 
           // Update processed tenders list
-          const currentTenderIds = parsedTenders.map((t: any) => t.id);
+          const currentTenderIds = allMinistryTenders.map((t: any) => t.id);
           localStorage.setItem(
             "lastProcessedTenders",
             JSON.stringify(currentTenderIds),
           );
           // Convert recent tender format to company dashboard tender format
-          const formattedTenders = parsedTenders.map((recentTender: any) => ({
+          const formattedTenders = allMinistryTenders.map((recentTender: any) => ({
             id: recentTender.id,
             title: recentTender.title,
             ministry: recentTender.procuringEntity || "Kano State Government",
