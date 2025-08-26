@@ -471,13 +471,10 @@ export default function Index() {
 
     // Listen for localStorage changes (when tenders are published from other tabs/components)
     const handleStorageChange = (e: StorageEvent) => {
-      const { ministryCode } = getCurrentMinistryContext();
-      const featuredTendersKey = getMinistryStorageKey("featuredTenders");
-
-      if (e.key === featuredTendersKey) {
-        console.log(
-          `Featured tenders updated for ministry ${ministryCode}, reloading...`,
-        );
+      // Listen for any ministry-specific featured tender updates
+      if (e.key && e.key.endsWith('_featuredTenders')) {
+        const ministryCode = e.key.replace('_featuredTenders', '');
+        console.log(`Featured tenders updated for ministry ${ministryCode}, reloading...`);
         loadFeaturedTenders();
       }
     };
