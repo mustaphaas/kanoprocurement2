@@ -11,6 +11,7 @@ import EvaluationCommitteeManagement from "@/components/EvaluationCommitteeManag
 import ScoringMatrixImplementation from "@/components/ScoringMatrixImplementation";
 import NOCRequestsModule from "@/components/NOCRequestsModule";
 import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistryOverview";
+import PaymentRequestApproval from "@/components/ministry/PaymentRequestApproval";
 import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import { logUserAction } from "@/lib/auditLogStorage";
@@ -1574,7 +1575,7 @@ export default function MinistryDashboard() {
               projectTitle: "Urban Drainage System Development",
               requestDate: "2024-02-08",
               status: "Pending",
-              projectValue: "₦12,300,000,000",
+              projectValue: "���12,300,000,000",
               contractorName: "Emirate Construction Co",
               expectedDuration: "15 months",
             },
@@ -10216,7 +10217,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                       <li>����� 90% faster processing</li>
                       <li>��� Reduced human errors</li>
                       <li>• Real-time notifications</li>
-                      <li>���� Automatic compliance checks</li>
+                      <li>����� Automatic compliance checks</li>
                     </ul>
                   </div>
                 </div>
