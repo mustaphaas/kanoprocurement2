@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { formatCurrency } from "@/lib/utils";
+import { verifyMinistryPropertyFix } from "@/lib/verifyMinistryFix";
+import { runCompleteFilteringTest } from "@/lib/ministryFilteringTest";
 
 interface TenderTestHelperProps {
   onTenderCreated: () => void;
