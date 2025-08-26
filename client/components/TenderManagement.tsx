@@ -736,6 +736,9 @@ const TenderManagement = () => {
 
     setTenders(updatedTenders);
     saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+
+    // Synchronize all tender stores after status update
+    synchronizeAllTenderStores();
   };
 
   const filteredTenders = tenders.filter((tender) => {
