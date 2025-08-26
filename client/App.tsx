@@ -25,12 +25,15 @@ import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation
 import TenderStatusDemo from "./pages/TenderStatusDemo";
 import { performFullMigration } from "@/lib/tenderMigration";
 import { runCleanupIfNeeded } from "@/lib/globalKeyCleanup";
+import { logVerificationReport } from "@/lib/ministryIsolationVerification";
 
 // Trigger tender system migration on app startup
 try {
   performFullMigration();
   // Clean up legacy global keys to prevent ministry data leakage
   runCleanupIfNeeded();
+  // Verify ministry data isolation is working properly
+  setTimeout(() => logVerificationReport(), 1000); // Delay to let initial data load
 } catch (error) {
   console.error("Error during tender migration:", error);
 }
