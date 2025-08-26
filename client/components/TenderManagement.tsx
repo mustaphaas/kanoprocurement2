@@ -234,7 +234,9 @@ const TenderManagement = () => {
       const ministryCode = ministryInfo.code;
 
       // Load tenders from main store
-      const mainTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+      const mainTenders = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+      );
 
       // Convert to different formats for different stores
       const recentTendersFormat = mainTenders.map((tender: any) => ({
@@ -255,17 +257,33 @@ const TenderManagement = () => {
           day: "2-digit",
           year: "numeric",
         }),
-        statusColor: tender.status === "Open" || tender.status === "Published"
-          ? "bg-green-100 text-green-800"
-          : "bg-gray-100 text-gray-800",
+        statusColor:
+          tender.status === "Open" || tender.status === "Published"
+            ? "bg-green-100 text-green-800"
+            : "bg-gray-100 text-gray-800",
       }));
 
       // Update all storage locations
-      localStorage.setItem("recentTenders", JSON.stringify(recentTendersFormat));
-      localStorage.setItem("featuredTenders", JSON.stringify(recentTendersFormat.slice(0, 5)));
-      localStorage.setItem(`${ministryCode}_recentTenders`, JSON.stringify(recentTendersFormat));
-      localStorage.setItem(`${ministryCode}_tenders`, JSON.stringify(mainTenders));
-      localStorage.setItem(`${ministryCode}_featuredTenders`, JSON.stringify(recentTendersFormat.slice(0, 5)));
+      localStorage.setItem(
+        "recentTenders",
+        JSON.stringify(recentTendersFormat),
+      );
+      localStorage.setItem(
+        "featuredTenders",
+        JSON.stringify(recentTendersFormat.slice(0, 5)),
+      );
+      localStorage.setItem(
+        `${ministryCode}_recentTenders`,
+        JSON.stringify(recentTendersFormat),
+      );
+      localStorage.setItem(
+        `${ministryCode}_tenders`,
+        JSON.stringify(mainTenders),
+      );
+      localStorage.setItem(
+        `${ministryCode}_featuredTenders`,
+        JSON.stringify(recentTendersFormat.slice(0, 5)),
+      );
 
       console.log("Synchronized tender data across all stores");
     } catch (error) {
@@ -533,9 +551,15 @@ const TenderManagement = () => {
             "Construction of 5 primary healthcare centers across rural communities",
           budget: 250000000,
           status: "Published",
-          createdDate: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-          publishedDate: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-          closingDate: new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          createdDate: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          publishedDate: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          closingDate: new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           openingDate: "2024-02-21",
           ministry: "Ministry of Health",
           department: "Primary Healthcare Development",
@@ -563,9 +587,15 @@ const TenderManagement = () => {
             "Procurement of modern medical equipment for state hospitals",
           budget: 150000000,
           status: "Open",
-          createdDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-          publishedDate: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-          closingDate: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          createdDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          publishedDate: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
+          closingDate: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           ministry: "Ministry of Health",
           department: "Medical Equipment",
           tenderType: "Open",
@@ -1017,14 +1047,22 @@ const TenderManagement = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  const existingTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-                  const synchronizedTenders = existingTenders.map((tender: Tender) => synchronizeTenderStatus(tender));
+                  const existingTenders = JSON.parse(
+                    localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+                  );
+                  const synchronizedTenders = existingTenders.map(
+                    (tender: Tender) => synchronizeTenderStatus(tender),
+                  );
                   setTenders(synchronizedTenders);
 
                   // Debug info
-                  const tenderTitles = existingTenders.map((t: any) => `${t.id}: ${t.title} (${t.status})`);
+                  const tenderTitles = existingTenders.map(
+                    (t: any) => `${t.id}: ${t.title} (${t.status})`,
+                  );
                   console.log("All tenders in localStorage:", existingTenders);
-                  alert(`Refreshed! Found ${synchronizedTenders.length} tenders:\n\n${tenderTitles.join('\n')}`);
+                  alert(
+                    `Refreshed! Found ${synchronizedTenders.length} tenders:\n\n${tenderTitles.join("\n")}`,
+                  );
                 }}
                 className="px-6 py-3"
               >
@@ -1044,7 +1082,12 @@ const TenderManagement = () => {
       </div>
 
       {/* Enhanced Tabs Navigation */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="overview" className="w-full">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        defaultValue="overview"
+        className="w-full"
+      >
         <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-blue-100 shadow-lg p-2">
           <TabsList className="grid w-full grid-cols-8 bg-transparent gap-1">
             <TabsTrigger
@@ -1288,7 +1331,9 @@ const TenderManagement = () => {
                             size="sm"
                             onClick={() => {
                               const bids = getBidsForTender(tender.id);
-                              alert(`Bids for ${tender.title}:\n\n${bids.map(bid => `• ${bid.companyName} - ${bid.bidAmount} (${bid.status})`).join('\n')}`);
+                              alert(
+                                `Bids for ${tender.title}:\n\n${bids.map((bid) => `• ${bid.companyName} - ${bid.bidAmount} (${bid.status})`).join("\n")}`,
+                              );
                             }}
                             className="hover:bg-purple-50 hover:border-purple-300 transition-colors"
                           >
