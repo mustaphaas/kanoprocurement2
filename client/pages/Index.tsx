@@ -369,7 +369,10 @@ export default function Index() {
   // Load featured tenders from localStorage on component mount
   const loadFeaturedTenders = () => {
     try {
-      const storedFeaturedTenders = localStorage.getItem("featuredTenders");
+      const { ministryCode } = getCurrentMinistryContext();
+      const featuredTendersKey = getMinistryStorageKey("featuredTenders");
+
+      const storedFeaturedTenders = localStorage.getItem(featuredTendersKey);
       if (storedFeaturedTenders) {
         const parsedTenders = JSON.parse(storedFeaturedTenders);
         if (parsedTenders && parsedTenders.length > 0) {
@@ -379,8 +382,7 @@ export default function Index() {
           );
           setFeaturedTenders(tendersWithUpdatedStatus);
           console.log(
-            "Loaded featured tenders from localStorage:",
-            tendersWithUpdatedStatus.length,
+            `Loaded ${tendersWithUpdatedStatus.length} featured tenders for ministry ${ministryCode}`,
           );
           return;
         }
@@ -389,8 +391,8 @@ export default function Index() {
       console.error("Error loading featured tenders from localStorage:", error);
     }
 
-    // Fall back to default data if localStorage is empty or has errors
-    console.log("Using default featured tenders");
+    // Fall back to ministry-specific default data if localStorage is empty or has errors
+    console.log("Using ministry-specific default featured tenders");
     setFeaturedTenders(getDefaultTenders());
   };
 
@@ -402,8 +404,11 @@ export default function Index() {
 
     // Listen for localStorage changes (when tenders are published from other tabs/components)
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "featuredTenders") {
-        console.log("Featured tenders updated in localStorage, reloading...");
+      const { ministryCode } = getCurrentMinistryContext();
+      const featuredTendersKey = getMinistryStorageKey("featuredTenders");
+
+      if (e.key === featuredTendersKey) {
+        console.log(`Featured tenders updated for ministry ${ministryCode}, reloading...`);
         loadFeaturedTenders();
       }
     };
