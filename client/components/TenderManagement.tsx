@@ -1247,6 +1247,9 @@ const TenderManagement = () => {
                                 STORAGE_KEYS.TENDERS,
                                 updatedTenders,
                               );
+
+                              // Synchronize all tender stores after publishing
+                              synchronizeAllTenderStores();
                             }}
                             className="hover:bg-green-50 hover:border-green-300 transition-colors"
                           >
