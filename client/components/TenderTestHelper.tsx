@@ -313,6 +313,17 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
         >
           Check Tender Visibility
         </button>
+
+        <button
+          onClick={() => {
+            const result = verifyHooksFix();
+            logHooksFixStatus();
+            alert(`React Hooks Fix Verification:\n\n${result.success ? "✅ HOOKS ISSUE FIXED" : "❌ HOOKS ISSUES DETECTED"}\n\n${result.message}\n\nCheck console for detailed information and testing instructions.`);
+          }}
+          className="w-full px-3 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700"
+        >
+          Verify Hooks Fix
+        </button>
       </div>
 
       <div className="mt-4 p-3 bg-blue-50 rounded text-xs text-gray-600">
