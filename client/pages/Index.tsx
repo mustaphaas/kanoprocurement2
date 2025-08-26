@@ -229,27 +229,60 @@ export default function Index() {
 
   const [recentTenders, setRecentTenders] = useState(getDefaultRecentTenders());
 
-  // Load recent tenders from localStorage
+  // Load recent tenders from all ministries (aggregated approach)
   const loadRecentTenders = () => {
     try {
-      const storedRecentTenders = localStorage.getItem("recentTenders");
-      if (storedRecentTenders) {
-        const parsedTenders = JSON.parse(storedRecentTenders);
-        if (parsedTenders && parsedTenders.length > 0) {
+      // Import the aggregator function
+      import("@/lib/companyTenderAggregator").then(({ getAggregatedMinistryTenders }) => {
+        const aggregatedTenders = getAggregatedMinistryTenders();
+
+        if (aggregatedTenders && aggregatedTenders.length > 0) {
           console.log(
-            "Loaded recent tenders from localStorage:",
-            parsedTenders.length,
+            "✅ Loaded aggregated recent tenders from all ministries:",
+            aggregatedTenders.length,
           );
-          setRecentTenders(parsedTenders);
+
+          // Convert to homepage format if needed
+          const homepageFormat = aggregatedTenders.map((tender: any) => ({
+            id: tender.id,
+            title: tender.title,
+            description: tender.description,
+            category: tender.category,
+            value: tender.value,
+            deadline: tender.deadline,
+            location: tender.location || "Kano State",
+            views: tender.views || Math.floor(Math.random() * 200) + 50,
+            status: tender.status || "Open",
+            publishDate: tender.publishDate || tender.publishedDate,
+            closingDate: tender.closingDate || tender.deadline,
+            tenderFee: tender.tenderFee || "₦25,000",
+            procuringEntity: tender.procuringEntity || tender.ministry || "Kano State Government",
+            duration: tender.duration || "12 months",
+            eligibility: tender.eligibility || "Qualified contractors with relevant experience",
+            requirements: tender.requirements || [
+              "Valid CAC certificate",
+              "Tax clearance for last 3 years",
+              "Professional license",
+              "Evidence of similar projects",
+              "Financial capacity documentation",
+            ],
+            technicalSpecs: tender.technicalSpecs || [
+              "Project specifications as detailed in tender document",
+              "Quality standards must meet government requirements",
+              "Timeline adherence is mandatory",
+            ],
+          }));
+
+          setRecentTenders(homepageFormat);
           return;
         }
-      }
+      });
     } catch (error) {
-      console.error("Error loading recent tenders from localStorage:", error);
+      console.error("Error loading aggregated recent tenders:", error);
     }
 
-    // Fall back to default data if localStorage is empty or has errors
-    console.log("Using default recent tenders");
+    // Fall back to default data if no ministry tenders found
+    console.log("Using default recent tenders (no ministry data found)");
     setRecentTenders(getDefaultRecentTenders());
   };
 
@@ -261,8 +294,10 @@ export default function Index() {
 
     // Listen for localStorage changes (when tenders are published from other tabs/components)
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "recentTenders") {
-        console.log("Recent tenders updated in localStorage, reloading...");
+      // Listen for any ministry-specific tender updates
+      if (e.key && e.key.endsWith('_recentTenders')) {
+        const ministryCode = e.key.replace('_recentTenders', '');
+        console.log(`Recent tenders updated for ministry ${ministryCode}, reloading...`);
         loadRecentTenders();
       }
     };
@@ -2368,7 +2403,7 @@ export default function Index() {
                             • Read all requirements and specifications carefully
                           </li>
                           <li>• Attend pre-bid meetings (if scheduled)</li>
-                          <li>• Submit clarification requests if needed</li>
+                          <li>��� Submit clarification requests if needed</li>
                         </ul>
                       </div>
                       <div>
