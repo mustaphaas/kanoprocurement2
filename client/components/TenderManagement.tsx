@@ -268,9 +268,20 @@ const TenderManagement = () => {
       localStorage.setItem(`${ministryCode}_featuredTenders`, JSON.stringify(recentTendersFormat.slice(0, 5)));
 
       console.log("Synchronized tender data across all stores");
+      return mainTenders;
     } catch (error) {
       console.error("Error synchronizing tender stores:", error);
+      return [];
     }
+  };
+
+  // Function to force refresh tenders from storage
+  const forceRefreshTenders = () => {
+    const storedTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+    const syncedTenders = storedTenders.map((tender: any) => synchronizeTenderStatus(tender));
+    setTenders(syncedTenders);
+    synchronizeAllTenderStores();
+    return syncedTenders;
   };
 
   // Stepper state for evaluation workflow
