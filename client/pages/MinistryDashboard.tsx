@@ -4018,9 +4018,10 @@ export default function MinistryDashboard() {
       const latestTenders = tendersList.slice(0, 5);
       localStorage.setItem(featuredTendersKey, JSON.stringify(latestTenders));
 
-      // Also store in recentTenders with more detailed information
+      // Also store in ministry-specific recentTenders with more detailed information
+      const recentTendersKey = `${ministryInfo.code}_recentTenders`;
       const existingRecentTenders =
-        localStorage.getItem("recentTenders") || "[]";
+        localStorage.getItem(recentTendersKey) || "[]";
       const recentTendersList = JSON.parse(existingRecentTenders);
       const recentTender = {
         id: tender.id,
@@ -4058,9 +4059,11 @@ export default function MinistryDashboard() {
       // Keep only the last 10 recent tenders
       const latestRecentTenders = recentTendersList.slice(0, 10);
       localStorage.setItem(
-        "recentTenders",
+        recentTendersKey,
         JSON.stringify(latestRecentTenders),
       );
+
+      console.log(`✅ Tender ${tender.id} stored in ministry-specific key: ${recentTendersKey}`);
 
       // Reset form
       setNewTender({
