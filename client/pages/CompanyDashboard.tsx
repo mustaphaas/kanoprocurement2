@@ -4175,7 +4175,7 @@ export default function CompanyDashboard() {
       <div className="flex">
         {/* Sidebar */}
         <div
-          className={`${sidebarOpen ? "w-64" : "w-0"} overflow-hidden transition-all duration-300 bg-white border-r border-gray-200 h-screen sticky top-16`}
+          className={`${sidebarOpen ? "w-64" : "w-0"} overflow-x-hidden transition-all duration-300 bg-white border-r border-gray-200 sticky top-16 max-h-[calc(100vh-4rem)]`}
         >
           <nav className="p-4 space-y-2">
             <div className="mb-4">
