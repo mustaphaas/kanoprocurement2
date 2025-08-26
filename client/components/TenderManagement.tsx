@@ -598,11 +598,13 @@ const TenderManagement = () => {
         },
       ];
 
-      setTenders(mockTenders);
-      saveToStorage(STORAGE_KEYS.TENDERS, mockTenders);
+      const syncedMockTenders = mockTenders.map(tender => synchronizeTenderStatus(tender));
+      setTenders(syncedMockTenders);
+      saveToStorage(STORAGE_KEYS.TENDERS, syncedMockTenders);
       synchronizeAllTenderStores();
     } else {
-      setTenders(existingTenders);
+      const syncedExistingTenders = existingTenders.map((tender: any) => synchronizeTenderStatus(tender));
+      setTenders(syncedExistingTenders);
       synchronizeAllTenderStores();
     }
   }, []);
