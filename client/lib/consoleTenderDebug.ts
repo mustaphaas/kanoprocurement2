@@ -1,4 +1,5 @@
 import { debugSpecificTender } from "./tenderDebugHelper";
+import "./fixTenderSettings";
 
 // Auto-run debug when this module loads
 console.log("🔍 Running tender status debug for user issue...");
