@@ -823,9 +823,14 @@ const TenderManagement = () => {
       timeline: [],
     };
 
-    const updatedTenders = [...tenders, newTender];
-    setTenders(updatedTenders);
-    saveToStorage(STORAGE_KEYS.TENDERS, updatedTenders);
+    // FIXED: Add to local state (filtered tenders)
+    const updatedLocalTenders = [...tenders, newTender];
+    setTenders(updatedLocalTenders);
+
+    // FIXED: Add to global storage (all tenders from all ministries)
+    const allExistingTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+    const updatedGlobalTenders = [...allExistingTenders, newTender];
+    saveToStorage(STORAGE_KEYS.TENDERS, updatedGlobalTenders);
 
     // Synchronize all tender stores
     synchronizeAllTenderStores();
