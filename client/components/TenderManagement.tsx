@@ -960,6 +960,32 @@ const TenderManagement = () => {
               <Button
                 variant="outline"
                 onClick={() => {
+                  const ministryInfo = getMinistryInfo();
+                  const ministryCode = ministryInfo.code;
+
+                  const mainTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+                  const recentTenders = JSON.parse(localStorage.getItem("recentTenders") || "[]");
+                  const featuredTenders = JSON.parse(localStorage.getItem("featuredTenders") || "[]");
+                  const ministryTenders = JSON.parse(localStorage.getItem(`${ministryCode}_tenders`) || "[]");
+
+                  console.log("Storage Debug:", {
+                    mainTenders,
+                    recentTenders,
+                    featuredTenders,
+                    ministryTenders,
+                    currentState: tenders
+                  });
+
+                  alert(`Storage Debug:\n\nMain Store (${STORAGE_KEYS.TENDERS}): ${mainTenders.length} tenders\nRecent Tenders: ${recentTenders.length} tenders\nFeatured Tenders: ${featuredTenders.length} tenders\nMinistry Tenders (${ministryCode}): ${ministryTenders.length} tenders\nCurrent Component State: ${tenders.length} tenders\n\nCheck console for details.`);
+                }}
+                className="px-4 py-3"
+              >
+                <Eye className="h-5 w-5 mr-2" />
+                Debug Storage
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
                   const refreshedTenders = forceRefreshTenders();
 
                   // Debug info
