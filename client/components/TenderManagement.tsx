@@ -289,12 +289,12 @@ const TenderManagement = () => {
         createdAt: Date.now(),
       }));
 
-      // Update all storage locations
+      // Update all storage locations with proper formats
       localStorage.setItem("recentTenders", JSON.stringify(recentTendersFormat));
-      localStorage.setItem("featuredTenders", JSON.stringify(recentTendersFormat.slice(0, 5)));
+      localStorage.setItem("featuredTenders", JSON.stringify(featuredTendersFormat.slice(0, 5)));
       localStorage.setItem(`${ministryCode}_recentTenders`, JSON.stringify(recentTendersFormat));
       localStorage.setItem(`${ministryCode}_tenders`, JSON.stringify(mainTenders));
-      localStorage.setItem(`${ministryCode}_featuredTenders`, JSON.stringify(recentTendersFormat.slice(0, 5)));
+      localStorage.setItem(`${ministryCode}_featuredTenders`, JSON.stringify(featuredTendersFormat.slice(0, 5)));
 
       console.log("Synchronized tender data across all stores");
       return mainTenders;
