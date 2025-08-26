@@ -236,28 +236,57 @@ const TenderManagement = () => {
       // Load tenders from main store
       const mainTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
 
-      // Convert to different formats for different stores
+      // Convert to Company Dashboard format (recentTenders)
       const recentTendersFormat = mainTenders.map((tender: any) => ({
         id: tender.id,
         title: tender.title,
         description: tender.description,
         category: "General",
-        estimatedValue: formatCurrency(tender.budget),
+        value: tender.budget.toString(), // Company Dashboard expects string
+        deadline: tender.closingDate,
+        location: "Kano State",
+        views: Math.floor(Math.random() * 200) + 50,
         status: tender.status === "Published" ? "Open" : tender.status,
         publishDate: tender.publishedDate || tender.createdDate,
-        closeDate: tender.closingDate,
-        bidsReceived: getBidCount(tender.id),
-        ministry: tender.ministry,
+        closingDate: tender.closingDate,
+        tenderFee: "₦25,000",
         procuringEntity: tender.ministry,
+        duration: "12 months",
+        eligibility: "Qualified contractors with relevant experience",
+        requirements: [
+          "Valid CAC certificate",
+          "Tax clearance for last 3 years",
+          "Professional license",
+          "Evidence of similar projects",
+          "Financial capacity documentation"
+        ],
+        technicalSpecs: [
+          "Project specifications as detailed in tender document",
+          "Quality standards must meet government requirements",
+          "Timeline adherence is mandatory"
+        ]
+      }));
+
+      // Convert to Homepage format (featuredTenders)
+      const featuredTendersFormat = mainTenders.map((tender: any) => ({
+        id: tender.id,
+        title: tender.title,
+        description: tender.description,
         value: formatCurrency(tender.budget),
         deadline: new Date(tender.closingDate).toLocaleDateString("en-US", {
           month: "short",
           day: "2-digit",
           year: "numeric",
         }),
-        statusColor: tender.status === "Open" || tender.status === "Published"
+        status: tender.status === "Published" ? "Open" : tender.status,
+        statusColor: (tender.status === "Open" || tender.status === "Published")
           ? "bg-green-100 text-green-800"
+          : (tender.status === "Closing Soon")
+          ? "bg-orange-100 text-orange-800"
           : "bg-gray-100 text-gray-800",
+        category: "General",
+        ministry: tender.ministry,
+        createdAt: Date.now(),
       }));
 
       // Update all storage locations
