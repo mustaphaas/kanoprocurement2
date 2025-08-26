@@ -1126,7 +1126,7 @@ const TenderManagement = () => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
                         <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
                           <DollarSign className="h-4 w-4 text-emerald-600" />
                           <div>
