@@ -2701,7 +2701,7 @@ export default function MinistryDashboard() {
       // Refresh overview when main tender storage changes
       if (event.key === "kanoproc_tenders") {
         console.log("🔄 Main tender storage changed, refreshing overview...");
-        setOverviewRefreshTrigger(prev => prev + 1);
+        setOverviewRefreshTrigger((prev) => prev + 1);
       }
     };
 
@@ -2710,22 +2710,26 @@ export default function MinistryDashboard() {
 
     // Also listen for same-tab changes (when TenderManagement updates storage)
     const handleSameTabChange = () => {
-      setOverviewRefreshTrigger(prev => prev + 1);
+      setOverviewRefreshTrigger((prev) => prev + 1);
     };
 
     // Set up an interval to check for changes (fallback for same-tab updates)
     let lastTenderCount = 0;
     const checkInterval = setInterval(() => {
-      const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
+      const mainTenders = JSON.parse(
+        localStorage.getItem("kanoproc_tenders") || "[]",
+      );
       const ministryInfo = getMinistryInfo();
-      const currentMinistryTenders = mainTenders.filter((tender: any) =>
-        tender.ministry === ministryInfo.name
+      const currentMinistryTenders = mainTenders.filter(
+        (tender: any) => tender.ministry === ministryInfo.name,
       );
 
       if (currentMinistryTenders.length !== lastTenderCount) {
-        console.log(`🔄 Tender count changed: ${lastTenderCount} → ${currentMinistryTenders.length}`);
+        console.log(
+          `🔄 Tender count changed: ${lastTenderCount} → ${currentMinistryTenders.length}`,
+        );
         lastTenderCount = currentMinistryTenders.length;
-        setOverviewRefreshTrigger(prev => prev + 1);
+        setOverviewRefreshTrigger((prev) => prev + 1);
       }
     }, 2000); // Check every 2 seconds
 
@@ -5002,18 +5006,21 @@ Penalty Clause: 0.5% per week for delayed completion`,
     const { ministryId, ministry } = getMinistryMockData();
 
     // FIXED: Read from main tender storage and filter by current ministry
-    const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
+    const mainTenders = JSON.parse(
+      localStorage.getItem("kanoproc_tenders") || "[]",
+    );
     const ministryInfo = getMinistryInfo();
-    const currentMinistryTenders = mainTenders.filter((tender: any) =>
-      tender.ministry === ministryInfo.name
+    const currentMinistryTenders = mainTenders.filter(
+      (tender: any) => tender.ministry === ministryInfo.name,
     );
 
     const summaryData = {
       totalProcurementPlans:
         ministryId === "ministry2" ? 24 : ministryId === "ministry3" ? 18 : 15,
       tendersCreated: currentMinistryTenders.length, // Use filtered tenders from main storage
-      tendersUnderEvaluation: currentMinistryTenders.filter((t: any) => t.status === "Evaluated")
-        .length,
+      tendersUnderEvaluation: currentMinistryTenders.filter(
+        (t: any) => t.status === "Evaluated",
+      ).length,
       nocPending: nocRequests.filter((n) => n.status === "Pending").length,
       nocApproved: nocRequests.filter((n) => n.status === "Approved").length,
       nocRejected: nocRequests.filter((n) => n.status === "Rejected").length,

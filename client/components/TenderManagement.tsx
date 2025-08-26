@@ -828,7 +828,9 @@ const TenderManagement = () => {
     setTenders(updatedLocalTenders);
 
     // FIXED: Add to global storage (all tenders from all ministries)
-    const allExistingTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+    const allExistingTenders = JSON.parse(
+      localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+    );
     const updatedGlobalTenders = [...allExistingTenders, newTender];
     saveToStorage(STORAGE_KEYS.TENDERS, updatedGlobalTenders);
 

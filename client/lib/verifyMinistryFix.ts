@@ -6,9 +6,9 @@
 /**
  * Quick verification function to check if the ministry property fix is working
  */
-export const verifyMinistryPropertyFix = (): { 
-  success: boolean; 
-  message: string; 
+export const verifyMinistryPropertyFix = (): {
+  success: boolean;
+  message: string;
   details: any;
 } => {
   try {
@@ -18,24 +18,24 @@ export const verifyMinistryPropertyFix = (): {
       return {
         success: false,
         message: "No ministry user found in localStorage",
-        details: null
+        details: null,
       };
     }
 
     const userData = JSON.parse(ministryUser);
-    
+
     // Check if ministryName property exists (this was the missing property)
     const hasMinistryName = "ministryName" in userData;
     const hasMinistryCode = "ministryCode" in userData;
-    
+
     if (!hasMinistryName) {
       return {
         success: false,
         message: "ministryName property still missing from ministry user data",
-        details: { 
+        details: {
           availableProps: Object.keys(userData),
-          userData: userData
-        }
+          userData: userData,
+        },
       };
     }
 
@@ -43,19 +43,21 @@ export const verifyMinistryPropertyFix = (): {
       return {
         success: false,
         message: "ministryCode property still missing from ministry user data",
-        details: { 
+        details: {
           availableProps: Object.keys(userData),
-          userData: userData
-        }
+          userData: userData,
+        },
       };
     }
 
     // Check filtering logic
-    const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
+    const mainTenders = JSON.parse(
+      localStorage.getItem("kanoproc_tenders") || "[]",
+    );
     const currentMinistryName = userData.ministryName;
-    
-    const ministryTenders = mainTenders.filter((tender: any) => 
-      tender.ministry === currentMinistryName
+
+    const ministryTenders = mainTenders.filter(
+      (tender: any) => tender.ministry === currentMinistryName,
     );
 
     const totalTenders = mainTenders.length;
@@ -71,16 +73,15 @@ export const verifyMinistryPropertyFix = (): {
         filteredTenders,
         propertyCheck: {
           hasMinistryName,
-          hasMinistryCode
-        }
-      }
+          hasMinistryCode,
+        },
+      },
     };
-
   } catch (error) {
     return {
       success: false,
       message: `Error verifying ministry fix: ${error}`,
-      details: { error }
+      details: { error },
     };
   }
 };
@@ -90,15 +91,15 @@ export const verifyMinistryPropertyFix = (): {
  */
 export const logVerificationResult = (): void => {
   const result = verifyMinistryPropertyFix();
-  
+
   console.log("=== MINISTRY PROPERTY FIX VERIFICATION ===");
   console.log(result.success ? "✅ SUCCESS" : "❌ FAILED");
   console.log(result.message);
-  
+
   if (result.details) {
     console.log("Details:", result.details);
   }
-  
+
   console.log("=========================================");
 };
 

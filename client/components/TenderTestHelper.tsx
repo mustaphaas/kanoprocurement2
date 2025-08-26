@@ -2,9 +2,15 @@ import React, { useState } from "react";
 import { formatCurrency } from "@/lib/utils";
 import { verifyMinistryPropertyFix } from "@/lib/verifyMinistryFix";
 import { runCompleteFilteringTest } from "@/lib/ministryFilteringTest";
-import { verifyTenderVisibility, logTenderVisibilityStatus } from "@/lib/verifyTenderVisibility";
+import {
+  verifyTenderVisibility,
+  logTenderVisibilityStatus,
+} from "@/lib/verifyTenderVisibility";
 import { verifyHooksFix, logHooksFixStatus } from "@/lib/verifyHooksFix";
-import { verifyTemporalDeadZoneFix, logTemporalDeadZoneFixStatus } from "@/lib/verifyTemporalDeadZoneFix";
+import {
+  verifyTemporalDeadZoneFix,
+  logTemporalDeadZoneFixStatus,
+} from "@/lib/verifyTemporalDeadZoneFix";
 
 interface TenderTestHelperProps {
   onTenderCreated: () => void;
@@ -256,7 +262,8 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
         Tender Testing Helper
       </h3>
       <p className="text-sm text-gray-600 mb-4">
-        Test tender creation, visibility, and debug React errors & initialization issues
+        Test tender creation, visibility, and debug React errors &
+        initialization issues
       </p>
 
       <div className="space-y-2">
@@ -285,7 +292,9 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
         <button
           onClick={() => {
             const result = verifyMinistryPropertyFix();
-            alert(`Ministry Property Fix Verification:\n\n${result.success ? "✅ SUCCESS" : "❌ FAILED"}\n\n${result.message}\n\nCheck console for detailed results.`);
+            alert(
+              `Ministry Property Fix Verification:\n\n${result.success ? "✅ SUCCESS" : "❌ FAILED"}\n\n${result.message}\n\nCheck console for detailed results.`,
+            );
             console.log("Ministry Property Fix Result:", result);
           }}
           className="w-full px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
@@ -296,7 +305,9 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
         <button
           onClick={() => {
             const result = runCompleteFilteringTest();
-            alert(`Complete Filtering Test:\n\n${result.passed ? "✅ ALL TESTS PASSED" : "❌ SOME TESTS FAILED"}\n\nCheck console for detailed results.`);
+            alert(
+              `Complete Filtering Test:\n\n${result.passed ? "✅ ALL TESTS PASSED" : "❌ SOME TESTS FAILED"}\n\nCheck console for detailed results.`,
+            );
             console.log("Complete Filtering Test Result:", result);
           }}
           className="w-full px-3 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
@@ -308,7 +319,9 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
           onClick={() => {
             const result = verifyTenderVisibility();
             logTenderVisibilityStatus();
-            alert(`Tender Visibility Check:\n\n${result.success ? "✅ ALL LOCATIONS WORKING" : "❌ VISIBILITY ISSUES FOUND"}\n\nDetails:\n• Ministry Overview: ${result.details.ministryOverview.willShow} tenders\n• Company Dashboard: ${result.details.companyDashboard.willShow} tenders\n• Main Storage: ${result.details.mainStorage.totalTenders} total\n\nCheck console for full details.`);
+            alert(
+              `Tender Visibility Check:\n\n${result.success ? "✅ ALL LOCATIONS WORKING" : "❌ VISIBILITY ISSUES FOUND"}\n\nDetails:\n• Ministry Overview: ${result.details.ministryOverview.willShow} tenders\n• Company Dashboard: ${result.details.companyDashboard.willShow} tenders\n• Main Storage: ${result.details.mainStorage.totalTenders} total\n\nCheck console for full details.`,
+            );
           }}
           className="w-full px-3 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700"
         >
@@ -319,7 +332,9 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
           onClick={() => {
             const result = verifyHooksFix();
             logHooksFixStatus();
-            alert(`React Hooks Fix Verification:\n\n${result.success ? "✅ HOOKS ISSUE FIXED" : "❌ HOOKS ISSUES DETECTED"}\n\n${result.message}\n\nCheck console for detailed information and testing instructions.`);
+            alert(
+              `React Hooks Fix Verification:\n\n${result.success ? "✅ HOOKS ISSUE FIXED" : "❌ HOOKS ISSUES DETECTED"}\n\n${result.message}\n\nCheck console for detailed information and testing instructions.`,
+            );
           }}
           className="w-full px-3 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700"
         >
@@ -330,7 +345,9 @@ export const TenderTestHelper: React.FC<TenderTestHelperProps> = ({
           onClick={() => {
             const result = verifyTemporalDeadZoneFix();
             logTemporalDeadZoneFixStatus();
-            alert(`Temporal Dead Zone Fix Verification:\n\n${result.success ? "✅ INITIALIZATION ERROR FIXED" : "❌ INITIALIZATION ISSUES DETECTED"}\n\n${result.message}\n\nCheck console for detailed test instructions.`);
+            alert(
+              `Temporal Dead Zone Fix Verification:\n\n${result.success ? "✅ INITIALIZATION ERROR FIXED" : "❌ INITIALIZATION ISSUES DETECTED"}\n\n${result.message}\n\nCheck console for detailed test instructions.`,
+            );
           }}
           className="w-full px-3 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
         >

@@ -246,7 +246,8 @@ export const testMinistrySwitching = (): {
 
   // Test passes if different ministries have different tender counts
   const tenderCounts = switchResults.map((r) => r.tenderCount);
-  const hasVariation = new Set(tenderCounts).size > 1 || tenderCounts.every(c => c === 0);
+  const hasVariation =
+    new Set(tenderCounts).size > 1 || tenderCounts.every((c) => c === 0);
 
   const summary = `
 === MINISTRY SWITCHING TEST ===
@@ -255,9 +256,7 @@ Total Tenders in Storage: ${mainTenders.length}
 
 Tenders by Ministry Context:
 ${switchResults
-  .map(
-    (result) => `  • ${result.ministry}: ${result.tenderCount} tenders`,
-  )
+  .map((result) => `  • ${result.ministry}: ${result.tenderCount} tenders`)
   .join("\n")}
 
 TEST RESULT: ${hasVariation ? "✅ PASSED" : "❌ FAILED"}
