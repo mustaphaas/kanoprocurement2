@@ -172,6 +172,9 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     setSelectedTender(tenderId);
     setSelectedBidder("");
     onTenderSelect(tenderId);
+    // Refresh bidders to ensure latest data
+    loadBidders();
+    console.log("Tender selected:", tenderId);
   };
 
   const handleSubmitEvaluation = () => {
