@@ -325,7 +325,11 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
                     onChange={(e) => setSelectedBidder(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
                   >
-                    <option value="">Select a bidder...</option>
+                    <option value="">
+                      {filteredBidders.length === 0
+                        ? "No bidders found for this tender"
+                        : "Select a bidder..."}
+                    </option>
                     {filteredBidders.map((bidder) => (
                       <option key={bidder.id} value={bidder.id}>
                         {bidder.company}
