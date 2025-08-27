@@ -38,6 +38,7 @@ import {
   TenderStatus,
   TenderStatusInfo,
 } from "@/lib/tenderSettings";
+import TenderEvaluationSystem from "@/components/evaluation/TenderEvaluationSystem";
 import { Button } from "@/components/ui/button";
 import {
   Card,
