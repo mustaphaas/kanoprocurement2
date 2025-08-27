@@ -106,6 +106,11 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     });
   };
 
+  // Calculate filtered bidders (must be before useEffect hooks that reference it)
+  const filteredBidders = bidders.filter(
+    (bidder) => bidder.tenderId === selectedTender,
+  );
+
   // Add global debugging functions
   useEffect(() => {
     // Global debug function for tender evaluation
