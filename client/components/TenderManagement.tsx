@@ -192,6 +192,7 @@ const STORAGE_KEYS = {
 };
 
 const TenderManagement = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
@@ -2458,10 +2459,7 @@ const TenderManagement = () => {
                                 <Button
                                   size="sm"
                                   className="w-full"
-                                  onClick={() => {
-                                    const navigate = useNavigate();
-                                    navigate(`/tender-scoring/${tender.id}`);
-                                  }}
+                                  onClick={() => navigate(`/tender-scoring/${tender.id}`)}
                                 >
                                   <Calculator className="h-4 w-4 mr-2" />
                                   Score Tender
@@ -2470,10 +2468,7 @@ const TenderManagement = () => {
                                   size="sm"
                                   variant="outline"
                                   className="w-full"
-                                  onClick={() => {
-                                    const navigate = useNavigate();
-                                    navigate(`/tender-results/${tender.id}`);
-                                  }}
+                                  onClick={() => navigate(`/tender-results/${tender.id}`)}
                                 >
                                   <Trophy className="h-4 w-4 mr-2" />
                                   View Results
@@ -2498,20 +2493,14 @@ const TenderManagement = () => {
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => {
-                                    const navigate = useNavigate();
-                                    navigate(`/tender-scoring/${tenderId}`);
-                                  }}
+                                  onClick={() => navigate(`/tender-scoring/${tenderId}`)}
                                 >
                                   <Calculator className="h-3 w-3" />
                                 </Button>
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => {
-                                    const navigate = useNavigate();
-                                    navigate(`/tender-results/${tenderId}`);
-                                  }}
+                                  onClick={() => navigate(`/tender-results/${tenderId}`)}
                                 >
                                   <Trophy className="h-3 w-3" />
                                 </Button>
