@@ -10,6 +10,7 @@ import {
   Save,
 } from "lucide-react";
 import { EvaluationTemplate, TenderAssignment } from "@shared/api";
+import { persistentStorage } from "../../lib/persistentStorage";
 
 interface TenderEvaluationSystemProps {
   assignedTenders: TenderAssignment[];
@@ -47,21 +48,103 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
   };
 
   const [selectedTender, setSelectedTender] = useState("");
-  const [bidders] = useState([
-    {
-      id: "bid001",
-      company: "Northern Construction Ltd",
-      tenderId: "tender001",
-    },
-    { id: "bid002", company: "Sahel Engineering Co.", tenderId: "tender001" },
-    {
-      id: "bid003",
-      company: "Kano Infrastructure Partners",
-      tenderId: "tender001",
-    },
-    { id: "bid004", company: "MedSupply Nigeria Ltd", tenderId: "tender002" },
-    { id: "bid005", company: "HealthTech Solutions", tenderId: "tender002" },
-  ]);
+  const [bidders, setBidders] = useState([]);
+
+  // Function to get all bids for a specific tender from localStorage
+  const getBidsForTender = (tenderId: string): any[] => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return [];
+
+      const bids = JSON.parse(storedBids);
+      return bids.filter((bid: any) => bid.tenderId === tenderId);
+    } catch (error) {
+      console.error("Error reading bids:", error);
+      return [];
+    }
+  };
+
+  // Function to get all bidders from localStorage
+  const loadBidders = () => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) {
+        setBidders([]);
+        return;
+      }
+
+      const bids = JSON.parse(storedBids);
+      // Transform bids to bidder format expected by the component
+      const transformedBidders = bids.map((bid: any) => ({
+        id: bid.id,
+        company: bid.companyName || bid.company,
+        tenderId: bid.tenderId,
+      }));
+      setBidders(transformedBidders);
+    } catch (error) {
+      console.error("Error loading bidders:", error);
+      setBidders([]);
+    }
+  };
+
+  // Initialize missing company statuses if they don't exist
+  const initializeCompanyStatuses = () => {
+    const defaultCompanyStatuses = [
+      { email: "ahmad@northernconstruction.com", status: "Approved" },
+      { email: "approved@company.com", status: "Approved" },
+      { email: "suspended@company.com", status: "Suspended" },
+      { email: "blacklisted@company.com", status: "Blacklisted" },
+      { email: "pending@company.com", status: "Pending" },
+    ];
+
+    defaultCompanyStatuses.forEach(({ email, status }) => {
+      const key = `userStatus_${email}`;
+      if (!persistentStorage.getItem(key)) {
+        persistentStorage.setItem(key, status);
+        console.log(`✅ Initialized ${key} = ${status}`);
+      }
+    });
+  };
+
+  // Calculate filtered bidders (must be before useEffect hooks that reference it)
+  const filteredBidders = bidders.filter(
+    (bidder) => bidder.tenderId === selectedTender,
+  );
+
+  // Add global debugging functions
+  useEffect(() => {
+    // Global debug function for tender evaluation
+    (window as any).debugTenderEvaluation = () => {
+      console.log("=== TENDER EVALUATION DEBUG ===");
+      console.log("Selected Tender:", selectedTender);
+      console.log("Assigned Tenders:", assignedTenders);
+      console.log("Total Bidders:", bidders);
+      console.log("Filtered Bidders:", filteredBidders);
+      console.log("localStorage tenderBids:", localStorage.getItem("tenderBids"));
+      console.log("localStorage recentTenders:", localStorage.getItem("recentTenders"));
+      console.log("Evaluation Template:", evaluationTemplate);
+    };
+
+    // Function to fix missing bidder data
+    (window as any).fixTenderBidderIssue = () => {
+      console.log("🛠️ Fixing tender bidder data...");
+      loadBidders();
+      initializeCompanyStatuses();
+      console.log("✅ Tender bidder data refreshed");
+    };
+
+    return () => {
+      // Cleanup global functions
+      delete (window as any).debugTenderEvaluation;
+      delete (window as any).fixTenderBidderIssue;
+    };
+  }, [selectedTender, assignedTenders, bidders, filteredBidders, evaluationTemplate]);
+
+  // Load bidders when component mounts
+  useEffect(() => {
+    initializeCompanyStatuses();
+    loadBidders();
+  }, []);
 
   const [scores, setScores] = useState({});
   const [selectedBidder, setSelectedBidder] = useState("");
@@ -85,9 +168,24 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     },
   });
 
-  const filteredBidders = bidders.filter(
-    (bidder) => bidder.tenderId === selectedTender,
-  );
+  // Debug logging
+  useEffect(() => {
+    const debugInfo = {
+      selectedTender,
+      assignedTenders,
+      bidders,
+      filteredBidders,
+    };
+    console.log("Debug info:", debugInfo);
+
+    // Additional debug: Check localStorage contents
+    if (selectedTender) {
+      const storedBids = localStorage.getItem("tenderBids");
+      const storedTenders = localStorage.getItem("recentTenders");
+      console.log("📋 localStorage 'tenderBids':", storedBids ? JSON.parse(storedBids) : "empty");
+      console.log("📋 localStorage 'recentTenders':", storedTenders ? JSON.parse(storedTenders) : "empty");
+    }
+  }, [selectedTender, assignedTenders, bidders, filteredBidders]);
 
   const handleScoreChange = (criteriaId, score) => {
     setScores((prev) => ({
@@ -133,6 +231,23 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     setSelectedTender(tenderId);
     setSelectedBidder("");
     onTenderSelect(tenderId);
+    // Refresh bidders to ensure latest data
+    loadBidders();
+    console.log("Tender selected:", tenderId);
+
+    // Debug: Show detailed tender and bidder mapping
+    console.log("🔍 Tender Selection Debug:");
+    console.log("  Selected Tender ID:", tenderId);
+    console.log("  Available Bidders:", bidders);
+    console.log("  Bidders for this tender:", bidders.filter(b => b.tenderId === tenderId));
+
+    // Check if there are any bids in localStorage for this tender
+    const storedBids = localStorage.getItem("tenderBids");
+    if (storedBids) {
+      const bids = JSON.parse(storedBids);
+      const bidsForTender = bids.filter((bid: any) => bid.tenderId === tenderId);
+      console.log("  Stored bids for this tender:", bidsForTender);
+    }
   };
 
   const handleSubmitEvaluation = () => {
@@ -211,7 +326,11 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
                     onChange={(e) => setSelectedBidder(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
                   >
-                    <option value="">Select a bidder...</option>
+                    <option value="">
+                      {filteredBidders.length === 0
+                        ? "No bidders found for this tender"
+                        : "Select a bidder..."}
+                    </option>
                     {filteredBidders.map((bidder) => (
                       <option key={bidder.id} value={bidder.id}>
                         {bidder.company}
