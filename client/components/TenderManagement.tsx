@@ -269,6 +269,56 @@ const TenderManagement = () => {
     }
   };
 
+  // Evaluation helper functions
+  const updateEvaluatorScore = (evaluatorId: string, criterionId: string, score: number, comment: string) => {
+    setEvaluatorScores(prev => ({
+      ...prev,
+      [evaluatorId]: {
+        ...prev[evaluatorId],
+        [criterionId]: { score, comment }
+      }
+    }));
+  };
+
+  const calculateTotalScore = (evaluatorId: string) => {
+    const scores = evaluatorScores[evaluatorId] || {};
+    return mockEvaluationCriteria.reduce((total, criterion) => {
+      const score = scores[criterion.id]?.score || 0;
+      return total + score;
+    }, 0);
+  };
+
+  const calculateAverageScore = (criterionId: string) => {
+    const allScores = mockTenderInfo.committeMembers
+      .map(member => evaluatorScores[member.id]?.[criterionId]?.score || 0)
+      .filter(score => score > 0);
+    return allScores.length > 0 ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length : 0;
+  };
+
+  const saveEvaluatorDraft = (evaluatorId: string) => {
+    setEvaluationStatus(prev => ({
+      ...prev,
+      [evaluatorId]: "draft"
+    }));
+    alert("Evaluation saved as draft");
+  };
+
+  const submitEvaluatorScores = (evaluatorId: string) => {
+    setEvaluationStatus(prev => ({
+      ...prev,
+      [evaluatorId]: "submitted"
+    }));
+    alert("Evaluation submitted successfully");
+  };
+
+  const approveConsolidatedReport = () => {
+    alert("Consolidated evaluation report approved");
+  };
+
+  const generateEvaluationReport = () => {
+    alert("Generating evaluation report PDF...");
+  };
+
   // Function to synchronize tender data to ministry-specific storage only
   const synchronizeAllTenderStores = () => {
     try {
