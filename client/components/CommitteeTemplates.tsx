@@ -197,7 +197,7 @@ export default function CommitteeTemplates() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
 
       const stored = localStorage.getItem(storageKey);
@@ -263,7 +263,7 @@ export default function CommitteeTemplates() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
       localStorage.setItem(storageKey, JSON.stringify(updatedTemplates));
     } catch (error) {
