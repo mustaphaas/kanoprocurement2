@@ -25,6 +25,11 @@ export interface CommitteeAssignmentResponse {
 // In-memory storage for demo purposes (in production, use a database)
 let assignments: CommitteeAssignmentResponse[] = [];
 
+// Helper function to get assignment by tender ID
+export const getAssignmentByTenderId = (tenderId: string): CommitteeAssignmentResponse | null => {
+  return assignments.find(assignment => assignment.tenderId === tenderId) || null;
+};
+
 export const createCommitteeAssignment: RequestHandler = (req, res) => {
   try {
     const payload: CommitteeAssignmentPayload = req.body;
