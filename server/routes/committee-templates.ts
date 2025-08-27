@@ -14,36 +14,36 @@ const mockCommitteeTemplates: CommitteeTemplate[] = [
     name: "Healthcare Procurement Committee",
     description: "Standard template for healthcare procurement evaluations",
     category: "Healthcare",
-    status: "Active"
+    status: "Active",
   },
   {
-    id: "CT-002", 
+    id: "CT-002",
     name: "Infrastructure Evaluation Committee",
     description: "Template for construction and infrastructure projects",
     category: "Infrastructure",
-    status: "Active"
+    status: "Active",
   },
   {
     id: "CT-003",
     name: "Education Technology Committee",
     description: "Specialized for educational technology procurement",
     category: "Education",
-    status: "Active"
+    status: "Active",
   },
   {
     id: "CT-004",
     name: "General Goods Committee",
     description: "Standard template for general goods and supplies",
     category: "General",
-    status: "Active"
+    status: "Active",
   },
   {
     id: "CT-005",
     name: "Professional Services Committee",
     description: "Template for consultancy and professional services",
     category: "Services",
-    status: "Active"
-  }
+    status: "Active",
+  },
 ];
 
 export const getCommitteeTemplates: RequestHandler = (req, res) => {

@@ -37,7 +37,9 @@ export const createCommitteeAssignment: RequestHandler = (req, res) => {
       return res.status(400).json({ error: "committeeTemplateId is required" });
     }
     if (!payload.evaluationTemplateId) {
-      return res.status(400).json({ error: "evaluationTemplateId is required" });
+      return res
+        .status(400)
+        .json({ error: "evaluationTemplateId is required" });
     }
     if (!payload.evaluationStart) {
       return res.status(400).json({ error: "evaluationStart is required" });
@@ -48,8 +50,8 @@ export const createCommitteeAssignment: RequestHandler = (req, res) => {
 
     // Validate date logic
     if (new Date(payload.evaluationStart) >= new Date(payload.evaluationEnd)) {
-      return res.status(400).json({ 
-        error: "Evaluation end date must be after start date" 
+      return res.status(400).json({
+        error: "Evaluation end date must be after start date",
       });
     }
 
@@ -64,7 +66,7 @@ export const createCommitteeAssignment: RequestHandler = (req, res) => {
       notes: payload.notes || "",
       status: "Draft",
       createdAt: new Date().toISOString(),
-      createdBy: "Current User" // In production, get from authentication
+      createdBy: "Current User", // In production, get from authentication
     };
 
     // Store assignment (in production, save to database)
