@@ -216,6 +216,7 @@ const TenderManagement = () => {
   const [isLoadingTenders, setIsLoadingTenders] = useState(false);
   const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
+  const [showConsolidatedReport, setShowConsolidatedReport] = useState(false);
   const [currentEvaluatorId] = useState("USR-003"); // In production, get from auth context
 
   // Mock evaluation data
