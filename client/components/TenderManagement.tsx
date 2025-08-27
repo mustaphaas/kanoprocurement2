@@ -39,7 +39,13 @@ import {
   TenderStatusInfo,
 } from "@/lib/tenderSettings";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -209,9 +215,12 @@ const TenderManagement = () => {
 
   // Evaluation state management - NEW STRUCTURE
   const [assignedTenders, setAssignedTenders] = useState<any[]>([]);
-  const [selectedTenderAssignment, setSelectedTenderAssignment] = useState<any>(null);
+  const [selectedTenderAssignment, setSelectedTenderAssignment] =
+    useState<any>(null);
   const [evaluationTemplate, setEvaluationTemplate] = useState<any>(null);
-  const [evaluatorScores, setEvaluatorScores] = useState<Record<string, { score: number; comment: string }>>({});
+  const [evaluatorScores, setEvaluatorScores] = useState<
+    Record<string, { score: number; comment: string }>
+  >({});
   const [isScoresSubmitted, setIsScoresSubmitted] = useState(false);
   const [isLoadingTenders, setIsLoadingTenders] = useState(false);
   const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
@@ -380,17 +389,19 @@ const TenderManagement = () => {
   const fetchAssignedTenders = async () => {
     setIsLoadingTenders(true);
     try {
-      const response = await fetch(`/api/tender-assignments/${currentEvaluatorId}`);
+      const response = await fetch(
+        `/api/tender-assignments/${currentEvaluatorId}`,
+      );
       if (response.ok) {
         const tenders = await response.json();
         setAssignedTenders(tenders);
-        console.log('Fetched assigned tenders:', tenders);
+        console.log("Fetched assigned tenders:", tenders);
       } else {
-        console.error('Failed to fetch assigned tenders');
+        console.error("Failed to fetch assigned tenders");
         setAssignedTenders([]);
       }
     } catch (error) {
-      console.error('Error fetching assigned tenders:', error);
+      console.error("Error fetching assigned tenders:", error);
       setAssignedTenders([]);
     } finally {
       setIsLoadingTenders(false);
@@ -405,22 +416,25 @@ const TenderManagement = () => {
       if (response.ok) {
         const template = await response.json();
         setEvaluationTemplate(template);
-        console.log('Fetched evaluation template:', template);
+        console.log("Fetched evaluation template:", template);
 
         // Initialize scores object
-        const initialScores: Record<string, { score: number; comment: string }> = {};
+        const initialScores: Record<
+          string,
+          { score: number; comment: string }
+        > = {};
         template.criteria.forEach((criterion: any) => {
-          initialScores[criterion.id] = { score: 0, comment: '' };
+          initialScores[criterion.id] = { score: 0, comment: "" };
         });
         setEvaluatorScores(initialScores);
         setIsScoresSubmitted(false);
         setIsDraftSaved(false);
       } else {
-        console.error('Failed to fetch evaluation template');
+        console.error("Failed to fetch evaluation template");
         setEvaluationTemplate(null);
       }
     } catch (error) {
-      console.error('Error fetching evaluation template:', error);
+      console.error("Error fetching evaluation template:", error);
       setEvaluationTemplate(null);
     } finally {
       setIsLoadingTemplate(false);
@@ -430,8 +444,8 @@ const TenderManagement = () => {
   // Check if all scores are entered
   const hasAllScores = () => {
     if (!evaluationTemplate) return false;
-    return evaluationTemplate.criteria.every((criterion: any) =>
-      evaluatorScores[criterion.id]?.score > 0
+    return evaluationTemplate.criteria.every(
+      (criterion: any) => evaluatorScores[criterion.id]?.score > 0,
     );
   };
 
@@ -440,21 +454,21 @@ const TenderManagement = () => {
     // In production, save to localStorage or send to server as draft
     localStorage.setItem(
       `draft_scores_${selectedTenderAssignment?.tenderId}_${currentEvaluatorId}`,
-      JSON.stringify(evaluatorScores)
+      JSON.stringify(evaluatorScores),
     );
     setIsDraftSaved(true);
-    alert('Draft saved successfully!');
+    alert("Draft saved successfully!");
   };
 
   // Submit final scores
   const submitScores = async () => {
     if (!selectedTenderAssignment || !evaluationTemplate) {
-      alert('Please select a tender and ensure template is loaded');
+      alert("Please select a tender and ensure template is loaded");
       return;
     }
 
     if (!hasAllScores()) {
-      alert('Please enter scores for all criteria before submitting');
+      alert("Please enter scores for all criteria before submitting");
       return;
     }
 
@@ -463,43 +477,43 @@ const TenderManagement = () => {
       const scores = evaluationTemplate.criteria.map((criterion: any) => ({
         criterionId: criterion.id.toString(),
         score: evaluatorScores[criterion.id]?.score || 0,
-        comment: evaluatorScores[criterion.id]?.comment || ''
+        comment: evaluatorScores[criterion.id]?.comment || "",
       }));
 
       const payload = {
         tenderId: selectedTenderAssignment.tenderId,
         evaluatorId: currentEvaluatorId,
-        scores: scores
+        scores: scores,
       };
 
-      console.log('Submitting scores:', payload);
+      console.log("Submitting scores:", payload);
 
-      const response = await fetch('/api/evaluator-scores', {
-        method: 'POST',
+      const response = await fetch("/api/evaluator-scores", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Scores submitted successfully:', result);
+        console.log("Scores submitted successfully:", result);
         setIsScoresSubmitted(true);
 
         // Clear draft from localStorage
         localStorage.removeItem(
-          `draft_scores_${selectedTenderAssignment.tenderId}_${currentEvaluatorId}`
+          `draft_scores_${selectedTenderAssignment.tenderId}_${currentEvaluatorId}`,
         );
 
-        alert('Scores submitted successfully! Your evaluation is now locked.');
+        alert("Scores submitted successfully! Your evaluation is now locked.");
       } else {
         const error = await response.json();
-        alert(`Failed to submit scores: ${error.error || 'Unknown error'}`);
+        alert(`Failed to submit scores: ${error.error || "Unknown error"}`);
       }
     } catch (error) {
-      console.error('Error submitting scores:', error);
-      alert('Network error: Failed to submit scores');
+      console.error("Error submitting scores:", error);
+      alert("Network error: Failed to submit scores");
     }
   };
 
@@ -519,7 +533,7 @@ const TenderManagement = () => {
           setEvaluatorScores(draftScores);
           setIsDraftSaved(true);
         } catch (error) {
-          console.error('Error loading draft scores:', error);
+          console.error("Error loading draft scores:", error);
         }
       }
     }
@@ -2115,16 +2129,23 @@ const TenderManagement = () => {
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="tender-select" className="text-sm font-medium">
+                  <Label
+                    htmlFor="tender-select"
+                    className="text-sm font-medium"
+                  >
                     Assigned Tenders
                   </Label>
                   <Select
                     value={selectedTenderAssignment?.id || ""}
                     onValueChange={(value) => {
-                      const assignment = assignedTenders.find(t => t.id === value);
+                      const assignment = assignedTenders.find(
+                        (t) => t.id === value,
+                      );
                       setSelectedTenderAssignment(assignment);
                       if (assignment) {
-                        fetchEvaluationTemplate(assignment.evaluationTemplateId);
+                        fetchEvaluationTemplate(
+                          assignment.evaluationTemplateId,
+                        );
                       }
                     }}
                   >
@@ -2154,7 +2175,8 @@ const TenderManagement = () => {
                 {!isLoadingTenders && assignedTenders.length === 0 && (
                   <Alert>
                     <AlertDescription>
-                      No tenders are currently assigned to you for evaluation. Please contact your administrator.
+                      No tenders are currently assigned to you for evaluation.
+                      Please contact your administrator.
                     </AlertDescription>
                   </Alert>
                 )}
@@ -2188,22 +2210,28 @@ const TenderManagement = () => {
                     <Label className="text-sm font-medium text-gray-600">
                       Category
                     </Label>
-                    <p className="font-semibold">{selectedTenderAssignment.tenderCategory}</p>
+                    <p className="font-semibold">
+                      {selectedTenderAssignment.tenderCategory}
+                    </p>
                   </div>
                   <div>
                     <Label className="text-sm font-medium text-gray-600">
                       Evaluation Period
                     </Label>
                     <p className="font-semibold">
-                      {new Date(selectedTenderAssignment.evaluationStart).toLocaleDateString()} -{" "}
-                      {new Date(selectedTenderAssignment.evaluationEnd).toLocaleDateString()}
+                      {new Date(
+                        selectedTenderAssignment.evaluationStart,
+                      ).toLocaleDateString()}{" "}
+                      -{" "}
+                      {new Date(
+                        selectedTenderAssignment.evaluationEnd,
+                      ).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           )}
-
 
           {/* 3️⃣ Dynamic Evaluation Criteria Scoring */}
           {selectedTenderAssignment && evaluationTemplate && (
@@ -2224,41 +2252,65 @@ const TenderManagement = () => {
                   )}
                 </CardTitle>
                 <CardDescription>
-                  Template: {evaluationTemplate.name} | Type: {evaluationTemplate.type}
+                  Template: {evaluationTemplate.name} | Type:{" "}
+                  {evaluationTemplate.type}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {isLoadingTemplate ? (
                   <div className="text-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Loading evaluation criteria...</p>
+                    <p className="text-muted-foreground">
+                      Loading evaluation criteria...
+                    </p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="border-b bg-gray-50">
-                          <th className="text-left p-3 font-medium">Criterion</th>
-                          <th className="text-center p-3 font-medium w-20">Type</th>
-                          <th className="text-center p-3 font-medium w-24">Max Score</th>
-                          <th className="text-center p-3 font-medium w-24">Your Score</th>
-                          <th className="text-left p-3 font-medium">Comments/Justification</th>
+                          <th className="text-left p-3 font-medium">
+                            Criterion
+                          </th>
+                          <th className="text-center p-3 font-medium w-20">
+                            Type
+                          </th>
+                          <th className="text-center p-3 font-medium w-24">
+                            Max Score
+                          </th>
+                          <th className="text-center p-3 font-medium w-24">
+                            Your Score
+                          </th>
+                          <th className="text-left p-3 font-medium">
+                            Comments/Justification
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
                         {evaluationTemplate.criteria.map((criterion: any) => {
-                          const currentScore = evaluatorScores[criterion.id]?.score || 0;
-                          const currentComment = evaluatorScores[criterion.id]?.comment || "";
+                          const currentScore =
+                            evaluatorScores[criterion.id]?.score || 0;
+                          const currentComment =
+                            evaluatorScores[criterion.id]?.comment || "";
 
                           return (
-                            <tr key={criterion.id} className="border-b hover:bg-gray-50">
-                              <td className="p-3 font-medium">{criterion.name}</td>
+                            <tr
+                              key={criterion.id}
+                              className="border-b hover:bg-gray-50"
+                            >
+                              <td className="p-3 font-medium">
+                                {criterion.name}
+                              </td>
                               <td className="p-3 text-center">
                                 <Badge
-                                  variant={criterion.type === 'financial' ? 'default' : 'secondary'}
+                                  variant={
+                                    criterion.type === "financial"
+                                      ? "default"
+                                      : "secondary"
+                                  }
                                   className="text-xs"
                                 >
-                                  {criterion.type || 'technical'}
+                                  {criterion.type || "technical"}
                                 </Badge>
                               </td>
                               <td className="p-3 text-center font-semibold text-blue-600">
@@ -2272,13 +2324,14 @@ const TenderManagement = () => {
                                   value={currentScore}
                                   disabled={isScoresSubmitted}
                                   onChange={(e) => {
-                                    const score = parseFloat(e.target.value) || 0;
-                                    setEvaluatorScores(prev => ({
+                                    const score =
+                                      parseFloat(e.target.value) || 0;
+                                    setEvaluatorScores((prev) => ({
                                       ...prev,
                                       [criterion.id]: {
                                         ...prev[criterion.id],
-                                        score: score
-                                      }
+                                        score: score,
+                                      },
                                     }));
                                     setIsDraftSaved(false);
                                   }}
@@ -2292,12 +2345,12 @@ const TenderManagement = () => {
                                   value={currentComment}
                                   disabled={isScoresSubmitted}
                                   onChange={(e) => {
-                                    setEvaluatorScores(prev => ({
+                                    setEvaluatorScores((prev) => ({
                                       ...prev,
                                       [criterion.id]: {
                                         ...prev[criterion.id],
-                                        comment: e.target.value
-                                      }
+                                        comment: e.target.value,
+                                      },
                                     }));
                                     setIsDraftSaved(false);
                                   }}
@@ -2313,27 +2366,31 @@ const TenderManagement = () => {
                 )}
 
                 {/* Action Buttons */}
-                {selectedTenderAssignment && evaluationTemplate && !isLoadingTemplate && (
-                  <div className="flex gap-4 mt-6 pt-4 border-t">
-                    <Button
-                      variant="outline"
-                      onClick={saveDraft}
-                      disabled={isScoresSubmitted}
-                      className="flex-1"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save Draft
-                    </Button>
-                    <Button
-                      onClick={submitScores}
-                      disabled={isScoresSubmitted || !hasAllScores()}
-                      className="flex-1"
-                    >
-                      <Send className="w-4 h-4 mr-2" />
-                      {isScoresSubmitted ? "Submitted" : "Submit Final Scores"}
-                    </Button>
-                  </div>
-                )}
+                {selectedTenderAssignment &&
+                  evaluationTemplate &&
+                  !isLoadingTemplate && (
+                    <div className="flex gap-4 mt-6 pt-4 border-t">
+                      <Button
+                        variant="outline"
+                        onClick={saveDraft}
+                        disabled={isScoresSubmitted}
+                        className="flex-1"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Save Draft
+                      </Button>
+                      <Button
+                        onClick={submitScores}
+                        disabled={isScoresSubmitted || !hasAllScores()}
+                        className="flex-1"
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        {isScoresSubmitted
+                          ? "Submitted"
+                          : "Submit Final Scores"}
+                      </Button>
+                    </div>
+                  )}
               </CardContent>
             </Card>
           )}
@@ -2351,23 +2408,30 @@ const TenderManagement = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
                     <p className="text-2xl font-bold text-blue-600">
-                      {evaluationTemplate ? evaluationTemplate.criteria.length : 0}
+                      {evaluationTemplate
+                        ? evaluationTemplate.criteria.length
+                        : 0}
                     </p>
                     <p className="text-sm text-gray-600">Total Criteria</p>
                   </div>
                   <div className="text-center p-4 bg-green-50 rounded-lg">
                     <p className="text-2xl font-bold text-green-600">
-                      {Object.keys(evaluatorScores).filter(id =>
-                        evaluatorScores[id]?.score > 0
-                      ).length}
+                      {
+                        Object.keys(evaluatorScores).filter(
+                          (id) => evaluatorScores[id]?.score > 0,
+                        ).length
+                      }
                     </p>
                     <p className="text-sm text-gray-600">Scored Criteria</p>
                   </div>
                   <div className="text-center p-4 bg-yellow-50 rounded-lg">
                     <p className="text-2xl font-bold text-yellow-600">
-                      {Object.values(evaluatorScores).reduce((sum: number, item: any) =>
-                        sum + (item?.score || 0), 0
-                      ).toFixed(1)}
+                      {Object.values(evaluatorScores)
+                        .reduce(
+                          (sum: number, item: any) => sum + (item?.score || 0),
+                          0,
+                        )
+                        .toFixed(1)}
                     </p>
                     <p className="text-sm text-gray-600">Total Score</p>
                   </div>

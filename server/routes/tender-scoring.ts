@@ -1,6 +1,10 @@
 import { RequestHandler } from "express";
 import { getAssignmentByTenderId } from "./committee-assignments";
-import { EvaluationTemplate, EvaluationCriteria, mockEvaluationTemplates } from "./evaluation-templates";
+import {
+  EvaluationTemplate,
+  EvaluationCriteria,
+  mockEvaluationTemplates,
+} from "./evaluation-templates";
 
 export interface TenderScore {
   id: string;
@@ -66,36 +70,48 @@ export const submitTenderScore: RequestHandler = (req, res) => {
     // Get the tender assignment to validate against the evaluation template
     const assignment = getAssignmentByTenderId(submission.tenderId);
     if (assignment) {
-      const evaluationTemplate = mockEvaluationTemplates.find(t => t.id === assignment.evaluationTemplateId);
+      const evaluationTemplate = mockEvaluationTemplates.find(
+        (t) => t.id === assignment.evaluationTemplateId,
+      );
 
       if (evaluationTemplate) {
         // Validate scores against template criteria
-        for (const [criteriaIdStr, score] of Object.entries(submission.scores)) {
+        for (const [criteriaIdStr, score] of Object.entries(
+          submission.scores,
+        )) {
           const criteriaId = parseInt(criteriaIdStr);
-          const criterion = evaluationTemplate.criteria.find(c => c.id === criteriaId);
+          const criterion = evaluationTemplate.criteria.find(
+            (c) => c.id === criteriaId,
+          );
 
           if (!criterion) {
             return res.status(400).json({
-              error: `Invalid criteria ID: ${criteriaId}. This criterion is not part of the evaluation template.`
+              error: `Invalid criteria ID: ${criteriaId}. This criterion is not part of the evaluation template.`,
             });
           }
 
           if (score < 0 || score > criterion.maxScore) {
             return res.status(400).json({
-              error: `Score for '${criterion.name}' must be between 0 and ${criterion.maxScore}`
+              error: `Score for '${criterion.name}' must be between 0 and ${criterion.maxScore}`,
             });
           }
         }
 
         // Check if all required criteria are provided
-        const providedCriteriaIds = new Set(Object.keys(submission.scores).map(id => parseInt(id)));
-        const requiredCriteriaIds = new Set(evaluationTemplate.criteria.map(c => c.id));
+        const providedCriteriaIds = new Set(
+          Object.keys(submission.scores).map((id) => parseInt(id)),
+        );
+        const requiredCriteriaIds = new Set(
+          evaluationTemplate.criteria.map((c) => c.id),
+        );
 
         for (const requiredId of requiredCriteriaIds) {
           if (!providedCriteriaIds.has(requiredId)) {
-            const criterion = evaluationTemplate.criteria.find(c => c.id === requiredId);
+            const criterion = evaluationTemplate.criteria.find(
+              (c) => c.id === requiredId,
+            );
             return res.status(400).json({
-              error: `Missing score for required criterion: '${criterion?.name}'`
+              error: `Missing score for required criterion: '${criterion?.name}'`,
             });
           }
         }
@@ -108,11 +124,14 @@ export const submitTenderScore: RequestHandler = (req, res) => {
       0,
     );
 
-    console.log(`Submitting score for tender ${submission.tenderId}, bidder ${submission.bidderName}:`, {
-      scores: submission.scores,
-      totalScore,
-      evaluationTemplateId: assignment?.evaluationTemplateId
-    });
+    console.log(
+      `Submitting score for tender ${submission.tenderId}, bidder ${submission.bidderName}:`,
+      {
+        scores: submission.scores,
+        totalScore,
+        evaluationTemplateId: assignment?.evaluationTemplateId,
+      },
+    );
 
     // Check if score already exists for this tender/committee member/bidder
     const existingScoreIndex = tenderScores.findIndex(
@@ -191,10 +210,14 @@ export const getTenderFinalScores: RequestHandler = async (req, res) => {
     }
 
     // Get the evaluation template
-    const evaluationTemplate = mockEvaluationTemplates.find(t => t.id === assignment.evaluationTemplateId);
+    const evaluationTemplate = mockEvaluationTemplates.find(
+      (t) => t.id === assignment.evaluationTemplateId,
+    );
 
     if (!evaluationTemplate) {
-      console.error(`Evaluation template ${assignment.evaluationTemplateId} not found`);
+      console.error(
+        `Evaluation template ${assignment.evaluationTemplateId} not found`,
+      );
       return res.status(404).json({ error: "Evaluation template not found" });
     }
 
@@ -243,7 +266,7 @@ export const getTenderFinalScores: RequestHandler = async (req, res) => {
         evaluationTemplate.criteria.forEach((criterion) => {
           const score = avgScores[criterion.id] || 0;
 
-          if (criterion.type === 'financial') {
+          if (criterion.type === "financial") {
             financialScore += score;
             maxFinancialScore += criterion.maxScore;
           } else {
@@ -254,35 +277,42 @@ export const getTenderFinalScores: RequestHandler = async (req, res) => {
         });
 
         // Normalize scores to percentages
-        const technicalPercentage = maxTechnicalScore > 0 ? (technicalScore / maxTechnicalScore) * 100 : 0;
-        const financialPercentage = maxFinancialScore > 0 ? (financialScore / maxFinancialScore) * 100 : 0;
+        const technicalPercentage =
+          maxTechnicalScore > 0
+            ? (technicalScore / maxTechnicalScore) * 100
+            : 0;
+        const financialPercentage =
+          maxFinancialScore > 0
+            ? (financialScore / maxFinancialScore) * 100
+            : 0;
 
         // Apply methodology based on template type
         let finalScore = 0;
 
         switch (evaluationTemplate.type?.toUpperCase()) {
-          case 'QCBS':
+          case "QCBS":
             // Quality and Cost-Based Selection: typically 70% technical, 30% financial
             finalScore = technicalPercentage * 0.7 + financialPercentage * 0.3;
             break;
 
-          case 'LCS':
+          case "LCS":
             // Least Cost Selection: technical qualification is pass/fail, lowest cost wins
             // For scoring purposes, if technical meets minimum threshold, financial dominates
             const minTechnicalThreshold = 75; // 75% minimum
             if (technicalPercentage >= minTechnicalThreshold) {
-              finalScore = financialPercentage * 0.8 + technicalPercentage * 0.2;
+              finalScore =
+                financialPercentage * 0.8 + technicalPercentage * 0.2;
             } else {
               finalScore = technicalPercentage * 0.5; // Penalize for not meeting technical threshold
             }
             break;
 
-          case 'QBS':
+          case "QBS":
             // Quality-Based Selection: 100% technical (price negotiated later)
             finalScore = technicalPercentage;
             break;
 
-          case 'FBS':
+          case "FBS":
             // Fixed Budget Selection: best technical within budget
             finalScore = technicalPercentage * 0.9 + financialPercentage * 0.1;
             break;
@@ -338,7 +368,9 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
       return res.status(404).json({ error: "Tender assignment not found" });
     }
 
-    const evaluationTemplate = mockEvaluationTemplates.find(t => t.id === assignment.evaluationTemplateId);
+    const evaluationTemplate = mockEvaluationTemplates.find(
+      (t) => t.id === assignment.evaluationTemplateId,
+    );
     if (!evaluationTemplate) {
       return res.status(404).json({ error: "Evaluation template not found" });
     }
@@ -346,17 +378,19 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
     // Validate scores against template criteria
     for (const scoreItem of submission.scores) {
       const criteriaId = parseInt(scoreItem.criterionId);
-      const criterion = evaluationTemplate.criteria.find(c => c.id === criteriaId);
+      const criterion = evaluationTemplate.criteria.find(
+        (c) => c.id === criteriaId,
+      );
 
       if (!criterion) {
         return res.status(400).json({
-          error: `Invalid criteria ID: ${scoreItem.criterionId}. This criterion is not part of the evaluation template.`
+          error: `Invalid criteria ID: ${scoreItem.criterionId}. This criterion is not part of the evaluation template.`,
         });
       }
 
       if (scoreItem.score < 0 || scoreItem.score > criterion.maxScore) {
         return res.status(400).json({
-          error: `Score for '${criterion.name}' must be between 0 and ${criterion.maxScore}`
+          error: `Score for '${criterion.name}' must be between 0 and ${criterion.maxScore}`,
         });
       }
     }
@@ -365,7 +399,7 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
     const scoresRecord: Record<number, number> = {};
     let totalScore = 0;
 
-    submission.scores.forEach(scoreItem => {
+    submission.scores.forEach((scoreItem) => {
       const criteriaId = parseInt(scoreItem.criterionId);
       scoresRecord[criteriaId] = scoreItem.score;
       totalScore += scoreItem.score;
@@ -375,11 +409,14 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
     const existingScoreIndex = tenderScores.findIndex(
       (score) =>
         score.tenderId === submission.tenderId &&
-        score.committeeMemberId === submission.evaluatorId
+        score.committeeMemberId === submission.evaluatorId,
     );
 
     const newScore: TenderScore = {
-      id: existingScoreIndex >= 0 ? tenderScores[existingScoreIndex].id : `TS-${Date.now()}`,
+      id:
+        existingScoreIndex >= 0
+          ? tenderScores[existingScoreIndex].id
+          : `TS-${Date.now()}`,
       tenderId: submission.tenderId,
       committeeMemberId: submission.evaluatorId,
       bidderName: "All Bidders", // For new format, we handle all bidders in one submission
@@ -400,7 +437,7 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
       success: true,
       scoreId: newScore.id,
       message: "Scores submitted successfully",
-      submittedScores: submission.scores
+      submittedScores: submission.scores,
     });
   } catch (error) {
     console.error("Error submitting evaluator score:", error);

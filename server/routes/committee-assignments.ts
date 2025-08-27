@@ -35,7 +35,7 @@ let assignments: CommitteeAssignmentResponse[] = [
     notes: "Medical equipment procurement evaluation",
     status: "Active",
     createdAt: "2024-01-10T10:00:00Z",
-    createdBy: "Admin User"
+    createdBy: "Admin User",
   },
   {
     id: "CA-1000002",
@@ -47,7 +47,7 @@ let assignments: CommitteeAssignmentResponse[] = [
     notes: "Infrastructure project evaluation",
     status: "Draft",
     createdAt: "2024-01-15T14:30:00Z",
-    createdBy: "Ministry User"
+    createdBy: "Ministry User",
   },
   {
     id: "CA-1000003",
@@ -59,13 +59,17 @@ let assignments: CommitteeAssignmentResponse[] = [
     notes: "Consulting services evaluation",
     status: "Active",
     createdAt: "2024-01-25T09:15:00Z",
-    createdBy: "Procurement Officer"
-  }
+    createdBy: "Procurement Officer",
+  },
 ];
 
 // Helper function to get assignment by tender ID
-export const getAssignmentByTenderId = (tenderId: string): CommitteeAssignmentResponse | null => {
-  return assignments.find(assignment => assignment.tenderId === tenderId) || null;
+export const getAssignmentByTenderId = (
+  tenderId: string,
+): CommitteeAssignmentResponse | null => {
+  return (
+    assignments.find((assignment) => assignment.tenderId === tenderId) || null
+  );
 };
 
 export const createCommitteeAssignment: RequestHandler = (req, res) => {
@@ -144,42 +148,46 @@ export const getTenderAssignmentsForEvaluator: RequestHandler = (req, res) => {
 
     // Filter assignments where the evaluator is part of the committee
     // For now, return all active assignments (in production, filter by evaluator membership)
-    const evaluatorAssignments = assignments.filter(assignment =>
-      assignment.status === "Draft" || assignment.status === "Active"
-    ).map(assignment => {
-      // Generate realistic tender titles and categories based on tender ID and template
-      let tenderTitle = "Sample Tender";
-      let tenderCategory = "General";
+    const evaluatorAssignments = assignments
+      .filter(
+        (assignment) =>
+          assignment.status === "Draft" || assignment.status === "Active",
+      )
+      .map((assignment) => {
+        // Generate realistic tender titles and categories based on tender ID and template
+        let tenderTitle = "Sample Tender";
+        let tenderCategory = "General";
 
-      switch (assignment.tenderId) {
-        case "TDR-001":
-          tenderTitle = "Supply of Medical Equipment to Primary Health Centers";
-          tenderCategory = "Healthcare";
-          break;
-        case "TDR-002":
-          tenderTitle = "Road Construction and Rehabilitation Project";
-          tenderCategory = "Infrastructure";
-          break;
-        case "TDR-003":
-          tenderTitle = "Consulting Services for Health System Improvement";
-          tenderCategory = "Professional Services";
-          break;
-        default:
-          tenderTitle = `Tender ${assignment.tenderId}`;
-          tenderCategory = "General";
-      }
+        switch (assignment.tenderId) {
+          case "TDR-001":
+            tenderTitle =
+              "Supply of Medical Equipment to Primary Health Centers";
+            tenderCategory = "Healthcare";
+            break;
+          case "TDR-002":
+            tenderTitle = "Road Construction and Rehabilitation Project";
+            tenderCategory = "Infrastructure";
+            break;
+          case "TDR-003":
+            tenderTitle = "Consulting Services for Health System Improvement";
+            tenderCategory = "Professional Services";
+            break;
+          default:
+            tenderTitle = `Tender ${assignment.tenderId}`;
+            tenderCategory = "General";
+        }
 
-      return {
-        id: assignment.id,
-        tenderId: assignment.tenderId,
-        tenderTitle,
-        tenderCategory,
-        evaluationTemplateId: assignment.evaluationTemplateId,
-        evaluationStart: assignment.evaluationStart,
-        evaluationEnd: assignment.evaluationEnd,
-        status: assignment.status
-      };
-    });
+        return {
+          id: assignment.id,
+          tenderId: assignment.tenderId,
+          tenderTitle,
+          tenderCategory,
+          evaluationTemplateId: assignment.evaluationTemplateId,
+          evaluationStart: assignment.evaluationStart,
+          evaluationEnd: assignment.evaluationEnd,
+          status: assignment.status,
+        };
+      });
 
     res.json(evaluatorAssignments);
   } catch (error) {
