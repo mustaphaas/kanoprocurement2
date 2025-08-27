@@ -131,6 +131,22 @@ export const getEvaluationTemplates: RequestHandler = (req, res) => {
   }
 };
 
+export const getEvaluationTemplateById: RequestHandler = (req, res) => {
+  try {
+    const { id } = req.params;
+    const template = mockEvaluationTemplates.find(t => t.id === id);
+
+    if (!template) {
+      return res.status(404).json({ error: "Evaluation template not found" });
+    }
+
+    res.json(template);
+  } catch (error) {
+    console.error("Error fetching evaluation template:", error);
+    res.status(500).json({ error: "Failed to fetch evaluation template" });
+  }
+};
+
 export const createEvaluationTemplate: RequestHandler = (req, res) => {
   try {
     const { name, description, category, type } = req.body;
