@@ -2403,7 +2403,9 @@ export default function TenderCommitteeAssignment() {
                   {(() => {
                     const filteredTemplates = assignmentForm.tenderCategory
                       ? evaluationTemplates.filter(template =>
-                          template.category === assignmentForm.tenderCategory
+                          template.category === assignmentForm.tenderCategory ||
+                          template.category === "General" ||
+                          !template.category // Include templates without category
                         )
                       : evaluationTemplates;
 
