@@ -174,7 +174,7 @@ export default function CommitteeTemplates() {
     minimumMembers: 3,
     maximumMembers: 7,
     quorumRequirement: 3,
-    methodology: "QCBS" as const,
+    methodology: "QCBS" as "QCBS" | "QBS" | "LCS" | "FBS",
     technicalWeightPercent: 70,
     financialWeightPercent: 30,
     passingTechnicalScore: 75,
