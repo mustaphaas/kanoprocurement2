@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
 import { getAssignmentByTenderId } from "./committee-assignments";
-import { EvaluationTemplate, EvaluationCriteria } from "./evaluation-templates";
-import { getEvaluationTemplateById } from "./evaluation-templates";
+import { EvaluationTemplate, EvaluationCriteria, mockEvaluationTemplates } from "./evaluation-templates";
 
 export interface TenderScore {
   id: string;
@@ -133,30 +132,11 @@ export const getTenderFinalScores: RequestHandler = async (req, res) => {
     }
 
     // Get the evaluation template
-    let evaluationTemplate: EvaluationTemplate;
-    try {
-      // Create a mock request object for getEvaluationTemplateById
-      const mockReq = {
-        params: { id: assignment.evaluationTemplateId }
-      } as any;
+    const evaluationTemplate = mockEvaluationTemplates.find(t => t.id === assignment.evaluationTemplateId);
 
-      let templateData: EvaluationTemplate | null = null;
-      const mockRes = {
-        json: (data: any) => { templateData = data; },
-        status: () => mockRes,
-      } as any;
-
-      // Get template using the existing function
-      const { mockEvaluationTemplates } = await import('./evaluation-templates');
-      evaluationTemplate = mockEvaluationTemplates.find(t => t.id === assignment.evaluationTemplateId);
-
-      if (!evaluationTemplate) {
-        console.error(`Evaluation template ${assignment.evaluationTemplateId} not found`);
-        return res.status(404).json({ error: "Evaluation template not found" });
-      }
-    } catch (error) {
-      console.error(`Error fetching evaluation template:`, error);
-      return res.status(500).json({ error: "Failed to fetch evaluation template" });
+    if (!evaluationTemplate) {
+      console.error(`Evaluation template ${assignment.evaluationTemplateId} not found`);
+      return res.status(404).json({ error: "Evaluation template not found" });
     }
 
     // Group scores by bidder
