@@ -1790,1023 +1790,152 @@ const TenderManagement = () => {
           </Card>
         </TabsContent>
 
-        {/* Evaluation */}
+        {/* Tender Evaluation */}
         <TabsContent value="evaluation" className="space-y-6">
-          {/* Tender Summary Card */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600">Tender ID</p>
-                  <p className="font-semibold">MOH-2024-001</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Title</p>
-                  <p className="font-semibold">Hospital Equipment Supply</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Status</p>
-                  <Badge className="bg-blue-100 text-blue-800">
-                    Committee Setup
-                  </Badge>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Progress</p>
-                  <p className="font-semibold">Step 1 of 3</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Stepper Navigation */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                {/* Step 1: Committee Assignment */}
-                <div className="flex items-center">
-                  <div
-                    className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
-                      currentStep === 1
-                        ? "bg-blue-600 text-white"
-                        : stepStatus.step1.completed
-                          ? "bg-green-600 text-white"
-                          : "bg-gray-300 text-gray-600"
-                    }`}
-                  >
-                    {stepStatus.step1.completed ? "✅" : "1"}
-                  </div>
-                  <div className="ml-3">
-                    <p
-                      className={`font-semibold ${
-                        currentStep === 1
-                          ? "text-blue-600"
-                          : stepStatus.step1.completed
-                            ? "text-green-600"
-                            : "text-gray-400"
-                      }`}
-                    >
-                      Committee Assignment
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {currentStep === 1
-                        ? "Active"
-                        : stepStatus.step1.completed
-                          ? "Completed"
-                          : "Pending"}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex-1 mx-4">
-                  <div className="h-1 bg-gray-200 rounded-full">
-                    <div
-                      className={`h-1 rounded-full transition-all duration-300 ${
-                        stepStatus.step1.completed
-                          ? "w-full bg-green-600"
-                          : "w-0 bg-blue-600"
-                      }`}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Step 2: COI Declaration */}
-                <div className="flex items-center">
-                  <div
-                    className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
-                      currentStep === 2
-                        ? "bg-blue-600 text-white"
-                        : stepStatus.step2.completed
-                          ? "bg-green-600 text-white"
-                          : "bg-gray-300 text-gray-600"
-                    }`}
-                  >
-                    {stepStatus.step2.completed ? "✅" : "2"}
-                  </div>
-                  <div className="ml-3">
-                    <p
-                      className={`font-semibold ${
-                        currentStep === 2
-                          ? "text-blue-600"
-                          : stepStatus.step2.completed
-                            ? "text-green-600"
-                            : "text-gray-400"
-                      }`}
-                    >
-                      COI Declaration
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {stepStatus.step2.locked
-                        ? "Locked"
-                        : currentStep === 2
-                          ? "Active"
-                          : stepStatus.step2.completed
-                            ? "Completed"
-                            : "Pending"}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex-1 mx-4">
-                  <div className="h-1 bg-gray-200 rounded-full">
-                    <div
-                      className={`h-1 rounded-full transition-all duration-300 ${
-                        stepStatus.step2.completed
-                          ? "w-full bg-green-600"
-                          : "w-0 bg-gray-200"
-                      }`}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Step 3: QCBS Scoring */}
-                <div className="flex items-center">
-                  <div
-                    className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
-                      currentStep === 3
-                        ? "bg-blue-600 text-white"
-                        : stepStatus.step3.completed
-                          ? "bg-green-600 text-white"
-                          : "bg-gray-300 text-gray-600"
-                    }`}
-                  >
-                    {stepStatus.step3.completed ? "✅" : "3"}
-                  </div>
-                  <div className="ml-3">
-                    <p
-                      className={`font-semibold ${
-                        currentStep === 3
-                          ? "text-blue-600"
-                          : stepStatus.step3.completed
-                            ? "text-green-600"
-                            : "text-gray-400"
-                      }`}
-                    >
-                      QCBS Scoring
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {stepStatus.step3.locked
-                        ? "Locked"
-                        : currentStep === 3
-                          ? "Active"
-                          : stepStatus.step3.completed
-                            ? "Completed"
-                            : "Pending"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Step 1: Committee Assignment (Officer Only) */}
+          {/* Committee Scoring */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm">
-                  1
-                </div>
-                Committee Assignment
+                <Calculator className="h-5 w-5 text-blue-600" />
+                Committee Scoring
                 <Badge className="bg-blue-100 text-blue-800">
-                  Officer Only
+                  Individual Evaluation
                 </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {/* Assignment Table */}
-                <div>
-                  <h3 className="font-medium mb-4">Assignment Table</h3>
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Role</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>COI</TableHead>
-                          <TableHead>Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Dr. Amina Hassan
-                          </TableCell>
-                          <TableCell>Chairperson</TableCell>
-                          <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">
-                              Pending COI
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    <strong>Individual Committee Member Scoring</strong> -
+                    Each committee member scores bidders independently
+                    using the assigned evaluation template.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Available Tenders for Scoring */}
+                  {tenders
+                    .filter(
+                      (t) =>
+                        t.status === "Closed" ||
+                        t.status === "Evaluation_Complete",
+                    )
+                    .slice(0, 6)
+                    .map((tender) => (
+                      <Card
+                        key={tender.id}
+                        className="hover:shadow-md transition-shadow"
+                      >
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-lg">
+                            {tender.title}
+                          </CardTitle>
+                          <div className="flex items-center justify-between">
+                            <Badge
+                              variant={
+                                tender.status === "Closed"
+                                  ? "secondary"
+                                  : "default"
+                              }
+                            >
+                              {tender.status}
                             </Badge>
-                          </TableCell>
-                          <TableCell>—</TableCell>
-                          <TableCell>
-                            <Button size="sm" variant="outline">
-                              Replace
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Eng. Musa Ibrahim
-                          </TableCell>
-                          <TableCell>Technical Secretary</TableCell>
-                          <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">
-                              Pending COI
-                            </Badge>
-                          </TableCell>
-                          <TableCell>—</TableCell>
-                          <TableCell>
-                            <Button size="sm" variant="outline">
-                              Replace
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Dr. Fatima Yusuf
-                          </TableCell>
-                          <TableCell>Clinical Evaluator</TableCell>
-                          <TableCell>
-                            <Badge className="bg-red-100 text-red-800">
-                              COI Declared
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <AlertTriangle className="h-4 w-4 text-red-600" />
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-1">
-                              <Button size="sm" variant="outline">
-                                Review
-                              </Button>
-                              <Button size="sm" variant="outline">
-                                Replace
-                              </Button>
+                            <span className="text-sm text-muted-foreground">
+                              ID: {tender.id}
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="text-sm space-y-1">
+                            <div>
+                              <strong>Category:</strong> {tender.category}
                             </div>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Bala Ahmed
-                          </TableCell>
-                          <TableCell>Financial Analyst</TableCell>
-                          <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">
-                              Pending COI
-                            </Badge>
-                          </TableCell>
-                          <TableCell>—</TableCell>
-                          <TableCell>—</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            Mary Luka
-                          </TableCell>
-                          <TableCell>Procurement Expert</TableCell>
-                          <TableCell>
-                            <Badge className="bg-yellow-100 text-yellow-800">
-                              Pending COI
-                            </Badge>
-                          </TableCell>
-                          <TableCell>—</TableCell>
-                          <TableCell>—</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
+                            <div>
+                              <strong>Value:</strong> {tender.value}
+                            </div>
+                            <div>
+                              <strong>Closing:</strong>{" "}
+                              {tender.closingDate}
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col space-y-2">
+                            <Button
+                              size="sm"
+                              className="w-full"
+                              onClick={() =>
+                                navigate(`/tender-scoring/${tender.id}`)
+                              }
+                            >
+                              <Calculator className="h-4 w-4 mr-2" />
+                              Score Tender
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="w-full"
+                              onClick={() =>
+                                navigate(`/tender-results/${tender.id}`)
+                              }
+                            >
+                              <Trophy className="h-4 w-4 mr-2" />
+                              View Results
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <Button variant="outline">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Member
-                  </Button>
-                  <Button variant="outline">
-                    <Users className="h-4 w-4 mr-2" />
-                    Replace Member
-                  </Button>
-                  <Button
-                    className="bg-primary"
-                    onClick={() => {
-                      setCommitteeAssigned(true);
-                      setStepStatus((prev) => ({
-                        ...prev,
-                        step1: { completed: true, locked: false },
-                        step2: { completed: false, locked: false },
-                      }));
-                      setCurrentStep(2);
-                    }}
-                  >
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Confirm Assignment
-                  </Button>
-                </div>
-
-                {!committeeAssigned && (
-                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <div className="flex items-start gap-2">
-                      <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                      <div>
-                        <p className="font-medium text-yellow-800">
-                          Assignment Required
-                        </p>
-                        <p className="text-sm text-yellow-700 mt-1">
-                          Click "Confirm Assignment" to proceed to COI
-                          Declaration step.
-                        </p>
-                      </div>
-                    </div>
+                {/* Quick Access Section */}
+                <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <h3 className="font-medium text-green-800 mb-3">
+                    Quick Access - Healthcare Tenders
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {["MOH-2024-001", "MOH-2024-002", "MOH-2024-003"].map(
+                      (tenderId) => (
+                        <div
+                          key={tenderId}
+                          className="flex items-center justify-between p-3 bg-white rounded border"
+                        >
+                          <div>
+                            <p className="font-medium text-sm">
+                              {tenderId}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              Healthcare Tender
+                            </p>
+                          </div>
+                          <div className="flex space-x-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                navigate(`/tender-scoring/${tenderId}`)
+                              }
+                            >
+                              <Calculator className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                navigate(`/tender-results/${tenderId}`)
+                              }
+                            >
+                              <Trophy className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ),
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </CardContent>
           </Card>
-
-          {/* Step 2: COI Declaration */}
-          {currentStep >= 2 && !stepStatus.step2.locked ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm">
-                    2
-                  </div>
-                  COI Declaration
-                  <Badge className="bg-blue-100 text-blue-800">
-                    Evaluator View
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {/* Evaluator Dashboard */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="p-4">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <div>
-                          <p className="font-medium">Completed</p>
-                          <p className="text-2xl font-bold">3</p>
-                        </div>
-                      </div>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-5 w-5 text-yellow-600" />
-                        <div>
-                          <p className="font-medium">Pending</p>
-                          <p className="text-2xl font-bold">1</p>
-                        </div>
-                      </div>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5 text-red-600" />
-                        <div>
-                          <p className="font-medium">Conflicts</p>
-                          <p className="text-2xl font-bold">1</p>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-
-                  {/* Declaration Forms */}
-                  <div className="space-y-4">
-                    <h3 className="font-medium">Individual COI Declarations</h3>
-
-                    {[
-                      {
-                        name: "Dr. Amina Hassan",
-                        role: "Chairperson",
-                        status: "Completed",
-                        conflict: false,
-                      },
-                      {
-                        name: "Eng. Musa Ibrahim",
-                        role: "Technical Secretary",
-                        status: "Completed",
-                        conflict: false,
-                      },
-                      {
-                        name: "Dr. Fatima Yusuf",
-                        role: "Clinical Evaluator",
-                        status: "Conflict Declared",
-                        conflict: true,
-                        details:
-                          "Financial relationship with Vendor B - Medium severity",
-                      },
-                      {
-                        name: "Bala Ahmed",
-                        role: "Financial Analyst",
-                        status: "Pending",
-                        conflict: null,
-                      },
-                      {
-                        name: "Mary Luka",
-                        role: "Procurement Expert",
-                        status: "Completed",
-                        conflict: false,
-                      },
-                    ].map((member, index) => (
-                      <Card key={index} className="p-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <p className="font-medium">{member.name}</p>
-                            <p className="text-sm text-gray-600">
-                              {member.role}
-                            </p>
-                          </div>
-                          <Badge
-                            className={
-                              member.status === "Completed" && !member.conflict
-                                ? "bg-green-100 text-green-800"
-                                : member.status === "Conflict Declared"
-                                  ? "bg-red-100 text-red-800"
-                                  : "bg-yellow-100 text-yellow-800"
-                            }
-                          >
-                            {member.status}
-                          </Badge>
-                        </div>
-
-                        {member.status === "Pending" && (
-                          <div className="space-y-3 bg-gray-50 p-3 rounded-lg">
-                            <div className="space-y-2">
-                              <Label className="text-sm font-medium">
-                                Declaration
-                              </Label>
-                              <div className="space-y-2">
-                                <div className="flex items-center space-x-2">
-                                  <Checkbox id={`no-conflict-${index}`} />
-                                  <Label
-                                    htmlFor={`no-conflict-${index}`}
-                                    className="text-sm"
-                                  >
-                                    ✅ I declare no conflict of interest
-                                  </Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <Checkbox id={`has-conflict-${index}`} />
-                                  <Label
-                                    htmlFor={`has-conflict-${index}`}
-                                    className="text-sm"
-                                  >
-                                    ❌ Conflict Exists
-                                  </Label>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div>
-                              <Label className="text-sm font-medium">
-                                Conflict Type & Details
-                              </Label>
-                              <Select>
-                                <SelectTrigger className="mt-1">
-                                  <SelectValue placeholder="Select conflict type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="financial">
-                                    Financial
-                                  </SelectItem>
-                                  <SelectItem value="professional">
-                                    Professional
-                                  </SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <Textarea
-                                placeholder="Provide details about the conflict..."
-                                className="mt-2"
-                                rows={3}
-                              />
-                            </div>
-
-                            <Button size="sm">Submit Declaration</Button>
-                          </div>
-                        )}
-
-                        {member.conflict && member.details && (
-                          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-sm font-medium text-red-800">
-                              Conflict Details:
-                            </p>
-                            <p className="text-sm text-red-700 mt-1">
-                              {member.details}
-                            </p>
-                            <div className="flex gap-2 mt-2">
-                              <Button size="sm" variant="outline">
-                                Approve with Mitigation
-                              </Button>
-                              <Button size="sm" variant="destructive">
-                                Replace Evaluator
-                              </Button>
-                            </div>
-                          </div>
-                        )}
-                      </Card>
-                    ))}
-                  </div>
-
-                  {/* Officer Review Panel */}
-                  <Card className="p-4 bg-blue-50">
-                    <h3 className="font-medium text-blue-900 mb-3">
-                      Officer Review Panel
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
-                        <div>
-                          <p className="font-medium">
-                            Dr. Fatima Yusuf - Conflict Review
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            Financial relationship with participating vendor
-                          </p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setCoiResolved(true)}
-                          >
-                            Approve with Mitigation
-                          </Button>
-                          <Button size="sm" variant="destructive">
-                            Replace Evaluator
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            Block Participation
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-
-                  {/* Action Button */}
-                  <div className="flex justify-center">
-                    <Button
-                      className="bg-primary px-8"
-                      onClick={() => {
-                        setCoiResolved(true);
-                        setStepStatus((prev) => ({
-                          ...prev,
-                          step2: { completed: true, locked: false },
-                          step3: { completed: false, locked: false },
-                        }));
-                        setCurrentStep(3);
-                      }}
-                      disabled={!coiResolved}
-                    >
-                      <Shield className="h-4 w-4 mr-2" />
-                      Finalize COI Review
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="opacity-50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold text-sm">
-                    2
-                  </div>
-                  COI Declaration
-                  <Badge className="bg-gray-100 text-gray-600">Locked</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 font-medium">
-                    Complete Step 1 to unlock
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Committee assignment must be confirmed before COI
-                    declarations can begin
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Step 3: QCBS Scoring */}
-          {currentStep >= 3 && !stepStatus.step3.locked ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm">
-                    3
-                  </div>
-                  QCBS Scoring
-                  <Badge className="bg-blue-100 text-blue-800">
-                    Committee Workspace
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {/* Tabs inside workspace */}
-                  <Tabs defaultValue="committee" className="w-full">
-                    <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="committee">
-                        🔸 Committee Scoring
-                      </TabsTrigger>
-                      <TabsTrigger value="technical">
-                        🔸 Technical Evaluation
-                      </TabsTrigger>
-                      <TabsTrigger value="financial">
-                        🔸 Financial Evaluation
-                      </TabsTrigger>
-                      <TabsTrigger value="final">
-                        🔸 Final QCBS Ranking
-                      </TabsTrigger>
-                    </TabsList>
-
-                    {/* Committee Scoring Tab */}
-                    <TabsContent value="committee" className="space-y-4">
-                      <div className="p-4 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-blue-800">
-                          <strong>Individual Committee Member Scoring</strong> -
-                          Each committee member scores bidders independently
-                          using the assigned evaluation template.
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {/* Available Tenders for Scoring */}
-                        {tenders
-                          .filter(
-                            (t) =>
-                              t.status === "Closed" ||
-                              t.status === "Evaluation_Complete",
-                          )
-                          .slice(0, 6)
-                          .map((tender) => (
-                            <Card
-                              key={tender.id}
-                              className="hover:shadow-md transition-shadow"
-                            >
-                              <CardHeader className="pb-3">
-                                <CardTitle className="text-lg">
-                                  {tender.title}
-                                </CardTitle>
-                                <div className="flex items-center justify-between">
-                                  <Badge
-                                    variant={
-                                      tender.status === "Closed"
-                                        ? "secondary"
-                                        : "default"
-                                    }
-                                  >
-                                    {tender.status}
-                                  </Badge>
-                                  <span className="text-sm text-muted-foreground">
-                                    ID: {tender.id}
-                                  </span>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="space-y-3">
-                                <div className="text-sm space-y-1">
-                                  <div>
-                                    <strong>Category:</strong> {tender.category}
-                                  </div>
-                                  <div>
-                                    <strong>Value:</strong> {tender.value}
-                                  </div>
-                                  <div>
-                                    <strong>Closing:</strong>{" "}
-                                    {tender.closingDate}
-                                  </div>
-                                </div>
-
-                                <div className="flex flex-col space-y-2">
-                                  <Button
-                                    size="sm"
-                                    className="w-full"
-                                    onClick={() =>
-                                      navigate(`/tender-scoring/${tender.id}`)
-                                    }
-                                  >
-                                    <Calculator className="h-4 w-4 mr-2" />
-                                    Score Tender
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="w-full"
-                                    onClick={() =>
-                                      navigate(`/tender-results/${tender.id}`)
-                                    }
-                                  >
-                                    <Trophy className="h-4 w-4 mr-2" />
-                                    View Results
-                                  </Button>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
-                      </div>
-
-                      {/* Quick Access Section */}
-                      <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <h3 className="font-medium text-green-800 mb-3">
-                          Quick Access - Healthcare Tenders
-                        </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {["MOH-2024-001", "MOH-2024-002", "MOH-2024-003"].map(
-                            (tenderId) => (
-                              <div
-                                key={tenderId}
-                                className="flex items-center justify-between p-3 bg-white rounded border"
-                              >
-                                <div>
-                                  <p className="font-medium text-sm">
-                                    {tenderId}
-                                  </p>
-                                  <p className="text-xs text-muted-foreground">
-                                    Healthcare Tender
-                                  </p>
-                                </div>
-                                <div className="flex space-x-1">
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() =>
-                                      navigate(`/tender-scoring/${tenderId}`)
-                                    }
-                                  >
-                                    <Calculator className="h-3 w-3" />
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() =>
-                                      navigate(`/tender-results/${tenderId}`)
-                                    }
-                                  >
-                                    <Trophy className="h-3 w-3" />
-                                  </Button>
-                                </div>
-                              </div>
-                            ),
-                          )}
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    {/* Technical Evaluation Tab */}
-                    <TabsContent value="technical" className="space-y-4">
-                      <div className="p-4 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-blue-800">
-                          <strong>
-                            Criteria auto-loaded from scoring matrix
-                          </strong>{" "}
-                          - Each evaluator scores independently, system
-                          calculates weighted averages.
-                        </p>
-                      </div>
-
-                      <div className="overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Criteria</TableHead>
-                              <TableHead>Weight</TableHead>
-                              <TableHead>Evaluator Avg.</TableHead>
-                              <TableHead>Weighted Score</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell className="font-medium">
-                                Equipment Quality
-                              </TableCell>
-                              <TableCell>40%</TableCell>
-                              <TableCell>82.5</TableCell>
-                              <TableCell className="font-bold">33.0</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">
-                                Vendor Experience
-                              </TableCell>
-                              <TableCell>20%</TableCell>
-                              <TableCell>72.5</TableCell>
-                              <TableCell className="font-bold">14.5</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">
-                                Delivery & Training Plan
-                              </TableCell>
-                              <TableCell>10%</TableCell>
-                              <TableCell>87.5</TableCell>
-                              <TableCell className="font-bold">8.8</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">
-                                Technical Support
-                              </TableCell>
-                              <TableCell>15%</TableCell>
-                              <TableCell>78.0</TableCell>
-                              <TableCell className="font-bold">11.7</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">
-                                Local Content
-                              </TableCell>
-                              <TableCell>15%</TableCell>
-                              <TableCell>65.0</TableCell>
-                              <TableCell className="font-bold">9.8</TableCell>
-                            </TableRow>
-                            <TableRow className="bg-blue-50 font-bold">
-                              <TableCell>TOTAL TECHNICAL SCORE</TableCell>
-                              <TableCell>100%</TableCell>
-                              <TableCell>—</TableCell>
-                              <TableCell>77.8</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </div>
-
-                      <div className="p-4 bg-green-50 rounded-lg">
-                        <p className="text-sm text-green-800">
-                          <strong>
-                            System Auto-calculates Technical Score:
-                          </strong>{" "}
-                          All vendors passed minimum threshold (≥75%)
-                        </p>
-                      </div>
-                    </TabsContent>
-
-                    {/* Financial Evaluation Tab */}
-                    <TabsContent value="financial" className="space-y-4">
-                      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <p className="text-sm text-yellow-800">
-                          <strong>
-                            Only unlocked if Technical Passing Score ≥ 75%
-                          </strong>{" "}
-                          - Financial envelopes opened for qualified vendors
-                          only.
-                        </p>
-                      </div>
-
-                      <div className="overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Vendor</TableHead>
-                              <TableHead>Price (₦)</TableHead>
-                              <TableHead>Normalized Score</TableHead>
-                              <TableHead>Weighted Financial Score</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            <TableRow className="bg-green-50">
-                              <TableCell className="font-medium">A</TableCell>
-                              <TableCell>1,000,000</TableCell>
-                              <TableCell className="font-bold">100</TableCell>
-                              <TableCell className="font-bold text-green-600">
-                                30.0
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">B</TableCell>
-                              <TableCell>1,200,000</TableCell>
-                              <TableCell>83</TableCell>
-                              <TableCell className="font-bold">24.9</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">C</TableCell>
-                              <TableCell>1,500,000</TableCell>
-                              <TableCell>67</TableCell>
-                              <TableCell className="font-bold">20.1</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </div>
-                    </TabsContent>
-
-                    {/* Final QCBS Ranking Tab */}
-                    <TabsContent value="final" className="space-y-4">
-                      <div className="p-4 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-blue-800">
-                          <strong>Final QCBS Ranking:</strong> Technical (70%) +
-                          Financial (30%) = Combined Score
-                        </p>
-                      </div>
-
-                      <div className="overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Vendor</TableHead>
-                              <TableHead>Technical (70%)</TableHead>
-                              <TableHead>Financial (30%)</TableHead>
-                              <TableHead>Final Score</TableHead>
-                              <TableHead>Rank</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            <TableRow className="bg-yellow-50">
-                              <TableCell className="font-medium">A</TableCell>
-                              <TableCell>72.5</TableCell>
-                              <TableCell>30.0</TableCell>
-                              <TableCell className="font-bold text-yellow-600">
-                                102.5
-                              </TableCell>
-                              <TableCell>
-                                <Badge className="bg-yellow-100 text-yellow-800">
-                                  🥇 1
-                                </Badge>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow className="bg-gray-50">
-                              <TableCell className="font-medium">B</TableCell>
-                              <TableCell>70.0</TableCell>
-                              <TableCell>24.9</TableCell>
-                              <TableCell className="font-bold">94.9</TableCell>
-                              <TableCell>
-                                <Badge className="bg-gray-100 text-gray-800">
-                                  🥈 2
-                                </Badge>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">C</TableCell>
-                              <TableCell>65.0</TableCell>
-                              <TableCell>20.1</TableCell>
-                              <TableCell className="font-bold">85.1</TableCell>
-                              <TableCell>
-                                <Badge className="bg-gray-100 text-gray-800">
-                                  🥉 3
-                                </Badge>
-                              </TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </div>
-                    </TabsContent>
-                  </Tabs>
-
-                  {/* Committee Actions */}
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium text-green-800">
-                          QCBS Evaluation Complete
-                        </p>
-                        <p className="text-sm text-green-700">
-                          Recommended Award: <strong>Vendor A</strong> (Final
-                          Score: 102.5)
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          <Download className="h-4 w-4 mr-2" />
-                          Save Draft Evaluation
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <FileText className="h-4 w-4 mr-2" />
-                          Generate Evaluation Report
-                        </Button>
-                        <Button className="bg-primary" size="sm">
-                          <Award className="h-4 w-4 mr-2" />
-                          Submit Final Recommendation
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="opacity-50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold text-sm">
-                    3
-                  </div>
-                  QCBS Scoring
-                  <Badge className="bg-gray-100 text-gray-600">Locked</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <Scale className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 font-medium">
-                    Complete Steps 1 & 2 to unlock
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    All COI declarations must be resolved before scoring can
-                    begin
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </TabsContent>
 
         {/* Award Recommendation */}
