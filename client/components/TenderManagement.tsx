@@ -1275,7 +1275,7 @@ const TenderManagement = () => {
               className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-rose-50 border border-transparent data-[state=active]:border-rose-200"
             >
               <Scale className="h-4 w-4" />
-              <span className="font-medium">Evaluation</span>
+              <span className="font-medium">Tender Evaluation</span>
             </TabsTrigger>
             <TabsTrigger
               value="award"
