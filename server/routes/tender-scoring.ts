@@ -49,11 +49,56 @@ export const submitTenderScore: RequestHandler = (req, res) => {
       return res.status(400).json({ error: "scores are required" });
     }
 
+    // Get the tender assignment to validate against the evaluation template
+    const assignment = getAssignmentByTenderId(submission.tenderId);
+    if (assignment) {
+      const evaluationTemplate = mockEvaluationTemplates.find(t => t.id === assignment.evaluationTemplateId);
+
+      if (evaluationTemplate) {
+        // Validate scores against template criteria
+        for (const [criteriaIdStr, score] of Object.entries(submission.scores)) {
+          const criteriaId = parseInt(criteriaIdStr);
+          const criterion = evaluationTemplate.criteria.find(c => c.id === criteriaId);
+
+          if (!criterion) {
+            return res.status(400).json({
+              error: `Invalid criteria ID: ${criteriaId}. This criterion is not part of the evaluation template.`
+            });
+          }
+
+          if (score < 0 || score > criterion.maxScore) {
+            return res.status(400).json({
+              error: `Score for '${criterion.name}' must be between 0 and ${criterion.maxScore}`
+            });
+          }
+        }
+
+        // Check if all required criteria are provided
+        const providedCriteriaIds = new Set(Object.keys(submission.scores).map(id => parseInt(id)));
+        const requiredCriteriaIds = new Set(evaluationTemplate.criteria.map(c => c.id));
+
+        for (const requiredId of requiredCriteriaIds) {
+          if (!providedCriteriaIds.has(requiredId)) {
+            const criterion = evaluationTemplate.criteria.find(c => c.id === requiredId);
+            return res.status(400).json({
+              error: `Missing score for required criterion: '${criterion?.name}'`
+            });
+          }
+        }
+      }
+    }
+
     // Calculate total score
     const totalScore = Object.values(submission.scores).reduce(
       (sum, score) => sum + score,
       0,
     );
+
+    console.log(`Submitting score for tender ${submission.tenderId}, bidder ${submission.bidderName}:`, {
+      scores: submission.scores,
+      totalScore,
+      evaluationTemplateId: assignment?.evaluationTemplateId
+    });
 
     // Check if score already exists for this tender/committee member/bidder
     const existingScoreIndex = tenderScores.findIndex(
