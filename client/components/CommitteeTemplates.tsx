@@ -670,8 +670,12 @@ export default function CommitteeTemplates() {
     const currentUser = "Current User"; // In a real app, get from auth context
     const currentDate = new Date().toISOString().split("T")[0];
 
+    // Get ministry code for template ID
+    const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+    const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
+
     const newTemplate: CommitteeTemplate = {
-      id: `CT-${Date.now()}`,
+      id: `${ministryCode}-CT-${Date.now()}`,
       name: templateForm.name,
       description: templateForm.description,
       category: templateForm.category,
