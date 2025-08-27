@@ -94,3 +94,34 @@ export const getCommitteeAssignments: RequestHandler = (req, res) => {
     res.status(500).json({ error: "Failed to fetch committee assignments" });
   }
 };
+
+// Get tender assignments for a specific evaluator
+export const getTenderAssignmentsForEvaluator: RequestHandler = (req, res) => {
+  try {
+    const { evaluatorId } = req.params;
+
+    if (!evaluatorId) {
+      return res.status(400).json({ error: "evaluatorId is required" });
+    }
+
+    // Filter assignments where the evaluator is part of the committee
+    // For now, return all active assignments (in production, filter by evaluator membership)
+    const evaluatorAssignments = assignments.filter(assignment =>
+      assignment.status === "Draft" || assignment.status === "Active"
+    ).map(assignment => ({
+      id: assignment.id,
+      tenderId: assignment.tenderId,
+      tenderTitle: `Tender ${assignment.tenderId}`, // In production, fetch from tender table
+      tenderCategory: "Healthcare", // In production, fetch from tender table
+      evaluationTemplateId: assignment.evaluationTemplateId,
+      evaluationStart: assignment.evaluationStart,
+      evaluationEnd: assignment.evaluationEnd,
+      status: assignment.status
+    }));
+
+    res.json(evaluatorAssignments);
+  } catch (error) {
+    console.error("Error fetching tender assignments for evaluator:", error);
+    res.status(500).json({ error: "Failed to fetch tender assignments" });
+  }
+};
