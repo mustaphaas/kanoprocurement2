@@ -23,7 +23,45 @@ export interface CommitteeAssignmentResponse {
 }
 
 // In-memory storage for demo purposes (in production, use a database)
-let assignments: CommitteeAssignmentResponse[] = [];
+let assignments: CommitteeAssignmentResponse[] = [
+  // Sample assignments for testing
+  {
+    id: "CA-1000001",
+    tenderId: "TDR-001",
+    committeeTemplateId: "CT-001",
+    evaluationTemplateId: "ET-001", // QCBS template
+    evaluationStart: "2024-01-15T00:00:00Z",
+    evaluationEnd: "2024-02-15T23:59:59Z",
+    notes: "Medical equipment procurement evaluation",
+    status: "Active",
+    createdAt: "2024-01-10T10:00:00Z",
+    createdBy: "Admin User"
+  },
+  {
+    id: "CA-1000002",
+    tenderId: "TDR-002",
+    committeeTemplateId: "CT-002",
+    evaluationTemplateId: "ET-002", // LCS template
+    evaluationStart: "2024-01-20T00:00:00Z",
+    evaluationEnd: "2024-02-20T23:59:59Z",
+    notes: "Infrastructure project evaluation",
+    status: "Draft",
+    createdAt: "2024-01-15T14:30:00Z",
+    createdBy: "Ministry User"
+  },
+  {
+    id: "CA-1000003",
+    tenderId: "TDR-003",
+    committeeTemplateId: "CT-001",
+    evaluationTemplateId: "ET-003", // QBS template
+    evaluationStart: "2024-02-01T00:00:00Z",
+    evaluationEnd: "2024-02-28T23:59:59Z",
+    notes: "Consulting services evaluation",
+    status: "Active",
+    createdAt: "2024-01-25T09:15:00Z",
+    createdBy: "Procurement Officer"
+  }
+];
 
 // Helper function to get assignment by tender ID
 export const getAssignmentByTenderId = (tenderId: string): CommitteeAssignmentResponse | null => {
