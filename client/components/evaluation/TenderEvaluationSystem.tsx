@@ -147,6 +147,14 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
       filteredBidders,
     };
     console.log("Debug info:", debugInfo);
+
+    // Additional debug: Check localStorage contents
+    if (selectedTender) {
+      const storedBids = localStorage.getItem("tenderBids");
+      const storedTenders = localStorage.getItem("recentTenders");
+      console.log("📋 localStorage 'tenderBids':", storedBids ? JSON.parse(storedBids) : "empty");
+      console.log("📋 localStorage 'recentTenders':", storedTenders ? JSON.parse(storedTenders) : "empty");
+    }
   }, [selectedTender, assignedTenders, bidders, filteredBidders]);
 
   const handleScoreChange = (criteriaId, score) => {
