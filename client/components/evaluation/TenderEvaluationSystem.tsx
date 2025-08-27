@@ -117,6 +117,17 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     (bidder) => bidder.tenderId === selectedTender,
   );
 
+  // Debug logging
+  useEffect(() => {
+    const debugInfo = {
+      selectedTender,
+      assignedTenders,
+      bidders,
+      filteredBidders,
+    };
+    console.log("Debug info:", debugInfo);
+  }, [selectedTender, assignedTenders, bidders, filteredBidders]);
+
   const handleScoreChange = (criteriaId, score) => {
     setScores((prev) => ({
       ...prev,
