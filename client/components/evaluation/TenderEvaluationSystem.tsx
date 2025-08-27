@@ -49,6 +49,48 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
   const [selectedTender, setSelectedTender] = useState("");
   const [bidders, setBidders] = useState([]);
 
+  // Function to get all bids for a specific tender from localStorage
+  const getBidsForTender = (tenderId: string): any[] => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) return [];
+
+      const bids = JSON.parse(storedBids);
+      return bids.filter((bid: any) => bid.tenderId === tenderId);
+    } catch (error) {
+      console.error("Error reading bids:", error);
+      return [];
+    }
+  };
+
+  // Function to get all bidders from localStorage
+  const loadBidders = () => {
+    try {
+      const storedBids = localStorage.getItem("tenderBids");
+      if (!storedBids) {
+        setBidders([]);
+        return;
+      }
+
+      const bids = JSON.parse(storedBids);
+      // Transform bids to bidder format expected by the component
+      const transformedBidders = bids.map((bid: any) => ({
+        id: bid.id,
+        company: bid.companyName || bid.company,
+        tenderId: bid.tenderId,
+      }));
+      setBidders(transformedBidders);
+    } catch (error) {
+      console.error("Error loading bidders:", error);
+      setBidders([]);
+    }
+  };
+
+  // Load bidders when component mounts
+  useEffect(() => {
+    loadBidders();
+  }, []);
+
   const [scores, setScores] = useState({});
   const [selectedBidder, setSelectedBidder] = useState("");
   const [showAggregateScores, setShowAggregateScores] = useState(false);
