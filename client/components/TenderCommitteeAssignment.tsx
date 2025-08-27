@@ -2279,6 +2279,44 @@ export default function TenderCommitteeAssignment() {
                 </SelectContent>
               </Select>
             </div>
+            <div>
+              <Label htmlFor="evaluation-template">Evaluation Template</Label>
+              <Select
+                value={assignmentForm.evaluationTemplateId}
+                onValueChange={(value) =>
+                  setAssignmentForm({
+                    ...assignmentForm,
+                    evaluationTemplateId: value,
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select evaluation template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(assignmentForm.tenderCategory
+                    ? evaluationTemplates.filter(template =>
+                        template.category === assignmentForm.tenderCategory
+                      )
+                    : evaluationTemplates
+                  ).map((template) => (
+                    <SelectItem key={template.id} value={template.id}>
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">{template.name}</span>
+                        {template.description && (
+                          <span className="text-sm text-gray-600">
+                            {template.description}
+                          </span>
+                        )}
+                        <span className="text-xs text-gray-500">
+                          {template.type} • {template.category}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="eval-start">Evaluation Start Date</Label>
