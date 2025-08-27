@@ -1355,14 +1355,66 @@ export default function TenderCommitteeAssignment() {
 
   const fetchEvaluationTemplates = async () => {
     try {
-      const response = await fetch('/api/evaluation-templates');
-      if (response.ok) {
-        const templates = await response.json();
-        setEvaluationTemplates(templates);
-        console.log('Fetched evaluation templates from API:', templates);
-      } else {
-        console.error('Failed to fetch evaluation templates from API');
+      // Get API templates
+      let apiTemplates: EvaluationTemplate[] = [];
+      try {
+        const response = await fetch('/api/evaluation-templates');
+        if (response.ok) {
+          apiTemplates = await response.json();
+          console.log('🌐 Fetched evaluation templates from API:', apiTemplates);
+        }
+      } catch (apiError) {
+        console.log('⚠️ API not available for evaluation templates, using local only');
       }
+
+      // Get localStorage templates (from FlexibleQCBSTemplate)
+      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
+
+      const qcbsStorageKey = `${ministryCode}_qcbsFlexibleTemplates`;
+      const storedQCBSTemplates = localStorage.getItem(qcbsStorageKey);
+      let localTemplates: EvaluationTemplate[] = [];
+
+      if (storedQCBSTemplates) {
+        const parsedQCBSTemplates = JSON.parse(storedQCBSTemplates);
+        // Convert QCBS templates to EvaluationTemplate format
+        localTemplates = parsedQCBSTemplates.map((qcbsTemplate: any) => ({
+          id: qcbsTemplate.id,
+          name: qcbsTemplate.name,
+          description: qcbsTemplate.description,
+          category: qcbsTemplate.category,
+          type: "QCBS" // All templates from FlexibleQCBSTemplate are QCBS
+        }));
+        console.log('💾 Loaded local evaluation templates (QCBS):', localTemplates);
+      }
+
+      // Also check for scoring rubrics (from ScoringMatrixImplementation)
+      const rubricStorageKey = `${ministryCode}_scoringRubrics`;
+      const storedRubrics = localStorage.getItem(rubricStorageKey);
+      if (storedRubrics) {
+        const parsedRubrics = JSON.parse(storedRubrics);
+        const rubricTemplates = parsedRubrics.map((rubric: any) => ({
+          id: rubric.id,
+          name: rubric.name,
+          description: rubric.description || `${rubric.type} scoring rubric`,
+          category: rubric.category || "General",
+          type: rubric.type || "Custom"
+        }));
+        localTemplates = [...localTemplates, ...rubricTemplates];
+        console.log('📊 Added scoring rubric templates:', rubricTemplates);
+      }
+
+      // Combine both sources, avoiding duplicates by ID
+      const allTemplates = [...apiTemplates];
+      localTemplates.forEach(localTemplate => {
+        if (!allTemplates.find(t => t.id === localTemplate.id)) {
+          allTemplates.push(localTemplate);
+        }
+      });
+
+      setEvaluationTemplates(allTemplates);
+      console.log('✅ Combined evaluation templates (API + Local):', allTemplates);
+
     } catch (error) {
       console.error('Error fetching evaluation templates:', error);
     }
