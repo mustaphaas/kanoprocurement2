@@ -1,18 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table';
-import { ArrowLeft, Trophy, Medal, Award, Download, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  ArrowLeft,
+  Trophy,
+  Medal,
+  Award,
+  Download,
+  RefreshCw,
+} from "lucide-react";
 
 interface TenderFinalScore {
   bidderName: string;
@@ -36,37 +49,38 @@ interface TenderScore {
 export default function TenderResults() {
   const { tenderId } = useParams<{ tenderId: string }>();
   const navigate = useNavigate();
-  
+
   const [finalScores, setFinalScores] = useState<TenderFinalScore[]>([]);
   const [individualScores, setIndividualScores] = useState<TenderScore[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const fetchResults = async () => {
     if (!tenderId) return;
-    
+
     try {
       setLoading(true);
-      setError('');
-      
+      setError("");
+
       // Fetch final aggregated scores
-      const finalResponse = await fetch(`/api/tenders/${tenderId}/final-scores`);
+      const finalResponse = await fetch(
+        `/api/tenders/${tenderId}/final-scores`,
+      );
       if (!finalResponse.ok) {
-        throw new Error('Failed to fetch final scores');
+        throw new Error("Failed to fetch final scores");
       }
       const finalData = await finalResponse.json();
       setFinalScores(finalData);
-      
+
       // Fetch individual committee member scores
       const scoresResponse = await fetch(`/api/tenders/${tenderId}/scores`);
       if (!scoresResponse.ok) {
-        throw new Error('Failed to fetch individual scores');
+        throw new Error("Failed to fetch individual scores");
       }
       const scoresData = await scoresResponse.json();
       setIndividualScores(scoresData);
-      
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -85,7 +99,11 @@ export default function TenderResults() {
       case 3:
         return <Award className="w-5 h-5 text-amber-600" />;
       default:
-        return <span className="w-5 h-5 flex items-center justify-center text-sm font-medium">{rank}</span>;
+        return (
+          <span className="w-5 h-5 flex items-center justify-center text-sm font-medium">
+            {rank}
+          </span>
+        );
     }
   };
 
@@ -105,15 +123,16 @@ export default function TenderResults() {
   const handleExport = () => {
     // Simple CSV export
     const csvContent = [
-      'Rank,Bidder Name,Technical Score,Financial Score,Final Score',
-      ...finalScores.map(score => 
-        `${score.rank},"${score.bidderName}",${score.technicalScore},${score.financialScore},${score.finalScore}`
-      )
-    ].join('\n');
+      "Rank,Bidder Name,Technical Score,Financial Score,Final Score",
+      ...finalScores.map(
+        (score) =>
+          `${score.rank},"${score.bidderName}",${score.technicalScore},${score.financialScore},${score.finalScore}`,
+      ),
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `tender-${tenderId}-results.csv`;
     document.body.appendChild(a);
@@ -183,7 +202,9 @@ export default function TenderResults() {
         <CardContent>
           {finalScores.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">No evaluation results available yet.</p>
+              <p className="text-muted-foreground">
+                No evaluation results available yet.
+              </p>
               <p className="text-sm text-muted-foreground mt-2">
                 Results will appear once committee members submit their scores.
               </p>
@@ -198,15 +219,23 @@ export default function TenderResults() {
                   <div className="flex items-center space-x-4">
                     {getRankIcon(score.rank)}
                     <div>
-                      <h3 className="font-semibold text-lg">{score.bidderName}</h3>
+                      <h3 className="font-semibold text-lg">
+                        {score.bidderName}
+                      </h3>
                       <div className="flex space-x-4 text-sm text-muted-foreground">
-                        <span>Technical: {score.technicalScore.toFixed(1)}</span>
-                        <span>Financial: {score.financialScore.toFixed(1)}</span>
+                        <span>
+                          Technical: {score.technicalScore.toFixed(1)}
+                        </span>
+                        <span>
+                          Financial: {score.financialScore.toFixed(1)}
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold">{score.finalScore.toFixed(1)}</div>
+                    <div className="text-2xl font-bold">
+                      {score.finalScore.toFixed(1)}
+                    </div>
                     <Badge variant={score.rank === 1 ? "default" : "secondary"}>
                       Rank #{score.rank}
                     </Badge>
@@ -248,12 +277,22 @@ export default function TenderResults() {
                         <span className="font-medium">#{score.rank}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium">{score.bidderName}</TableCell>
-                    <TableCell className="text-right">{score.technicalScore.toFixed(2)}</TableCell>
-                    <TableCell className="text-right">{score.financialScore.toFixed(2)}</TableCell>
-                    <TableCell className="text-right font-semibold">{score.finalScore.toFixed(2)}</TableCell>
+                    <TableCell className="font-medium">
+                      {score.bidderName}
+                    </TableCell>
                     <TableCell className="text-right">
-                      <Badge variant={score.rank === 1 ? "default" : "secondary"}>
+                      {score.technicalScore.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {score.financialScore.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-right font-semibold">
+                      {score.finalScore.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Badge
+                        variant={score.rank === 1 ? "default" : "secondary"}
+                      >
                         {score.rank === 1 ? "Winner" : "Evaluated"}
                       </Badge>
                     </TableCell>
@@ -271,7 +310,8 @@ export default function TenderResults() {
           <CardHeader>
             <CardTitle>Individual Committee Scores</CardTitle>
             <CardDescription>
-              Raw scores submitted by each committee member ({individualScores.length} submissions)
+              Raw scores submitted by each committee member (
+              {individualScores.length} submissions)
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -288,14 +328,22 @@ export default function TenderResults() {
               <TableBody>
                 {individualScores.map((score) => (
                   <TableRow key={score.id}>
-                    <TableCell className="font-medium">{score.bidderName}</TableCell>
+                    <TableCell className="font-medium">
+                      {score.bidderName}
+                    </TableCell>
                     <TableCell>{score.committeeMemberId}</TableCell>
-                    <TableCell className="text-right">{score.totalScore.toFixed(1)}</TableCell>
+                    <TableCell className="text-right">
+                      {score.totalScore.toFixed(1)}
+                    </TableCell>
                     <TableCell className="text-right">
                       {new Date(score.submittedAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Badge variant={score.status === 'submitted' ? "default" : "secondary"}>
+                      <Badge
+                        variant={
+                          score.status === "submitted" ? "default" : "secondary"
+                        }
+                      >
                         {score.status}
                       </Badge>
                     </TableCell>
@@ -309,10 +357,13 @@ export default function TenderResults() {
 
       {/* Actions */}
       <div className="flex justify-center space-x-4">
-        <Button variant="outline" onClick={() => navigate(`/tender-scoring/${tenderId}`)}>
+        <Button
+          variant="outline"
+          onClick={() => navigate(`/tender-scoring/${tenderId}`)}
+        >
           Add More Scores
         </Button>
-        <Button onClick={() => navigate('/admin-dashboard')}>
+        <Button onClick={() => navigate("/admin-dashboard")}>
           Back to Dashboard
         </Button>
       </div>

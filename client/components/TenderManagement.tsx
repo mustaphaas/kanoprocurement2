@@ -2431,82 +2431,129 @@ const TenderManagement = () => {
                       <div className="p-4 bg-blue-50 rounded-lg">
                         <p className="text-sm text-blue-800">
                           <strong>Individual Committee Member Scoring</strong> -
-                          Each committee member scores bidders independently using the assigned evaluation template.
+                          Each committee member scores bidders independently
+                          using the assigned evaluation template.
                         </p>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {/* Available Tenders for Scoring */}
-                        {tenders.filter(t => t.status === 'Closed' || t.status === 'Evaluation_Complete').slice(0, 6).map((tender) => (
-                          <Card key={tender.id} className="hover:shadow-md transition-shadow">
-                            <CardHeader className="pb-3">
-                              <CardTitle className="text-lg">{tender.title}</CardTitle>
-                              <div className="flex items-center justify-between">
-                                <Badge variant={tender.status === 'Closed' ? 'secondary' : 'default'}>
-                                  {tender.status}
-                                </Badge>
-                                <span className="text-sm text-muted-foreground">ID: {tender.id}</span>
-                              </div>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                              <div className="text-sm space-y-1">
-                                <div><strong>Category:</strong> {tender.category}</div>
-                                <div><strong>Value:</strong> {tender.value}</div>
-                                <div><strong>Closing:</strong> {tender.closingDate}</div>
-                              </div>
+                        {tenders
+                          .filter(
+                            (t) =>
+                              t.status === "Closed" ||
+                              t.status === "Evaluation_Complete",
+                          )
+                          .slice(0, 6)
+                          .map((tender) => (
+                            <Card
+                              key={tender.id}
+                              className="hover:shadow-md transition-shadow"
+                            >
+                              <CardHeader className="pb-3">
+                                <CardTitle className="text-lg">
+                                  {tender.title}
+                                </CardTitle>
+                                <div className="flex items-center justify-between">
+                                  <Badge
+                                    variant={
+                                      tender.status === "Closed"
+                                        ? "secondary"
+                                        : "default"
+                                    }
+                                  >
+                                    {tender.status}
+                                  </Badge>
+                                  <span className="text-sm text-muted-foreground">
+                                    ID: {tender.id}
+                                  </span>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="space-y-3">
+                                <div className="text-sm space-y-1">
+                                  <div>
+                                    <strong>Category:</strong> {tender.category}
+                                  </div>
+                                  <div>
+                                    <strong>Value:</strong> {tender.value}
+                                  </div>
+                                  <div>
+                                    <strong>Closing:</strong>{" "}
+                                    {tender.closingDate}
+                                  </div>
+                                </div>
 
-                              <div className="flex flex-col space-y-2">
-                                <Button
-                                  size="sm"
-                                  className="w-full"
-                                  onClick={() => navigate(`/tender-scoring/${tender.id}`)}
-                                >
-                                  <Calculator className="h-4 w-4 mr-2" />
-                                  Score Tender
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="w-full"
-                                  onClick={() => navigate(`/tender-results/${tender.id}`)}
-                                >
-                                  <Trophy className="h-4 w-4 mr-2" />
-                                  View Results
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
+                                <div className="flex flex-col space-y-2">
+                                  <Button
+                                    size="sm"
+                                    className="w-full"
+                                    onClick={() =>
+                                      navigate(`/tender-scoring/${tender.id}`)
+                                    }
+                                  >
+                                    <Calculator className="h-4 w-4 mr-2" />
+                                    Score Tender
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() =>
+                                      navigate(`/tender-results/${tender.id}`)
+                                    }
+                                  >
+                                    <Trophy className="h-4 w-4 mr-2" />
+                                    View Results
+                                  </Button>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
                       </div>
 
                       {/* Quick Access Section */}
                       <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <h3 className="font-medium text-green-800 mb-3">Quick Access - Healthcare Tenders</h3>
+                        <h3 className="font-medium text-green-800 mb-3">
+                          Quick Access - Healthcare Tenders
+                        </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {['MOH-2024-001', 'MOH-2024-002', 'MOH-2024-003'].map((tenderId) => (
-                            <div key={tenderId} className="flex items-center justify-between p-3 bg-white rounded border">
-                              <div>
-                                <p className="font-medium text-sm">{tenderId}</p>
-                                <p className="text-xs text-muted-foreground">Healthcare Tender</p>
+                          {["MOH-2024-001", "MOH-2024-002", "MOH-2024-003"].map(
+                            (tenderId) => (
+                              <div
+                                key={tenderId}
+                                className="flex items-center justify-between p-3 bg-white rounded border"
+                              >
+                                <div>
+                                  <p className="font-medium text-sm">
+                                    {tenderId}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Healthcare Tender
+                                  </p>
+                                </div>
+                                <div className="flex space-x-1">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      navigate(`/tender-scoring/${tenderId}`)
+                                    }
+                                  >
+                                    <Calculator className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      navigate(`/tender-results/${tenderId}`)
+                                    }
+                                  >
+                                    <Trophy className="h-3 w-3" />
+                                  </Button>
+                                </div>
                               </div>
-                              <div className="flex space-x-1">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => navigate(`/tender-scoring/${tenderId}`)}
-                                >
-                                  <Calculator className="h-3 w-3" />
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => navigate(`/tender-results/${tenderId}`)}
-                                >
-                                  <Trophy className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
+                            ),
+                          )}
                         </div>
                       </div>
                     </TabsContent>

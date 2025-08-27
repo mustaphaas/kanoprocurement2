@@ -1,20 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Save, Send, Calculator, Trophy, FileText } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  Save,
+  Send,
+  Calculator,
+  Trophy,
+  FileText,
+} from "lucide-react";
 
 interface EvaluationCriteria {
   id: number;
   name: string;
   maxScore: number;
   weight?: number;
-  type?: 'technical' | 'financial';
+  type?: "technical" | "financial";
 }
 
 interface EvaluationTemplate {
@@ -44,50 +57,53 @@ interface TenderScore {
 export default function TenderScoring() {
   const { tenderId } = useParams<{ tenderId: string }>();
   const navigate = useNavigate();
-  
+
   const [assignment, setAssignment] = useState<TenderAssignment | null>(null);
   const [template, setTemplate] = useState<EvaluationTemplate | null>(null);
   const [scores, setScores] = useState<Record<number, number>>({});
-  const [bidderName, setBidderName] = useState('');
+  const [bidderName, setBidderName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
-  
-  const currentUserId = 'user123'; // In production, get from auth context
+
+  const currentUserId = "user123"; // In production, get from auth context
 
   useEffect(() => {
     const fetchData = async () => {
       if (!tenderId) return;
-      
+
       try {
         setLoading(true);
-        
+
         // Fetch tender assignment
-        const assignmentResponse = await fetch(`/api/tenders/${tenderId}/assignment`);
+        const assignmentResponse = await fetch(
+          `/api/tenders/${tenderId}/assignment`,
+        );
         if (!assignmentResponse.ok) {
-          throw new Error('Failed to fetch tender assignment');
+          throw new Error("Failed to fetch tender assignment");
         }
         const assignmentData = await assignmentResponse.json();
         setAssignment(assignmentData);
-        
+
         // Fetch evaluation template
-        const templateResponse = await fetch(`/api/evaluation-templates/${assignmentData.evaluationTemplateId}`);
+        const templateResponse = await fetch(
+          `/api/evaluation-templates/${assignmentData.evaluationTemplateId}`,
+        );
         if (!templateResponse.ok) {
-          throw new Error('Failed to fetch evaluation template');
+          throw new Error("Failed to fetch evaluation template");
         }
         const templateData = await templateResponse.json();
         setTemplate(templateData);
-        
+
         // Initialize scores object
         const initialScores: Record<number, number> = {};
         templateData.criteria.forEach((criterion: EvaluationCriteria) => {
           initialScores[criterion.id] = 0;
         });
         setScores(initialScores);
-        
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
         setLoading(false);
       }
@@ -98,17 +114,18 @@ export default function TenderScoring() {
 
   const handleScoreChange = (criteriaId: number, value: string) => {
     const numValue = parseFloat(value) || 0;
-    const maxScore = template?.criteria.find(c => c.id === criteriaId)?.maxScore || 0;
-    
+    const maxScore =
+      template?.criteria.find((c) => c.id === criteriaId)?.maxScore || 0;
+
     if (numValue > maxScore) {
       setError(`Score cannot exceed maximum of ${maxScore}`);
       return;
     }
-    
-    setError('');
-    setScores(prev => ({
+
+    setError("");
+    setScores((prev) => ({
       ...prev,
-      [criteriaId]: numValue
+      [criteriaId]: numValue,
     }));
   };
 
@@ -117,62 +134,68 @@ export default function TenderScoring() {
   };
 
   const calculateMaxTotalScore = () => {
-    return template?.criteria.reduce((total, criterion) => total + criterion.maxScore, 0) || 0;
+    return (
+      template?.criteria.reduce(
+        (total, criterion) => total + criterion.maxScore,
+        0,
+      ) || 0
+    );
   };
 
   const handleSubmit = async () => {
     if (!bidderName.trim()) {
-      setError('Please enter the bidder name');
+      setError("Please enter the bidder name");
       return;
     }
 
     if (!template || !tenderId) {
-      setError('Missing tender or template information');
+      setError("Missing tender or template information");
       return;
     }
 
     // Validate all scores are entered
-    const hasAllScores = template.criteria.every(criterion => scores[criterion.id] > 0);
+    const hasAllScores = template.criteria.every(
+      (criterion) => scores[criterion.id] > 0,
+    );
     if (!hasAllScores) {
-      setError('Please enter scores for all criteria');
+      setError("Please enter scores for all criteria");
       return;
     }
 
     try {
       setIsSubmitting(true);
-      setError('');
+      setError("");
 
       const scoreData: TenderScore = {
         tenderId,
         committeeMemberId: currentUserId,
         bidderName: bidderName.trim(),
-        scores
+        scores,
       };
 
-      const response = await fetch('/api/tender-scores', {
-        method: 'POST',
+      const response = await fetch("/api/tender-scores", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(scoreData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit scores');
+        throw new Error("Failed to submit scores");
       }
 
-      setSuccess('Scores submitted successfully!');
-      
+      setSuccess("Scores submitted successfully!");
+
       // Reset form
-      setBidderName('');
+      setBidderName("");
       const initialScores: Record<number, number> = {};
       template.criteria.forEach((criterion: EvaluationCriteria) => {
         initialScores[criterion.id] = 0;
       });
       setScores(initialScores);
-      
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to submit scores');
+      setError(err instanceof Error ? err.message : "Failed to submit scores");
     } finally {
       setIsSubmitting(false);
     }
@@ -200,7 +223,10 @@ export default function TenderScoring() {
       <div className="container mx-auto p-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Tender Not Found</h1>
-          <p className="text-muted-foreground mb-4">The requested tender could not be found or you don't have access to score it.</p>
+          <p className="text-muted-foreground mb-4">
+            The requested tender could not be found or you don't have access to
+            score it.
+          </p>
           <Button onClick={() => navigate(-1)}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Go Back
@@ -248,7 +274,7 @@ export default function TenderScoring() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 {template.name}
-                <Badge variant="secondary">{template.type || 'QCBS'}</Badge>
+                <Badge variant="secondary">{template.type || "QCBS"}</Badge>
               </CardTitle>
               <CardDescription>{template.description}</CardDescription>
             </CardHeader>
@@ -259,7 +285,8 @@ export default function TenderScoring() {
             <CardHeader>
               <CardTitle>Score Evaluation</CardTitle>
               <CardDescription>
-                Enter scores for each evaluation criterion. Maximum total score: {calculateMaxTotalScore()}
+                Enter scores for each evaluation criterion. Maximum total score:{" "}
+                {calculateMaxTotalScore()}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -279,19 +306,34 @@ export default function TenderScoring() {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Evaluation Criteria</h3>
                 {template.criteria.map((criterion) => (
-                  <div key={criterion.id} className="flex items-center space-x-4 p-4 border rounded-lg">
+                  <div
+                    key={criterion.id}
+                    className="flex items-center space-x-4 p-4 border rounded-lg"
+                  >
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
-                        <Label htmlFor={`score-${criterion.id}`} className="font-medium">
+                        <Label
+                          htmlFor={`score-${criterion.id}`}
+                          className="font-medium"
+                        >
                           {criterion.name}
                         </Label>
-                        <Badge variant={criterion.type === 'financial' ? 'default' : 'secondary'}>
-                          {criterion.type === 'financial' ? 'Financial' : 'Technical'}
+                        <Badge
+                          variant={
+                            criterion.type === "financial"
+                              ? "default"
+                              : "secondary"
+                          }
+                        >
+                          {criterion.type === "financial"
+                            ? "Financial"
+                            : "Technical"}
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">
                         Maximum Score: {criterion.maxScore}
-                        {criterion.weight && ` | Weight: ${(criterion.weight * 100).toFixed(0)}%`}
+                        {criterion.weight &&
+                          ` | Weight: ${(criterion.weight * 100).toFixed(0)}%`}
                       </p>
                     </div>
                     <div className="w-24">
@@ -301,8 +343,10 @@ export default function TenderScoring() {
                         min="0"
                         max={criterion.maxScore}
                         step="0.1"
-                        value={scores[criterion.id] || ''}
-                        onChange={(e) => handleScoreChange(criterion.id, e.target.value)}
+                        value={scores[criterion.id] || ""}
+                        onChange={(e) =>
+                          handleScoreChange(criterion.id, e.target.value)
+                        }
                         placeholder="0"
                       />
                     </div>
@@ -314,7 +358,8 @@ export default function TenderScoring() {
               <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
                 <span className="font-semibold">Total Score:</span>
                 <span className="text-2xl font-bold">
-                  {calculateTotalScore().toFixed(1)} / {calculateMaxTotalScore()}
+                  {calculateTotalScore().toFixed(1)} /{" "}
+                  {calculateMaxTotalScore()}
                 </span>
               </div>
 
@@ -360,35 +405,48 @@ export default function TenderScoring() {
             <CardHeader>
               <CardTitle>Evaluation Template Details</CardTitle>
               <CardDescription>
-                Complete scoring criteria and weightings for this tender evaluation
+                Complete scoring criteria and weightings for this tender
+                evaluation
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="font-medium">Template Name:</span> {template.name}
+                    <span className="font-medium">Template Name:</span>{" "}
+                    {template.name}
                   </div>
                   <div>
-                    <span className="font-medium">Type:</span> {template.type || 'QCBS'}
+                    <span className="font-medium">Type:</span>{" "}
+                    {template.type || "QCBS"}
                   </div>
                   <div className="col-span-2">
-                    <span className="font-medium">Description:</span> {template.description}
+                    <span className="font-medium">Description:</span>{" "}
+                    {template.description}
                   </div>
                 </div>
-                
+
                 <div className="space-y-3">
                   <h4 className="font-medium">Scoring Criteria:</h4>
                   {template.criteria.map((criterion) => (
-                    <div key={criterion.id} className="flex items-center justify-between p-3 border rounded">
+                    <div
+                      key={criterion.id}
+                      className="flex items-center justify-between p-3 border rounded"
+                    >
                       <div>
                         <span className="font-medium">{criterion.name}</span>
                         <span className="text-sm text-muted-foreground ml-2">
-                          ({criterion.type === 'financial' ? 'Financial' : 'Technical'})
+                          (
+                          {criterion.type === "financial"
+                            ? "Financial"
+                            : "Technical"}
+                          )
                         </span>
                       </div>
                       <div className="text-right">
-                        <div className="font-medium">{criterion.maxScore} points</div>
+                        <div className="font-medium">
+                          {criterion.maxScore} points
+                        </div>
                         {criterion.weight && (
                           <div className="text-sm text-muted-foreground">
                             {(criterion.weight * 100).toFixed(0)}% weight

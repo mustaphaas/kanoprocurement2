@@ -121,7 +121,7 @@ export interface EvaluationCriteria {
   name: string;
   maxScore: number;
   weight?: number;
-  type?: 'technical' | 'financial';
+  type?: "technical" | "financial";
 }
 
 export interface EvaluationTemplate {
