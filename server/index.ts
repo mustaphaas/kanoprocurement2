@@ -15,6 +15,7 @@ import {
 } from "./routes/committee-assignments";
 import {
   submitTenderScore,
+  submitEvaluatorScore,
   getTenderScores,
   getTenderFinalScores,
   getTenderAssignment,
@@ -47,6 +48,7 @@ export function createServer() {
 
   // Tender scoring API routes
   app.post("/api/tender-scores", submitTenderScore);
+  app.post("/api/evaluator-scores", submitEvaluatorScore);
   app.get("/api/tenders/:tenderId/scores", getTenderScores);
   app.get("/api/tenders/:tenderId/final-scores", getTenderFinalScores);
   app.get("/api/tenders/:tenderId/assignment", getTenderAssignment);
