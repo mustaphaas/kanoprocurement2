@@ -87,8 +87,28 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     }
   };
 
+  // Initialize missing company statuses if they don't exist
+  const initializeCompanyStatuses = () => {
+    const defaultCompanyStatuses = [
+      { email: "ahmad@northernconstruction.com", status: "Approved" },
+      { email: "approved@company.com", status: "Approved" },
+      { email: "suspended@company.com", status: "Suspended" },
+      { email: "blacklisted@company.com", status: "Blacklisted" },
+      { email: "pending@company.com", status: "Pending" },
+    ];
+
+    defaultCompanyStatuses.forEach(({ email, status }) => {
+      const key = `userStatus_${email}`;
+      if (!persistentStorage.getItem(key)) {
+        persistentStorage.setItem(key, status);
+        console.log(`✅ Initialized ${key} = ${status}`);
+      }
+    });
+  };
+
   // Load bidders when component mounts
   useEffect(() => {
+    initializeCompanyStatuses();
     loadBidders();
   }, []);
 
