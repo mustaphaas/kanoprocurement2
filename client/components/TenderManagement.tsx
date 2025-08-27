@@ -209,10 +209,6 @@ const TenderManagement = () => {
   // Evaluation state management
   const [selectedTenderForEvaluation, setSelectedTenderForEvaluation] =
     useState("MOH-2024-001");
-  const [evaluationMode, setEvaluationMode] = useState<
-    "individual" | "collective"
-  >("individual");
-  const [currentEvaluator, setCurrentEvaluator] = useState("Dr. Amina Hassan");
   const [evaluatorScores, setEvaluatorScores] = useState<any>({});
   const [evaluationStatus, setEvaluationStatus] = useState<any>({});
   const [showConsolidatedReport, setShowConsolidatedReport] = useState(false);
@@ -2020,66 +2016,6 @@ const TenderManagement = () => {
             </CardContent>
           </Card>
 
-          {/* Mode Selection */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="h-5 w-5 text-purple-600" />
-                Evaluation Mode
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-4">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="individual"
-                    checked={evaluationMode === "individual"}
-                    onChange={() => setEvaluationMode("individual")}
-                    className="text-blue-600"
-                  />
-                  <Label htmlFor="individual">
-                    Individual Entry - Each evaluator logs in separately
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="collective"
-                    checked={evaluationMode === "collective"}
-                    onChange={() => setEvaluationMode("collective")}
-                    className="text-blue-600"
-                  />
-                  <Label htmlFor="collective">
-                    Collective Entry - One person enters for all
-                  </Label>
-                </div>
-              </div>
-
-              {evaluationMode === "individual" && (
-                <div className="mt-4">
-                  <Label className="text-sm font-medium">
-                    Current Evaluator
-                  </Label>
-                  <Select
-                    value={currentEvaluator}
-                    onValueChange={setCurrentEvaluator}
-                  >
-                    <SelectTrigger className="w-64">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {mockTenderInfo.committeMembers.map((member) => (
-                        <SelectItem key={member.id} value={member.name}>
-                          {member.name} - {member.role}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </CardContent>
-          </Card>
 
           {/* 2️⃣ Committee Scoring Section */}
           <Card>
@@ -2087,11 +2023,6 @@ const TenderManagement = () => {
               <CardTitle className="flex items-center gap-2">
                 <Calculator className="h-5 w-5 text-green-600" />
                 Committee Scoring
-                {evaluationMode === "individual" && (
-                  <Badge className="bg-green-100 text-green-800">
-                    {currentEvaluator}
-                  </Badge>
-                )}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -2126,10 +2057,7 @@ const TenderManagement = () => {
                         </thead>
                         <tbody>
                           {mockEvaluationCriteria.map((criterion) => {
-                            const currentEvaluatorId =
-                              mockTenderInfo.committeMembers.find(
-                                (m) => m.name === currentEvaluator,
-                              )?.id || "evaluator1";
+                            const currentEvaluatorId = "evaluator1"; // Default to first evaluator
                             const currentScore =
                               evaluatorScores[currentEvaluatorId]?.[
                                 criterion.id
@@ -2385,10 +2313,7 @@ const TenderManagement = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    const currentEvaluatorId =
-                      mockTenderInfo.committeMembers.find(
-                        (m) => m.name === currentEvaluator,
-                      )?.id || "evaluator1";
+                    const currentEvaluatorId = "evaluator1"; // Default to first evaluator
                     saveEvaluatorDraft(currentEvaluatorId);
                   }}
                 >
@@ -2398,10 +2323,7 @@ const TenderManagement = () => {
 
                 <Button
                   onClick={() => {
-                    const currentEvaluatorId =
-                      mockTenderInfo.committeMembers.find(
-                        (m) => m.name === currentEvaluator,
-                      )?.id || "evaluator1";
+                    const currentEvaluatorId = "evaluator1"; // Default to first evaluator
                     submitEvaluatorScores(currentEvaluatorId);
                   }}
                   className="bg-blue-600 hover:bg-blue-700"
