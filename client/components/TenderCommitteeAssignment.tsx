@@ -1301,19 +1301,54 @@ export default function TenderCommitteeAssignment() {
   // API fetch functions
   const fetchCommitteeTemplates = async () => {
     try {
-      const response = await fetch('/api/committee-templates');
-      if (response.ok) {
-        const templates = await response.json();
-        setCommitteeTemplates(templates);
-        console.log('Fetched committee templates from API:', templates);
-      } else {
-        console.error('Failed to fetch committee templates from API');
-        // Fallback to loadCommitteeTemplates if API fails
-        loadCommitteeTemplates();
+      // Get API templates
+      let apiTemplates: CommitteeTemplate[] = [];
+      try {
+        const response = await fetch('/api/committee-templates');
+        if (response.ok) {
+          apiTemplates = await response.json();
+          console.log('🌐 Fetched committee templates from API:', apiTemplates);
+        }
+      } catch (apiError) {
+        console.log('⚠️ API not available for committee templates, using local only');
       }
+
+      // Get localStorage templates
+      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
+
+      const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
+      const storedTemplates = localStorage.getItem(templatesKey);
+      let localTemplates: CommitteeTemplate[] = [];
+
+      if (storedTemplates) {
+        const parsedTemplates = JSON.parse(storedTemplates);
+        // Filter local templates for ministry
+        localTemplates = parsedTemplates.filter((template: any) => {
+          const belongsToMinistry =
+            template.id?.startsWith(ministryCode) ||
+            (ministryCode === "MOH" && template.category === "Healthcare") ||
+            (ministryCode === "MOWI" && template.category === "Infrastructure") ||
+            (ministryCode === "MOE" && template.category === "Education");
+          return belongsToMinistry;
+        });
+        console.log('💾 Loaded local committee templates:', localTemplates);
+      }
+
+      // Combine both sources, avoiding duplicates by ID
+      const allTemplates = [...apiTemplates];
+      localTemplates.forEach(localTemplate => {
+        if (!allTemplates.find(t => t.id === localTemplate.id)) {
+          allTemplates.push(localTemplate);
+        }
+      });
+
+      setCommitteeTemplates(allTemplates);
+      console.log('✅ Combined committee templates (API + Local):', allTemplates);
+
     } catch (error) {
       console.error('Error fetching committee templates:', error);
-      // Fallback to loadCommitteeTemplates if API fails
+      // Final fallback to loadCommitteeTemplates
       loadCommitteeTemplates();
     }
   };
