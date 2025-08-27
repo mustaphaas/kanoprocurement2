@@ -728,8 +728,9 @@ export default function CommitteeTemplates() {
     setTemplates(updatedTemplates);
     saveTemplates(updatedTemplates);
 
-    console.log("Created new template:", newTemplate);
-    console.log("Updated templates list:", updatedTemplates);
+    console.log("🆕 Created new template:", newTemplate);
+    console.log("📋 Updated templates list:", updatedTemplates);
+    console.log("🏛️ Ministry code used in template ID:", ministryCode);
 
     setTemplateForm({
       name: "",
