@@ -70,10 +70,40 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
 export const getEvaluationTemplates: RequestHandler = (req, res) => {
   try {
     // In a real application, this would fetch from a database
-    // For now, return mock data
+    // For now, return mock data plus any created templates
     res.json(mockEvaluationTemplates);
   } catch (error) {
     console.error("Error fetching evaluation templates:", error);
     res.status(500).json({ error: "Failed to fetch evaluation templates" });
+  }
+};
+
+export const createEvaluationTemplate: RequestHandler = (req, res) => {
+  try {
+    const { name, description, category, type } = req.body;
+
+    // Validate required fields
+    if (!name) {
+      return res.status(400).json({ error: "Name is required" });
+    }
+
+    // Create new evaluation template
+    const newTemplate: EvaluationTemplate = {
+      id: `ET-${Date.now()}`,
+      name,
+      description: description || "",
+      category: category || "General",
+      type: type || "QCBS"
+    };
+
+    // Add to mock data (in production, save to database)
+    mockEvaluationTemplates.push(newTemplate);
+
+    console.log("Created new evaluation template:", newTemplate);
+
+    res.status(201).json(newTemplate);
+  } catch (error) {
+    console.error("Error creating evaluation template:", error);
+    res.status(500).json({ error: "Failed to create evaluation template" });
   }
 };
