@@ -2267,12 +2267,16 @@ export default function TenderCommitteeAssignment() {
                     <SelectItem key={template.id} value={template.id}>
                       <div className="flex flex-col items-start">
                         <span className="font-medium">{template.name}</span>
-                        <span className="text-sm text-gray-600">
-                          {template.description}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {template.category} • {template.status}
-                        </span>
+                        {template.description && (
+                          <span className="text-sm text-gray-600">
+                            {template.description}
+                          </span>
+                        )}
+                        {(template.category || template.status) && (
+                          <span className="text-xs text-gray-500">
+                            {template.category} {template.status && `• ${template.status}`}
+                          </span>
+                        )}
                       </div>
                     </SelectItem>
                   ))}
