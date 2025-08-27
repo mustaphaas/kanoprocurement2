@@ -207,8 +207,11 @@ const TenderManagement = () => {
   const [showEvaluationModal, setShowEvaluationModal] = useState(false);
 
   // Evaluation state management
-  const [selectedTenderForEvaluation, setSelectedTenderForEvaluation] = useState("MOH-2024-001");
-  const [evaluationMode, setEvaluationMode] = useState<"individual" | "collective">("individual");
+  const [selectedTenderForEvaluation, setSelectedTenderForEvaluation] =
+    useState("MOH-2024-001");
+  const [evaluationMode, setEvaluationMode] = useState<
+    "individual" | "collective"
+  >("individual");
   const [currentEvaluator, setCurrentEvaluator] = useState("Dr. Amina Hassan");
   const [evaluatorScores, setEvaluatorScores] = useState<any>({});
   const [evaluationStatus, setEvaluationStatus] = useState<any>({});
@@ -222,27 +225,90 @@ const TenderManagement = () => {
     evaluationStartDate: "2024-03-01",
     evaluationEndDate: "2024-03-15",
     committeMembers: [
-      { id: "evaluator1", name: "Dr. Amina Hassan", role: "Chairperson", status: "submitted" },
-      { id: "evaluator2", name: "Eng. Musa Ibrahim", role: "Technical Secretary", status: "draft" },
-      { id: "evaluator3", name: "Dr. Fatima Yusuf", role: "Clinical Evaluator", status: "submitted" },
-      { id: "evaluator4", name: "Bala Ahmed", role: "Financial Analyst", status: "draft" },
-      { id: "evaluator5", name: "Mary Luka", role: "Procurement Expert", status: "submitted" }
-    ]
+      {
+        id: "evaluator1",
+        name: "Dr. Amina Hassan",
+        role: "Chairperson",
+        status: "submitted",
+      },
+      {
+        id: "evaluator2",
+        name: "Eng. Musa Ibrahim",
+        role: "Technical Secretary",
+        status: "draft",
+      },
+      {
+        id: "evaluator3",
+        name: "Dr. Fatima Yusuf",
+        role: "Clinical Evaluator",
+        status: "submitted",
+      },
+      {
+        id: "evaluator4",
+        name: "Bala Ahmed",
+        role: "Financial Analyst",
+        status: "draft",
+      },
+      {
+        id: "evaluator5",
+        name: "Mary Luka",
+        role: "Procurement Expert",
+        status: "submitted",
+      },
+    ],
   };
 
   const mockEvaluationCriteria = [
-    { id: "tech1", criterion: "Equipment Quality & Specifications", maxScore: 25, weight: 0.25 },
-    { id: "tech2", criterion: "Vendor Experience & Track Record", maxScore: 20, weight: 0.20 },
-    { id: "tech3", criterion: "Technical Support & Maintenance", maxScore: 15, weight: 0.15 },
-    { id: "tech4", criterion: "Delivery Timeline & Implementation", maxScore: 15, weight: 0.15 },
-    { id: "tech5", criterion: "Local Content & Compliance", maxScore: 10, weight: 0.10 },
-    { id: "fin1", criterion: "Cost Competitiveness", maxScore: 15, weight: 0.15 }
+    {
+      id: "tech1",
+      criterion: "Equipment Quality & Specifications",
+      maxScore: 25,
+      weight: 0.25,
+    },
+    {
+      id: "tech2",
+      criterion: "Vendor Experience & Track Record",
+      maxScore: 20,
+      weight: 0.2,
+    },
+    {
+      id: "tech3",
+      criterion: "Technical Support & Maintenance",
+      maxScore: 15,
+      weight: 0.15,
+    },
+    {
+      id: "tech4",
+      criterion: "Delivery Timeline & Implementation",
+      maxScore: 15,
+      weight: 0.15,
+    },
+    {
+      id: "tech5",
+      criterion: "Local Content & Compliance",
+      maxScore: 10,
+      weight: 0.1,
+    },
+    {
+      id: "fin1",
+      criterion: "Cost Competitiveness",
+      maxScore: 15,
+      weight: 0.15,
+    },
   ];
 
   const mockBidders = [
     { id: "bidder1", name: "MedTech Solutions Ltd", financialOffer: 850000000 },
-    { id: "bidder2", name: "HealthCare Equipment Co", financialOffer: 920000000 },
-    { id: "bidder3", name: "Advanced Medical Systems", financialOffer: 780000000 }
+    {
+      id: "bidder2",
+      name: "HealthCare Equipment Co",
+      financialOffer: 920000000,
+    },
+    {
+      id: "bidder3",
+      name: "Advanced Medical Systems",
+      financialOffer: 780000000,
+    },
   ];
 
   // Function to get bid count for a specific tender
@@ -274,13 +340,18 @@ const TenderManagement = () => {
   };
 
   // Evaluation helper functions
-  const updateEvaluatorScore = (evaluatorId: string, criterionId: string, score: number, comment: string) => {
-    setEvaluatorScores(prev => ({
+  const updateEvaluatorScore = (
+    evaluatorId: string,
+    criterionId: string,
+    score: number,
+    comment: string,
+  ) => {
+    setEvaluatorScores((prev) => ({
       ...prev,
       [evaluatorId]: {
         ...prev[evaluatorId],
-        [criterionId]: { score, comment }
-      }
+        [criterionId]: { score, comment },
+      },
     }));
   };
 
@@ -294,23 +365,25 @@ const TenderManagement = () => {
 
   const calculateAverageScore = (criterionId: string) => {
     const allScores = mockTenderInfo.committeMembers
-      .map(member => evaluatorScores[member.id]?.[criterionId]?.score || 0)
-      .filter(score => score > 0);
-    return allScores.length > 0 ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length : 0;
+      .map((member) => evaluatorScores[member.id]?.[criterionId]?.score || 0)
+      .filter((score) => score > 0);
+    return allScores.length > 0
+      ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length
+      : 0;
   };
 
   const saveEvaluatorDraft = (evaluatorId: string) => {
-    setEvaluationStatus(prev => ({
+    setEvaluationStatus((prev) => ({
       ...prev,
-      [evaluatorId]: "draft"
+      [evaluatorId]: "draft",
     }));
     alert("Evaluation saved as draft");
   };
 
   const submitEvaluatorScores = (evaluatorId: string) => {
-    setEvaluationStatus(prev => ({
+    setEvaluationStatus((prev) => ({
       ...prev,
-      [evaluatorId]: "submitted"
+      [evaluatorId]: "submitted",
     }));
     alert("Evaluation submitted successfully");
   };
@@ -1899,28 +1972,43 @@ const TenderManagement = () => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Tender Title</Label>
-                  <p className="font-semibold text-lg">{mockTenderInfo.title}</p>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Tender Title
+                  </Label>
+                  <p className="font-semibold text-lg">
+                    {mockTenderInfo.title}
+                  </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Category</Label>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Category
+                  </Label>
                   <p className="font-semibold">{mockTenderInfo.category}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Evaluation Period</Label>
-                  <p className="font-semibold">{mockTenderInfo.evaluationStartDate} - {mockTenderInfo.evaluationEndDate}</p>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Evaluation Period
+                  </Label>
+                  <p className="font-semibold">
+                    {mockTenderInfo.evaluationStartDate} -{" "}
+                    {mockTenderInfo.evaluationEndDate}
+                  </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Committee Members</Label>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Committee Members
+                  </Label>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {mockTenderInfo.committeMembers.map((member, index) => (
                       <Badge
                         key={index}
                         variant="outline"
                         className={`text-xs ${
-                          member.status === 'submitted' ? 'bg-green-50 text-green-700 border-green-200' :
-                          member.status === 'draft' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
-                          'bg-gray-50 text-gray-700 border-gray-200'
+                          member.status === "submitted"
+                            ? "bg-green-50 text-green-700 border-green-200"
+                            : member.status === "draft"
+                              ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                              : "bg-gray-50 text-gray-700 border-gray-200"
                         }`}
                       >
                         {member.name}
@@ -1950,7 +2038,9 @@ const TenderManagement = () => {
                     onChange={() => setEvaluationMode("individual")}
                     className="text-blue-600"
                   />
-                  <Label htmlFor="individual">Individual Entry - Each evaluator logs in separately</Label>
+                  <Label htmlFor="individual">
+                    Individual Entry - Each evaluator logs in separately
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <input
@@ -1960,20 +2050,29 @@ const TenderManagement = () => {
                     onChange={() => setEvaluationMode("collective")}
                     className="text-blue-600"
                   />
-                  <Label htmlFor="collective">Collective Entry - One person enters for all</Label>
+                  <Label htmlFor="collective">
+                    Collective Entry - One person enters for all
+                  </Label>
                 </div>
               </div>
 
               {evaluationMode === "individual" && (
                 <div className="mt-4">
-                  <Label className="text-sm font-medium">Current Evaluator</Label>
-                  <Select value={currentEvaluator} onValueChange={setCurrentEvaluator}>
+                  <Label className="text-sm font-medium">
+                    Current Evaluator
+                  </Label>
+                  <Select
+                    value={currentEvaluator}
+                    onValueChange={setCurrentEvaluator}
+                  >
                     <SelectTrigger className="w-64">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {mockTenderInfo.committeMembers.map((member) => (
-                        <SelectItem key={member.id} value={member.name}>{member.name} - {member.role}</SelectItem>
+                        <SelectItem key={member.id} value={member.name}>
+                          {member.name} - {member.role}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -2002,41 +2101,69 @@ const TenderManagement = () => {
                     <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
                       <Building className="h-5 w-5 text-blue-600" />
                       {bidder.name}
-                      <Badge variant="outline">₦{bidder.financialOffer.toLocaleString()}</Badge>
+                      <Badge variant="outline">
+                        ₦{bidder.financialOffer.toLocaleString()}
+                      </Badge>
                     </h3>
 
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse">
                         <thead>
                           <tr className="border-b bg-gray-50">
-                            <th className="text-left p-3 font-medium">Criterion</th>
-                            <th className="text-center p-3 font-medium w-24">Max Score</th>
-                            <th className="text-center p-3 font-medium w-24">Score</th>
-                            <th className="text-left p-3 font-medium">Comments/Justification</th>
+                            <th className="text-left p-3 font-medium">
+                              Criterion
+                            </th>
+                            <th className="text-center p-3 font-medium w-24">
+                              Max Score
+                            </th>
+                            <th className="text-center p-3 font-medium w-24">
+                              Score
+                            </th>
+                            <th className="text-left p-3 font-medium">
+                              Comments/Justification
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
                           {mockEvaluationCriteria.map((criterion) => {
-                            const currentEvaluatorId = mockTenderInfo.committeMembers.find(m => m.name === currentEvaluator)?.id || "evaluator1";
-                            const currentScore = evaluatorScores[currentEvaluatorId]?.[criterion.id]?.score || 0;
-                            const currentComment = evaluatorScores[currentEvaluatorId]?.[criterion.id]?.comment || "";
+                            const currentEvaluatorId =
+                              mockTenderInfo.committeMembers.find(
+                                (m) => m.name === currentEvaluator,
+                              )?.id || "evaluator1";
+                            const currentScore =
+                              evaluatorScores[currentEvaluatorId]?.[
+                                criterion.id
+                              ]?.score || 0;
+                            const currentComment =
+                              evaluatorScores[currentEvaluatorId]?.[
+                                criterion.id
+                              ]?.comment || "";
 
                             return (
-                              <tr key={criterion.id} className="border-b hover:bg-gray-50">
-                                <td className="p-3 font-medium">{criterion.criterion}</td>
-                                <td className="p-3 text-center font-semibold text-blue-600">{criterion.maxScore}</td>
+                              <tr
+                                key={criterion.id}
+                                className="border-b hover:bg-gray-50"
+                              >
+                                <td className="p-3 font-medium">
+                                  {criterion.criterion}
+                                </td>
+                                <td className="p-3 text-center font-semibold text-blue-600">
+                                  {criterion.maxScore}
+                                </td>
                                 <td className="p-3">
                                   <Input
                                     type="number"
                                     min="0"
                                     max={criterion.maxScore}
                                     value={currentScore}
-                                    onChange={(e) => updateEvaluatorScore(
-                                      currentEvaluatorId,
-                                      criterion.id,
-                                      parseInt(e.target.value) || 0,
-                                      currentComment
-                                    )}
+                                    onChange={(e) =>
+                                      updateEvaluatorScore(
+                                        currentEvaluatorId,
+                                        criterion.id,
+                                        parseInt(e.target.value) || 0,
+                                        currentComment,
+                                      )
+                                    }
                                     className="w-20 text-center"
                                   />
                                 </td>
@@ -2044,12 +2171,14 @@ const TenderManagement = () => {
                                   <Textarea
                                     placeholder="Enter justification for this score..."
                                     value={currentComment}
-                                    onChange={(e) => updateEvaluatorScore(
-                                      currentEvaluatorId,
-                                      criterion.id,
-                                      currentScore,
-                                      e.target.value
-                                    )}
+                                    onChange={(e) =>
+                                      updateEvaluatorScore(
+                                        currentEvaluatorId,
+                                        criterion.id,
+                                        currentScore,
+                                        e.target.value,
+                                      )
+                                    }
                                     className="min-h-[60px]"
                                   />
                                 </td>
@@ -2077,18 +2206,31 @@ const TenderManagement = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Individual Totals */}
                 <div>
-                  <h3 className="font-semibold mb-3">Individual Evaluator Totals</h3>
+                  <h3 className="font-semibold mb-3">
+                    Individual Evaluator Totals
+                  </h3>
                   <div className="space-y-2">
                     {mockTenderInfo.committeMembers.map((member) => {
                       const total = calculateTotalScore(member.id);
                       return (
-                        <div key={member.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <div
+                          key={member.id}
+                          className="flex justify-between items-center p-2 bg-gray-50 rounded"
+                        >
                           <span className="font-medium">{member.name}</span>
                           <div className="flex items-center gap-2">
-                            <Badge variant={member.status === 'submitted' ? 'default' : 'secondary'}>
+                            <Badge
+                              variant={
+                                member.status === "submitted"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                            >
                               {member.status}
                             </Badge>
-                            <span className="font-bold text-blue-600">{total}/100</span>
+                            <span className="font-bold text-blue-600">
+                              {total}/100
+                            </span>
                           </div>
                         </div>
                       );
@@ -2098,14 +2240,21 @@ const TenderManagement = () => {
 
                 {/* Criteria Averages */}
                 <div>
-                  <h3 className="font-semibold mb-3">Average Scores by Criterion</h3>
+                  <h3 className="font-semibold mb-3">
+                    Average Scores by Criterion
+                  </h3>
                   <div className="space-y-2">
                     {mockEvaluationCriteria.map((criterion) => {
                       const avgScore = calculateAverageScore(criterion.id);
                       return (
-                        <div key={criterion.id} className="flex justify-between items-center p-2 bg-gray-50 rounded text-sm">
+                        <div
+                          key={criterion.id}
+                          className="flex justify-between items-center p-2 bg-gray-50 rounded text-sm"
+                        >
                           <span>{criterion.criterion}</span>
-                          <span className="font-bold text-green-600">{avgScore.toFixed(1)}/{criterion.maxScore}</span>
+                          <span className="font-bold text-green-600">
+                            {avgScore.toFixed(1)}/{criterion.maxScore}
+                          </span>
                         </div>
                       );
                     })}
@@ -2128,31 +2277,50 @@ const TenderManagement = () => {
                 <div className="space-y-6">
                   {/* Bidder Rankings */}
                   <div>
-                    <h3 className="font-semibold mb-3">Final Bidder Rankings</h3>
+                    <h3 className="font-semibold mb-3">
+                      Final Bidder Rankings
+                    </h3>
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse border">
                         <thead>
                           <tr className="bg-gray-50">
                             <th className="border p-3 text-left">Rank</th>
                             <th className="border p-3 text-left">Bidder</th>
-                            <th className="border p-3 text-center">Technical Score</th>
-                            <th className="border p-3 text-center">Financial Score</th>
-                            <th className="border p-3 text-center">Total Score</th>
+                            <th className="border p-3 text-center">
+                              Technical Score
+                            </th>
+                            <th className="border p-3 text-center">
+                              Financial Score
+                            </th>
+                            <th className="border p-3 text-center">
+                              Total Score
+                            </th>
                             <th className="border p-3 text-center">Status</th>
                           </tr>
                         </thead>
                         <tbody>
                           {mockBidders.map((bidder, index) => (
-                            <tr key={bidder.id} className={index === 0 ? "bg-green-50" : ""}>
+                            <tr
+                              key={bidder.id}
+                              className={index === 0 ? "bg-green-50" : ""}
+                            >
                               <td className="border p-3 font-bold">
                                 {index === 0 && "🥇"} {index + 1}
                               </td>
-                              <td className="border p-3 font-medium">{bidder.name}</td>
+                              <td className="border p-3 font-medium">
+                                {bidder.name}
+                              </td>
                               <td className="border p-3 text-center">75.2</td>
                               <td className="border p-3 text-center">18.5</td>
-                              <td className="border p-3 text-center font-bold text-green-600">93.7</td>
+                              <td className="border p-3 text-center font-bold text-green-600">
+                                93.7
+                              </td>
                               <td className="border p-3 text-center">
-                                <Badge variant={index === 0 ? "default" : "secondary"}>
+                                <Badge
+                                  variant={
+                                    index === 0 ? "default" : "secondary"
+                                  }
+                                >
                                   {index === 0 ? "Recommended" : "Not Selected"}
                                 </Badge>
                               </td>
@@ -2165,7 +2333,9 @@ const TenderManagement = () => {
 
                   {/* Detailed Scores */}
                   <div>
-                    <h3 className="font-semibold mb-3">Detailed Individual Scores</h3>
+                    <h3 className="font-semibold mb-3">
+                      Detailed Individual Scores
+                    </h3>
                     <div className="grid gap-4">
                       {mockBidders.map((bidder) => (
                         <Card key={bidder.id} className="p-4">
@@ -2175,10 +2345,18 @@ const TenderManagement = () => {
                               <div key={evaluator.id} className="space-y-1">
                                 <p className="font-medium">{evaluator.name}</p>
                                 {mockEvaluationCriteria.map((criterion) => (
-                                  <div key={criterion.id} className="flex justify-between">
-                                    <span className="text-gray-600">{criterion.criterion.substring(0, 20)}...</span>
+                                  <div
+                                    key={criterion.id}
+                                    className="flex justify-between"
+                                  >
+                                    <span className="text-gray-600">
+                                      {criterion.criterion.substring(0, 20)}...
+                                    </span>
                                     <span className="font-medium">
-                                      {evaluatorScores[evaluator.id]?.[criterion.id]?.score || 0}/{criterion.maxScore}
+                                      {evaluatorScores[evaluator.id]?.[
+                                        criterion.id
+                                      ]?.score || 0}
+                                      /{criterion.maxScore}
                                     </span>
                                   </div>
                                 ))}
@@ -2207,7 +2385,10 @@ const TenderManagement = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    const currentEvaluatorId = mockTenderInfo.committeMembers.find(m => m.name === currentEvaluator)?.id || "evaluator1";
+                    const currentEvaluatorId =
+                      mockTenderInfo.committeMembers.find(
+                        (m) => m.name === currentEvaluator,
+                      )?.id || "evaluator1";
                     saveEvaluatorDraft(currentEvaluatorId);
                   }}
                 >
@@ -2217,7 +2398,10 @@ const TenderManagement = () => {
 
                 <Button
                   onClick={() => {
-                    const currentEvaluatorId = mockTenderInfo.committeMembers.find(m => m.name === currentEvaluator)?.id || "evaluator1";
+                    const currentEvaluatorId =
+                      mockTenderInfo.committeMembers.find(
+                        (m) => m.name === currentEvaluator,
+                      )?.id || "evaluator1";
                     submitEvaluatorScores(currentEvaluatorId);
                   }}
                   className="bg-blue-600 hover:bg-blue-700"
@@ -2228,11 +2412,13 @@ const TenderManagement = () => {
 
                 <Button
                   variant="outline"
-                  onClick={() => setShowConsolidatedReport(!showConsolidatedReport)}
+                  onClick={() =>
+                    setShowConsolidatedReport(!showConsolidatedReport)
+                  }
                   className="border-green-300 text-green-700 hover:bg-green-50"
                 >
                   <Eye className="h-4 w-4 mr-2" />
-                  {showConsolidatedReport ? 'Hide' : 'Show'} Consolidated Report
+                  {showConsolidatedReport ? "Hide" : "Show"} Consolidated Report
                 </Button>
 
                 <Button
@@ -2255,19 +2441,42 @@ const TenderManagement = () => {
 
               {/* Status Summary */}
               <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold mb-2">Evaluation Status Summary</h4>
+                <h4 className="font-semibold mb-2">
+                  Evaluation Status Summary
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span>Submitted: {mockTenderInfo.committeMembers.filter(m => m.status === 'submitted').length}</span>
+                    <span>
+                      Submitted:{" "}
+                      {
+                        mockTenderInfo.committeMembers.filter(
+                          (m) => m.status === "submitted",
+                        ).length
+                      }
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <span>Draft: {mockTenderInfo.committeMembers.filter(m => m.status === 'draft').length}</span>
+                    <span>
+                      Draft:{" "}
+                      {
+                        mockTenderInfo.committeMembers.filter(
+                          (m) => m.status === "draft",
+                        ).length
+                      }
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-                    <span>Pending: {mockTenderInfo.committeMembers.filter(m => m.status === 'pending').length}</span>
+                    <span>
+                      Pending:{" "}
+                      {
+                        mockTenderInfo.committeMembers.filter(
+                          (m) => m.status === "pending",
+                        ).length
+                      }
+                    </span>
                   </div>
                 </div>
               </div>
