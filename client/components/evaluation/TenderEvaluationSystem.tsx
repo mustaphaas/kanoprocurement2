@@ -106,6 +106,35 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     });
   };
 
+  // Add global debugging functions
+  useEffect(() => {
+    // Global debug function for tender evaluation
+    (window as any).debugTenderEvaluation = () => {
+      console.log("=== TENDER EVALUATION DEBUG ===");
+      console.log("Selected Tender:", selectedTender);
+      console.log("Assigned Tenders:", assignedTenders);
+      console.log("Total Bidders:", bidders);
+      console.log("Filtered Bidders:", filteredBidders);
+      console.log("localStorage tenderBids:", localStorage.getItem("tenderBids"));
+      console.log("localStorage recentTenders:", localStorage.getItem("recentTenders"));
+      console.log("Evaluation Template:", evaluationTemplate);
+    };
+
+    // Function to fix missing bidder data
+    (window as any).fixTenderBidderIssue = () => {
+      console.log("🛠️ Fixing tender bidder data...");
+      loadBidders();
+      initializeCompanyStatuses();
+      console.log("✅ Tender bidder data refreshed");
+    };
+
+    return () => {
+      // Cleanup global functions
+      delete (window as any).debugTenderEvaluation;
+      delete (window as any).fixTenderBidderIssue;
+    };
+  }, [selectedTender, assignedTenders, bidders, filteredBidders, evaluationTemplate]);
+
   // Load bidders when component mounts
   useEffect(() => {
     initializeCompanyStatuses();
