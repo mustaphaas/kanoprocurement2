@@ -10,6 +10,7 @@ import {
   Save,
 } from "lucide-react";
 import { EvaluationTemplate, TenderAssignment } from "@shared/api";
+import { persistentStorage } from "../../lib/persistentStorage";
 
 interface TenderEvaluationSystemProps {
   assignedTenders: TenderAssignment[];
