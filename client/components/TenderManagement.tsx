@@ -1885,331 +1885,392 @@ const TenderManagement = () => {
 
         {/* Tender Evaluation */}
         <TabsContent value="evaluation" className="space-y-6">
-          {/* Committee Scoring with Sub-tabs */}
-          <Card>
+          {/* 1️⃣ Tender Information Header */}
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calculator className="h-5 w-5 text-blue-600" />
-                Committee Scoring
+              <CardTitle className="flex items-center gap-2 text-blue-900">
+                <FileText className="h-6 w-6" />
+                Tender Information
                 <Badge className="bg-blue-100 text-blue-800">
-                  Evaluation Workspace
+                  {mockTenderInfo.id}
                 </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Sub-tabs for Committee Scoring */}
-              <Tabs defaultValue="individual" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="individual">
-                    🔸 Individual Scoring
-                  </TabsTrigger>
-                  <TabsTrigger value="review">
-                    🔸 Committee Review
-                  </TabsTrigger>
-                  <TabsTrigger value="results">
-                    🔸 Final Results
-                  </TabsTrigger>
-                </TabsList>
-
-                {/* Individual Scoring Tab */}
-                <TabsContent value="individual" className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-800">
-                      <strong>Individual Committee Member Scoring</strong> -
-                      Each committee member scores bidders independently
-                      using the assigned evaluation template.
-                    </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Tender Title</Label>
+                  <p className="font-semibold text-lg">{mockTenderInfo.title}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Category</Label>
+                  <p className="font-semibold">{mockTenderInfo.category}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Evaluation Period</Label>
+                  <p className="font-semibold">{mockTenderInfo.evaluationStartDate} - {mockTenderInfo.evaluationEndDate}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Committee Members</Label>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {mockTenderInfo.committeMembers.map((member, index) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className={`text-xs ${
+                          member.status === 'submitted' ? 'bg-green-50 text-green-700 border-green-200' :
+                          member.status === 'draft' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                          'bg-gray-50 text-gray-700 border-gray-200'
+                        }`}
+                      >
+                        {member.name}
+                      </Badge>
+                    ))}
                   </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {/* Available Tenders for Scoring */}
-                    {tenders
-                      .filter(
-                        (t) =>
-                          t.status === "Closed" ||
-                          t.status === "Evaluation_Complete",
-                      )
-                      .slice(0, 6)
-                      .map((tender) => (
-                        <Card
-                          key={tender.id}
-                          className="hover:shadow-md transition-shadow"
-                        >
-                          <CardHeader className="pb-3">
-                            <CardTitle className="text-lg">
-                              {tender.title}
-                            </CardTitle>
-                            <div className="flex items-center justify-between">
-                              <Badge
-                                variant={
-                                  tender.status === "Closed"
-                                    ? "secondary"
-                                    : "default"
-                                }
-                              >
-                                {tender.status}
-                              </Badge>
-                              <span className="text-sm text-muted-foreground">
-                                ID: {tender.id}
-                              </span>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-3">
-                            <div className="text-sm space-y-1">
-                              <div>
-                                <strong>Category:</strong> {tender.category}
-                              </div>
-                              <div>
-                                <strong>Value:</strong> {tender.value}
-                              </div>
-                              <div>
-                                <strong>Closing:</strong>{" "}
-                                {tender.closingDate}
-                              </div>
-                            </div>
+          {/* Mode Selection */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-purple-600" />
+                Evaluation Mode
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-4">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="individual"
+                    checked={evaluationMode === "individual"}
+                    onChange={() => setEvaluationMode("individual")}
+                    className="text-blue-600"
+                  />
+                  <Label htmlFor="individual">Individual Entry - Each evaluator logs in separately</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="collective"
+                    checked={evaluationMode === "collective"}
+                    onChange={() => setEvaluationMode("collective")}
+                    className="text-blue-600"
+                  />
+                  <Label htmlFor="collective">Collective Entry - One person enters for all</Label>
+                </div>
+              </div>
 
-                            <div className="flex flex-col space-y-2">
-                              <Button
-                                size="sm"
-                                className="w-full"
-                                onClick={() =>
-                                  navigate(`/tender-scoring/${tender.id}`)
-                                }
-                              >
-                                <Calculator className="h-4 w-4 mr-2" />
-                                Score Tender
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="w-full"
-                                onClick={() =>
-                                  navigate(`/tender-results/${tender.id}`)
-                                }
-                              >
-                                <Trophy className="h-4 w-4 mr-2" />
-                                View Results
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
+              {evaluationMode === "individual" && (
+                <div className="mt-4">
+                  <Label className="text-sm font-medium">Current Evaluator</Label>
+                  <Select value={currentEvaluator} onValueChange={setCurrentEvaluator}>
+                    <SelectTrigger className="w-64">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {mockTenderInfo.committeMembers.map((member) => (
+                        <SelectItem key={member.id} value={member.name}>{member.name} - {member.role}</SelectItem>
                       ))}
-                  </div>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
-                  {/* Quick Access Section */}
-                  <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <h3 className="font-medium text-green-800 mb-3">
-                      Quick Access - Healthcare Tenders
+          {/* 2️⃣ Committee Scoring Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calculator className="h-5 w-5 text-green-600" />
+                Committee Scoring
+                {evaluationMode === "individual" && (
+                  <Badge className="bg-green-100 text-green-800">
+                    {currentEvaluator}
+                  </Badge>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {mockBidders.map((bidder) => (
+                  <div key={bidder.id} className="border rounded-lg p-4">
+                    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                      <Building className="h-5 w-5 text-blue-600" />
+                      {bidder.name}
+                      <Badge variant="outline">₦{bidder.financialOffer.toLocaleString()}</Badge>
                     </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {["MOH-2024-001", "MOH-2024-002", "MOH-2024-003"].map(
-                        (tenderId) => (
-                          <div
-                            key={tenderId}
-                            className="flex items-center justify-between p-3 bg-white rounded border"
-                          >
-                            <div>
-                              <p className="font-medium text-sm">
-                                {tenderId}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                Healthcare Tender
-                              </p>
-                            </div>
-                            <div className="flex space-x-1">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() =>
-                                  navigate(`/tender-scoring/${tenderId}`)
-                                }
-                              >
-                                <Calculator className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() =>
-                                  navigate(`/tender-results/${tenderId}`)
-                                }
-                              >
-                                <Trophy className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        ),
-                      )}
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="border-b bg-gray-50">
+                            <th className="text-left p-3 font-medium">Criterion</th>
+                            <th className="text-center p-3 font-medium w-24">Max Score</th>
+                            <th className="text-center p-3 font-medium w-24">Score</th>
+                            <th className="text-left p-3 font-medium">Comments/Justification</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {mockEvaluationCriteria.map((criterion) => {
+                            const currentEvaluatorId = mockTenderInfo.committeMembers.find(m => m.name === currentEvaluator)?.id || "evaluator1";
+                            const currentScore = evaluatorScores[currentEvaluatorId]?.[criterion.id]?.score || 0;
+                            const currentComment = evaluatorScores[currentEvaluatorId]?.[criterion.id]?.comment || "";
+
+                            return (
+                              <tr key={criterion.id} className="border-b hover:bg-gray-50">
+                                <td className="p-3 font-medium">{criterion.criterion}</td>
+                                <td className="p-3 text-center font-semibold text-blue-600">{criterion.maxScore}</td>
+                                <td className="p-3">
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    max={criterion.maxScore}
+                                    value={currentScore}
+                                    onChange={(e) => updateEvaluatorScore(
+                                      currentEvaluatorId,
+                                      criterion.id,
+                                      parseInt(e.target.value) || 0,
+                                      currentComment
+                                    )}
+                                    className="w-20 text-center"
+                                  />
+                                </td>
+                                <td className="p-3">
+                                  <Textarea
+                                    placeholder="Enter justification for this score..."
+                                    value={currentComment}
+                                    onChange={(e) => updateEvaluatorScore(
+                                      currentEvaluatorId,
+                                      criterion.id,
+                                      currentScore,
+                                      e.target.value
+                                    )}
+                                    className="min-h-[60px]"
+                                  />
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
-                </TabsContent>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-                {/* Committee Review Tab */}
-                <TabsContent value="review" className="space-y-4">
-                  <div className="p-4 bg-orange-50 rounded-lg">
-                    <p className="text-sm text-orange-800">
-                      <strong>Committee Review Dashboard</strong> -
-                      Review and manage all committee member evaluations in one place.
-                    </p>
-                  </div>
-
-                  {/* Committee Members Status */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Committee Members Status</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {[
-                          { name: "Dr. Amina Hassan", role: "Chairperson", status: "Completed", progress: 100 },
-                          { name: "Eng. Musa Ibrahim", role: "Technical Secretary", status: "In Progress", progress: 75 },
-                          { name: "Dr. Fatima Yusuf", role: "Clinical Evaluator", status: "Completed", progress: 100 },
-                          { name: "Bala Ahmed", role: "Financial Analyst", status: "Pending", progress: 0 },
-                          { name: "Mary Luka", role: "Procurement Expert", status: "In Progress", progress: 50 }
-                        ].map((member, index) => (
-                          <Card key={index} className="p-4">
-                            <div className="flex justify-between items-start mb-2">
-                              <div>
-                                <p className="font-medium">{member.name}</p>
-                                <p className="text-sm text-gray-600">{member.role}</p>
-                              </div>
-                              <Badge
-                                variant={
-                                  member.status === "Completed" ? "default" :
-                                  member.status === "In Progress" ? "secondary" : "outline"
-                                }
-                              >
-                                {member.status}
-                              </Badge>
-                            </div>
-                            <div className="space-y-2">
-                              <div className="flex justify-between text-sm">
-                                <span>Progress</span>
-                                <span>{member.progress}%</span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div
-                                  className="bg-blue-600 h-2 rounded-full"
-                                  style={{ width: `${member.progress}%` }}
-                                ></div>
-                              </div>
-                            </div>
-                          </Card>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Review Actions */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Review Actions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-3">
-                        <Button variant="outline">
-                          <Users className="h-4 w-4 mr-2" />
-                          Send Reminders
-                        </Button>
-                        <Button variant="outline">
-                          <Eye className="h-4 w-4 mr-2" />
-                          View All Submissions
-                        </Button>
-                        <Button variant="outline">
-                          <FileText className="h-4 w-4 mr-2" />
-                          Export Progress Report
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                {/* Final Results Tab */}
-                <TabsContent value="results" className="space-y-4">
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <p className="text-sm text-green-800">
-                      <strong>Final Evaluation Results</strong> -
-                      Consolidated scoring results and final recommendations.
-                    </p>
-                  </div>
-
-                  {/* Results Summary */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Evaluation Summary</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="text-center p-4 bg-blue-50 rounded-lg">
-                          <div className="text-2xl font-bold text-blue-600">5</div>
-                          <div className="text-sm text-blue-700">Committee Members</div>
-                        </div>
-                        <div className="text-center p-4 bg-green-50 rounded-lg">
-                          <div className="text-2xl font-bold text-green-600">3</div>
-                          <div className="text-sm text-green-700">Submitted Evaluations</div>
-                        </div>
-                        <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                          <div className="text-2xl font-bold text-yellow-600">75%</div>
-                          <div className="text-sm text-yellow-700">Completion Rate</div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Final Rankings */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Final Bidder Rankings</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        {[
-                          { rank: 1, name: "MedTech Solutions Ltd", score: 93.7, status: "Recommended" },
-                          { rank: 2, name: "HealthCare Equipment Co", score: 87.2, status: "Second Choice" },
-                          { rank: 3, name: "Advanced Medical Systems", score: 82.1, status: "Not Selected" }
-                        ].map((bidder) => (
-                          <div key={bidder.rank} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div className="flex items-center gap-3">
-                              <div className="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full font-bold">
-                                {bidder.rank}
-                              </div>
-                              <div>
-                                <p className="font-medium">{bidder.name}</p>
-                                <p className="text-sm text-gray-600">Total Score: {bidder.score}/100</p>
-                              </div>
-                            </div>
-                            <Badge variant={bidder.rank === 1 ? "default" : "secondary"}>
-                              {bidder.status}
+          {/* 3️⃣ Score Aggregation */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-orange-600" />
+                Score Aggregation
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Individual Totals */}
+                <div>
+                  <h3 className="font-semibold mb-3">Individual Evaluator Totals</h3>
+                  <div className="space-y-2">
+                    {mockTenderInfo.committeMembers.map((member) => {
+                      const total = calculateTotalScore(member.id);
+                      return (
+                        <div key={member.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                          <span className="font-medium">{member.name}</span>
+                          <div className="flex items-center gap-2">
+                            <Badge variant={member.status === 'submitted' ? 'default' : 'secondary'}>
+                              {member.status}
                             </Badge>
+                            <span className="font-bold text-blue-600">{total}/100</span>
                           </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
 
-                  {/* Final Actions */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Final Actions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-3">
-                        <Button className="bg-green-600 hover:bg-green-700">
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Approve Results
-                        </Button>
-                        <Button variant="outline">
-                          <Download className="h-4 w-4 mr-2" />
-                          Generate Final Report
-                        </Button>
-                        <Button variant="outline">
-                          <Send className="h-4 w-4 mr-2" />
-                          Submit to Authority
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
+                {/* Criteria Averages */}
+                <div>
+                  <h3 className="font-semibold mb-3">Average Scores by Criterion</h3>
+                  <div className="space-y-2">
+                    {mockEvaluationCriteria.map((criterion) => {
+                      const avgScore = calculateAverageScore(criterion.id);
+                      return (
+                        <div key={criterion.id} className="flex justify-between items-center p-2 bg-gray-50 rounded text-sm">
+                          <span>{criterion.criterion}</span>
+                          <span className="font-bold text-green-600">{avgScore.toFixed(1)}/{criterion.maxScore}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 4️⃣ Consolidated Evaluation Report */}
+          {showConsolidatedReport && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-yellow-600" />
+                  Consolidated Evaluation Report
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Bidder Rankings */}
+                  <div>
+                    <h3 className="font-semibold mb-3">Final Bidder Rankings</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse border">
+                        <thead>
+                          <tr className="bg-gray-50">
+                            <th className="border p-3 text-left">Rank</th>
+                            <th className="border p-3 text-left">Bidder</th>
+                            <th className="border p-3 text-center">Technical Score</th>
+                            <th className="border p-3 text-center">Financial Score</th>
+                            <th className="border p-3 text-center">Total Score</th>
+                            <th className="border p-3 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {mockBidders.map((bidder, index) => (
+                            <tr key={bidder.id} className={index === 0 ? "bg-green-50" : ""}>
+                              <td className="border p-3 font-bold">
+                                {index === 0 && "🥇"} {index + 1}
+                              </td>
+                              <td className="border p-3 font-medium">{bidder.name}</td>
+                              <td className="border p-3 text-center">75.2</td>
+                              <td className="border p-3 text-center">18.5</td>
+                              <td className="border p-3 text-center font-bold text-green-600">93.7</td>
+                              <td className="border p-3 text-center">
+                                <Badge variant={index === 0 ? "default" : "secondary"}>
+                                  {index === 0 ? "Recommended" : "Not Selected"}
+                                </Badge>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Detailed Scores */}
+                  <div>
+                    <h3 className="font-semibold mb-3">Detailed Individual Scores</h3>
+                    <div className="grid gap-4">
+                      {mockBidders.map((bidder) => (
+                        <Card key={bidder.id} className="p-4">
+                          <h4 className="font-semibold mb-2">{bidder.name}</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            {mockTenderInfo.committeMembers.map((evaluator) => (
+                              <div key={evaluator.id} className="space-y-1">
+                                <p className="font-medium">{evaluator.name}</p>
+                                {mockEvaluationCriteria.map((criterion) => (
+                                  <div key={criterion.id} className="flex justify-between">
+                                    <span className="text-gray-600">{criterion.criterion.substring(0, 20)}...</span>
+                                    <span className="font-medium">
+                                      {evaluatorScores[evaluator.id]?.[criterion.id]?.score || 0}/{criterion.maxScore}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 5️⃣ Actions & Workflow */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-purple-600" />
+                Actions & Workflow
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    const currentEvaluatorId = mockTenderInfo.committeMembers.find(m => m.name === currentEvaluator)?.id || "evaluator1";
+                    saveEvaluatorDraft(currentEvaluatorId);
+                  }}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Draft
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    const currentEvaluatorId = mockTenderInfo.committeMembers.find(m => m.name === currentEvaluator)?.id || "evaluator1";
+                    submitEvaluatorScores(currentEvaluatorId);
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit Evaluation
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={() => setShowConsolidatedReport(!showConsolidatedReport)}
+                  className="border-green-300 text-green-700 hover:bg-green-50"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  {showConsolidatedReport ? 'Hide' : 'Show'} Consolidated Report
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={approveConsolidatedReport}
+                  className="border-yellow-300 text-yellow-700 hover:bg-yellow-50"
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Chairperson Approval
+                </Button>
+
+                <Button
+                  onClick={generateEvaluationReport}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Generate PDF Report
+                </Button>
+              </div>
+
+              {/* Status Summary */}
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h4 className="font-semibold mb-2">Evaluation Status Summary</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span>Submitted: {mockTenderInfo.committeMembers.filter(m => m.status === 'submitted').length}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <span>Draft: {mockTenderInfo.committeMembers.filter(m => m.status === 'draft').length}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                    <span>Pending: {mockTenderInfo.committeMembers.filter(m => m.status === 'pending').length}</span>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
