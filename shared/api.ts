@@ -112,3 +112,59 @@ export interface CreateMDAUserRequest {
   department: string;
   permissions: MDAUserPermissions;
 }
+
+/**
+ * Tender Scoring System Types
+ */
+export interface EvaluationCriteria {
+  id: number;
+  name: string;
+  maxScore: number;
+  weight?: number;
+  type?: "technical" | "financial";
+}
+
+export interface EvaluationTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  type?: string;
+  criteria: EvaluationCriteria[];
+}
+
+export interface TenderScore {
+  id: string;
+  tenderId: string;
+  committeeMemberId: string;
+  bidderName: string;
+  scores: Record<number, number>; // criteriaId -> score
+  totalScore: number;
+  submittedAt: string;
+  status: "draft" | "submitted";
+}
+
+export interface TenderScoreSubmission {
+  tenderId: string;
+  committeeMemberId: string;
+  bidderName: string;
+  scores: Record<number, number>;
+}
+
+export interface TenderFinalScore {
+  bidderName: string;
+  technicalScore: number;
+  financialScore: number;
+  finalScore: number;
+  rank: number;
+}
+
+export interface TenderAssignment {
+  id: string;
+  tenderId: string;
+  evaluationTemplateId: string;
+  committeeMemberId: string;
+  status: string;
+  evaluationStart: string;
+  evaluationEnd: string;
+}

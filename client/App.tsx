@@ -23,6 +23,8 @@ import GovernorDashboard from "./pages/GovernorDashboard";
 import FirebaseSetup from "./pages/FirebaseSetup";
 import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation";
 import TenderStatusDemo from "./pages/TenderStatusDemo";
+import TenderScoring from "./pages/TenderScoring";
+import TenderResults from "./pages/TenderResults";
 import { performFullMigration } from "@/lib/tenderMigration";
 import { runCleanupIfNeeded } from "@/lib/globalKeyCleanup";
 import { logVerificationReport } from "@/lib/ministryIsolationVerification";
@@ -125,6 +127,22 @@ const App = () => (
               element={<ProcurementWorkflowValidation />}
             />
             <Route path="/tender-status-demo" element={<TenderStatusDemo />} />
+            <Route
+              path="/tender-scoring/:tenderId"
+              element={
+                <ProtectedRoute requiredRole="ministry">
+                  <TenderScoring />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tender-results/:tenderId"
+              element={
+                <ProtectedRoute requiredRole="ministry">
+                  <TenderResults />
+                </ProtectedRoute>
+              }
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -5,12 +5,19 @@ import { handleDemo } from "./routes/demo";
 import { getCommitteeTemplates } from "./routes/committee-templates";
 import {
   getEvaluationTemplates,
+  getEvaluationTemplateById,
   createEvaluationTemplate,
 } from "./routes/evaluation-templates";
 import {
   createCommitteeAssignment,
   getCommitteeAssignments,
 } from "./routes/committee-assignments";
+import {
+  submitTenderScore,
+  getTenderScores,
+  getTenderFinalScores,
+  getTenderAssignment,
+} from "./routes/tender-scoring";
 
 export function createServer() {
   const app = express();
@@ -31,9 +38,16 @@ export function createServer() {
   // Committee management API routes
   app.get("/api/committee-templates", getCommitteeTemplates);
   app.get("/api/evaluation-templates", getEvaluationTemplates);
+  app.get("/api/evaluation-templates/:id", getEvaluationTemplateById);
   app.post("/api/evaluation-templates", createEvaluationTemplate);
   app.post("/api/committee-assignments", createCommitteeAssignment);
   app.get("/api/committee-assignments", getCommitteeAssignments);
+
+  // Tender scoring API routes
+  app.post("/api/tender-scores", submitTenderScore);
+  app.get("/api/tenders/:tenderId/scores", getTenderScores);
+  app.get("/api/tenders/:tenderId/final-scores", getTenderFinalScores);
+  app.get("/api/tenders/:tenderId/assignment", getTenderAssignment);
 
   return app;
 }

@@ -1,11 +1,20 @@
 import { RequestHandler } from "express";
 
+export interface EvaluationCriteria {
+  id: number;
+  name: string;
+  maxScore: number;
+  weight?: number;
+  type?: "technical" | "financial";
+}
+
 export interface EvaluationTemplate {
   id: string;
   name: string;
   description?: string;
   category?: string;
   type?: string;
+  criteria: EvaluationCriteria[];
 }
 
 const mockEvaluationTemplates: EvaluationTemplate[] = [
@@ -15,6 +24,43 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
     description: "70% Technical, 30% Financial evaluation",
     category: "Healthcare",
     type: "QCBS",
+    criteria: [
+      {
+        id: 1,
+        name: "Qualifications",
+        maxScore: 20,
+        weight: 0.2,
+        type: "technical",
+      },
+      {
+        id: 2,
+        name: "Methodology",
+        maxScore: 25,
+        weight: 0.25,
+        type: "technical",
+      },
+      {
+        id: 3,
+        name: "Experience",
+        maxScore: 15,
+        weight: 0.15,
+        type: "technical",
+      },
+      {
+        id: 4,
+        name: "Team Competence",
+        maxScore: 10,
+        weight: 0.1,
+        type: "technical",
+      },
+      {
+        id: 5,
+        name: "Financial Proposal",
+        maxScore: 30,
+        weight: 0.3,
+        type: "financial",
+      },
+    ],
   },
   {
     id: "ET-002",
@@ -22,6 +68,22 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
     description: "Lowest cost among technically qualified bidders",
     category: "Infrastructure",
     type: "LCS",
+    criteria: [
+      {
+        id: 1,
+        name: "Technical Qualification",
+        maxScore: 70,
+        weight: 0.7,
+        type: "technical",
+      },
+      {
+        id: 2,
+        name: "Financial Proposal",
+        maxScore: 30,
+        weight: 0.3,
+        type: "financial",
+      },
+    ],
   },
   {
     id: "ET-003",
@@ -29,6 +91,29 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
     description: "100% Technical evaluation, price negotiated later",
     category: "Services",
     type: "QBS",
+    criteria: [
+      {
+        id: 1,
+        name: "Technical Approach",
+        maxScore: 40,
+        weight: 0.4,
+        type: "technical",
+      },
+      {
+        id: 2,
+        name: "Team Qualifications",
+        maxScore: 30,
+        weight: 0.3,
+        type: "technical",
+      },
+      {
+        id: 3,
+        name: "Company Experience",
+        maxScore: 30,
+        weight: 0.3,
+        type: "technical",
+      },
+    ],
   },
   {
     id: "ET-004",
@@ -36,6 +121,29 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
     description: "Best technical proposal within fixed budget",
     category: "Education",
     type: "FBS",
+    criteria: [
+      {
+        id: 1,
+        name: "Technical Proposal",
+        maxScore: 50,
+        weight: 0.5,
+        type: "technical",
+      },
+      {
+        id: 2,
+        name: "Implementation Plan",
+        maxScore: 30,
+        weight: 0.3,
+        type: "technical",
+      },
+      {
+        id: 3,
+        name: "Budget Compliance",
+        maxScore: 20,
+        weight: 0.2,
+        type: "financial",
+      },
+    ],
   },
   {
     id: "ET-005",
@@ -43,6 +151,43 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
     description: "Simplified QCBS template for healthcare procurement",
     category: "Healthcare",
     type: "QCBS",
+    criteria: [
+      {
+        id: 1,
+        name: "Qualifications",
+        maxScore: 20,
+        weight: 0.2,
+        type: "technical",
+      },
+      {
+        id: 2,
+        name: "Methodology",
+        maxScore: 25,
+        weight: 0.25,
+        type: "technical",
+      },
+      {
+        id: 3,
+        name: "Experience",
+        maxScore: 15,
+        weight: 0.15,
+        type: "technical",
+      },
+      {
+        id: 4,
+        name: "Team Competence",
+        maxScore: 10,
+        weight: 0.1,
+        type: "technical",
+      },
+      {
+        id: 5,
+        name: "Financial Proposal",
+        maxScore: 30,
+        weight: 0.3,
+        type: "financial",
+      },
+    ],
   },
   {
     id: "ET-006",
@@ -50,6 +195,22 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
     description: "Standard LCS template for infrastructure projects",
     category: "Infrastructure",
     type: "LCS",
+    criteria: [
+      {
+        id: 1,
+        name: "Technical Qualification",
+        maxScore: 70,
+        weight: 0.7,
+        type: "technical",
+      },
+      {
+        id: 2,
+        name: "Financial Proposal",
+        maxScore: 30,
+        weight: 0.3,
+        type: "financial",
+      },
+    ],
   },
   {
     id: "ET-007",
@@ -57,6 +218,43 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
     description: "QCBS template optimized for education technology",
     category: "Education",
     type: "QCBS",
+    criteria: [
+      {
+        id: 1,
+        name: "Technical Specifications",
+        maxScore: 25,
+        weight: 0.25,
+        type: "technical",
+      },
+      {
+        id: 2,
+        name: "Implementation Methodology",
+        maxScore: 20,
+        weight: 0.2,
+        type: "technical",
+      },
+      {
+        id: 3,
+        name: "Support and Training",
+        maxScore: 15,
+        weight: 0.15,
+        type: "technical",
+      },
+      {
+        id: 4,
+        name: "Company Experience",
+        maxScore: 10,
+        weight: 0.1,
+        type: "technical",
+      },
+      {
+        id: 5,
+        name: "Financial Proposal",
+        maxScore: 30,
+        weight: 0.3,
+        type: "financial",
+      },
+    ],
   },
   {
     id: "ET-008",
@@ -64,6 +262,29 @@ const mockEvaluationTemplates: EvaluationTemplate[] = [
     description: "LCS template for general goods and supplies",
     category: "General",
     type: "LCS",
+    criteria: [
+      {
+        id: 1,
+        name: "Product Quality",
+        maxScore: 40,
+        weight: 0.4,
+        type: "technical",
+      },
+      {
+        id: 2,
+        name: "Delivery Capability",
+        maxScore: 30,
+        weight: 0.3,
+        type: "technical",
+      },
+      {
+        id: 3,
+        name: "Financial Proposal",
+        maxScore: 30,
+        weight: 0.3,
+        type: "financial",
+      },
+    ],
   },
 ];
 
@@ -75,6 +296,22 @@ export const getEvaluationTemplates: RequestHandler = (req, res) => {
   } catch (error) {
     console.error("Error fetching evaluation templates:", error);
     res.status(500).json({ error: "Failed to fetch evaluation templates" });
+  }
+};
+
+export const getEvaluationTemplateById: RequestHandler = (req, res) => {
+  try {
+    const { id } = req.params;
+    const template = mockEvaluationTemplates.find((t) => t.id === id);
+
+    if (!template) {
+      return res.status(404).json({ error: "Evaluation template not found" });
+    }
+
+    res.json(template);
+  } catch (error) {
+    console.error("Error fetching evaluation template:", error);
+    res.status(500).json({ error: "Failed to fetch evaluation template" });
   }
 };
 
