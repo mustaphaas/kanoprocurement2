@@ -17,7 +17,7 @@ export interface EvaluationTemplate {
   criteria: EvaluationCriteria[];
 }
 
-const mockEvaluationTemplates: EvaluationTemplate[] = [
+export const mockEvaluationTemplates: EvaluationTemplate[] = [
   {
     id: "ET-001",
     name: "Quality and Cost-Based Selection (QCBS)",

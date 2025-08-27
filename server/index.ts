@@ -11,9 +11,11 @@ import {
 import {
   createCommitteeAssignment,
   getCommitteeAssignments,
+  getTenderAssignmentsForEvaluator,
 } from "./routes/committee-assignments";
 import {
   submitTenderScore,
+  submitEvaluatorScore,
   getTenderScores,
   getTenderFinalScores,
   getTenderAssignment,
@@ -42,9 +44,14 @@ export function createServer() {
   app.post("/api/evaluation-templates", createEvaluationTemplate);
   app.post("/api/committee-assignments", createCommitteeAssignment);
   app.get("/api/committee-assignments", getCommitteeAssignments);
+  app.get(
+    "/api/tender-assignments/:evaluatorId",
+    getTenderAssignmentsForEvaluator,
+  );
 
   // Tender scoring API routes
   app.post("/api/tender-scores", submitTenderScore);
+  app.post("/api/evaluator-scores", submitEvaluatorScore);
   app.get("/api/tenders/:tenderId/scores", getTenderScores);
   app.get("/api/tenders/:tenderId/final-scores", getTenderFinalScores);
   app.get("/api/tenders/:tenderId/assignment", getTenderAssignment);
