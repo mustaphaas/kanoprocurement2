@@ -237,7 +237,12 @@ export default function EvaluationCommitteeManagement() {
 
   const [memberForm, setMemberForm] = useState({
     name: "",
-    role: "Evaluator" as "Chair" | "Secretary" | "Evaluator" | "Technical Expert" | "Observer",
+    role: "Evaluator" as
+      | "Chair"
+      | "Secretary"
+      | "Evaluator"
+      | "Technical Expert"
+      | "Observer",
     department: "",
     email: "",
     phone: "",

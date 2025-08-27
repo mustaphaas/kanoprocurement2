@@ -630,7 +630,7 @@ export default function CommitteeTemplates() {
           responsibilities: [
             "Lead technical evaluations",
             "Coordinate committee activities",
-            "Ensure compliance with standards"
+            "Ensure compliance with standards",
           ],
           requiredQualifications: [
             "Civil Engineering degree",
@@ -646,7 +646,7 @@ export default function CommitteeTemplates() {
           mandatoryRole: true,
           conflictOfInterestAllowed: false,
           minimumRequired: 1,
-          maxConflictScore: 2
+          maxConflictScore: 2,
         },
         // ... other roles adapted for infrastructure
       ];
@@ -670,7 +670,7 @@ export default function CommitteeTemplates() {
           responsibilities: [
             "Lead educational evaluations",
             "Coordinate committee activities",
-            "Ensure educational standards compliance"
+            "Ensure educational standards compliance",
           ],
           requiredQualifications: [
             "Education degree (PhD preferred)",
@@ -686,7 +686,7 @@ export default function CommitteeTemplates() {
           mandatoryRole: true,
           conflictOfInterestAllowed: false,
           minimumRequired: 1,
-          maxConflictScore: 2
+          maxConflictScore: 2,
         },
         // ... other roles adapted for education
       ];
