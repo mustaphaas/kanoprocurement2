@@ -298,7 +298,7 @@ export default function TenderCommitteeAssignment() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
 
       // One-time cleanup: remove any cross-ministry contamination
       cleanupCrossMinistryContamination(ministryCode);
@@ -397,7 +397,7 @@ export default function TenderCommitteeAssignment() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
       const storageKey = `${ministryCode}_${type}`;
       localStorage.setItem(storageKey, JSON.stringify(data));
     } catch (error) {
@@ -1240,7 +1240,7 @@ export default function TenderCommitteeAssignment() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
 
       const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
       const storedTemplates = localStorage.getItem(templatesKey);
