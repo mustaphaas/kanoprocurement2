@@ -55,6 +55,7 @@ interface CommitteeRoleTemplate {
   mandatoryRole: boolean;
   conflictOfInterestAllowed: boolean; // Binary: true = allowed, false = strictly prohibited
   minimumRequired: number; // Minimum number of this role required
+  maxConflictScore?: number; // Maximum allowed conflict of interest score
 }
 
 interface CommitteeTemplate {
@@ -82,6 +83,8 @@ interface EvaluationFramework {
   methodology: "QCBS" | "QBS" | "LCS" | "FBS";
   defaultTechnicalWeight: number; // Default weight, can be adjusted per tender
   defaultFinancialWeight: number; // Default weight, can be adjusted per tender
+  technicalWeightPercent?: number; // Legacy property for backward compatibility
+  financialWeightPercent?: number; // Legacy property for backward compatibility
   allowWeightCustomization: boolean; // Whether weights can be modified per tender
   passingTechnicalScore: number; // Configurable threshold
   scoringScale: number; // e.g., 100 or 10
