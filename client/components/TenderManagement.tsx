@@ -2133,11 +2133,13 @@ const TenderManagement = () => {
             }}
             onScoreSubmit={(scores) => {
               // Convert scores to the expected format and submit
-              const formattedScores = Object.entries(scores).map(([criteriaId, score]) => ({
-                criterionId: criteriaId,
-                score: score,
-                comment: ""
-              }));
+              const formattedScores = Object.entries(scores).map(
+                ([criteriaId, score]) => ({
+                  criterionId: criteriaId,
+                  score: score,
+                  comment: "",
+                }),
+              );
 
               if (selectedTenderAssignment) {
                 const payload = {
@@ -2153,18 +2155,18 @@ const TenderManagement = () => {
                   },
                   body: JSON.stringify(payload),
                 })
-                .then(response => {
-                  if (response.ok) {
-                    alert("Evaluation submitted successfully!");
-                    setIsScoresSubmitted(true);
-                  } else {
-                    alert("Failed to submit evaluation. Please try again.");
-                  }
-                })
-                .catch(error => {
-                  console.error("Error submitting scores:", error);
-                  alert("Error submitting evaluation. Please try again.");
-                });
+                  .then((response) => {
+                    if (response.ok) {
+                      alert("Evaluation submitted successfully!");
+                      setIsScoresSubmitted(true);
+                    } else {
+                      alert("Failed to submit evaluation. Please try again.");
+                    }
+                  })
+                  .catch((error) => {
+                    console.error("Error submitting scores:", error);
+                    alert("Error submitting evaluation. Please try again.");
+                  });
               }
             }}
           />
