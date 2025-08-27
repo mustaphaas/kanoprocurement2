@@ -202,6 +202,45 @@ const TenderManagement = () => {
   const [showAmendmentModal, setShowAmendmentModal] = useState(false);
   const [showEvaluationModal, setShowEvaluationModal] = useState(false);
 
+  // Evaluation state management
+  const [selectedTenderForEvaluation, setSelectedTenderForEvaluation] = useState("MOH-2024-001");
+  const [evaluationMode, setEvaluationMode] = useState<"individual" | "collective">("individual");
+  const [currentEvaluator, setCurrentEvaluator] = useState("Dr. Amina Hassan");
+  const [evaluatorScores, setEvaluatorScores] = useState<any>({});
+  const [evaluationStatus, setEvaluationStatus] = useState<any>({});
+  const [showConsolidatedReport, setShowConsolidatedReport] = useState(false);
+
+  // Mock evaluation data
+  const mockTenderInfo = {
+    id: "MOH-2024-001",
+    title: "Hospital Equipment Supply",
+    category: "Medical Equipment",
+    evaluationStartDate: "2024-03-01",
+    evaluationEndDate: "2024-03-15",
+    committeMembers: [
+      { id: "evaluator1", name: "Dr. Amina Hassan", role: "Chairperson", status: "submitted" },
+      { id: "evaluator2", name: "Eng. Musa Ibrahim", role: "Technical Secretary", status: "draft" },
+      { id: "evaluator3", name: "Dr. Fatima Yusuf", role: "Clinical Evaluator", status: "submitted" },
+      { id: "evaluator4", name: "Bala Ahmed", role: "Financial Analyst", status: "draft" },
+      { id: "evaluator5", name: "Mary Luka", role: "Procurement Expert", status: "submitted" }
+    ]
+  };
+
+  const mockEvaluationCriteria = [
+    { id: "tech1", criterion: "Equipment Quality & Specifications", maxScore: 25, weight: 0.25 },
+    { id: "tech2", criterion: "Vendor Experience & Track Record", maxScore: 20, weight: 0.20 },
+    { id: "tech3", criterion: "Technical Support & Maintenance", maxScore: 15, weight: 0.15 },
+    { id: "tech4", criterion: "Delivery Timeline & Implementation", maxScore: 15, weight: 0.15 },
+    { id: "tech5", criterion: "Local Content & Compliance", maxScore: 10, weight: 0.10 },
+    { id: "fin1", criterion: "Cost Competitiveness", maxScore: 15, weight: 0.15 }
+  ];
+
+  const mockBidders = [
+    { id: "bidder1", name: "MedTech Solutions Ltd", financialOffer: 850000000 },
+    { id: "bidder2", name: "HealthCare Equipment Co", financialOffer: 920000000 },
+    { id: "bidder3", name: "Advanced Medical Systems", financialOffer: 780000000 }
+  ];
+
   // Function to get bid count for a specific tender
   const getBidCount = (tenderId: string): number => {
     try {
