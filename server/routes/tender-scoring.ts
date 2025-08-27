@@ -13,7 +13,21 @@ export interface TenderScore {
   status: "draft" | "submitted";
 }
 
+// New payload structure as requested
+export interface ScoreItem {
+  criterionId: string;
+  score: number;
+  comment: string;
+}
+
 export interface TenderScoreSubmission {
+  tenderId: string;
+  evaluatorId: string;
+  scores: ScoreItem[];
+}
+
+// Legacy interface for backward compatibility
+export interface LegacyTenderScoreSubmission {
   tenderId: string;
   committeeMemberId: string;
   bidderName: string;
