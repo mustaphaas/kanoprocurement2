@@ -623,10 +623,15 @@ export default function CommitteeTemplates() {
 
       baseTemplate.roles = [
         {
-          ...(baseTemplate.roles?.[0] || {}),
+          id: "ROLE-INFRA-001",
           title: "Chief Engineer (Chair)",
           description:
             "Senior civil engineer responsible for leading technical evaluations",
+          responsibilities: [
+            "Lead technical evaluations",
+            "Coordinate committee activities",
+            "Ensure compliance with standards"
+          ],
           requiredQualifications: [
             "Civil Engineering degree",
             "Professional Engineer certification",
@@ -637,6 +642,11 @@ export default function CommitteeTemplates() {
             "Construction Management",
             "Infrastructure Development",
           ],
+          minimumExperience: 15,
+          mandatoryRole: true,
+          conflictOfInterestAllowed: false,
+          minimumRequired: 1,
+          maxConflictScore: 2
         },
         // ... other roles adapted for infrastructure
       ];
@@ -653,10 +663,15 @@ export default function CommitteeTemplates() {
 
       baseTemplate.roles = [
         {
-          ...(baseTemplate.roles?.[0] || {}),
+          id: "ROLE-EDU-001",
           title: "Education Director (Chair)",
           description:
             "Senior education professional responsible for leading evaluations",
+          responsibilities: [
+            "Lead educational evaluations",
+            "Coordinate committee activities",
+            "Ensure educational standards compliance"
+          ],
           requiredQualifications: [
             "Education degree (PhD preferred)",
             "Minimum 15 years education experience",
@@ -667,6 +682,11 @@ export default function CommitteeTemplates() {
             "Curriculum Development",
             "Educational Technology",
           ],
+          minimumExperience: 15,
+          mandatoryRole: true,
+          conflictOfInterestAllowed: false,
+          minimumRequired: 1,
+          maxConflictScore: 2
         },
         // ... other roles adapted for education
       ];
