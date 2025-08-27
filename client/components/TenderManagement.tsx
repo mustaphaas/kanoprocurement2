@@ -27,6 +27,10 @@ import {
   Settings,
   Calculator,
   Trophy,
+  Building,
+  BarChart3,
+  Save,
+  Send,
 } from "lucide-react";
 import {
   tenderSettingsManager,
