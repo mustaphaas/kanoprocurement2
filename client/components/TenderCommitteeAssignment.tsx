@@ -227,9 +227,17 @@ const STORAGE_KEYS = {
 interface CommitteeTemplate {
   id: string;
   name: string;
-  description: string;
-  category: string;
-  status: string;
+  description?: string;
+  category?: string;
+  status?: string;
+}
+
+interface EvaluationTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  type?: string;
 }
 
 export default function TenderCommitteeAssignment() {
@@ -240,6 +248,9 @@ export default function TenderCommitteeAssignment() {
   const [closedTenders, setClosedTenders] = useState<ClosedTender[]>([]);
   const [committeeTemplates, setCommitteeTemplates] = useState<
     CommitteeTemplate[]
+  >([]);
+  const [evaluationTemplates, setEvaluationTemplates] = useState<
+    EvaluationTemplate[]
   >([]);
   const [selectedAssignment, setSelectedAssignment] =
     useState<TenderCommitteeAssignment | null>(null);
@@ -262,6 +273,7 @@ export default function TenderCommitteeAssignment() {
     tenderTitle: "",
     tenderCategory: "",
     committeeTemplateId: "",
+    evaluationTemplateId: "",
     evaluationStartDate: "",
     evaluationEndDate: "",
     assignmentNotes: "",
@@ -277,6 +289,8 @@ export default function TenderCommitteeAssignment() {
 
   useEffect(() => {
     loadData();
+    fetchCommitteeTemplates();
+    fetchEvaluationTemplates();
   }, []);
 
   const loadData = () => {
@@ -284,7 +298,10 @@ export default function TenderCommitteeAssignment() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode =
+        ministryUser.ministryCode?.toUpperCase() ||
+        ministryUser.ministryId?.toUpperCase() ||
+        "MOH";
 
       // One-time cleanup: remove any cross-ministry contamination
       cleanupCrossMinistryContamination(ministryCode);
@@ -383,7 +400,10 @@ export default function TenderCommitteeAssignment() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode =
+        ministryUser.ministryCode?.toUpperCase() ||
+        ministryUser.ministryId?.toUpperCase() ||
+        "MOH";
       const storageKey = `${ministryCode}_${type}`;
       localStorage.setItem(storageKey, JSON.stringify(data));
     } catch (error) {
@@ -1089,7 +1109,7 @@ export default function TenderCommitteeAssignment() {
 
   // Removed createSampleClosedTenders - now using unified data source from @/lib/tenderData
 
-  const createAssignment = () => {
+  const createAssignment = async () => {
     // Clear previous messages
     setErrorMessage("");
     setSuccessMessage("");
@@ -1101,6 +1121,10 @@ export default function TenderCommitteeAssignment() {
     }
     if (!assignmentForm.committeeTemplateId) {
       setErrorMessage("Please select a committee template.");
+      return;
+    }
+    if (!assignmentForm.evaluationTemplateId) {
+      setErrorMessage("Please select an evaluation template.");
       return;
     }
     if (!assignmentForm.evaluationStartDate) {
@@ -1159,19 +1183,50 @@ export default function TenderCommitteeAssignment() {
       conflicts: [],
     };
 
-    const updatedAssignments = [...assignments, newAssignment];
-    setAssignments(updatedAssignments);
-    saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
+    // Submit to API
+    try {
+      const payload = {
+        tenderId: assignmentForm.tenderId,
+        committeeTemplateId: assignmentForm.committeeTemplateId,
+        evaluationTemplateId: assignmentForm.evaluationTemplateId,
+        evaluationStart: assignmentForm.evaluationStartDate,
+        evaluationEnd: assignmentForm.evaluationEndDate,
+        notes: assignmentForm.assignmentNotes,
+      };
 
-    // Log for debugging
-    console.log("Created new assignment:", newAssignment);
-    console.log("Updated assignments array:", updatedAssignments);
+      const response = await fetch("/api/committee-assignments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const createdAssignment = await response.json();
+        console.log("Created assignment via API:", createdAssignment);
+
+        // Also update local state for immediate UI feedback
+        const updatedAssignments = [...assignments, newAssignment];
+        setAssignments(updatedAssignments);
+        saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || "Failed to create assignment");
+        return;
+      }
+    } catch (error) {
+      console.error("Error creating assignment:", error);
+      setErrorMessage("Network error: Failed to create assignment");
+      return;
+    }
 
     setAssignmentForm({
       tenderId: "",
       tenderTitle: "",
       tenderCategory: "",
       committeeTemplateId: "",
+      evaluationTemplateId: "",
       evaluationStartDate: "",
       evaluationEndDate: "",
       assignmentNotes: "",
@@ -1181,8 +1236,9 @@ export default function TenderCommitteeAssignment() {
     // Show success message
     setSuccessMessage("Committee assignment created successfully!");
 
-    // Refresh committee templates after creating assignment
-    loadCommitteeTemplates();
+    // Refresh templates after creating assignment
+    fetchCommitteeTemplates();
+    fetchEvaluationTemplates();
   };
 
   const loadCommitteeTemplates = () => {
@@ -1190,12 +1246,28 @@ export default function TenderCommitteeAssignment() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode =
+        ministryUser.ministryCode?.toUpperCase() ||
+        ministryUser.ministryId?.toUpperCase() ||
+        "MOH";
+
+      console.log("🏛️ Loading committee templates:", {
+        ministryUser,
+        derivedMinistryCode: ministryCode,
+        ministryCode: ministryUser.ministryCode,
+        ministryId: ministryUser.ministryId,
+      });
 
       const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
+      console.log(
+        "🔑 Looking for templates in localStorage key:",
+        templatesKey,
+      );
+
       const storedTemplates = localStorage.getItem(templatesKey);
       if (storedTemplates) {
         const parsedTemplates = JSON.parse(storedTemplates);
+        console.log("📄 Found stored templates:", parsedTemplates);
 
         // Filter templates to ensure only ministry-specific ones are loaded
         const ministrySpecificTemplates = parsedTemplates.filter(
@@ -1206,13 +1278,19 @@ export default function TenderCommitteeAssignment() {
               (ministryCode === "MOWI" &&
                 template.category === "Infrastructure") ||
               (ministryCode === "MOE" && template.category === "Education");
+
+            console.log(
+              `🔍 Template ${template.id} (category: ${template.category}) belongs to ${ministryCode}?`,
+              belongsToMinistry,
+            );
             return belongsToMinistry;
           },
         );
 
         setCommitteeTemplates(ministrySpecificTemplates);
         console.log(
-          `Refreshed ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}`,
+          `✅ Loaded ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}:`,
+          ministrySpecificTemplates,
         );
 
         // Save the filtered templates back to ensure cleanup
@@ -1220,6 +1298,8 @@ export default function TenderCommitteeAssignment() {
           templatesKey,
           JSON.stringify(ministrySpecificTemplates),
         );
+      } else {
+        console.log("❌ No stored templates found for key:", templatesKey);
       }
     } catch (error) {
       console.error("Error loading committee templates:", error);
@@ -1232,6 +1312,153 @@ export default function TenderCommitteeAssignment() {
       loadCommitteeTemplates();
     }
   }, [showAssignmentModal]);
+
+  // API fetch functions
+  const fetchCommitteeTemplates = async () => {
+    try {
+      // Get API templates
+      let apiTemplates: CommitteeTemplate[] = [];
+      try {
+        const response = await fetch("/api/committee-templates");
+        if (response.ok) {
+          apiTemplates = await response.json();
+          console.log("🌐 Fetched committee templates from API:", apiTemplates);
+        }
+      } catch (apiError) {
+        console.log(
+          "⚠️ API not available for committee templates, using local only",
+        );
+      }
+
+      // Get localStorage templates
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
+      const ministryCode =
+        ministryUser.ministryCode?.toUpperCase() ||
+        ministryUser.ministryId?.toUpperCase() ||
+        "MOH";
+
+      const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
+      const storedTemplates = localStorage.getItem(templatesKey);
+      let localTemplates: CommitteeTemplate[] = [];
+
+      if (storedTemplates) {
+        const parsedTemplates = JSON.parse(storedTemplates);
+        // Filter local templates for ministry
+        localTemplates = parsedTemplates.filter((template: any) => {
+          const belongsToMinistry =
+            template.id?.startsWith(ministryCode) ||
+            (ministryCode === "MOH" && template.category === "Healthcare") ||
+            (ministryCode === "MOWI" &&
+              template.category === "Infrastructure") ||
+            (ministryCode === "MOE" && template.category === "Education");
+          return belongsToMinistry;
+        });
+        console.log("💾 Loaded local committee templates:", localTemplates);
+      }
+
+      // Combine both sources, avoiding duplicates by ID
+      const allTemplates = [...apiTemplates];
+      localTemplates.forEach((localTemplate) => {
+        if (!allTemplates.find((t) => t.id === localTemplate.id)) {
+          allTemplates.push(localTemplate);
+        }
+      });
+
+      setCommitteeTemplates(allTemplates);
+      console.log(
+        "✅ Combined committee templates (API + Local):",
+        allTemplates,
+      );
+    } catch (error) {
+      console.error("Error fetching committee templates:", error);
+      // Final fallback to loadCommitteeTemplates
+      loadCommitteeTemplates();
+    }
+  };
+
+  const fetchEvaluationTemplates = async () => {
+    try {
+      // Get API templates
+      let apiTemplates: EvaluationTemplate[] = [];
+      try {
+        const response = await fetch("/api/evaluation-templates");
+        if (response.ok) {
+          apiTemplates = await response.json();
+          console.log(
+            "🌐 Fetched evaluation templates from API:",
+            apiTemplates,
+          );
+        }
+      } catch (apiError) {
+        console.log(
+          "⚠️ API not available for evaluation templates, using local only",
+        );
+      }
+
+      // Get localStorage templates (from FlexibleQCBSTemplate)
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
+      const ministryCode =
+        ministryUser.ministryCode?.toUpperCase() ||
+        ministryUser.ministryId?.toUpperCase() ||
+        "MOH";
+
+      const qcbsStorageKey = `${ministryCode}_qcbsFlexibleTemplates`;
+      const storedQCBSTemplates = localStorage.getItem(qcbsStorageKey);
+      let localTemplates: EvaluationTemplate[] = [];
+
+      if (storedQCBSTemplates) {
+        const parsedQCBSTemplates = JSON.parse(storedQCBSTemplates);
+        // Convert QCBS templates to EvaluationTemplate format
+        localTemplates = parsedQCBSTemplates.map((qcbsTemplate: any) => ({
+          id: qcbsTemplate.id,
+          name: qcbsTemplate.name,
+          description: qcbsTemplate.description,
+          category: qcbsTemplate.category,
+          type: "QCBS", // All templates from FlexibleQCBSTemplate are QCBS
+        }));
+        console.log(
+          "💾 Loaded local evaluation templates (QCBS):",
+          localTemplates,
+        );
+      }
+
+      // Also check for scoring rubrics (from ScoringMatrixImplementation)
+      const rubricStorageKey = `${ministryCode}_scoringRubrics`;
+      const storedRubrics = localStorage.getItem(rubricStorageKey);
+      if (storedRubrics) {
+        const parsedRubrics = JSON.parse(storedRubrics);
+        const rubricTemplates = parsedRubrics.map((rubric: any) => ({
+          id: rubric.id,
+          name: rubric.name,
+          description: rubric.description || `${rubric.type} scoring rubric`,
+          category: rubric.category || "General",
+          type: rubric.type || "Custom",
+        }));
+        localTemplates = [...localTemplates, ...rubricTemplates];
+        console.log("📊 Added scoring rubric templates:", rubricTemplates);
+      }
+
+      // Combine both sources, avoiding duplicates by ID
+      const allTemplates = [...apiTemplates];
+      localTemplates.forEach((localTemplate) => {
+        if (!allTemplates.find((t) => t.id === localTemplate.id)) {
+          allTemplates.push(localTemplate);
+        }
+      });
+
+      setEvaluationTemplates(allTemplates);
+      console.log(
+        "✅ Combined evaluation templates (API + Local):",
+        allTemplates,
+      );
+    } catch (error) {
+      console.error("Error fetching evaluation templates:", error);
+    }
+  };
 
   const submitCOIDeclaration = (assignmentId: string) => {
     const newDeclaration: COIDeclaration = {
@@ -1745,7 +1972,7 @@ export default function TenderCommitteeAssignment() {
                                     {getStatusBadge(member.status)}
                                   </div>
                                   <div className="text-sm text-gray-600">
-                                    {member.department} • {member.experience}+
+                                    {member.department} �� {member.experience}+
                                     years
                                   </div>
                                   <div className="text-xs text-gray-500">
@@ -2182,11 +2409,68 @@ export default function TenderCommitteeAssignment() {
                     <SelectItem key={template.id} value={template.id}>
                       <div className="flex flex-col items-start">
                         <span className="font-medium">{template.name}</span>
-                        <span className="text-sm text-gray-600">
-                          {template.description}
-                        </span>
+                        {template.description && (
+                          <span className="text-sm text-gray-600">
+                            {template.description}
+                          </span>
+                        )}
+                        {(template.category || template.status) && (
+                          <span className="text-xs text-gray-500">
+                            {template.category}{" "}
+                            {template.status && `• ${template.status}`}
+                          </span>
+                        )}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="evaluation-template">Evaluation Template</Label>
+              <Select
+                value={assignmentForm.evaluationTemplateId}
+                onValueChange={(value) =>
+                  setAssignmentForm({
+                    ...assignmentForm,
+                    evaluationTemplateId: value,
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select evaluation template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(() => {
+                    const filteredTemplates = assignmentForm.tenderCategory
+                      ? evaluationTemplates.filter(
+                          (template) =>
+                            template.category ===
+                              assignmentForm.tenderCategory ||
+                            template.category === "General" ||
+                            !template.category, // Include templates without category
+                        )
+                      : evaluationTemplates;
+
+                    console.log("🔽 Evaluation template dropdown:", {
+                      tenderCategory: assignmentForm.tenderCategory,
+                      allTemplates: evaluationTemplates,
+                      filteredTemplates,
+                      templateCount: filteredTemplates.length,
+                    });
+
+                    return filteredTemplates;
+                  })().map((template) => (
+                    <SelectItem key={template.id} value={template.id}>
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">{template.name}</span>
+                        {template.description && (
+                          <span className="text-sm text-gray-600">
+                            {template.description}
+                          </span>
+                        )}
                         <span className="text-xs text-gray-500">
-                          {template.category} • {template.status}
+                          {template.type} • {template.category}
                         </span>
                       </div>
                     </SelectItem>

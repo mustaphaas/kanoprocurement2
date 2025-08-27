@@ -197,7 +197,10 @@ export default function CommitteeTemplates() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode =
+        ministryUser.ministryCode?.toUpperCase() ||
+        ministryUser.ministryId?.toUpperCase() ||
+        "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
 
       const stored = localStorage.getItem(storageKey);
@@ -263,7 +266,10 @@ export default function CommitteeTemplates() {
       const ministryUser = JSON.parse(
         localStorage.getItem("ministryUser") || "{}",
       );
-      const ministryCode = ministryUser.ministryId?.toUpperCase() || "MOH";
+      const ministryCode =
+        ministryUser.ministryCode?.toUpperCase() ||
+        ministryUser.ministryId?.toUpperCase() ||
+        "MOH";
       const storageKey = `${ministryCode}_${STORAGE_KEY}`;
       localStorage.setItem(storageKey, JSON.stringify(updatedTemplates));
     } catch (error) {
@@ -670,8 +676,17 @@ export default function CommitteeTemplates() {
     const currentUser = "Current User"; // In a real app, get from auth context
     const currentDate = new Date().toISOString().split("T")[0];
 
+    // Get ministry code for template ID
+    const ministryUser = JSON.parse(
+      localStorage.getItem("ministryUser") || "{}",
+    );
+    const ministryCode =
+      ministryUser.ministryCode?.toUpperCase() ||
+      ministryUser.ministryId?.toUpperCase() ||
+      "MOH";
+
     const newTemplate: CommitteeTemplate = {
-      id: `CT-${Date.now()}`,
+      id: `${ministryCode}-CT-${Date.now()}`,
       name: templateForm.name,
       description: templateForm.description,
       category: templateForm.category,
@@ -724,8 +739,9 @@ export default function CommitteeTemplates() {
     setTemplates(updatedTemplates);
     saveTemplates(updatedTemplates);
 
-    console.log("Created new template:", newTemplate);
-    console.log("Updated templates list:", updatedTemplates);
+    console.log("🆕 Created new template:", newTemplate);
+    console.log("📋 Updated templates list:", updatedTemplates);
+    console.log("🏛️ Ministry code used in template ID:", ministryCode);
 
     setTemplateForm({
       name: "",
