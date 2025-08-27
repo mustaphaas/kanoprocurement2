@@ -622,12 +622,14 @@ export default function NOCRequestsModule({
 
     // Log the action
     logUserAction(
-      ministryCode,
-      "NOC_REQUEST_CREATED",
-      nocRequest.projectTitle,
-      `New NOC request created for ${nocRequest.projectTitle}`,
-      "HIGH",
-      nocRequest,
+      ministryCode, // user
+      "ministry_admin", // userRole
+      "NOC_REQUEST_CREATED", // action
+      nocRequest.projectTitle, // entity
+      `New NOC request created for ${nocRequest.projectTitle}`, // details
+      "HIGH", // severity
+      nocRequest.id, // entityId
+      nocRequest, // metadata
     );
 
     setNOCRequests((prev) => [nocRequest, ...prev]);

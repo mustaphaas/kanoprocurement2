@@ -357,7 +357,8 @@ const ContractManagement = () => {
         phone: "+234-XXX-XXX-XXXX",
         address: "Company Address",
         registrationNumber: "RC-XXXXXX",
-        taxNumber: "TIN-XXXXXX",
+        taxClearance: "TIN-XXXXXX",
+        performanceRating: 0, // Default performance rating
       },
       ministry: nocContract.ministry,
       department: nocContract.procuringEntity || nocContract.ministry,

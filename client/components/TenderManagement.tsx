@@ -79,6 +79,7 @@ import {
   generateTenderId,
   initializeTenderCounter,
 } from "@/lib/tenderIdGenerator";
+import RealTimeVerificationTool from "./RealTimeVerificationTool";
 
 // Types
 interface Tender {

@@ -55,6 +55,7 @@ interface CommitteeRoleTemplate {
   mandatoryRole: boolean;
   conflictOfInterestAllowed: boolean; // Binary: true = allowed, false = strictly prohibited
   minimumRequired: number; // Minimum number of this role required
+  maxConflictScore?: number; // Maximum allowed conflict of interest score
 }
 
 interface CommitteeTemplate {
@@ -82,6 +83,8 @@ interface EvaluationFramework {
   methodology: "QCBS" | "QBS" | "LCS" | "FBS";
   defaultTechnicalWeight: number; // Default weight, can be adjusted per tender
   defaultFinancialWeight: number; // Default weight, can be adjusted per tender
+  technicalWeightPercent?: number; // Legacy property for backward compatibility
+  financialWeightPercent?: number; // Legacy property for backward compatibility
   allowWeightCustomization: boolean; // Whether weights can be modified per tender
   passingTechnicalScore: number; // Configurable threshold
   scoringScale: number; // e.g., 100 or 10
@@ -171,7 +174,7 @@ export default function CommitteeTemplates() {
     minimumMembers: 3,
     maximumMembers: 7,
     quorumRequirement: 3,
-    methodology: "QCBS" as const,
+    methodology: "QCBS" as "QCBS" | "QBS" | "LCS" | "FBS",
     technicalWeightPercent: 70,
     financialWeightPercent: 30,
     passingTechnicalScore: 75,
@@ -620,10 +623,15 @@ export default function CommitteeTemplates() {
 
       baseTemplate.roles = [
         {
-          ...(baseTemplate.roles?.[0] || {}),
+          id: "ROLE-INFRA-001",
           title: "Chief Engineer (Chair)",
           description:
             "Senior civil engineer responsible for leading technical evaluations",
+          responsibilities: [
+            "Lead technical evaluations",
+            "Coordinate committee activities",
+            "Ensure compliance with standards",
+          ],
           requiredQualifications: [
             "Civil Engineering degree",
             "Professional Engineer certification",
@@ -634,6 +642,11 @@ export default function CommitteeTemplates() {
             "Construction Management",
             "Infrastructure Development",
           ],
+          minimumExperience: 15,
+          mandatoryRole: true,
+          conflictOfInterestAllowed: false,
+          minimumRequired: 1,
+          maxConflictScore: 2,
         },
         // ... other roles adapted for infrastructure
       ];
@@ -650,10 +663,15 @@ export default function CommitteeTemplates() {
 
       baseTemplate.roles = [
         {
-          ...(baseTemplate.roles?.[0] || {}),
+          id: "ROLE-EDU-001",
           title: "Education Director (Chair)",
           description:
             "Senior education professional responsible for leading evaluations",
+          responsibilities: [
+            "Lead educational evaluations",
+            "Coordinate committee activities",
+            "Ensure educational standards compliance",
+          ],
           requiredQualifications: [
             "Education degree (PhD preferred)",
             "Minimum 15 years education experience",
@@ -664,6 +682,11 @@ export default function CommitteeTemplates() {
             "Curriculum Development",
             "Educational Technology",
           ],
+          minimumExperience: 15,
+          mandatoryRole: true,
+          conflictOfInterestAllowed: false,
+          minimumRequired: 1,
+          maxConflictScore: 2,
         },
         // ... other roles adapted for education
       ];
