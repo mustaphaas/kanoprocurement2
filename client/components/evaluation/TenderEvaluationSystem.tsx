@@ -233,6 +233,20 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     // Refresh bidders to ensure latest data
     loadBidders();
     console.log("Tender selected:", tenderId);
+
+    // Debug: Show detailed tender and bidder mapping
+    console.log("🔍 Tender Selection Debug:");
+    console.log("  Selected Tender ID:", tenderId);
+    console.log("  Available Bidders:", bidders);
+    console.log("  Bidders for this tender:", bidders.filter(b => b.tenderId === tenderId));
+
+    // Check if there are any bids in localStorage for this tender
+    const storedBids = localStorage.getItem("tenderBids");
+    if (storedBids) {
+      const bids = JSON.parse(storedBids);
+      const bidsForTender = bids.filter((bid: any) => bid.tenderId === tenderId);
+      console.log("  Stored bids for this tender:", bidsForTender);
+    }
   };
 
   const handleSubmitEvaluation = () => {
