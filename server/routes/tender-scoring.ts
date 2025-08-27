@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { getAssignmentByTenderId } from "./committee-assignments";
 
 export interface TenderScore {
   id: string;
@@ -196,18 +197,39 @@ export const getTenderAssignment: RequestHandler = (req, res) => {
   try {
     const { tenderId } = req.params;
 
-    // Mock tender assignment data - in production this would come from database
-    const mockAssignment = {
-      id: `CA-${tenderId}`,
-      tenderId,
-      evaluationTemplateId: "ET-001", // Default QCBS template
-      committeeMemberId: "user123", // Current user
-      status: "active",
-      evaluationStart: "2024-01-15T00:00:00Z",
-      evaluationEnd: "2024-02-15T00:00:00Z",
+    if (!tenderId) {
+      return res.status(400).json({ error: "tenderId is required" });
+    }
+
+    // Get the real assignment data from committee assignments
+    const assignment = getAssignmentByTenderId(tenderId);
+
+    if (!assignment) {
+      // Return a mock assignment for backward compatibility if no assignment found
+      const mockAssignment = {
+        id: `CA-${tenderId}`,
+        tenderId,
+        evaluationTemplateId: "ET-001", // Default QCBS template
+        committeeMemberId: "user123", // Current user
+        status: "active",
+        evaluationStart: "2024-01-15T00:00:00Z",
+        evaluationEnd: "2024-02-15T00:00:00Z",
+      };
+      return res.json(mockAssignment);
+    }
+
+    // Transform the assignment data to match the expected format
+    const tenderAssignment = {
+      id: assignment.id,
+      tenderId: assignment.tenderId,
+      evaluationTemplateId: assignment.evaluationTemplateId,
+      committeeMemberId: "user123", // Current user - in production, get from auth
+      status: assignment.status.toLowerCase(),
+      evaluationStart: assignment.evaluationStart,
+      evaluationEnd: assignment.evaluationEnd,
     };
 
-    res.json(mockAssignment);
+    res.json(tenderAssignment);
   } catch (error) {
     console.error("Error fetching tender assignment:", error);
     res.status(500).json({ error: "Failed to fetch tender assignment" });
