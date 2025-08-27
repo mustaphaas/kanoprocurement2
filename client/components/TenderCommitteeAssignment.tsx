@@ -227,9 +227,17 @@ const STORAGE_KEYS = {
 interface CommitteeTemplate {
   id: string;
   name: string;
-  description: string;
-  category: string;
-  status: string;
+  description?: string;
+  category?: string;
+  status?: string;
+}
+
+interface EvaluationTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  type?: string;
 }
 
 export default function TenderCommitteeAssignment() {
@@ -240,6 +248,9 @@ export default function TenderCommitteeAssignment() {
   const [closedTenders, setClosedTenders] = useState<ClosedTender[]>([]);
   const [committeeTemplates, setCommitteeTemplates] = useState<
     CommitteeTemplate[]
+  >([]);
+  const [evaluationTemplates, setEvaluationTemplates] = useState<
+    EvaluationTemplate[]
   >([]);
   const [selectedAssignment, setSelectedAssignment] =
     useState<TenderCommitteeAssignment | null>(null);
@@ -262,6 +273,7 @@ export default function TenderCommitteeAssignment() {
     tenderTitle: "",
     tenderCategory: "",
     committeeTemplateId: "",
+    evaluationTemplateId: "",
     evaluationStartDate: "",
     evaluationEndDate: "",
     assignmentNotes: "",
@@ -277,6 +289,8 @@ export default function TenderCommitteeAssignment() {
 
   useEffect(() => {
     loadData();
+    fetchCommitteeTemplates();
+    fetchEvaluationTemplates();
   }, []);
 
   const loadData = () => {
@@ -1745,7 +1759,7 @@ export default function TenderCommitteeAssignment() {
                                     {getStatusBadge(member.status)}
                                   </div>
                                   <div className="text-sm text-gray-600">
-                                    {member.department} • {member.experience}+
+                                    {member.department} �� {member.experience}+
                                     years
                                   </div>
                                   <div className="text-xs text-gray-500">
