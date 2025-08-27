@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { getCommitteeTemplates } from "./routes/committee-templates";
-import { getEvaluationTemplates } from "./routes/evaluation-templates";
+import { getEvaluationTemplates, createEvaluationTemplate } from "./routes/evaluation-templates";
 import { createCommitteeAssignment, getCommitteeAssignments } from "./routes/committee-assignments";
 
 export function createServer() {
