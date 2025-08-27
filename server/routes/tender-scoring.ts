@@ -316,6 +316,98 @@ export const getTenderFinalScores: RequestHandler = async (req, res) => {
   }
 };
 
+// New endpoint for evaluator score submission with new format
+export const submitEvaluatorScore: RequestHandler = (req, res) => {
+  try {
+    const submission: TenderScoreSubmission = req.body;
+
+    // Validate required fields
+    if (!submission.tenderId) {
+      return res.status(400).json({ error: "tenderId is required" });
+    }
+    if (!submission.evaluatorId) {
+      return res.status(400).json({ error: "evaluatorId is required" });
+    }
+    if (!submission.scores || submission.scores.length === 0) {
+      return res.status(400).json({ error: "scores are required" });
+    }
+
+    // Get the tender assignment to validate against the evaluation template
+    const assignment = getAssignmentByTenderId(submission.tenderId);
+    if (!assignment) {
+      return res.status(404).json({ error: "Tender assignment not found" });
+    }
+
+    const evaluationTemplate = mockEvaluationTemplates.find(t => t.id === assignment.evaluationTemplateId);
+    if (!evaluationTemplate) {
+      return res.status(404).json({ error: "Evaluation template not found" });
+    }
+
+    // Validate scores against template criteria
+    for (const scoreItem of submission.scores) {
+      const criteriaId = parseInt(scoreItem.criterionId);
+      const criterion = evaluationTemplate.criteria.find(c => c.id === criteriaId);
+
+      if (!criterion) {
+        return res.status(400).json({
+          error: `Invalid criteria ID: ${scoreItem.criterionId}. This criterion is not part of the evaluation template.`
+        });
+      }
+
+      if (scoreItem.score < 0 || scoreItem.score > criterion.maxScore) {
+        return res.status(400).json({
+          error: `Score for '${criterion.name}' must be between 0 and ${criterion.maxScore}`
+        });
+      }
+    }
+
+    // Convert to storage format and calculate total score
+    const scoresRecord: Record<number, number> = {};
+    let totalScore = 0;
+
+    submission.scores.forEach(scoreItem => {
+      const criteriaId = parseInt(scoreItem.criterionId);
+      scoresRecord[criteriaId] = scoreItem.score;
+      totalScore += scoreItem.score;
+    });
+
+    // Find existing score entry for this evaluator and tender
+    const existingScoreIndex = tenderScores.findIndex(
+      (score) =>
+        score.tenderId === submission.tenderId &&
+        score.committeeMemberId === submission.evaluatorId
+    );
+
+    const newScore: TenderScore = {
+      id: existingScoreIndex >= 0 ? tenderScores[existingScoreIndex].id : `TS-${Date.now()}`,
+      tenderId: submission.tenderId,
+      committeeMemberId: submission.evaluatorId,
+      bidderName: "All Bidders", // For new format, we handle all bidders in one submission
+      scores: scoresRecord,
+      totalScore,
+      submittedAt: new Date().toISOString(),
+      status: "submitted",
+    };
+
+    if (existingScoreIndex >= 0) {
+      tenderScores[existingScoreIndex] = newScore;
+    } else {
+      tenderScores.push(newScore);
+    }
+
+    console.log("Submitted evaluator score:", newScore);
+    res.status(201).json({
+      success: true,
+      scoreId: newScore.id,
+      message: "Scores submitted successfully",
+      submittedScores: submission.scores
+    });
+  } catch (error) {
+    console.error("Error submitting evaluator score:", error);
+    res.status(500).json({ error: "Failed to submit evaluator score" });
+  }
+};
+
 export const getTenderAssignment: RequestHandler = (req, res) => {
   try {
     const { tenderId } = req.params;
