@@ -2400,12 +2400,22 @@ export default function TenderCommitteeAssignment() {
                   <SelectValue placeholder="Select evaluation template" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(assignmentForm.tenderCategory
-                    ? evaluationTemplates.filter(template =>
-                        template.category === assignmentForm.tenderCategory
-                      )
-                    : evaluationTemplates
-                  ).map((template) => (
+                  {(() => {
+                    const filteredTemplates = assignmentForm.tenderCategory
+                      ? evaluationTemplates.filter(template =>
+                          template.category === assignmentForm.tenderCategory
+                        )
+                      : evaluationTemplates;
+
+                    console.log('🔽 Evaluation template dropdown:', {
+                      tenderCategory: assignmentForm.tenderCategory,
+                      allTemplates: evaluationTemplates,
+                      filteredTemplates,
+                      templateCount: filteredTemplates.length
+                    });
+
+                    return filteredTemplates;
+                  })().map((template) => (
                     <SelectItem key={template.id} value={template.id}>
                       <div className="flex flex-col items-start">
                         <span className="font-medium">{template.name}</span>
