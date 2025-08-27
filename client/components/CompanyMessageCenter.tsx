@@ -38,8 +38,6 @@ import {
   Target,
   Download,
   Phone,
-  Mark,
-  MarkComplete,
   Check,
 } from "lucide-react";
 import {
