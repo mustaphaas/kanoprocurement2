@@ -1103,7 +1103,7 @@ export default function TenderCommitteeAssignment() {
 
   // Removed createSampleClosedTenders - now using unified data source from @/lib/tenderData
 
-  const createAssignment = () => {
+  const createAssignment = async () => {
     // Clear previous messages
     setErrorMessage("");
     setSuccessMessage("");
@@ -1115,6 +1115,10 @@ export default function TenderCommitteeAssignment() {
     }
     if (!assignmentForm.committeeTemplateId) {
       setErrorMessage("Please select a committee template.");
+      return;
+    }
+    if (!assignmentForm.evaluationTemplateId) {
+      setErrorMessage("Please select an evaluation template.");
       return;
     }
     if (!assignmentForm.evaluationStartDate) {
@@ -1173,19 +1177,50 @@ export default function TenderCommitteeAssignment() {
       conflicts: [],
     };
 
-    const updatedAssignments = [...assignments, newAssignment];
-    setAssignments(updatedAssignments);
-    saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
+    // Submit to API
+    try {
+      const payload = {
+        tenderId: assignmentForm.tenderId,
+        committeeTemplateId: assignmentForm.committeeTemplateId,
+        evaluationTemplateId: assignmentForm.evaluationTemplateId,
+        evaluationStart: assignmentForm.evaluationStartDate,
+        evaluationEnd: assignmentForm.evaluationEndDate,
+        notes: assignmentForm.assignmentNotes
+      };
 
-    // Log for debugging
-    console.log("Created new assignment:", newAssignment);
-    console.log("Updated assignments array:", updatedAssignments);
+      const response = await fetch('/api/committee-assignments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const createdAssignment = await response.json();
+        console.log('Created assignment via API:', createdAssignment);
+
+        // Also update local state for immediate UI feedback
+        const updatedAssignments = [...assignments, newAssignment];
+        setAssignments(updatedAssignments);
+        saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || 'Failed to create assignment');
+        return;
+      }
+    } catch (error) {
+      console.error('Error creating assignment:', error);
+      setErrorMessage('Network error: Failed to create assignment');
+      return;
+    }
 
     setAssignmentForm({
       tenderId: "",
       tenderTitle: "",
       tenderCategory: "",
       committeeTemplateId: "",
+      evaluationTemplateId: "",
       evaluationStartDate: "",
       evaluationEndDate: "",
       assignmentNotes: "",
@@ -1195,8 +1230,9 @@ export default function TenderCommitteeAssignment() {
     // Show success message
     setSuccessMessage("Committee assignment created successfully!");
 
-    // Refresh committee templates after creating assignment
-    loadCommitteeTemplates();
+    // Refresh templates after creating assignment
+    fetchCommitteeTemplates();
+    fetchEvaluationTemplates();
   };
 
   const loadCommitteeTemplates = () => {
