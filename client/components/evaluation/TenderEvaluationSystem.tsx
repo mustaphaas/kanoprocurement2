@@ -163,6 +163,7 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     },
   });
 
+  // Calculate filtered bidders (must be before useEffect hooks that reference it)
   const filteredBidders = bidders.filter(
     (bidder) => bidder.tenderId === selectedTender,
   );
