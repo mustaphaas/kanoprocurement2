@@ -47,21 +47,7 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
   };
 
   const [selectedTender, setSelectedTender] = useState("");
-  const [bidders] = useState([
-    {
-      id: "bid001",
-      company: "Northern Construction Ltd",
-      tenderId: "tender001",
-    },
-    { id: "bid002", company: "Sahel Engineering Co.", tenderId: "tender001" },
-    {
-      id: "bid003",
-      company: "Kano Infrastructure Partners",
-      tenderId: "tender001",
-    },
-    { id: "bid004", company: "MedSupply Nigeria Ltd", tenderId: "tender002" },
-    { id: "bid005", company: "HealthTech Solutions", tenderId: "tender002" },
-  ]);
+  const [bidders, setBidders] = useState([]);
 
   const [scores, setScores] = useState({});
   const [selectedBidder, setSelectedBidder] = useState("");
