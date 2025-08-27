@@ -2,6 +2,9 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { getCommitteeTemplates } from "./routes/committee-templates";
+import { getEvaluationTemplates } from "./routes/evaluation-templates";
+import { createCommitteeAssignment, getCommitteeAssignments } from "./routes/committee-assignments";
 
 export function createServer() {
   const app = express();
@@ -18,6 +21,12 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Committee management API routes
+  app.get("/api/committee-templates", getCommitteeTemplates);
+  app.get("/api/evaluation-templates", getEvaluationTemplates);
+  app.post("/api/committee-assignments", createCommitteeAssignment);
+  app.get("/api/committee-assignments", getCommitteeAssignments);
 
   return app;
 }
