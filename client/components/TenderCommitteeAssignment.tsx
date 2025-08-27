@@ -1242,10 +1242,20 @@ export default function TenderCommitteeAssignment() {
       );
       const ministryCode = ministryUser.ministryCode?.toUpperCase() || ministryUser.ministryId?.toUpperCase() || "MOH";
 
+      console.log("🏛️ Loading committee templates:", {
+        ministryUser,
+        derivedMinistryCode: ministryCode,
+        ministryCode: ministryUser.ministryCode,
+        ministryId: ministryUser.ministryId
+      });
+
       const templatesKey = `${ministryCode}_${STORAGE_KEYS.COMMITTEE_TEMPLATES}`;
+      console.log("🔑 Looking for templates in localStorage key:", templatesKey);
+
       const storedTemplates = localStorage.getItem(templatesKey);
       if (storedTemplates) {
         const parsedTemplates = JSON.parse(storedTemplates);
+        console.log("📄 Found stored templates:", parsedTemplates);
 
         // Filter templates to ensure only ministry-specific ones are loaded
         const ministrySpecificTemplates = parsedTemplates.filter(
@@ -1256,13 +1266,16 @@ export default function TenderCommitteeAssignment() {
               (ministryCode === "MOWI" &&
                 template.category === "Infrastructure") ||
               (ministryCode === "MOE" && template.category === "Education");
+
+            console.log(`🔍 Template ${template.id} (category: ${template.category}) belongs to ${ministryCode}?`, belongsToMinistry);
             return belongsToMinistry;
           },
         );
 
         setCommitteeTemplates(ministrySpecificTemplates);
         console.log(
-          `Refreshed ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}`,
+          `✅ Loaded ${ministrySpecificTemplates.length} ministry-specific committee templates for ${ministryCode}:`,
+          ministrySpecificTemplates
         );
 
         // Save the filtered templates back to ensure cleanup
@@ -1270,6 +1283,8 @@ export default function TenderCommitteeAssignment() {
           templatesKey,
           JSON.stringify(ministrySpecificTemplates),
         );
+      } else {
+        console.log("❌ No stored templates found for key:", templatesKey);
       }
     } catch (error) {
       console.error("Error loading committee templates:", error);
