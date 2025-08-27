@@ -146,16 +146,40 @@ export const getTenderAssignmentsForEvaluator: RequestHandler = (req, res) => {
     // For now, return all active assignments (in production, filter by evaluator membership)
     const evaluatorAssignments = assignments.filter(assignment =>
       assignment.status === "Draft" || assignment.status === "Active"
-    ).map(assignment => ({
-      id: assignment.id,
-      tenderId: assignment.tenderId,
-      tenderTitle: `Tender ${assignment.tenderId}`, // In production, fetch from tender table
-      tenderCategory: "Healthcare", // In production, fetch from tender table
-      evaluationTemplateId: assignment.evaluationTemplateId,
-      evaluationStart: assignment.evaluationStart,
-      evaluationEnd: assignment.evaluationEnd,
-      status: assignment.status
-    }));
+    ).map(assignment => {
+      // Generate realistic tender titles and categories based on tender ID and template
+      let tenderTitle = "Sample Tender";
+      let tenderCategory = "General";
+
+      switch (assignment.tenderId) {
+        case "TDR-001":
+          tenderTitle = "Supply of Medical Equipment to Primary Health Centers";
+          tenderCategory = "Healthcare";
+          break;
+        case "TDR-002":
+          tenderTitle = "Road Construction and Rehabilitation Project";
+          tenderCategory = "Infrastructure";
+          break;
+        case "TDR-003":
+          tenderTitle = "Consulting Services for Health System Improvement";
+          tenderCategory = "Professional Services";
+          break;
+        default:
+          tenderTitle = `Tender ${assignment.tenderId}`;
+          tenderCategory = "General";
+      }
+
+      return {
+        id: assignment.id,
+        tenderId: assignment.tenderId,
+        tenderTitle,
+        tenderCategory,
+        evaluationTemplateId: assignment.evaluationTemplateId,
+        evaluationStart: assignment.evaluationStart,
+        evaluationEnd: assignment.evaluationEnd,
+        status: assignment.status
+      };
+    });
 
     res.json(evaluatorAssignments);
   } catch (error) {
