@@ -1247,6 +1247,41 @@ export default function TenderCommitteeAssignment() {
     }
   }, [showAssignmentModal]);
 
+  // API fetch functions
+  const fetchCommitteeTemplates = async () => {
+    try {
+      const response = await fetch('/api/committee-templates');
+      if (response.ok) {
+        const templates = await response.json();
+        setCommitteeTemplates(templates);
+        console.log('Fetched committee templates from API:', templates);
+      } else {
+        console.error('Failed to fetch committee templates from API');
+        // Fallback to loadCommitteeTemplates if API fails
+        loadCommitteeTemplates();
+      }
+    } catch (error) {
+      console.error('Error fetching committee templates:', error);
+      // Fallback to loadCommitteeTemplates if API fails
+      loadCommitteeTemplates();
+    }
+  };
+
+  const fetchEvaluationTemplates = async () => {
+    try {
+      const response = await fetch('/api/evaluation-templates');
+      if (response.ok) {
+        const templates = await response.json();
+        setEvaluationTemplates(templates);
+        console.log('Fetched evaluation templates from API:', templates);
+      } else {
+        console.error('Failed to fetch evaluation templates from API');
+      }
+    } catch (error) {
+      console.error('Error fetching evaluation templates:', error);
+    }
+  };
+
   const submitCOIDeclaration = (assignmentId: string) => {
     const newDeclaration: COIDeclaration = {
       id: `COI-${Date.now()}`,
