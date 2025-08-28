@@ -82,6 +82,7 @@ import {
 } from "@/lib/tenderIdGenerator";
 import RealTimeVerificationTool from "./RealTimeVerificationTool";
 import { getCentralClarifications, updateClarification, type ClarificationRecord } from "@/lib/clarificationsStorage";
+import { getMinistryById } from "@shared/ministries";
 
 // Types
 interface Tender {
