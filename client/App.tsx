@@ -13,6 +13,7 @@ import AllTenders from "./pages/AllTenders";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import Login from "./pages/Login";
 import CompanyDashboard from "./pages/CompanyDashboard";
+import CompanyDashboardModern from "./pages/CompanyDashboardModern";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
@@ -75,6 +76,14 @@ const App = () => (
             <Route path="/user/dashboard" element={<UserDashboard />} />
             <Route
               path="/company/dashboard"
+              element={
+                <ProtectedRoute requiredRole="company">
+                  <CompanyDashboardModern />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/company/dashboard/legacy"
               element={
                 <ProtectedRoute requiredRole="company">
                   <CompanyDashboard />

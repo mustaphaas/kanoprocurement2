@@ -1145,6 +1145,39 @@ export default function TenderCommitteeAssignment() {
       return;
     }
 
+    // Find the selected tender to get real tender information
+    const selectedTender = closedTenders.find(
+      (t) => t.id === assignmentForm.tenderId,
+    );
+
+    // If tender not found in closed tenders, try to get it from main tender storage
+    let tenderTitle = assignmentForm.tenderTitle;
+    let tenderCategory = assignmentForm.tenderCategory;
+
+    if (!selectedTender && assignmentForm.tenderId) {
+      // Try to fetch tender information from main storage
+      try {
+        const mainTenders = JSON.parse(
+          localStorage.getItem("kanoproc_tenders") || "[]",
+        );
+        const foundTender = mainTenders.find(
+          (t: any) => t.id === assignmentForm.tenderId,
+        );
+        if (foundTender) {
+          tenderTitle = foundTender.title;
+          tenderCategory =
+            foundTender.category ||
+            getCategoryFromMinistry(foundTender.ministry);
+          console.log(`📋 Found tender in main storage: ${foundTender.title}`);
+        }
+      } catch (error) {
+        console.warn("Could not fetch tender from main storage:", error);
+      }
+    } else if (selectedTender) {
+      tenderTitle = selectedTender.title;
+      tenderCategory = selectedTender.category;
+    }
+
     // Find the selected template to get its name
     const selectedTemplate = committeeTemplates.find(
       (t) => t.id === assignmentForm.committeeTemplateId,
@@ -1153,8 +1186,8 @@ export default function TenderCommitteeAssignment() {
     const newAssignment: TenderCommitteeAssignment = {
       id: `TCA-${Date.now()}`,
       tenderId: assignmentForm.tenderId,
-      tenderTitle: assignmentForm.tenderTitle,
-      tenderCategory: assignmentForm.tenderCategory,
+      tenderTitle: tenderTitle,
+      tenderCategory: tenderCategory,
       committeeTemplateId: assignmentForm.committeeTemplateId,
       templateName: selectedTemplate?.name || "Unknown Template",
       assignedMembers: [],
@@ -1312,6 +1345,15 @@ export default function TenderCommitteeAssignment() {
       loadCommitteeTemplates();
     }
   }, [showAssignmentModal]);
+
+  // Helper function to determine category from ministry
+  const getCategoryFromMinistry = (ministry: string) => {
+    if (ministry?.includes("Health")) return "Healthcare";
+    if (ministry?.includes("Works") || ministry?.includes("Infrastructure"))
+      return "Infrastructure";
+    if (ministry?.includes("Education")) return "Education";
+    return "General";
+  };
 
   // API fetch functions
   const fetchCommitteeTemplates = async () => {
@@ -2331,11 +2373,41 @@ export default function TenderCommitteeAssignment() {
                     const selectedTender = closedTenders.find(
                       (t) => t.id === value,
                     );
+
+                    let tenderTitle = selectedTender?.title || "";
+                    let tenderCategory = selectedTender?.category || "";
+
+                    // If tender not found in closed tenders, try main storage
+                    if (!selectedTender && value) {
+                      try {
+                        const mainTenders = JSON.parse(
+                          localStorage.getItem("kanoproc_tenders") || "[]",
+                        );
+                        const foundTender = mainTenders.find(
+                          (t: any) => t.id === value,
+                        );
+                        if (foundTender) {
+                          tenderTitle = foundTender.title;
+                          tenderCategory =
+                            foundTender.category ||
+                            getCategoryFromMinistry(foundTender.ministry);
+                          console.log(
+                            `📋 Found tender in main storage: ${foundTender.title}`,
+                          );
+                        }
+                      } catch (error) {
+                        console.warn(
+                          "Could not fetch tender from main storage:",
+                          error,
+                        );
+                      }
+                    }
+
                     setAssignmentForm({
                       ...assignmentForm,
                       tenderId: value,
-                      tenderTitle: selectedTender?.title || "",
-                      tenderCategory: selectedTender?.category || "",
+                      tenderTitle,
+                      tenderCategory,
                     });
                   }}
                 >
