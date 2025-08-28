@@ -14,6 +14,7 @@ import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistry
 import PaymentRequestApproval from "@/components/ministry/PaymentRequestApproval";
 import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
+import { getCentralClarifications, type ClarificationRecord } from "@/lib/clarificationsStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
 import {
@@ -2645,7 +2646,21 @@ export default function MinistryDashboard() {
 
     setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
-    setVendorCommunications(mockVendorCommunications);
+    const centralClars = getCentralClarifications();
+    const mappedFromCentral = centralClars.map((c) => ({
+      id: c.id,
+      vendorId: c.vendorEmail,
+      vendorName: c.vendorName,
+      subject: c.subject,
+      message: c.message,
+      type: "Clarification" as const,
+      channels: ["Portal"] as ("Email" | "SMS" | "Portal")[],
+      sentDate: c.submittedDate.split("T")[0],
+      readStatus: false,
+      responseRequired: true,
+      priority: c.urgent ? "High" : "Medium",
+    }));
+    setVendorCommunications([...mappedFromCentral, ...mockVendorCommunications]);
     setScheduledPublications(mockScheduledPublications);
     setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
 
@@ -2695,6 +2710,31 @@ export default function MinistryDashboard() {
         delete (window as any).ministryDashboardCleanup;
       }
     };
+  }, []);
+
+  // Listen for real-time clarification submissions from companies
+  useEffect(() => {
+    const handler = (e: any) => {
+      const c: ClarificationRecord = e.detail;
+      setVendorCommunications((prev) => [
+        {
+          id: c.id,
+          vendorId: c.vendorEmail,
+          vendorName: c.vendorName,
+          subject: c.subject,
+          message: c.message,
+          type: "Clarification",
+          channels: ["Portal"],
+          sentDate: c.submittedDate.split("T")[0],
+          readStatus: false,
+          responseRequired: true,
+          priority: c.urgent ? "High" : "Medium",
+        },
+        ...prev,
+      ]);
+    };
+    window.addEventListener("clarificationSubmitted", handler as EventListener);
+    return () => window.removeEventListener("clarificationSubmitted", handler as EventListener);
   }, []);
 
   // Listen for changes to main tender storage and refresh overview
