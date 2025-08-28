@@ -219,7 +219,6 @@ export default function CompanyDashboard() {
     setClarTenderId("");
     setActiveSection("existing-clarifications");
   };
-  const [statusUpdateTrigger, setStatusUpdateTrigger] = useState(0);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -337,7 +336,7 @@ export default function CompanyDashboard() {
             })),
           );
         } else {
-          console.log("📊 LocalStorage Monitor - No userStatus keys found");
+          console.log("���� LocalStorage Monitor - No userStatus keys found");
         }
       }, 5000);
 
