@@ -13,6 +13,7 @@ import AllTenders from "./pages/AllTenders";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import Login from "./pages/Login";
 import CompanyDashboard from "./pages/CompanyDashboard";
+import CompanyDashboardModern from "./pages/CompanyDashboardModern";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
