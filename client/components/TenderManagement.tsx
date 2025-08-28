@@ -240,9 +240,22 @@ const TenderManagement = () => {
   const [responseText, setResponseText] = useState("");
 
   useEffect(() => {
-    setClarifications(getCentralClarifications());
+    const ministryUser = localStorage.getItem("ministryUser");
+    let ministryCode = "MOH";
+    try {
+      if (ministryUser) {
+        const data = JSON.parse(ministryUser);
+        const m = getMinistryById(data.ministryId);
+        if (m?.code) ministryCode = m.code;
+      }
+    } catch {}
+
+    const initial = getCentralClarifications().filter((c) => c.ministryCode === ministryCode);
+    setClarifications(initial);
+
     const onClarification = (e: any) => {
       const c: ClarificationRecord = e.detail;
+      if (c.ministryCode !== ministryCode) return;
       setClarifications((prev) => [c, ...prev]);
     };
     window.addEventListener("clarificationSubmitted", onClarification as EventListener);
