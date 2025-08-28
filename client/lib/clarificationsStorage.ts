@@ -28,9 +28,7 @@ export const getCentralClarifications = (): ClarificationRecord[] => {
   }
 };
 
-export const saveCentralClarifications = (
-  items: ClarificationRecord[],
-) => {
+export const saveCentralClarifications = (items: ClarificationRecord[]) => {
   localStorage.setItem(CENTRAL_KEY, JSON.stringify(items));
 };
 
@@ -51,7 +49,9 @@ export const getCompanyClarifications = (
   );
 };
 
-export const getClarificationById = (id: string): ClarificationRecord | null => {
+export const getClarificationById = (
+  id: string,
+): ClarificationRecord | null => {
   return getCentralClarifications().find((c) => c.id === id) || null;
 };
 

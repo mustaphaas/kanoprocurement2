@@ -14,7 +14,10 @@ import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistry
 import PaymentRequestApproval from "@/components/ministry/PaymentRequestApproval";
 import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
-import { getCentralClarifications, type ClarificationRecord } from "@/lib/clarificationsStorage";
+import {
+  getCentralClarifications,
+  type ClarificationRecord,
+} from "@/lib/clarificationsStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
 import {
@@ -2647,7 +2650,9 @@ export default function MinistryDashboard() {
     setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
     const centralClars = getCentralClarifications();
-    const filtered = centralClars.filter((c) => c.ministryCode === currentMinistry.code);
+    const filtered = centralClars.filter(
+      (c) => c.ministryCode === currentMinistry.code,
+    );
     const mappedFromCentral = filtered.map((c) => ({
       id: c.id,
       vendorId: c.vendorEmail,
@@ -2661,7 +2666,10 @@ export default function MinistryDashboard() {
       responseRequired: true,
       priority: c.urgent ? "High" : "Medium",
     }));
-    setVendorCommunications([...mappedFromCentral, ...mockVendorCommunications]);
+    setVendorCommunications([
+      ...mappedFromCentral,
+      ...mockVendorCommunications,
+    ]);
     setScheduledPublications(mockScheduledPublications);
     setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
 
@@ -2737,7 +2745,11 @@ export default function MinistryDashboard() {
       ]);
     };
     window.addEventListener("clarificationSubmitted", handler as EventListener);
-    return () => window.removeEventListener("clarificationSubmitted", handler as EventListener);
+    return () =>
+      window.removeEventListener(
+        "clarificationSubmitted",
+        handler as EventListener,
+      );
   }, []);
 
   // Listen for changes to main tender storage and refresh overview

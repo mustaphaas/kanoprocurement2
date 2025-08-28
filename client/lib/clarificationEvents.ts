@@ -24,5 +24,6 @@ export const dispatchClarificationSubmitted = (
 
 // Expose for manual testing if needed
 if (typeof window !== "undefined") {
-  (window as any).dispatchClarificationSubmitted = dispatchClarificationSubmitted;
+  (window as any).dispatchClarificationSubmitted =
+    dispatchClarificationSubmitted;
 }

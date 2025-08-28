@@ -11,7 +11,11 @@ import { getAggregatedMinistryTenders } from "@/lib/companyTenderAggregator";
 import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import PaymentRequest from "@/components/PaymentRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { addClarification, getCompanyClarifications, type ClarificationRecord } from "@/lib/clarificationsStorage";
+import {
+  addClarification,
+  getCompanyClarifications,
+  type ClarificationRecord,
+} from "@/lib/clarificationsStorage";
 import { dispatchClarificationSubmitted } from "@/lib/clarificationEvents";
 import {
   Building2,
@@ -154,10 +158,19 @@ export default function CompanyDashboard() {
   const [statusUpdateTrigger, setStatusUpdateTrigger] = useState(0);
 
   // Discover available tenders and map to ministries for auto-detection
-  const aggregatedTenders = useMemo(() => getAggregatedMinistryTenders(), [statusUpdateTrigger]);
+  const aggregatedTenders = useMemo(
+    () => getAggregatedMinistryTenders(),
+    [statusUpdateTrigger],
+  );
 
   const handleSubmitClarification = () => {
-    if (!clarTender || !clarCategory || !clarSubject || !clarMessage || !clarMinistryCode) {
+    if (
+      !clarTender ||
+      !clarCategory ||
+      !clarSubject ||
+      !clarMessage ||
+      !clarMinistryCode
+    ) {
       alert("Please complete all required fields, including Ministry.");
       return;
     }
@@ -3271,11 +3284,17 @@ export default function CompanyDashboard() {
                         onChange={(e) => {
                           const id = e.target.value;
                           setClarTenderId(id);
-                          const t = aggregatedTenders.find((tt: any) => tt.id === id);
+                          const t = aggregatedTenders.find(
+                            (tt: any) => tt.id === id,
+                          );
                           if (t) {
                             setClarTender(`${t.id} - ${t.title}`);
                             // Prefer sourceMinistry if present, else try to infer from id prefix
-                            const code = (t as any).sourceMinistry || (typeof t.id === "string" ? t.id.split("-")[0] : "");
+                            const code =
+                              (t as any).sourceMinistry ||
+                              (typeof t.id === "string"
+                                ? t.id.split("-")[0]
+                                : "");
                             setClarMinistryCode(code || "");
                           } else {
                             setClarTender("");
@@ -3296,7 +3315,11 @@ export default function CompanyDashboard() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Category
                       </label>
-                      <select value={clarCategory} onChange={(e) => setClarCategory(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <select
+                        value={clarCategory}
+                        onChange={(e) => setClarCategory(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      >
                         <option value="">Select Category</option>
                         <option value="technical">
                           Technical Specifications
@@ -3320,7 +3343,11 @@ export default function CompanyDashboard() {
                       type="text"
                       readOnly
                       className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-                      value={clarMinistryCode ? clarMinistryCode : "Select a tender to auto-detect"}
+                      value={
+                        clarMinistryCode
+                          ? clarMinistryCode
+                          : "Select a tender to auto-detect"
+                      }
                     />
                   </div>
 
@@ -3410,7 +3437,10 @@ export default function CompanyDashboard() {
                     <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                       Save as Draft
                     </button>
-                    <button onClick={handleSubmitClarification} className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                    <button
+                      onClick={handleSubmitClarification}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                    >
                       <Send className="h-4 w-4 mr-2" />
                       Submit Clarification
                     </button>
@@ -3455,96 +3485,99 @@ export default function CompanyDashboard() {
               </div>
               <div className="p-6">
                 <div className="space-y-4">
-                  {getCompanyClarifications(companyData.email).map((clarification) => (
-                    <div
-                      key={clarification.id}
-                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="font-medium text-gray-900">
-                              {clarification.subject}
-                            </h3>
-                            {clarification.urgent && (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                <AlertTriangle className="h-3 w-3 mr-1" />
-                                Urgent
+                  {getCompanyClarifications(companyData.email).map(
+                    (clarification) => (
+                      <div
+                        key={clarification.id}
+                        className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h3 className="font-medium text-gray-900">
+                                {clarification.subject}
+                              </h3>
+                              {clarification.urgent && (
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                  <AlertTriangle className="h-3 w-3 mr-1" />
+                                  Urgent
+                                </span>
+                              )}
+                              <span
+                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                  clarification.status === "Responded"
+                                    ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
+                                    : clarification.status ===
+                                        "Pending Response"
+                                      ? "bg-yellow-100 text-yellow-800"
+                                      : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {clarification.status}
                               </span>
-                            )}
-                            <span
-                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                clarification.status === "Responded"
-                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800"
-                                  : clarification.status === "Pending Response"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : "bg-gray-100 text-gray-800"
-                              }`}
-                            >
-                              {clarification.status}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-2">
-                            {clarification.tender}
-                          </p>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-500">
-                            <div>
-                              <span className="font-medium">Category:</span>{" "}
-                              {clarification.category}
                             </div>
-                            <div>
-                              <span className="font-medium">Submitted:</span>{" "}
-                              {new Date(
-                                clarification.submittedDate,
-                              ).toLocaleDateString()}
-                            </div>
-                            <div>
-                              <span className="font-medium">Response:</span>{" "}
-                              {clarification.responseDate
-                                ? new Date(
-                                    clarification.responseDate,
-                                  ).toLocaleDateString()
-                                : "Pending"}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex space-x-2 ml-4">
-                          <button className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                            <Eye className="h-4 w-4 mr-1" />
-                            View
-                          </button>
-                          {clarification.status === "Pending Response" && (
-                            <button className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                              <Edit className="h-4 w-4 mr-1" />
-                              Edit
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                      {clarification.response && (
-                        <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                          <div className="flex items-start space-x-3">
-                            <MessageSquare className="h-5 w-5 text-green-600 mt-0.5" />
-                            <div>
-                              <h4 className="text-sm font-medium text-green-900">
-                                Official Response
-                              </h4>
-                              <p className="text-sm text-green-800 mt-1">
-                                {clarification.response}
-                              </p>
-                              <p className="text-xs text-green-600 mt-2">
-                                Responded on{" "}
+                            <p className="text-sm text-gray-600 mb-2">
+                              {clarification.tender}
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-500">
+                              <div>
+                                <span className="font-medium">Category:</span>{" "}
+                                {clarification.category}
+                              </div>
+                              <div>
+                                <span className="font-medium">Submitted:</span>{" "}
                                 {new Date(
-                                  clarification.responseDate!,
+                                  clarification.submittedDate,
                                 ).toLocaleDateString()}
-                              </p>
+                              </div>
+                              <div>
+                                <span className="font-medium">Response:</span>{" "}
+                                {clarification.responseDate
+                                  ? new Date(
+                                      clarification.responseDate,
+                                    ).toLocaleDateString()
+                                  : "Pending"}
+                              </div>
                             </div>
                           </div>
+                          <div className="flex space-x-2 ml-4">
+                            <button className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                              <Eye className="h-4 w-4 mr-1" />
+                              View
+                            </button>
+                            {clarification.status === "Pending Response" && (
+                              <button className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                <Edit className="h-4 w-4 mr-1" />
+                                Edit
+                              </button>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  ))}
+
+                        {clarification.response && (
+                          <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div className="flex items-start space-x-3">
+                              <MessageSquare className="h-5 w-5 text-green-600 mt-0.5" />
+                              <div>
+                                <h4 className="text-sm font-medium text-green-900">
+                                  Official Response
+                                </h4>
+                                <p className="text-sm text-green-800 mt-1">
+                                  {clarification.response}
+                                </p>
+                                <p className="text-xs text-green-600 mt-2">
+                                  Responded on{" "}
+                                  {new Date(
+                                    clarification.responseDate!,
+                                  ).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ),
+                  )}
                 </div>
               </div>
             </div>

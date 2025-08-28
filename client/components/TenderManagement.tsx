@@ -81,7 +81,11 @@ import {
   initializeTenderCounter,
 } from "@/lib/tenderIdGenerator";
 import RealTimeVerificationTool from "./RealTimeVerificationTool";
-import { getCentralClarifications, updateClarification, type ClarificationRecord } from "@/lib/clarificationsStorage";
+import {
+  getCentralClarifications,
+  updateClarification,
+  type ClarificationRecord,
+} from "@/lib/clarificationsStorage";
 import { getMinistryById } from "@shared/ministries";
 
 // Types
@@ -233,7 +237,9 @@ const TenderManagement = () => {
   const [currentEvaluatorId] = useState("USR-003"); // In production, get from auth context
 
   // Dynamic Clarifications (from company submissions)
-  const [clarifications, setClarifications] = useState<ClarificationRecord[]>([]);
+  const [clarifications, setClarifications] = useState<ClarificationRecord[]>(
+    [],
+  );
   const [selectedClarification, setSelectedClarification] =
     useState<ClarificationRecord | null>(null);
   const [clarDialogOpen, setClarDialogOpen] = useState(false);
@@ -250,7 +256,9 @@ const TenderManagement = () => {
       }
     } catch {}
 
-    const initial = getCentralClarifications().filter((c) => c.ministryCode === ministryCode);
+    const initial = getCentralClarifications().filter(
+      (c) => c.ministryCode === ministryCode,
+    );
     setClarifications(initial);
 
     const onClarification = (e: any) => {
@@ -258,8 +266,15 @@ const TenderManagement = () => {
       if (c.ministryCode !== ministryCode) return;
       setClarifications((prev) => [c, ...prev]);
     };
-    window.addEventListener("clarificationSubmitted", onClarification as EventListener);
-    return () => window.removeEventListener("clarificationSubmitted", onClarification as EventListener);
+    window.addEventListener(
+      "clarificationSubmitted",
+      onClarification as EventListener,
+    );
+    return () =>
+      window.removeEventListener(
+        "clarificationSubmitted",
+        onClarification as EventListener,
+      );
   }, []);
 
   const openClarification = (c: ClarificationRecord) => {
@@ -2107,7 +2122,9 @@ const TenderManagement = () => {
                       <MessageSquare className="h-5 w-5 text-green-600" />
                       <div>
                         <p className="font-medium">Clarifications</p>
-                        <p className="text-2xl font-bold">{clarifications.length}</p>
+                        <p className="text-2xl font-bold">
+                          {clarifications.length}
+                        </p>
                       </div>
                     </div>
                   </Card>
@@ -2150,15 +2167,31 @@ const TenderManagement = () => {
                       <TableBody>
                         {clarifications.slice(0, 10).map((c) => (
                           <TableRow key={c.id}>
-                            <TableCell className="font-medium">{c.subject}</TableCell>
+                            <TableCell className="font-medium">
+                              {c.subject}
+                            </TableCell>
                             <TableCell>{c.tender}</TableCell>
                             <TableCell>{c.vendorName}</TableCell>
-                            <TableCell>{new Date(c.submittedDate).toLocaleDateString()}</TableCell>
                             <TableCell>
-                              <Badge variant={c.status === "Pending Response" ? "secondary" : "default"}>{c.status}</Badge>
+                              {new Date(c.submittedDate).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  c.status === "Pending Response"
+                                    ? "secondary"
+                                    : "default"
+                                }
+                              >
+                                {c.status}
+                              </Badge>
                             </TableCell>
                             <TableCell className="text-right">
-                              <Button variant="outline" size="sm" onClick={() => openClarification(c)}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openClarification(c)}
+                              >
                                 <Eye className="h-4 w-4 mr-1" /> View
                               </Button>
                             </TableCell>
@@ -2166,7 +2199,12 @@ const TenderManagement = () => {
                         ))}
                         {clarifications.length === 0 && (
                           <TableRow>
-                            <TableCell colSpan={6} className="text-center text-sm text-gray-500">No clarifications yet</TableCell>
+                            <TableCell
+                              colSpan={6}
+                              className="text-center text-sm text-gray-500"
+                            >
+                              No clarifications yet
+                            </TableCell>
                           </TableRow>
                         )}
                       </TableBody>
@@ -2186,7 +2224,9 @@ const TenderManagement = () => {
                 <div className="space-y-3">
                   <div>
                     <div className="text-sm text-gray-500">Subject</div>
-                    <div className="font-medium">{selectedClarification.subject}</div>
+                    <div className="font-medium">
+                      {selectedClarification.subject}
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
@@ -2200,15 +2240,29 @@ const TenderManagement = () => {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500">Message</div>
-                    <div className="whitespace-pre-wrap">{selectedClarification.message}</div>
+                    <div className="whitespace-pre-wrap">
+                      {selectedClarification.message}
+                    </div>
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Response</div>
-                    <Textarea value={responseText} onChange={(e) => setResponseText(e.target.value)} placeholder="Type your response..." rows={4} />
+                    <Textarea
+                      value={responseText}
+                      onChange={(e) => setResponseText(e.target.value)}
+                      placeholder="Type your response..."
+                      rows={4}
+                    />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setClarDialogOpen(false)}>Close</Button>
-                    <Button onClick={handleRespondToClarification}>Save Response</Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setClarDialogOpen(false)}
+                    >
+                      Close
+                    </Button>
+                    <Button onClick={handleRespondToClarification}>
+                      Save Response
+                    </Button>
                   </div>
                 </div>
               )}
