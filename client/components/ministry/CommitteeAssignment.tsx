@@ -208,7 +208,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
       members: [],
       created_date: new Date().toISOString(),
       status: "active",
-      tender_id: createFormData.tender_id || undefined,
+      tender_id: createFormData.tender_id && createFormData.tender_id !== "none" ? createFormData.tender_id : undefined,
       ministry_id: ministryId,
     };
 
