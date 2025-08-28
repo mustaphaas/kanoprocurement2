@@ -2366,11 +2366,30 @@ export default function TenderCommitteeAssignment() {
                     const selectedTender = closedTenders.find(
                       (t) => t.id === value,
                     );
+
+                    let tenderTitle = selectedTender?.title || "";
+                    let tenderCategory = selectedTender?.category || "";
+
+                    // If tender not found in closed tenders, try main storage
+                    if (!selectedTender && value) {
+                      try {
+                        const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
+                        const foundTender = mainTenders.find((t: any) => t.id === value);
+                        if (foundTender) {
+                          tenderTitle = foundTender.title;
+                          tenderCategory = foundTender.category || getCategoryFromMinistry(foundTender.ministry);
+                          console.log(`📋 Found tender in main storage: ${foundTender.title}`);
+                        }
+                      } catch (error) {
+                        console.warn("Could not fetch tender from main storage:", error);
+                      }
+                    }
+
                     setAssignmentForm({
                       ...assignmentForm,
                       tenderId: value,
-                      tenderTitle: selectedTender?.title || "",
-                      tenderCategory: selectedTender?.category || "",
+                      tenderTitle,
+                      tenderCategory,
                     });
                   }}
                 >
