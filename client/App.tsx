@@ -78,15 +78,15 @@ const App = () => (
               path="/company/dashboard"
               element={
                 <ProtectedRoute requiredRole="company">
-                  <CompanyDashboardModern />
+                  <CompanyDashboard />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/company/dashboard/legacy"
+              path="/company/dashboard/modern"
               element={
                 <ProtectedRoute requiredRole="company">
-                  <CompanyDashboard />
+                  <CompanyDashboardModern />
                 </ProtectedRoute>
               }
             />
