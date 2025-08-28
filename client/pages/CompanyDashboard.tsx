@@ -144,12 +144,16 @@ export default function CompanyDashboard() {
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   // Clarifications form state
   const [clarTender, setClarTender] = useState("");
+  const [clarTenderId, setClarTenderId] = useState("");
   const [clarCategory, setClarCategory] = useState("");
   const [clarSubject, setClarSubject] = useState("");
   const [clarMessage, setClarMessage] = useState("");
   const [clarUrgent, setClarUrgent] = useState(false);
   const [clarEmailCopy, setClarEmailCopy] = useState(false);
   const [clarMinistryCode, setClarMinistryCode] = useState("");
+
+  // Discover available tenders and map to ministries for auto-detection
+  const aggregatedTenders = useMemo(() => getAggregatedMinistryTenders(), [statusUpdateTrigger]);
 
   const handleSubmitClarification = () => {
     if (!clarTender || !clarCategory || !clarSubject || !clarMessage || !clarMinistryCode) {
