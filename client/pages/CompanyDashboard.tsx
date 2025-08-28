@@ -149,10 +149,11 @@ export default function CompanyDashboard() {
   const [clarMessage, setClarMessage] = useState("");
   const [clarUrgent, setClarUrgent] = useState(false);
   const [clarEmailCopy, setClarEmailCopy] = useState(false);
+  const [clarMinistryCode, setClarMinistryCode] = useState("");
 
   const handleSubmitClarification = () => {
-    if (!clarTender || !clarCategory || !clarSubject || !clarMessage) {
-      alert("Please complete all required fields.");
+    if (!clarTender || !clarCategory || !clarSubject || !clarMessage || !clarMinistryCode) {
+      alert("Please complete all required fields, including Ministry.");
       return;
     }
     const record: ClarificationRecord = {
@@ -168,6 +169,7 @@ export default function CompanyDashboard() {
       status: "Pending Response",
       vendorEmail: companyData.email,
       vendorName: companyData.name,
+      ministryCode: clarMinistryCode,
     };
     addClarification(record);
     logUserAction(
