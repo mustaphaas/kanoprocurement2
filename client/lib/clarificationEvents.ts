@@ -8,6 +8,7 @@ export interface ClarificationSubmittedEvent {
   submittedDate: string; // ISO date string
   vendorEmail: string;
   vendorName: string;
+  ministryCode: string;
   status: "Pending Response" | "Responded" | "Closed";
 }
 
