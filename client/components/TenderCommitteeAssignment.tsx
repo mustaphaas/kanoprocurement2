@@ -1180,8 +1180,8 @@ export default function TenderCommitteeAssignment() {
     const newAssignment: TenderCommitteeAssignment = {
       id: `TCA-${Date.now()}`,
       tenderId: assignmentForm.tenderId,
-      tenderTitle: assignmentForm.tenderTitle,
-      tenderCategory: assignmentForm.tenderCategory,
+      tenderTitle: tenderTitle,
+      tenderCategory: tenderCategory,
       committeeTemplateId: assignmentForm.committeeTemplateId,
       templateName: selectedTemplate?.name || "Unknown Template",
       assignedMembers: [],
