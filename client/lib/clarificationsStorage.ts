@@ -49,3 +49,17 @@ export const getCompanyClarifications = (
     (c) => c.vendorEmail.toLowerCase() === vendorEmail.toLowerCase(),
   );
 };
+
+export const getClarificationById = (id: string): ClarificationRecord | null => {
+  return getCentralClarifications().find((c) => c.id === id) || null;
+};
+
+export const updateClarification = (
+  id: string,
+  patch: Partial<ClarificationRecord>,
+): ClarificationRecord[] => {
+  const current = getCentralClarifications();
+  const updated = current.map((c) => (c.id === id ? { ...c, ...patch } : c));
+  saveCentralClarifications(updated);
+  return updated;
+};
