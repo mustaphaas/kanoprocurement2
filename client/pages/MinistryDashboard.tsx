@@ -2647,7 +2647,9 @@ export default function MinistryDashboard() {
     setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
     const centralClars = getCentralClarifications();
-    const mappedFromCentral = centralClars.map((c) => ({
+    const { ministry } = getMinistryMockData();
+    const filtered = centralClars.filter((c) => c.ministryCode === ministry.code);
+    const mappedFromCentral = filtered.map((c) => ({
       id: c.id,
       vendorId: c.vendorEmail,
       vendorName: c.vendorName,
