@@ -569,7 +569,7 @@ export default function PaymentRequest({
                           onValueChange={(value) =>
                             setFormData((prev) => ({
                               ...prev,
-                              milestoneId: value,
+                              milestoneId: value === "none" ? "" : value,
                             }))
                           }
                         >

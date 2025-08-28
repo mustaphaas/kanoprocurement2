@@ -14,6 +14,10 @@ import { EnhancedMinistryOverview } from "@/components/ministry/EnhancedMinistry
 import PaymentRequestApproval from "@/components/ministry/PaymentRequestApproval";
 import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
+import {
+  getCentralClarifications,
+  type ClarificationRecord,
+} from "@/lib/clarificationsStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
 import { persistentStorage } from "@/lib/persistentStorage";
 import {
@@ -1607,7 +1611,7 @@ export default function MinistryDashboard() {
               projectTitle: "Digital Learning Platform Development",
               requestDate: "2024-01-25",
               status: "Pending",
-              projectValue: "₦1,800,000,000",
+              projectValue: "��1,800,000,000",
               contractorName: "Kano School Furniture Ltd",
               expectedDuration: "12 months",
             },
@@ -2645,7 +2649,27 @@ export default function MinistryDashboard() {
 
     setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
-    setVendorCommunications(mockVendorCommunications);
+    const centralClars = getCentralClarifications();
+    const filtered = centralClars.filter(
+      (c) => c.ministryCode === currentMinistry.code,
+    );
+    const mappedFromCentral = filtered.map((c) => ({
+      id: c.id,
+      vendorId: c.vendorEmail,
+      vendorName: c.vendorName,
+      subject: c.subject,
+      message: c.message,
+      type: "Clarification" as const,
+      channels: ["Portal"] as ("Email" | "SMS" | "Portal")[],
+      sentDate: c.submittedDate.split("T")[0],
+      readStatus: false,
+      responseRequired: true,
+      priority: c.urgent ? "High" : "Medium",
+    }));
+    setVendorCommunications([
+      ...mappedFromCentral,
+      ...mockVendorCommunications,
+    ]);
     setScheduledPublications(mockScheduledPublications);
     setVendorWorkflowStatuses(mockVendorWorkflowStatuses);
 
@@ -2695,6 +2719,37 @@ export default function MinistryDashboard() {
         delete (window as any).ministryDashboardCleanup;
       }
     };
+  }, []);
+
+  // Listen for real-time clarification submissions from companies
+  useEffect(() => {
+    const handler = (e: any) => {
+      const c: ClarificationRecord = e.detail;
+      const { ministry: currentMinistry } = getMinistryMockData();
+      if (c.ministryCode !== currentMinistry.code) return;
+      setVendorCommunications((prev) => [
+        {
+          id: c.id,
+          vendorId: c.vendorEmail,
+          vendorName: c.vendorName,
+          subject: c.subject,
+          message: c.message,
+          type: "Clarification",
+          channels: ["Portal"],
+          sentDate: c.submittedDate.split("T")[0],
+          readStatus: false,
+          responseRequired: true,
+          priority: c.urgent ? "High" : "Medium",
+        },
+        ...prev,
+      ]);
+    };
+    window.addEventListener("clarificationSubmitted", handler as EventListener);
+    return () =>
+      window.removeEventListener(
+        "clarificationSubmitted",
+        handler as EventListener,
+      );
   }, []);
 
   // Listen for changes to main tender storage and refresh overview
@@ -2994,7 +3049,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-009",
           companyName: "Emirate Construction Co",
-          bidAmount: "₦8,800,000,000",
+          bidAmount: "��8,800,000,000",
           technicalScore: 84,
           financialScore: 81,
           totalScore: 82.5,
