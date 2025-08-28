@@ -216,7 +216,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
     saveCommittees(updatedCommittees);
     onCommitteeUpdate?.(newCommittee);
 
-    setCreateFormData({ name: "", type: "" as CommitteeType, tender_id: "" });
+    setCreateFormData({ name: "", type: "" as CommitteeType, tender_id: "none" });
     setShowCreateForm(false);
   };
 
