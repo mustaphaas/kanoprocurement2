@@ -81,7 +81,7 @@ import {
   initializeTenderCounter,
 } from "@/lib/tenderIdGenerator";
 import RealTimeVerificationTool from "./RealTimeVerificationTool";
-import { getCentralClarifications, type ClarificationRecord } from "@/lib/clarificationsStorage";
+import { getCentralClarifications, updateClarification, type ClarificationRecord } from "@/lib/clarificationsStorage";
 
 // Types
 interface Tender {
