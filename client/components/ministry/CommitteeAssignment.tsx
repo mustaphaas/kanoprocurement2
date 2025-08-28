@@ -102,7 +102,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
   const [createFormData, setCreateFormData] = useState({
     name: "",
     type: "" as CommitteeType,
-    tender_id: "",
+    tender_id: "none",
   });
 
   const [assignFormData, setAssignFormData] = useState({
@@ -208,7 +208,10 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
       members: [],
       created_date: new Date().toISOString(),
       status: "active",
-      tender_id: createFormData.tender_id || undefined,
+      tender_id:
+        createFormData.tender_id && createFormData.tender_id !== "none"
+          ? createFormData.tender_id
+          : undefined,
       ministry_id: ministryId,
     };
 
@@ -216,7 +219,11 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
     saveCommittees(updatedCommittees);
     onCommitteeUpdate?.(newCommittee);
 
-    setCreateFormData({ name: "", type: "" as CommitteeType, tender_id: "" });
+    setCreateFormData({
+      name: "",
+      type: "" as CommitteeType,
+      tender_id: "none",
+    });
     setShowCreateForm(false);
   };
 
@@ -721,7 +728,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
                   <SelectValue placeholder="Select tender" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No tender</SelectItem>
+                  <SelectItem value="none">No tender</SelectItem>
                   {tenders.map((tender) => (
                     <SelectItem key={tender.id} value={tender.id}>
                       {tender.title}
