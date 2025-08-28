@@ -81,6 +81,7 @@ import {
   initializeTenderCounter,
 } from "@/lib/tenderIdGenerator";
 import RealTimeVerificationTool from "./RealTimeVerificationTool";
+import { getCentralClarifications, type ClarificationRecord } from "@/lib/clarificationsStorage";
 
 // Types
 interface Tender {
@@ -229,6 +230,18 @@ const TenderManagement = () => {
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [showConsolidatedReport, setShowConsolidatedReport] = useState(false);
   const [currentEvaluatorId] = useState("USR-003"); // In production, get from auth context
+
+  // Dynamic Clarifications (from company submissions)
+  const [clarifications, setClarifications] = useState<ClarificationRecord[]>([]);
+  useEffect(() => {
+    setClarifications(getCentralClarifications());
+    const onClarification = (e: any) => {
+      const c: ClarificationRecord = e.detail;
+      setClarifications((prev) => [c, ...prev]);
+    };
+    window.addEventListener("clarificationSubmitted", onClarification as EventListener);
+    return () => window.removeEventListener("clarificationSubmitted", onClarification as EventListener);
+  }, []);
 
   // Mock evaluation data
   const mockTenderInfo = {
@@ -2058,7 +2071,7 @@ const TenderManagement = () => {
                       <MessageSquare className="h-5 w-5 text-green-600" />
                       <div>
                         <p className="font-medium">Clarifications</p>
-                        <p className="text-2xl font-bold">23</p>
+                        <p className="text-2xl font-bold">{clarifications.length}</p>
                       </div>
                     </div>
                   </Card>
