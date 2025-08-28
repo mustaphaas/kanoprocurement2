@@ -3265,21 +3265,30 @@ export default function CompanyDashboard() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Tender Reference
                       </label>
-                      <select value={clarTender} onChange={(e) => setClarTender(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <select
+                        value={clarTenderId}
+                        onChange={(e) => {
+                          const id = e.target.value;
+                          setClarTenderId(id);
+                          const t = aggregatedTenders.find((tt: any) => tt.id === id);
+                          if (t) {
+                            setClarTender(`${t.id} - ${t.title}`);
+                            // Prefer sourceMinistry if present, else try to infer from id prefix
+                            const code = (t as any).sourceMinistry || (typeof t.id === "string" ? t.id.split("-")[0] : "");
+                            setClarMinistryCode(code || "");
+                          } else {
+                            setClarTender("");
+                            setClarMinistryCode("");
+                          }
+                        }}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      >
                         <option value="">Select Active Tender</option>
-                        <option value="TB001">
-                          TB001 - Road Construction and Maintenance Services
-                        </option>
-                        <option value="TB002">
-                          TB002 - Supply of Medical Equipment to General
-                          Hospitals
-                        </option>
-                        <option value="TB003">
-                          TB003 - School Building Renovation Project
-                        </option>
-                        <option value="TB004">
-                          TB004 - ICT Infrastructure Development
-                        </option>
+                        {aggregatedTenders.map((t: any) => (
+                          <option key={t.id} value={t.id}>
+                            {t.id} - {t.title}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
