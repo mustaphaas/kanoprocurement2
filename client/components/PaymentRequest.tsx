@@ -366,8 +366,8 @@ export default function PaymentRequest({
         from: formData.workPeriodFrom,
         to: formData.workPeriodTo,
       },
-      milestoneId: formData.milestoneId || undefined,
-      milestoneTitle: formData.milestoneId
+      milestoneId: formData.milestoneId && formData.milestoneId !== "none" ? formData.milestoneId : undefined,
+      milestoneTitle: formData.milestoneId && formData.milestoneId !== "none"
         ? selectedContract.milestones.find((m) => m.id === formData.milestoneId)
             ?.title
         : undefined,
