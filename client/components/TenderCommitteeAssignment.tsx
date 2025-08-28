@@ -1340,6 +1340,14 @@ export default function TenderCommitteeAssignment() {
     }
   }, [showAssignmentModal]);
 
+  // Helper function to determine category from ministry
+  const getCategoryFromMinistry = (ministry: string) => {
+    if (ministry?.includes("Health")) return "Healthcare";
+    if (ministry?.includes("Works") || ministry?.includes("Infrastructure")) return "Infrastructure";
+    if (ministry?.includes("Education")) return "Education";
+    return "General";
+  };
+
   // API fetch functions
   const fetchCommitteeTemplates = async () => {
     try {
