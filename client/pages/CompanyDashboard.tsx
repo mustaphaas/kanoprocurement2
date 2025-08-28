@@ -197,6 +197,7 @@ export default function CompanyDashboard() {
       submittedDate: record.submittedDate,
       vendorEmail: record.vendorEmail,
       vendorName: record.vendorName,
+      ministryCode: record.ministryCode,
       status: record.status,
     });
     if (clarEmailCopy) {
