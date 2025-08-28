@@ -72,6 +72,42 @@ export const getAssignmentByTenderId = (
   );
 };
 
+// Get tender assignment with full tender information for TenderScoring page
+export const getTenderAssignmentWithDetails: RequestHandler = (req, res) => {
+  try {
+    const { tenderId } = req.params;
+
+    if (!tenderId) {
+      return res.status(400).json({ error: "tenderId is required" });
+    }
+
+    // Find assignment for this tender
+    const assignment = getAssignmentByTenderId(tenderId);
+
+    if (!assignment) {
+      return res.status(404).json({ error: "Tender assignment not found" });
+    }
+
+    // Get tender information
+    const tenderInfo = getTenderInfo(tenderId);
+
+    // Return assignment with tender details
+    const assignmentWithDetails = {
+      ...assignment,
+      tenderTitle: tenderInfo.title,
+      tenderCategory: tenderInfo.category,
+      ministry: tenderInfo.ministry,
+    };
+
+    console.log(`📋 Returning tender assignment details for ${tenderId}:`, assignmentWithDetails);
+
+    res.json(assignmentWithDetails);
+  } catch (error) {
+    console.error("Error fetching tender assignment with details:", error);
+    res.status(500).json({ error: "Failed to fetch tender assignment details" });
+  }
+};
+
 export const createCommitteeAssignment: RequestHandler = (req, res) => {
   try {
     const payload: CommitteeAssignmentPayload = req.body;
