@@ -3313,14 +3313,14 @@ export default function CompanyDashboard() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Ministry
+                      Ministry (auto-detected)
                     </label>
-                    <select value={clarMinistryCode} onChange={(e) => setClarMinistryCode(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                      <option value="">Select Ministry</option>
-                      <option value="MOH">Ministry of Health</option>
-                      <option value="MOWI">Ministry of Works & Infrastructure</option>
-                      <option value="MOE">Ministry of Education</option>
-                    </select>
+                    <input
+                      type="text"
+                      readOnly
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+                      value={clarMinistryCode ? clarMinistryCode : "Select a tender to auto-detect"}
+                    />
                   </div>
 
                   <div>
