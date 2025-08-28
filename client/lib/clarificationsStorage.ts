@@ -13,6 +13,7 @@ export interface ClarificationRecord {
   status: ClarificationStatus;
   vendorEmail: string;
   vendorName: string;
+  ministryCode: string;
 }
 
 const CENTRAL_KEY = "centralClarifications";
