@@ -11,6 +11,8 @@ import { getAggregatedMinistryTenders } from "@/lib/companyTenderAggregator";
 import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import PaymentRequest from "@/components/PaymentRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { addClarification, getCompanyClarifications, type ClarificationRecord } from "@/lib/clarificationsStorage";
+import { dispatchClarificationSubmitted } from "@/lib/clarificationEvents";
 import {
   Building2,
   Home,
@@ -140,6 +142,58 @@ export default function CompanyDashboard() {
     useState(false);
   const [showSubmitBidModal, setShowSubmitBidModal] = useState(false);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
+  // Clarifications form state
+  const [clarTender, setClarTender] = useState("");
+  const [clarCategory, setClarCategory] = useState("");
+  const [clarSubject, setClarSubject] = useState("");
+  const [clarMessage, setClarMessage] = useState("");
+  const [clarUrgent, setClarUrgent] = useState(false);
+  const [clarEmailCopy, setClarEmailCopy] = useState(false);
+
+  const handleSubmitClarification = () => {
+    if (!clarTender || !clarCategory || !clarSubject || !clarMessage) {
+      alert("Please complete all required fields.");
+      return;
+    }
+    const record: ClarificationRecord = {
+      id: `CLR-${Date.now()}`,
+      tender: clarTender,
+      subject: clarSubject,
+      category: clarCategory,
+      message: clarMessage,
+      urgent: clarUrgent,
+      submittedDate: new Date().toISOString(),
+      responseDate: null,
+      response: null,
+      status: "Pending Response",
+      vendorEmail: companyData.email,
+      vendorName: companyData.name,
+    };
+    addClarification(record);
+    dispatchClarificationSubmitted({
+      id: record.id,
+      tender: record.tender,
+      subject: record.subject,
+      category: record.category,
+      message: record.message,
+      urgent: record.urgent,
+      submittedDate: record.submittedDate,
+      vendorEmail: record.vendorEmail,
+      vendorName: record.vendorName,
+      status: record.status,
+    });
+    if (clarEmailCopy) {
+      console.log("Email copy requested for:", companyData.email);
+    }
+    // Reset form and navigate to history
+    setClarTender("");
+    setClarCategory("");
+    setClarSubject("");
+    setClarMessage("");
+    setClarUrgent(false);
+    setClarEmailCopy(false);
+    setActiveSection("existing-clarifications");
+  };
   const [statusUpdateTrigger, setStatusUpdateTrigger] = useState(0);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -3188,7 +3242,7 @@ export default function CompanyDashboard() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Tender Reference
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <select value={clarTender} onChange={(e) => setClarTender(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                         <option value="">Select Active Tender</option>
                         <option value="TB001">
                           TB001 - Road Construction and Maintenance Services
@@ -3209,7 +3263,7 @@ export default function CompanyDashboard() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Category
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <select value={clarCategory} onChange={(e) => setClarCategory(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                         <option value="">Select Category</option>
                         <option value="technical">
                           Technical Specifications
@@ -3233,6 +3287,8 @@ export default function CompanyDashboard() {
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Brief subject of your clarification request"
+                      value={clarSubject}
+                      onChange={(e) => setClarSubject(e.target.value)}
                     />
                   </div>
 
@@ -3244,6 +3300,8 @@ export default function CompanyDashboard() {
                       rows={6}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Please provide detailed description of what you need clarification on..."
+                      value={clarMessage}
+                      onChange={(e) => setClarMessage(e.target.value)}
                     />
                   </div>
 
@@ -3276,6 +3334,8 @@ export default function CompanyDashboard() {
                         type="checkbox"
                         id="urgent"
                         className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        checked={clarUrgent}
+                        onChange={(e) => setClarUrgent(e.target.checked)}
                       />
                       <label
                         htmlFor="urgent"
@@ -3289,6 +3349,8 @@ export default function CompanyDashboard() {
                         type="checkbox"
                         id="emailCopy"
                         className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        checked={clarEmailCopy}
+                        onChange={(e) => setClarEmailCopy(e.target.checked)}
                       />
                       <label
                         htmlFor="emailCopy"
@@ -3303,7 +3365,7 @@ export default function CompanyDashboard() {
                     <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                       Save as Draft
                     </button>
-                    <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                    <button onClick={handleSubmitClarification} className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
                       <Send className="h-4 w-4 mr-2" />
                       Submit Clarification
                     </button>
@@ -3348,56 +3410,7 @@ export default function CompanyDashboard() {
               </div>
               <div className="p-6">
                 <div className="space-y-4">
-                  {[
-                    {
-                      id: "CLR001",
-                      tender:
-                        "TB001 - Road Construction and Maintenance Services",
-                      subject: "Technical specifications for asphalt grade",
-                      category: "Technical Specifications",
-                      status: "Responded",
-                      submittedDate: "2024-01-25",
-                      responseDate: "2024-01-26",
-                      urgent: false,
-                      response:
-                        "The asphalt grade required is AC 20 as per Nigerian standard specifications. Please refer to section 3.2 of the technical document.",
-                    },
-                    {
-                      id: "CLR002",
-                      tender: "TB002 - Supply of Medical Equipment",
-                      subject: "Delivery timeline clarification",
-                      category: "Timeline/Deadlines",
-                      status: "Pending Response",
-                      submittedDate: "2024-01-27",
-                      responseDate: null,
-                      urgent: true,
-                      response: null,
-                    },
-                    {
-                      id: "CLR003",
-                      tender: "TB003 - School Building Renovation",
-                      subject: "Payment terms and advance payment",
-                      category: "Financial Requirements",
-                      status: "Responded",
-                      submittedDate: "2024-01-24",
-                      responseDate: "2024-01-25",
-                      urgent: false,
-                      response:
-                        "Advance payment of 15% will be provided upon contract signing. Remaining payments as per schedule in contract terms.",
-                    },
-                    {
-                      id: "CLR004",
-                      tender: "TB001 - Road Construction and Maintenance",
-                      subject: "Required insurance coverage amount",
-                      category: "Legal/Compliance",
-                      status: "Closed",
-                      submittedDate: "2024-01-22",
-                      responseDate: "2024-01-23",
-                      urgent: false,
-                      response:
-                        "Professional indemnity insurance of ₦50 million and public liability insurance of ₦100 million are required.",
-                    },
-                  ].map((clarification) => (
+                  {getCompanyClarifications(companyData.email).map((clarification) => (
                     <div
                       key={clarification.id}
                       className="border rounded-lg p-4 hover:shadow-md transition-shadow"
