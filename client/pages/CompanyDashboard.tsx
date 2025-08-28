@@ -215,6 +215,7 @@ export default function CompanyDashboard() {
     setClarUrgent(false);
     setClarEmailCopy(false);
     setClarMinistryCode("");
+    setClarTenderId("");
     setActiveSection("existing-clarifications");
   };
   const [statusUpdateTrigger, setStatusUpdateTrigger] = useState(0);
@@ -1819,7 +1820,7 @@ export default function CompanyDashboard() {
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">Project Value</option>
-                      <option value="0-100m">₦0 - ₦100M</option>
+                      <option value="0-100m">��0 - ₦100M</option>
                       <option value="100m-1b">₦100M - ₦1B</option>
                       <option value="1b+">₦1B+</option>
                     </select>
@@ -2107,7 +2108,7 @@ export default function CompanyDashboard() {
                       id: "TB002",
                       title: "Supply of Medical Equipment to General Hospitals",
                       purchaseDate: "2024-01-10",
-                      amount: "₦3,000",
+                      amount: "���3,000",
                       status: "Submitted",
                       deadline: "2024-02-10",
                       category: "Healthcare",
@@ -2218,7 +2219,7 @@ export default function CompanyDashboard() {
                       title:
                         "Supply of Office Furniture to Government Secretariat",
                       awardDate: "2024-01-20",
-                      contractValue: "₦15,500,000",
+                      contractValue: "��15,500,000",
                       status: "Contract Signed",
                       progress: 65,
                       completionDate: "2024-03-20",
