@@ -397,13 +397,16 @@ const TenderManagement = () => {
       if (response.ok) {
         const tenders = await response.json();
         setAssignedTenders(tenders);
-        console.log("📋 Fetched assigned tenders with titles:", tenders.map(t => ({
-          id: t.id,
-          tenderId: t.tenderId,
-          title: t.tenderTitle,
-          category: t.tenderCategory,
-          ministry: t.ministry
-        })));
+        console.log(
+          "📋 Fetched assigned tenders with titles:",
+          tenders.map((t) => ({
+            id: t.id,
+            tenderId: t.tenderId,
+            title: t.tenderTitle,
+            category: t.tenderCategory,
+            ministry: t.ministry,
+          })),
+        );
       } else {
         console.error("Failed to fetch assigned tenders");
         setAssignedTenders([]);

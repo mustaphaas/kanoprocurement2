@@ -487,7 +487,7 @@ const getTenderInfoForScoring = (tenderId: string) => {
   ];
 
   // First try to find in mock data
-  const mockTender = mockTenders.find(t => t.id === tenderId);
+  const mockTender = mockTenders.find((t) => t.id === tenderId);
   if (mockTender) {
     return mockTender;
   }
@@ -560,7 +560,10 @@ export const getTenderAssignment: RequestHandler = (req, res) => {
         evaluationStart: "2024-01-15T00:00:00Z",
         evaluationEnd: "2024-02-15T00:00:00Z",
       };
-      console.log(`📋 Returning mock assignment for ${tenderId}:`, mockAssignment);
+      console.log(
+        `📋 Returning mock assignment for ${tenderId}:`,
+        mockAssignment,
+      );
       return res.json(mockAssignment);
     }
 

@@ -12,7 +12,13 @@ import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import PaymentRequest from "@/components/PaymentRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
@@ -143,12 +149,14 @@ interface Contract {
 }
 
 export default function CompanyDashboardModern() {
-  const [activeSection, setActiveSection] = useState<ActiveSection>("dashboard");
+  const [activeSection, setActiveSection] =
+    useState<ActiveSection>("dashboard");
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [showExpressInterestModal, setShowExpressInterestModal] = useState(false);
+  const [showExpressInterestModal, setShowExpressInterestModal] =
+    useState(false);
   const [showSubmitBidModal, setShowSubmitBidModal] = useState(false);
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [statusUpdateTrigger, setStatusUpdateTrigger] = useState(0);
@@ -166,7 +174,10 @@ export default function CompanyDashboardModern() {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("persistentStorageChange", handlePersistentStorageChange);
+    window.addEventListener(
+      "persistentStorageChange",
+      handlePersistentStorageChange,
+    );
 
     const interval = setInterval(() => {
       setStatusUpdateTrigger((prev) => prev + 1);
@@ -174,7 +185,10 @@ export default function CompanyDashboardModern() {
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("persistentStorageChange", handlePersistentStorageChange);
+      window.removeEventListener(
+        "persistentStorageChange",
+        handlePersistentStorageChange,
+      );
       clearInterval(interval);
     };
   }, []);
@@ -193,7 +207,12 @@ export default function CompanyDashboardModern() {
 
     const adminSetStatus = persistentStorage.getItem(storageKey);
 
-    if (adminSetStatus && ["Pending", "Approved", "Suspended", "Blacklisted"].includes(adminSetStatus)) {
+    if (
+      adminSetStatus &&
+      ["Pending", "Approved", "Suspended", "Blacklisted"].includes(
+        adminSetStatus,
+      )
+    ) {
       return adminSetStatus as CompanyStatus;
     }
 
@@ -255,8 +274,12 @@ export default function CompanyDashboardModern() {
 
     if (!details) {
       try {
-        const registeredCompanies = JSON.parse(localStorage.getItem("registeredCompanies") || "[]");
-        const registeredCompany = registeredCompanies.find((company: any) => company.email === userEmail);
+        const registeredCompanies = JSON.parse(
+          localStorage.getItem("registeredCompanies") || "[]",
+        );
+        const registeredCompany = registeredCompanies.find(
+          (company: any) => company.email === userEmail,
+        );
 
         if (registeredCompany) {
           details = {
@@ -296,14 +319,16 @@ export default function CompanyDashboardModern() {
     return {
       ...details,
       status,
-      suspensionReason: status === "Suspended" 
-        ? userEmail === "suspended@company.com"
-          ? "Professional License expired on January 15, 2024"
-          : "Professional License expired on January 15, 2024"
-        : undefined,
-      blacklistReason: status === "Blacklisted" 
-        ? "Violation of procurement guidelines and contract terms"
-        : undefined,
+      suspensionReason:
+        status === "Suspended"
+          ? userEmail === "suspended@company.com"
+            ? "Professional License expired on January 15, 2024"
+            : "Professional License expired on January 15, 2024"
+          : undefined,
+      blacklistReason:
+        status === "Blacklisted"
+          ? "Violation of procurement guidelines and contract terms"
+          : undefined,
     };
   };
 
@@ -397,9 +422,12 @@ export default function CompanyDashboardModern() {
         }
       }
 
-      const storedTenderStates = localStorage.getItem("companyTenderStates") || "{}";
+      const storedTenderStates =
+        localStorage.getItem("companyTenderStates") || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
-      const lastProcessedTenders = JSON.parse(localStorage.getItem("lastProcessedTenders") || "[]");
+      const lastProcessedTenders = JSON.parse(
+        localStorage.getItem("lastProcessedTenders") || "[]",
+      );
 
       if (allTenders.length > 0) {
         allTenders.forEach((tender: any) => {
@@ -419,7 +447,10 @@ export default function CompanyDashboardModern() {
         });
 
         const currentTenderIds = allTenders.map((t: any) => t.id);
-        localStorage.setItem("lastProcessedTenders", JSON.stringify(currentTenderIds));
+        localStorage.setItem(
+          "lastProcessedTenders",
+          JSON.stringify(currentTenderIds),
+        );
 
         const formattedTenders = allTenders.map((tender: any) => ({
           id: tender.id,
@@ -429,8 +460,12 @@ export default function CompanyDashboardModern() {
           value: formatCurrency(tender.budget),
           deadline: tender.closingDate,
           location: "Kano State",
-          status: tender.status === "Open" || tender.status === "Published" ? "Open" : "Closed",
-          hasExpressedInterest: tenderStates[tender.id]?.hasExpressedInterest || false,
+          status:
+            tender.status === "Open" || tender.status === "Published"
+              ? "Open"
+              : "Closed",
+          hasExpressedInterest:
+            tenderStates[tender.id]?.hasExpressedInterest || false,
           hasBid: tenderStates[tender.id]?.hasBid || false,
           unspscCode: "72141100",
           procurementMethod: "Open Tendering",
@@ -440,7 +475,9 @@ export default function CompanyDashboardModern() {
         const finalTenders = [...formattedTenders];
 
         defaultTenders.forEach((defaultTender) => {
-          if (!formattedTenders.find((t: Tender) => t.id === defaultTender.id)) {
+          if (
+            !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
+          ) {
             finalTenders.push(defaultTender);
           }
         });
@@ -533,35 +570,51 @@ export default function CompanyDashboardModern() {
 
   const getStatusBadgeVariant = (status: CompanyStatus) => {
     switch (status) {
-      case "Approved": return "default";
-      case "Pending": return "secondary";
-      case "Suspended": return "destructive";
-      case "Blacklisted": return "destructive";
-      default: return "secondary";
+      case "Approved":
+        return "default";
+      case "Pending":
+        return "secondary";
+      case "Suspended":
+        return "destructive";
+      case "Blacklisted":
+        return "destructive";
+      default:
+        return "secondary";
     }
   };
 
   const getStatusIcon = (status: CompanyStatus) => {
     switch (status) {
-      case "Approved": return CheckCircle;
-      case "Pending": return Clock;
-      case "Suspended": return AlertTriangle;
-      case "Blacklisted": return Ban;
-      default: return Clock;
+      case "Approved":
+        return CheckCircle;
+      case "Pending":
+        return Clock;
+      case "Suspended":
+        return AlertTriangle;
+      case "Blacklisted":
+        return Ban;
+      default:
+        return Clock;
     }
   };
 
   const handleExpressInterest = (tender: Tender) => {
     if (companyData.status === "Suspended") {
-      alert("Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore tender participation privileges.");
+      alert(
+        "Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore tender participation privileges.",
+      );
       return;
     }
     if (companyData.status === "Pending") {
-      alert("Your account is pending approval. You will be able to express interest in tenders once your registration is approved.");
+      alert(
+        "Your account is pending approval. You will be able to express interest in tenders once your registration is approved.",
+      );
       return;
     }
     if (companyData.status === "Blacklisted") {
-      alert("Your account is blacklisted. You cannot participate in procurement activities. Please submit an appeal if you believe this is in error.");
+      alert(
+        "Your account is blacklisted. You cannot participate in procurement activities. Please submit an appeal if you believe this is in error.",
+      );
       return;
     }
     if (companyData.status !== "Approved") {
@@ -569,14 +622,23 @@ export default function CompanyDashboardModern() {
       return;
     }
 
-    const statusInfo = tenderStatusChecker.getStatusInfo(tender.status, tender.deadline);
+    const statusInfo = tenderStatusChecker.getStatusInfo(
+      tender.status,
+      tender.deadline,
+    );
     if (!statusInfo.canExpressInterest) {
       if (tender.status === "Closed") {
-        alert("This tender is closed. The deadline has passed and no new expressions of interest are being accepted.");
+        alert(
+          "This tender is closed. The deadline has passed and no new expressions of interest are being accepted.",
+        );
       } else if (tender.status === "Draft") {
-        alert("This tender is still in draft status and not yet open for expressions of interest.");
+        alert(
+          "This tender is still in draft status and not yet open for expressions of interest.",
+        );
       } else {
-        alert(`This tender is in '${tender.status}' status and is no longer accepting expressions of interest.`);
+        alert(
+          `This tender is in '${tender.status}' status and is no longer accepting expressions of interest.`,
+        );
       }
       return;
     }
@@ -587,15 +649,21 @@ export default function CompanyDashboardModern() {
 
   const handleSubmitBid = (tender: Tender) => {
     if (companyData.status === "Suspended") {
-      alert("Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore bidding privileges.");
+      alert(
+        "Your account is suspended. Please resolve compliance issues through the 'Reinstatement Portal' to restore bidding privileges.",
+      );
       return;
     }
     if (companyData.status === "Pending") {
-      alert("Your account is pending approval. You will be able to submit bids once your registration is approved.");
+      alert(
+        "Your account is pending approval. You will be able to submit bids once your registration is approved.",
+      );
       return;
     }
     if (companyData.status === "Blacklisted") {
-      alert("Your account is blacklisted. You cannot submit bids. Please submit an appeal if you believe this is in error.");
+      alert(
+        "Your account is blacklisted. You cannot submit bids. Please submit an appeal if you believe this is in error.",
+      );
       return;
     }
     if (companyData.status !== "Approved") {
@@ -603,20 +671,31 @@ export default function CompanyDashboardModern() {
       return;
     }
 
-    const statusInfo = tenderStatusChecker.getStatusInfo(tender.status, tender.deadline);
+    const statusInfo = tenderStatusChecker.getStatusInfo(
+      tender.status,
+      tender.deadline,
+    );
     if (!statusInfo.canSubmitBid) {
       if (tender.status === "Closed") {
-        alert("This tender is closed. The deadline has passed and no new bids are being accepted.");
+        alert(
+          "This tender is closed. The deadline has passed and no new bids are being accepted.",
+        );
       } else if (tender.status === "Draft") {
-        alert("This tender is still in draft status and not yet open for bid submissions.");
+        alert(
+          "This tender is still in draft status and not yet open for bid submissions.",
+        );
       } else {
-        alert(`This tender is in '${tender.status}' status and is no longer accepting bid submissions.`);
+        alert(
+          `This tender is in '${tender.status}' status and is no longer accepting bid submissions.`,
+        );
       }
       return;
     }
 
     if (!tender.hasExpressedInterest) {
-      alert("You must express interest in this tender before submitting a bid.");
+      alert(
+        "You must express interest in this tender before submitting a bid.",
+      );
       return;
     }
     setSelectedTender(tender);
@@ -634,7 +713,8 @@ export default function CompanyDashboardModern() {
       ),
     );
 
-    const storedTenderStates = localStorage.getItem("companyTenderStates") || "{}";
+    const storedTenderStates =
+      localStorage.getItem("companyTenderStates") || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
@@ -719,7 +799,8 @@ export default function CompanyDashboardModern() {
       ),
     );
 
-    const storedTenderStates = localStorage.getItem("companyTenderStates") || "{}";
+    const storedTenderStates =
+      localStorage.getItem("companyTenderStates") || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
@@ -795,17 +876,22 @@ export default function CompanyDashboardModern() {
                   <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-blue-800 bg-clip-text text-transparent">
                     {companyData.name}
                   </h1>
-                  <p className="text-sm text-gray-600 hidden sm:block">Company Dashboard</p>
+                  <p className="text-sm text-gray-600 hidden sm:block">
+                    Company Dashboard
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4">
-              <Badge variant={getStatusBadgeVariant(companyData.status)} className="flex items-center space-x-1">
+              <Badge
+                variant={getStatusBadgeVariant(companyData.status)}
+                className="flex items-center space-x-1"
+              >
                 <StatusIcon className="h-3 w-3" />
                 <span>{companyData.status}</span>
               </Badge>
-              
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -819,12 +905,8 @@ export default function CompanyDashboardModern() {
                   </span>
                 )}
               </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLogout}
-              >
+
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="h-5 w-5" />
               </Button>
             </div>
@@ -842,16 +924,22 @@ export default function CompanyDashboardModern() {
                 <div className="flex-1">
                   {companyData.status === "Pending" && (
                     <>
-                      <h3 className="font-semibold text-orange-800">Account Pending Approval</h3>
+                      <h3 className="font-semibold text-orange-800">
+                        Account Pending Approval
+                      </h3>
                       <p className="text-sm text-orange-700 mt-1">
-                        Your company registration is under review by the Bureau of Public Procurement. 
-                        You will be notified once your account is approved. Estimated processing time: 5-7 business days.
+                        Your company registration is under review by the Bureau
+                        of Public Procurement. You will be notified once your
+                        account is approved. Estimated processing time: 5-7
+                        business days.
                       </p>
                     </>
                   )}
                   {companyData.status === "Suspended" && (
                     <>
-                      <h3 className="font-semibold text-orange-800">Account Suspended</h3>
+                      <h3 className="font-semibold text-orange-800">
+                        Account Suspended
+                      </h3>
                       <p className="text-sm text-orange-700 mt-1">
                         Your account is suspended due to expired documents.
                         {companyData.suspensionReason && (
@@ -863,10 +951,13 @@ export default function CompanyDashboardModern() {
                   )}
                   {companyData.status === "Blacklisted" && (
                     <>
-                      <h3 className="font-semibold text-red-800">Account Blacklisted</h3>
+                      <h3 className="font-semibold text-red-800">
+                        Account Blacklisted
+                      </h3>
                       <p className="text-sm text-red-700 mt-1">
-                        Your company has been blacklisted from participating in Kano State Government 
-                        procurements due to {companyData.blacklistReason || "policy violations"}. 
+                        Your company has been blacklisted from participating in
+                        Kano State Government procurements due to{" "}
+                        {companyData.blacklistReason || "policy violations"}.
                         Please contact the BPP for more information.
                       </p>
                     </>
@@ -878,7 +969,11 @@ export default function CompanyDashboardModern() {
         )}
 
         {/* Main Dashboard Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-8"
+        >
           {/* Enhanced Tab Navigation */}
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-lg p-2">
             <TabsList className="grid w-full grid-cols-6 bg-transparent gap-2">
@@ -935,9 +1030,15 @@ export default function CompanyDashboardModern() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-blue-700">Total Tenders</p>
-                      <p className="text-3xl font-bold text-blue-900">{companyData.totalAdverts}</p>
-                      <p className="text-xs text-blue-600 mt-1">Available opportunities</p>
+                      <p className="text-sm font-medium text-blue-700">
+                        Total Tenders
+                      </p>
+                      <p className="text-3xl font-bold text-blue-900">
+                        {companyData.totalAdverts}
+                      </p>
+                      <p className="text-xs text-blue-600 mt-1">
+                        Available opportunities
+                      </p>
                     </div>
                     <div className="p-3 bg-blue-600 rounded-2xl shadow-lg">
                       <FileText className="h-6 w-6 text-white" />
@@ -951,9 +1052,15 @@ export default function CompanyDashboardModern() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-emerald-700">Expressed Interest</p>
-                      <p className="text-3xl font-bold text-emerald-900">{companyData.bidsExpressedInterest}</p>
-                      <p className="text-xs text-emerald-600 mt-1">EOI submitted</p>
+                      <p className="text-sm font-medium text-emerald-700">
+                        Expressed Interest
+                      </p>
+                      <p className="text-3xl font-bold text-emerald-900">
+                        {companyData.bidsExpressedInterest}
+                      </p>
+                      <p className="text-xs text-emerald-600 mt-1">
+                        EOI submitted
+                      </p>
                     </div>
                     <div className="p-3 bg-emerald-600 rounded-2xl shadow-lg">
                       <TrendingUp className="h-6 w-6 text-white" />
@@ -967,9 +1074,15 @@ export default function CompanyDashboardModern() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-purple-700">Active Bids</p>
-                      <p className="text-3xl font-bold text-purple-900">{companyData.activeBids}</p>
-                      <p className="text-xs text-purple-600 mt-1">Under evaluation</p>
+                      <p className="text-sm font-medium text-purple-700">
+                        Active Bids
+                      </p>
+                      <p className="text-3xl font-bold text-purple-900">
+                        {companyData.activeBids}
+                      </p>
+                      <p className="text-xs text-purple-600 mt-1">
+                        Under evaluation
+                      </p>
                     </div>
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg">
                       <Clock className="h-6 w-6 text-white" />
@@ -983,9 +1096,15 @@ export default function CompanyDashboardModern() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-amber-700">Contract Value</p>
-                      <p className="text-3xl font-bold text-amber-900">{companyData.totalContractValue}</p>
-                      <p className="text-xs text-amber-600 mt-1">Total awarded</p>
+                      <p className="text-sm font-medium text-amber-700">
+                        Contract Value
+                      </p>
+                      <p className="text-3xl font-bold text-amber-900">
+                        {companyData.totalContractValue}
+                      </p>
+                      <p className="text-xs text-amber-600 mt-1">
+                        Total awarded
+                      </p>
                     </div>
                     <div className="p-3 bg-amber-600 rounded-2xl shadow-lg">
                       <DollarSign className="h-6 w-6 text-white" />
@@ -1012,16 +1131,24 @@ export default function CompanyDashboardModern() {
                       key={notification.id}
                       className={cn(
                         "p-4 rounded-xl border-l-4 transition-all duration-200",
-                        notification.type === "success" && "bg-green-50 border-green-400",
-                        notification.type === "warning" && "bg-orange-50 border-orange-400",
-                        notification.type === "error" && "bg-red-50 border-red-400",
-                        notification.type === "info" && "bg-blue-50 border-blue-400"
+                        notification.type === "success" &&
+                          "bg-green-50 border-green-400",
+                        notification.type === "warning" &&
+                          "bg-orange-50 border-orange-400",
+                        notification.type === "error" &&
+                          "bg-red-50 border-red-400",
+                        notification.type === "info" &&
+                          "bg-blue-50 border-blue-400",
                       )}
                     >
                       <div className="flex items-start space-x-3">
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900 text-sm">{notification.title}</p>
-                          <p className="text-xs text-gray-600 mt-1">{notification.message}</p>
+                          <p className="font-medium text-gray-900 text-sm">
+                            {notification.title}
+                          </p>
+                          <p className="text-xs text-gray-600 mt-1">
+                            {notification.message}
+                          </p>
                           <p className="text-xs text-gray-500 mt-2">
                             {new Date(notification.date).toLocaleDateString()}
                           </p>
@@ -1117,7 +1244,9 @@ export default function CompanyDashboardModern() {
                     <Target className="h-5 w-5 text-purple-600" />
                     <span>Recommended for You</span>
                   </CardTitle>
-                  <CardDescription>Based on your profile and past activity</CardDescription>
+                  <CardDescription>
+                    Based on your profile and past activity
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -1127,9 +1256,15 @@ export default function CompanyDashboardModern() {
                         className="flex items-center justify-between p-4 bg-purple-50 rounded-xl border border-purple-100 hover:bg-purple-100 transition-colors"
                       >
                         <div className="flex-1">
-                          <h4 className="font-medium text-gray-900">{tender.title}</h4>
-                          <p className="text-sm text-gray-600">{tender.ministry}</p>
-                          <p className="text-xs text-purple-600 mt-1">Deadline: {tender.deadline}</p>
+                          <h4 className="font-medium text-gray-900">
+                            {tender.title}
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            {tender.ministry}
+                          </p>
+                          <p className="text-xs text-purple-600 mt-1">
+                            Deadline: {tender.deadline}
+                          </p>
                         </div>
                         <Button
                           size="sm"
@@ -1157,7 +1292,9 @@ export default function CompanyDashboardModern() {
                       <FileText className="h-5 w-5 text-emerald-600" />
                       <span>Available Tenders</span>
                     </CardTitle>
-                    <CardDescription>Browse and express interest in government tenders</CardDescription>
+                    <CardDescription>
+                      Browse and express interest in government tenders
+                    </CardDescription>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button variant="outline" size="sm">
@@ -1180,9 +1317,14 @@ export default function CompanyDashboardModern() {
               <CardContent>
                 <div className="space-y-4">
                   {tenders
-                    .filter((tender) =>
-                      tender.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      tender.ministry.toLowerCase().includes(searchTerm.toLowerCase())
+                    .filter(
+                      (tender) =>
+                        tender.title
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase()) ||
+                        tender.ministry
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase()),
                     )
                     .map((tender) => (
                       <div
@@ -1192,8 +1334,16 @@ export default function CompanyDashboardModern() {
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center space-x-3 mb-2">
-                              <h3 className="text-lg font-semibold text-gray-900">{tender.title}</h3>
-                              <Badge variant={tender.status === "Open" ? "default" : "secondary"}>
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {tender.title}
+                              </h3>
+                              <Badge
+                                variant={
+                                  tender.status === "Open"
+                                    ? "default"
+                                    : "secondary"
+                                }
+                              >
                                 {tender.status}
                               </Badge>
                             </div>
@@ -1278,7 +1428,9 @@ export default function CompanyDashboardModern() {
                   <Target className="h-5 w-5 text-purple-600" />
                   <span>My Bid Submissions</span>
                 </CardTitle>
-                <CardDescription>Track the status of your submitted bids</CardDescription>
+                <CardDescription>
+                  Track the status of your submitted bids
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -1291,7 +1443,9 @@ export default function CompanyDashboardModern() {
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">{tender.title}</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                              {tender.title}
+                            </h3>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 mb-4">
                               <div className="flex items-center space-x-1">
                                 <Building2 className="h-4 w-4" />
@@ -1308,7 +1462,9 @@ export default function CompanyDashboardModern() {
                             </div>
                             <div className="flex items-center space-x-4">
                               <Badge variant="secondary">Bid Submitted</Badge>
-                              <span className="text-xs text-gray-500">Status: Under Evaluation</span>
+                              <span className="text-xs text-gray-500">
+                                Status: Under Evaluation
+                              </span>
                             </div>
                           </div>
                           <div className="flex flex-col space-y-2">
@@ -1327,9 +1483,17 @@ export default function CompanyDashboardModern() {
                   {tenders.filter((tender) => tender.hasBid).length === 0 && (
                     <div className="text-center py-12 text-gray-500">
                       <Target className="h-16 w-16 mx-auto mb-4 opacity-30" />
-                      <h3 className="text-lg font-medium mb-2">No Bids Submitted Yet</h3>
-                      <p className="mb-6">Start by expressing interest in tenders and then submit your bids.</p>
-                      <Button onClick={() => setActiveTab("tenders")} className="bg-purple-600 hover:bg-purple-700 text-white">
+                      <h3 className="text-lg font-medium mb-2">
+                        No Bids Submitted Yet
+                      </h3>
+                      <p className="mb-6">
+                        Start by expressing interest in tenders and then submit
+                        your bids.
+                      </p>
+                      <Button
+                        onClick={() => setActiveTab("tenders")}
+                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                      >
                         Browse Tenders
                       </Button>
                     </div>
@@ -1347,7 +1511,9 @@ export default function CompanyDashboardModern() {
                   <Award className="h-5 w-5 text-amber-600" />
                   <span>Awarded Contracts</span>
                 </CardTitle>
-                <CardDescription>Monitor your active and completed contracts</CardDescription>
+                <CardDescription>
+                  Monitor your active and completed contracts
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
@@ -1358,7 +1524,9 @@ export default function CompanyDashboardModern() {
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">{contract.projectTitle}</h3>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            {contract.projectTitle}
+                          </h3>
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 mb-4">
                             <div className="flex items-center space-x-1">
                               <Building2 className="h-4 w-4" />
@@ -1374,14 +1542,29 @@ export default function CompanyDashboardModern() {
                             </div>
                           </div>
                           <div className="flex items-center space-x-4 mb-4">
-                            <Badge variant={contract.status === "Active" ? "default" : contract.status === "Completed" ? "secondary" : "destructive"}>
+                            <Badge
+                              variant={
+                                contract.status === "Active"
+                                  ? "default"
+                                  : contract.status === "Completed"
+                                    ? "secondary"
+                                    : "destructive"
+                              }
+                            >
                               {contract.status}
                             </Badge>
                             {contract.progress !== undefined && (
                               <div className="flex items-center space-x-2 flex-1 max-w-xs">
-                                <span className="text-xs text-gray-500">Progress:</span>
-                                <Progress value={contract.progress} className="flex-1" />
-                                <span className="text-xs text-gray-600">{contract.progress}%</span>
+                                <span className="text-xs text-gray-500">
+                                  Progress:
+                                </span>
+                                <Progress
+                                  value={contract.progress}
+                                  className="flex-1"
+                                />
+                                <span className="text-xs text-gray-600">
+                                  {contract.progress}%
+                                </span>
                               </div>
                             )}
                           </div>
@@ -1404,9 +1587,16 @@ export default function CompanyDashboardModern() {
                   {contracts.length === 0 && (
                     <div className="text-center py-12 text-gray-500">
                       <Award className="h-16 w-16 mx-auto mb-4 opacity-30" />
-                      <h3 className="text-lg font-medium mb-2">No Contracts Awarded</h3>
-                      <p className="mb-6">Keep bidding on tenders to win your first contract.</p>
-                      <Button onClick={() => setActiveTab("tenders")} className="bg-amber-600 hover:bg-amber-700 text-white">
+                      <h3 className="text-lg font-medium mb-2">
+                        No Contracts Awarded
+                      </h3>
+                      <p className="mb-6">
+                        Keep bidding on tenders to win your first contract.
+                      </p>
+                      <Button
+                        onClick={() => setActiveTab("tenders")}
+                        className="bg-amber-600 hover:bg-amber-700 text-white"
+                      >
                         Browse Tenders
                       </Button>
                     </div>
@@ -1424,13 +1614,17 @@ export default function CompanyDashboardModern() {
                   <Users className="h-5 w-5 text-rose-600" />
                   <span>Company Profile</span>
                 </CardTitle>
-                <CardDescription>Manage your company information and documents</CardDescription>
+                <CardDescription>
+                  Manage your company information and documents
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Company Name
+                      </label>
                       <input
                         type="text"
                         value={companyData.name}
@@ -1439,7 +1633,9 @@ export default function CompanyDashboardModern() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email Address
+                      </label>
                       <input
                         type="email"
                         value={companyData.email}
@@ -1448,11 +1644,13 @@ export default function CompanyDashboardModern() {
                       />
                     </div>
                   </div>
-                  
+
                   <Separator />
-                  
+
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Document Status</h4>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      Document Status
+                    </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
                         { name: "CAC Certificate", status: "verified" },
@@ -1460,18 +1658,34 @@ export default function CompanyDashboardModern() {
                         { name: "Experience Certificate", status: "pending" },
                         { name: "Financial Statement", status: "missing" },
                       ].map((doc) => (
-                        <div key={doc.name} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                          <span className="font-medium text-gray-900">{doc.name}</span>
-                          <Badge variant={doc.status === "verified" ? "default" : doc.status === "pending" ? "secondary" : "destructive"}>
+                        <div
+                          key={doc.name}
+                          className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                        >
+                          <span className="font-medium text-gray-900">
+                            {doc.name}
+                          </span>
+                          <Badge
+                            variant={
+                              doc.status === "verified"
+                                ? "default"
+                                : doc.status === "pending"
+                                  ? "secondary"
+                                  : "destructive"
+                            }
+                          >
                             {doc.status}
                           </Badge>
                         </div>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="flex space-x-4">
-                    <Button className="bg-rose-600 hover:bg-rose-700 text-white" disabled={companyData.status === "Blacklisted"}>
+                    <Button
+                      className="bg-rose-600 hover:bg-rose-700 text-white"
+                      disabled={companyData.status === "Blacklisted"}
+                    >
                       <Upload className="h-4 w-4 mr-2" />
                       Upload Documents
                     </Button>
@@ -1493,7 +1707,9 @@ export default function CompanyDashboardModern() {
                   <MessageSquare className="h-5 w-5 text-indigo-600" />
                   <span>Support & Help</span>
                 </CardTitle>
-                <CardDescription>Get assistance and access help resources</CardDescription>
+                <CardDescription>
+                  Get assistance and access help resources
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
@@ -1501,30 +1717,44 @@ export default function CompanyDashboardModern() {
                     <div className="p-6 border border-indigo-200 rounded-xl bg-indigo-50 hover:bg-indigo-100 transition-colors cursor-pointer">
                       <div className="text-center">
                         <MessageSquare className="h-8 w-8 text-indigo-600 mx-auto mb-3" />
-                        <h3 className="font-semibold text-gray-900 mb-2">Live Chat</h3>
-                        <p className="text-sm text-gray-600">Get instant help from our support team</p>
+                        <h3 className="font-semibold text-gray-900 mb-2">
+                          Live Chat
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Get instant help from our support team
+                        </p>
                       </div>
                     </div>
                     <div className="p-6 border border-emerald-200 rounded-xl bg-emerald-50 hover:bg-emerald-100 transition-colors cursor-pointer">
                       <div className="text-center">
                         <Mail className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
-                        <h3 className="font-semibold text-gray-900 mb-2">Email Support</h3>
-                        <p className="text-sm text-gray-600">Send us a detailed message</p>
+                        <h3 className="font-semibold text-gray-900 mb-2">
+                          Email Support
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Send us a detailed message
+                        </p>
                       </div>
                     </div>
                     <div className="p-6 border border-amber-200 rounded-xl bg-amber-50 hover:bg-amber-100 transition-colors cursor-pointer">
                       <div className="text-center">
                         <Phone className="h-8 w-8 text-amber-600 mx-auto mb-3" />
-                        <h3 className="font-semibold text-gray-900 mb-2">Phone Support</h3>
-                        <p className="text-sm text-gray-600">Call us during business hours</p>
+                        <h3 className="font-semibold text-gray-900 mb-2">
+                          Phone Support
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Call us during business hours
+                        </p>
                       </div>
                     </div>
                   </div>
-                  
+
                   <Separator />
-                  
+
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Frequently Asked Questions</h4>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      Frequently Asked Questions
+                    </h4>
                     <div className="space-y-3">
                       {[
                         "How do I express interest in a tender?",
@@ -1532,9 +1762,14 @@ export default function CompanyDashboardModern() {
                         "How can I track my bid status?",
                         "What are the evaluation criteria?",
                       ].map((faq, index) => (
-                        <div key={index} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                        <div
+                          key={index}
+                          className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                        >
                           <div className="flex items-center justify-between">
-                            <span className="font-medium text-gray-900">{faq}</span>
+                            <span className="font-medium text-gray-900">
+                              {faq}
+                            </span>
                             <ChevronRight className="h-4 w-4 text-gray-400" />
                           </div>
                         </div>
@@ -1552,9 +1787,12 @@ export default function CompanyDashboardModern() {
       {showExpressInterestModal && selectedTender && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Express Interest</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
+              Express Interest
+            </h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to express interest in "{selectedTender.title}"?
+              Are you sure you want to express interest in "
+              {selectedTender.title}"?
             </p>
             <div className="flex space-x-3">
               <Button

@@ -99,12 +99,17 @@ export const getTenderAssignmentWithDetails: RequestHandler = (req, res) => {
       ministry: tenderInfo.ministry,
     };
 
-    console.log(`📋 Returning tender assignment details for ${tenderId}:`, assignmentWithDetails);
+    console.log(
+      `📋 Returning tender assignment details for ${tenderId}:`,
+      assignmentWithDetails,
+    );
 
     res.json(assignmentWithDetails);
   } catch (error) {
     console.error("Error fetching tender assignment with details:", error);
-    res.status(500).json({ error: "Failed to fetch tender assignment details" });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch tender assignment details" });
   }
 };
 
@@ -217,7 +222,7 @@ const getTenderInfo = (tenderId: string) => {
   ];
 
   // First try to find in mock data
-  const mockTender = mockTenders.find(t => t.id === tenderId);
+  const mockTender = mockTenders.find((t) => t.id === tenderId);
   if (mockTender) {
     return mockTender;
   }
@@ -295,8 +300,14 @@ export const getTenderAssignmentsForEvaluator: RequestHandler = (req, res) => {
         };
       });
 
-    console.log(`📋 Returning ${evaluatorAssignments.length} tender assignments for evaluator ${evaluatorId}:`,
-      evaluatorAssignments.map(a => ({ id: a.id, tenderId: a.tenderId, title: a.tenderTitle })));
+    console.log(
+      `📋 Returning ${evaluatorAssignments.length} tender assignments for evaluator ${evaluatorId}:`,
+      evaluatorAssignments.map((a) => ({
+        id: a.id,
+        tenderId: a.tenderId,
+        title: a.tenderTitle,
+      })),
+    );
 
     res.json(evaluatorAssignments);
   } catch (error) {

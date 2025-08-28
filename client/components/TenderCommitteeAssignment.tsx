@@ -1157,11 +1157,17 @@ export default function TenderCommitteeAssignment() {
     if (!selectedTender && assignmentForm.tenderId) {
       // Try to fetch tender information from main storage
       try {
-        const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
-        const foundTender = mainTenders.find((t: any) => t.id === assignmentForm.tenderId);
+        const mainTenders = JSON.parse(
+          localStorage.getItem("kanoproc_tenders") || "[]",
+        );
+        const foundTender = mainTenders.find(
+          (t: any) => t.id === assignmentForm.tenderId,
+        );
         if (foundTender) {
           tenderTitle = foundTender.title;
-          tenderCategory = foundTender.category || getCategoryFromMinistry(foundTender.ministry);
+          tenderCategory =
+            foundTender.category ||
+            getCategoryFromMinistry(foundTender.ministry);
           console.log(`📋 Found tender in main storage: ${foundTender.title}`);
         }
       } catch (error) {
@@ -1343,7 +1349,8 @@ export default function TenderCommitteeAssignment() {
   // Helper function to determine category from ministry
   const getCategoryFromMinistry = (ministry: string) => {
     if (ministry?.includes("Health")) return "Healthcare";
-    if (ministry?.includes("Works") || ministry?.includes("Infrastructure")) return "Infrastructure";
+    if (ministry?.includes("Works") || ministry?.includes("Infrastructure"))
+      return "Infrastructure";
     if (ministry?.includes("Education")) return "Education";
     return "General";
   };
@@ -2373,15 +2380,26 @@ export default function TenderCommitteeAssignment() {
                     // If tender not found in closed tenders, try main storage
                     if (!selectedTender && value) {
                       try {
-                        const mainTenders = JSON.parse(localStorage.getItem("kanoproc_tenders") || "[]");
-                        const foundTender = mainTenders.find((t: any) => t.id === value);
+                        const mainTenders = JSON.parse(
+                          localStorage.getItem("kanoproc_tenders") || "[]",
+                        );
+                        const foundTender = mainTenders.find(
+                          (t: any) => t.id === value,
+                        );
                         if (foundTender) {
                           tenderTitle = foundTender.title;
-                          tenderCategory = foundTender.category || getCategoryFromMinistry(foundTender.ministry);
-                          console.log(`📋 Found tender in main storage: ${foundTender.title}`);
+                          tenderCategory =
+                            foundTender.category ||
+                            getCategoryFromMinistry(foundTender.ministry);
+                          console.log(
+                            `📋 Found tender in main storage: ${foundTender.title}`,
+                          );
                         }
                       } catch (error) {
-                        console.warn("Could not fetch tender from main storage:", error);
+                        console.warn(
+                          "Could not fetch tender from main storage:",
+                          error,
+                        );
                       }
                     }
 
