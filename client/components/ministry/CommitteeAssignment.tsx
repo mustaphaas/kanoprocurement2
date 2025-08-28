@@ -102,7 +102,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
   const [createFormData, setCreateFormData] = useState({
     name: "",
     type: "" as CommitteeType,
-    tender_id: "",
+    tender_id: "none",
   });
 
   const [assignFormData, setAssignFormData] = useState({
