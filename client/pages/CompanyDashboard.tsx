@@ -210,6 +210,7 @@ export default function CompanyDashboard() {
     setClarMessage("");
     setClarUrgent(false);
     setClarEmailCopy(false);
+    setClarMinistryCode("");
     setActiveSection("existing-clarifications");
   };
   const [statusUpdateTrigger, setStatusUpdateTrigger] = useState(0);
