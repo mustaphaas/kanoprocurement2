@@ -445,6 +445,93 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
   }
 };
 
+// Helper function to get tender information (same as in committee-assignments.ts)
+const getTenderInfoForScoring = (tenderId: string) => {
+  const mockTenders = [
+    {
+      id: "KS-2024-001",
+      title: "Supply of Medical Equipment to Primary Health Centers",
+      category: "Healthcare",
+      ministry: "Ministry of Health",
+    },
+    {
+      id: "KS-2024-002",
+      title: "Hospital Equipment Supply",
+      category: "Healthcare",
+      ministry: "Ministry of Health",
+    },
+    {
+      id: "KS-2024-003",
+      title: "Road Construction and Rehabilitation Project",
+      category: "Infrastructure",
+      ministry: "Ministry of Works and Infrastructure",
+    },
+    {
+      id: "MOH-2024-001",
+      title: "Medical Equipment Procurement for State Hospitals",
+      category: "Healthcare",
+      ministry: "Ministry of Health",
+    },
+    {
+      id: "MOWI-2024-001",
+      title: "Kano-Kaduna Highway Rehabilitation",
+      category: "Infrastructure",
+      ministry: "Ministry of Works and Infrastructure",
+    },
+    {
+      id: "MOE-2024-001",
+      title: "School Furniture Supply Program",
+      category: "Education",
+      ministry: "Ministry of Education",
+    },
+  ];
+
+  // First try to find in mock data
+  const mockTender = mockTenders.find(t => t.id === tenderId);
+  if (mockTender) {
+    return mockTender;
+  }
+
+  // Fallback: generate based on ID pattern
+  if (tenderId.startsWith("KS-")) {
+    return {
+      id: tenderId,
+      title: `Kano State Tender ${tenderId}`,
+      category: "General",
+      ministry: "Kano State Government",
+    };
+  } else if (tenderId.startsWith("MOH-")) {
+    return {
+      id: tenderId,
+      title: `Health Sector Procurement ${tenderId}`,
+      category: "Healthcare",
+      ministry: "Ministry of Health",
+    };
+  } else if (tenderId.startsWith("MOWI-")) {
+    return {
+      id: tenderId,
+      title: `Infrastructure Project ${tenderId}`,
+      category: "Infrastructure",
+      ministry: "Ministry of Works and Infrastructure",
+    };
+  } else if (tenderId.startsWith("MOE-")) {
+    return {
+      id: tenderId,
+      title: `Educational Services ${tenderId}`,
+      category: "Education",
+      ministry: "Ministry of Education",
+    };
+  }
+
+  // Final fallback
+  return {
+    id: tenderId,
+    title: `Tender ${tenderId}`,
+    category: "General",
+    ministry: "Kano State Government",
+  };
+};
+
 export const getTenderAssignment: RequestHandler = (req, res) => {
   try {
     const { tenderId } = req.params;
@@ -452,6 +539,9 @@ export const getTenderAssignment: RequestHandler = (req, res) => {
     if (!tenderId) {
       return res.status(400).json({ error: "tenderId is required" });
     }
+
+    // Get tender information first
+    const tenderInfo = getTenderInfoForScoring(tenderId);
 
     // Get the real assignment data from committee assignments
     const assignment = getAssignmentByTenderId(tenderId);
@@ -461,19 +551,26 @@ export const getTenderAssignment: RequestHandler = (req, res) => {
       const mockAssignment = {
         id: `CA-${tenderId}`,
         tenderId,
+        tenderTitle: tenderInfo.title,
+        tenderCategory: tenderInfo.category,
+        ministry: tenderInfo.ministry,
         evaluationTemplateId: "ET-001", // Default QCBS template
         committeeMemberId: "user123", // Current user
         status: "active",
         evaluationStart: "2024-01-15T00:00:00Z",
         evaluationEnd: "2024-02-15T00:00:00Z",
       };
+      console.log(`📋 Returning mock assignment for ${tenderId}:`, mockAssignment);
       return res.json(mockAssignment);
     }
 
-    // Transform the assignment data to match the expected format
+    // Transform the assignment data to match the expected format with tender information
     const tenderAssignment = {
       id: assignment.id,
       tenderId: assignment.tenderId,
+      tenderTitle: tenderInfo.title,
+      tenderCategory: tenderInfo.category,
+      ministry: tenderInfo.ministry,
       evaluationTemplateId: assignment.evaluationTemplateId,
       committeeMemberId: "user123", // Current user - in production, get from auth
       status: assignment.status.toLowerCase(),
