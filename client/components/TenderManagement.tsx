@@ -2118,9 +2118,88 @@ const TenderManagement = () => {
                     </div>
                   </Card>
                 </div>
+
+                <div className="mt-6">
+                  <h4 className="font-medium mb-2">Recent Clarifications</h4>
+                  <div className="border rounded-lg overflow-hidden">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Subject</TableHead>
+                          <TableHead>Tender</TableHead>
+                          <TableHead>Vendor</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Action</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {clarifications.slice(0, 10).map((c) => (
+                          <TableRow key={c.id}>
+                            <TableCell className="font-medium">{c.subject}</TableCell>
+                            <TableCell>{c.tender}</TableCell>
+                            <TableCell>{c.vendorName}</TableCell>
+                            <TableCell>{new Date(c.submittedDate).toLocaleDateString()}</TableCell>
+                            <TableCell>
+                              <Badge variant={c.status === "Pending Response" ? "secondary" : "default"}>{c.status}</Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="outline" size="sm" onClick={() => openClarification(c)}>
+                                <Eye className="h-4 w-4 mr-1" /> View
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {clarifications.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center text-sm text-gray-500">No clarifications yet</TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
+
+          <Dialog open={clarDialogOpen} onOpenChange={setClarDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Clarification Details</DialogTitle>
+              </DialogHeader>
+              {selectedClarification && (
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-sm text-gray-500">Subject</div>
+                    <div className="font-medium">{selectedClarification.subject}</div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-sm text-gray-500">Tender</div>
+                      <div>{selectedClarification.tender}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Vendor</div>
+                      <div>{selectedClarification.vendorName}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500">Message</div>
+                    <div className="whitespace-pre-wrap">{selectedClarification.message}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500 mb-1">Response</div>
+                    <Textarea value={responseText} onChange={(e) => setResponseText(e.target.value)} placeholder="Type your response..." rows={4} />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setClarDialogOpen(false)}>Close</Button>
+                    <Button onClick={handleRespondToClarification}>Save Response</Button>
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         {/* Tender Opening */}
