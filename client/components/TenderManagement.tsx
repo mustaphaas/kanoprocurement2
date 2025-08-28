@@ -233,6 +233,11 @@ const TenderManagement = () => {
 
   // Dynamic Clarifications (from company submissions)
   const [clarifications, setClarifications] = useState<ClarificationRecord[]>([]);
+  const [selectedClarification, setSelectedClarification] =
+    useState<ClarificationRecord | null>(null);
+  const [clarDialogOpen, setClarDialogOpen] = useState(false);
+  const [responseText, setResponseText] = useState("");
+
   useEffect(() => {
     setClarifications(getCentralClarifications());
     const onClarification = (e: any) => {
@@ -242,6 +247,23 @@ const TenderManagement = () => {
     window.addEventListener("clarificationSubmitted", onClarification as EventListener);
     return () => window.removeEventListener("clarificationSubmitted", onClarification as EventListener);
   }, []);
+
+  const openClarification = (c: ClarificationRecord) => {
+    setSelectedClarification(c);
+    setResponseText(c.response || "");
+    setClarDialogOpen(true);
+  };
+
+  const handleRespondToClarification = () => {
+    if (!selectedClarification) return;
+    const updated = updateClarification(selectedClarification.id, {
+      response: responseText,
+      responseDate: new Date().toISOString(),
+      status: "Responded",
+    });
+    setClarifications(updated);
+    setClarDialogOpen(false);
+  };
 
   // Mock evaluation data
   const mockTenderInfo = {
