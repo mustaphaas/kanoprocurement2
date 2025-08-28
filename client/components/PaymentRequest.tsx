@@ -565,7 +565,7 @@ export default function PaymentRequest({
                             <SelectValue placeholder="Select milestone" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">
+                            <SelectItem value="none">
                               No specific milestone
                             </SelectItem>
                             {selectedContract.milestones.map((milestone) => (
