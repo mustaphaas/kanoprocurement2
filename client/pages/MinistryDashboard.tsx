@@ -1608,7 +1608,7 @@ export default function MinistryDashboard() {
               projectTitle: "Digital Learning Platform Development",
               requestDate: "2024-01-25",
               status: "Pending",
-              projectValue: "₦1,800,000,000",
+              projectValue: "��1,800,000,000",
               contractorName: "Kano School Furniture Ltd",
               expectedDuration: "12 months",
             },
@@ -2647,7 +2647,6 @@ export default function MinistryDashboard() {
     setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
     const centralClars = getCentralClarifications();
-    const { ministry: currentMinistry } = getMinistryMockData();
     const filtered = centralClars.filter((c) => c.ministryCode === currentMinistry.code);
     const mappedFromCentral = filtered.map((c) => ({
       id: c.id,
