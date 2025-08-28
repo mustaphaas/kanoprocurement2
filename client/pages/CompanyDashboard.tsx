@@ -170,6 +170,21 @@ export default function CompanyDashboard() {
       vendorName: companyData.name,
     };
     addClarification(record);
+    logUserAction(
+      companyData.email.toLowerCase(),
+      "company_user",
+      "CLARIFICATION_REQUESTED",
+      "Clarifications",
+      `Company ${companyData.name} submitted a clarification: ${record.subject}`,
+      "MEDIUM",
+      undefined,
+      {
+        tender: record.tender,
+        category: record.category,
+        urgent: record.urgent,
+        submittedDate: record.submittedDate,
+      },
+    );
     dispatchClarificationSubmitted({
       id: record.id,
       tender: record.tender,
