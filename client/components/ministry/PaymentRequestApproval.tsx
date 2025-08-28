@@ -898,12 +898,16 @@ export default function PaymentRequestApproval({
                       </Label>
                       <div className="space-y-2 mt-2">
                         {selectedRequest.supportingDocuments.map((doc) => (
-                          <div key={doc.id} className="flex items-center space-x-2 p-2 bg-gray-50 rounded border">
+                          <div
+                            key={doc.id}
+                            className="flex items-center space-x-2 p-2 bg-gray-50 rounded border"
+                          >
                             <FileText className="h-4 w-4 text-blue-600" />
                             <div className="flex-1">
                               <p className="text-sm font-medium">{doc.name}</p>
                               <p className="text-xs text-gray-500">
-                                {doc.type} • {doc.size} • {new Date(doc.uploadDate).toLocaleDateString()}
+                                {doc.type} • {doc.size} •{" "}
+                                {new Date(doc.uploadDate).toLocaleDateString()}
                               </p>
                             </div>
                             {doc.url && (
@@ -912,7 +916,7 @@ export default function PaymentRequestApproval({
                                 variant="outline"
                                 onClick={() => {
                                   // Create a link to download/view the file
-                                  const link = document.createElement('a');
+                                  const link = document.createElement("a");
                                   link.href = doc.url;
                                   link.download = doc.name;
                                   link.click();

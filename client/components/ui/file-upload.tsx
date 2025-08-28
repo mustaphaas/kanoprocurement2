@@ -59,7 +59,9 @@ export function FileUpload({
 
     const validFiles = files.filter((file) => {
       if (file.size > maxSize) {
-        alert(`File ${file.name} is too large. Maximum size is ${formatFileSize(maxSize)}`);
+        alert(
+          `File ${file.name} is too large. Maximum size is ${formatFileSize(maxSize)}`,
+        );
         return false;
       }
       return true;
@@ -86,7 +88,7 @@ export function FileUpload({
           dragActive
             ? "border-primary bg-primary/5"
             : "border-gray-300 hover:border-gray-400",
-          disabled && "opacity-50 cursor-not-allowed"
+          disabled && "opacity-50 cursor-not-allowed",
         )}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}

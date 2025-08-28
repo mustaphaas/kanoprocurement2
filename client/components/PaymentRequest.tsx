@@ -296,14 +296,19 @@ export default function PaymentRequest({
     if (file) {
       // Validate file size (10MB limit)
       if (file.size > 10 * 1024 * 1024) {
-        alert('File size must be less than 10MB');
+        alert("File size must be less than 10MB");
         return;
       }
 
       // Validate file type
-      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+      const allowedTypes = [
+        "application/pdf",
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        alert('Please upload a PDF, JPG, or PNG file');
+        alert("Please upload a PDF, JPG, or PNG file");
         return;
       }
 
@@ -350,7 +355,7 @@ export default function PaymentRequest({
           url: base64, // Store as base64 for now
         };
       } catch (error) {
-        alert('Error processing invoice file. Please try again.');
+        alert("Error processing invoice file. Please try again.");
         setLoading(false);
         return;
       }
@@ -366,12 +371,19 @@ export default function PaymentRequest({
         from: formData.workPeriodFrom,
         to: formData.workPeriodTo,
       },
-      milestoneId: formData.milestoneId && formData.milestoneId !== "none" ? formData.milestoneId : undefined,
-      milestoneTitle: formData.milestoneId && formData.milestoneId !== "none"
-        ? selectedContract.milestones.find((m) => m.id === formData.milestoneId)
-            ?.title
-        : undefined,
-      supportingDocuments: invoiceDocument ? [invoiceDocument, ...documents] : documents,
+      milestoneId:
+        formData.milestoneId && formData.milestoneId !== "none"
+          ? formData.milestoneId
+          : undefined,
+      milestoneTitle:
+        formData.milestoneId && formData.milestoneId !== "none"
+          ? selectedContract.milestones.find(
+              (m) => m.id === formData.milestoneId,
+            )?.title
+          : undefined,
+      supportingDocuments: invoiceDocument
+        ? [invoiceDocument, ...documents]
+        : documents,
       charges,
       netAmount,
       totalAmount: formData.requestedAmount,
@@ -476,16 +488,16 @@ export default function PaymentRequest({
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   };
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const selectedContract = formData.contractId
@@ -714,7 +726,9 @@ export default function PaymentRequest({
                           <Button
                             type="button"
                             variant="outline"
-                            onClick={() => document.getElementById('invoiceFile')?.click()}
+                            onClick={() =>
+                              document.getElementById("invoiceFile")?.click()
+                            }
                             className="mb-2"
                           >
                             Choose File
@@ -724,7 +738,9 @@ export default function PaymentRequest({
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-2">
                                   <FileText className="h-4 w-4 text-green-600" />
-                                  <span className="text-green-800">{invoiceFile.name}</span>
+                                  <span className="text-green-800">
+                                    {invoiceFile.name}
+                                  </span>
                                 </div>
                                 <button
                                   type="button"
@@ -735,7 +751,8 @@ export default function PaymentRequest({
                                 </button>
                               </div>
                               <p className="text-green-600 mt-1">
-                                Size: {(invoiceFile.size / 1024 / 1024).toFixed(2)} MB
+                                Size:{" "}
+                                {(invoiceFile.size / 1024 / 1024).toFixed(2)} MB
                               </p>
                             </div>
                           )}
@@ -1045,12 +1062,16 @@ export default function PaymentRequest({
                       </Label>
                       <div className="space-y-2 mt-2">
                         {selectedRequest.supportingDocuments.map((doc) => (
-                          <div key={doc.id} className="flex items-center space-x-2 p-2 bg-gray-50 rounded border">
+                          <div
+                            key={doc.id}
+                            className="flex items-center space-x-2 p-2 bg-gray-50 rounded border"
+                          >
                             <FileText className="h-4 w-4 text-blue-600" />
                             <div className="flex-1">
                               <p className="text-sm font-medium">{doc.name}</p>
                               <p className="text-xs text-gray-500">
-                                {doc.type} • {doc.size} • {new Date(doc.uploadDate).toLocaleDateString()}
+                                {doc.type} • {doc.size} •{" "}
+                                {new Date(doc.uploadDate).toLocaleDateString()}
                               </p>
                             </div>
                             {doc.url && (
@@ -1059,7 +1080,7 @@ export default function PaymentRequest({
                                 variant="outline"
                                 onClick={() => {
                                   // Create a link to download/view the file
-                                  const link = document.createElement('a');
+                                  const link = document.createElement("a");
                                   link.href = doc.url;
                                   link.download = doc.name;
                                   link.click();
