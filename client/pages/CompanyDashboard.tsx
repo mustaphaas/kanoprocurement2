@@ -151,6 +151,7 @@ export default function CompanyDashboard() {
   const [clarUrgent, setClarUrgent] = useState(false);
   const [clarEmailCopy, setClarEmailCopy] = useState(false);
   const [clarMinistryCode, setClarMinistryCode] = useState("");
+  const [statusUpdateTrigger, setStatusUpdateTrigger] = useState(0);
 
   // Discover available tenders and map to ministries for auto-detection
   const aggregatedTenders = useMemo(() => getAggregatedMinistryTenders(), [statusUpdateTrigger]);
