@@ -2718,6 +2718,8 @@ export default function MinistryDashboard() {
   useEffect(() => {
     const handler = (e: any) => {
       const c: ClarificationRecord = e.detail;
+      const { ministry } = getMinistryMockData();
+      if (c.ministryCode !== ministry.code) return;
       setVendorCommunications((prev) => [
         {
           id: c.id,
