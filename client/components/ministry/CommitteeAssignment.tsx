@@ -721,7 +721,7 @@ export const CommitteeAssignment: React.FC<CommitteeAssignmentProps> = ({
                   <SelectValue placeholder="Select tender" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No tender</SelectItem>
+                  <SelectItem value="none">No tender</SelectItem>
                   {tenders.map((tender) => (
                     <SelectItem key={tender.id} value={tender.id}>
                       {tender.title}
