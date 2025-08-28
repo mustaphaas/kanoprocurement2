@@ -496,7 +496,7 @@ export default function PaymentRequest({
                           onValueChange={(value) =>
                             setFormData((prev) => ({
                               ...prev,
-                              milestoneId: value,
+                              milestoneId: value === "none" ? "" : value,
                             }))
                           }
                         >
@@ -504,7 +504,7 @@ export default function PaymentRequest({
                             <SelectValue placeholder="Select milestone" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">
+                            <SelectItem value="none">
                               No specific milestone
                             </SelectItem>
                             {selectedContract.milestones.map((milestone) => (
