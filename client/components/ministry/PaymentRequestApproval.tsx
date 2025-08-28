@@ -890,6 +890,43 @@ export default function PaymentRequestApproval({
                       </p>
                     </div>
                   </div>
+
+                  {selectedRequest.supportingDocuments.length > 0 && (
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Supporting Documents
+                      </Label>
+                      <div className="space-y-2 mt-2">
+                        {selectedRequest.supportingDocuments.map((doc) => (
+                          <div key={doc.id} className="flex items-center space-x-2 p-2 bg-gray-50 rounded border">
+                            <FileText className="h-4 w-4 text-blue-600" />
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">{doc.name}</p>
+                              <p className="text-xs text-gray-500">
+                                {doc.type} • {doc.size} • {new Date(doc.uploadDate).toLocaleDateString()}
+                              </p>
+                            </div>
+                            {doc.url && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  // Create a link to download/view the file
+                                  const link = document.createElement('a');
+                                  link.href = doc.url;
+                                  link.download = doc.name;
+                                  link.click();
+                                }}
+                              >
+                                <Eye className="h-3 w-3 mr-1" />
+                                View
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-4">
