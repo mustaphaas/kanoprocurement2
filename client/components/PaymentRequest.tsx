@@ -397,7 +397,7 @@ export default function PaymentRequest({
       workDescription: "",
       workPeriodFrom: "",
       workPeriodTo: "",
-      milestoneId: "",
+      milestoneId: "none",
       workCompletionPercentage: 0,
       requestType: "Interim",
       invoiceNumber: "",
