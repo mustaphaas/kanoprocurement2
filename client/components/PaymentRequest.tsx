@@ -193,6 +193,7 @@ export default function PaymentRequest({
   });
 
   const [documents, setDocuments] = useState<PaymentDocument[]>([]);
+  const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
 
   // Load data on component mount
   useEffect(() => {
@@ -290,13 +291,34 @@ export default function PaymentRequest({
     }
   };
 
-  const handleCreateRequest = () => {
+  const handleInvoiceFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        return;
+      }
+
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a PDF, JPG, or PNG file');
+        return;
+      }
+
+      setInvoiceFile(file);
+    }
+  };
+
+  const handleCreateRequest = async () => {
     if (
       !formData.contractId ||
       !formData.requestedAmount ||
-      !formData.workDescription
+      !formData.workDescription ||
+      !invoiceFile
     ) {
-      alert("Please fill in all required fields");
+      alert("Please fill in all required fields including invoice attachment");
       return;
     }
 
@@ -314,6 +336,26 @@ export default function PaymentRequest({
     const charges = calculateCharges(formData.requestedAmount);
     const netAmount = formData.requestedAmount - charges.total;
 
+    // Convert file to base64 for storage
+    let invoiceDocument: PaymentDocument | null = null;
+    if (invoiceFile) {
+      try {
+        const base64 = await fileToBase64(invoiceFile);
+        invoiceDocument = {
+          id: `DOC-${Date.now()}`,
+          name: invoiceFile.name,
+          type: "Invoice",
+          uploadDate: new Date().toISOString(),
+          size: formatFileSize(invoiceFile.size),
+          url: base64, // Store as base64 for now
+        };
+      } catch (error) {
+        alert('Error processing invoice file. Please try again.');
+        setLoading(false);
+        return;
+      }
+    }
+
     const newRequest: PaymentRequest = {
       id: `PR-${Date.now()}`,
       contractId: formData.contractId,
@@ -329,7 +371,7 @@ export default function PaymentRequest({
         ? selectedContract.milestones.find((m) => m.id === formData.milestoneId)
             ?.title
         : undefined,
-      supportingDocuments: documents,
+      supportingDocuments: invoiceDocument ? [invoiceDocument, ...documents] : documents,
       charges,
       netAmount,
       totalAmount: formData.requestedAmount,
@@ -367,6 +409,7 @@ export default function PaymentRequest({
       },
     });
     setDocuments([]);
+    setInvoiceFile(null);
     setShowCreateModal(false);
     setLoading(false);
   };
@@ -425,6 +468,24 @@ export default function PaymentRequest({
       default:
         return <FileText className="h-4 w-4" />;
     }
+  };
+
+  // Helper functions
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   const selectedContract = formData.contractId
@@ -630,6 +691,56 @@ export default function PaymentRequest({
                         }
                         placeholder="Invoice reference number"
                       />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="invoiceFile">Invoice Attachment *</Label>
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-colors">
+                        <div className="text-center">
+                          <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                          <p className="text-sm text-gray-600 mb-2">
+                            Upload invoice document
+                          </p>
+                          <p className="text-xs text-gray-500 mb-3">
+                            Accepted formats: PDF, JPG, PNG (Max 10MB)
+                          </p>
+                          <input
+                            type="file"
+                            id="invoiceFile"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={handleInvoiceFileChange}
+                            className="hidden"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => document.getElementById('invoiceFile')?.click()}
+                            className="mb-2"
+                          >
+                            Choose File
+                          </Button>
+                          {invoiceFile && (
+                            <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-2">
+                                  <FileText className="h-4 w-4 text-green-600" />
+                                  <span className="text-green-800">{invoiceFile.name}</span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => setInvoiceFile(null)}
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                              <p className="text-green-600 mt-1">
+                                Size: {(invoiceFile.size / 1024 / 1024).toFixed(2)} MB
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -926,6 +1037,43 @@ export default function PaymentRequest({
                     </Label>
                     <p className="text-sm">{selectedRequest.workDescription}</p>
                   </div>
+
+                  {selectedRequest.supportingDocuments.length > 0 && (
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Supporting Documents
+                      </Label>
+                      <div className="space-y-2 mt-2">
+                        {selectedRequest.supportingDocuments.map((doc) => (
+                          <div key={doc.id} className="flex items-center space-x-2 p-2 bg-gray-50 rounded border">
+                            <FileText className="h-4 w-4 text-blue-600" />
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">{doc.name}</p>
+                              <p className="text-xs text-gray-500">
+                                {doc.type} • {doc.size} • {new Date(doc.uploadDate).toLocaleDateString()}
+                              </p>
+                            </div>
+                            {doc.url && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  // Create a link to download/view the file
+                                  const link = document.createElement('a');
+                                  link.href = doc.url;
+                                  link.download = doc.name;
+                                  link.click();
+                                }}
+                              >
+                                <Eye className="h-3 w-3 mr-1" />
+                                View
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
