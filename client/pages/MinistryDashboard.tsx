@@ -2647,8 +2647,8 @@ export default function MinistryDashboard() {
     setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
     const centralClars = getCentralClarifications();
-    const { ministry } = getMinistryMockData();
-    const filtered = centralClars.filter((c) => c.ministryCode === ministry.code);
+    const { ministry: currentMinistry } = getMinistryMockData();
+    const filtered = centralClars.filter((c) => c.ministryCode === currentMinistry.code);
     const mappedFromCentral = filtered.map((c) => ({
       id: c.id,
       vendorId: c.vendorEmail,
@@ -2718,8 +2718,8 @@ export default function MinistryDashboard() {
   useEffect(() => {
     const handler = (e: any) => {
       const c: ClarificationRecord = e.detail;
-      const { ministry } = getMinistryMockData();
-      if (c.ministryCode !== ministry.code) return;
+      const { ministry: currentMinistry } = getMinistryMockData();
+      if (c.ministryCode !== currentMinistry.code) return;
       setVendorCommunications((prev) => [
         {
           id: c.id,
@@ -3038,7 +3038,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-009",
           companyName: "Emirate Construction Co",
-          bidAmount: "₦8,800,000,000",
+          bidAmount: "��8,800,000,000",
           technicalScore: 84,
           financialScore: 81,
           totalScore: 82.5,
