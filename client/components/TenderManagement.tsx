@@ -1526,10 +1526,20 @@ const TenderManagement = () => {
     } catch {}
 
     const ministry = getMinistryInfo();
+
+    // Try resolve actual tender id from storage by id or title
+    let actualTenderId: string | undefined;
+    try {
+      const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+      const match = findTenderByIdOrTitle(all, assignment.tenderId, assignment.tenderTitle);
+      if (match) actualTenderId = match.id;
+    } catch {}
+
     const approval = {
       id: `AWD-APP-${Date.now()}`,
       tenderId: assignment.tenderId,
       tenderTitle: assignment.tenderTitle,
+      actualTenderId,
       ministryCode: ministry.code,
       ministryName: ministry.name,
       status: "Submitted",
@@ -1550,7 +1560,8 @@ const TenderManagement = () => {
       const all = JSON.parse(
         localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
       );
-      const idx = all.findIndex((t: any) => t.id === assignment.tenderId);
+      const match = findTenderByIdOrTitle(all, actualTenderId || assignment.tenderId, assignment.tenderTitle);
+      const idx = match ? all.findIndex((t: any) => t.id === match.id) : -1;
       if (idx !== -1) {
         all[idx].awardApprovalStatus = "Submitted";
         all[idx].workflowStage = "Contract Award";
