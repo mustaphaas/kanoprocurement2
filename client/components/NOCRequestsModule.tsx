@@ -552,7 +552,7 @@ export default function NOCRequestsModule({
       tenderId: tender.id,
       tenderTitle: tender.tenderTitle,
       projectTitle: tender.tenderTitle,
-      projectValue: tender.projectValue,
+      projectValue: formatCurrency(tender.projectValue),
       contractorName: tender.winningBidder,
       evaluationResults: tender.evaluationResults,
     }));
@@ -690,6 +690,26 @@ export default function NOCRequestsModule({
         "centralNOCRequests",
         JSON.stringify(updatedCentralList),
       );
+    }
+
+    // Persist to ministry-specific storage
+    const ministryNOCKey = `${ministryCode}_NOCRequests`;
+    const ministryNOCs = localStorage.getItem(ministryNOCKey);
+    if (ministryNOCs) {
+      const list = JSON.parse(ministryNOCs);
+      const updatedList = list.map((req: NOCRequest) =>
+        req.id === requestId
+          ? {
+              ...req,
+              status: "Submitted",
+              timeline: {
+                ...req.timeline,
+                dateSubmitted: new Date().toISOString().split("T")[0],
+              },
+            }
+          : req,
+      );
+      localStorage.setItem(ministryNOCKey, JSON.stringify(updatedList));
     }
 
     alert("NOC Request submitted for review!");
@@ -892,7 +912,8 @@ export default function NOCRequestsModule({
                                   Winning Bidder: {tender.winningBidder}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  Project Value: {tender.projectValue}
+                                  Project Value:{" "}
+                                  {formatCurrency(tender.projectValue)}
                                 </p>
                               </div>
                               <div className="text-right">
@@ -1035,7 +1056,7 @@ export default function NOCRequestsModule({
                               </p>
                               <p>
                                 <span className="font-medium">Value:</span>{" "}
-                                {request.projectValue}
+                                {formatCurrency(request.projectValue)}
                               </p>
                             </div>
                             <div>
@@ -1208,7 +1229,7 @@ export default function NOCRequestsModule({
                     <div>
                       <p>
                         <span className="font-medium">Project Value:</span>{" "}
-                        {selectedTender.projectValue}
+                        {formatCurrency(selectedTender.projectValue)}
                       </p>
                       <p>
                         <span className="font-medium">Overall Score:</span>{" "}

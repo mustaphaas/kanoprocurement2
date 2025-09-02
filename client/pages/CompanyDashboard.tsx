@@ -279,7 +279,7 @@ export default function CompanyDashboard() {
     };
 
     (window as any).clearAllStatus = () => {
-      console.log("🧹 Clearing all userStatus from storage...");
+      console.log("�� Clearing all userStatus from storage...");
       persistentStorage.clearAll();
       setStatusUpdateTrigger((prev) => prev + 1);
       console.log("✅ All userStatus cleared!");
@@ -628,8 +628,8 @@ export default function CompanyDashboard() {
           console.error("Error parsing main tenders:", error);
         }
       }
-      const storedTenderStates =
-        localStorage.getItem("companyTenderStates") || "{}";
+      const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+      const storedTenderStates = localStorage.getItem(statesKey) || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
       const lastProcessedTenders = JSON.parse(
         localStorage.getItem("lastProcessedTenders") || "[]",
@@ -905,14 +905,14 @@ export default function CompanyDashboard() {
     );
 
     // Persist tender state to localStorage
-    const storedTenderStates =
-      localStorage.getItem("companyTenderStates") || "{}";
+    const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+    const storedTenderStates = localStorage.getItem(statesKey) || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
       hasExpressedInterest: true,
     };
-    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
+    localStorage.setItem(statesKey, JSON.stringify(tenderStates));
 
     // Create EOI confirmation message using message service
     messageService.createEOIConfirmationMessage(
@@ -1002,15 +1002,15 @@ export default function CompanyDashboard() {
     );
 
     // Persist tender state to localStorage
-    const storedTenderStates =
-      localStorage.getItem("companyTenderStates") || "{}";
+    const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+    const storedTenderStates = localStorage.getItem(statesKey) || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
       hasExpressedInterest: true,
       hasBid: true,
     };
-    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
+    localStorage.setItem(statesKey, JSON.stringify(tenderStates));
 
     // Create bid confirmation message using message service
     messageService.createBidConfirmationMessage(
@@ -1833,7 +1833,7 @@ export default function CompanyDashboard() {
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">Project Value</option>
-                      <option value="0-100m">��0 - ₦100M</option>
+                      <option value="0-100m">₦0 - ₦100M</option>
                       <option value="100m-1b">₦100M - ₦1B</option>
                       <option value="1b+">₦1B+</option>
                     </select>
@@ -2121,7 +2121,7 @@ export default function CompanyDashboard() {
                       id: "TB002",
                       title: "Supply of Medical Equipment to General Hospitals",
                       purchaseDate: "2024-01-10",
-                      amount: "���3,000",
+                      amount: "₦3,000",
                       status: "Submitted",
                       deadline: "2024-02-10",
                       category: "Healthcare",
@@ -2232,7 +2232,7 @@ export default function CompanyDashboard() {
                       title:
                         "Supply of Office Furniture to Government Secretariat",
                       awardDate: "2024-01-20",
-                      contractValue: "��15,500,000",
+                      contractValue: "₦15,500,000",
                       status: "Contract Signed",
                       progress: 65,
                       completionDate: "2024-03-20",
@@ -3873,9 +3873,7 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <DollarSign className="h-6 w-6 text-green-600" />
                     </div>
-                    <h4 className="text-2xl font-bold text-gray-900">
-                      ��89.2B
-                    </h4>
+                    <h4 className="text-2xl font-bold text-gray-900">₦89.2B</h4>
                     <p className="text-sm text-gray-600">Total Value</p>
                     <p className="text-xs text-green-600 mt-1">
                       +22% this year
@@ -4103,7 +4101,7 @@ export default function CompanyDashboard() {
                             Northern Builders Ltd
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            ��950M
+                            ₦950M
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Jan 25, 2024

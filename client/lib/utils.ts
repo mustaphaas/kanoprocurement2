@@ -1,4 +1,4 @@
-import { clsx, type ClassValue } from "clsx";
+import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -11,13 +11,15 @@ export function formatCurrency(amount: string | number): string {
     let numericAmount: number;
 
     if (typeof amount === "string") {
+      // Normalize and remove replacement characters
+      const normalized = amount.replace(/�/g, "");
       // If it's already properly formatted, return as is
-      if (amount.startsWith("₦") && !amount.includes("�")) {
-        return amount;
+      if (normalized.startsWith("₦")) {
+        return normalized;
       }
 
       // Remove all non-numeric characters except decimal point and letters (for B, M, K suffixes)
-      let cleanAmount = amount.replace(/[^\d.BMK]/gi, "");
+      let cleanAmount = normalized.replace(/[^\d.BMK]/gi, "");
 
       // Handle billion, million, thousand suffixes
       let multiplier = 1;
@@ -45,7 +47,7 @@ export function formatCurrency(amount: string | number): string {
     } else if (numericAmount >= 1000000) {
       return `₦${(numericAmount / 1000000).toFixed(1)}M`;
     } else if (numericAmount >= 1000) {
-      return `��${(numericAmount / 1000).toFixed(1)}K`;
+      return `₦${(numericAmount / 1000).toFixed(1)}K`;
     }
 
     return `₦${numericAmount.toLocaleString("en-US", {

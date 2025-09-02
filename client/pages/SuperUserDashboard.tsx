@@ -1087,7 +1087,7 @@ export default function SuperUserDashboard() {
           "Upgrade of government ICT infrastructure and network systems",
         category: "Technology",
         ministry: "Ministry of Science and Technology",
-        estimatedValue: "��1.2B",
+        estimatedValue: "₦1.2B",
         status: "Awarded",
         workflowStatus: "Contract_Awarded",
         workflowStep: 6,
@@ -1115,7 +1115,7 @@ export default function SuperUserDashboard() {
           "Supply of advanced medical equipment for specialist units",
         category: "Healthcare",
         ministry: "Ministry of Health",
-        estimatedValue: "���950M",
+        estimatedValue: "₦950M",
         status: "Closed",
         workflowStatus: "NOC_Requested",
         workflowStep: 5,
@@ -6678,7 +6678,7 @@ The award letter has been:
                     >
                       <option value="">Select winning bidder</option>
                       <option value="1">
-                        Northern Construction Ltd (�����2.3B - Score: 87.5)
+                        Northern Construction Ltd (₦2.3B - Score: 87.5)
                       </option>
                       <option value="2">
                         BuildRight Engineering (₦2.6B - Score: 76.5)
@@ -9117,7 +9117,7 @@ The award letter has been:
               🔐 Digital Contract Signing
             </h3>
             <p className="text-sm text-gray-600 mb-6">
-              Contract: {selectedAwardTender.title} • Awarded to:{" "}
+              Contract: {selectedAwardTender.title} ��� Awarded to:{" "}
               {selectedAwardTender.awardedCompany}
             </p>
 
@@ -9566,10 +9566,10 @@ The award letter has been:
                   >
                     <option value="">Select winning bidder</option>
                     <option value="Northern Construction Ltd (₦2.3B - Score: 87.5)">
-                      Northern Construction Ltd (��2.3B - Score: 87.5)
+                      Northern Construction Ltd (₦2.3B - Score: 87.5)
                     </option>
                     <option value="BuildRight Engineering (₦2.6B - Score: 76.5)">
-                      BuildRight Engineering (��2.6B - Score: 76.5)
+                      BuildRight Engineering (₦2.6B - Score: 76.5)
                     </option>
                     <option value="Kano Infrastructure Corp (₦2.1B - Score: 82.0)">
                       Kano Infrastructure Corp (₦2.1B - Score: 82.0)

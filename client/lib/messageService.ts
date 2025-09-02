@@ -430,9 +430,29 @@ class MessageService {
     // This function should be called periodically to check for tender status changes
     // and generate appropriate messages for companies that have expressed interest
     try {
-      const companyTenderStates = JSON.parse(
-        localStorage.getItem("companyTenderStates") || "{}",
-      );
+      const companyStatesByEmail: Record<string, any> = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("companyTenderStates_")) {
+          try {
+            const email = key.replace("companyTenderStates_", "");
+            companyStatesByEmail[email] = JSON.parse(
+              localStorage.getItem(key) || "{}",
+            );
+          } catch (error) {
+            console.error(
+              "Error parsing company tender states for key:",
+              key,
+              error,
+            );
+          }
+        }
+      }
+      if (Object.keys(companyStatesByEmail).length === 0) {
+        companyStatesByEmail["legacy"] = JSON.parse(
+          localStorage.getItem("companyTenderStates") || "{}",
+        );
+      }
       // Get tenders from all ministries (aggregated approach)
       const getAggregatedTenders = () => {
         const allTenders: any[] = [];
@@ -458,35 +478,37 @@ class MessageService {
       const recentTenders = getAggregatedTenders();
 
       recentTenders.forEach((tender: any) => {
-        const tenderState = companyTenderStates[tender.id];
-        if (
-          tenderState &&
-          (tenderState.hasExpressedInterest || tenderState.hasBid)
-        ) {
-          // Check if tender status has changed and should trigger a notification
-          const currentStatus = tender.status;
-          const lastNotifiedStatus = localStorage.getItem(
-            `lastNotifiedStatus_${tender.id}`,
-          );
-
-          if (lastNotifiedStatus !== currentStatus) {
-            // Create status update message
-            this.createTenderStatusUpdateMessage({
-              tenderId: tender.id,
-              tenderTitle: tender.title,
-              oldStatus: lastNotifiedStatus || "Unknown",
-              newStatus: currentStatus,
-              deadline: tender.deadline,
-              ministry: tender.procuringEntity || tender.ministry,
-            });
-
-            // Update last notified status
-            localStorage.setItem(
+        Object.values(companyStatesByEmail).forEach((states: any) => {
+          const tenderState = states[tender.id];
+          if (
+            tenderState &&
+            (tenderState.hasExpressedInterest || tenderState.hasBid)
+          ) {
+            // Check if tender status has changed and should trigger a notification
+            const currentStatus = tender.status;
+            const lastNotifiedStatus = localStorage.getItem(
               `lastNotifiedStatus_${tender.id}`,
-              currentStatus,
             );
+
+            if (lastNotifiedStatus !== currentStatus) {
+              // Create status update message
+              this.createTenderStatusUpdateMessage({
+                tenderId: tender.id,
+                tenderTitle: tender.title,
+                oldStatus: lastNotifiedStatus || "Unknown",
+                newStatus: currentStatus,
+                deadline: tender.deadline,
+                ministry: tender.procuringEntity || tender.ministry,
+              });
+
+              // Update last notified status
+              localStorage.setItem(
+                `lastNotifiedStatus_${tender.id}`,
+                currentStatus,
+              );
+            }
           }
-        }
+        });
       });
     } catch (error) {
       console.error("Error monitoring tender status changes:", error);

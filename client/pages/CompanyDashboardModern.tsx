@@ -422,8 +422,8 @@ export default function CompanyDashboardModern() {
         }
       }
 
-      const storedTenderStates =
-        localStorage.getItem("companyTenderStates") || "{}";
+      const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+      const storedTenderStates = localStorage.getItem(statesKey) || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
       const lastProcessedTenders = JSON.parse(
         localStorage.getItem("lastProcessedTenders") || "[]",
@@ -713,14 +713,14 @@ export default function CompanyDashboardModern() {
       ),
     );
 
-    const storedTenderStates =
-      localStorage.getItem("companyTenderStates") || "{}";
+    const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+    const storedTenderStates = localStorage.getItem(statesKey) || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
       hasExpressedInterest: true,
     };
-    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
+    localStorage.setItem(statesKey, JSON.stringify(tenderStates));
 
     messageService.createEOIConfirmationMessage(
       {
@@ -799,15 +799,15 @@ export default function CompanyDashboardModern() {
       ),
     );
 
-    const storedTenderStates =
-      localStorage.getItem("companyTenderStates") || "{}";
+    const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+    const storedTenderStates = localStorage.getItem(statesKey) || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
       hasExpressedInterest: true,
       hasBid: true,
     };
-    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
+    localStorage.setItem(statesKey, JSON.stringify(tenderStates));
 
     messageService.createBidConfirmationMessage(
       {
