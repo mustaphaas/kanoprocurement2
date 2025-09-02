@@ -1758,18 +1758,12 @@ const TenderManagement = () => {
         localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
       );
       const approval = list.find((a: any) => a.id === approvalId);
-      const tIndex = all.findIndex((t: any) =>
-        approval && approval.tenderId ? t.id === approval.tenderId : false,
+      const match = findTenderByIdOrTitle(
+        all,
+        approval?.actualTenderId || approval?.tenderId,
+        approval?.tenderTitle,
       );
-      // Fallback: if not found by approval, try by selected assignment
-      const idx =
-        tIndex !== -1
-          ? tIndex
-          : all.findIndex(
-              (t: any) =>
-                selectedTenderAssignment &&
-                t.id === selectedTenderAssignment.tenderId,
-            );
+      const idx = match ? all.findIndex((t: any) => t.id === match.id) : -1;
       if (idx !== -1) {
         all[idx].awardApprovalStatus = decision;
         if (decision === "Approved") {
@@ -1817,7 +1811,7 @@ const TenderManagement = () => {
         }
         localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
         // Update selected tender assignment for downstream actions
-        const assn = assignedTenders.find((a) => a.tenderId === all[idx].id);
+        const assn = assignedTenders.find((a) => a.tenderId === all[idx].id || normalize(a.tenderTitle) === normalize(all[idx].title));
         if (assn) setSelectedTenderAssignment(assn);
       }
     } catch {}
@@ -2049,7 +2043,7 @@ const TenderManagement = () => {
         bg: "bg-gradient-to-r from-green-100 to-emerald-100",
         text: "text-green-700",
         border: "border-green-200",
-        icon: "✅",
+        icon: "���",
       },
       "NOC Rejected": {
         bg: "bg-gradient-to-r from-red-100 to-rose-100",
