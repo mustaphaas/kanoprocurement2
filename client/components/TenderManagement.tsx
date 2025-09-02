@@ -808,15 +808,25 @@ const TenderManagement = () => {
     loadApprovals();
 
     const onSubmitted = () => loadApprovals();
+    const onUpdated = () => loadApprovals();
     window.addEventListener(
       "awardApprovalSubmitted",
       onSubmitted as EventListener,
     );
-    return () =>
+    window.addEventListener(
+      "awardApprovalUpdated",
+      onUpdated as EventListener,
+    );
+    return () => {
       window.removeEventListener(
         "awardApprovalSubmitted",
         onSubmitted as EventListener,
       );
+      window.removeEventListener(
+        "awardApprovalUpdated",
+        onUpdated as EventListener,
+      );
+    };
   }, []);
 
   // Auto-select first assignment for convenience (used by Award tab actions)
