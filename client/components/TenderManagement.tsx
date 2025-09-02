@@ -2703,7 +2703,7 @@ const TenderManagement = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="budget">Budget (���)</Label>
+                <Label htmlFor="budget">Budget (₦)</Label>
                 <Input
                   id="budget"
                   type="number"
