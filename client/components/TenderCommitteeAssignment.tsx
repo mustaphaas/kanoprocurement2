@@ -1502,6 +1502,32 @@ export default function TenderCommitteeAssignment() {
     }
   };
 
+  const activateAssignment = async (assignmentId: string) => {
+    try {
+      setErrorMessage("");
+      setSuccessMessage("");
+      const response = await fetch(`/api/committee-assignments/${assignmentId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Active" }),
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        const updatedAssignments = assignments.map((a) =>
+          a.id === assignmentId ? { ...a, status: updated.status || "Active" } : a,
+        );
+        setAssignments(updatedAssignments);
+        saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
+        setSuccessMessage("Assignment activated successfully.");
+      } else {
+        const err = await response.json().catch(() => ({}));
+        setErrorMessage(err.error || "Failed to activate assignment");
+      }
+    } catch (e) {
+      setErrorMessage("Network error: Failed to activate assignment");
+    }
+  };
+
   const submitCOIDeclaration = (assignmentId: string) => {
     const newDeclaration: COIDeclaration = {
       id: `COI-${Date.now()}`,
@@ -1798,6 +1824,16 @@ export default function TenderCommitteeAssignment() {
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
+                        {assignment.status === "Draft" && (
+                          <Button
+                            size="sm"
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                            onClick={() => activateAssignment(assignment.id)}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Activate
+                          </Button>
+                        )}
                         {assignment.status === "Assigned" && (
                           <Button
                             variant="outline"
