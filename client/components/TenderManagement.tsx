@@ -1349,18 +1349,23 @@ const TenderManagement = () => {
 
   // Award actions
   const handleGenerateAwardReport = () => {
-    if (!selectedTenderAssignment) {
+    const assignment =
+      selectedTenderAssignment || (assignedTenders.length > 0 ? assignedTenders[0] : null);
+    if (!assignment) {
       alert("Please select a tender to generate the report");
       return;
     }
+    // Ensure selection is reflected in state for downstream actions
+    if (!selectedTenderAssignment) setSelectedTenderAssignment(assignment);
+
     const ministry = getMinistryInfo();
     const report = {
       id: `AWD-REP-${Date.now()}`,
-      tenderId: selectedTenderAssignment.tenderId,
-      tenderTitle: selectedTenderAssignment.tenderTitle,
+      tenderId: assignment.tenderId,
+      tenderTitle: assignment.tenderTitle,
       ministryCode: ministry.code,
       ministryName: ministry.name,
-      evaluationTemplateId: selectedTenderAssignment.evaluationTemplateId,
+      evaluationTemplateId: assignment.evaluationTemplateId,
       evaluatorId: currentEvaluatorId,
       generatedAt: new Date().toISOString(),
       summary: "Evaluation report prepared for award recommendation",
@@ -1383,7 +1388,7 @@ const TenderManagement = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `award-report-${selectedTenderAssignment.tenderId}.json`;
+      a.download = `award-report-${assignment.tenderId}.json`;
       document.body.appendChild(a);
       a.click();
       URL.revokeObjectURL(url);
@@ -1394,15 +1399,20 @@ const TenderManagement = () => {
   };
 
   const handleSubmitAwardForApproval = () => {
-    if (!selectedTenderAssignment) {
+    const assignment =
+      selectedTenderAssignment || (assignedTenders.length > 0 ? assignedTenders[0] : null);
+    if (!assignment) {
       alert("Please select a tender to submit for approval");
       return;
     }
+    // Ensure selection is reflected in state for downstream actions
+    if (!selectedTenderAssignment) setSelectedTenderAssignment(assignment);
+
     const ministry = getMinistryInfo();
     const approval = {
       id: `AWD-APP-${Date.now()}`,
-      tenderId: selectedTenderAssignment.tenderId,
-      tenderTitle: selectedTenderAssignment.tenderTitle,
+      tenderId: assignment.tenderId,
+      tenderTitle: assignment.tenderTitle,
       ministryCode: ministry.code,
       ministryName: ministry.name,
       status: "Submitted",
@@ -1421,7 +1431,7 @@ const TenderManagement = () => {
 
     try {
       const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-      const idx = all.findIndex((t: any) => t.id === selectedTenderAssignment.tenderId);
+      const idx = all.findIndex((t: any) => t.id === assignment.tenderId);
       if (idx !== -1) {
         all[idx].awardApprovalStatus = "Submitted";
         all[idx].workflowStage = "Contract Award";
@@ -1433,7 +1443,7 @@ const TenderManagement = () => {
       window.dispatchEvent(
         new CustomEvent("awardApprovalSubmitted", {
           detail: {
-            tenderId: selectedTenderAssignment.tenderId,
+            tenderId: assignment.tenderId,
             approvalId: approval.id,
             status: approval.status,
           },
@@ -2656,6 +2666,37 @@ const TenderManagement = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                <div>
+                  <Label className="mb-2 block">Select Tender</Label>
+                  <Select
+                    value={selectedTenderAssignment?.id || (assignedTenders[0]?.id || "")}
+                    onValueChange={(id) => {
+                      const a = assignedTenders.find((t) => t.id === id);
+                      setSelectedTenderAssignment(a || null);
+                      if (a?.evaluationTemplateId) {
+                        fetchEvaluationTemplate(a.evaluationTemplateId);
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose tender for award actions" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {assignedTenders.length === 0 ? (
+                        <SelectItem value="no-tenders" disabled>
+                          No assigned tenders
+                        </SelectItem>
+                      ) : (
+                        assignedTenders.map((t) => (
+                          <SelectItem key={t.id} value={t.id}>
+                            {t.tenderId} - {t.tenderTitle || t.status || "Assigned"}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-medium">Evaluation Report</h3>
                   <p className="text-sm text-gray-600 mt-1">
