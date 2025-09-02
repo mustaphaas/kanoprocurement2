@@ -459,11 +459,49 @@ const TenderManagement = () => {
         `/api/tender-assignments/${currentEvaluatorId}`,
       );
       if (response.ok) {
-        const tenders = await response.json();
-        setAssignedTenders(tenders);
+        const serverTenders = await response.json();
+
+        // Merge with locally stored assignments (from TenderCommitteeAssignment)
+        let localMerged: any[] = [];
+        try {
+          const ministryUser = JSON.parse(
+            localStorage.getItem("ministryUser") || "{}",
+          );
+          const ministryCode =
+            ministryUser.ministryCode?.toUpperCase() ||
+            ministryUser.ministryId?.toUpperCase() ||
+            "MOH";
+          const localKey = `${ministryCode}_tenderAssignments`;
+          const localRaw = localStorage.getItem(localKey);
+          if (localRaw) {
+            const localAssignments = JSON.parse(localRaw);
+            localMerged = localAssignments.map((a: any) => ({
+              id: a.id,
+              tenderId: a.tenderId,
+              tenderTitle: a.tenderTitle,
+              tenderCategory: a.tenderCategory,
+              ministry: a.ministry,
+              evaluationTemplateId: a.evaluationTemplateId,
+              evaluationStart: a.evaluationPeriod?.startDate,
+              evaluationEnd: a.evaluationPeriod?.endDate,
+              status: a.status,
+            }));
+          }
+        } catch (e) {
+          console.warn("Local assignment merge skipped due to error", e);
+        }
+
+        // Deduplicate by id (prefer server data), then by tenderId
+        const byId = new Map<string, any>();
+        [...serverTenders, ...localMerged].forEach((item) => {
+          if (!item) return;
+          if (item.id && !byId.has(item.id)) byId.set(item.id, item);
+        });
+        const merged = Array.from(byId.values());
+        setAssignedTenders(merged);
         console.log(
-          "📋 Fetched assigned tenders with titles:",
-          tenders.map((t) => ({
+          "📋 Assigned tenders (merged server+local):",
+          merged.map((t) => ({
             id: t.id,
             tenderId: t.tenderId,
             title: t.tenderTitle,
@@ -473,7 +511,33 @@ const TenderManagement = () => {
         );
       } else {
         console.error("Failed to fetch assigned tenders");
-        setAssignedTenders([]);
+        // Fallback to local only
+        try {
+          const ministryUser = JSON.parse(
+            localStorage.getItem("ministryUser") || "{}",
+          );
+          const ministryCode =
+            ministryUser.ministryCode?.toUpperCase() ||
+            ministryUser.ministryId?.toUpperCase() ||
+            "MOH";
+          const localKey = `${ministryCode}_tenderAssignments`;
+          const localRaw = localStorage.getItem(localKey) || "[]";
+          const localAssignments = JSON.parse(localRaw);
+          const localMapped = localAssignments.map((a: any) => ({
+            id: a.id,
+            tenderId: a.tenderId,
+            tenderTitle: a.tenderTitle,
+            tenderCategory: a.tenderCategory,
+            ministry: a.ministry,
+            evaluationTemplateId: a.evaluationTemplateId,
+            evaluationStart: a.evaluationPeriod?.startDate,
+            evaluationEnd: a.evaluationPeriod?.endDate,
+            status: a.status,
+          }));
+          setAssignedTenders(localMapped);
+        } catch {
+          setAssignedTenders([]);
+        }
       }
     } catch (error) {
       console.error("Error fetching assigned tenders:", error);
