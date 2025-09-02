@@ -1423,9 +1423,9 @@ const TenderManagement = () => {
     }
 
     const demos = [
-      { name: "Northern Construction Ltd" },
-      { name: "Sahel Engineering Co" },
-      { name: "Arewa Tech Services" },
+      { name: "Northern Construction Ltd", email: "northern@company.com" },
+      { name: "Sahel Engineering Co", email: "sahel@company.com" },
+      { name: "Arewa Tech Services", email: "arewa@company.com" },
     ];
     demos.forEach((d, idx) => {
       if (!has(d.name)) {
@@ -1434,6 +1434,7 @@ const TenderManagement = () => {
           tenderId,
           tenderTitle: tenderTitle || tenderId,
           companyName: d.name,
+          companyEmail: d.email,
           bidAmount: formatCurrency(700000000 + idx * 50000000),
           status: "Submitted",
           submittedAt: new Date().toISOString(),
