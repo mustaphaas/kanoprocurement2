@@ -106,9 +106,12 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     });
   };
 
-  // Calculate filtered bidders (must be before useEffect hooks that reference it)
+  // Calculate filtered bidders based on the actual tenderId (not assignment id)
+  const selectedTenderId =
+    assignedTenders.find((t) => t.id === selectedTender)?.tenderId ||
+    selectedTender;
   const filteredBidders = bidders.filter(
-    (bidder) => bidder.tenderId === selectedTender,
+    (bidder) => bidder.tenderId === selectedTenderId,
   );
 
   // Add global debugging functions
@@ -239,13 +242,20 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     console.log("🔍 Tender Selection Debug:");
     console.log("  Selected Tender ID:", tenderId);
     console.log("  Available Bidders:", bidders);
-    console.log("  Bidders for this tender:", bidders.filter(b => b.tenderId === tenderId));
+    const tenderIdForSelection =
+      assignedTenders.find((t) => t.id === tenderId)?.tenderId || tenderId;
+    console.log(
+      "  Bidders for this tender:",
+      bidders.filter((b) => b.tenderId === tenderIdForSelection),
+    );
 
     // Check if there are any bids in localStorage for this tender
     const storedBids = localStorage.getItem("tenderBids");
     if (storedBids) {
       const bids = JSON.parse(storedBids);
-      const bidsForTender = bids.filter((bid: any) => bid.tenderId === tenderId);
+      const bidsForTender = bids.filter(
+        (bid: any) => bid.tenderId === tenderIdForSelection,
+      );
       console.log("  Stored bids for this tender:", bidsForTender);
     }
   };
