@@ -1239,8 +1239,13 @@ export default function TenderCommitteeAssignment() {
         const createdAssignment = await response.json();
         console.log("Created assignment via API:", createdAssignment);
 
-        // Also update local state for immediate UI feedback
-        const updatedAssignments = [...assignments, newAssignment];
+        // Also update local state for immediate UI feedback, but use server ID/status
+        const mergedAssignment = {
+          ...newAssignment,
+          id: createdAssignment.id || newAssignment.id,
+          status: createdAssignment.status || newAssignment.status,
+        };
+        const updatedAssignments = [...assignments, mergedAssignment];
         setAssignments(updatedAssignments);
         saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
       } else {
