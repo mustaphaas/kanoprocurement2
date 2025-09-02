@@ -2661,7 +2661,7 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Generate comprehensive evaluation report for approval
                   </p>
-                  <Button className="mt-2" size="sm">
+                  <Button className="mt-2" size="sm" onClick={handleGenerateAwardReport}>
                     <FileText className="h-4 w-4 mr-2" />
                     Generate Report
                   </Button>
