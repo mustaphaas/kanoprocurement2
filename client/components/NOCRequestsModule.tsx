@@ -552,7 +552,7 @@ export default function NOCRequestsModule({
       tenderId: tender.id,
       tenderTitle: tender.tenderTitle,
       projectTitle: tender.tenderTitle,
-      projectValue: tender.projectValue,
+      projectValue: formatCurrency(tender.projectValue),
       contractorName: tender.winningBidder,
       evaluationResults: tender.evaluationResults,
     }));
