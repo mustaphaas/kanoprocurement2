@@ -1389,6 +1389,17 @@ const TenderManagement = () => {
     return `₦${num.toLocaleString()}`;
   };
 
+  const normalize = (s?: string) => (s || "").toString().trim().toLowerCase();
+  const findTenderByIdOrTitle = (arr: any[], id?: string, title?: string) => {
+    if (!Array.isArray(arr)) return null;
+    let t = id ? arr.find((x) => x?.id === id) : null;
+    if (t) return t;
+    const ntitle = normalize(title);
+    if (!ntitle) return null;
+    t = arr.find((x) => normalize(x?.title) === ntitle) || arr.find((x) => normalize(x?.title).includes(ntitle));
+    return t || null;
+  };
+
   // Ensure demo bids exist for a tender and set approval@company.com as participant
   const ensureDemoBidsForTender = (tenderId: string, tenderTitle?: string) => {
     const existing = JSON.parse(localStorage.getItem("tenderBids") || "[]");
