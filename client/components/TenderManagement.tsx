@@ -505,8 +505,109 @@ const TenderManagement = () => {
         setIsScoresSubmitted(false);
         setIsDraftSaved(false);
       } else {
-        console.error("Failed to fetch evaluation template");
-        setEvaluationTemplate(null);
+        // Fallback: try to load locally saved templates (Flexible QCBS or Scoring Rubrics)
+        try {
+          const ministryUser = JSON.parse(
+            localStorage.getItem("ministryUser") || "{}",
+          );
+          const ministryCode =
+            ministryUser.ministryCode?.toUpperCase() ||
+            ministryUser.ministryId?.toUpperCase() ||
+            "MOH";
+
+          const qcbsKey = `${ministryCode}_qcbsFlexibleTemplates`;
+          const rubricsKey = `${ministryCode}_scoringRubrics`;
+
+          const qcbsRaw = localStorage.getItem(qcbsKey);
+          const rubricsRaw = localStorage.getItem(rubricsKey);
+
+          const qcbsList = qcbsRaw ? JSON.parse(qcbsRaw) : [];
+          const rubricsList = rubricsRaw ? JSON.parse(rubricsRaw) : [];
+
+          const buildCriteriaFromQCBS = (tpl: any) => {
+            // Distribute 70/30 across technical/financial by relative criterion weight
+            const techTotal = (tpl.technicalCriteria || []).reduce(
+              (sum: number, c: any) => sum + (Number(c.weight) || 0),
+              0,
+            ) || 1;
+            const finTotal = (tpl.financialCriteria || []).reduce(
+              (sum: number, c: any) => sum + (Number(c.weight) || 0),
+              0,
+            ) || 1;
+            const techPct = Number(tpl.technicalWeight) || 70;
+            const finPct = Number(tpl.financialWeight) || 30;
+
+            const techCriteria = (tpl.technicalCriteria || []).map((c: any) => ({
+              id: c.id,
+              name: c.name,
+              maxScore: Number(c.maxScore) || 100,
+              weight: ((Number(c.weight) || 0) / techTotal) * techPct,
+              type: "technical",
+            }));
+            const finCriteria = (tpl.financialCriteria || []).map((c: any) => ({
+              id: c.id,
+              name: c.name,
+              maxScore: Number(c.maxScore) || 100,
+              weight: ((Number(c.weight) || 0) / finTotal) * finPct,
+              type: "financial",
+            }));
+            return [...techCriteria, ...finCriteria];
+          };
+
+          const localCandidates: any[] = [];
+
+          // Map QCBS templates to evaluation template shape with criteria
+          for (const tpl of qcbsList) {
+            localCandidates.push({
+              id: tpl.id,
+              name: tpl.name,
+              description: tpl.description,
+              category: tpl.category,
+              type: "QCBS",
+              criteria: buildCriteriaFromQCBS(tpl),
+            });
+          }
+
+          // Map scoring rubrics if present (flatten as criteria with equal distribution)
+          for (const rb of rubricsList) {
+            const items = Array.isArray(rb.items) ? rb.items : [];
+            const total = items.length || 1;
+            const perc = 100 / total;
+            localCandidates.push({
+              id: rb.id,
+              name: rb.name,
+              description: rb.description || `${rb.type || "Custom"} scoring rubric`,
+              category: rb.category || "General",
+              type: rb.type || "Custom",
+              criteria: items.map((it: any, idx: number) => ({
+                id: it.id || `${rb.id}-C${idx + 1}`,
+                name: it.name || it.title || `Criterion ${idx + 1}`,
+                maxScore: Number(it.maxScore) || 100,
+                weight: Number(it.weight) || perc,
+                type: "technical",
+              })),
+            });
+          }
+
+          const localMatch = localCandidates.find((t) => t.id === templateId);
+          if (localMatch) {
+            setEvaluationTemplate(localMatch);
+            // Initialize scores
+            const initialScores: Record<string, { score: number; comment: string }> = {};
+            localMatch.criteria.forEach((criterion: any) => {
+              initialScores[criterion.id] = { score: 0, comment: "" };
+            });
+            setEvaluatorScores(initialScores);
+            setIsScoresSubmitted(false);
+            setIsDraftSaved(false);
+          } else {
+            console.error("Template not found locally either");
+            setEvaluationTemplate(null);
+          }
+        } catch (localErr) {
+          console.error("Local fallback failed:", localErr);
+          setEvaluationTemplate(null);
+        }
       }
     } catch (error) {
       console.error("Error fetching evaluation template:", error);
