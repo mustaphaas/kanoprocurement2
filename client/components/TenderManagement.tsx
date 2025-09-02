@@ -1482,46 +1482,60 @@ const TenderManagement = () => {
     }
 
     // Determine winner dynamically
-    const allBids: any[] = JSON.parse(localStorage.getItem("tenderBids") || "[]").filter(
-      (b: any) => b.tenderId === tenderId,
-    );
+    const allBids: any[] = JSON.parse(
+      localStorage.getItem("tenderBids") || "[]",
+    ).filter((b: any) => b.tenderId === tenderId);
 
     // Identify if this is the specific test tender
     const isTestingTender = (() => {
       const t = normalize(tenderTitle);
-      return tenderId === "MOH-2024-001" || t.includes("hospital equipment supply");
+      return (
+        tenderId === "MOH-2024-001" || t.includes("hospital equipment supply")
+      );
     })();
 
     // Prefer existing award set on the tender record, if any
-    const allTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-    const tenderRecord = (allTenders || []).find((t: any) => t.id === tenderId || normalize(t.title) === normalize(tenderTitle));
+    const allTenders = JSON.parse(
+      localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+    );
+    const tenderRecord = (allTenders || []).find(
+      (t: any) =>
+        t.id === tenderId || normalize(t.title) === normalize(tenderTitle),
+    );
 
     let winnerBid: any = null;
 
     if (isTestingTender) {
-      winnerBid = allBids.find(
-        (b) => (b.companyEmail || "").toLowerCase() === testWinnerEmail,
-      ) || null;
+      winnerBid =
+        allBids.find(
+          (b) => (b.companyEmail || "").toLowerCase() === testWinnerEmail,
+        ) || null;
     }
 
     if (!winnerBid && tenderRecord?.awardedCompanyEmail) {
       const email = (tenderRecord.awardedCompanyEmail || "").toLowerCase();
-      winnerBid = allBids.find(
-        (b) => (b.companyEmail || "").toLowerCase() === email,
-      ) || null;
+      winnerBid =
+        allBids.find((b) => (b.companyEmail || "").toLowerCase() === email) ||
+        null;
     }
 
     if (!winnerBid && allBids.length > 0) {
       winnerBid = allBids.reduce((best: any, curr: any) => {
         if (!best) return curr;
-        return parseCurrencyToNumber(curr.bidAmount) < parseCurrencyToNumber(best.bidAmount)
+        return parseCurrencyToNumber(curr.bidAmount) <
+          parseCurrencyToNumber(best.bidAmount)
           ? curr
           : best;
       }, null as any);
     }
 
-    const winnerEmail = (winnerBid?.companyEmail || (isTestingTender ? testWinnerEmail : allBids[0]?.companyEmail || "")).toLowerCase();
-    const winnerName = winnerBid?.companyName || (isTestingTender ? testWinnerName : allBids[0]?.companyName || "");
+    const winnerEmail = (
+      winnerBid?.companyEmail ||
+      (isTestingTender ? testWinnerEmail : allBids[0]?.companyEmail || "")
+    ).toLowerCase();
+    const winnerName =
+      winnerBid?.companyName ||
+      (isTestingTender ? testWinnerName : allBids[0]?.companyName || "");
 
     return { winnerEmail, winnerName, winnerBid };
   };
