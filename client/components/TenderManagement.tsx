@@ -1580,6 +1580,117 @@ const TenderManagement = () => {
     alert("Award recommendation submitted for approval");
   };
 
+  // Notify winner
+  const notifyWinningBidder = (
+    tenderId: string,
+    tenderTitle: string,
+    winnerEmail: string,
+    winnerName: string,
+    awardAmount: string,
+  ) => {
+    try {
+      messageService.addMessage(
+        {
+          type: "contract_awarded",
+          category: "success",
+          title: "Contract Awarded",
+          message: `Congratulations ${winnerName}! Your bid for "${tenderTitle}" has been selected and the contract has been awarded. Amount: ${awardAmount}. Our team will contact you with next steps for contract signing.`,
+          tenderId,
+          read: false,
+          actions: [
+            {
+              id: "view_tender",
+              label: "View Tender",
+              action: "view_tender",
+              data: { tenderId },
+            },
+            {
+              id: "download_document",
+              label: "Download Award Letter",
+              action: "download_document",
+              data: { tenderId, type: "award_letter" },
+            },
+          ],
+          metadata: { tenderTitle, awardAmount, isWinner: true },
+        },
+        winnerEmail,
+      );
+    } catch (e) {
+      console.error("Failed to notify winner", e);
+    }
+  };
+
+  // Notify unsuccessful bidders
+  const notifyUnsuccessfulBidders = (
+    tenderId: string,
+    tenderTitle: string,
+    winnerEmail: string,
+  ) => {
+    try {
+      const bids = JSON.parse(localStorage.getItem("tenderBids") || "[]");
+      const losers = bids.filter(
+        (b: any) =>
+          b.tenderId === tenderId &&
+          (b.companyEmail || "").toLowerCase() !== (winnerEmail || "").toLowerCase(),
+      );
+      losers.forEach((b: any) => {
+        if (!b.companyEmail) return;
+        messageService.addMessage(
+          {
+            type: "bid_evaluated",
+            category: "info",
+            title: "Tender Result - Not Successful",
+            message: `Thank you for participating. The tender "${tenderTitle}" has been awarded to another bidder. We encourage you to participate in future opportunities.`,
+            tenderId,
+            bidId: b.id,
+            read: false,
+            actions: [
+              {
+                id: "view_results",
+                label: "View Tender",
+                action: "view_tender",
+                data: { tenderId },
+              },
+            ],
+            metadata: { tenderTitle, isWinningBid: false, bidAmount: b.bidAmount },
+          },
+          b.companyEmail,
+        );
+      });
+    } catch (e) {
+      console.error("Failed to notify unsuccessful bidders", e);
+    }
+  };
+
+  // Publish public award notice
+  const publishPublicAwardNotice = (tender: any) => {
+    try {
+      const notice = {
+        id: `PUB-${Date.now()}`,
+        tenderId: tender.id,
+        tenderTitle: tender.title,
+        awardedCompany: tender.awardedCompany,
+        awardAmount: tender.awardAmount,
+        awardDate: tender.awardDate,
+        ministry: tender.ministry,
+        publishedAt: new Date().toISOString(),
+      };
+      const key = "publicAwardNotices";
+      const list = JSON.parse(localStorage.getItem(key) || "[]");
+      list.unshift(notice);
+      localStorage.setItem(key, JSON.stringify(list));
+      try {
+        window.dispatchEvent(
+          new CustomEvent("publicAwardPublished", { detail: notice }),
+        );
+      } catch {}
+      return notice;
+    } catch (e) {
+      console.error("Failed to publish public notice", e);
+      return null;
+    }
+  };
+
   // Decide approval (Approve/Reject) within this screen
   const handleAwardApprovalDecision = (
     approvalId: string,
@@ -1636,6 +1747,37 @@ const TenderManagement = () => {
           all[idx].awardAmount =
             winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
           all[idx].awardDate = new Date().toISOString().split("T")[0];
+
+          // Send notifications
+          notifyWinningBidder(
+            tenderId,
+            all[idx].title,
+            ensured.winnerEmail,
+            ensured.winnerName,
+            all[idx].awardAmount,
+          );
+          notifyUnsuccessfulBidders(
+            tenderId,
+            all[idx].title,
+            ensured.winnerEmail,
+          );
+
+          // Also send evaluation completion notifications using existing service
+          try {
+            const assignmentDetails =
+              evaluationNotificationService.getTenderAssignmentDetails(
+                tenderId,
+              );
+            if (assignmentDetails) {
+              evaluationNotificationService.notifyEvaluationCompleted(
+                assignmentDetails,
+                ensured.winnerName,
+              );
+            }
+          } catch {}
+
+          // Publish public notice
+          publishPublicAwardNotice(all[idx]);
         }
         localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
       }
@@ -3036,7 +3178,27 @@ const TenderManagement = () => {
                   <p className="text-sm text-green-700 mt-1">
                     Notify winning bidder(s) of award decision
                   </p>
-                  <Button className="mt-2" size="sm">
+                  <Button
+                    className="mt-2"
+                    size="sm"
+                    onClick={() => {
+                      const tender = tenders.find((t) =>
+                        selectedTenderAssignment ? t.id === selectedTenderAssignment.tenderId : false,
+                      ) || null;
+                      if (!tender || !tender.awardedCompanyEmail) {
+                        alert("No awarded tender selected");
+                        return;
+                      }
+                      notifyWinningBidder(
+                        tender.id,
+                        tender.title,
+                        tender.awardedCompanyEmail,
+                        tender.awardedCompany,
+                        tender.awardAmount || formatCurrency(tender.budget || 0),
+                      );
+                      alert("Success notification sent to winner");
+                    }}
+                  >
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Send Award Notice
                   </Button>
@@ -3050,7 +3212,26 @@ const TenderManagement = () => {
                     Provide feedback to unsuccessful bidders as per procurement
                     law
                   </p>
-                  <Button className="mt-2" size="sm" variant="outline">
+                  <Button
+                    className="mt-2"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const tender = tenders.find((t) =>
+                        selectedTenderAssignment ? t.id === selectedTenderAssignment.tenderId : false,
+                      ) || null;
+                      if (!tender || !tender.id || !tender.awardedCompanyEmail) {
+                        alert("No awarded tender selected");
+                        return;
+                      }
+                      notifyUnsuccessfulBidders(
+                        tender.id,
+                        tender.title,
+                        tender.awardedCompanyEmail,
+                      );
+                      alert("Feedback sent to unsuccessful bidders");
+                    }}
+                  >
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Send Feedback
                   </Button>
@@ -3061,7 +3242,22 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Publish award notice on KanoProc public portal
                   </p>
-                  <Button className="mt-2" size="sm" variant="outline">
+                  <Button
+                    className="mt-2"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const tender = tenders.find((t) =>
+                        selectedTenderAssignment ? t.id === selectedTenderAssignment.tenderId : false,
+                      ) || null;
+                      if (!tender) {
+                        alert("No awarded tender selected");
+                        return;
+                      }
+                      const notice = publishPublicAwardNotice(tender);
+                      if (notice) alert("Public award notice published");
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     Publish Award
                   </Button>
