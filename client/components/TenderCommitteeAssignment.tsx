@@ -1684,6 +1684,16 @@ export default function TenderCommitteeAssignment() {
           <p className="text-gray-600">
             Assign committee members to specific tenders with COI management
           </p>
+          {errorMessage && (
+            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-800">
+              {errorMessage}
+            </div>
+          )}
+          {successMessage && (
+            <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-800">
+              {successMessage}
+            </div>
+          )}
           {closedTenders.length === 0 && (
             <p className="text-sm text-yellow-600 mt-1">
               ⚠️ No closed tenders available for assignment
