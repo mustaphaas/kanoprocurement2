@@ -371,27 +371,37 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
     const evaluationTemplate = mockEvaluationTemplates.find(
       (t) => t.id === assignment.evaluationTemplateId,
     );
-    if (!evaluationTemplate) {
-      return res.status(404).json({ error: "Evaluation template not found" });
-    }
 
-    // Validate scores against template criteria
-    for (const scoreItem of submission.scores) {
-      const criteriaId = parseInt(scoreItem.criterionId);
-      const criterion = evaluationTemplate.criteria.find(
-        (c) => c.id === criteriaId,
-      );
+    // If template is found, validate strictly. Otherwise, accept with generic bounds
+    if (evaluationTemplate) {
+      for (const scoreItem of submission.scores) {
+        const criteriaId = parseInt(scoreItem.criterionId);
+        const criterion = evaluationTemplate.criteria.find(
+          (c) => c.id === criteriaId,
+        );
 
-      if (!criterion) {
-        return res.status(400).json({
-          error: `Invalid criteria ID: ${scoreItem.criterionId}. This criterion is not part of the evaluation template.`,
-        });
+        if (!criterion) {
+          return res.status(400).json({
+            error: `Invalid criteria ID: ${scoreItem.criterionId}. This criterion is not part of the evaluation template.`,
+          });
+        }
+
+        if (scoreItem.score < 0 || scoreItem.score > criterion.maxScore) {
+          return res.status(400).json({
+            error: `Score for '${criterion.name}' must be between 0 and ${criterion.maxScore}`,
+          });
+        }
       }
-
-      if (scoreItem.score < 0 || scoreItem.score > criterion.maxScore) {
-        return res.status(400).json({
-          error: `Score for '${criterion.name}' must be between 0 and ${criterion.maxScore}`,
-        });
+    } else {
+      console.warn(
+        `Evaluation template ${assignment.evaluationTemplateId} not found on server; accepting scores with generic validation.`,
+      );
+      for (const scoreItem of submission.scores) {
+        if (scoreItem.score < 0 || scoreItem.score > 100) {
+          return res
+            .status(400)
+            .json({ error: "Scores must be between 0 and 100" });
+        }
       }
     }
 
@@ -399,8 +409,9 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
     const scoresRecord: Record<number, number> = {};
     let totalScore = 0;
 
-    submission.scores.forEach((scoreItem) => {
-      const criteriaId = parseInt(scoreItem.criterionId);
+    submission.scores.forEach((scoreItem, idx) => {
+      const parsed = parseInt(scoreItem.criterionId);
+      const criteriaId = Number.isNaN(parsed) ? 1000 + idx : parsed;
       scoresRecord[criteriaId] = scoreItem.score;
       totalScore += scoreItem.score;
     });
