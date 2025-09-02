@@ -55,6 +55,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getClosedTenders, type ClosedTender } from "@/lib/tenderData";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { evaluationNotificationService } from "@/lib/evaluationNotificationService";
 
 // Types for Tender-Specific Committee Assignment
 interface ClosedTender {
@@ -1568,6 +1569,20 @@ export default function TenderCommitteeAssignment() {
                 setAssignments(updatedAssignments);
                 saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
                 setSuccessMessage("Assignment activated successfully.");
+
+                // Send evaluation commencement notifications to bidding companies
+                const activatedAssignment = assignments.find(a => a.id === assignmentId);
+                if (activatedAssignment) {
+                  console.log("Sending evaluation commencement notifications for synced assignment:", activatedAssignment);
+                  evaluationNotificationService.notifyEvaluationCommencing({
+                    id: targetId, // Use server ID
+                    tenderId: activatedAssignment.tenderId,
+                    tenderTitle: activatedAssignment.tenderTitle,
+                    tenderCategory: activatedAssignment.tenderCategory,
+                    ministry: activatedAssignment.ministry || "Government Ministry"
+                  });
+                }
+
                 window.dispatchEvent(new Event("committee-assignments:updated"));
                 return;
               }
