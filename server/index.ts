@@ -12,6 +12,7 @@ import {
   createCommitteeAssignment,
   getCommitteeAssignments,
   getTenderAssignmentsForEvaluator,
+  updateCommitteeAssignmentStatus,
 } from "./routes/committee-assignments";
 import {
   submitTenderScore,
