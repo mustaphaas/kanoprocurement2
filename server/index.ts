@@ -45,6 +45,10 @@ export function createServer() {
   app.post("/api/evaluation-templates", createEvaluationTemplate);
   app.post("/api/committee-assignments", createCommitteeAssignment);
   app.get("/api/committee-assignments", getCommitteeAssignments);
+  app.patch(
+    "/api/committee-assignments/:id/status",
+    updateCommitteeAssignmentStatus,
+  );
   app.get(
     "/api/tender-assignments/:evaluatorId",
     getTenderAssignmentsForEvaluator,
