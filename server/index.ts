@@ -12,6 +12,7 @@ import {
   createCommitteeAssignment,
   getCommitteeAssignments,
   getTenderAssignmentsForEvaluator,
+  updateCommitteeAssignmentStatus,
 } from "./routes/committee-assignments";
 import {
   submitTenderScore,
@@ -19,6 +20,9 @@ import {
   getTenderScores,
   getTenderFinalScores,
   getTenderAssignment,
+  approveFinalScores,
+  requestRevision,
+  getChairmanDecision,
 } from "./routes/tender-scoring";
 
 export function createServer() {
@@ -44,6 +48,10 @@ export function createServer() {
   app.post("/api/evaluation-templates", createEvaluationTemplate);
   app.post("/api/committee-assignments", createCommitteeAssignment);
   app.get("/api/committee-assignments", getCommitteeAssignments);
+  app.patch(
+    "/api/committee-assignments/:id/status",
+    updateCommitteeAssignmentStatus,
+  );
   app.get(
     "/api/tender-assignments/:evaluatorId",
     getTenderAssignmentsForEvaluator,
@@ -55,6 +63,11 @@ export function createServer() {
   app.get("/api/tenders/:tenderId/scores", getTenderScores);
   app.get("/api/tenders/:tenderId/final-scores", getTenderFinalScores);
   app.get("/api/tenders/:tenderId/assignment", getTenderAssignment);
+
+  // Chairman actions
+  app.post("/api/tenders/:tenderId/approve-final", approveFinalScores);
+  app.post("/api/tenders/:tenderId/request-revision", requestRevision);
+  app.get("/api/tenders/:tenderId/decision", getChairmanDecision);
 
   return app;
 }

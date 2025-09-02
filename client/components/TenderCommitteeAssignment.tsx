@@ -55,6 +55,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getClosedTenders, type ClosedTender } from "@/lib/tenderData";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { evaluationNotificationService } from "@/lib/evaluationNotificationService";
 
 // Types for Tender-Specific Committee Assignment
 interface ClosedTender {
@@ -319,9 +320,36 @@ export default function TenderCommitteeAssignment() {
       if (storedAssignments) {
         setAssignments(JSON.parse(storedAssignments));
       } else {
-        const sampleAssignments = createSampleAssignments(ministryCode);
-        setAssignments(sampleAssignments);
-        localStorage.setItem(assignmentsKey, JSON.stringify(sampleAssignments));
+        // Fallback 1: migrate from legacy global key
+        const legacy = localStorage.getItem(STORAGE_KEYS.TENDER_ASSIGNMENTS);
+        if (legacy) {
+          const legacyParsed = JSON.parse(legacy);
+          setAssignments(legacyParsed);
+          localStorage.setItem(assignmentsKey, JSON.stringify(legacyParsed));
+          localStorage.removeItem(STORAGE_KEYS.TENDER_ASSIGNMENTS);
+        } else {
+          // Fallback 2: try server assignments and persist locally
+          fetch("/api/committee-assignments")
+            .then((r) => (r.ok ? r.json() : []))
+            .then((serverItems) => {
+              if (Array.isArray(serverItems) && serverItems.length > 0) {
+                setAssignments(serverItems);
+                localStorage.setItem(assignmentsKey, JSON.stringify(serverItems));
+              } else {
+                const sampleAssignments = createSampleAssignments(ministryCode);
+                setAssignments(sampleAssignments);
+                localStorage.setItem(
+                  assignmentsKey,
+                  JSON.stringify(sampleAssignments),
+                );
+              }
+            })
+            .catch(() => {
+              const sampleAssignments = createSampleAssignments(ministryCode);
+              setAssignments(sampleAssignments);
+              localStorage.setItem(assignmentsKey, JSON.stringify(sampleAssignments));
+            });
+        }
       }
 
       // Load member pool
@@ -1189,6 +1217,7 @@ export default function TenderCommitteeAssignment() {
       tenderTitle: tenderTitle,
       tenderCategory: tenderCategory,
       committeeTemplateId: assignmentForm.committeeTemplateId,
+      evaluationTemplateId: assignmentForm.evaluationTemplateId,
       templateName: selectedTemplate?.name || "Unknown Template",
       assignedMembers: [],
       assignmentDate: new Date().toISOString().split("T")[0],
@@ -1239,8 +1268,16 @@ export default function TenderCommitteeAssignment() {
         const createdAssignment = await response.json();
         console.log("Created assignment via API:", createdAssignment);
 
-        // Also update local state for immediate UI feedback
-        const updatedAssignments = [...assignments, newAssignment];
+        // Also update local state for immediate UI feedback, but use server ID/status
+        const mergedAssignment = {
+          ...newAssignment,
+          id: createdAssignment.id || newAssignment.id,
+          status: createdAssignment.status || newAssignment.status,
+          evaluationTemplateId:
+            createdAssignment.evaluationTemplateId ||
+            newAssignment.evaluationTemplateId,
+        };
+        const updatedAssignments = [...assignments, mergedAssignment];
         setAssignments(updatedAssignments);
         saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
       } else {
@@ -1484,21 +1521,107 @@ export default function TenderCommitteeAssignment() {
         console.log("📊 Added scoring rubric templates:", rubricTemplates);
       }
 
-      // Combine both sources, avoiding duplicates by ID
-      const allTemplates = [...apiTemplates];
-      localTemplates.forEach((localTemplate) => {
-        if (!allTemplates.find((t) => t.id === localTemplate.id)) {
-          allTemplates.push(localTemplate);
-        }
-      });
-
-      setEvaluationTemplates(allTemplates);
+      // Use only locally created/saved templates for assignment selection
+      setEvaluationTemplates(localTemplates);
       console.log(
-        "✅ Combined evaluation templates (API + Local):",
-        allTemplates,
+        "✅ Loaded locally saved evaluation templates:",
+        localTemplates,
       );
     } catch (error) {
       console.error("Error fetching evaluation templates:", error);
+    }
+  };
+
+  const activateAssignment = async (assignmentId: string) => {
+    try {
+      setErrorMessage("");
+      setSuccessMessage("");
+      let targetId = assignmentId;
+      let response = await fetch(`/api/committee-assignments/${targetId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Active" }),
+      });
+
+      // If not found on server (e.g., local-only ID), try to resolve server ID by tenderId
+      if (response.status === 404) {
+        const local = assignments.find((a) => a.id === assignmentId);
+        if (local) {
+          const listRes = await fetch(`/api/committee-assignments`);
+          if (listRes.ok) {
+            const serverItems = await listRes.json();
+            const match = serverItems.find((s: any) => s.tenderId === local.tenderId);
+            if (match?.id) {
+              targetId = match.id;
+              response = await fetch(`/api/committee-assignments/${targetId}/status`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "Active" }),
+              });
+              // also sync local id to server id for future actions
+              if (response.ok) {
+                const updated = await response.json();
+                const updatedAssignments = assignments.map((a) =>
+                  a.id === assignmentId
+                    ? { ...a, id: targetId, status: updated.status || "Active" }
+                    : a,
+                );
+                setAssignments(updatedAssignments);
+                saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
+                setSuccessMessage("Assignment activated successfully.");
+
+                // Send evaluation commencement notifications to bidding companies
+                const activatedAssignment = assignments.find(a => a.id === assignmentId);
+                if (activatedAssignment) {
+                  console.log("Sending evaluation commencement notifications for synced assignment:", activatedAssignment);
+                  evaluationNotificationService.notifyEvaluationCommencing({
+                    id: targetId, // Use server ID
+                    tenderId: activatedAssignment.tenderId,
+                    tenderTitle: activatedAssignment.tenderTitle,
+                    tenderCategory: activatedAssignment.tenderCategory,
+                    ministry: activatedAssignment.ministry || "Government Ministry"
+                  });
+                }
+
+                window.dispatchEvent(new Event("committee-assignments:updated"));
+                return;
+              }
+            }
+          }
+        }
+      }
+
+      if (response.ok) {
+        const updated = await response.json();
+        const updatedAssignments = assignments.map((a) =>
+          a.id === assignmentId || a.id === targetId
+            ? { ...a, status: updated.status || "Active" }
+            : a,
+        );
+        setAssignments(updatedAssignments);
+        saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
+        setSuccessMessage("Assignment activated successfully.");
+
+        // Send evaluation commencement notifications to bidding companies
+        const activatedAssignment = assignments.find(a => a.id === assignmentId || a.id === targetId);
+        if (activatedAssignment) {
+          console.log("Sending evaluation commencement notifications for assignment:", activatedAssignment);
+          evaluationNotificationService.notifyEvaluationCommencing({
+            id: activatedAssignment.id,
+            tenderId: activatedAssignment.tenderId,
+            tenderTitle: activatedAssignment.tenderTitle,
+            tenderCategory: activatedAssignment.tenderCategory,
+            ministry: activatedAssignment.ministry || "Government Ministry"
+          });
+        }
+
+        window.dispatchEvent(new Event("committee-assignments:updated"));
+      } else {
+        const err = await response.json().catch(() => ({}));
+        setErrorMessage(err.error || "Failed to activate assignment");
+      }
+    } catch (e) {
+      setErrorMessage("Network error: Failed to activate assignment");
     }
   };
 
@@ -1623,6 +1746,16 @@ export default function TenderCommitteeAssignment() {
           <p className="text-gray-600">
             Assign committee members to specific tenders with COI management
           </p>
+          {errorMessage && (
+            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-800">
+              {errorMessage}
+            </div>
+          )}
+          {successMessage && (
+            <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-800">
+              {successMessage}
+            </div>
+          )}
           {closedTenders.length === 0 && (
             <p className="text-sm text-yellow-600 mt-1">
               ⚠️ No closed tenders available for assignment
@@ -1798,6 +1931,16 @@ export default function TenderCommitteeAssignment() {
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
+                        {assignment.status === "Draft" && (
+                          <Button
+                            size="sm"
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                            onClick={() => activateAssignment(assignment.id)}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Activate
+                          </Button>
+                        )}
                         {assignment.status === "Assigned" && (
                           <Button
                             variant="outline"
@@ -2513,26 +2656,7 @@ export default function TenderCommitteeAssignment() {
                   <SelectValue placeholder="Select evaluation template" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(() => {
-                    const filteredTemplates = assignmentForm.tenderCategory
-                      ? evaluationTemplates.filter(
-                          (template) =>
-                            template.category ===
-                              assignmentForm.tenderCategory ||
-                            template.category === "General" ||
-                            !template.category, // Include templates without category
-                        )
-                      : evaluationTemplates;
-
-                    console.log("🔽 Evaluation template dropdown:", {
-                      tenderCategory: assignmentForm.tenderCategory,
-                      allTemplates: evaluationTemplates,
-                      filteredTemplates,
-                      templateCount: filteredTemplates.length,
-                    });
-
-                    return filteredTemplates;
-                  })().map((template) => (
+                  {evaluationTemplates.map((template) => (
                     <SelectItem key={template.id} value={template.id}>
                       <div className="flex flex-col items-start">
                         <span className="font-medium">{template.name}</span>

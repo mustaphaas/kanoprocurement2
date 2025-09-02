@@ -1,167 +1,124 @@
 import { RequestHandler } from "express";
+import {
+  EvaluationTemplate,
+  mockEvaluationTemplates,
+} from "./evaluation-templates";
 
-export interface CommitteeAssignmentPayload {
-  tenderId: string;
-  committeeTemplateId: string;
-  evaluationTemplateId: string;
-  evaluationStart: string;
-  evaluationEnd: string;
-  notes: string;
-}
-
-export interface CommitteeAssignmentResponse {
+export interface CommitteeAssignment {
   id: string;
   tenderId: string;
+  tenderTitle: string;
   committeeTemplateId: string;
   evaluationTemplateId: string;
   evaluationStart: string;
   evaluationEnd: string;
-  notes: string;
-  status: string;
+  status: "active" | "draft" | "completed" | "suspended";
+  assignedBy: string;
   createdAt: string;
-  createdBy: string;
+  notes?: string;
 }
 
-// In-memory storage for demo purposes (in production, use a database)
-let assignments: CommitteeAssignmentResponse[] = [
-  // Sample assignments for testing
+// In-memory storage for demo purposes
+let assignments: CommitteeAssignment[] = [
   {
-    id: "CA-1000001",
-    tenderId: "TDR-001",
+    id: "CA-001",
+    tenderId: "MOH-2024-001",
+    tenderTitle: "Medical Equipment Procurement for State Hospitals",
     committeeTemplateId: "CT-001",
-    evaluationTemplateId: "ET-001", // QCBS template
+    evaluationTemplateId: "ET-001",
     evaluationStart: "2024-01-15T00:00:00Z",
-    evaluationEnd: "2024-02-15T23:59:59Z",
-    notes: "Medical equipment procurement evaluation",
-    status: "Active",
-    createdAt: "2024-01-10T10:00:00Z",
-    createdBy: "Admin User",
+    evaluationEnd: "2024-02-15T00:00:00Z",
+    status: "active",
+    assignedBy: "Admin",
+    createdAt: "2024-01-10T00:00:00Z",
+    notes: "Priority tender for Q1 2024",
   },
   {
-    id: "CA-1000002",
-    tenderId: "TDR-002",
-    committeeTemplateId: "CT-002",
-    evaluationTemplateId: "ET-002", // LCS template
-    evaluationStart: "2024-01-20T00:00:00Z",
-    evaluationEnd: "2024-02-20T23:59:59Z",
-    notes: "Infrastructure project evaluation",
-    status: "Draft",
-    createdAt: "2024-01-15T14:30:00Z",
-    createdBy: "Ministry User",
-  },
-  {
-    id: "CA-1000003",
-    tenderId: "TDR-003",
+    id: "CA-002",
+    tenderId: "KS-2024-002",
+    tenderTitle: "Hospital Equipment Supply",
     committeeTemplateId: "CT-001",
-    evaluationTemplateId: "ET-003", // QBS template
-    evaluationStart: "2024-02-01T00:00:00Z",
-    evaluationEnd: "2024-02-28T23:59:59Z",
-    notes: "Consulting services evaluation",
-    status: "Active",
-    createdAt: "2024-01-25T09:15:00Z",
-    createdBy: "Procurement Officer",
+    evaluationTemplateId: "ET-001",
+    evaluationStart: "2024-01-20T00:00:00Z",
+    evaluationEnd: "2024-02-20T00:00:00Z",
+    status: "active",
+    assignedBy: "Admin",
+    createdAt: "2024-01-15T00:00:00Z",
+    notes: "Urgent procurement for new hospital wing",
   },
 ];
 
-// Helper function to get assignment by tender ID
-export const getAssignmentByTenderId = (
-  tenderId: string,
-): CommitteeAssignmentResponse | null => {
-  return (
-    assignments.find((assignment) => assignment.tenderId === tenderId) || null
-  );
-};
-
-// Get tender assignment with full tender information for TenderScoring page
-export const getTenderAssignmentWithDetails: RequestHandler = (req, res) => {
+export const createCommitteeAssignment: RequestHandler = (req, res) => {
   try {
-    const { tenderId } = req.params;
+    const {
+      tenderId,
+      committeeTemplateId,
+      evaluationTemplateId,
+      evaluationStart,
+      evaluationEnd,
+      notes,
+    } = req.body;
 
+    // Validate required fields
     if (!tenderId) {
       return res.status(400).json({ error: "tenderId is required" });
     }
-
-    // Find assignment for this tender
-    const assignment = getAssignmentByTenderId(tenderId);
-
-    if (!assignment) {
-      return res.status(404).json({ error: "Tender assignment not found" });
+    if (!committeeTemplateId) {
+      return res
+        .status(400)
+        .json({ error: "committeeTemplateId is required" });
     }
-
-    // Get tender information
-    const tenderInfo = getTenderInfo(tenderId);
-
-    // Return assignment with tender details
-    const assignmentWithDetails = {
-      ...assignment,
-      tenderTitle: tenderInfo.title,
-      tenderCategory: tenderInfo.category,
-      ministry: tenderInfo.ministry,
-    };
-
-    console.log(
-      `📋 Returning tender assignment details for ${tenderId}:`,
-      assignmentWithDetails,
-    );
-
-    res.json(assignmentWithDetails);
-  } catch (error) {
-    console.error("Error fetching tender assignment with details:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to fetch tender assignment details" });
-  }
-};
-
-export const createCommitteeAssignment: RequestHandler = (req, res) => {
-  try {
-    const payload: CommitteeAssignmentPayload = req.body;
-
-    // Validate required fields
-    if (!payload.tenderId) {
-      return res.status(400).json({ error: "tenderId is required" });
-    }
-    if (!payload.committeeTemplateId) {
-      return res.status(400).json({ error: "committeeTemplateId is required" });
-    }
-    if (!payload.evaluationTemplateId) {
+    if (!evaluationTemplateId) {
       return res
         .status(400)
         .json({ error: "evaluationTemplateId is required" });
     }
-    if (!payload.evaluationStart) {
+    if (!evaluationStart) {
       return res.status(400).json({ error: "evaluationStart is required" });
     }
-    if (!payload.evaluationEnd) {
+    if (!evaluationEnd) {
       return res.status(400).json({ error: "evaluationEnd is required" });
     }
 
-    // Validate date logic
-    if (new Date(payload.evaluationStart) >= new Date(payload.evaluationEnd)) {
-      return res.status(400).json({
-        error: "Evaluation end date must be after start date",
-      });
+    // Validate evaluation template exists
+    const evaluationTemplate = mockEvaluationTemplates.find(
+      (t) => t.id === evaluationTemplateId,
+    );
+    if (!evaluationTemplate) {
+      return res
+        .status(400)
+        .json({ error: "Invalid evaluation template ID" });
     }
 
-    // Create new assignment
-    const newAssignment: CommitteeAssignmentResponse = {
+    // Generate a tender title based on the tender ID pattern
+    let tenderTitle = `Tender ${tenderId}`;
+    if (tenderId.startsWith("MOH-")) {
+      tenderTitle = `Health Sector Procurement ${tenderId}`;
+    } else if (tenderId.startsWith("KS-")) {
+      tenderTitle = `Kano State Tender ${tenderId}`;
+    } else if (tenderId.startsWith("MOWI-")) {
+      tenderTitle = `Infrastructure Project ${tenderId}`;
+    } else if (tenderId.startsWith("MOE-")) {
+      tenderTitle = `Educational Services ${tenderId}`;
+    }
+
+    const newAssignment: CommitteeAssignment = {
       id: `CA-${Date.now()}`,
-      tenderId: payload.tenderId,
-      committeeTemplateId: payload.committeeTemplateId,
-      evaluationTemplateId: payload.evaluationTemplateId,
-      evaluationStart: payload.evaluationStart,
-      evaluationEnd: payload.evaluationEnd,
-      notes: payload.notes || "",
-      status: "Draft",
+      tenderId,
+      tenderTitle,
+      committeeTemplateId,
+      evaluationTemplateId,
+      evaluationStart,
+      evaluationEnd,
+      status: "active",
+      assignedBy: "Current User", // In production, get from authentication
       createdAt: new Date().toISOString(),
-      createdBy: "Current User", // In production, get from authentication
+      notes,
     };
 
-    // Store assignment (in production, save to database)
     assignments.push(newAssignment);
 
-    console.log("Created new committee assignment:", newAssignment);
-
+    console.log("Created committee assignment:", newAssignment);
     res.status(201).json(newAssignment);
   } catch (error) {
     console.error("Error creating committee assignment:", error);
@@ -178,140 +135,82 @@ export const getCommitteeAssignments: RequestHandler = (req, res) => {
   }
 };
 
-// Helper function to get tender information from localStorage simulation
-const getTenderInfo = (tenderId: string) => {
-  // In a real application, this would query the database
-  // For now, simulate reading from the same localStorage that the client uses
-  const mockTenders = [
-    {
-      id: "KS-2024-001",
-      title: "Supply of Medical Equipment to Primary Health Centers",
-      category: "Healthcare",
-      ministry: "Ministry of Health",
-    },
-    {
-      id: "KS-2024-002",
-      title: "Hospital Equipment Supply",
-      category: "Healthcare",
-      ministry: "Ministry of Health",
-    },
-    {
-      id: "KS-2024-003",
-      title: "Road Construction and Rehabilitation Project",
-      category: "Infrastructure",
-      ministry: "Ministry of Works and Infrastructure",
-    },
-    {
-      id: "MOH-2024-001",
-      title: "Medical Equipment Procurement for State Hospitals",
-      category: "Healthcare",
-      ministry: "Ministry of Health",
-    },
-    {
-      id: "MOWI-2024-001",
-      title: "Kano-Kaduna Highway Rehabilitation",
-      category: "Infrastructure",
-      ministry: "Ministry of Works and Infrastructure",
-    },
-    {
-      id: "MOE-2024-001",
-      title: "School Furniture Supply Program",
-      category: "Education",
-      ministry: "Ministry of Education",
-    },
-  ];
-
-  // First try to find in mock data
-  const mockTender = mockTenders.find((t) => t.id === tenderId);
-  if (mockTender) {
-    return mockTender;
-  }
-
-  // Fallback: generate based on ID pattern
-  if (tenderId.startsWith("KS-")) {
-    return {
-      id: tenderId,
-      title: `Kano State Tender ${tenderId}`,
-      category: "General",
-      ministry: "Kano State Government",
-    };
-  } else if (tenderId.startsWith("MOH-")) {
-    return {
-      id: tenderId,
-      title: `Health Sector Procurement ${tenderId}`,
-      category: "Healthcare",
-      ministry: "Ministry of Health",
-    };
-  } else if (tenderId.startsWith("MOWI-")) {
-    return {
-      id: tenderId,
-      title: `Infrastructure Project ${tenderId}`,
-      category: "Infrastructure",
-      ministry: "Ministry of Works and Infrastructure",
-    };
-  } else if (tenderId.startsWith("MOE-")) {
-    return {
-      id: tenderId,
-      title: `Educational Services ${tenderId}`,
-      category: "Education",
-      ministry: "Ministry of Education",
-    };
-  }
-
-  // Final fallback
-  return {
-    id: tenderId,
-    title: `Tender ${tenderId}`,
-    category: "General",
-    ministry: "Kano State Government",
-  };
-};
-
-// Get tender assignments for a specific evaluator
 export const getTenderAssignmentsForEvaluator: RequestHandler = (req, res) => {
   try {
     const { evaluatorId } = req.params;
 
-    if (!evaluatorId) {
-      return res.status(400).json({ error: "evaluatorId is required" });
-    }
-
-    // Filter assignments where the evaluator is part of the committee
-    // For now, return all active assignments (in production, filter by evaluator membership)
-    const evaluatorAssignments = assignments
-      .filter(
-        (assignment) =>
-          assignment.status === "Draft" || assignment.status === "Active",
-      )
-      .map((assignment) => {
-        // Get real tender information instead of hard-coded values
-        const tenderInfo = getTenderInfo(assignment.tenderId);
-
-        return {
-          id: assignment.id,
-          tenderId: assignment.tenderId,
-          tenderTitle: tenderInfo.title,
-          tenderCategory: tenderInfo.category,
-          ministry: tenderInfo.ministry,
-          evaluationTemplateId: assignment.evaluationTemplateId,
-          evaluationStart: assignment.evaluationStart,
-          evaluationEnd: assignment.evaluationEnd,
-          status: assignment.status,
-        };
-      });
+    // For demo purposes, return assignments where the evaluator should have access
+    // In production, this would check actual committee membership
+    const evaluatorAssignments = assignments.map((assignment) => ({
+      id: assignment.id,
+      tenderId: assignment.tenderId,
+      tenderTitle: assignment.tenderTitle,
+      status: assignment.status,
+      evaluationStart: assignment.evaluationStart,
+      evaluationEnd: assignment.evaluationEnd,
+      evaluationTemplateId: assignment.evaluationTemplateId,
+    }));
 
     console.log(
-      `📋 Returning ${evaluatorAssignments.length} tender assignments for evaluator ${evaluatorId}:`,
-      evaluatorAssignments.map((a) => ({
-        id: a.id,
-        tenderId: a.tenderId,
-        title: a.tenderTitle,
-      })),
+      `Returning ${evaluatorAssignments.length} assignments for evaluator ${evaluatorId}`,
     );
-
     res.json(evaluatorAssignments);
   } catch (error) {
     console.error("Error fetching tender assignments for evaluator:", error);
-    res.status(500).json({ error: "Failed to fetch tender assignments" });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch tender assignments for evaluator" });
   }
+};
+
+export const updateCommitteeAssignmentStatus: RequestHandler = (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ error: "status is required" });
+    }
+
+    const validStatuses = ["active", "draft", "completed", "suspended"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        error: `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+      });
+    }
+
+    const assignmentIndex = assignments.findIndex((a) => a.id === id);
+    if (assignmentIndex === -1) {
+      return res.status(404).json({ error: "Committee assignment not found" });
+    }
+
+    assignments[assignmentIndex].status = status;
+
+    console.log(
+      `Updated assignment ${id} status to ${status}`,
+      assignments[assignmentIndex],
+    );
+    res.json(assignments[assignmentIndex]);
+  } catch (error) {
+    console.error("Error updating committee assignment status:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to update committee assignment status" });
+  }
+};
+
+// Helper function to get assignment by tender ID
+export const getAssignmentByTenderId = (tenderId: string) => {
+  return assignments.find((a) => a.tenderId === tenderId);
+};
+
+// Helper function to update assignment status in memory (for chairman approval)
+export const updateAssignmentStatusInMemory = (assignmentId: string, status: string) => {
+  const assignmentIndex = assignments.findIndex((a) => a.id === assignmentId);
+  if (assignmentIndex !== -1) {
+    assignments[assignmentIndex].status = status.toLowerCase() as any;
+    console.log(`Updated assignment ${assignmentId} status to ${status} in memory`);
+    return assignments[assignmentIndex];
+  }
+  return null;
 };

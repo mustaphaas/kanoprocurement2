@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { EvaluationTemplate, TenderAssignment } from "@shared/api";
 import { persistentStorage } from "../../lib/persistentStorage";
+import { evaluationNotificationService } from "../../lib/evaluationNotificationService";
 
 interface TenderEvaluationSystemProps {
   assignedTenders: TenderAssignment[];
@@ -106,10 +107,33 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     });
   };
 
-  // Calculate filtered bidders (must be before useEffect hooks that reference it)
+  // Calculate filtered bidders based on the actual tenderId (not assignment id)
+  const selectedTenderId =
+    assignedTenders.find((t) => t.id === selectedTender)?.tenderId ||
+    selectedTender;
+
+  // Demo bidders fallback if no real bids exist
+  const getDemoBiddersForTender = (tenderId: string) => {
+    if (!tenderId) return [] as { id: string; company: string; tenderId: string }[];
+    const demoCompanies = [
+      "Northern Construction Ltd",
+      "Sahel Engineering Co",
+      "Arewa Tech Services",
+    ];
+    return demoCompanies.map((name, idx) => ({
+      id: `DEMO-BID-${tenderId}-${idx + 1}`,
+      company: name,
+      tenderId,
+    }));
+  };
+
   const filteredBidders = bidders.filter(
-    (bidder) => bidder.tenderId === selectedTender,
+    (bidder) => bidder.tenderId === selectedTenderId,
   );
+  const biddersForUI =
+    filteredBidders.length > 0
+      ? filteredBidders
+      : getDemoBiddersForTender(selectedTenderId);
 
   // Add global debugging functions
   useEffect(() => {
@@ -182,7 +206,7 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     if (selectedTender) {
       const storedBids = localStorage.getItem("tenderBids");
       const storedTenders = localStorage.getItem("recentTenders");
-      console.log("📋 localStorage 'tenderBids':", storedBids ? JSON.parse(storedBids) : "empty");
+      console.log("��� localStorage 'tenderBids':", storedBids ? JSON.parse(storedBids) : "empty");
       console.log("📋 localStorage 'recentTenders':", storedTenders ? JSON.parse(storedTenders) : "empty");
     }
   }, [selectedTender, assignedTenders, bidders, filteredBidders]);
@@ -239,13 +263,20 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     console.log("🔍 Tender Selection Debug:");
     console.log("  Selected Tender ID:", tenderId);
     console.log("  Available Bidders:", bidders);
-    console.log("  Bidders for this tender:", bidders.filter(b => b.tenderId === tenderId));
+    const tenderIdForSelection =
+      assignedTenders.find((t) => t.id === tenderId)?.tenderId || tenderId;
+    console.log(
+      "  Bidders for this tender:",
+      bidders.filter((b) => b.tenderId === tenderIdForSelection),
+    );
 
     // Check if there are any bids in localStorage for this tender
     const storedBids = localStorage.getItem("tenderBids");
     if (storedBids) {
       const bids = JSON.parse(storedBids);
-      const bidsForTender = bids.filter((bid: any) => bid.tenderId === tenderId);
+      const bidsForTender = bids.filter(
+        (bid: any) => bid.tenderId === tenderIdForSelection,
+      );
       console.log("  Stored bids for this tender:", bidsForTender);
     }
   };
@@ -327,11 +358,11 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
                   >
                     <option value="">
-                      {filteredBidders.length === 0
+                      {biddersForUI.length === 0
                         ? "No bidders found for this tender"
                         : "Select a bidder..."}
                     </option>
-                    {filteredBidders.map((bidder) => (
+                    {biddersForUI.map((bidder) => (
                       <option key={bidder.id} value={bidder.id}>
                         {bidder.company}
                       </option>
@@ -569,10 +600,63 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
                     </div>
 
                     <div className="mt-4 flex justify-end space-x-4">
-                      <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors">
+                      <button
+                        onClick={async () => {
+                          const reason = window.prompt(
+                            "Enter reason for revision request:",
+                            "Please review specific criteria and resubmit."
+                          );
+                          if (!reason) return;
+                          try {
+                            const res = await fetch(`/api/tenders/${selectedTenderId}/request-revision`, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ chairmanId: currentUser.id, reason }),
+                            });
+                            if (!res.ok) {
+                              const err = await res.json().catch(() => ({}));
+                              alert(err.error || "Failed to request revision");
+                              return;
+                            }
+                            alert("Revision requested successfully.");
+                          } catch (e) {
+                            console.error(e);
+                            alert("Network error requesting revision");
+                          }
+                        }}
+                        className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
+                      >
                         Request Revision
                       </button>
-                      <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                      <button
+                        onClick={async () => {
+                          try {
+                            const res = await fetch(`/api/tenders/${selectedTenderId}/approve-final`, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ chairmanId: currentUser.id }),
+                            });
+                            if (!res.ok) {
+                              const err = await res.json().catch(() => ({}));
+                              alert(err.error || "Failed to approve final scores");
+                              return;
+                            }
+                            const result = await res.json();
+                            alert(result.message || "Final scores approved successfully. Tender ready for NOC process.");
+
+                            // Send evaluation completion notifications to bidding companies
+                            const assignmentDetails = evaluationNotificationService.getTenderAssignmentDetails(selectedTenderId);
+                            if (assignmentDetails) {
+                              console.log("Sending evaluation completion notifications for tender:", selectedTenderId);
+                              evaluationNotificationService.notifyEvaluationCompleted(assignmentDetails);
+                            }
+                          } catch (e) {
+                            console.error(e);
+                            alert("Network error approving final scores");
+                          }
+                        }}
+                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                      >
                         Approve Final Score
                       </button>
                     </div>
