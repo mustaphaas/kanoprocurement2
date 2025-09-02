@@ -628,8 +628,8 @@ export default function CompanyDashboard() {
           console.error("Error parsing main tenders:", error);
         }
       }
-      const storedTenderStates =
-        localStorage.getItem("companyTenderStates") || "{}";
+      const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+      const storedTenderStates = localStorage.getItem(statesKey) || localStorage.getItem("companyTenderStates") || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
       const lastProcessedTenders = JSON.parse(
         localStorage.getItem("lastProcessedTenders") || "[]",
@@ -905,14 +905,14 @@ export default function CompanyDashboard() {
     );
 
     // Persist tender state to localStorage
-    const storedTenderStates =
-      localStorage.getItem("companyTenderStates") || "{}";
+    const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+    const storedTenderStates = localStorage.getItem(statesKey) || localStorage.getItem("companyTenderStates") || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
       hasExpressedInterest: true,
     };
-    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
+    localStorage.setItem(statesKey, JSON.stringify(tenderStates));
 
     // Create EOI confirmation message using message service
     messageService.createEOIConfirmationMessage(
@@ -1002,15 +1002,15 @@ export default function CompanyDashboard() {
     );
 
     // Persist tender state to localStorage
-    const storedTenderStates =
-      localStorage.getItem("companyTenderStates") || "{}";
+    const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+    const storedTenderStates = localStorage.getItem(statesKey) || localStorage.getItem("companyTenderStates") || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
       hasExpressedInterest: true,
       hasBid: true,
     };
-    localStorage.setItem("companyTenderStates", JSON.stringify(tenderStates));
+    localStorage.setItem(statesKey, JSON.stringify(tenderStates));
 
     // Create bid confirmation message using message service
     messageService.createBidConfirmationMessage(
