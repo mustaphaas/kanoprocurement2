@@ -46,8 +46,123 @@ export interface TenderFinalScore {
   rank: number;
 }
 
+interface ChairmanDecision {
+  tenderId: string;
+  status: "approved" | "revision_requested";
+  approvedBy: string;
+  approvedAt: string;
+  reason?: string;
+  winningBidderName?: string;
+  finalScores?: TenderFinalScore[];
+}
+
 // In-memory storage for demo purposes
 let tenderScores: TenderScore[] = [];
+let chairmanDecisions: ChairmanDecision[] = [];
+
+// Helper: compute final scores for a tender using current stored evaluator scores and evaluation template
+function computeFinalScoresForTender(tenderId: string): {
+  finalScores: TenderFinalScore[];
+  evaluationTemplate?: EvaluationTemplate;
+} {
+  const scores = tenderScores.filter((s) => s.tenderId === tenderId);
+  const assignment = getAssignmentByTenderId(tenderId);
+  const evaluationTemplate = assignment
+    ? mockEvaluationTemplates.find((t) => t.id === assignment.evaluationTemplateId)
+    : undefined;
+
+  if (!scores.length || !evaluationTemplate) {
+    return { finalScores: [], evaluationTemplate };
+  }
+
+  // Group scores by bidder
+  const bidderScores: Record<string, TenderScore[]> = {};
+  scores.forEach((score) => {
+    if (!bidderScores[score.bidderName]) bidderScores[score.bidderName] = [];
+    bidderScores[score.bidderName].push(score);
+  });
+
+  const finalScores: TenderFinalScore[] = Object.entries(bidderScores).map(
+    ([bidderName, bidderScoreList]) => {
+      const avgScores: Record<number, number> = {};
+      const criteriaIds = new Set<number>();
+
+      bidderScoreList.forEach((score) => {
+        Object.keys(score.scores).forEach((criteriaId) => {
+          criteriaIds.add(parseInt(criteriaId));
+        });
+      });
+
+      criteriaIds.forEach((criteriaId) => {
+        const criteriaScores = bidderScoreList
+          .map((score) => score.scores[criteriaId] || 0)
+          .filter((val) => val > 0);
+        if (criteriaScores.length > 0) {
+          avgScores[criteriaId] =
+            criteriaScores.reduce((sum, val) => sum + val, 0) /
+            criteriaScores.length;
+        }
+      });
+
+      let technicalScore = 0;
+      let financialScore = 0;
+      let maxTechnicalScore = 0;
+      let maxFinancialScore = 0;
+
+      evaluationTemplate.criteria.forEach((criterion) => {
+        const score = avgScores[criterion.id] || 0;
+        if (criterion.type === "financial") {
+          financialScore += score;
+          maxFinancialScore += criterion.maxScore;
+        } else {
+          technicalScore += score;
+          maxTechnicalScore += criterion.maxScore;
+        }
+      });
+
+      const technicalPercentage =
+        maxTechnicalScore > 0 ? (technicalScore / maxTechnicalScore) * 100 : 0;
+      const financialPercentage =
+        maxFinancialScore > 0 ? (financialScore / maxFinancialScore) * 100 : 0;
+
+      let finalScore = 0;
+      switch ((evaluationTemplate.type || "QCBS").toUpperCase()) {
+        case "QCBS":
+          finalScore = technicalPercentage * 0.7 + financialPercentage * 0.3;
+          break;
+        case "LCS": {
+          const minTechnicalThreshold = 75;
+          finalScore =
+            technicalPercentage >= minTechnicalThreshold
+              ? financialPercentage * 0.8 + technicalPercentage * 0.2
+              : technicalPercentage * 0.5;
+          break;
+        }
+        case "QBS":
+          finalScore = technicalPercentage;
+          break;
+        case "FBS":
+          finalScore = technicalPercentage * 0.9 + financialPercentage * 0.1;
+          break;
+        default:
+          finalScore = technicalPercentage * 0.7 + financialPercentage * 0.3;
+      }
+
+      return {
+        bidderName,
+        technicalScore: Math.round(technicalPercentage * 100) / 100,
+        financialScore: Math.round(financialPercentage * 100) / 100,
+        finalScore: Math.round(finalScore * 100) / 100,
+        rank: 0,
+      };
+    },
+  );
+
+  finalScores.sort((a, b) => b.finalScore - a.finalScore);
+  finalScores.forEach((s, idx) => (s.rank = idx + 1));
+
+  return { finalScores, evaluationTemplate };
+}
 
 export const submitTenderScore: RequestHandler = (req, res) => {
   try {
@@ -149,7 +264,7 @@ export const submitTenderScore: RequestHandler = (req, res) => {
       tenderId: submission.tenderId,
       committeeMemberId: submission.committeeMemberId,
       bidderName: submission.bidderName,
-      scores: submission.scores,
+      scores: submission.scores as unknown as Record<number, number>,
       totalScore,
       submittedAt: new Date().toISOString(),
       status: "submitted",
@@ -195,149 +310,13 @@ export const getTenderFinalScores: RequestHandler = async (req, res) => {
       return res.status(400).json({ error: "tenderId is required" });
     }
 
-    // Get all scores for this tender
-    const scores = tenderScores.filter((score) => score.tenderId === tenderId);
-
-    if (scores.length === 0) {
-      return res.json([]);
-    }
-
-    // Get the tender assignment to find the evaluation template
-    const assignment = getAssignmentByTenderId(tenderId);
-    if (!assignment) {
-      console.error(`No assignment found for tender ${tenderId}`);
-      return res.status(404).json({ error: "Tender assignment not found" });
-    }
-
-    // Get the evaluation template
-    const evaluationTemplate = mockEvaluationTemplates.find(
-      (t) => t.id === assignment.evaluationTemplateId,
+    const { finalScores, evaluationTemplate } = computeFinalScoresForTender(
+      tenderId,
     );
 
     if (!evaluationTemplate) {
-      console.error(
-        `Evaluation template ${assignment.evaluationTemplateId} not found`,
-      );
       return res.status(404).json({ error: "Evaluation template not found" });
     }
-
-    // Group scores by bidder
-    const bidderScores: Record<string, TenderScore[]> = {};
-    scores.forEach((score) => {
-      if (!bidderScores[score.bidderName]) {
-        bidderScores[score.bidderName] = [];
-      }
-      bidderScores[score.bidderName].push(score);
-    });
-
-    // Calculate final scores for each bidder using the evaluation template
-    const finalScores: TenderFinalScore[] = Object.entries(bidderScores).map(
-      ([bidderName, bidderScoreList]) => {
-        // Calculate average scores across all committee members
-        const avgScores: Record<number, number> = {};
-        const criteriaIds = new Set<number>();
-
-        // Collect all criteria IDs
-        bidderScoreList.forEach((score) => {
-          Object.keys(score.scores).forEach((criteriaId) => {
-            criteriaIds.add(parseInt(criteriaId));
-          });
-        });
-
-        // Calculate average for each criteria
-        criteriaIds.forEach((criteriaId) => {
-          const criteriaScores = bidderScoreList
-            .map((score) => score.scores[criteriaId] || 0)
-            .filter((score) => score > 0);
-
-          if (criteriaScores.length > 0) {
-            avgScores[criteriaId] =
-              criteriaScores.reduce((sum, score) => sum + score, 0) /
-              criteriaScores.length;
-          }
-        });
-
-        // Calculate technical and financial scores using template criteria
-        let technicalScore = 0;
-        let financialScore = 0;
-        let maxTechnicalScore = 0;
-        let maxFinancialScore = 0;
-
-        evaluationTemplate.criteria.forEach((criterion) => {
-          const score = avgScores[criterion.id] || 0;
-
-          if (criterion.type === "financial") {
-            financialScore += score;
-            maxFinancialScore += criterion.maxScore;
-          } else {
-            // Default to technical if type is not specified or is 'technical'
-            technicalScore += score;
-            maxTechnicalScore += criterion.maxScore;
-          }
-        });
-
-        // Normalize scores to percentages
-        const technicalPercentage =
-          maxTechnicalScore > 0
-            ? (technicalScore / maxTechnicalScore) * 100
-            : 0;
-        const financialPercentage =
-          maxFinancialScore > 0
-            ? (financialScore / maxFinancialScore) * 100
-            : 0;
-
-        // Apply methodology based on template type
-        let finalScore = 0;
-
-        switch (evaluationTemplate.type?.toUpperCase()) {
-          case "QCBS":
-            // Quality and Cost-Based Selection: typically 70% technical, 30% financial
-            finalScore = technicalPercentage * 0.7 + financialPercentage * 0.3;
-            break;
-
-          case "LCS":
-            // Least Cost Selection: technical qualification is pass/fail, lowest cost wins
-            // For scoring purposes, if technical meets minimum threshold, financial dominates
-            const minTechnicalThreshold = 75; // 75% minimum
-            if (technicalPercentage >= minTechnicalThreshold) {
-              finalScore =
-                financialPercentage * 0.8 + technicalPercentage * 0.2;
-            } else {
-              finalScore = technicalPercentage * 0.5; // Penalize for not meeting technical threshold
-            }
-            break;
-
-          case "QBS":
-            // Quality-Based Selection: 100% technical (price negotiated later)
-            finalScore = technicalPercentage;
-            break;
-
-          case "FBS":
-            // Fixed Budget Selection: best technical within budget
-            finalScore = technicalPercentage * 0.9 + financialPercentage * 0.1;
-            break;
-
-          default:
-            // Default to QCBS methodology
-            finalScore = technicalPercentage * 0.7 + financialPercentage * 0.3;
-            break;
-        }
-
-        return {
-          bidderName,
-          technicalScore: Math.round(technicalPercentage * 100) / 100,
-          financialScore: Math.round(financialPercentage * 100) / 100,
-          finalScore: Math.round(finalScore * 100) / 100,
-          rank: 0, // Will be set after sorting
-        };
-      },
-    );
-
-    // Sort by final score (descending) and assign ranks
-    finalScores.sort((a, b) => b.finalScore - a.finalScore);
-    finalScores.forEach((score, index) => {
-      score.rank = index + 1;
-    });
 
     res.json(finalScores);
   } catch (error) {
@@ -453,6 +432,89 @@ export const submitEvaluatorScore: RequestHandler = (req, res) => {
   } catch (error) {
     console.error("Error submitting evaluator score:", error);
     res.status(500).json({ error: "Failed to submit evaluator score" });
+  }
+};
+
+export const approveFinalScores: RequestHandler = (req, res) => {
+  try {
+    const { tenderId } = req.params as { tenderId: string };
+    const { chairmanId, winningBidderName, notes } = req.body || {};
+
+    if (!tenderId) return res.status(400).json({ error: "tenderId is required" });
+    if (!chairmanId)
+      return res.status(400).json({ error: "chairmanId is required" });
+
+    const { finalScores, evaluationTemplate } = computeFinalScoresForTender(
+      tenderId,
+    );
+
+    if (!evaluationTemplate) {
+      return res.status(404).json({ error: "Evaluation template not found" });
+    }
+    if (finalScores.length === 0) {
+      return res.status(400).json({ error: "No scores available to finalize" });
+    }
+
+    const decision: ChairmanDecision = {
+      tenderId,
+      status: "approved",
+      approvedBy: chairmanId,
+      approvedAt: new Date().toISOString(),
+      reason: notes,
+      winningBidderName: winningBidderName || finalScores[0]?.bidderName,
+      finalScores,
+    };
+
+    chairmanDecisions = chairmanDecisions.filter((d) => d.tenderId !== tenderId);
+    chairmanDecisions.push(decision);
+
+    return res.status(201).json({ success: true, decision });
+  } catch (error) {
+    console.error("Error approving final scores:", error);
+    return res.status(500).json({ error: "Failed to approve final scores" });
+  }
+};
+
+export const requestRevision: RequestHandler = (req, res) => {
+  try {
+    const { tenderId } = req.params as { tenderId: string };
+    const { chairmanId, reason } = req.body || {};
+
+    if (!tenderId) return res.status(400).json({ error: "tenderId is required" });
+    if (!chairmanId)
+      return res.status(400).json({ error: "chairmanId is required" });
+    if (!reason || String(reason).trim().length < 5)
+      return res
+        .status(400)
+        .json({ error: "A valid reason (min 5 chars) is required" });
+
+    const decision: ChairmanDecision = {
+      tenderId,
+      status: "revision_requested",
+      approvedBy: chairmanId,
+      approvedAt: new Date().toISOString(),
+      reason,
+    };
+
+    chairmanDecisions = chairmanDecisions.filter((d) => d.tenderId !== tenderId);
+    chairmanDecisions.push(decision);
+
+    return res.status(201).json({ success: true, decision });
+  } catch (error) {
+    console.error("Error requesting revision:", error);
+    return res.status(500).json({ error: "Failed to request revision" });
+  }
+};
+
+export const getChairmanDecision: RequestHandler = (req, res) => {
+  try {
+    const { tenderId } = req.params as { tenderId: string };
+    const decision = chairmanDecisions.find((d) => d.tenderId === tenderId);
+    if (!decision) return res.status(404).json({ error: "No decision found" });
+    return res.json(decision);
+  } catch (error) {
+    console.error("Error getting chairman decision:", error);
+    return res.status(500).json({ error: "Failed to get chairman decision" });
   }
 };
 
