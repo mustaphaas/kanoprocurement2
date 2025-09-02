@@ -692,6 +692,26 @@ export default function NOCRequestsModule({
       );
     }
 
+    // Persist to ministry-specific storage
+    const ministryNOCKey = `${ministryCode}_NOCRequests`;
+    const ministryNOCs = localStorage.getItem(ministryNOCKey);
+    if (ministryNOCs) {
+      const list = JSON.parse(ministryNOCs);
+      const updatedList = list.map((req: NOCRequest) =>
+        req.id === requestId
+          ? {
+              ...req,
+              status: "Submitted",
+              timeline: {
+                ...req.timeline,
+                dateSubmitted: new Date().toISOString().split("T")[0],
+              },
+            }
+          : req,
+      );
+      localStorage.setItem(ministryNOCKey, JSON.stringify(updatedList));
+    }
+
     alert("NOC Request submitted for review!");
   };
 
