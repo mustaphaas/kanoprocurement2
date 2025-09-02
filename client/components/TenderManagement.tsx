@@ -813,10 +813,7 @@ const TenderManagement = () => {
       "awardApprovalSubmitted",
       onSubmitted as EventListener,
     );
-    window.addEventListener(
-      "awardApprovalUpdated",
-      onUpdated as EventListener,
-    );
+    window.addEventListener("awardApprovalUpdated", onUpdated as EventListener);
     return () => {
       window.removeEventListener(
         "awardApprovalSubmitted",
@@ -1406,7 +1403,9 @@ const TenderManagement = () => {
     if (t) return t;
     const ntitle = normalize(title);
     if (!ntitle) return null;
-    t = arr.find((x) => normalize(x?.title) === ntitle) || arr.find((x) => normalize(x?.title).includes(ntitle));
+    t =
+      arr.find((x) => normalize(x?.title) === ntitle) ||
+      arr.find((x) => normalize(x?.title).includes(ntitle));
     return t || null;
   };
 
@@ -1551,8 +1550,14 @@ const TenderManagement = () => {
     // Try resolve actual tender id from storage by id or title
     let actualTenderId: string | undefined;
     try {
-      const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-      const match = findTenderByIdOrTitle(all, assignment.tenderId, assignment.tenderTitle);
+      const all = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+      );
+      const match = findTenderByIdOrTitle(
+        all,
+        assignment.tenderId,
+        assignment.tenderTitle,
+      );
       if (match) actualTenderId = match.id;
     } catch {}
 
@@ -1581,7 +1586,11 @@ const TenderManagement = () => {
       const all = JSON.parse(
         localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
       );
-      const match = findTenderByIdOrTitle(all, actualTenderId || assignment.tenderId, assignment.tenderTitle);
+      const match = findTenderByIdOrTitle(
+        all,
+        actualTenderId || assignment.tenderId,
+        assignment.tenderTitle,
+      );
       const idx = match ? all.findIndex((t: any) => t.id === match.id) : -1;
       if (idx !== -1) {
         all[idx].awardApprovalStatus = "Submitted";
@@ -1663,7 +1672,8 @@ const TenderManagement = () => {
       const losers = bids.filter(
         (b: any) =>
           b.tenderId === tenderId &&
-          (b.companyEmail || "").toLowerCase() !== (winnerEmail || "").toLowerCase(),
+          (b.companyEmail || "").toLowerCase() !==
+            (winnerEmail || "").toLowerCase(),
       );
       losers.forEach((b: any) => {
         if (!b.companyEmail) return;
@@ -1684,7 +1694,11 @@ const TenderManagement = () => {
                 data: { tenderId },
               },
             ],
-            metadata: { tenderTitle, isWinningBid: false, bidAmount: b.bidAmount },
+            metadata: {
+              tenderTitle,
+              isWinningBid: false,
+              bidAmount: b.bidAmount,
+            },
           },
           b.companyEmail,
         );
@@ -1734,15 +1748,22 @@ const TenderManagement = () => {
     if (!tender.awardedCompanyEmail) {
       try {
         const ensured = ensureDemoBidsForTender(tender.id, tender.title);
-        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-        const idx = all.findIndex((t:any) => t.id === tender.id);
+        const all = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+        );
+        const idx = all.findIndex((t: any) => t.id === tender.id);
         if (idx !== -1) {
           all[idx].awardedCompany = ensured.winnerName;
           all[idx].awardedCompanyEmail = ensured.winnerEmail;
-          all[idx].awardAmount = all[idx].awardAmount || ensured.winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
+          all[idx].awardAmount =
+            all[idx].awardAmount ||
+            ensured.winnerBid?.bidAmount ||
+            formatCurrency(all[idx].budget || 0);
           localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
           tender = all[idx];
-          try { forceRefreshTenders(); } catch {}
+          try {
+            forceRefreshTenders();
+          } catch {}
         }
       } catch {}
     }
@@ -1753,7 +1774,7 @@ const TenderManagement = () => {
 
     const contractsKey = "contracts";
     const contracts = JSON.parse(localStorage.getItem(contractsKey) || "[]");
-    const existing = contracts.find((c:any) => c.tenderId === tender.id);
+    const existing = contracts.find((c: any) => c.tenderId === tender.id);
     const contract = existing || {
       id: `CON-${tender.id}`,
       tenderId: tender.id,
@@ -1762,7 +1783,9 @@ const TenderManagement = () => {
       projectTitle: tender.title,
       contractValue: tender.awardAmount || formatCurrency(tender.budget || 0),
       startDate: new Date().toISOString().split("T")[0],
-      endDate: new Date(Date.now() + 365*24*60*60*1000).toISOString().split("T")[0],
+      endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       status: "Draft",
       createdDate: new Date().toISOString().split("T")[0],
     };
@@ -1772,7 +1795,15 @@ const TenderManagement = () => {
     }
 
     try {
-      window.dispatchEvent(new CustomEvent("contractCreated", { detail: { tenderId: tender.id, contractId: contract.id, contractData: contract } }));
+      window.dispatchEvent(
+        new CustomEvent("contractCreated", {
+          detail: {
+            tenderId: tender.id,
+            contractId: contract.id,
+            contractData: contract,
+          },
+        }),
+      );
     } catch {}
 
     alert("Draft contract created");
@@ -1781,15 +1812,29 @@ const TenderManagement = () => {
   // Transfer contract to management (activate)
   const transferContractToManagement = () => {
     const tender = resolveAwardTender();
-    if (!tender) { alert("No awarded tender selected"); return; }
+    if (!tender) {
+      alert("No awarded tender selected");
+      return;
+    }
     const contractsKey = "contracts";
     const contracts = JSON.parse(localStorage.getItem(contractsKey) || "[]");
-    const idx = contracts.findIndex((c:any) => c.tenderId === tender.id);
-    if (idx === -1) { alert("Create a draft contract first"); return; }
+    const idx = contracts.findIndex((c: any) => c.tenderId === tender.id);
+    if (idx === -1) {
+      alert("Create a draft contract first");
+      return;
+    }
     contracts[idx].status = "Active";
     localStorage.setItem(contractsKey, JSON.stringify(contracts));
     try {
-      window.dispatchEvent(new CustomEvent("contractCreated", { detail: { tenderId: tender.id, contractId: contracts[idx].id, contractData: contracts[idx] } }));
+      window.dispatchEvent(
+        new CustomEvent("contractCreated", {
+          detail: {
+            tenderId: tender.id,
+            contractId: contracts[idx].id,
+            contractData: contracts[idx],
+          },
+        }),
+      );
     } catch {}
     alert("Contract transferred to management");
   };
@@ -1798,12 +1843,18 @@ const TenderManagement = () => {
   const resolveAwardTender = () => {
     const approved = awardApprovals.find((a: any) => a.status === "Approved");
     const preferredTenderId =
-      selectedTenderAssignment?.tenderId || approved?.actualTenderId || approved?.tenderId || tenders.find((t) => t.status === "Awarded")?.id || assignedTenders[0]?.tenderId || null;
+      selectedTenderAssignment?.tenderId ||
+      approved?.actualTenderId ||
+      approved?.tenderId ||
+      tenders.find((t) => t.status === "Awarded")?.id ||
+      assignedTenders[0]?.tenderId ||
+      null;
     if (preferredTenderId) {
       const byId = tenders.find((t) => t.id === preferredTenderId);
       if (byId) return byId;
     }
-    const title = approved?.tenderTitle || selectedTenderAssignment?.tenderTitle;
+    const title =
+      approved?.tenderTitle || selectedTenderAssignment?.tenderTitle;
     const t = findTenderByIdOrTitle(tenders, undefined, title);
     return t || null;
   };
@@ -1892,13 +1943,19 @@ const TenderManagement = () => {
         }
         localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
         // Update selected tender assignment for downstream actions
-        const assn = assignedTenders.find((a) => a.tenderId === all[idx].id || normalize(a.tenderTitle) === normalize(all[idx].title));
+        const assn = assignedTenders.find(
+          (a) =>
+            a.tenderId === all[idx].id ||
+            normalize(a.tenderTitle) === normalize(all[idx].title),
+        );
         if (assn) setSelectedTenderAssignment(assn);
       }
     } catch {}
 
     // Refresh local tenders from storage
-    try { forceRefreshTenders(); } catch {}
+    try {
+      forceRefreshTenders();
+    } catch {}
 
     setAwardApprovals(updated);
     try {
@@ -3300,29 +3357,51 @@ const TenderManagement = () => {
                     size="sm"
                     onClick={() => {
                       let tender = resolveAwardTender();
-                      if (!tender) { alert("No awarded tender selected"); return; }
+                      if (!tender) {
+                        alert("No awarded tender selected");
+                        return;
+                      }
                       if (!tender.awardedCompanyEmail) {
                         try {
-                          const ensured = ensureDemoBidsForTender(tender.id, tender.title);
-                          const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-                          const idx = all.findIndex((t:any) => t.id === tender.id);
+                          const ensured = ensureDemoBidsForTender(
+                            tender.id,
+                            tender.title,
+                          );
+                          const all = JSON.parse(
+                            localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+                          );
+                          const idx = all.findIndex(
+                            (t: any) => t.id === tender.id,
+                          );
                           if (idx !== -1) {
                             all[idx].awardedCompany = ensured.winnerName;
                             all[idx].awardedCompanyEmail = ensured.winnerEmail;
-                            all[idx].awardAmount = all[idx].awardAmount || ensured.winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
-                            localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+                            all[idx].awardAmount =
+                              all[idx].awardAmount ||
+                              ensured.winnerBid?.bidAmount ||
+                              formatCurrency(all[idx].budget || 0);
+                            localStorage.setItem(
+                              STORAGE_KEYS.TENDERS,
+                              JSON.stringify(all),
+                            );
                             tender = all[idx];
-                            try { forceRefreshTenders(); } catch {}
+                            try {
+                              forceRefreshTenders();
+                            } catch {}
                           }
                         } catch {}
                       }
-                      if (!tender.awardedCompanyEmail) { alert("No awarded tender selected"); return; }
+                      if (!tender.awardedCompanyEmail) {
+                        alert("No awarded tender selected");
+                        return;
+                      }
                       notifyWinningBidder(
                         tender.id,
                         tender.title,
                         tender.awardedCompanyEmail,
                         tender.awardedCompany,
-                        tender.awardAmount || formatCurrency(tender.budget || 0),
+                        tender.awardAmount ||
+                          formatCurrency(tender.budget || 0),
                       );
                       alert("Success notification sent to winner");
                     }}
@@ -3346,23 +3425,44 @@ const TenderManagement = () => {
                     variant="outline"
                     onClick={() => {
                       let tender = resolveAwardTender();
-                      if (!tender) { alert("No awarded tender selected"); return; }
+                      if (!tender) {
+                        alert("No awarded tender selected");
+                        return;
+                      }
                       if (!tender.awardedCompanyEmail) {
                         try {
-                          const ensured = ensureDemoBidsForTender(tender.id, tender.title);
-                          const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-                          const idx = all.findIndex((t:any) => t.id === tender.id);
+                          const ensured = ensureDemoBidsForTender(
+                            tender.id,
+                            tender.title,
+                          );
+                          const all = JSON.parse(
+                            localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+                          );
+                          const idx = all.findIndex(
+                            (t: any) => t.id === tender.id,
+                          );
                           if (idx !== -1) {
                             all[idx].awardedCompany = ensured.winnerName;
                             all[idx].awardedCompanyEmail = ensured.winnerEmail;
-                            all[idx].awardAmount = all[idx].awardAmount || ensured.winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
-                            localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+                            all[idx].awardAmount =
+                              all[idx].awardAmount ||
+                              ensured.winnerBid?.bidAmount ||
+                              formatCurrency(all[idx].budget || 0);
+                            localStorage.setItem(
+                              STORAGE_KEYS.TENDERS,
+                              JSON.stringify(all),
+                            );
                             tender = all[idx];
-                            try { forceRefreshTenders(); } catch {}
+                            try {
+                              forceRefreshTenders();
+                            } catch {}
                           }
                         } catch {}
                       }
-                      if (!tender.id || !tender.awardedCompanyEmail) { alert("No awarded tender selected"); return; }
+                      if (!tender.id || !tender.awardedCompanyEmail) {
+                        alert("No awarded tender selected");
+                        return;
+                      }
                       notifyUnsuccessfulBidders(
                         tender.id,
                         tender.title,
@@ -3387,19 +3487,37 @@ const TenderManagement = () => {
                     variant="outline"
                     onClick={() => {
                       let tender = resolveAwardTender();
-                      if (!tender) { alert("No awarded tender selected"); return; }
+                      if (!tender) {
+                        alert("No awarded tender selected");
+                        return;
+                      }
                       if (!tender.awardedCompanyEmail) {
                         try {
-                          const ensured = ensureDemoBidsForTender(tender.id, tender.title);
-                          const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-                          const idx = all.findIndex((t:any) => t.id === tender.id);
+                          const ensured = ensureDemoBidsForTender(
+                            tender.id,
+                            tender.title,
+                          );
+                          const all = JSON.parse(
+                            localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+                          );
+                          const idx = all.findIndex(
+                            (t: any) => t.id === tender.id,
+                          );
                           if (idx !== -1) {
                             all[idx].awardedCompany = ensured.winnerName;
                             all[idx].awardedCompanyEmail = ensured.winnerEmail;
-                            all[idx].awardAmount = all[idx].awardAmount || ensured.winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
-                            localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+                            all[idx].awardAmount =
+                              all[idx].awardAmount ||
+                              ensured.winnerBid?.bidAmount ||
+                              formatCurrency(all[idx].budget || 0);
+                            localStorage.setItem(
+                              STORAGE_KEYS.TENDERS,
+                              JSON.stringify(all),
+                            );
                             tender = all[idx];
-                            try { forceRefreshTenders(); } catch {}
+                            try {
+                              forceRefreshTenders();
+                            } catch {}
                           }
                         } catch {}
                       }
@@ -3429,7 +3547,11 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Convert winning bid to draft contract
                   </p>
-                  <Button className="mt-2" size="sm" onClick={createDraftContractFromAward}>
+                  <Button
+                    className="mt-2"
+                    size="sm"
+                    onClick={createDraftContractFromAward}
+                  >
                     <FileCheck className="h-4 w-4 mr-2" />
                     Create Draft Contract
                   </Button>
@@ -3440,7 +3562,12 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Push to Contract Management for milestones and payments
                   </p>
-                  <Button className="mt-2" size="sm" variant="outline" onClick={transferContractToManagement}>
+                  <Button
+                    className="mt-2"
+                    size="sm"
+                    variant="outline"
+                    onClick={transferContractToManagement}
+                  >
                     <Target className="h-4 w-4 mr-2" />
                     Transfer to Contract Mgmt
                   </Button>
