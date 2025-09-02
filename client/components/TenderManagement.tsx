@@ -1347,6 +1347,104 @@ const TenderManagement = () => {
     return `₦${num.toLocaleString()}`;
   };
 
+  // Award actions
+  const handleGenerateAwardReport = () => {
+    if (!selectedTenderAssignment) {
+      alert("Please select a tender to generate the report");
+      return;
+    }
+    const ministry = getMinistryInfo();
+    const report = {
+      id: `AWD-REP-${Date.now()}`,
+      tenderId: selectedTenderAssignment.tenderId,
+      tenderTitle: selectedTenderAssignment.tenderTitle,
+      ministryCode: ministry.code,
+      ministryName: ministry.name,
+      evaluationTemplateId: selectedTenderAssignment.evaluationTemplateId,
+      evaluatorId: currentEvaluatorId,
+      generatedAt: new Date().toISOString(),
+      summary: "Evaluation report prepared for award recommendation",
+    };
+
+    const key = `${ministry.code}_awardReports`;
+    const existing = JSON.parse(localStorage.getItem(key) || "[]");
+    existing.unshift(report);
+    localStorage.setItem(key, JSON.stringify(existing));
+
+    const centralKey = "centralAwardReports";
+    const central = JSON.parse(localStorage.getItem(centralKey) || "[]");
+    central.unshift(report);
+    localStorage.setItem(centralKey, JSON.stringify(central));
+
+    try {
+      const blob = new Blob([JSON.stringify(report, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `award-report-${selectedTenderAssignment.tenderId}.json`;
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+    } catch {}
+
+    alert("Evaluation report generated and downloaded");
+  };
+
+  const handleSubmitAwardForApproval = () => {
+    if (!selectedTenderAssignment) {
+      alert("Please select a tender to submit for approval");
+      return;
+    }
+    const ministry = getMinistryInfo();
+    const approval = {
+      id: `AWD-APP-${Date.now()}`,
+      tenderId: selectedTenderAssignment.tenderId,
+      tenderTitle: selectedTenderAssignment.tenderTitle,
+      ministryCode: ministry.code,
+      ministryName: ministry.name,
+      status: "Submitted",
+      submittedAt: new Date().toISOString(),
+    };
+
+    const key = `${ministry.code}_awardApprovals`;
+    const existing = JSON.parse(localStorage.getItem(key) || "[]");
+    existing.unshift(approval);
+    localStorage.setItem(key, JSON.stringify(existing));
+
+    const centralKey = "centralAwardApprovals";
+    const central = JSON.parse(localStorage.getItem(centralKey) || "[]");
+    central.unshift(approval);
+    localStorage.setItem(centralKey, JSON.stringify(central));
+
+    try {
+      const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+      const idx = all.findIndex((t: any) => t.id === selectedTenderAssignment.tenderId);
+      if (idx !== -1) {
+        all[idx].awardApprovalStatus = "Submitted";
+        all[idx].workflowStage = "Contract Award";
+        localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+      }
+    } catch {}
+
+    try {
+      window.dispatchEvent(
+        new CustomEvent("awardApprovalSubmitted", {
+          detail: {
+            tenderId: selectedTenderAssignment.tenderId,
+            approvalId: approval.id,
+            status: approval.status,
+          },
+        }),
+      );
+    } catch {}
+
+    forceRefreshTenders();
+    alert("Award recommendation submitted for approval");
+  };
+
   // Helper to determine category based on ministry
   const getCategoryFromMinistry = (ministry: string) => {
     if (ministry.includes("Health")) return "Healthcare";
@@ -1593,7 +1691,7 @@ const TenderManagement = () => {
         bg: "bg-gradient-to-r from-green-100 to-teal-100",
         text: "text-green-700",
         border: "border-green-200",
-        icon: "✨",
+        icon: "��",
       },
     };
 
