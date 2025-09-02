@@ -1372,6 +1372,58 @@ const TenderManagement = () => {
     return `₦${num.toLocaleString()}`;
   };
 
+  // Ensure demo bids exist for a tender and set approval@company.com as participant
+  const ensureDemoBidsForTender = (tenderId: string, tenderTitle?: string) => {
+    const existing = JSON.parse(localStorage.getItem("tenderBids") || "[]");
+    const has = (name: string) => existing.some((b: any) => b.tenderId === tenderId && (b.companyName === name || b.companyEmail === name));
+
+    const winnerEmail = "approval@company.com";
+    const winnerName = "Approved Company Ltd";
+
+    const toAdd: any[] = [];
+    if (!existing.some((b: any) => b.tenderId === tenderId && (b.companyEmail || "").toLowerCase() === winnerEmail)) {
+      toAdd.push({
+        id: `BID-${Date.now()}-WIN`,
+        tenderId,
+        tenderTitle: tenderTitle || tenderId,
+        companyName: winnerName,
+        companyEmail: winnerEmail,
+        bidAmount: "₦850,000,000",
+        status: "Submitted",
+        submittedAt: new Date().toISOString(),
+      });
+    }
+
+    const demos = [
+      { name: "Northern Construction Ltd" },
+      { name: "Sahel Engineering Co" },
+      { name: "Arewa Tech Services" },
+    ];
+    demos.forEach((d, idx) => {
+      if (!has(d.name)) {
+        toAdd.push({
+          id: `BID-${Date.now()}-D${idx + 1}`,
+          tenderId,
+          tenderTitle: tenderTitle || tenderId,
+          companyName: d.name,
+          bidAmount: formatCurrency(700000000 + idx * 50000000),
+          status: "Submitted",
+          submittedAt: new Date().toISOString(),
+        });
+      }
+    });
+
+    if (toAdd.length > 0) {
+      const merged = [...existing, ...toAdd];
+      localStorage.setItem("tenderBids", JSON.stringify(merged));
+    }
+
+    // Return winning bid info
+    const winnerBid = (JSON.parse(localStorage.getItem("tenderBids") || "[]") as any[])
+      .find((b) => b.tenderId === tenderId && (b.companyEmail || "").toLowerCase() === winnerEmail);
+    return { winnerEmail, winnerName, winnerBid };
+  };
+
   // Award actions
   const handleGenerateAwardReport = () => {
     const assignment =
@@ -1431,6 +1483,9 @@ const TenderManagement = () => {
       return;
     }
     if (!selectedTenderAssignment) setSelectedTenderAssignment(assignment);
+
+    // Ensure demo bids exist and winner participant is present
+    try { ensureDemoBidsForTender(assignment.tenderId, assignment.tenderTitle); } catch {}
 
     const ministry = getMinistryInfo();
     const approval = {
@@ -1503,18 +1558,25 @@ const TenderManagement = () => {
     localStorage.setItem(key, JSON.stringify(updated));
     localStorage.setItem(centralKey, JSON.stringify(updatedCentral));
 
-    // Update tender record
+    // Update tender record and set winner when approved
     try {
       const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-      const idx = all.findIndex((t: any) => {
-        const match = list.find((a: any) => a.id === approvalId && a.tenderId === t.id);
-        return !!match;
-      });
+      const approval = list.find((a: any) => a.id === approvalId);
+      const tIndex = all.findIndex((t: any) => approval && a.tenderId ? t.id === approval.tenderId : false);
+      // Fallback: if not found by approval, try by selected assignment
+      const idx = tIndex !== -1 ? tIndex : all.findIndex((t: any) => selectedTenderAssignment && t.id === selectedTenderAssignment.tenderId);
       if (idx !== -1) {
         all[idx].awardApprovalStatus = decision;
         if (decision === "Approved") {
-          all[idx].status = all[idx].status || "Evaluated";
+          const tenderId = all[idx].id;
+          const ensured = ensureDemoBidsForTender(tenderId, all[idx].title);
+          const winnerBid = ensured.winnerBid;
+          all[idx].status = "Awarded";
           all[idx].workflowStage = "Contract Award";
+          all[idx].awardedCompany = ensured.winnerName;
+          all[idx].awardedCompanyEmail = ensured.winnerEmail;
+          all[idx].awardAmount = winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
+          all[idx].awardDate = new Date().toISOString().split("T")[0];
         }
         localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
       }
