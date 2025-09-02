@@ -110,9 +110,29 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
   const selectedTenderId =
     assignedTenders.find((t) => t.id === selectedTender)?.tenderId ||
     selectedTender;
+
+  // Demo bidders fallback if no real bids exist
+  const getDemoBiddersForTender = (tenderId: string) => {
+    if (!tenderId) return [] as { id: string; company: string; tenderId: string }[];
+    const demoCompanies = [
+      "Northern Construction Ltd",
+      "Sahel Engineering Co",
+      "Arewa Tech Services",
+    ];
+    return demoCompanies.map((name, idx) => ({
+      id: `DEMO-BID-${tenderId}-${idx + 1}`,
+      company: name,
+      tenderId,
+    }));
+  };
+
   const filteredBidders = bidders.filter(
     (bidder) => bidder.tenderId === selectedTenderId,
   );
+  const biddersForUI =
+    filteredBidders.length > 0
+      ? filteredBidders
+      : getDemoBiddersForTender(selectedTenderId);
 
   // Add global debugging functions
   useEffect(() => {
@@ -337,11 +357,11 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
                   >
                     <option value="">
-                      {filteredBidders.length === 0
+                      {biddersForUI.length === 0
                         ? "No bidders found for this tender"
                         : "Select a bidder..."}
                     </option>
-                    {filteredBidders.map((bidder) => (
+                    {biddersForUI.map((bidder) => (
                       <option key={bidder.id} value={bidder.id}>
                         {bidder.company}
                       </option>
