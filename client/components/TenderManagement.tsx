@@ -1723,6 +1723,77 @@ const TenderManagement = () => {
     }
   };
 
+  // Create draft contract from awarded tender
+  const createDraftContractFromAward = () => {
+    let tender = resolveAwardTender();
+    if (!tender) {
+      alert("No awarded tender selected");
+      return;
+    }
+    // Ensure winner info present
+    if (!tender.awardedCompanyEmail) {
+      try {
+        const ensured = ensureDemoBidsForTender(tender.id, tender.title);
+        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const idx = all.findIndex((t:any) => t.id === tender.id);
+        if (idx !== -1) {
+          all[idx].awardedCompany = ensured.winnerName;
+          all[idx].awardedCompanyEmail = ensured.winnerEmail;
+          all[idx].awardAmount = all[idx].awardAmount || ensured.winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
+          localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+          tender = all[idx];
+          try { forceRefreshTenders(); } catch {}
+        }
+      } catch {}
+    }
+    if (!tender.awardedCompany) {
+      alert("No awarded tender selected");
+      return;
+    }
+
+    const contractsKey = "contracts";
+    const contracts = JSON.parse(localStorage.getItem(contractsKey) || "[]");
+    const existing = contracts.find((c:any) => c.tenderId === tender.id);
+    const contract = existing || {
+      id: `CON-${tender.id}`,
+      tenderId: tender.id,
+      contractorName: tender.awardedCompany,
+      contractorEmail: tender.awardedCompanyEmail,
+      projectTitle: tender.title,
+      contractValue: tender.awardAmount || formatCurrency(tender.budget || 0),
+      startDate: new Date().toISOString().split("T")[0],
+      endDate: new Date(Date.now() + 365*24*60*60*1000).toISOString().split("T")[0],
+      status: "Draft",
+      createdDate: new Date().toISOString().split("T")[0],
+    };
+    if (!existing) {
+      contracts.unshift(contract);
+      localStorage.setItem(contractsKey, JSON.stringify(contracts));
+    }
+
+    try {
+      window.dispatchEvent(new CustomEvent("contractCreated", { detail: { tenderId: tender.id, contractId: contract.id, contractData: contract } }));
+    } catch {}
+
+    alert("Draft contract created");
+  };
+
+  // Transfer contract to management (activate)
+  const transferContractToManagement = () => {
+    const tender = resolveAwardTender();
+    if (!tender) { alert("No awarded tender selected"); return; }
+    const contractsKey = "contracts";
+    const contracts = JSON.parse(localStorage.getItem(contractsKey) || "[]");
+    const idx = contracts.findIndex((c:any) => c.tenderId === tender.id);
+    if (idx === -1) { alert("Create a draft contract first"); return; }
+    contracts[idx].status = "Active";
+    localStorage.setItem(contractsKey, JSON.stringify(contracts));
+    try {
+      window.dispatchEvent(new CustomEvent("contractCreated", { detail: { tenderId: tender.id, contractId: contracts[idx].id, contractData: contracts[idx] } }));
+    } catch {}
+    alert("Contract transferred to management");
+  };
+
   // Helper to resolve current tender for award actions
   const resolveAwardTender = () => {
     const approved = awardApprovals.find((a: any) => a.status === "Approved");
@@ -3358,7 +3429,7 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Convert winning bid to draft contract
                   </p>
-                  <Button className="mt-2" size="sm">
+                  <Button className="mt-2" size="sm" onClick={createDraftContractFromAward}>
                     <FileCheck className="h-4 w-4 mr-2" />
                     Create Draft Contract
                   </Button>
@@ -3369,7 +3440,7 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Push to Contract Management for milestones and payments
                   </p>
-                  <Button className="mt-2" size="sm" variant="outline">
+                  <Button className="mt-2" size="sm" variant="outline" onClick={transferContractToManagement}>
                     <Target className="h-4 w-4 mr-2" />
                     Transfer to Contract Mgmt
                   </Button>
