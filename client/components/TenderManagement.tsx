@@ -3228,11 +3228,24 @@ const TenderManagement = () => {
                     className="mt-2"
                     size="sm"
                     onClick={() => {
-                      const tender = resolveAwardTender();
-                      if (!tender || !tender.awardedCompanyEmail) {
-                        alert("No awarded tender selected");
-                        return;
+                      let tender = resolveAwardTender();
+                      if (!tender) { alert("No awarded tender selected"); return; }
+                      if (!tender.awardedCompanyEmail) {
+                        try {
+                          const ensured = ensureDemoBidsForTender(tender.id, tender.title);
+                          const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+                          const idx = all.findIndex((t:any) => t.id === tender.id);
+                          if (idx !== -1) {
+                            all[idx].awardedCompany = ensured.winnerName;
+                            all[idx].awardedCompanyEmail = ensured.winnerEmail;
+                            all[idx].awardAmount = all[idx].awardAmount || ensured.winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
+                            localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+                            tender = all[idx];
+                            try { forceRefreshTenders(); } catch {}
+                          }
+                        } catch {}
                       }
+                      if (!tender.awardedCompanyEmail) { alert("No awarded tender selected"); return; }
                       notifyWinningBidder(
                         tender.id,
                         tender.title,
