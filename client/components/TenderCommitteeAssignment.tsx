@@ -1216,6 +1216,7 @@ export default function TenderCommitteeAssignment() {
       tenderTitle: tenderTitle,
       tenderCategory: tenderCategory,
       committeeTemplateId: assignmentForm.committeeTemplateId,
+      evaluationTemplateId: assignmentForm.evaluationTemplateId,
       templateName: selectedTemplate?.name || "Unknown Template",
       assignedMembers: [],
       assignmentDate: new Date().toISOString().split("T")[0],
@@ -1271,6 +1272,9 @@ export default function TenderCommitteeAssignment() {
           ...newAssignment,
           id: createdAssignment.id || newAssignment.id,
           status: createdAssignment.status || newAssignment.status,
+          evaluationTemplateId:
+            createdAssignment.evaluationTemplateId ||
+            newAssignment.evaluationTemplateId,
         };
         const updatedAssignments = [...assignments, mergedAssignment];
         setAssignments(updatedAssignments);
