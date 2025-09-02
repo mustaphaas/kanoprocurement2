@@ -10674,7 +10674,7 @@ Blockchain Timestamp: ${Date.now()}
               },
               {
                 category: "Laboratory Equipment",
-                amount: "��650M",
+                amount: "₦650M",
                 percentage: 27,
               },
               {
