@@ -1562,7 +1562,7 @@ const TenderManagement = () => {
     try {
       const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
       const approval = list.find((a: any) => a.id === approvalId);
-      const tIndex = all.findIndex((t: any) => approval && a.tenderId ? t.id === approval.tenderId : false);
+      const tIndex = all.findIndex((t: any) => (approval && approval.tenderId) ? t.id === approval.tenderId : false);
       // Fallback: if not found by approval, try by selected assignment
       const idx = tIndex !== -1 ? tIndex : all.findIndex((t: any) => selectedTenderAssignment && t.id === selectedTenderAssignment.tenderId);
       if (idx !== -1) {
