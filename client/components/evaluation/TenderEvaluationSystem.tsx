@@ -599,10 +599,55 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
                     </div>
 
                     <div className="mt-4 flex justify-end space-x-4">
-                      <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors">
+                      <button
+                        onClick={async () => {
+                          const reason = window.prompt(
+                            "Enter reason for revision request:",
+                            "Please review specific criteria and resubmit."
+                          );
+                          if (!reason) return;
+                          try {
+                            const res = await fetch(`/api/tenders/${selectedTenderId}/request-revision`, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ chairmanId: currentUser.id, reason }),
+                            });
+                            if (!res.ok) {
+                              const err = await res.json().catch(() => ({}));
+                              alert(err.error || "Failed to request revision");
+                              return;
+                            }
+                            alert("Revision requested successfully.");
+                          } catch (e) {
+                            console.error(e);
+                            alert("Network error requesting revision");
+                          }
+                        }}
+                        className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
+                      >
                         Request Revision
                       </button>
-                      <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                      <button
+                        onClick={async () => {
+                          try {
+                            const res = await fetch(`/api/tenders/${selectedTenderId}/approve-final`, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ chairmanId: currentUser.id }),
+                            });
+                            if (!res.ok) {
+                              const err = await res.json().catch(() => ({}));
+                              alert(err.error || "Failed to approve final scores");
+                              return;
+                            }
+                            alert("Final scores approved successfully.");
+                          } catch (e) {
+                            console.error(e);
+                            alert("Network error approving final scores");
+                          }
+                        }}
+                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                      >
                         Approve Final Score
                       </button>
                     </div>
