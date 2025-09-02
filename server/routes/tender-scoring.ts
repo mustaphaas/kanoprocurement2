@@ -468,7 +468,25 @@ export const approveFinalScores: RequestHandler = (req, res) => {
     chairmanDecisions = chairmanDecisions.filter((d) => d.tenderId !== tenderId);
     chairmanDecisions.push(decision);
 
-    return res.status(201).json({ success: true, decision });
+    // Update the committee assignment status to transition to NOC phase
+    try {
+      const assignment = getAssignmentByTenderId(tenderId);
+      if (assignment) {
+        // Import updateAssignmentStatus from committee-assignments
+        const { updateAssignmentStatusInMemory } = require("./committee-assignments");
+        updateAssignmentStatusInMemory(assignment.id, "Completed");
+        console.log(`Updated assignment ${assignment.id} status to Completed for NOC workflow`);
+      }
+    } catch (updateError) {
+      console.error("Failed to update assignment status:", updateError);
+      // Don't fail the approval, just log the error
+    }
+
+    return res.status(201).json({
+      success: true,
+      decision,
+      message: "Evaluation approved. Tender now ready for NOC process."
+    });
   } catch (error) {
     console.error("Error approving final scores:", error);
     return res.status(500).json({ error: "Failed to approve final scores" });

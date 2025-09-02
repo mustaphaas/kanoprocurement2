@@ -495,7 +495,7 @@ const TenderManagement = () => {
 
           // Also merge from any other ministry keys, to avoid missing entries
           Object.keys(localStorage)
-            .filter((k) => k.endsWith("_tenderAssignments"))
+            .filter((k) => k.endsWith("_tenderCommitteeAssignments"))
             .forEach((k) => {
               try {
                 const data = JSON.parse(localStorage.getItem(k) || "[]");
