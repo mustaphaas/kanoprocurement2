@@ -1409,7 +1409,20 @@ const TenderManagement = () => {
     return t || null;
   };
 
-  // Ensure demo bids exist for a tender and set approval@company.com as participant
+  // Helper: parse currency-like strings (₦, K/M/B) to numeric for comparisons
+  const parseCurrencyToNumber = (amount: any): number => {
+    if (typeof amount === "number") return amount;
+    const str = (amount ?? "").toString();
+    const normalized = str.replace(/�/g, "").toUpperCase();
+    let multiplier = 1;
+    if (normalized.includes("B")) multiplier = 1_000_000_000;
+    else if (normalized.includes("M")) multiplier = 1_000_000;
+    else if (normalized.includes("K")) multiplier = 1_000;
+    const numeric = parseFloat(normalized.replace(/[^\d.]/g, "")) || 0;
+    return numeric * multiplier;
+  };
+
+  // Ensure demo bids exist; determine winner dynamically. For the test tender only, winner is approval@company.com
   const ensureDemoBidsForTender = (tenderId: string, tenderTitle?: string) => {
     const existing = JSON.parse(localStorage.getItem("tenderBids") || "[]");
     const has = (name: string) =>
@@ -1419,23 +1432,24 @@ const TenderManagement = () => {
           (b.companyName === name || b.companyEmail === name),
       );
 
-    const winnerEmail = "approval@company.com";
-    const winnerName = "Approved Company Ltd";
+    const testWinnerEmail = "approval@company.com";
+    const testWinnerName = "Approved Company Ltd";
 
     const toAdd: any[] = [];
+    // Always include the test company as a participant if not already present (for demo/testing)
     if (
       !existing.some(
         (b: any) =>
           b.tenderId === tenderId &&
-          (b.companyEmail || "").toLowerCase() === winnerEmail,
+          (b.companyEmail || "").toLowerCase() === testWinnerEmail,
       )
     ) {
       toAdd.push({
         id: `BID-${Date.now()}-WIN`,
         tenderId,
         tenderTitle: tenderTitle || tenderId,
-        companyName: winnerName,
-        companyEmail: winnerEmail,
+        companyName: testWinnerName,
+        companyEmail: testWinnerEmail,
         bidAmount: "₦850,000,000",
         status: "Submitted",
         submittedAt: new Date().toISOString(),
@@ -1467,14 +1481,48 @@ const TenderManagement = () => {
       localStorage.setItem("tenderBids", JSON.stringify(merged));
     }
 
-    // Return winning bid info
-    const winnerBid = (
-      JSON.parse(localStorage.getItem("tenderBids") || "[]") as any[]
-    ).find(
-      (b) =>
-        b.tenderId === tenderId &&
-        (b.companyEmail || "").toLowerCase() === winnerEmail,
+    // Determine winner dynamically
+    const allBids: any[] = JSON.parse(localStorage.getItem("tenderBids") || "[]").filter(
+      (b: any) => b.tenderId === tenderId,
     );
+
+    // Identify if this is the specific test tender
+    const isTestingTender = (() => {
+      const t = normalize(tenderTitle);
+      return tenderId === "MOH-2024-001" || t.includes("hospital equipment supply");
+    })();
+
+    // Prefer existing award set on the tender record, if any
+    const allTenders = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+    const tenderRecord = (allTenders || []).find((t: any) => t.id === tenderId || normalize(t.title) === normalize(tenderTitle));
+
+    let winnerBid: any = null;
+
+    if (isTestingTender) {
+      winnerBid = allBids.find(
+        (b) => (b.companyEmail || "").toLowerCase() === testWinnerEmail,
+      ) || null;
+    }
+
+    if (!winnerBid && tenderRecord?.awardedCompanyEmail) {
+      const email = (tenderRecord.awardedCompanyEmail || "").toLowerCase();
+      winnerBid = allBids.find(
+        (b) => (b.companyEmail || "").toLowerCase() === email,
+      ) || null;
+    }
+
+    if (!winnerBid && allBids.length > 0) {
+      winnerBid = allBids.reduce((best: any, curr: any) => {
+        if (!best) return curr;
+        return parseCurrencyToNumber(curr.bidAmount) < parseCurrencyToNumber(best.bidAmount)
+          ? curr
+          : best;
+      }, null as any);
+    }
+
+    const winnerEmail = (winnerBid?.companyEmail || (isTestingTender ? testWinnerEmail : allBids[0]?.companyEmail || "")).toLowerCase();
+    const winnerName = winnerBid?.companyName || (isTestingTender ? testWinnerName : allBids[0]?.companyName || "");
+
     return { winnerEmail, winnerName, winnerBid };
   };
 
@@ -3612,7 +3660,7 @@ const TenderManagement = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="budget">Budget (₦)</Label>
+                <Label htmlFor="budget">Budget (���)</Label>
                 <Input
                   id="budget"
                   type="number"
