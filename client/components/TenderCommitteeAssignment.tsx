@@ -1489,18 +1489,11 @@ export default function TenderCommitteeAssignment() {
         console.log("📊 Added scoring rubric templates:", rubricTemplates);
       }
 
-      // Combine both sources, avoiding duplicates by ID
-      const allTemplates = [...apiTemplates];
-      localTemplates.forEach((localTemplate) => {
-        if (!allTemplates.find((t) => t.id === localTemplate.id)) {
-          allTemplates.push(localTemplate);
-        }
-      });
-
-      setEvaluationTemplates(allTemplates);
+      // Use only locally created/saved templates for assignment selection
+      setEvaluationTemplates(localTemplates);
       console.log(
-        "✅ Combined evaluation templates (API + Local):",
-        allTemplates,
+        "✅ Loaded locally saved evaluation templates:",
+        localTemplates,
       );
     } catch (error) {
       console.error("Error fetching evaluation templates:", error);
@@ -2591,26 +2584,7 @@ export default function TenderCommitteeAssignment() {
                   <SelectValue placeholder="Select evaluation template" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(() => {
-                    const filteredTemplates = assignmentForm.tenderCategory
-                      ? evaluationTemplates.filter(
-                          (template) =>
-                            template.category ===
-                              assignmentForm.tenderCategory ||
-                            template.category === "General" ||
-                            !template.category, // Include templates without category
-                        )
-                      : evaluationTemplates;
-
-                    console.log("🔽 Evaluation template dropdown:", {
-                      tenderCategory: assignmentForm.tenderCategory,
-                      allTemplates: evaluationTemplates,
-                      filteredTemplates,
-                      templateCount: filteredTemplates.length,
-                    });
-
-                    return filteredTemplates;
-                  })().map((template) => (
+                  {evaluationTemplates.map((template) => (
                     <SelectItem key={template.id} value={template.id}>
                       <div className="flex flex-col items-start">
                         <span className="font-medium">{template.name}</span>
