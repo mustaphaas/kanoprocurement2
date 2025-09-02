@@ -61,5 +61,10 @@ export function createServer() {
   app.get("/api/tenders/:tenderId/final-scores", getTenderFinalScores);
   app.get("/api/tenders/:tenderId/assignment", getTenderAssignment);
 
+  // Chairman actions
+  app.post("/api/tenders/:tenderId/approve-final", require("./routes/tender-scoring").approveFinalScores);
+  app.post("/api/tenders/:tenderId/request-revision", require("./routes/tender-scoring").requestRevision);
+  app.get("/api/tenders/:tenderId/decision", require("./routes/tender-scoring").getChairmanDecision);
+
   return app;
 }
