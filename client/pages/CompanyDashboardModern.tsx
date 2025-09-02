@@ -423,7 +423,7 @@ export default function CompanyDashboardModern() {
       }
 
       const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
-      const storedTenderStates = localStorage.getItem(statesKey) || localStorage.getItem("companyTenderStates") || "{}";
+      const storedTenderStates = localStorage.getItem(statesKey) || "{}";
       const tenderStates = JSON.parse(storedTenderStates);
       const lastProcessedTenders = JSON.parse(
         localStorage.getItem("lastProcessedTenders") || "[]",
@@ -714,7 +714,7 @@ export default function CompanyDashboardModern() {
     );
 
     const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
-    const storedTenderStates = localStorage.getItem(statesKey) || localStorage.getItem("companyTenderStates") || "{}";
+    const storedTenderStates = localStorage.getItem(statesKey) || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
@@ -800,7 +800,7 @@ export default function CompanyDashboardModern() {
     );
 
     const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
-    const storedTenderStates = localStorage.getItem(statesKey) || localStorage.getItem("companyTenderStates") || "{}";
+    const storedTenderStates = localStorage.getItem(statesKey) || "{}";
     const tenderStates = JSON.parse(storedTenderStates);
     tenderStates[selectedTender.id] = {
       ...tenderStates[selectedTender.id],
