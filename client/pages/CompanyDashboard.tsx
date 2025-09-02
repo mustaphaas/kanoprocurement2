@@ -279,7 +279,7 @@ export default function CompanyDashboard() {
     };
 
     (window as any).clearAllStatus = () => {
-      console.log("🧹 Clearing all userStatus from storage...");
+      console.log("�� Clearing all userStatus from storage...");
       persistentStorage.clearAll();
       setStatusUpdateTrigger((prev) => prev + 1);
       console.log("✅ All userStatus cleared!");
@@ -1833,7 +1833,7 @@ export default function CompanyDashboard() {
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="">Project Value</option>
-                      <option value="0-100m">��0 - ₦100M</option>
+                      <option value="0-100m">₦0 - ₦100M</option>
                       <option value="100m-1b">₦100M - ₦1B</option>
                       <option value="1b+">₦1B+</option>
                     </select>
