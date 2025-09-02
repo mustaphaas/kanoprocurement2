@@ -1230,7 +1230,7 @@ export default function ProcurementPlanning() {
                           <div>
                             <span className="font-medium">{plan.title}</span>
                             <div className="text-sm text-gray-600">
-                              Created: {plan.createdDate} • Budget: ��
+                              Created: {plan.createdDate} • Budget: ₦
                               {plan.budget.toLocaleString()}
                             </div>
                           </div>
