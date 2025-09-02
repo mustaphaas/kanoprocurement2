@@ -516,7 +516,7 @@ export default function MinistryDashboard() {
     {
       id: "BID-003",
       companyName: "Golden Gates Healthcare",
-      bidAmount: "���875,000,000",
+      bidAmount: "₦875,000,000",
       technicalScore: 85,
       financialScore: 82,
       totalScore: 83.5,
@@ -752,7 +752,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "EduTech Solutions Ltd",
-          bidAmount: "���2,000,000,000",
+          bidAmount: "₦2,000,000,000",
           technicalScore: 95,
           financialScore: 92,
           totalScore: 93.5,
@@ -3169,7 +3169,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-017",
           companyName: "Learning Tech Systems",
-          bidAmount: "��1,850,000,000",
+          bidAmount: "₦1,850,000,000",
           technicalScore: 89,
           financialScore: 87,
           totalScore: 88,
@@ -3242,7 +3242,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-004",
           companyName: "Royal Medical Solutions",
-          bidAmount: "��890,000,000",
+          bidAmount: "₦890,000,000",
           technicalScore: 82,
           financialScore: 79,
           totalScore: 80.5,
@@ -3372,7 +3372,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Advanced Diagnostics Ltd",
-          bidAmount: "������1,450,000,000",
+          bidAmount: "₦1,450,000,000",
           technicalScore: 87,
           financialScore: 85,
           totalScore: 86,
@@ -3574,7 +3574,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-011",
           companyName: "Kano School Furniture Ltd",
-          bidAmount: "��2,050,000,000",
+          bidAmount: "₦2,050,000,000",
           technicalScore: 91,
           financialScore: 89,
           totalScore: 90,
@@ -3588,7 +3588,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-012",
           companyName: "Northern Educational Supplies",
-          bidAmount: "��2,100,000,000",
+          bidAmount: "₦2,100,000,000",
           technicalScore: 88,
           financialScore: 86,
           totalScore: 87,
@@ -3633,7 +3633,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-001",
           companyName: "PrimeCare Medical Ltd",
-          bidAmount: "��820,000,000",
+          bidAmount: "₦820,000,000",
           technicalScore: 92,
           financialScore: 88,
           totalScore: 90,
