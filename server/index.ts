@@ -20,6 +20,9 @@ import {
   getTenderScores,
   getTenderFinalScores,
   getTenderAssignment,
+  approveFinalScores,
+  requestRevision,
+  getChairmanDecision,
 } from "./routes/tender-scoring";
 
 export function createServer() {
