@@ -471,7 +471,7 @@ const TenderManagement = () => {
             ministryUser.ministryCode?.toUpperCase() ||
             ministryUser.ministryId?.toUpperCase() ||
             "MOH";
-          const localKey = `${ministryCode}_tenderAssignments`;
+          const localKey = `${ministryCode}_tenderCommitteeAssignments`;
           const localRaw = localStorage.getItem(localKey);
           const pushMapped = (arr: any[]) => {
             arr.forEach((a: any) =>
@@ -535,7 +535,7 @@ const TenderManagement = () => {
             ministryUser.ministryCode?.toUpperCase() ||
             ministryUser.ministryId?.toUpperCase() ||
             "MOH";
-          const localKey = `${ministryCode}_tenderAssignments`;
+          const localKey = `${ministryCode}_tenderCommitteeAssignments`;
           const localRaw = localStorage.getItem(localKey) || "[]";
           const localAssignments = JSON.parse(localRaw);
           const localMapped = localAssignments.map((a: any) => ({
