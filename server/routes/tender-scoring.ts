@@ -476,6 +476,10 @@ export const approveFinalScores: RequestHandler = (req, res) => {
         const { updateAssignmentStatusInMemory } = require("./committee-assignments");
         updateAssignmentStatusInMemory(assignment.id, "Completed");
         console.log(`Updated assignment ${assignment.id} status to Completed for NOC workflow`);
+
+        // Send evaluation completion notifications to bidding companies
+        // This will be handled on the client side via a separate endpoint
+        console.log(`Assignment ${assignment.id} marked as completed - notifications will be sent from client`);
       }
     } catch (updateError) {
       console.error("Failed to update assignment status:", updateError);

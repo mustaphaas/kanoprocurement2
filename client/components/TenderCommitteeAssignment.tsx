@@ -1601,6 +1601,20 @@ export default function TenderCommitteeAssignment() {
         setAssignments(updatedAssignments);
         saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
         setSuccessMessage("Assignment activated successfully.");
+
+        // Send evaluation commencement notifications to bidding companies
+        const activatedAssignment = assignments.find(a => a.id === assignmentId || a.id === targetId);
+        if (activatedAssignment) {
+          console.log("Sending evaluation commencement notifications for assignment:", activatedAssignment);
+          evaluationNotificationService.notifyEvaluationCommencing({
+            id: activatedAssignment.id,
+            tenderId: activatedAssignment.tenderId,
+            tenderTitle: activatedAssignment.tenderTitle,
+            tenderCategory: activatedAssignment.tenderCategory,
+            ministry: activatedAssignment.ministry || "Government Ministry"
+          });
+        }
+
         window.dispatchEvent(new Event("committee-assignments:updated"));
       } else {
         const err = await response.json().catch(() => ({}));

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { EvaluationTemplate, TenderAssignment } from "@shared/api";
 import { persistentStorage } from "../../lib/persistentStorage";
+import { evaluationNotificationService } from "../../lib/evaluationNotificationService";
 
 interface TenderEvaluationSystemProps {
   assignedTenders: TenderAssignment[];
@@ -205,7 +206,7 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
     if (selectedTender) {
       const storedBids = localStorage.getItem("tenderBids");
       const storedTenders = localStorage.getItem("recentTenders");
-      console.log("📋 localStorage 'tenderBids':", storedBids ? JSON.parse(storedBids) : "empty");
+      console.log("��� localStorage 'tenderBids':", storedBids ? JSON.parse(storedBids) : "empty");
       console.log("📋 localStorage 'recentTenders':", storedTenders ? JSON.parse(storedTenders) : "empty");
     }
   }, [selectedTender, assignedTenders, bidders, filteredBidders]);
@@ -642,6 +643,13 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
                             }
                             const result = await res.json();
                             alert(result.message || "Final scores approved successfully. Tender ready for NOC process.");
+
+                            // Send evaluation completion notifications to bidding companies
+                            const assignmentDetails = evaluationNotificationService.getTenderAssignmentDetails(selectedTenderId);
+                            if (assignmentDetails) {
+                              console.log("Sending evaluation completion notifications for tender:", selectedTenderId);
+                              evaluationNotificationService.notifyEvaluationCompleted(assignmentDetails);
+                            }
                           } catch (e) {
                             console.error(e);
                             alert("Network error approving final scores");
