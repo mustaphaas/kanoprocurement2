@@ -784,6 +784,13 @@ const TenderManagement = () => {
       );
   }, []);
 
+  // Auto-select first assignment for convenience (used by Award tab actions)
+  useEffect(() => {
+    if (!selectedTenderAssignment && assignedTenders.length > 0) {
+      setSelectedTenderAssignment(assignedTenders[0]);
+    }
+  }, [assignedTenders]);
+
   // Load draft scores when tender is selected
   useEffect(() => {
     if (selectedTenderAssignment && evaluationTemplate) {
