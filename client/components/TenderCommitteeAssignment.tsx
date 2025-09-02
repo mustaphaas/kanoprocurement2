@@ -1511,15 +1511,52 @@ export default function TenderCommitteeAssignment() {
     try {
       setErrorMessage("");
       setSuccessMessage("");
-      const response = await fetch(`/api/committee-assignments/${assignmentId}/status`, {
+      let targetId = assignmentId;
+      let response = await fetch(`/api/committee-assignments/${targetId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "Active" }),
       });
+
+      // If not found on server (e.g., local-only ID), try to resolve server ID by tenderId
+      if (response.status === 404) {
+        const local = assignments.find((a) => a.id === assignmentId);
+        if (local) {
+          const listRes = await fetch(`/api/committee-assignments`);
+          if (listRes.ok) {
+            const serverItems = await listRes.json();
+            const match = serverItems.find((s: any) => s.tenderId === local.tenderId);
+            if (match?.id) {
+              targetId = match.id;
+              response = await fetch(`/api/committee-assignments/${targetId}/status`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "Active" }),
+              });
+              // also sync local id to server id for future actions
+              if (response.ok) {
+                const updated = await response.json();
+                const updatedAssignments = assignments.map((a) =>
+                  a.id === assignmentId
+                    ? { ...a, id: targetId, status: updated.status || "Active" }
+                    : a,
+                );
+                setAssignments(updatedAssignments);
+                saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
+                setSuccessMessage("Assignment activated successfully.");
+                return;
+              }
+            }
+          }
+        }
+      }
+
       if (response.ok) {
         const updated = await response.json();
         const updatedAssignments = assignments.map((a) =>
-          a.id === assignmentId ? { ...a, status: updated.status || "Active" } : a,
+          a.id === assignmentId || a.id === targetId
+            ? { ...a, status: updated.status || "Active" }
+            : a,
         );
         setAssignments(updatedAssignments);
         saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
