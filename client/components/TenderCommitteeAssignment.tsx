@@ -319,9 +319,36 @@ export default function TenderCommitteeAssignment() {
       if (storedAssignments) {
         setAssignments(JSON.parse(storedAssignments));
       } else {
-        const sampleAssignments = createSampleAssignments(ministryCode);
-        setAssignments(sampleAssignments);
-        localStorage.setItem(assignmentsKey, JSON.stringify(sampleAssignments));
+        // Fallback 1: migrate from legacy global key
+        const legacy = localStorage.getItem(STORAGE_KEYS.TENDER_ASSIGNMENTS);
+        if (legacy) {
+          const legacyParsed = JSON.parse(legacy);
+          setAssignments(legacyParsed);
+          localStorage.setItem(assignmentsKey, JSON.stringify(legacyParsed));
+          localStorage.removeItem(STORAGE_KEYS.TENDER_ASSIGNMENTS);
+        } else {
+          // Fallback 2: try server assignments and persist locally
+          fetch("/api/committee-assignments")
+            .then((r) => (r.ok ? r.json() : []))
+            .then((serverItems) => {
+              if (Array.isArray(serverItems) && serverItems.length > 0) {
+                setAssignments(serverItems);
+                localStorage.setItem(assignmentsKey, JSON.stringify(serverItems));
+              } else {
+                const sampleAssignments = createSampleAssignments(ministryCode);
+                setAssignments(sampleAssignments);
+                localStorage.setItem(
+                  assignmentsKey,
+                  JSON.stringify(sampleAssignments),
+                );
+              }
+            })
+            .catch(() => {
+              const sampleAssignments = createSampleAssignments(ministryCode);
+              setAssignments(sampleAssignments);
+              localStorage.setItem(assignmentsKey, JSON.stringify(sampleAssignments));
+            });
+        }
       }
 
       // Load member pool
