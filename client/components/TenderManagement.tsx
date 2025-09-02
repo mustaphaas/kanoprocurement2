@@ -1717,9 +1717,14 @@ const TenderManagement = () => {
   const resolveAwardTender = () => {
     const approved = awardApprovals.find((a: any) => a.status === "Approved");
     const preferredTenderId =
-      selectedTenderAssignment?.tenderId || approved?.tenderId || tenders.find((t) => t.status === "Awarded")?.id || assignedTenders[0]?.tenderId || null;
-    if (!preferredTenderId) return null;
-    return tenders.find((t) => t.id === preferredTenderId) || null;
+      selectedTenderAssignment?.tenderId || approved?.actualTenderId || approved?.tenderId || tenders.find((t) => t.status === "Awarded")?.id || assignedTenders[0]?.tenderId || null;
+    if (preferredTenderId) {
+      const byId = tenders.find((t) => t.id === preferredTenderId);
+      if (byId) return byId;
+    }
+    const title = approved?.tenderTitle || selectedTenderAssignment?.tenderTitle;
+    const t = findTenderByIdOrTitle(tenders, undefined, title);
+    return t || null;
   };
 
   // Decide approval (Approve/Reject) within this screen
