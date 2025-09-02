@@ -473,20 +473,35 @@ const TenderManagement = () => {
             "MOH";
           const localKey = `${ministryCode}_tenderAssignments`;
           const localRaw = localStorage.getItem(localKey);
+          const pushMapped = (arr: any[]) => {
+            arr.forEach((a: any) =>
+              localMerged.push({
+                id: a.id,
+                tenderId: a.tenderId,
+                tenderTitle: a.tenderTitle,
+                tenderCategory: a.tenderCategory,
+                ministry: a.ministry,
+                evaluationTemplateId: a.evaluationTemplateId,
+                evaluationStart: a.evaluationPeriod?.startDate,
+                evaluationEnd: a.evaluationPeriod?.endDate,
+                status: a.status,
+              }),
+            );
+          };
+
           if (localRaw) {
-            const localAssignments = JSON.parse(localRaw);
-            localMerged = localAssignments.map((a: any) => ({
-              id: a.id,
-              tenderId: a.tenderId,
-              tenderTitle: a.tenderTitle,
-              tenderCategory: a.tenderCategory,
-              ministry: a.ministry,
-              evaluationTemplateId: a.evaluationTemplateId,
-              evaluationStart: a.evaluationPeriod?.startDate,
-              evaluationEnd: a.evaluationPeriod?.endDate,
-              status: a.status,
-            }));
+            pushMapped(JSON.parse(localRaw));
           }
+
+          // Also merge from any other ministry keys, to avoid missing entries
+          Object.keys(localStorage)
+            .filter((k) => k.endsWith("_tenderAssignments"))
+            .forEach((k) => {
+              try {
+                const data = JSON.parse(localStorage.getItem(k) || "[]");
+                if (Array.isArray(data)) pushMapped(data);
+              } catch {}
+            });
         } catch (e) {
           console.warn("Local assignment merge skipped due to error", e);
         }
