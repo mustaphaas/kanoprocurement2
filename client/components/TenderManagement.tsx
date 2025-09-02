@@ -1691,6 +1691,15 @@ const TenderManagement = () => {
     }
   };
 
+  // Helper to resolve current tender for award actions
+  const resolveAwardTender = () => {
+    const approved = awardApprovals.find((a: any) => a.status === "Approved");
+    const preferredTenderId =
+      selectedTenderAssignment?.tenderId || approved?.tenderId || tenders.find((t) => t.status === "Awarded")?.id || assignedTenders[0]?.tenderId || null;
+    if (!preferredTenderId) return null;
+    return tenders.find((t) => t.id === preferredTenderId) || null;
+  };
+
   // Decide approval (Approve/Reject) within this screen
   const handleAwardApprovalDecision = (
     approvalId: string,
@@ -1780,8 +1789,14 @@ const TenderManagement = () => {
           publishPublicAwardNotice(all[idx]);
         }
         localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+        // Update selected tender assignment for downstream actions
+        const assn = assignedTenders.find((a) => a.tenderId === all[idx].id);
+        if (assn) setSelectedTenderAssignment(assn);
       }
     } catch {}
+
+    // Refresh local tenders from storage
+    try { forceRefreshTenders(); } catch {}
 
     setAwardApprovals(updated);
     try {
@@ -3182,9 +3197,7 @@ const TenderManagement = () => {
                     className="mt-2"
                     size="sm"
                     onClick={() => {
-                      const tender = tenders.find((t) =>
-                        selectedTenderAssignment ? t.id === selectedTenderAssignment.tenderId : false,
-                      ) || null;
+                      const tender = resolveAwardTender();
                       if (!tender || !tender.awardedCompanyEmail) {
                         alert("No awarded tender selected");
                         return;
@@ -3217,9 +3230,7 @@ const TenderManagement = () => {
                     size="sm"
                     variant="outline"
                     onClick={() => {
-                      const tender = tenders.find((t) =>
-                        selectedTenderAssignment ? t.id === selectedTenderAssignment.tenderId : false,
-                      ) || null;
+                      const tender = resolveAwardTender();
                       if (!tender || !tender.id || !tender.awardedCompanyEmail) {
                         alert("No awarded tender selected");
                         return;
@@ -3247,9 +3258,7 @@ const TenderManagement = () => {
                     size="sm"
                     variant="outline"
                     onClick={() => {
-                      const tender = tenders.find((t) =>
-                        selectedTenderAssignment ? t.id === selectedTenderAssignment.tenderId : false,
-                      ) || null;
+                      const tender = resolveAwardTender();
                       if (!tender) {
                         alert("No awarded tender selected");
                         return;
