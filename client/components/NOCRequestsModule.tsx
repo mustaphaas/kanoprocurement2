@@ -1055,7 +1055,7 @@ export default function NOCRequestsModule({
                               </p>
                               <p>
                                 <span className="font-medium">Value:</span>{" "}
-                                {request.projectValue}
+                                {formatCurrency(request.projectValue)}
                               </p>
                             </div>
                             <div>
