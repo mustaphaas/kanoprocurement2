@@ -37,7 +37,7 @@ export const getAllTenders = (): Tender[] => [
     id: "MOWI-2024-001",
     title: "Construction of 50km Rural Roads in Kano North",
     category: "Infrastructure",
-    value: "��2.5B",
+    value: "₦2.5B",
     deadline: "2024-02-15",
     location: "Kano North LGA",
     views: 245,
@@ -228,7 +228,7 @@ export const getAllTenders = (): Tender[] => [
     id: "MOWI-2023-018",
     title: "Bridge Construction and Maintenance",
     category: "Infrastructure",
-    value: "��1.2B",
+    value: "₦1.2B",
     deadline: "2023-11-30", // Past date
     location: "Kano South",
     views: 178,
