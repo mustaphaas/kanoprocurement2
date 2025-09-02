@@ -693,9 +693,16 @@ const TenderManagement = () => {
     }
   };
 
-  // Load data on component mount
+  // Load data on component mount and when assignments are updated elsewhere
   useEffect(() => {
     fetchAssignedTenders();
+    const handler = () => fetchAssignedTenders();
+    window.addEventListener("committee-assignments:updated", handler as any);
+    return () =>
+      window.removeEventListener(
+        "committee-assignments:updated",
+        handler as any,
+      );
   }, []);
 
   // Load draft scores when tender is selected
