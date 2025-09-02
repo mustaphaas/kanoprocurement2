@@ -178,6 +178,35 @@ export const getCommitteeAssignments: RequestHandler = (req, res) => {
   }
 };
 
+// Update assignment status (e.g., Draft -> Active)
+export const updateCommitteeAssignmentStatus: RequestHandler = (req, res) => {
+  try {
+    const { id } = req.params as { id: string };
+    const { status } = req.body as { status?: string };
+
+    if (!id) {
+      return res.status(400).json({ error: "id is required" });
+    }
+    if (!status) {
+      return res.status(400).json({ error: "status is required" });
+    }
+
+    const idx = assignments.findIndex((a) => a.id === id);
+    if (idx === -1) {
+      return res.status(404).json({ error: "Assignment not found" });
+    }
+
+    assignments[idx] = { ...assignments[idx], status };
+    console.log(`Updated committee assignment ${id} to status ${status}`);
+    return res.json(assignments[idx]);
+  } catch (error) {
+    console.error("Error updating committee assignment status:", error);
+    return res
+      .status(500)
+      .json({ error: "Failed to update committee assignment status" });
+  }
+};
+
 // Helper function to get tender information from localStorage simulation
 const getTenderInfo = (tenderId: string) => {
   // In a real application, this would query the database
