@@ -1228,7 +1228,7 @@ export default function NOCRequestsModule({
                     <div>
                       <p>
                         <span className="font-medium">Project Value:</span>{" "}
-                        {selectedTender.projectValue}
+                        {formatCurrency(selectedTender.projectValue)}
                       </p>
                       <p>
                         <span className="font-medium">Overall Score:</span>{" "}
