@@ -2121,7 +2121,7 @@ export default function CompanyDashboard() {
                       id: "TB002",
                       title: "Supply of Medical Equipment to General Hospitals",
                       purchaseDate: "2024-01-10",
-                      amount: "���3,000",
+                      amount: "₦3,000",
                       status: "Submitted",
                       deadline: "2024-02-10",
                       category: "Healthcare",
@@ -2232,7 +2232,7 @@ export default function CompanyDashboard() {
                       title:
                         "Supply of Office Furniture to Government Secretariat",
                       awardDate: "2024-01-20",
-                      contractValue: "��15,500,000",
+                      contractValue: "₦15,500,000",
                       status: "Contract Signed",
                       progress: 65,
                       completionDate: "2024-03-20",
@@ -3874,7 +3874,7 @@ export default function CompanyDashboard() {
                       <DollarSign className="h-6 w-6 text-green-600" />
                     </div>
                     <h4 className="text-2xl font-bold text-gray-900">
-                      ��89.2B
+                      ₦89.2B
                     </h4>
                     <p className="text-sm text-gray-600">Total Value</p>
                     <p className="text-xs text-green-600 mt-1">
@@ -4103,7 +4103,7 @@ export default function CompanyDashboard() {
                             Northern Builders Ltd
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            ��950M
+                            ₦950M
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Jan 25, 2024
