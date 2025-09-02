@@ -2672,7 +2672,7 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Route to MDA Head → State Tenders Board (if above threshold)
                   </p>
-                  <Button className="mt-2" size="sm" variant="outline">
+                  <Button className="mt-2" size="sm" variant="outline" onClick={handleSubmitAwardForApproval}>
                     <Target className="h-4 w-4 mr-2" />
                     Submit for Approval
                   </Button>
