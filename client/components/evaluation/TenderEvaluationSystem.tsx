@@ -640,7 +640,8 @@ const TenderEvaluationSystem: React.FC<TenderEvaluationSystemProps> = ({
                               alert(err.error || "Failed to approve final scores");
                               return;
                             }
-                            alert("Final scores approved successfully.");
+                            const result = await res.json();
+                            alert(result.message || "Final scores approved successfully. Tender ready for NOC process.");
                           } catch (e) {
                             console.error(e);
                             alert("Network error approving final scores");
