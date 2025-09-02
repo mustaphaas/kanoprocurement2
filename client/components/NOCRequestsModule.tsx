@@ -912,7 +912,8 @@ export default function NOCRequestsModule({
                                   Winning Bidder: {tender.winningBidder}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  Project Value: {formatCurrency(tender.projectValue)}
+                                  Project Value:{" "}
+                                  {formatCurrency(tender.projectValue)}
                                 </p>
                               </div>
                               <div className="text-right">

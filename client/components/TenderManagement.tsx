@@ -608,24 +608,28 @@ const TenderManagement = () => {
 
           const buildCriteriaFromQCBS = (tpl: any) => {
             // Distribute 70/30 across technical/financial by relative criterion weight
-            const techTotal = (tpl.technicalCriteria || []).reduce(
-              (sum: number, c: any) => sum + (Number(c.weight) || 0),
-              0,
-            ) || 1;
-            const finTotal = (tpl.financialCriteria || []).reduce(
-              (sum: number, c: any) => sum + (Number(c.weight) || 0),
-              0,
-            ) || 1;
+            const techTotal =
+              (tpl.technicalCriteria || []).reduce(
+                (sum: number, c: any) => sum + (Number(c.weight) || 0),
+                0,
+              ) || 1;
+            const finTotal =
+              (tpl.financialCriteria || []).reduce(
+                (sum: number, c: any) => sum + (Number(c.weight) || 0),
+                0,
+              ) || 1;
             const techPct = Number(tpl.technicalWeight) || 70;
             const finPct = Number(tpl.financialWeight) || 30;
 
-            const techCriteria = (tpl.technicalCriteria || []).map((c: any) => ({
-              id: c.id,
-              name: c.name,
-              maxScore: Number(c.maxScore) || 100,
-              weight: ((Number(c.weight) || 0) / techTotal) * techPct,
-              type: "technical",
-            }));
+            const techCriteria = (tpl.technicalCriteria || []).map(
+              (c: any) => ({
+                id: c.id,
+                name: c.name,
+                maxScore: Number(c.maxScore) || 100,
+                weight: ((Number(c.weight) || 0) / techTotal) * techPct,
+                type: "technical",
+              }),
+            );
             const finCriteria = (tpl.financialCriteria || []).map((c: any) => ({
               id: c.id,
               name: c.name,
@@ -658,7 +662,8 @@ const TenderManagement = () => {
             localCandidates.push({
               id: rb.id,
               name: rb.name,
-              description: rb.description || `${rb.type || "Custom"} scoring rubric`,
+              description:
+                rb.description || `${rb.type || "Custom"} scoring rubric`,
               category: rb.category || "General",
               type: rb.type || "Custom",
               criteria: items.map((it: any, idx: number) => ({
@@ -675,7 +680,10 @@ const TenderManagement = () => {
           if (localMatch) {
             setEvaluationTemplate(localMatch);
             // Initialize scores
-            const initialScores: Record<string, { score: number; comment: string }> = {};
+            const initialScores: Record<
+              string,
+              { score: number; comment: string }
+            > = {};
             localMatch.criteria.forEach((criterion: any) => {
               initialScores[criterion.id] = { score: 0, comment: "" };
             });
@@ -798,8 +806,15 @@ const TenderManagement = () => {
     loadApprovals();
 
     const onSubmitted = () => loadApprovals();
-    window.addEventListener("awardApprovalSubmitted", onSubmitted as EventListener);
-    return () => window.removeEventListener("awardApprovalSubmitted", onSubmitted as EventListener);
+    window.addEventListener(
+      "awardApprovalSubmitted",
+      onSubmitted as EventListener,
+    );
+    return () =>
+      window.removeEventListener(
+        "awardApprovalSubmitted",
+        onSubmitted as EventListener,
+      );
   }, []);
 
   // Auto-select first assignment for convenience (used by Award tab actions)
@@ -1375,13 +1390,24 @@ const TenderManagement = () => {
   // Ensure demo bids exist for a tender and set approval@company.com as participant
   const ensureDemoBidsForTender = (tenderId: string, tenderTitle?: string) => {
     const existing = JSON.parse(localStorage.getItem("tenderBids") || "[]");
-    const has = (name: string) => existing.some((b: any) => b.tenderId === tenderId && (b.companyName === name || b.companyEmail === name));
+    const has = (name: string) =>
+      existing.some(
+        (b: any) =>
+          b.tenderId === tenderId &&
+          (b.companyName === name || b.companyEmail === name),
+      );
 
     const winnerEmail = "approval@company.com";
     const winnerName = "Approved Company Ltd";
 
     const toAdd: any[] = [];
-    if (!existing.some((b: any) => b.tenderId === tenderId && (b.companyEmail || "").toLowerCase() === winnerEmail)) {
+    if (
+      !existing.some(
+        (b: any) =>
+          b.tenderId === tenderId &&
+          (b.companyEmail || "").toLowerCase() === winnerEmail,
+      )
+    ) {
       toAdd.push({
         id: `BID-${Date.now()}-WIN`,
         tenderId,
@@ -1419,15 +1445,21 @@ const TenderManagement = () => {
     }
 
     // Return winning bid info
-    const winnerBid = (JSON.parse(localStorage.getItem("tenderBids") || "[]") as any[])
-      .find((b) => b.tenderId === tenderId && (b.companyEmail || "").toLowerCase() === winnerEmail);
+    const winnerBid = (
+      JSON.parse(localStorage.getItem("tenderBids") || "[]") as any[]
+    ).find(
+      (b) =>
+        b.tenderId === tenderId &&
+        (b.companyEmail || "").toLowerCase() === winnerEmail,
+    );
     return { winnerEmail, winnerName, winnerBid };
   };
 
   // Award actions
   const handleGenerateAwardReport = () => {
     const assignment =
-      selectedTenderAssignment || (assignedTenders.length > 0 ? assignedTenders[0] : null);
+      selectedTenderAssignment ||
+      (assignedTenders.length > 0 ? assignedTenders[0] : null);
     if (!assignment) {
       alert("Please select a tender to generate the report");
       return;
@@ -1477,7 +1509,8 @@ const TenderManagement = () => {
 
   const handleSubmitAwardForApproval = () => {
     const assignment =
-      selectedTenderAssignment || (assignedTenders.length > 0 ? assignedTenders[0] : null);
+      selectedTenderAssignment ||
+      (assignedTenders.length > 0 ? assignedTenders[0] : null);
     if (!assignment) {
       alert("Please select a tender to submit for approval");
       return;
@@ -1485,7 +1518,9 @@ const TenderManagement = () => {
     if (!selectedTenderAssignment) setSelectedTenderAssignment(assignment);
 
     // Ensure demo bids exist and winner participant is present
-    try { ensureDemoBidsForTender(assignment.tenderId, assignment.tenderTitle); } catch {}
+    try {
+      ensureDemoBidsForTender(assignment.tenderId, assignment.tenderTitle);
+    } catch {}
 
     const ministry = getMinistryInfo();
     const approval = {
@@ -1509,7 +1544,9 @@ const TenderManagement = () => {
     localStorage.setItem(centralKey, JSON.stringify(central));
 
     try {
-      const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+      const all = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+      );
       const idx = all.findIndex((t: any) => t.id === assignment.tenderId);
       if (idx !== -1) {
         all[idx].awardApprovalStatus = "Submitted";
@@ -1541,7 +1578,10 @@ const TenderManagement = () => {
   };
 
   // Decide approval (Approve/Reject) within this screen
-  const handleAwardApprovalDecision = (approvalId: string, decision: "Approved" | "Rejected") => {
+  const handleAwardApprovalDecision = (
+    approvalId: string,
+    decision: "Approved" | "Rejected",
+  ) => {
     const ministry = getMinistryInfo();
     const key = `${ministry.code}_awardApprovals`;
     const centralKey = "centralAwardApprovals";
@@ -1550,7 +1590,11 @@ const TenderManagement = () => {
     const central = JSON.parse(localStorage.getItem(centralKey) || "[]");
 
     const updateList = (arr: any[]) =>
-      arr.map((a) => (a.id === approvalId ? { ...a, status: decision, decidedAt: new Date().toISOString() } : a));
+      arr.map((a) =>
+        a.id === approvalId
+          ? { ...a, status: decision, decidedAt: new Date().toISOString() }
+          : a,
+      );
 
     const updated = updateList(list);
     const updatedCentral = updateList(central);
@@ -1560,11 +1604,22 @@ const TenderManagement = () => {
 
     // Update tender record and set winner when approved
     try {
-      const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+      const all = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+      );
       const approval = list.find((a: any) => a.id === approvalId);
-      const tIndex = all.findIndex((t: any) => (approval && approval.tenderId) ? t.id === approval.tenderId : false);
+      const tIndex = all.findIndex((t: any) =>
+        approval && approval.tenderId ? t.id === approval.tenderId : false,
+      );
       // Fallback: if not found by approval, try by selected assignment
-      const idx = tIndex !== -1 ? tIndex : all.findIndex((t: any) => selectedTenderAssignment && t.id === selectedTenderAssignment.tenderId);
+      const idx =
+        tIndex !== -1
+          ? tIndex
+          : all.findIndex(
+              (t: any) =>
+                selectedTenderAssignment &&
+                t.id === selectedTenderAssignment.tenderId,
+            );
       if (idx !== -1) {
         all[idx].awardApprovalStatus = decision;
         if (decision === "Approved") {
@@ -1575,7 +1630,8 @@ const TenderManagement = () => {
           all[idx].workflowStage = "Contract Award";
           all[idx].awardedCompany = ensured.winnerName;
           all[idx].awardedCompanyEmail = ensured.winnerEmail;
-          all[idx].awardAmount = winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
+          all[idx].awardAmount =
+            winnerBid?.bidAmount || formatCurrency(all[idx].budget || 0);
           all[idx].awardDate = new Date().toISOString().split("T")[0];
         }
         localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
@@ -1587,7 +1643,7 @@ const TenderManagement = () => {
       window.dispatchEvent(
         new CustomEvent("awardApprovalUpdated", {
           detail: { approvalId, status: decision },
-        })
+        }),
       );
     } catch {}
   };
@@ -2806,7 +2862,11 @@ const TenderManagement = () => {
                 <div>
                   <Label className="mb-2 block">Select Tender</Label>
                   <Select
-                    value={selectedTenderAssignment?.id || (assignedTenders[0]?.id || "")}
+                    value={
+                      selectedTenderAssignment?.id ||
+                      assignedTenders[0]?.id ||
+                      ""
+                    }
                     onValueChange={(id) => {
                       const a = assignedTenders.find((t) => t.id === id);
                       setSelectedTenderAssignment(a || null);
@@ -2826,7 +2886,8 @@ const TenderManagement = () => {
                       ) : (
                         assignedTenders.map((t) => (
                           <SelectItem key={t.id} value={t.id}>
-                            {t.tenderId} - {t.tenderTitle || t.status || "Assigned"}
+                            {t.tenderId} -{" "}
+                            {t.tenderTitle || t.status || "Assigned"}
                           </SelectItem>
                         ))
                       )}
@@ -2839,7 +2900,11 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Generate comprehensive evaluation report for approval
                   </p>
-                  <Button className="mt-2" size="sm" onClick={handleGenerateAwardReport}>
+                  <Button
+                    className="mt-2"
+                    size="sm"
+                    onClick={handleGenerateAwardReport}
+                  >
                     <FileText className="h-4 w-4 mr-2" />
                     Generate Report
                   </Button>
@@ -2850,14 +2915,21 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Route to MDA Head → State Tenders Board (if above threshold)
                   </p>
-                  <Button className="mt-2" size="sm" variant="outline" onClick={handleSubmitAwardForApproval}>
+                  <Button
+                    className="mt-2"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleSubmitAwardForApproval}
+                  >
                     <Target className="h-4 w-4 mr-2" />
                     Submit for Approval
                   </Button>
                 </div>
 
                 <div className="p-4 border rounded-lg">
-                  <h3 className="font-medium">Approval Queue (This Ministry)</h3>
+                  <h3 className="font-medium">
+                    Approval Queue (This Ministry)
+                  </h3>
                   <p className="text-sm text-gray-600 mt-1">
                     Review and decide on submitted award recommendations
                   </p>
@@ -2875,27 +2947,63 @@ const TenderManagement = () => {
                       <TableBody>
                         {awardApprovals.length === 0 && (
                           <TableRow>
-                            <TableCell colSpan={5} className="text-center text-sm text-gray-500">No approvals yet</TableCell>
+                            <TableCell
+                              colSpan={5}
+                              className="text-center text-sm text-gray-500"
+                            >
+                              No approvals yet
+                            </TableCell>
                           </TableRow>
                         )}
                         {awardApprovals.map((a) => (
                           <TableRow key={a.id}>
-                            <TableCell className="font-mono text-xs">{a.id}</TableCell>
-                            <TableCell>
-                              <div className="font-medium">{a.tenderTitle || a.tenderId}</div>
-                              <div className="text-xs text-gray-500">{a.tenderId}</div>
+                            <TableCell className="font-mono text-xs">
+                              {a.id}
                             </TableCell>
                             <TableCell>
-                              <Badge variant={a.status === "Submitted" ? "secondary" : a.status === "Approved" ? "default" : "destructive"}>
+                              <div className="font-medium">
+                                {a.tenderTitle || a.tenderId}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {a.tenderId}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  a.status === "Submitted"
+                                    ? "secondary"
+                                    : a.status === "Approved"
+                                      ? "default"
+                                      : "destructive"
+                                }
+                              >
                                 {a.status}
                               </Badge>
                             </TableCell>
-                            <TableCell className="text-sm">{new Date(a.submittedAt || a.decidedAt || Date.now()).toLocaleString()}</TableCell>
+                            <TableCell className="text-sm">
+                              {new Date(
+                                a.submittedAt || a.decidedAt || Date.now(),
+                              ).toLocaleString()}
+                            </TableCell>
                             <TableCell className="text-right space-x-2">
-                              <Button size="sm" disabled={a.status !== "Submitted"} onClick={() => handleAwardApprovalDecision(a.id, "Approved")}>
+                              <Button
+                                size="sm"
+                                disabled={a.status !== "Submitted"}
+                                onClick={() =>
+                                  handleAwardApprovalDecision(a.id, "Approved")
+                                }
+                              >
                                 Approve
                               </Button>
-                              <Button size="sm" variant="outline" disabled={a.status !== "Submitted"} onClick={() => handleAwardApprovalDecision(a.id, "Rejected")}>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                disabled={a.status !== "Submitted"}
+                                onClick={() =>
+                                  handleAwardApprovalDecision(a.id, "Rejected")
+                                }
+                              >
                                 Reject
                               </Button>
                             </TableCell>

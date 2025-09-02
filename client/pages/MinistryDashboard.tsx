@@ -5074,9 +5074,13 @@ Penalty Clause: 0.5% per week for delayed completion`,
     // Compute tender assignment counts
     const getTenderAssignmentCounts = () => {
       try {
-        const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
-        const ministryCode = ministryUser.ministryCode?.toUpperCase() ||
-                            ministryUser.ministryId?.toUpperCase() || "MOH";
+        const ministryUser = JSON.parse(
+          localStorage.getItem("ministryUser") || "{}",
+        );
+        const ministryCode =
+          ministryUser.ministryCode?.toUpperCase() ||
+          ministryUser.ministryId?.toUpperCase() ||
+          "MOH";
         const assignmentsKey = `${ministryCode}_tenderCommitteeAssignments`;
         const storedAssignments = localStorage.getItem(assignmentsKey);
 
@@ -5085,17 +5089,31 @@ Penalty Clause: 0.5% per week for delayed completion`,
           return {
             total: assignments.length,
             draft: assignments.filter((a: any) => a.status === "Draft").length,
-            active: assignments.filter((a: any) => a.status === "Active").length,
-            completed: assignments.filter((a: any) => a.status === "Completed").length,
-            underEvaluation: assignments.filter((a: any) =>
-              a.status === "Active" || a.status === "COI_Pending"
+            active: assignments.filter((a: any) => a.status === "Active")
+              .length,
+            completed: assignments.filter((a: any) => a.status === "Completed")
+              .length,
+            underEvaluation: assignments.filter(
+              (a: any) => a.status === "Active" || a.status === "COI_Pending",
             ).length,
           };
         }
-        return { total: 0, draft: 0, active: 0, completed: 0, underEvaluation: 0 };
+        return {
+          total: 0,
+          draft: 0,
+          active: 0,
+          completed: 0,
+          underEvaluation: 0,
+        };
       } catch (error) {
         console.error("Error computing tender assignment counts:", error);
-        return { total: 0, draft: 0, active: 0, completed: 0, underEvaluation: 0 };
+        return {
+          total: 0,
+          draft: 0,
+          active: 0,
+          completed: 0,
+          underEvaluation: 0,
+        };
       }
     };
 
@@ -5106,7 +5124,9 @@ Penalty Clause: 0.5% per week for delayed completion`,
         ministryId === "ministry2" ? 24 : ministryId === "ministry3" ? 18 : 15,
       tendersCreated: currentMinistryTenders.length, // Use filtered tenders from main storage
       tendersUnderEvaluation: assignmentCounts.underEvaluation, // Use real assignment counts
-      nocPending: nocRequests.filter((n) => n.status === "Pending").length + assignmentCounts.completed, // Completed assignments need NOC
+      nocPending:
+        nocRequests.filter((n) => n.status === "Pending").length +
+        assignmentCounts.completed, // Completed assignments need NOC
       nocApproved: nocRequests.filter((n) => n.status === "Approved").length,
       nocRejected: nocRequests.filter((n) => n.status === "Rejected").length,
       contractsActive: contracts.filter((c) => c.status === "Active").length,

@@ -3873,9 +3873,7 @@ export default function CompanyDashboard() {
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <DollarSign className="h-6 w-6 text-green-600" />
                     </div>
-                    <h4 className="text-2xl font-bold text-gray-900">
-                      ₦89.2B
-                    </h4>
+                    <h4 className="text-2xl font-bold text-gray-900">₦89.2B</h4>
                     <p className="text-sm text-gray-600">Total Value</p>
                     <p className="text-xs text-green-600 mt-1">
                       +22% this year
