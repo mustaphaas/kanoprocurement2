@@ -436,9 +436,15 @@ class MessageService {
         if (key && key.startsWith("companyTenderStates_")) {
           try {
             const email = key.replace("companyTenderStates_", "");
-            companyStatesByEmail[email] = JSON.parse(localStorage.getItem(key) || "{}");
+            companyStatesByEmail[email] = JSON.parse(
+              localStorage.getItem(key) || "{}",
+            );
           } catch (error) {
-            console.error("Error parsing company tender states for key:", key, error);
+            console.error(
+              "Error parsing company tender states for key:",
+              key,
+              error,
+            );
           }
         }
       }
