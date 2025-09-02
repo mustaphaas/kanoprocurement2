@@ -1103,7 +1103,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of medical equipment for Kano State hospitals",
               category: "Healthcare",
-              estimatedValue: "�����850,000,000",
+              estimatedValue: "₦850,000,000",
               status: "Published",
               publishDate: "2024-01-15",
               closeDate: "2024-02-15",
@@ -1117,7 +1117,7 @@ export default function MinistryDashboard() {
               description:
                 "Construction of bridges across major rivers in Kano State",
               category: "Bridge Construction",
-              estimatedValue: "��8,500,000,000",
+              estimatedValue: "₦8,500,000,000",
               status: "Evaluated",
               publishDate: "2024-01-20",
               closeDate: "2024-03-01",
@@ -1145,7 +1145,7 @@ export default function MinistryDashboard() {
               description:
                 "Construction of modern drainage system for Kano metropolis",
               category: "Infrastructure Development",
-              estimatedValue: "���12,300,000,000",
+              estimatedValue: "₦12,300,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1221,7 +1221,7 @@ export default function MinistryDashboard() {
               description:
                 "Procurement of textbooks and library resources for all levels",
               category: "Educational Materials",
-              estimatedValue: "��1,650,000,000",
+              estimatedValue: "₦1,650,000,000",
               status: "Evaluated",
               publishDate: "2024-02-01",
               closeDate: "2024-03-10",
@@ -1379,7 +1379,7 @@ export default function MinistryDashboard() {
           {
             id: "PAY-001",
             milestoneId: "MIL-001",
-            amount: "���������255,000,000",
+            amount: "₦255,000,000",
             requestDate: "2024-03-12",
             approvalDate: "2024-03-15",
             paymentDate: "2024-03-18",
@@ -1561,7 +1561,7 @@ export default function MinistryDashboard() {
               projectTitle: "Bridge Construction Project - Phase 2",
               requestDate: "2024-02-01",
               status: "Pending",
-              projectValue: "���8,500,000,000",
+              projectValue: "₦8,500,000,000",
               contractorName: "Sahel Bridge Builders",
               expectedDuration: "12 months",
             },
@@ -1588,7 +1588,7 @@ export default function MinistryDashboard() {
               projectTitle: "Heavy Equipment Procurement & Installation",
               requestDate: "2024-02-10",
               status: "Pending",
-              projectValue: "���4,750,000,000",
+              projectValue: "₦4,750,000,000",
               contractorName: "Federal Infrastructure Ltd",
               expectedDuration: "8 months",
             },
@@ -1600,7 +1600,7 @@ export default function MinistryDashboard() {
               projectTitle: "School Furniture Supply Program - Phase 1",
               requestDate: "2024-01-18",
               status: "Approved",
-              projectValue: "���2,100,000,000",
+              projectValue: "₦2,100,000,000",
               contractorName: "EduTech Solutions Ltd",
               expectedDuration: "8 months",
               approvalDate: "2024-01-22",
@@ -1611,7 +1611,7 @@ export default function MinistryDashboard() {
               projectTitle: "Digital Learning Platform Development",
               requestDate: "2024-01-25",
               status: "Pending",
-              projectValue: "��1,800,000,000",
+              projectValue: "₦1,800,000,000",
               contractorName: "Kano School Furniture Ltd",
               expectedDuration: "12 months",
             },
@@ -1645,7 +1645,7 @@ export default function MinistryDashboard() {
               projectTitle: "Hospital Equipment Supply - Phase 1",
               requestDate: "2024-01-25",
               status: "Approved",
-              projectValue: "���850,000,000",
+              projectValue: "₦850,000,000",
               contractorName: "PrimeCare Medical Ltd",
               expectedDuration: "6 months",
               approvalDate: "2024-01-28",
@@ -3049,7 +3049,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-009",
           companyName: "Emirate Construction Co",
-          bidAmount: "��8,800,000,000",
+          bidAmount: "₦8,800,000,000",
           technicalScore: 84,
           financialScore: 81,
           totalScore: 82.5,
@@ -3066,7 +3066,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-010",
           companyName: "EduTech Solutions Ltd",
-          bidAmount: "����2,000,000,000",
+          bidAmount: "₦2,000,000,000",
           technicalScore: 95,
           financialScore: 92,
           totalScore: 93.5,
@@ -5117,7 +5117,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         ministryId === "ministry2"
           ? "₦50.0B"
           : ministryId === "ministry3"
-            ? "��12.5B"
+            ? "₦12.5B"
             : "₦3.2B",
       utilizedBudget:
         ministryId === "ministry2"
@@ -8241,7 +8241,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                             })
                           }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="��0.00"
+                          placeholder="₦0.00"
                         />
                       </div>
                       <div>
