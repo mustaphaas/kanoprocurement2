@@ -1582,6 +1582,7 @@ export default function TenderCommitteeAssignment() {
         setAssignments(updatedAssignments);
         saveData(STORAGE_KEYS.TENDER_ASSIGNMENTS, updatedAssignments);
         setSuccessMessage("Assignment activated successfully.");
+        window.dispatchEvent(new Event("committee-assignments:updated"));
       } else {
         const err = await response.json().catch(() => ({}));
         setErrorMessage(err.error || "Failed to activate assignment");
