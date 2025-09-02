@@ -236,6 +236,9 @@ const TenderManagement = () => {
   const [showConsolidatedReport, setShowConsolidatedReport] = useState(false);
   const [currentEvaluatorId] = useState("USR-003"); // In production, get from auth context
 
+  // Award approvals state
+  const [awardApprovals, setAwardApprovals] = useState<any[]>([]);
+
   // Dynamic Clarifications (from company submissions)
   const [clarifications, setClarifications] = useState<ClarificationRecord[]>(
     [],
@@ -782,6 +785,21 @@ const TenderManagement = () => {
         "committee-assignments:updated",
         handler as any,
       );
+  }, []);
+
+  // Load award approvals for current ministry and keep in sync via events
+  useEffect(() => {
+    const loadApprovals = () => {
+      const ministry = getMinistryInfo();
+      const key = `${ministry.code}_awardApprovals`;
+      const list = JSON.parse(localStorage.getItem(key) || "[]");
+      setAwardApprovals(Array.isArray(list) ? list : []);
+    };
+    loadApprovals();
+
+    const onSubmitted = () => loadApprovals();
+    window.addEventListener("awardApprovalSubmitted", onSubmitted as EventListener);
+    return () => window.removeEventListener("awardApprovalSubmitted", onSubmitted as EventListener);
   }, []);
 
   // Auto-select first assignment for convenience (used by Award tab actions)
@@ -1412,7 +1430,6 @@ const TenderManagement = () => {
       alert("Please select a tender to submit for approval");
       return;
     }
-    // Ensure selection is reflected in state for downstream actions
     if (!selectedTenderAssignment) setSelectedTenderAssignment(assignment);
 
     const ministry = getMinistryInfo();
@@ -1458,8 +1475,59 @@ const TenderManagement = () => {
       );
     } catch {}
 
+    // Refresh local state list
+    try {
+      const list = JSON.parse(localStorage.getItem(key) || "[]");
+      setAwardApprovals(Array.isArray(list) ? list : []);
+    } catch {}
+
     forceRefreshTenders();
     alert("Award recommendation submitted for approval");
+  };
+
+  // Decide approval (Approve/Reject) within this screen
+  const handleAwardApprovalDecision = (approvalId: string, decision: "Approved" | "Rejected") => {
+    const ministry = getMinistryInfo();
+    const key = `${ministry.code}_awardApprovals`;
+    const centralKey = "centralAwardApprovals";
+
+    const list = JSON.parse(localStorage.getItem(key) || "[]");
+    const central = JSON.parse(localStorage.getItem(centralKey) || "[]");
+
+    const updateList = (arr: any[]) =>
+      arr.map((a) => (a.id === approvalId ? { ...a, status: decision, decidedAt: new Date().toISOString() } : a));
+
+    const updated = updateList(list);
+    const updatedCentral = updateList(central);
+
+    localStorage.setItem(key, JSON.stringify(updated));
+    localStorage.setItem(centralKey, JSON.stringify(updatedCentral));
+
+    // Update tender record
+    try {
+      const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+      const idx = all.findIndex((t: any) => {
+        const match = list.find((a: any) => a.id === approvalId && a.tenderId === t.id);
+        return !!match;
+      });
+      if (idx !== -1) {
+        all[idx].awardApprovalStatus = decision;
+        if (decision === "Approved") {
+          all[idx].status = all[idx].status || "Evaluated";
+          all[idx].workflowStage = "Contract Award";
+        }
+        localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+      }
+    } catch {}
+
+    setAwardApprovals(updated);
+    try {
+      window.dispatchEvent(
+        new CustomEvent("awardApprovalUpdated", {
+          detail: { approvalId, status: decision },
+        })
+      );
+    } catch {}
   };
 
   // Helper to determine category based on ministry
@@ -2724,6 +2792,56 @@ const TenderManagement = () => {
                     <Target className="h-4 w-4 mr-2" />
                     Submit for Approval
                   </Button>
+                </div>
+
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-medium">Approval Queue (This Ministry)</h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Review and decide on submitted award recommendations
+                  </p>
+                  <div className="mt-3 border rounded">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Approval ID</TableHead>
+                          <TableHead>Tender</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Submitted</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {awardApprovals.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={5} className="text-center text-sm text-gray-500">No approvals yet</TableCell>
+                          </TableRow>
+                        )}
+                        {awardApprovals.map((a) => (
+                          <TableRow key={a.id}>
+                            <TableCell className="font-mono text-xs">{a.id}</TableCell>
+                            <TableCell>
+                              <div className="font-medium">{a.tenderTitle || a.tenderId}</div>
+                              <div className="text-xs text-gray-500">{a.tenderId}</div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={a.status === "Submitted" ? "secondary" : a.status === "Approved" ? "default" : "destructive"}>
+                                {a.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-sm">{new Date(a.submittedAt || a.decidedAt || Date.now()).toLocaleString()}</TableCell>
+                            <TableCell className="text-right space-x-2">
+                              <Button size="sm" disabled={a.status !== "Submitted"} onClick={() => handleAwardApprovalDecision(a.id, "Approved")}>
+                                Approve
+                              </Button>
+                              <Button size="sm" variant="outline" disabled={a.status !== "Submitted"} onClick={() => handleAwardApprovalDecision(a.id, "Rejected")}>
+                                Reject
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
               </div>
             </CardContent>
