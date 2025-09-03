@@ -3597,6 +3597,18 @@ const TenderManagement = () => {
                         } catch {}
                       }
                       const notice = publishPublicAwardNotice(tender);
+
+                      try {
+                        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+                        const idx = all.findIndex((t: any) => t.id === tender.id);
+                        if (idx !== -1) {
+                          all[idx].awardPublished = true;
+                          all[idx].awardPublishedAt = new Date().toISOString();
+                          localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+                          try { forceRefreshTenders(); } catch {}
+                        }
+                      } catch {}
+
                       if (notice) alert("Public award notice published");
                     }}
                   >
