@@ -1873,14 +1873,35 @@ const TenderManagement = () => {
           (b.companyEmail || "").toLowerCase() !==
             (winnerEmail || "").toLowerCase(),
       );
+
+      // Resolve ministry name from tender record or current ministry context
+      let ministryName = "Kano State Government";
+      try {
+        const allTenders = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+        );
+        const t = (allTenders || []).find((x: any) => x.id === tenderId);
+        const ctx = getMinistryInfo();
+        ministryName = t?.ministry || ctx?.name || ministryName;
+      } catch {}
+
       losers.forEach((b: any) => {
         if (!b.companyEmail) return;
+
+        const subject = `Tender Outcome – ${tenderTitle}`;
+        const body =
+          `Dear ${b.companyName || "Bidder"},\n\n` +
+          `Thank you for participating in the tender “${tenderTitle}” under the ${ministryName} e‑Procurement system.\n\n` +
+          `After due evaluation in line with the Public Procurement Act and applicable guidelines, the award has been made to another bidder.\n\n` +
+          `We appreciate your effort and commitment, and we strongly encourage your continued participation in future opportunities within the Kano State e‑Procurement portal.\n\n` +
+          `Sincerely,\n${ministryName}\nProcurement Department`;
+
         messageService.addMessage(
           {
             type: "bid_evaluated",
             category: "info",
-            title: "Tender Result - Not Successful",
-            message: `Thank you for participating. The tender "${tenderTitle}" has been awarded to another bidder. We encourage you to participate in future opportunities.`,
+            title: subject,
+            message: body,
             tenderId,
             bidId: b.id,
             read: false,
@@ -1894,6 +1915,8 @@ const TenderManagement = () => {
             ],
             metadata: {
               tenderTitle,
+              ministry: ministryName,
+              companyName: b.companyName,
               isWinningBid: false,
               bidAmount: b.bidAmount,
             },
