@@ -955,6 +955,8 @@ export default function MinistryDashboard() {
         certificateNumber,
         approvalDate,
         rejectionDate,
+        tenderId,
+        tenderTitle,
       } = event.detail;
 
       setNOCRequests((prevRequests) => {
