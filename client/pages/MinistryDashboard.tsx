@@ -11343,11 +11343,36 @@ Blockchain Timestamp: ${Date.now()}
             </div>
 
             <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Bell className="h-5 w-5 text-gray-600 hover:text-teal-600 cursor-pointer transition-colors" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                  3
-                </span>
+              <div className="relative" ref={notifRef}>
+                <button aria-label="Notifications" onClick={() => setShowNotifs((s) => !s)} className="relative">
+                  <Bell className="h-5 w-5 text-gray-600 hover:text-teal-600 cursor-pointer transition-colors" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+                {showNotifs && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
+                    <div className="flex items-center justify-between p-2 border-b">
+                      <span className="text-sm font-medium">Notifications</span>
+                      <button className="text-xs text-teal-600 hover:underline" onClick={markAllRead}>Mark all read</button>
+                    </div>
+                    <div className="max-h-80 overflow-auto">
+                      {notifications.length === 0 ? (
+                        <div className="p-4 text-sm text-gray-500">No notifications</div>
+                      ) : (
+                        notifications.slice(0, 10).map((n) => (
+                          <div key={n.id} className={`px-3 py-2 text-sm border-b ${n.read ? "bg-white" : "bg-teal-50"}`}>
+                            <div className="font-medium text-gray-800">{n.title}</div>
+                            <div className="text-gray-600">{n.message}</div>
+                            <div className="text-xs text-gray-400 mt-1">{new Date(n.ts).toLocaleString()}</div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
               <button
                 onClick={handleLogout}
