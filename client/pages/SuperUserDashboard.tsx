@@ -896,6 +896,22 @@ export default function SuperUserDashboard() {
         },
       );
 
+      // Notify other app sections (e.g., MinistryDashboard bell)
+      try {
+        window.dispatchEvent(
+          new CustomEvent("companyStatusChanged", {
+            detail: {
+              companyId,
+              companyName: company.companyName,
+              email: company.email.toLowerCase(),
+              status: newStatus,
+              reason,
+              timestamp: Date.now(),
+            },
+          }),
+        );
+      } catch {}
+
       // Reload audit logs to show the new entry
       loadAuditLogs();
 
