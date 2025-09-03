@@ -87,7 +87,7 @@ import {
   updateClarification,
   type ClarificationRecord,
 } from "@/lib/clarificationsStorage";
-import { getMinistryById } from "@shared/ministries";
+import { getMinistryById, getAllMinistries } from "@shared/ministries";
 import { messageService } from "@/lib/messageService";
 import { evaluationNotificationService } from "@/lib/evaluationNotificationService";
 
