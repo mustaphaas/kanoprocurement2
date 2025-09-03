@@ -940,6 +940,18 @@ export default function MinistryDashboard() {
       const finalNOCs = [...newApprovedRejected, ...updatedNOCs];
       setNOCRequests(finalNOCs);
 
+      // Push notifications for newly approved/rejected items
+      try {
+        newApprovedRejected.forEach((cr: any) => {
+          const status = cr.status;
+          if (status === "Approved") {
+            pushNotif({ title: "NOC Approved", message: `${cr.projectTitle || cr.id} approved (Cert: ${cr.certificateNumber || "-"})` });
+          } else if (status === "Rejected") {
+            pushNotif({ title: "NOC Rejected", message: `${cr.projectTitle || cr.id} rejected` });
+          }
+        });
+      } catch {}
+
       // Update localStorage
       const ministryNOCKey = `${ministry.code}_NOCRequests`;
       localStorage.setItem(ministryNOCKey, JSON.stringify(finalNOCs));
@@ -3529,7 +3541,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-003",
           companyName: "Northern Roads Nigeria",
-          bidAmount: "₦15,400,000,000",
+          bidAmount: "���15,400,000,000",
           technicalScore: 85,
           financialScore: 83,
           totalScore: 84,
