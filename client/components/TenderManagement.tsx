@@ -530,13 +530,62 @@ const TenderManagement = () => {
 
   // NEW EVALUATION FUNCTIONS
 
+  // Helper: load local assigned tenders for current ministry
+  const getLocalAssignedTenders = (): any[] => {
+    try {
+      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryCode =
+        ministryUser.ministryCode?.toUpperCase() ||
+        ministryUser.ministryId?.toUpperCase() ||
+        "MOH";
+      const localKey = `${ministryCode}_tenderCommitteeAssignments`;
+      const localRaw = localStorage.getItem(localKey) || "[]";
+      const localAssignments = JSON.parse(localRaw);
+      const mapOne = (a: any) => ({
+        id: a.id,
+        tenderId: a.tenderId,
+        tenderTitle: a.tenderTitle,
+        tenderCategory: a.tenderCategory,
+        ministry: a.ministry,
+        evaluationTemplateId: a.evaluationTemplateId,
+        evaluationStart: a.evaluationPeriod?.startDate,
+        evaluationEnd: a.evaluationPeriod?.endDate,
+        status: a.status,
+      });
+      const own = Array.isArray(localAssignments) ? localAssignments.map(mapOne) : [];
+      // Also merge from any other ministry keys
+      const others: any[] = [];
+      Object.keys(localStorage)
+        .filter((k) => k.endsWith("_tenderCommitteeAssignments"))
+        .forEach((k) => {
+          try {
+            const data = JSON.parse(localStorage.getItem(k) || "[]");
+            if (Array.isArray(data)) others.push(...data.map(mapOne));
+          } catch {}
+        });
+      // Dedup by id then tenderId
+      const byId = new Map<string, any>();
+      [...own, ...others].forEach((item) => {
+        if (!item) return;
+        if (item.id && !byId.has(item.id)) byId.set(item.id, item);
+      });
+      return Array.from(byId.values());
+    } catch {
+      return [];
+    }
+  };
+
   // Fetch assigned tenders for current evaluator
   const fetchAssignedTenders = async () => {
     setIsLoadingTenders(true);
     try {
+      const controller = new AbortController();
+      const t = setTimeout(() => controller.abort(), 2500);
       const response = await fetch(
         `/api/tender-assignments/${currentEvaluatorId}`,
+        { signal: controller.signal },
       );
+      clearTimeout(t);
       if (response.ok) {
         const serverTenders = await response.json();
 
@@ -604,38 +653,12 @@ const TenderManagement = () => {
           })),
         );
       } else {
-        console.error("Failed to fetch assigned tenders");
         // Fallback to local only
-        try {
-          const ministryUser = JSON.parse(
-            localStorage.getItem("ministryUser") || "{}",
-          );
-          const ministryCode =
-            ministryUser.ministryCode?.toUpperCase() ||
-            ministryUser.ministryId?.toUpperCase() ||
-            "MOH";
-          const localKey = `${ministryCode}_tenderCommitteeAssignments`;
-          const localRaw = localStorage.getItem(localKey) || "[]";
-          const localAssignments = JSON.parse(localRaw);
-          const localMapped = localAssignments.map((a: any) => ({
-            id: a.id,
-            tenderId: a.tenderId,
-            tenderTitle: a.tenderTitle,
-            tenderCategory: a.tenderCategory,
-            ministry: a.ministry,
-            evaluationTemplateId: a.evaluationTemplateId,
-            evaluationStart: a.evaluationPeriod?.startDate,
-            evaluationEnd: a.evaluationPeriod?.endDate,
-            status: a.status,
-          }));
-          setAssignedTenders(localMapped);
-        } catch {
-          setAssignedTenders([]);
-        }
+        setAssignedTenders(getLocalAssignedTenders());
       }
     } catch (error) {
-      console.error("Error fetching assigned tenders:", error);
-      setAssignedTenders([]);
+      // Network/instrumentation failures: silently fall back to local
+      setAssignedTenders(getLocalAssignedTenders());
     } finally {
       setIsLoadingTenders(false);
     }
