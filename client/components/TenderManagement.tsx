@@ -309,7 +309,8 @@ const TenderManagement = () => {
 
       const approved = awardApprovals.find((a: any) => a.status === "Approved");
       const anyEntry = awardApprovals[0];
-      const normalize = (s?: string) => (s || "").toString().trim().toLowerCase();
+      const normalize = (s?: string) =>
+        (s || "").toString().trim().toLowerCase();
 
       const targetId =
         selectedTenderAssignment?.tenderId ||
@@ -318,14 +319,20 @@ const TenderManagement = () => {
         anyEntry?.actualTenderId ||
         anyEntry?.tenderId ||
         "";
-      const targetTitle = selectedTenderAssignment?.tenderTitle || approved?.tenderTitle || anyEntry?.tenderTitle || "";
+      const targetTitle =
+        selectedTenderAssignment?.tenderTitle ||
+        approved?.tenderTitle ||
+        anyEntry?.tenderTitle ||
+        "";
 
       const filterOut = (arr: any[]) =>
         arr.filter(
           (a: any) =>
             !(
-              (targetId && (a.actualTenderId === targetId || a.tenderId === targetId)) ||
-              (targetTitle && normalize(a.tenderTitle) === normalize(targetTitle))
+              (targetId &&
+                (a.actualTenderId === targetId || a.tenderId === targetId)) ||
+              (targetTitle &&
+                normalize(a.tenderTitle) === normalize(targetTitle))
             ),
         );
 
@@ -338,9 +345,12 @@ const TenderManagement = () => {
       setAwardApprovals(Array.isArray(newList) ? newList : []);
 
       try {
-        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const all = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+        );
         const idx = all.findIndex(
-          (t: any) => t.id === targetId || normalize(t.title) === normalize(targetTitle),
+          (t: any) =>
+            t.id === targetId || normalize(t.title) === normalize(targetTitle),
         );
         if (idx !== -1) {
           delete all[idx].awardApprovalStatus;
@@ -350,7 +360,9 @@ const TenderManagement = () => {
 
       try {
         window.dispatchEvent(
-          new CustomEvent("awardApprovalUpdated", { detail: { reset: true, tenderId: targetId } }),
+          new CustomEvent("awardApprovalUpdated", {
+            detail: { reset: true, tenderId: targetId },
+          }),
         );
       } catch {}
 

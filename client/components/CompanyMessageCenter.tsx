@@ -88,7 +88,10 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
       }
     };
     const onStorage = () => loadMessages();
-    window.addEventListener("companyMessagesUpdated", onCustom as EventListener);
+    window.addEventListener(
+      "companyMessagesUpdated",
+      onCustom as EventListener,
+    );
     window.addEventListener("storage", onStorage);
 
     return () => {

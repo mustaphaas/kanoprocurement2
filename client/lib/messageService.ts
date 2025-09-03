@@ -106,7 +106,10 @@ class MessageService {
 
       try {
         const syncKey = `_company_messages_sync_${Date.now()}`;
-        localStorage.setItem(syncKey, JSON.stringify({ email, ts: Date.now() }));
+        localStorage.setItem(
+          syncKey,
+          JSON.stringify({ email, ts: Date.now() }),
+        );
         localStorage.removeItem(syncKey);
       } catch {}
       try {
