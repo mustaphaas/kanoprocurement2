@@ -1692,6 +1692,22 @@ const TenderManagement = () => {
     awardAmount: string,
   ) => {
     try {
+      let targetEmail = (winnerEmail || "").toLowerCase();
+
+      if (!targetEmail) {
+        // Try to infer from registered companies by name
+        try {
+          const registered = JSON.parse(localStorage.getItem("registeredCompanies") || "[]");
+          const match = registered.find((c: any) => (c.companyName || "").toLowerCase() === (winnerName || "").toLowerCase());
+          if (match?.email) targetEmail = (match.email || "").toLowerCase();
+        } catch {}
+      }
+
+      if (!targetEmail) {
+        // Final fallback for demo/testing accounts
+        targetEmail = "approval@company.com";
+      }
+
       messageService.addMessage(
         {
           type: "contract_awarded",
@@ -1716,7 +1732,7 @@ const TenderManagement = () => {
           ],
           metadata: { tenderTitle, awardAmount, isWinner: true },
         },
-        winnerEmail,
+        targetEmail,
       );
     } catch (e) {
       console.error("Failed to notify winner", e);
