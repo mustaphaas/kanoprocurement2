@@ -3465,6 +3465,19 @@ const TenderManagement = () => {
                         tender.awardAmount ||
                           formatCurrency(tender.budget || 0),
                       );
+
+                      try {
+                        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+                        const idx = all.findIndex((t: any) => t.id === tender.id);
+                        if (idx !== -1) {
+                          all[idx].status = "Awarded";
+                          all[idx].workflowStage = "Contract Award";
+                          all[idx].awardDate = all[idx].awardDate || new Date().toISOString().split("T")[0];
+                          localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+                          try { forceRefreshTenders(); } catch {}
+                        }
+                      } catch {}
+
                       alert("Success notification sent to winner");
                     }}
                   >
