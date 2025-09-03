@@ -267,6 +267,10 @@ export default function TenderCommitteeAssignment() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  function arrSafe<T>(v: T[] | undefined | null): T[] {
+    return Array.isArray(v) ? v : [];
+  }
+  const lenSafe = (v: unknown[] | undefined | null) => arrSafe(v as any).length;
 
   // Form states
   const [assignmentForm, setAssignmentForm] = useState({
@@ -334,7 +338,10 @@ export default function TenderCommitteeAssignment() {
             .then((serverItems) => {
               if (Array.isArray(serverItems) && serverItems.length > 0) {
                 setAssignments(serverItems);
-                localStorage.setItem(assignmentsKey, JSON.stringify(serverItems));
+                localStorage.setItem(
+                  assignmentsKey,
+                  JSON.stringify(serverItems),
+                );
               } else {
                 const sampleAssignments = createSampleAssignments(ministryCode);
                 setAssignments(sampleAssignments);
@@ -347,7 +354,10 @@ export default function TenderCommitteeAssignment() {
             .catch(() => {
               const sampleAssignments = createSampleAssignments(ministryCode);
               setAssignments(sampleAssignments);
-              localStorage.setItem(assignmentsKey, JSON.stringify(sampleAssignments));
+              localStorage.setItem(
+                assignmentsKey,
+                JSON.stringify(sampleAssignments),
+              );
             });
         }
       }
@@ -1537,11 +1547,14 @@ export default function TenderCommitteeAssignment() {
       setErrorMessage("");
       setSuccessMessage("");
       let targetId = assignmentId;
-      let response = await fetch(`/api/committee-assignments/${targetId}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Active" }),
-      });
+      let response = await fetch(
+        `/api/committee-assignments/${targetId}/status`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "Active" }),
+        },
+      );
 
       // If not found on server (e.g., local-only ID), try to resolve server ID by tenderId
       if (response.status === 404) {
@@ -1550,14 +1563,19 @@ export default function TenderCommitteeAssignment() {
           const listRes = await fetch(`/api/committee-assignments`);
           if (listRes.ok) {
             const serverItems = await listRes.json();
-            const match = serverItems.find((s: any) => s.tenderId === local.tenderId);
+            const match = serverItems.find(
+              (s: any) => s.tenderId === local.tenderId,
+            );
             if (match?.id) {
               targetId = match.id;
-              response = await fetch(`/api/committee-assignments/${targetId}/status`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "Active" }),
-              });
+              response = await fetch(
+                `/api/committee-assignments/${targetId}/status`,
+                {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ status: "Active" }),
+                },
+              );
               // also sync local id to server id for future actions
               if (response.ok) {
                 const updated = await response.json();
@@ -1571,19 +1589,27 @@ export default function TenderCommitteeAssignment() {
                 setSuccessMessage("Assignment activated successfully.");
 
                 // Send evaluation commencement notifications to bidding companies
-                const activatedAssignment = assignments.find(a => a.id === assignmentId);
+                const activatedAssignment = assignments.find(
+                  (a) => a.id === assignmentId,
+                );
                 if (activatedAssignment) {
-                  console.log("Sending evaluation commencement notifications for synced assignment:", activatedAssignment);
+                  console.log(
+                    "Sending evaluation commencement notifications for synced assignment:",
+                    activatedAssignment,
+                  );
                   evaluationNotificationService.notifyEvaluationCommencing({
                     id: targetId, // Use server ID
                     tenderId: activatedAssignment.tenderId,
                     tenderTitle: activatedAssignment.tenderTitle,
                     tenderCategory: activatedAssignment.tenderCategory,
-                    ministry: activatedAssignment.ministry || "Government Ministry"
+                    ministry:
+                      activatedAssignment.ministry || "Government Ministry",
                   });
                 }
 
-                window.dispatchEvent(new Event("committee-assignments:updated"));
+                window.dispatchEvent(
+                  new Event("committee-assignments:updated"),
+                );
                 return;
               }
             }
@@ -1603,15 +1629,20 @@ export default function TenderCommitteeAssignment() {
         setSuccessMessage("Assignment activated successfully.");
 
         // Send evaluation commencement notifications to bidding companies
-        const activatedAssignment = assignments.find(a => a.id === assignmentId || a.id === targetId);
+        const activatedAssignment = assignments.find(
+          (a) => a.id === assignmentId || a.id === targetId,
+        );
         if (activatedAssignment) {
-          console.log("Sending evaluation commencement notifications for assignment:", activatedAssignment);
+          console.log(
+            "Sending evaluation commencement notifications for assignment:",
+            activatedAssignment,
+          );
           evaluationNotificationService.notifyEvaluationCommencing({
             id: activatedAssignment.id,
             tenderId: activatedAssignment.tenderId,
             tenderTitle: activatedAssignment.tenderTitle,
             tenderCategory: activatedAssignment.tenderCategory,
-            ministry: activatedAssignment.ministry || "Government Ministry"
+            ministry: activatedAssignment.ministry || "Government Ministry",
           });
         }
 
@@ -1643,16 +1674,20 @@ export default function TenderCommitteeAssignment() {
       assignment.id === assignmentId
         ? {
             ...assignment,
-            coiDeclarations: [...assignment.coiDeclarations, newDeclaration],
-            assignedMembers: assignment.assignedMembers.map((member) =>
-              member.memberId === coiForm.memberId
-                ? {
-                    ...member,
-                    status: coiForm.hasConflict
-                      ? "COI_Declared"
-                      : ("Active" as const),
-                  }
-                : member,
+            coiDeclarations: [
+              ...arrSafe(assignment.coiDeclarations),
+              newDeclaration,
+            ],
+            assignedMembers: arrSafe(assignment.assignedMembers).map(
+              (member) =>
+                member.memberId === coiForm.memberId
+                  ? {
+                      ...member,
+                      status: coiForm.hasConflict
+                        ? "COI_Declared"
+                        : ("Active" as const),
+                    }
+                  : member,
             ),
           }
         : assignment,
@@ -1883,7 +1918,7 @@ export default function TenderCommitteeAssignment() {
                               Members Assigned
                             </Label>
                             <p className="text-sm font-semibold">
-                              {assignment.assignedMembers.length}
+                              {lenSafe(assignment.assignedMembers)}
                             </p>
                           </div>
                           <div>
@@ -1891,8 +1926,8 @@ export default function TenderCommitteeAssignment() {
                               COI Declarations
                             </Label>
                             <p className="text-sm font-semibold">
-                              {assignment.coiDeclarations.length}
-                              {assignment.coiDeclarations.some(
+                              {lenSafe(assignment.coiDeclarations)}
+                              {arrSafe(assignment.coiDeclarations).some(
                                 (coi) => coi.hasConflict,
                               ) && (
                                 <AlertTriangle className="inline h-3 w-3 ml-1 text-yellow-600" />
@@ -1904,8 +1939,8 @@ export default function TenderCommitteeAssignment() {
                               Evaluation Period
                             </Label>
                             <p className="text-sm font-semibold">
-                              {assignment.evaluationPeriod.startDate} to{" "}
-                              {assignment.evaluationPeriod.endDate}
+                              {assignment.evaluationPeriod?.startDate ?? "-"} to{" "}
+                              {assignment.evaluationPeriod?.endDate ?? "-"}
                             </p>
                           </div>
                           <div>
@@ -1913,8 +1948,8 @@ export default function TenderCommitteeAssignment() {
                               Conflicts
                             </Label>
                             <p className="text-sm font-semibold">
-                              {assignment.conflicts.length}
-                              {assignment.conflicts.some(
+                              {lenSafe(assignment.conflicts)}
+                              {arrSafe(assignment.conflicts).some(
                                 (c) => c.severity === "Critical",
                               ) && (
                                 <XCircle className="inline h-3 w-3 ml-1 text-red-600" />
@@ -1961,7 +1996,7 @@ export default function TenderCommitteeAssignment() {
                       <div>
                         <h4 className="font-medium mb-2">Assigned Members</h4>
                         <div className="space-y-2">
-                          {assignment.assignedMembers
+                          {arrSafe(assignment.assignedMembers)
                             .slice(0, 3)
                             .map((member) => (
                               <div
@@ -1991,24 +2026,24 @@ export default function TenderCommitteeAssignment() {
                                 </div>
                               </div>
                             ))}
-                          {assignment.assignedMembers.length > 3 && (
+                          {lenSafe(assignment.assignedMembers) > 3 && (
                             <div className="text-sm text-gray-500 text-center py-1">
-                              +{assignment.assignedMembers.length - 3} more
+                              +{lenSafe(assignment.assignedMembers) - 3} more
                               members
                             </div>
                           )}
                         </div>
                       </div>
 
-                      {assignment.coiDeclarations.length > 0 && (
+                      {lenSafe(assignment.coiDeclarations) > 0 && (
                         <div>
                           <h4 className="font-medium mb-2 flex items-center gap-2">
                             <Shield className="h-4 w-4" />
                             COI Declarations (
-                            {assignment.coiDeclarations.length})
+                            {lenSafe(assignment.coiDeclarations)})
                           </h4>
                           <div className="space-y-2">
-                            {assignment.coiDeclarations.map((coi) => (
+                            {arrSafe(assignment.coiDeclarations).map((coi) => (
                               <div
                                 key={coi.id}
                                 className="flex items-center justify-between p-2 bg-yellow-50 rounded"
@@ -2049,11 +2084,11 @@ export default function TenderCommitteeAssignment() {
                         </div>
                       )}
 
-                      {assignment.conflicts.length > 0 && (
+                      {lenSafe(assignment.conflicts) > 0 && (
                         <Alert>
                           <AlertTriangle className="h-4 w-4" />
                           <AlertDescription>
-                            {assignment.conflicts.length} conflict(s) require
+                            {lenSafe(assignment.conflicts)} conflict(s) require
                             attention. Review member assignments and COI
                             declarations.
                           </AlertDescription>
@@ -2116,9 +2151,9 @@ export default function TenderCommitteeAssignment() {
                       <h4 className="font-medium mb-2 flex items-center gap-2">
                         <UserCheck className="h-4 w-4" />
                         Current Committee Members (
-                        {assignment.assignedMembers.length})
+                        {lenSafe(assignment.assignedMembers)})
                       </h4>
-                      {assignment.assignedMembers.length === 0 ? (
+                      {lenSafe(assignment.assignedMembers) === 0 ? (
                         <div className="text-center py-8 text-gray-500">
                           <Users className="h-12 w-12 mx-auto mb-2 text-gray-300" />
                           <p>No members assigned yet</p>
@@ -2136,7 +2171,7 @@ export default function TenderCommitteeAssignment() {
                         </div>
                       ) : (
                         <div className="space-y-2">
-                          {assignment.assignedMembers.map((member) => (
+                          {arrSafe(assignment.assignedMembers).map((member) => (
                             <div
                               key={member.id}
                               className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -2203,7 +2238,7 @@ export default function TenderCommitteeAssignment() {
           <div className="grid gap-4">
             {assignments
               .flatMap((assignment) =>
-                assignment.coiDeclarations.map((coi) => ({
+                arrSafe(assignment.coiDeclarations).map((coi) => ({
                   ...coi,
                   tenderTitle: assignment.tenderTitle,
                   tenderId: assignment.tenderId,
@@ -2265,46 +2300,50 @@ export default function TenderCommitteeAssignment() {
                         </div>
                       </div>
 
-                      {coi.hasConflict && coi.conflictDetails.length > 0 && (
+                      {coi.hasConflict && lenSafe(coi.conflictDetails) > 0 && (
                         <div>
                           <Label className="text-sm font-medium">
                             Conflict Details
                           </Label>
                           <div className="space-y-2 mt-1">
-                            {coi.conflictDetails.map((detail, index) => (
-                              <div
-                                key={index}
-                                className="p-2 bg-red-50 rounded border-l-4 border-red-500"
-                              >
-                                <div className="font-medium text-red-900">
-                                  {detail.type} Conflict
+                            {arrSafe(coi.conflictDetails).map(
+                              (detail, index) => (
+                                <div
+                                  key={index}
+                                  className="p-2 bg-red-50 rounded border-l-4 border-red-500"
+                                >
+                                  <div className="font-medium text-red-900">
+                                    {detail.type} Conflict
+                                  </div>
+                                  <div className="text-sm text-red-800">
+                                    {detail.description}
+                                  </div>
+                                  <div className="text-xs text-red-700">
+                                    Entity: {detail.entity} • Relationship:{" "}
+                                    {detail.relationship}
+                                    {detail.duration &&
+                                      ` • Duration: ${detail.duration}`}
+                                  </div>
                                 </div>
-                                <div className="text-sm text-red-800">
-                                  {detail.description}
-                                </div>
-                                <div className="text-xs text-red-700">
-                                  Entity: {detail.entity} • Relationship:{" "}
-                                  {detail.relationship}
-                                  {detail.duration &&
-                                    ` • Duration: ${detail.duration}`}
-                                </div>
-                              </div>
-                            ))}
+                              ),
+                            )}
                           </div>
                         </div>
                       )}
 
-                      {coi.mitigationMeasures.length > 0 && (
+                      {lenSafe(coi.mitigationMeasures) > 0 && (
                         <div>
                           <Label className="text-sm font-medium">
                             Mitigation Measures
                           </Label>
                           <ul className="list-disc list-inside space-y-1 mt-1 text-sm">
-                            {coi.mitigationMeasures.map((measure, index) => (
-                              <li key={index} className="text-gray-700">
-                                {measure}
-                              </li>
-                            ))}
+                            {arrSafe(coi.mitigationMeasures).map(
+                              (measure, index) => (
+                                <li key={index} className="text-gray-700">
+                                  {measure}
+                                </li>
+                              ),
+                            )}
                           </ul>
                         </div>
                       )}
@@ -2385,7 +2424,7 @@ export default function TenderCommitteeAssignment() {
                             Recent Assignments
                           </Label>
                           <p className="text-sm font-semibold">
-                            {member.recentAssignments.length}
+                            {lenSafe(member.recentAssignments)}
                           </p>
                         </div>
                         <div>
@@ -2435,7 +2474,7 @@ export default function TenderCommitteeAssignment() {
                         Expertise Areas
                       </Label>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {member.expertise.map((area) => (
+                        {arrSafe(member.expertise).map((area) => (
                           <Badge
                             key={area}
                             variant="outline"
@@ -2452,7 +2491,7 @@ export default function TenderCommitteeAssignment() {
                         Qualifications
                       </Label>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {member.qualifications.map((qual) => (
+                        {arrSafe(member.qualifications).map((qual) => (
                           <Badge
                             key={qual}
                             variant="secondary"
@@ -2467,7 +2506,7 @@ export default function TenderCommitteeAssignment() {
                     <div>
                       <Label className="text-sm font-medium">Languages</Label>
                       <p className="text-sm text-gray-700">
-                        {member.languages.join(", ")}
+                        {arrSafe(member.languages).join(", ")}
                       </p>
                     </div>
                   </div>
@@ -2751,11 +2790,13 @@ export default function TenderCommitteeAssignment() {
                   <SelectValue placeholder="Select committee member" />
                 </SelectTrigger>
                 <SelectContent>
-                  {selectedAssignment?.assignedMembers.map((member) => (
-                    <SelectItem key={member.memberId} value={member.memberId}>
-                      {member.memberName} ({member.roleTitle})
-                    </SelectItem>
-                  ))}
+                  {arrSafe(selectedAssignment?.assignedMembers).map(
+                    (member) => (
+                      <SelectItem key={member.memberId} value={member.memberId}>
+                        {member.memberName} ({member.roleTitle})
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </Select>
             </div>
