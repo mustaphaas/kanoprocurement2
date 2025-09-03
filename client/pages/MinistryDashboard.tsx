@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
 import { MDAUser, CreateMDAUserRequest, MDAUserPermissions } from "@shared/api";
 import { getMinistryById, MinistryConfig } from "@shared/ministries";
 import MinistryUserForm from "@/components/MinistryUserForm";
@@ -3108,7 +3109,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-009",
           companyName: "Emirate Construction Co",
-          bidAmount: "₦8,800,000,000",
+          bidAmount: "���8,800,000,000",
           technicalScore: 84,
           financialScore: 81,
           totalScore: 82.5,
@@ -3345,7 +3346,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-007",
           companyName: "Kano Pharmaceutical Ltd",
-          bidAmount: "₦680,000,000",
+          bidAmount: "��680,000,000",
           technicalScore: 89,
           financialScore: 87,
           totalScore: 88,
