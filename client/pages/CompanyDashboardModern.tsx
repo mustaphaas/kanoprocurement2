@@ -892,7 +892,6 @@ export default function CompanyDashboardModern() {
                 <span>{companyData.status}</span>
               </Badge>
 
-
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="h-5 w-5" />
               </Button>
@@ -906,7 +905,11 @@ export default function CompanyDashboardModern() {
           <div className="space-y-4 mb-8">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-gray-900">Messages</h2>
-              <Button variant="outline" size="sm" onClick={() => setActiveSection("dashboard")}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveSection("dashboard")}
+              >
                 Back to Dashboard
               </Button>
             </div>

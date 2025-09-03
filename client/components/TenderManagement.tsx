@@ -1697,8 +1697,14 @@ const TenderManagement = () => {
       if (!targetEmail) {
         // Try to infer from registered companies by name
         try {
-          const registered = JSON.parse(localStorage.getItem("registeredCompanies") || "[]");
-          const match = registered.find((c: any) => (c.companyName || "").toLowerCase() === (winnerName || "").toLowerCase());
+          const registered = JSON.parse(
+            localStorage.getItem("registeredCompanies") || "[]",
+          );
+          const match = registered.find(
+            (c: any) =>
+              (c.companyName || "").toLowerCase() ===
+              (winnerName || "").toLowerCase(),
+          );
           if (match?.email) targetEmail = (match.email || "").toLowerCase();
         } catch {}
       }
@@ -1936,13 +1942,16 @@ const TenderManagement = () => {
     }
 
     // 2) Try by title in current state
-    const title = approved?.tenderTitle || selectedTenderAssignment?.tenderTitle;
+    const title =
+      approved?.tenderTitle || selectedTenderAssignment?.tenderTitle;
     const byTitle = findTenderByIdOrTitle(tenders, undefined, title);
     if (byTitle) return byTitle;
 
     // 3) Fallback: search global storage (all tenders)
     try {
-      const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+      const all = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+      );
       if (preferredTenderId) {
         const foundById = all.find((t: any) => t.id === preferredTenderId);
         if (foundById) return foundById;
@@ -1970,7 +1979,9 @@ const TenderManagement = () => {
         localStorage.getItem(`${ministry.code}_tenders`) || "[]",
       );
       if (preferredTenderId) {
-        const foundById = ministryTenders.find((t: any) => t.id === preferredTenderId);
+        const foundById = ministryTenders.find(
+          (t: any) => t.id === preferredTenderId,
+        );
         if (foundById) return foundById;
       }
       if (title) {
@@ -2007,9 +2018,12 @@ const TenderManagement = () => {
     if (approved?.tenderTitle || approved?.tenderId) {
       try {
         const ministry = getMinistryInfo();
-        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const all = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+        );
         const synthesized = {
-          id: approved.actualTenderId || approved.tenderId || `SYN-${Date.now()}`,
+          id:
+            approved.actualTenderId || approved.tenderId || `SYN-${Date.now()}`,
           title: approved.tenderTitle || approved.tenderId || "Awarded Tender",
           description: approved.tenderTitle || "",
           budget: 0,
@@ -3617,14 +3631,25 @@ const TenderManagement = () => {
                       );
 
                       try {
-                        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-                        const idx = all.findIndex((t: any) => t.id === tender.id);
+                        const all = JSON.parse(
+                          localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+                        );
+                        const idx = all.findIndex(
+                          (t: any) => t.id === tender.id,
+                        );
                         if (idx !== -1) {
                           all[idx].status = "Awarded";
                           all[idx].workflowStage = "Contract Award";
-                          all[idx].awardDate = all[idx].awardDate || new Date().toISOString().split("T")[0];
-                          localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
-                          try { forceRefreshTenders(); } catch {}
+                          all[idx].awardDate =
+                            all[idx].awardDate ||
+                            new Date().toISOString().split("T")[0];
+                          localStorage.setItem(
+                            STORAGE_KEYS.TENDERS,
+                            JSON.stringify(all),
+                          );
+                          try {
+                            forceRefreshTenders();
+                          } catch {}
                         }
                       } catch {}
 
@@ -3749,13 +3774,22 @@ const TenderManagement = () => {
                       const notice = publishPublicAwardNotice(tender);
 
                       try {
-                        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
-                        const idx = all.findIndex((t: any) => t.id === tender.id);
+                        const all = JSON.parse(
+                          localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+                        );
+                        const idx = all.findIndex(
+                          (t: any) => t.id === tender.id,
+                        );
                         if (idx !== -1) {
                           all[idx].awardPublished = true;
                           all[idx].awardPublishedAt = new Date().toISOString();
-                          localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
-                          try { forceRefreshTenders(); } catch {}
+                          localStorage.setItem(
+                            STORAGE_KEYS.TENDERS,
+                            JSON.stringify(all),
+                          );
+                          try {
+                            forceRefreshTenders();
+                          } catch {}
                         }
                       } catch {}
 

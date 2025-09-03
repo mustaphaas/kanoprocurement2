@@ -283,22 +283,30 @@ export default function SuperuserNOC() {
     try {
       const tendersKey = "kanoproc_tenders";
       const allTenders = JSON.parse(localStorage.getItem(tendersKey) || "[]");
-      const normalize = (s?: string) => (s || "").toString().trim().toLowerCase();
+      const normalize = (s?: string) =>
+        (s || "").toString().trim().toLowerCase();
       const matchedTender = allTenders.find(
         (t: any) =>
           t.id === (selectedRequest as any).tenderId ||
           normalize(t.title) === normalize(selectedRequest.projectTitle) ||
-          normalize(t.awardedCompany) === normalize(selectedRequest.contractorName),
+          normalize(t.awardedCompany) ===
+            normalize(selectedRequest.contractorName),
       );
 
-      let contractorEmail = matchedTender?.awardedCompanyEmail as string | undefined;
+      let contractorEmail = matchedTender?.awardedCompanyEmail as
+        | string
+        | undefined;
       if (!contractorEmail) {
         const bids = JSON.parse(localStorage.getItem("tenderBids") || "[]");
         const bidMatch = bids.find(
           (b: any) =>
-            (b.tenderId && ((selectedRequest as any).tenderId && b.tenderId === (selectedRequest as any).tenderId)) ||
-            normalize(b.tenderTitle) === normalize(selectedRequest.projectTitle) ||
-            normalize(b.companyName) === normalize(selectedRequest.contractorName),
+            (b.tenderId &&
+              (selectedRequest as any).tenderId &&
+              b.tenderId === (selectedRequest as any).tenderId) ||
+            normalize(b.tenderTitle) ===
+              normalize(selectedRequest.projectTitle) ||
+            normalize(b.companyName) ===
+              normalize(selectedRequest.contractorName),
         );
         contractorEmail = bidMatch?.companyEmail;
       }
