@@ -998,7 +998,7 @@ const TenderManagement = () => {
         status: tender.status === "Published" ? "Open" : tender.status,
         publishDate: tender.publishedDate || tender.createdDate,
         closingDate: tender.closingDate,
-        tenderFee: "₦25,000",
+        tenderFee: "���25,000",
         procuringEntity: tender.ministry,
         duration: "12 months",
         eligibility: "Qualified contractors with relevant experience",
@@ -1506,7 +1506,7 @@ const TenderManagement = () => {
         address: "Kano State Secretariat, Kano",
       };
     }
-  };​
+  };
 
   const formatCurrency = (amount: string | number) => {
     const num = typeof amount === "string" ? parseFloat(amount) : amount;
