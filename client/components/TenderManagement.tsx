@@ -1733,11 +1733,6 @@ const TenderManagement = () => {
       };
 
       messageService.addMessage(payload, targetEmail);
-
-      // Also copy the notification to demo winner inbox for visibility
-      if (targetEmail !== "approval@company.com") {
-        messageService.addMessage(payload, "approval@company.com");
-      }
     } catch (e) {
       console.error("Failed to notify winner", e);
     }
@@ -2137,6 +2132,26 @@ const TenderManagement = () => {
 
           // Publish public notice
           publishPublicAwardNotice(all[idx]);
+
+          // Enrich approval records with winner details for downstream actions
+          try {
+            const enrich = (arr: any[]) =>
+              arr.map((a: any) =>
+                a.id === approvalId
+                  ? {
+                      ...a,
+                      winningBidderEmail: ensured.winnerEmail,
+                      winningBidder: ensured.winnerName,
+                      awardAmount: all[idx].awardAmount,
+                      actualTenderId: all[idx].id,
+                    }
+                  : a,
+              );
+            const enriched = enrich(updated);
+            const enrichedCentral = enrich(updatedCentral);
+            localStorage.setItem(key, JSON.stringify(enriched));
+            localStorage.setItem(centralKey, JSON.stringify(enrichedCentral));
+          } catch {}
         }
         localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
         // Update selected tender assignment for downstream actions
