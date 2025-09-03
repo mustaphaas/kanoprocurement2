@@ -1550,6 +1550,35 @@ const TenderManagement = () => {
       }
     });
 
+    // Include requested test participants for validation
+    const extraParticipants = [
+      {
+        companyName: "New Ventures Construction Ltd",
+        emails: ["pending@company.com", "suspended@company.com"],
+      },
+    ];
+    extraParticipants.forEach((p) => {
+      p.emails.forEach((email, idx) => {
+        const existsForEmail = existing.some(
+          (b: any) =>
+            b.tenderId === tenderId &&
+            (b.companyEmail || "").toLowerCase() === email.toLowerCase(),
+        );
+        if (!existsForEmail) {
+          toAdd.push({
+            id: `BID-${Date.now()}-X${idx + 1}`,
+            tenderId,
+            tenderTitle: tenderTitle || tenderId,
+            companyName: p.companyName,
+            companyEmail: email,
+            bidAmount: formatCurrency(650000000 + toAdd.length * 10000000),
+            status: "Submitted",
+            submittedAt: new Date().toISOString(),
+          });
+        }
+      });
+    });
+
     if (toAdd.length > 0) {
       const merged = [...existing, ...toAdd];
       localStorage.setItem("tenderBids", JSON.stringify(merged));
