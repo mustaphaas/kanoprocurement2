@@ -1757,8 +1757,8 @@ const TenderManagement = () => {
       tenderId: assignment.tenderId,
       tenderTitle: assignment.tenderTitle,
       actualTenderId,
-      ministryCode: ministry.code,
-      ministryName: ministry.name,
+      ministryCode: targetMinistry.code,
+      ministryName: targetMinistry.name,
       status: "Submitted",
       submittedAt: new Date().toISOString(),
     };
