@@ -695,11 +695,31 @@ export default function MinistryDashboard() {
     window.addEventListener("awardApprovalUpdated", handleApprovalUpdated as EventListener);
     window.addEventListener("publicAwardPublished", handlePublicNotice as EventListener);
     window.addEventListener("contractCreated", handleContract as EventListener);
+
+    const handleCompanyRegistered = (e: any) => {
+      const d = e.detail || {};
+      pushNotif({ title: "Company Registered", message: `${d.companyName || d.email} submitted registration` });
+    };
+    const handleCompanyStatusChanged = (e: any) => {
+      const d = e.detail || {};
+      pushNotif({ title: `Company ${d.status}`, message: `${d.companyName || d.email} ${d.reason ? `- ${d.reason}` : ""}` });
+    };
+    const handleCompanyBid = (e: any) => {
+      const d = e.detail || {};
+      pushNotif({ title: "Bid Submitted", message: `${d.companyName || "A company"} submitted bid for ${d.tenderTitle || d.tenderId || "a tender"}` });
+    };
+    window.addEventListener("companyRegistered", handleCompanyRegistered as EventListener);
+    window.addEventListener("companyStatusChanged", handleCompanyStatusChanged as EventListener);
+    window.addEventListener("companyBidSubmitted", handleCompanyBid as EventListener);
+
     return () => {
       window.removeEventListener("awardApprovalSubmitted", handleApproval as EventListener);
       window.removeEventListener("awardApprovalUpdated", handleApprovalUpdated as EventListener);
       window.removeEventListener("publicAwardPublished", handlePublicNotice as EventListener);
       window.removeEventListener("contractCreated", handleContract as EventListener);
+      window.removeEventListener("companyRegistered", handleCompanyRegistered as EventListener);
+      window.removeEventListener("companyStatusChanged", handleCompanyStatusChanged as EventListener);
+      window.removeEventListener("companyBidSubmitted", handleCompanyBid as EventListener);
     };
   }, [notifications]);
 
@@ -3541,7 +3561,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-003",
           companyName: "Northern Roads Nigeria",
-          bidAmount: "���15,400,000,000",
+          bidAmount: "₦15,400,000,000",
           technicalScore: 85,
           financialScore: 83,
           totalScore: 84,
