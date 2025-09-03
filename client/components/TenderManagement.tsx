@@ -300,6 +300,67 @@ const TenderManagement = () => {
     setClarDialogOpen(false);
   };
 
+  // Reset approvals for current tender (ministry + central stores)
+  const handleResetApprovals = () => {
+    try {
+      const ministry = getMinistryInfo();
+      const key = `${ministry.code}_awardApprovals`;
+      const centralKey = "centralAwardApprovals";
+
+      const approved = awardApprovals.find((a: any) => a.status === "Approved");
+      const anyEntry = awardApprovals[0];
+      const normalize = (s?: string) => (s || "").toString().trim().toLowerCase();
+
+      const targetId =
+        selectedTenderAssignment?.tenderId ||
+        approved?.actualTenderId ||
+        approved?.tenderId ||
+        anyEntry?.actualTenderId ||
+        anyEntry?.tenderId ||
+        "";
+      const targetTitle = selectedTenderAssignment?.tenderTitle || approved?.tenderTitle || anyEntry?.tenderTitle || "";
+
+      const filterOut = (arr: any[]) =>
+        arr.filter(
+          (a: any) =>
+            !(
+              (targetId && (a.actualTenderId === targetId || a.tenderId === targetId)) ||
+              (targetTitle && normalize(a.tenderTitle) === normalize(targetTitle))
+            ),
+        );
+
+      const list = JSON.parse(localStorage.getItem(key) || "[]");
+      const central = JSON.parse(localStorage.getItem(centralKey) || "[]");
+      const newList = filterOut(list);
+      const newCentral = filterOut(central);
+      localStorage.setItem(key, JSON.stringify(newList));
+      localStorage.setItem(centralKey, JSON.stringify(newCentral));
+      setAwardApprovals(Array.isArray(newList) ? newList : []);
+
+      try {
+        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const idx = all.findIndex(
+          (t: any) => t.id === targetId || normalize(t.title) === normalize(targetTitle),
+        );
+        if (idx !== -1) {
+          delete all[idx].awardApprovalStatus;
+          localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+        }
+      } catch {}
+
+      try {
+        window.dispatchEvent(
+          new CustomEvent("awardApprovalUpdated", { detail: { reset: true, tenderId: targetId } }),
+        );
+      } catch {}
+
+      alert("Approvals reset for the selected tender");
+    } catch (e) {
+      console.error("Failed to reset approvals", e);
+      alert("Failed to reset approvals");
+    }
+  };
+
   // Mock evaluation data
   const mockTenderInfo = {
     id: "MOH-2024-001",
