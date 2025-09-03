@@ -876,8 +876,40 @@ const TenderManagement = () => {
     const loadApprovals = () => {
       const ministry = getMinistryInfo();
       const key = `${ministry.code}_awardApprovals`;
-      const list = JSON.parse(localStorage.getItem(key) || "[]");
-      setAwardApprovals(Array.isArray(list) ? list : []);
+      let list = JSON.parse(localStorage.getItem(key) || "[]");
+      if (!Array.isArray(list)) list = [];
+      // Auto-migrate any approvals that belong to a different ministry based on tender info/prefix
+      try {
+        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const ministries = getAllMinistries();
+        const toKeep: any[] = [];
+        list.forEach((a: any) => {
+          const match = findTenderByIdOrTitle(all, a.actualTenderId || a.tenderId, a.tenderTitle);
+          let expected = a.ministryCode;
+          if (match?.ministry) {
+            const byName = ministries.find((m: any) => (m.name || "").toLowerCase() === (match.ministry || "").toLowerCase());
+            if (byName) expected = byName.code;
+          } else {
+            const prefix = (a.actualTenderId || a.tenderId || "").split("-")[0];
+            const byCode = ministries.find((m: any) => (m.code || "").toUpperCase() === (prefix || "").toUpperCase());
+            if (byCode) expected = byCode.code;
+          }
+          if ((expected || ministry.code) !== ministry.code) {
+            const targetKey = `${expected || ministry.code}_awardApprovals`;
+            const existing = JSON.parse(localStorage.getItem(targetKey) || "[]");
+            const arr = Array.isArray(existing) ? existing : [];
+            arr.unshift({ ...a, ministryCode: expected });
+            localStorage.setItem(targetKey, JSON.stringify(arr));
+          } else {
+            toKeep.push(a);
+          }
+        });
+        if (toKeep.length !== list.length) {
+          localStorage.setItem(key, JSON.stringify(toKeep));
+          list = toKeep;
+        }
+      } catch {}
+      setAwardApprovals(list);
     };
     loadApprovals();
 
