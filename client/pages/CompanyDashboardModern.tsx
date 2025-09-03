@@ -892,20 +892,6 @@ export default function CompanyDashboardModern() {
                 <span>{companyData.status}</span>
               </Badge>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative"
-                onClick={() => setActiveSection("messages")}
-              >
-                <MessageSquare className="h-5 w-5" />
-                {unreadMessageCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {unreadMessageCount}
-                  </span>
-                )}
-              </Button>
-
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="h-5 w-5" />
               </Button>
@@ -915,6 +901,21 @@ export default function CompanyDashboardModern() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeSection === "messages" && (
+          <div className="space-y-4 mb-8">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-gray-900">Messages</h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveSection("dashboard")}
+              >
+                Back to Dashboard
+              </Button>
+            </div>
+            <CompanyMessageCenter companyEmail={companyData.email} />
+          </div>
+        )}
         {/* Status Alert */}
         {companyData.status !== "Approved" && (
           <Card className="mb-8 border-l-4 border-l-orange-500 bg-gradient-to-r from-orange-50 to-amber-50">

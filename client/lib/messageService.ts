@@ -76,9 +76,11 @@ class MessageService {
   // Get all messages for current company
   public getMessages(companyEmail?: string): CompanyMessage[] {
     try {
-      const email = companyEmail || this.getCurrentCompanyEmail();
+      const emailRaw = companyEmail || this.getCurrentCompanyEmail();
+      const email = emailRaw || "unknown@company.com";
       const key = `${this.storageKey}_${email}`;
-      const stored = localStorage.getItem(key);
+      const lcKey = `${this.storageKey}_${email.toLowerCase()}`;
+      const stored = localStorage.getItem(key) || localStorage.getItem(lcKey);
       if (stored) {
         return JSON.parse(stored);
       }
@@ -94,9 +96,28 @@ class MessageService {
     companyEmail?: string,
   ): void {
     try {
-      const email = companyEmail || this.getCurrentCompanyEmail();
+      const emailRaw = companyEmail || this.getCurrentCompanyEmail();
+      const email = emailRaw || "unknown@company.com";
       const key = `${this.storageKey}_${email}`;
+      const lcKey = `${this.storageKey}_${email.toLowerCase()}`;
+
       localStorage.setItem(key, JSON.stringify(messages));
+      localStorage.setItem(lcKey, JSON.stringify(messages));
+
+      try {
+        const syncKey = `_company_messages_sync_${Date.now()}`;
+        localStorage.setItem(
+          syncKey,
+          JSON.stringify({ email, ts: Date.now() }),
+        );
+        localStorage.removeItem(syncKey);
+      } catch {}
+      try {
+        window.dispatchEvent(
+          new CustomEvent("companyMessagesUpdated", { detail: { email } }),
+        );
+      } catch {}
+
       this.notifyListeners();
     } catch (error) {
       console.error("Error saving messages:", error);

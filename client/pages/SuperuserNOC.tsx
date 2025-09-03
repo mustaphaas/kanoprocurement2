@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { dispatchNOCStatusUpdate } from "@/lib/nocEventUtils";
+import { messageService } from "@/lib/messageService";
 import {
   CheckCircle,
   XCircle,
@@ -278,6 +279,60 @@ export default function SuperuserNOC() {
       certificateNumber,
       approvalDate: new Date().toISOString().split("T")[0],
     });
+
+    try {
+      const tendersKey = "kanoproc_tenders";
+      const allTenders = JSON.parse(localStorage.getItem(tendersKey) || "[]");
+      const normalize = (s?: string) =>
+        (s || "").toString().trim().toLowerCase();
+      const matchedTender = allTenders.find(
+        (t: any) =>
+          t.id === (selectedRequest as any).tenderId ||
+          normalize(t.title) === normalize(selectedRequest.projectTitle) ||
+          normalize(t.awardedCompany) ===
+            normalize(selectedRequest.contractorName),
+      );
+
+      let contractorEmail = matchedTender?.awardedCompanyEmail as
+        | string
+        | undefined;
+      if (!contractorEmail) {
+        const bids = JSON.parse(localStorage.getItem("tenderBids") || "[]");
+        const bidMatch = bids.find(
+          (b: any) =>
+            (b.tenderId &&
+              (selectedRequest as any).tenderId &&
+              b.tenderId === (selectedRequest as any).tenderId) ||
+            normalize(b.tenderTitle) ===
+              normalize(selectedRequest.projectTitle) ||
+            normalize(b.companyName) ===
+              normalize(selectedRequest.contractorName),
+        );
+        contractorEmail = bidMatch?.companyEmail;
+      }
+
+      if (contractorEmail) {
+        messageService.addMessage(
+          {
+            type: "general",
+            category: "success",
+            title: "NOC Approved",
+            message: `Your Notice of Compliance for "${selectedRequest.projectTitle}" has been approved. Certificate: ${certificateNumber}. You may proceed to contract signing steps.`,
+            read: false,
+            metadata: {
+              nocId: selectedRequest.id,
+              certificateNumber,
+              approvalDate: new Date().toISOString().split("T")[0],
+              contractorName: selectedRequest.contractorName,
+              ministry: selectedRequest.requestingMinistry,
+            },
+          },
+          contractorEmail.toLowerCase(),
+        );
+      }
+    } catch (e) {
+      console.error("Failed to send NOC approval notification:", e);
+    }
 
     setShowApprovalModal(false);
     setApprovalComments("");
