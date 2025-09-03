@@ -1965,7 +1965,7 @@ export default function TenderCommitteeAssignment() {
                       <div>
                         <h4 className="font-medium mb-2">Assigned Members</h4>
                         <div className="space-y-2">
-                          {assignment.assignedMembers
+                          {arrSafe(assignment.assignedMembers)
                             .slice(0, 3)
                             .map((member) => (
                               <div
