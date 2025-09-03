@@ -31,6 +31,7 @@ import {
   BarChart3,
   Save,
   Send,
+  Trash2,
 } from "lucide-react";
 import {
   tenderSettingsManager,
