@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { dispatchNOCStatusUpdate } from "@/lib/nocEventUtils";
+import { messageService } from "@/lib/messageService";
 import {
   CheckCircle,
   XCircle,
