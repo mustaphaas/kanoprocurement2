@@ -80,7 +80,25 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
     // Subscribe to message updates
     const unsubscribe = messageService.subscribe(loadMessages);
 
-    return unsubscribe;
+    // Cross-tab and cross-context listeners
+    const onCustom = (e: any) => {
+      const target = e?.detail?.email?.toLowerCase?.();
+      if (!companyEmail || !target || companyEmail.toLowerCase() === target) {
+        loadMessages();
+      }
+    };
+    const onStorage = () => loadMessages();
+    window.addEventListener("companyMessagesUpdated", onCustom as EventListener);
+    window.addEventListener("storage", onStorage);
+
+    return () => {
+      window.removeEventListener(
+        "companyMessagesUpdated",
+        onCustom as EventListener,
+      );
+      window.removeEventListener("storage", onStorage);
+      unsubscribe();
+    };
   }, [companyEmail]);
 
   // Filter messages based on search term and filters
