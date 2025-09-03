@@ -1726,6 +1726,32 @@ const TenderManagement = () => {
       if (match) actualTenderId = match.id;
     } catch {}
 
+    const resolveTenderMinistry = (): { code: string; name: string } => {
+      try {
+        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const match = findTenderByIdOrTitle(
+          all,
+          actualTenderId || assignment.tenderId,
+          assignment.tenderTitle,
+        );
+        const ministries = getAllMinistries();
+        if (match?.ministry) {
+          const byName = ministries.find(
+            (m: any) => (m.name || "").toLowerCase() === (match.ministry || "").toLowerCase(),
+          );
+          if (byName) return { code: byName.code, name: byName.name };
+        }
+        const prefix = (actualTenderId || assignment.tenderId || "").split("-")[0];
+        const byCode = ministries.find(
+          (m: any) => (m.code || "").toUpperCase() === (prefix || "").toUpperCase(),
+        );
+        if (byCode) return { code: byCode.code, name: byCode.name };
+      } catch {}
+      return { code: ministry.code, name: ministry.name };
+    };
+
+    const targetMinistry = resolveTenderMinistry();
+
     const approval = {
       id: `AWD-APP-${Date.now()}`,
       tenderId: assignment.tenderId,
