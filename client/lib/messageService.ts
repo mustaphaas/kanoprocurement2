@@ -76,9 +76,11 @@ class MessageService {
   // Get all messages for current company
   public getMessages(companyEmail?: string): CompanyMessage[] {
     try {
-      const email = companyEmail || this.getCurrentCompanyEmail();
+      const emailRaw = companyEmail || this.getCurrentCompanyEmail();
+      const email = emailRaw || "unknown@company.com";
       const key = `${this.storageKey}_${email}`;
-      const stored = localStorage.getItem(key);
+      const lcKey = `${this.storageKey}_${email.toLowerCase()}`;
+      const stored = localStorage.getItem(key) || localStorage.getItem(lcKey);
       if (stored) {
         return JSON.parse(stored);
       }
