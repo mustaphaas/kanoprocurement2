@@ -533,7 +533,9 @@ const TenderManagement = () => {
   // Helper: load local assigned tenders for current ministry
   const getLocalAssignedTenders = (): any[] => {
     try {
-      const ministryUser = JSON.parse(localStorage.getItem("ministryUser") || "{}");
+      const ministryUser = JSON.parse(
+        localStorage.getItem("ministryUser") || "{}",
+      );
       const ministryCode =
         ministryUser.ministryCode?.toUpperCase() ||
         ministryUser.ministryId?.toUpperCase() ||
@@ -552,7 +554,9 @@ const TenderManagement = () => {
         evaluationEnd: a.evaluationPeriod?.endDate,
         status: a.status,
       });
-      const own = Array.isArray(localAssignments) ? localAssignments.map(mapOne) : [];
+      const own = Array.isArray(localAssignments)
+        ? localAssignments.map(mapOne)
+        : [];
       // Also merge from any other ministry keys
       const others: any[] = [];
       Object.keys(localStorage)
@@ -903,23 +907,38 @@ const TenderManagement = () => {
       if (!Array.isArray(list)) list = [];
       // Auto-migrate any approvals that belong to a different ministry based on tender info/prefix
       try {
-        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const all = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+        );
         const ministries = getAllMinistries();
         const toKeep: any[] = [];
         list.forEach((a: any) => {
-          const match = findTenderByIdOrTitle(all, a.actualTenderId || a.tenderId, a.tenderTitle);
+          const match = findTenderByIdOrTitle(
+            all,
+            a.actualTenderId || a.tenderId,
+            a.tenderTitle,
+          );
           let expected = a.ministryCode;
           if (match?.ministry) {
-            const byName = ministries.find((m: any) => (m.name || "").toLowerCase() === (match.ministry || "").toLowerCase());
+            const byName = ministries.find(
+              (m: any) =>
+                (m.name || "").toLowerCase() ===
+                (match.ministry || "").toLowerCase(),
+            );
             if (byName) expected = byName.code;
           } else {
             const prefix = (a.actualTenderId || a.tenderId || "").split("-")[0];
-            const byCode = ministries.find((m: any) => (m.code || "").toUpperCase() === (prefix || "").toUpperCase());
+            const byCode = ministries.find(
+              (m: any) =>
+                (m.code || "").toUpperCase() === (prefix || "").toUpperCase(),
+            );
             if (byCode) expected = byCode.code;
           }
           if ((expected || ministry.code) !== ministry.code) {
             const targetKey = `${expected || ministry.code}_awardApprovals`;
-            const existing = JSON.parse(localStorage.getItem(targetKey) || "[]");
+            const existing = JSON.parse(
+              localStorage.getItem(targetKey) || "[]",
+            );
             const arr = Array.isArray(existing) ? existing : [];
             arr.unshift({ ...a, ministryCode: expected });
             localStorage.setItem(targetKey, JSON.stringify(arr));
@@ -1795,7 +1814,9 @@ const TenderManagement = () => {
 
     const resolveTenderMinistry = (): { code: string; name: string } => {
       try {
-        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const all = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]",
+        );
         const match = findTenderByIdOrTitle(
           all,
           actualTenderId || assignment.tenderId,
@@ -1804,13 +1825,18 @@ const TenderManagement = () => {
         const ministries = getAllMinistries();
         if (match?.ministry) {
           const byName = ministries.find(
-            (m: any) => (m.name || "").toLowerCase() === (match.ministry || "").toLowerCase(),
+            (m: any) =>
+              (m.name || "").toLowerCase() ===
+              (match.ministry || "").toLowerCase(),
           );
           if (byName) return { code: byName.code, name: byName.name };
         }
-        const prefix = (actualTenderId || assignment.tenderId || "").split("-")[0];
+        const prefix = (actualTenderId || assignment.tenderId || "").split(
+          "-",
+        )[0];
         const byCode = ministries.find(
-          (m: any) => (m.code || "").toUpperCase() === (prefix || "").toUpperCase(),
+          (m: any) =>
+            (m.code || "").toUpperCase() === (prefix || "").toUpperCase(),
         );
         if (byCode) return { code: byCode.code, name: byCode.name };
       } catch {}

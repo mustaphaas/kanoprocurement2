@@ -645,7 +645,13 @@ export default function MinistryDashboard() {
   const ministryInfo = getMinistryInfo();
 
   // Notifications (bell)
-  type MiniNotif = { id: string; title: string; message: string; ts: string; read?: boolean };
+  type MiniNotif = {
+    id: string;
+    title: string;
+    message: string;
+    ts: string;
+    read?: boolean;
+  };
   const [showNotifs, setShowNotifs] = useState(false);
   const [notifications, setNotifications] = useState<MiniNotif[]>([]);
   const notifKey = `${ministryInfo.code}_ministry_notifications`;
@@ -657,14 +663,21 @@ export default function MinistryDashboard() {
       const raw = localStorage.getItem(notifKey) || "[]";
       const list = JSON.parse(raw);
       setNotifications(Array.isArray(list) ? list : []);
-    } catch { setNotifications([]); }
+    } catch {
+      setNotifications([]);
+    }
   };
   const saveNotifs = (list: MiniNotif[]) => {
     localStorage.setItem(notifKey, JSON.stringify(list));
     setNotifications(list);
   };
   const pushNotif = (n: Omit<MiniNotif, "id" | "ts">) => {
-    const item: MiniNotif = { id: `N-${Date.now()}-${Math.random().toString(36).slice(2,7)}`, ts: new Date().toISOString(), read: false, ...n };
+    const item: MiniNotif = {
+      id: `N-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      ts: new Date().toISOString(),
+      read: false,
+      ...n,
+    };
     const next = [item, ...notifications].slice(0, 50);
     saveNotifs(next);
   };
@@ -684,42 +697,114 @@ export default function MinistryDashboard() {
   }, [notifKey]);
   useEffect(() => {
     const handleApproval = (e: any) => {
-      try { const d = e.detail || {}; pushNotif({ title: "Award Approval Submitted", message: `Approval ${d.approvalId || ""} status: ${d.status || "Submitted"}` }); } catch {}
+      try {
+        const d = e.detail || {};
+        pushNotif({
+          title: "Award Approval Submitted",
+          message: `Approval ${d.approvalId || ""} status: ${d.status || "Submitted"}`,
+        });
+      } catch {}
     };
     const handleApprovalUpdated = (e: any) => {
-      try { const d = e.detail || {}; pushNotif({ title: "Award Approval Updated", message: `Approval ${d.approvalId || ""} -> ${d.status || "Updated"}` }); } catch {}
+      try {
+        const d = e.detail || {};
+        pushNotif({
+          title: "Award Approval Updated",
+          message: `Approval ${d.approvalId || ""} -> ${d.status || "Updated"}`,
+        });
+      } catch {}
     };
-    const handlePublicNotice = (e: any) => { const d = e.detail || {}; pushNotif({ title: "Public Award Notice", message: `${d.tenderTitle || d.tenderId || "Tender"} notice published` }); };
-    const handleContract = (e: any) => { const d = e.detail || {}; pushNotif({ title: "Contract Updated", message: `Contract ${d.contractId || d.contractData?.id || ""} for ${d.tenderId || "tender"}` }); };
-    window.addEventListener("awardApprovalSubmitted", handleApproval as EventListener);
-    window.addEventListener("awardApprovalUpdated", handleApprovalUpdated as EventListener);
-    window.addEventListener("publicAwardPublished", handlePublicNotice as EventListener);
+    const handlePublicNotice = (e: any) => {
+      const d = e.detail || {};
+      pushNotif({
+        title: "Public Award Notice",
+        message: `${d.tenderTitle || d.tenderId || "Tender"} notice published`,
+      });
+    };
+    const handleContract = (e: any) => {
+      const d = e.detail || {};
+      pushNotif({
+        title: "Contract Updated",
+        message: `Contract ${d.contractId || d.contractData?.id || ""} for ${d.tenderId || "tender"}`,
+      });
+    };
+    window.addEventListener(
+      "awardApprovalSubmitted",
+      handleApproval as EventListener,
+    );
+    window.addEventListener(
+      "awardApprovalUpdated",
+      handleApprovalUpdated as EventListener,
+    );
+    window.addEventListener(
+      "publicAwardPublished",
+      handlePublicNotice as EventListener,
+    );
     window.addEventListener("contractCreated", handleContract as EventListener);
 
     const handleCompanyRegistered = (e: any) => {
       const d = e.detail || {};
-      pushNotif({ title: "Company Registered", message: `${d.companyName || d.email} submitted registration` });
+      pushNotif({
+        title: "Company Registered",
+        message: `${d.companyName || d.email} submitted registration`,
+      });
     };
     const handleCompanyStatusChanged = (e: any) => {
       const d = e.detail || {};
-      pushNotif({ title: `Company ${d.status}`, message: `${d.companyName || d.email} ${d.reason ? `- ${d.reason}` : ""}` });
+      pushNotif({
+        title: `Company ${d.status}`,
+        message: `${d.companyName || d.email} ${d.reason ? `- ${d.reason}` : ""}`,
+      });
     };
     const handleCompanyBid = (e: any) => {
       const d = e.detail || {};
-      pushNotif({ title: "Bid Submitted", message: `${d.companyName || "A company"} submitted bid for ${d.tenderTitle || d.tenderId || "a tender"}` });
+      pushNotif({
+        title: "Bid Submitted",
+        message: `${d.companyName || "A company"} submitted bid for ${d.tenderTitle || d.tenderId || "a tender"}`,
+      });
     };
-    window.addEventListener("companyRegistered", handleCompanyRegistered as EventListener);
-    window.addEventListener("companyStatusChanged", handleCompanyStatusChanged as EventListener);
-    window.addEventListener("companyBidSubmitted", handleCompanyBid as EventListener);
+    window.addEventListener(
+      "companyRegistered",
+      handleCompanyRegistered as EventListener,
+    );
+    window.addEventListener(
+      "companyStatusChanged",
+      handleCompanyStatusChanged as EventListener,
+    );
+    window.addEventListener(
+      "companyBidSubmitted",
+      handleCompanyBid as EventListener,
+    );
 
     return () => {
-      window.removeEventListener("awardApprovalSubmitted", handleApproval as EventListener);
-      window.removeEventListener("awardApprovalUpdated", handleApprovalUpdated as EventListener);
-      window.removeEventListener("publicAwardPublished", handlePublicNotice as EventListener);
-      window.removeEventListener("contractCreated", handleContract as EventListener);
-      window.removeEventListener("companyRegistered", handleCompanyRegistered as EventListener);
-      window.removeEventListener("companyStatusChanged", handleCompanyStatusChanged as EventListener);
-      window.removeEventListener("companyBidSubmitted", handleCompanyBid as EventListener);
+      window.removeEventListener(
+        "awardApprovalSubmitted",
+        handleApproval as EventListener,
+      );
+      window.removeEventListener(
+        "awardApprovalUpdated",
+        handleApprovalUpdated as EventListener,
+      );
+      window.removeEventListener(
+        "publicAwardPublished",
+        handlePublicNotice as EventListener,
+      );
+      window.removeEventListener(
+        "contractCreated",
+        handleContract as EventListener,
+      );
+      window.removeEventListener(
+        "companyRegistered",
+        handleCompanyRegistered as EventListener,
+      );
+      window.removeEventListener(
+        "companyStatusChanged",
+        handleCompanyStatusChanged as EventListener,
+      );
+      window.removeEventListener(
+        "companyBidSubmitted",
+        handleCompanyBid as EventListener,
+      );
     };
   }, [notifications]);
 
@@ -965,9 +1050,15 @@ export default function MinistryDashboard() {
         newApprovedRejected.forEach((cr: any) => {
           const status = cr.status;
           if (status === "Approved") {
-            pushNotif({ title: "NOC Approved", message: `${cr.projectTitle || cr.id} approved (Cert: ${cr.certificateNumber || "-"})` });
+            pushNotif({
+              title: "NOC Approved",
+              message: `${cr.projectTitle || cr.id} approved (Cert: ${cr.certificateNumber || "-"})`,
+            });
           } else if (status === "Rejected") {
-            pushNotif({ title: "NOC Rejected", message: `${cr.projectTitle || cr.id} rejected` });
+            pushNotif({
+              title: "NOC Rejected",
+              message: `${cr.projectTitle || cr.id} rejected`,
+            });
           }
         });
       } catch {}
@@ -1016,11 +1107,20 @@ export default function MinistryDashboard() {
 
         try {
           if (status === "Approved") {
-            pushNotif({ title: "NOC Approved", message: `${tenderTitle || tenderId || requestId || "NOC"} approved (Cert: ${certificateNumber || "-"})` });
+            pushNotif({
+              title: "NOC Approved",
+              message: `${tenderTitle || tenderId || requestId || "NOC"} approved (Cert: ${certificateNumber || "-"})`,
+            });
           } else if (status === "Rejected") {
-            pushNotif({ title: "NOC Rejected", message: `${tenderTitle || tenderId || requestId || "NOC"} rejected` });
+            pushNotif({
+              title: "NOC Rejected",
+              message: `${tenderTitle || tenderId || requestId || "NOC"} rejected`,
+            });
           } else {
-            pushNotif({ title: "NOC Updated", message: `${tenderTitle || tenderId || requestId || "NOC"} status: ${status}` });
+            pushNotif({
+              title: "NOC Updated",
+              message: `${tenderTitle || tenderId || requestId || "NOC"} status: ${status}`,
+            });
           }
         } catch {}
 
@@ -11389,7 +11489,11 @@ Blockchain Timestamp: ${Date.now()}
 
             <div className="flex items-center space-x-4">
               <div className="relative" ref={notifRef}>
-                <button aria-label="Notifications" onClick={() => setShowNotifs((s) => !s)} className="relative">
+                <button
+                  aria-label="Notifications"
+                  onClick={() => setShowNotifs((s) => !s)}
+                  className="relative"
+                >
                   <Bell className="h-5 w-5 text-gray-600 hover:text-teal-600 cursor-pointer transition-colors" />
                   {unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
@@ -11401,17 +11505,31 @@ Blockchain Timestamp: ${Date.now()}
                   <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
                     <div className="flex items-center justify-between p-2 border-b">
                       <span className="text-sm font-medium">Notifications</span>
-                      <button className="text-xs text-teal-600 hover:underline" onClick={markAllRead}>Mark all read</button>
+                      <button
+                        className="text-xs text-teal-600 hover:underline"
+                        onClick={markAllRead}
+                      >
+                        Mark all read
+                      </button>
                     </div>
                     <div className="max-h-80 overflow-auto">
                       {notifications.length === 0 ? (
-                        <div className="p-4 text-sm text-gray-500">No notifications</div>
+                        <div className="p-4 text-sm text-gray-500">
+                          No notifications
+                        </div>
                       ) : (
                         notifications.slice(0, 10).map((n) => (
-                          <div key={n.id} className={`px-3 py-2 text-sm border-b ${n.read ? "bg-white" : "bg-teal-50"}`}>
-                            <div className="font-medium text-gray-800">{n.title}</div>
+                          <div
+                            key={n.id}
+                            className={`px-3 py-2 text-sm border-b ${n.read ? "bg-white" : "bg-teal-50"}`}
+                          >
+                            <div className="font-medium text-gray-800">
+                              {n.title}
+                            </div>
                             <div className="text-gray-600">{n.message}</div>
-                            <div className="text-xs text-gray-400 mt-1">{new Date(n.ts).toLocaleString()}</div>
+                            <div className="text-xs text-gray-400 mt-1">
+                              {new Date(n.ts).toLocaleString()}
+                            </div>
                           </div>
                         ))
                       )}
