@@ -1948,6 +1948,91 @@ const TenderManagement = () => {
       }
     } catch {}
 
+    // 4) Fallback: search ministry-specific stores
+    try {
+      const ministry = getMinistryInfo();
+      const ministryTenders = JSON.parse(
+        localStorage.getItem(`${ministry.code}_tenders`) || "[]",
+      );
+      if (preferredTenderId) {
+        const foundById = ministryTenders.find((t: any) => t.id === preferredTenderId);
+        if (foundById) return foundById;
+      }
+      if (title) {
+        const foundByTitle = ministryTenders.find(
+          (t: any) => normalize(t.title) === normalize(title),
+        );
+        if (foundByTitle) return foundByTitle;
+      }
+    } catch {}
+
+    // 5) Fallback: scan all *_tenders keys
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.endsWith("_tenders")) {
+          try {
+            const list = JSON.parse(localStorage.getItem(key) || "[]");
+            if (preferredTenderId) {
+              const byId = list.find((t: any) => t.id === preferredTenderId);
+              if (byId) return byId;
+            }
+            if (title) {
+              const byTitle2 = list.find(
+                (t: any) => normalize(t.title) === normalize(title),
+              );
+              if (byTitle2) return byTitle2;
+            }
+          } catch {}
+        }
+      }
+    } catch {}
+
+    // 6) As last resort, synthesize a minimal tender from approved record so actions can proceed
+    if (approved?.tenderTitle || approved?.tenderId) {
+      try {
+        const ministry = getMinistryInfo();
+        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+        const synthesized = {
+          id: approved.actualTenderId || approved.tenderId || `SYN-${Date.now()}`,
+          title: approved.tenderTitle || approved.tenderId || "Awarded Tender",
+          description: approved.tenderTitle || "",
+          budget: 0,
+          status: "Awarded",
+          createdDate: new Date().toISOString().split("T")[0],
+          awardDate: new Date().toISOString().split("T")[0],
+          ministry: ministry.name,
+          department: "",
+          tenderType: "Open",
+          procurementMethod: "NCB",
+          documents: [],
+          amendments: [],
+          bidders: [],
+          evaluation: {
+            id: `E${String(tenders.length + 1).padStart(3, "0")}`,
+            technicalCriteria: [],
+            financialCriteria: [],
+            committee: [],
+            technicalThreshold: 70,
+            financialWeight: 30,
+            technicalWeight: 70,
+            status: "Complete",
+          },
+          timeline: [],
+          awardedCompany: approved.winningBidder || approved.contractorName,
+          awardedCompanyEmail: approved.winningBidderEmail || "",
+          awardAmount: approved.awardAmount || "",
+          workflowStage: "Contract Award",
+        } as any;
+        const exists = all.find((t: any) => t.id === synthesized.id);
+        if (!exists) {
+          all.unshift(synthesized);
+          localStorage.setItem(STORAGE_KEYS.TENDERS, JSON.stringify(all));
+        }
+        return synthesized;
+      } catch {}
+    }
+
     return null;
   };
 
