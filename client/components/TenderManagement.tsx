@@ -1801,6 +1801,18 @@ const TenderManagement = () => {
       };
 
       messageService.addMessage(payload, targetEmail);
+
+      // Also deliver to common variant if applicable (e.g., approved vs approval)
+      try {
+        const variants = new Set<string>();
+        if (targetEmail.includes("approved@")) {
+          variants.add(targetEmail.replace("approved@", "approval@"));
+        }
+        if (targetEmail.includes("approval@")) {
+          variants.add(targetEmail.replace("approval@", "approved@"));
+        }
+        variants.forEach((v) => messageService.addMessage(payload, v));
+      } catch {}
     } catch (e) {
       console.error("Failed to notify winner", e);
     }
