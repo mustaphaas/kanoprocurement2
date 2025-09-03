@@ -1908,8 +1908,8 @@ export default function TenderCommitteeAssignment() {
                               Evaluation Period
                             </Label>
                             <p className="text-sm font-semibold">
-                              {assignment.evaluationPeriod.startDate} to{" "}
-                              {assignment.evaluationPeriod.endDate}
+                              {assignment.evaluationPeriod?.startDate ?? "-"} to{" "}
+                              {assignment.evaluationPeriod?.endDate ?? "-"}
                             </p>
                           </div>
                           <div>
