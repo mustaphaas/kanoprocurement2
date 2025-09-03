@@ -1763,7 +1763,7 @@ const TenderManagement = () => {
       submittedAt: new Date().toISOString(),
     };
 
-    const key = `${ministry.code}_awardApprovals`;
+    const key = `${targetMinistry.code}_awardApprovals`;
     const existing = JSON.parse(localStorage.getItem(key) || "[]");
     existing.unshift(approval);
     localStorage.setItem(key, JSON.stringify(existing));
