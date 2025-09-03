@@ -338,7 +338,10 @@ export default function TenderCommitteeAssignment() {
             .then((serverItems) => {
               if (Array.isArray(serverItems) && serverItems.length > 0) {
                 setAssignments(serverItems);
-                localStorage.setItem(assignmentsKey, JSON.stringify(serverItems));
+                localStorage.setItem(
+                  assignmentsKey,
+                  JSON.stringify(serverItems),
+                );
               } else {
                 const sampleAssignments = createSampleAssignments(ministryCode);
                 setAssignments(sampleAssignments);
@@ -351,7 +354,10 @@ export default function TenderCommitteeAssignment() {
             .catch(() => {
               const sampleAssignments = createSampleAssignments(ministryCode);
               setAssignments(sampleAssignments);
-              localStorage.setItem(assignmentsKey, JSON.stringify(sampleAssignments));
+              localStorage.setItem(
+                assignmentsKey,
+                JSON.stringify(sampleAssignments),
+              );
             });
         }
       }
@@ -1541,11 +1547,14 @@ export default function TenderCommitteeAssignment() {
       setErrorMessage("");
       setSuccessMessage("");
       let targetId = assignmentId;
-      let response = await fetch(`/api/committee-assignments/${targetId}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Active" }),
-      });
+      let response = await fetch(
+        `/api/committee-assignments/${targetId}/status`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "Active" }),
+        },
+      );
 
       // If not found on server (e.g., local-only ID), try to resolve server ID by tenderId
       if (response.status === 404) {
@@ -1554,14 +1563,19 @@ export default function TenderCommitteeAssignment() {
           const listRes = await fetch(`/api/committee-assignments`);
           if (listRes.ok) {
             const serverItems = await listRes.json();
-            const match = serverItems.find((s: any) => s.tenderId === local.tenderId);
+            const match = serverItems.find(
+              (s: any) => s.tenderId === local.tenderId,
+            );
             if (match?.id) {
               targetId = match.id;
-              response = await fetch(`/api/committee-assignments/${targetId}/status`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "Active" }),
-              });
+              response = await fetch(
+                `/api/committee-assignments/${targetId}/status`,
+                {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ status: "Active" }),
+                },
+              );
               // also sync local id to server id for future actions
               if (response.ok) {
                 const updated = await response.json();
@@ -1575,19 +1589,27 @@ export default function TenderCommitteeAssignment() {
                 setSuccessMessage("Assignment activated successfully.");
 
                 // Send evaluation commencement notifications to bidding companies
-                const activatedAssignment = assignments.find(a => a.id === assignmentId);
+                const activatedAssignment = assignments.find(
+                  (a) => a.id === assignmentId,
+                );
                 if (activatedAssignment) {
-                  console.log("Sending evaluation commencement notifications for synced assignment:", activatedAssignment);
+                  console.log(
+                    "Sending evaluation commencement notifications for synced assignment:",
+                    activatedAssignment,
+                  );
                   evaluationNotificationService.notifyEvaluationCommencing({
                     id: targetId, // Use server ID
                     tenderId: activatedAssignment.tenderId,
                     tenderTitle: activatedAssignment.tenderTitle,
                     tenderCategory: activatedAssignment.tenderCategory,
-                    ministry: activatedAssignment.ministry || "Government Ministry"
+                    ministry:
+                      activatedAssignment.ministry || "Government Ministry",
                   });
                 }
 
-                window.dispatchEvent(new Event("committee-assignments:updated"));
+                window.dispatchEvent(
+                  new Event("committee-assignments:updated"),
+                );
                 return;
               }
             }
@@ -1607,15 +1629,20 @@ export default function TenderCommitteeAssignment() {
         setSuccessMessage("Assignment activated successfully.");
 
         // Send evaluation commencement notifications to bidding companies
-        const activatedAssignment = assignments.find(a => a.id === assignmentId || a.id === targetId);
+        const activatedAssignment = assignments.find(
+          (a) => a.id === assignmentId || a.id === targetId,
+        );
         if (activatedAssignment) {
-          console.log("Sending evaluation commencement notifications for assignment:", activatedAssignment);
+          console.log(
+            "Sending evaluation commencement notifications for assignment:",
+            activatedAssignment,
+          );
           evaluationNotificationService.notifyEvaluationCommencing({
             id: activatedAssignment.id,
             tenderId: activatedAssignment.tenderId,
             tenderTitle: activatedAssignment.tenderTitle,
             tenderCategory: activatedAssignment.tenderCategory,
-            ministry: activatedAssignment.ministry || "Government Ministry"
+            ministry: activatedAssignment.ministry || "Government Ministry",
           });
         }
 
@@ -1647,16 +1674,20 @@ export default function TenderCommitteeAssignment() {
       assignment.id === assignmentId
         ? {
             ...assignment,
-            coiDeclarations: [...arrSafe(assignment.coiDeclarations), newDeclaration],
-            assignedMembers: arrSafe(assignment.assignedMembers).map((member) =>
-              member.memberId === coiForm.memberId
-                ? {
-                    ...member,
-                    status: coiForm.hasConflict
-                      ? "COI_Declared"
-                      : ("Active" as const),
-                  }
-                : member,
+            coiDeclarations: [
+              ...arrSafe(assignment.coiDeclarations),
+              newDeclaration,
+            ],
+            assignedMembers: arrSafe(assignment.assignedMembers).map(
+              (member) =>
+                member.memberId === coiForm.memberId
+                  ? {
+                      ...member,
+                      status: coiForm.hasConflict
+                        ? "COI_Declared"
+                        : ("Active" as const),
+                    }
+                  : member,
             ),
           }
         : assignment,
@@ -2275,25 +2306,27 @@ export default function TenderCommitteeAssignment() {
                             Conflict Details
                           </Label>
                           <div className="space-y-2 mt-1">
-                            {arrSafe(coi.conflictDetails).map((detail, index) => (
-                              <div
-                                key={index}
-                                className="p-2 bg-red-50 rounded border-l-4 border-red-500"
-                              >
-                                <div className="font-medium text-red-900">
-                                  {detail.type} Conflict
+                            {arrSafe(coi.conflictDetails).map(
+                              (detail, index) => (
+                                <div
+                                  key={index}
+                                  className="p-2 bg-red-50 rounded border-l-4 border-red-500"
+                                >
+                                  <div className="font-medium text-red-900">
+                                    {detail.type} Conflict
+                                  </div>
+                                  <div className="text-sm text-red-800">
+                                    {detail.description}
+                                  </div>
+                                  <div className="text-xs text-red-700">
+                                    Entity: {detail.entity} • Relationship:{" "}
+                                    {detail.relationship}
+                                    {detail.duration &&
+                                      ` • Duration: ${detail.duration}`}
+                                  </div>
                                 </div>
-                                <div className="text-sm text-red-800">
-                                  {detail.description}
-                                </div>
-                                <div className="text-xs text-red-700">
-                                  Entity: {detail.entity} • Relationship:{" "}
-                                  {detail.relationship}
-                                  {detail.duration &&
-                                    ` • Duration: ${detail.duration}`}
-                                </div>
-                              </div>
-                            ))}
+                              ),
+                            )}
                           </div>
                         </div>
                       )}
@@ -2304,11 +2337,13 @@ export default function TenderCommitteeAssignment() {
                             Mitigation Measures
                           </Label>
                           <ul className="list-disc list-inside space-y-1 mt-1 text-sm">
-                            {arrSafe(coi.mitigationMeasures).map((measure, index) => (
-                              <li key={index} className="text-gray-700">
-                                {measure}
-                              </li>
-                            ))}
+                            {arrSafe(coi.mitigationMeasures).map(
+                              (measure, index) => (
+                                <li key={index} className="text-gray-700">
+                                  {measure}
+                                </li>
+                              ),
+                            )}
                           </ul>
                         </div>
                       )}
@@ -2755,11 +2790,13 @@ export default function TenderCommitteeAssignment() {
                   <SelectValue placeholder="Select committee member" />
                 </SelectTrigger>
                 <SelectContent>
-                  {arrSafe(selectedAssignment?.assignedMembers).map((member) => (
-                    <SelectItem key={member.memberId} value={member.memberId}>
-                      {member.memberName} ({member.roleTitle})
-                    </SelectItem>
-                  ))}
+                  {arrSafe(selectedAssignment?.assignedMembers).map(
+                    (member) => (
+                      <SelectItem key={member.memberId} value={member.memberId}>
+                        {member.memberName} ({member.roleTitle})
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </Select>
             </div>
