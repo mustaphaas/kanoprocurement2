@@ -1476,10 +1476,22 @@ const TenderManagement = () => {
 
     try {
       const userData = JSON.parse(ministryUser);
-      // FIXED: Properly read ministryName and ministryCode from stored user data
+      // Prefer canonical config via ministryId when present
+      if (userData.ministryId) {
+        const m = getMinistryById(userData.ministryId);
+        if (m) {
+          return {
+            name: m.name,
+            code: m.code,
+            contactEmail: m.contactEmail,
+            contactPhone: m.contactPhone,
+            address: m.address,
+          };
+        }
+      }
       return {
-        name: userData.ministryName || "Ministry of Health", // Use stored ministryName
-        code: userData.ministryCode || "MOH", // Use stored ministryCode
+        name: userData.ministryName || "Ministry of Health",
+        code: userData.ministryCode || "MOH",
         contactEmail: "health@kanostate.gov.ng",
         contactPhone: "08012345678",
         address: "Kano State Secretariat, Kano",
@@ -1494,7 +1506,7 @@ const TenderManagement = () => {
         address: "Kano State Secretariat, Kano",
       };
     }
-  };
+  };​
 
   const formatCurrency = (amount: string | number) => {
     const num = typeof amount === "string" ? parseFloat(amount) : amount;
