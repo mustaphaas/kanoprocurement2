@@ -552,7 +552,9 @@ const CompanyMessageCenter: React.FC<CompanyMessageCenterProps> = ({
               </div>
 
               <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-gray-800 whitespace-pre-line">{selectedMessage.message}</p>
+                <p className="text-gray-800 whitespace-pre-line">
+                  {selectedMessage.message}
+                </p>
               </div>
 
               {selectedMessage.metadata && (
