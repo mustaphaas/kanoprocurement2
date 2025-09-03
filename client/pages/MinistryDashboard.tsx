@@ -643,6 +643,65 @@ export default function MinistryDashboard() {
 
   const ministryInfo = getMinistryInfo();
 
+  // Notifications (bell)
+  type MiniNotif = { id: string; title: string; message: string; ts: string; read?: boolean };
+  const [showNotifs, setShowNotifs] = useState(false);
+  const [notifications, setNotifications] = useState<MiniNotif[]>([]);
+  const notifKey = `${ministryInfo.code}_ministry_notifications`;
+  const unreadCount = notifications.filter((n) => !n.read).length;
+  const notifRef = useRef<HTMLDivElement | null>(null);
+
+  const loadNotifs = () => {
+    try {
+      const raw = localStorage.getItem(notifKey) || "[]";
+      const list = JSON.parse(raw);
+      setNotifications(Array.isArray(list) ? list : []);
+    } catch { setNotifications([]); }
+  };
+  const saveNotifs = (list: MiniNotif[]) => {
+    localStorage.setItem(notifKey, JSON.stringify(list));
+    setNotifications(list);
+  };
+  const pushNotif = (n: Omit<MiniNotif, "id" | "ts">) => {
+    const item: MiniNotif = { id: `N-${Date.now()}-${Math.random().toString(36).slice(2,7)}`, ts: new Date().toISOString(), read: false, ...n };
+    const next = [item, ...notifications].slice(0, 50);
+    saveNotifs(next);
+  };
+  const markAllRead = () => {
+    const next = notifications.map((n) => ({ ...n, read: true }));
+    saveNotifs(next);
+  };
+  useEffect(() => {
+    loadNotifs();
+    const onClickAway = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotifs(false);
+      }
+    };
+    document.addEventListener("mousedown", onClickAway);
+    return () => document.removeEventListener("mousedown", onClickAway);
+  }, [notifKey]);
+  useEffect(() => {
+    const handleApproval = (e: any) => {
+      try { const d = e.detail || {}; pushNotif({ title: "Award Approval Submitted", message: `Approval ${d.approvalId || ""} status: ${d.status || "Submitted"}` }); } catch {}
+    };
+    const handleApprovalUpdated = (e: any) => {
+      try { const d = e.detail || {}; pushNotif({ title: "Award Approval Updated", message: `Approval ${d.approvalId || ""} -> ${d.status || "Updated"}` }); } catch {}
+    };
+    const handlePublicNotice = (e: any) => { const d = e.detail || {}; pushNotif({ title: "Public Award Notice", message: `${d.tenderTitle || d.tenderId || "Tender"} notice published` }); };
+    const handleContract = (e: any) => { const d = e.detail || {}; pushNotif({ title: "Contract Updated", message: `Contract ${d.contractId || d.contractData?.id || ""} for ${d.tenderId || "tender"}` }); };
+    window.addEventListener("awardApprovalSubmitted", handleApproval as EventListener);
+    window.addEventListener("awardApprovalUpdated", handleApprovalUpdated as EventListener);
+    window.addEventListener("publicAwardPublished", handlePublicNotice as EventListener);
+    window.addEventListener("contractCreated", handleContract as EventListener);
+    return () => {
+      window.removeEventListener("awardApprovalSubmitted", handleApproval as EventListener);
+      window.removeEventListener("awardApprovalUpdated", handleApprovalUpdated as EventListener);
+      window.removeEventListener("publicAwardPublished", handlePublicNotice as EventListener);
+      window.removeEventListener("contractCreated", handleContract as EventListener);
+    };
+  }, [notifications]);
+
   // Get ministry-specific mock data
   const getMinistryMockData = () => {
     const ministryUser = localStorage.getItem("ministryUser");
