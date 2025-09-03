@@ -982,6 +982,16 @@ export default function MinistryDashboard() {
         const ministryNOCKey = `${ministry.code}_NOCRequests`;
         localStorage.setItem(ministryNOCKey, JSON.stringify(updatedRequests));
 
+        try {
+          if (status === "Approved") {
+            pushNotif({ title: "NOC Approved", message: `${tenderTitle || tenderId || requestId || "NOC"} approved (Cert: ${certificateNumber || "-"})` });
+          } else if (status === "Rejected") {
+            pushNotif({ title: "NOC Rejected", message: `${tenderTitle || tenderId || requestId || "NOC"} rejected` });
+          } else {
+            pushNotif({ title: "NOC Updated", message: `${tenderTitle || tenderId || requestId || "NOC"} status: ${status}` });
+          }
+        } catch {}
+
         return updatedRequests;
       });
     };
