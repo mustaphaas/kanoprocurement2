@@ -1888,7 +1888,7 @@ const TenderManagement = () => {
       losers.forEach((b: any) => {
         if (!b.companyEmail) return;
 
-        const subject = `Tender Outcome – ${tenderTitle}`;
+        const subject = `Subject: Tender Outcome – ${tenderTitle}`;
         const body =
           `Dear ${b.companyName || "Bidder"},\n\n` +
           `Thank you for participating in the tender “${tenderTitle}” under the ${ministryName} e‑Procurement system.\n\n` +
@@ -2559,7 +2559,7 @@ const TenderManagement = () => {
         bg: "bg-gradient-to-r from-blue-100 to-cyan-100",
         text: "text-blue-700",
         border: "border-blue-200",
-        icon: "���",
+        icon: "�����",
       },
       "Contract Signed": {
         bg: "bg-gradient-to-r from-blue-100 to-blue-100",
