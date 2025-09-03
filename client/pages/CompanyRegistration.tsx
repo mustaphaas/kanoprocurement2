@@ -491,6 +491,20 @@ export default function CompanyRegistration() {
         "Pending",
       );
 
+      // Dispatch company registration event for ministry notifications
+      try {
+        window.dispatchEvent(
+          new CustomEvent("companyRegistered", {
+            detail: {
+              id: registrationData.id,
+              companyName: registrationData.companyName,
+              email: registrationData.email,
+              registrationDate: registrationData.registrationDate,
+            },
+          }),
+        );
+      } catch {}
+
       // Log company registration
       logUserAction(
         formData.contactPersonEmail.toLowerCase(),
