@@ -791,6 +791,22 @@ export default function CompanyDashboardModern() {
     bidsArray.push(bidData);
     localStorage.setItem("tenderBids", JSON.stringify(bidsArray));
 
+    // Notify ministry dashboards
+    try {
+      window.dispatchEvent(
+        new CustomEvent("companyBidSubmitted", {
+          detail: {
+            bidId: bidData.id,
+            tenderId: selectedTender.id,
+            tenderTitle: selectedTender.title,
+            companyName: companyData.name,
+            bidAmount: bidData.bidAmount,
+            submittedAt: bidData.submittedAt,
+          },
+        }),
+      );
+    } catch {}
+
     setTenders((prevTenders) =>
       prevTenders.map((tender) =>
         tender.id === selectedTender.id
