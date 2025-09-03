@@ -3522,15 +3522,24 @@ const TenderManagement = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Route to MDA Head → State Tenders Board (if above threshold)
                   </p>
-                  <Button
-                    className="mt-2"
-                    size="sm"
-                    variant="outline"
-                    onClick={handleSubmitAwardForApproval}
-                  >
-                    <Target className="h-4 w-4 mr-2" />
-                    Submit for Approval
-                  </Button>
+                  <div className="flex gap-2 mt-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleSubmitAwardForApproval}
+                    >
+                      <Target className="h-4 w-4 mr-2" />
+                      Submit for Approval
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={handleResetApprovals}
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Reset Approvals
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="p-4 border rounded-lg">
