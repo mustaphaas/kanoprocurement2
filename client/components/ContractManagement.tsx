@@ -300,6 +300,8 @@ const ContractManagement = () => {
         }
       });
 
+      // Persist merged list to primary store so filters operate on a single source
+      saveToStorage(STORAGE_KEYS.CONTRACTS, allContracts);
       return allContracts;
     };
 
@@ -312,10 +314,15 @@ const ContractManagement = () => {
 
       setContracts((prevContracts) => {
         const exists = prevContracts.find((c) => c.id === contractData.id);
-        if (!exists) {
-          return [convertedContract, ...prevContracts];
-        }
-        return prevContracts;
+        const next = exists ? prevContracts : [convertedContract, ...prevContracts];
+        // Persist update to primary store for visibility across tabs/sessions
+        try {
+          const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.CONTRACTS) || "[]");
+          const has = Array.isArray(existing) && existing.find((c: any) => c.id === contractData.id);
+          const merged = has ? existing : [convertedContract, ...existing];
+          localStorage.setItem(STORAGE_KEYS.CONTRACTS, JSON.stringify(merged));
+        } catch {}
+        return next;
       });
     };
 
