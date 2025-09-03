@@ -892,19 +892,6 @@ export default function CompanyDashboardModern() {
                 <span>{companyData.status}</span>
               </Badge>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative"
-                onClick={() => setActiveSection("messages")}
-              >
-                <MessageSquare className="h-5 w-5" />
-                {unreadMessageCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {unreadMessageCount}
-                  </span>
-                )}
-              </Button>
 
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="h-5 w-5" />
