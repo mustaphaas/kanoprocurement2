@@ -267,6 +267,10 @@ export default function TenderCommitteeAssignment() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  function arrSafe<T>(v: T[] | undefined | null): T[] {
+    return Array.isArray(v) ? v : [];
+  }
+  const lenSafe = (v: unknown[] | undefined | null) => arrSafe(v as any).length;
 
   // Form states
   const [assignmentForm, setAssignmentForm] = useState({
@@ -1643,8 +1647,8 @@ export default function TenderCommitteeAssignment() {
       assignment.id === assignmentId
         ? {
             ...assignment,
-            coiDeclarations: [...assignment.coiDeclarations, newDeclaration],
-            assignedMembers: assignment.assignedMembers.map((member) =>
+            coiDeclarations: [...arrSafe(assignment.coiDeclarations), newDeclaration],
+            assignedMembers: arrSafe(assignment.assignedMembers).map((member) =>
               member.memberId === coiForm.memberId
                 ? {
                     ...member,
@@ -1883,7 +1887,7 @@ export default function TenderCommitteeAssignment() {
                               Members Assigned
                             </Label>
                             <p className="text-sm font-semibold">
-                              {assignment.assignedMembers.length}
+                              {lenSafe(assignment.assignedMembers)}
                             </p>
                           </div>
                           <div>
@@ -1891,8 +1895,8 @@ export default function TenderCommitteeAssignment() {
                               COI Declarations
                             </Label>
                             <p className="text-sm font-semibold">
-                              {assignment.coiDeclarations.length}
-                              {assignment.coiDeclarations.some(
+                              {lenSafe(assignment.coiDeclarations)}
+                              {arrSafe(assignment.coiDeclarations).some(
                                 (coi) => coi.hasConflict,
                               ) && (
                                 <AlertTriangle className="inline h-3 w-3 ml-1 text-yellow-600" />
@@ -1913,8 +1917,8 @@ export default function TenderCommitteeAssignment() {
                               Conflicts
                             </Label>
                             <p className="text-sm font-semibold">
-                              {assignment.conflicts.length}
-                              {assignment.conflicts.some(
+                              {lenSafe(assignment.conflicts)}
+                              {arrSafe(assignment.conflicts).some(
                                 (c) => c.severity === "Critical",
                               ) && (
                                 <XCircle className="inline h-3 w-3 ml-1 text-red-600" />
@@ -1991,24 +1995,24 @@ export default function TenderCommitteeAssignment() {
                                 </div>
                               </div>
                             ))}
-                          {assignment.assignedMembers.length > 3 && (
+                          {lenSafe(assignment.assignedMembers) > 3 && (
                             <div className="text-sm text-gray-500 text-center py-1">
-                              +{assignment.assignedMembers.length - 3} more
+                              +{lenSafe(assignment.assignedMembers) - 3} more
                               members
                             </div>
                           )}
                         </div>
                       </div>
 
-                      {assignment.coiDeclarations.length > 0 && (
+                      {lenSafe(assignment.coiDeclarations) > 0 && (
                         <div>
                           <h4 className="font-medium mb-2 flex items-center gap-2">
                             <Shield className="h-4 w-4" />
                             COI Declarations (
-                            {assignment.coiDeclarations.length})
+                            {lenSafe(assignment.coiDeclarations)})
                           </h4>
                           <div className="space-y-2">
-                            {assignment.coiDeclarations.map((coi) => (
+                            {arrSafe(assignment.coiDeclarations).map((coi) => (
                               <div
                                 key={coi.id}
                                 className="flex items-center justify-between p-2 bg-yellow-50 rounded"
@@ -2049,11 +2053,11 @@ export default function TenderCommitteeAssignment() {
                         </div>
                       )}
 
-                      {assignment.conflicts.length > 0 && (
+                      {lenSafe(assignment.conflicts) > 0 && (
                         <Alert>
                           <AlertTriangle className="h-4 w-4" />
                           <AlertDescription>
-                            {assignment.conflicts.length} conflict(s) require
+                            {lenSafe(assignment.conflicts)} conflict(s) require
                             attention. Review member assignments and COI
                             declarations.
                           </AlertDescription>
@@ -2116,9 +2120,9 @@ export default function TenderCommitteeAssignment() {
                       <h4 className="font-medium mb-2 flex items-center gap-2">
                         <UserCheck className="h-4 w-4" />
                         Current Committee Members (
-                        {assignment.assignedMembers.length})
+                        {lenSafe(assignment.assignedMembers)})
                       </h4>
-                      {assignment.assignedMembers.length === 0 ? (
+                      {lenSafe(assignment.assignedMembers) === 0 ? (
                         <div className="text-center py-8 text-gray-500">
                           <Users className="h-12 w-12 mx-auto mb-2 text-gray-300" />
                           <p>No members assigned yet</p>
@@ -2136,7 +2140,7 @@ export default function TenderCommitteeAssignment() {
                         </div>
                       ) : (
                         <div className="space-y-2">
-                          {assignment.assignedMembers.map((member) => (
+                          {arrSafe(assignment.assignedMembers).map((member) => (
                             <div
                               key={member.id}
                               className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -2203,7 +2207,7 @@ export default function TenderCommitteeAssignment() {
           <div className="grid gap-4">
             {assignments
               .flatMap((assignment) =>
-                assignment.coiDeclarations.map((coi) => ({
+                arrSafe(assignment.coiDeclarations).map((coi) => ({
                   ...coi,
                   tenderTitle: assignment.tenderTitle,
                   tenderId: assignment.tenderId,
@@ -2265,13 +2269,13 @@ export default function TenderCommitteeAssignment() {
                         </div>
                       </div>
 
-                      {coi.hasConflict && coi.conflictDetails.length > 0 && (
+                      {coi.hasConflict && lenSafe(coi.conflictDetails) > 0 && (
                         <div>
                           <Label className="text-sm font-medium">
                             Conflict Details
                           </Label>
                           <div className="space-y-2 mt-1">
-                            {coi.conflictDetails.map((detail, index) => (
+                            {arrSafe(coi.conflictDetails).map((detail, index) => (
                               <div
                                 key={index}
                                 className="p-2 bg-red-50 rounded border-l-4 border-red-500"
@@ -2294,13 +2298,13 @@ export default function TenderCommitteeAssignment() {
                         </div>
                       )}
 
-                      {coi.mitigationMeasures.length > 0 && (
+                      {lenSafe(coi.mitigationMeasures) > 0 && (
                         <div>
                           <Label className="text-sm font-medium">
                             Mitigation Measures
                           </Label>
                           <ul className="list-disc list-inside space-y-1 mt-1 text-sm">
-                            {coi.mitigationMeasures.map((measure, index) => (
+                            {arrSafe(coi.mitigationMeasures).map((measure, index) => (
                               <li key={index} className="text-gray-700">
                                 {measure}
                               </li>
@@ -2385,7 +2389,7 @@ export default function TenderCommitteeAssignment() {
                             Recent Assignments
                           </Label>
                           <p className="text-sm font-semibold">
-                            {member.recentAssignments.length}
+                            {lenSafe(member.recentAssignments)}
                           </p>
                         </div>
                         <div>
@@ -2435,7 +2439,7 @@ export default function TenderCommitteeAssignment() {
                         Expertise Areas
                       </Label>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {member.expertise.map((area) => (
+                        {arrSafe(member.expertise).map((area) => (
                           <Badge
                             key={area}
                             variant="outline"
@@ -2452,7 +2456,7 @@ export default function TenderCommitteeAssignment() {
                         Qualifications
                       </Label>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {member.qualifications.map((qual) => (
+                        {arrSafe(member.qualifications).map((qual) => (
                           <Badge
                             key={qual}
                             variant="secondary"
@@ -2467,7 +2471,7 @@ export default function TenderCommitteeAssignment() {
                     <div>
                       <Label className="text-sm font-medium">Languages</Label>
                       <p className="text-sm text-gray-700">
-                        {member.languages.join(", ")}
+                        {arrSafe(member.languages).join(", ")}
                       </p>
                     </div>
                   </div>
@@ -2751,7 +2755,7 @@ export default function TenderCommitteeAssignment() {
                   <SelectValue placeholder="Select committee member" />
                 </SelectTrigger>
                 <SelectContent>
-                  {selectedAssignment?.assignedMembers.map((member) => (
+                  {arrSafe(selectedAssignment?.assignedMembers).map((member) => (
                     <SelectItem key={member.memberId} value={member.memberId}>
                       {member.memberName} ({member.roleTitle})
                     </SelectItem>
