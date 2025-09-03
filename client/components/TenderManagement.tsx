@@ -1904,6 +1904,8 @@ const TenderManagement = () => {
   // Helper to resolve current tender for award actions
   const resolveAwardTender = () => {
     const approved = awardApprovals.find((a: any) => a.status === "Approved");
+    const normalize = (s?: string) => (s || "").toString().trim().toLowerCase();
+
     const preferredTenderId =
       selectedTenderAssignment?.tenderId ||
       approved?.actualTenderId ||
@@ -1911,14 +1913,42 @@ const TenderManagement = () => {
       tenders.find((t) => t.status === "Awarded")?.id ||
       assignedTenders[0]?.tenderId ||
       null;
+
+    // 1) Try by ID in current state
     if (preferredTenderId) {
       const byId = tenders.find((t) => t.id === preferredTenderId);
       if (byId) return byId;
     }
-    const title =
-      approved?.tenderTitle || selectedTenderAssignment?.tenderTitle;
-    const t = findTenderByIdOrTitle(tenders, undefined, title);
-    return t || null;
+
+    // 2) Try by title in current state
+    const title = approved?.tenderTitle || selectedTenderAssignment?.tenderTitle;
+    const byTitle = findTenderByIdOrTitle(tenders, undefined, title);
+    if (byTitle) return byTitle;
+
+    // 3) Fallback: search global storage (all tenders)
+    try {
+      const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.TENDERS) || "[]");
+      if (preferredTenderId) {
+        const foundById = all.find((t: any) => t.id === preferredTenderId);
+        if (foundById) return foundById;
+      }
+      if (title) {
+        const foundByTitle = all.find(
+          (t: any) => normalize(t.title) === normalize(title),
+        );
+        if (foundByTitle) return foundByTitle;
+      }
+      if (approved?.tenderTitle && approved?.tenderId) {
+        const foundEither = all.find(
+          (t: any) =>
+            t.id === approved.tenderId ||
+            normalize(t.title) === normalize(approved.tenderTitle),
+        );
+        if (foundEither) return foundEither;
+      }
+    } catch {}
+
+    return null;
   };
 
   // Decide approval (Approve/Reject) within this screen
