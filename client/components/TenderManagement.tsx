@@ -2111,8 +2111,16 @@ const TenderManagement = () => {
     const contracts = JSON.parse(localStorage.getItem(contractsKey) || "[]");
     const idx = contracts.findIndex((c: any) => c.tenderId === tender.id);
     if (idx === -1) {
-      alert("Create a draft contract first");
-      return;
+      try {
+        createDraftContractFromAward();
+      } catch {}
+      const refreshed = JSON.parse(localStorage.getItem(contractsKey) || "[]");
+      const idx2 = refreshed.findIndex((c: any) => c.tenderId === tender.id);
+      if (idx2 === -1) {
+        alert("Create a draft contract first");
+        return;
+      }
+      contracts.splice(0, contracts.length, ...refreshed);
     }
     contracts[idx].status = "Active";
     localStorage.setItem(contractsKey, JSON.stringify(contracts));
@@ -2132,6 +2140,7 @@ const TenderManagement = () => {
 
   // Helper to resolve current tender for award actions
   const resolveAwardTender = () => {
+    if (selectedTender) return selectedTender;
     const approved = awardApprovals.find((a: any) => a.status === "Approved");
     const normalize = (s?: string) => (s || "").toString().trim().toLowerCase();
 
