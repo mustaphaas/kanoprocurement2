@@ -1708,32 +1708,36 @@ const TenderManagement = () => {
         targetEmail = "approval@company.com";
       }
 
-      messageService.addMessage(
-        {
-          type: "contract_awarded",
-          category: "success",
-          title: "Contract Awarded",
-          message: `Congratulations ${winnerName}! Your bid for "${tenderTitle}" has been selected and the contract has been awarded. Amount: ${awardAmount}. Our team will contact you with next steps for contract signing.`,
-          tenderId,
-          read: false,
-          actions: [
-            {
-              id: "view_tender",
-              label: "View Tender",
-              action: "view_tender",
-              data: { tenderId },
-            },
-            {
-              id: "download_document",
-              label: "Download Award Letter",
-              action: "download_document",
-              data: { tenderId, type: "award_letter" },
-            },
-          ],
-          metadata: { tenderTitle, awardAmount, isWinner: true },
-        },
-        targetEmail,
-      );
+      const payload = {
+        type: "contract_awarded" as const,
+        category: "success" as const,
+        title: "Contract Awarded",
+        message: `Congratulations ${winnerName}! Your bid for "${tenderTitle}" has been selected and the contract has been awarded. Amount: ${awardAmount}. Our team will contact you with next steps for contract signing.`,
+        tenderId,
+        read: false,
+        actions: [
+          {
+            id: "view_tender",
+            label: "View Tender",
+            action: "view_tender" as const,
+            data: { tenderId },
+          },
+          {
+            id: "download_document",
+            label: "Download Award Letter",
+            action: "download_document" as const,
+            data: { tenderId, type: "award_letter" },
+          },
+        ],
+        metadata: { tenderTitle, awardAmount, isWinner: true },
+      };
+
+      messageService.addMessage(payload, targetEmail);
+
+      // Also copy the notification to demo winner inbox for visibility
+      if (targetEmail !== "approval@company.com") {
+        messageService.addMessage(payload, "approval@company.com");
+      }
     } catch (e) {
       console.error("Failed to notify winner", e);
     }
