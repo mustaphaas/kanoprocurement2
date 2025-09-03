@@ -265,7 +265,7 @@ export default function CompanyDashboard() {
     };
 
     (window as any).testBlacklist = (email = "approved@company.com") => {
-      console.log(`🧪 Manually blacklisting ${email} for testing...`);
+      console.log(`��� Manually blacklisting ${email} for testing...`);
       persistentStorage.setItem(
         `userStatus_${email.toLowerCase()}`,
         "Blacklisted",
@@ -991,6 +991,22 @@ export default function CompanyDashboard() {
 
     // Store back to localStorage
     localStorage.setItem("tenderBids", JSON.stringify(bidsArray));
+
+    // Notify ministry dashboards
+    try {
+      window.dispatchEvent(
+        new CustomEvent("companyBidSubmitted", {
+          detail: {
+            bidId: bidData.id,
+            tenderId: selectedTender.id,
+            tenderTitle: selectedTender.title,
+            companyName: companyData.name,
+            bidAmount: bidData.bidAmount,
+            submittedAt: bidData.submittedAt,
+          },
+        }),
+      );
+    } catch {}
 
     // Update the tender to show bid has been submitted - IMPORTANT: maintain hasExpressedInterest
     setTenders((prevTenders) =>
