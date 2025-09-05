@@ -15,7 +15,7 @@ import PaymentRequestApproval from "@/components/ministry/PaymentRequestApproval
 import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import {
-  getCentralClarifications,
+  getMinistryClarifications,
   type ClarificationRecord,
 } from "@/lib/clarificationsStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
@@ -10270,7 +10270,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           htmlFor="autoExecution"
                           className="text-sm font-medium text-gray-900 cursor-pointer"
                         >
-                          🤖 Smart Contract Auto-Execution
+                          ��� Smart Contract Auto-Execution
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
                           Automated milestone verification and payment triggers
