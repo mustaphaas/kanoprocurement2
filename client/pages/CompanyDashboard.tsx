@@ -3287,15 +3287,29 @@ export default function CompanyDashboard() {
                           const t = aggregatedTenders.find(
                             (tt: any) => tt.id === id,
                           );
+                          const inferCode = (tender: any): string => {
+                            if (!tender) return "";
+                            // 1) Prefer ID prefix if it matches known codes
+                            const idStr = typeof tender.id === "string" ? tender.id : "";
+                            const prefix = idStr.includes("-")
+                              ? idStr.split("-")[0].toUpperCase()
+                              : "";
+                            const known = ["MOH", "MOWI", "MOE"];
+                            if (known.includes(prefix)) return prefix;
+                            // 2) Fall back to explicit ministry code fields
+                            const explicit = (tender.ministryCode || tender.sourceMinistry || "").toString().toUpperCase();
+                            if (known.includes(explicit)) return explicit;
+                            // 3) Infer from procuring entity/name
+                            const name = (tender.procuringEntity || tender.ministry || "").toString().toLowerCase();
+                            if (name.includes("works")) return "MOWI";
+                            if (name.includes("education")) return "MOE";
+                            if (name.includes("health")) return "MOH";
+                            return explicit || prefix || "";
+                          };
                           if (t) {
                             setClarTender(`${t.id} - ${t.title}`);
-                            // Prefer sourceMinistry if present, else try to infer from id prefix
-                            const code =
-                              (t as any).sourceMinistry ||
-                              (typeof t.id === "string"
-                                ? t.id.split("-")[0]
-                                : "");
-                            setClarMinistryCode(code || "");
+                            const code = inferCode(t);
+                            setClarMinistryCode(code);
                           } else {
                             setClarTender("");
                             setClarMinistryCode("");
