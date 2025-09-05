@@ -30,6 +30,8 @@ export interface MDALoginData {
   loginTime: string;
 }
 
+import { getMinistryById } from "@shared/ministries";
+
 class MDAAuthService {
   private CREDENTIALS_KEY = "mdaCredentials";
   private CURRENT_USER_KEY = "ministryUser";
@@ -96,11 +98,14 @@ class MDAAuthService {
         loginTime: new Date().toISOString(),
       };
 
-      // Store current user session
+      // Store current user session (include ministry code/name for proper scoping)
+      const ministryConfig = getMinistryById(mda.id);
       localStorage.setItem(
         this.CURRENT_USER_KEY,
         JSON.stringify({
           ministryId: mda.id,
+          ministryCode: ministryConfig?.code || (mda.id || "").toUpperCase(),
+          ministryName: ministryConfig?.name || mda.name,
           email: email,
           name: mda.adminName,
           role: mda.adminRole,
