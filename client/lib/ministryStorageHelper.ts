@@ -183,6 +183,7 @@ export const MINISTRY_SPECIFIC_KEYS = {
   EVALUATION_SESSIONS: "evaluationSessions",
   FEATURED_TENDERS: "featuredTenders",
   RECENT_TENDERS: "recentTenders",
+  CLARIFICATIONS: "clarifications",
   MOCK_PROCUREMENT_PLAN: "mockProcurementPlan",
   MOCK_TENDER: "mockTender",
   MOCK_NOC_REQUEST: "mockNOCRequest",
