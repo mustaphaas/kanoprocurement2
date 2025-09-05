@@ -127,6 +127,7 @@ interface Contract {
   title: string;
   contractValue: number;
   ministry: string;
+  ministryCode?: string;
   status: "Active" | "Completed" | "Terminated";
   milestones: Array<{
     id: string;
@@ -286,6 +287,7 @@ export default function PaymentRequest({
         title: "Urban Road Expansion - Phase 1",
         contractValue: 4200000000,
         ministry: "Ministry of Works and Infrastructure",
+        ministryCode: "MOWI",
         status: "Active",
         milestones: [
           { id: "M1", title: "Survey & Design", percentage: 20, status: "Completed", dueDate: "2024-01-31" },
@@ -299,6 +301,7 @@ export default function PaymentRequest({
         title: "Hospital Equipment Supply",
         contractValue: 850000000,
         ministry: "Ministry of Health",
+        ministryCode: "MOH",
         status: "Active",
         milestones: [
           { id: "M1", title: "Equipment Procurement", percentage: 50, status: "Completed", dueDate: "2024-01-31" },
@@ -310,6 +313,7 @@ export default function PaymentRequest({
         title: "School Renovation & Furniture Supply",
         contractValue: 650000000,
         ministry: "Ministry of Education",
+        ministryCode: "MOE",
         status: "Active",
         milestones: [
           { id: "M1", title: "Structural Repairs", percentage: 30, status: "In Progress", dueDate: "2024-02-28" },
@@ -322,6 +326,7 @@ export default function PaymentRequest({
         title: "Bridge Rehabilitation Program",
         contractValue: 1900000000,
         ministry: "Ministry of Works and Infrastructure",
+        ministryCode: "MOWI",
         status: "Active",
         milestones: [
           { id: "M1", title: "Structural Assessment", percentage: 25, status: "Completed", dueDate: "2024-01-20" },
@@ -468,6 +473,7 @@ export default function PaymentRequest({
       workCompletionPercentage: formData.workCompletionPercentage,
       requestType: formData.requestType,
       invoiceNumber: formData.invoiceNumber,
+      ministryCode: selectedContract.ministryCode || resolveMinistryCode(selectedContract.ministry),
       ministryCode: resolveMinistryCode(selectedContract.ministry),
     };
 
@@ -1038,6 +1044,9 @@ export default function PaymentRequest({
                         <div className="font-medium">
                           {request.contractTitle}
                         </div>
+                        <div className="text-xs text-gray-500 mt-0.5">
+                          Ministry: <span className="font-medium">{request.ministryCode || ""}</span>
+                        </div>
                         {request.milestoneTitle && (
                           <div className="text-sm text-gray-500">
                             {request.milestoneTitle}
@@ -1117,7 +1126,12 @@ export default function PaymentRequest({
                     <Label className="text-sm font-medium text-gray-700">
                       Contract
                     </Label>
-                    <p className="text-sm">{selectedRequest.contractTitle}</p>
+                    <p className="text-sm">
+                      {selectedRequest.contractTitle}
+                      {selectedRequest.ministryCode && (
+                        <span className="ml-2 text-xs text-gray-500">({selectedRequest.ministryCode})</span>
+                      )}
+                    </p>
                   </div>
 
                   <div>
