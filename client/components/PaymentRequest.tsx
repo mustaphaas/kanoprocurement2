@@ -205,53 +205,93 @@ export default function PaymentRequest({
 
   const loadPaymentRequests = () => {
     try {
-      const stored = localStorage.getItem(`paymentRequests_${companyEmail}`);
+      const key = `paymentRequests_${companyEmail}`;
+      const stored = localStorage.getItem(key);
       if (stored) {
         setPaymentRequests(JSON.parse(stored));
+        return;
       }
+      // Seed sample requests for testing across ministries when none exist
+      const samples: PaymentRequest[] = [
+        {
+          id: `PR-${Date.now()}-MOH`,
+          contractId: "CON-2024-002",
+          contractTitle: "Hospital Equipment Supply",
+          requestedAmount: 120000000,
+          workDescription: "Delivery of diagnostic equipment and initial training",
+          workPeriod: { from: "2024-01-01", to: "2024-01-31" },
+          supportingDocuments: [],
+          charges: calculateCharges(120000000),
+          netAmount: 120000000 - calculateCharges(120000000).total,
+          totalAmount: 120000000,
+          status: "Submitted",
+          submittedDate: new Date().toISOString(),
+          companyDetails: { name: companyName, email: companyEmail, contactPerson: "", bankDetails: { accountName: "", accountNumber: "", bankName: "" } },
+          workCompletionPercentage: 50,
+          requestType: "Interim",
+          invoiceNumber: "INV-MOH-001",
+          ministryCode: "MOH",
+        },
+        {
+          id: `PR-${Date.now()}-MOWI`,
+          contractId: "CON-2024-001",
+          contractTitle: "Urban Road Expansion - Phase 1",
+          requestedAmount: 300000000,
+          workDescription: "Completed earthworks & drainage for sections A-C",
+          workPeriod: { from: "2024-02-01", to: "2024-02-28" },
+          supportingDocuments: [],
+          charges: calculateCharges(300000000),
+          netAmount: 300000000 - calculateCharges(300000000).total,
+          totalAmount: 300000000,
+          status: "Under Review",
+          submittedDate: new Date().toISOString(),
+          companyDetails: { name: companyName, email: companyEmail, contactPerson: "", bankDetails: { accountName: "", accountNumber: "", bankName: "" } },
+          workCompletionPercentage: 55,
+          requestType: "Milestone",
+          invoiceNumber: "INV-MOWI-001",
+          ministryCode: "MOWI",
+        },
+        {
+          id: `PR-${Date.now()}-MOE`,
+          contractId: "CON-2024-003",
+          contractTitle: "School Renovation & Furniture Supply",
+          requestedAmount: 80000000,
+          workDescription: "Structural repairs completed for 10 schools",
+          workPeriod: { from: "2024-01-15", to: "2024-02-10" },
+          supportingDocuments: [],
+          charges: calculateCharges(80000000),
+          netAmount: 80000000 - calculateCharges(80000000).total,
+          totalAmount: 80000000,
+          status: "Submitted",
+          submittedDate: new Date().toISOString(),
+          companyDetails: { name: companyName, email: companyEmail, contactPerson: "", bankDetails: { accountName: "", accountNumber: "", bankName: "" } },
+          workCompletionPercentage: 30,
+          requestType: "Interim",
+          invoiceNumber: "INV-MOE-001",
+          ministryCode: "MOE",
+        },
+      ];
+      localStorage.setItem(key, JSON.stringify(samples));
+      setPaymentRequests(samples);
     } catch (error) {
       console.error("Error loading payment requests:", error);
     }
   };
 
   const loadContracts = () => {
-    // Mock contract data - in real implementation, this would come from the backend
+    // Mock contract data across supported ministries
     const mockContracts: Contract[] = [
       {
         id: "CON-2024-001",
-        title: "ICT Infrastructure Development",
-        contractValue: 2500000000,
-        ministry: "Ministry of Science and Technology",
+        title: "Urban Road Expansion - Phase 1",
+        contractValue: 4200000000,
+        ministry: "Ministry of Works and Infrastructure",
         status: "Active",
         milestones: [
-          {
-            id: "M1",
-            title: "Site Preparation and Foundation",
-            percentage: 25,
-            status: "Completed",
-            dueDate: "2024-02-15",
-          },
-          {
-            id: "M2",
-            title: "Network Infrastructure Installation",
-            percentage: 40,
-            status: "In Progress",
-            dueDate: "2024-03-30",
-          },
-          {
-            id: "M3",
-            title: "Software Integration and Testing",
-            percentage: 25,
-            status: "Pending",
-            dueDate: "2024-05-15",
-          },
-          {
-            id: "M4",
-            title: "Final Deployment and Handover",
-            percentage: 10,
-            status: "Pending",
-            dueDate: "2024-06-30",
-          },
+          { id: "M1", title: "Survey & Design", percentage: 20, status: "Completed", dueDate: "2024-01-31" },
+          { id: "M2", title: "Earthworks & Drainage", percentage: 35, status: "In Progress", dueDate: "2024-03-15" },
+          { id: "M3", title: "Pavement & Surfacing", percentage: 35, status: "Pending", dueDate: "2024-05-30" },
+          { id: "M4", title: "Markings & Handover", percentage: 10, status: "Pending", dueDate: "2024-06-30" },
         ],
       },
       {
@@ -261,20 +301,32 @@ export default function PaymentRequest({
         ministry: "Ministry of Health",
         status: "Active",
         milestones: [
-          {
-            id: "M1",
-            title: "Equipment Procurement",
-            percentage: 50,
-            status: "Completed",
-            dueDate: "2024-01-31",
-          },
-          {
-            id: "M2",
-            title: "Installation and Training",
-            percentage: 50,
-            status: "In Progress",
-            dueDate: "2024-03-31",
-          },
+          { id: "M1", title: "Equipment Procurement", percentage: 50, status: "Completed", dueDate: "2024-01-31" },
+          { id: "M2", title: "Installation and Training", percentage: 50, status: "In Progress", dueDate: "2024-03-31" },
+        ],
+      },
+      {
+        id: "CON-2024-003",
+        title: "School Renovation & Furniture Supply",
+        contractValue: 650000000,
+        ministry: "Ministry of Education",
+        status: "Active",
+        milestones: [
+          { id: "M1", title: "Structural Repairs", percentage: 30, status: "In Progress", dueDate: "2024-02-28" },
+          { id: "M2", title: "Furniture Production", percentage: 40, status: "Pending", dueDate: "2024-04-15" },
+          { id: "M3", title: "Delivery & Installation", percentage: 30, status: "Pending", dueDate: "2024-05-31" },
+        ],
+      },
+      {
+        id: "CON-2024-004",
+        title: "Bridge Rehabilitation Program",
+        contractValue: 1900000000,
+        ministry: "Ministry of Works and Infrastructure",
+        status: "Active",
+        milestones: [
+          { id: "M1", title: "Structural Assessment", percentage: 25, status: "Completed", dueDate: "2024-01-20" },
+          { id: "M2", title: "Reinforcement & Decking", percentage: 50, status: "In Progress", dueDate: "2024-03-25" },
+          { id: "M3", title: "Finishing & Load Tests", percentage: 25, status: "Pending", dueDate: "2024-05-10" },
         ],
       },
     ];
