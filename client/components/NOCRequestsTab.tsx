@@ -484,9 +484,7 @@ export default function NOCRequestsTab() {
 
     // Clean up any old central data that might conflict
     const cleanupOldData = () => {
-      // Clear old central storage to start fresh and avoid duplicates
-      localStorage.removeItem("centralNOCRequests");
-
+      // Keep centralNOCRequests; we'll merge it below to avoid losing newly-created requests
       // Also check for any old-format NOC data and clear it
       const keysToCheck = Object.keys(localStorage);
       keysToCheck.forEach((key) => {
@@ -494,7 +492,8 @@ export default function NOCRequestsTab() {
           key.startsWith("noc") &&
           key !== "MOH_NOCRequests" &&
           key !== "MOWI_NOCRequests" &&
-          key !== "MOE_NOCRequests"
+          key !== "MOE_NOCRequests" &&
+          key !== "centralNOCRequests"
         ) {
           localStorage.removeItem(key);
         }
@@ -564,9 +563,19 @@ export default function NOCRequestsTab() {
 
     // Data is now loaded from ministry storage above - no fallback needed
 
+    // Merge existing central list (if any) so requests created just now are preserved
+    const existingCentral = JSON.parse(
+      localStorage.getItem("centralNOCRequests") || "[]",
+    );
+    const byId: Record<string, any> = {};
+    [...existingCentral, ...allNOCRequests].forEach((r: any) => {
+      byId[r.id] = { ...byId[r.id], ...r };
+    });
+    const merged = Object.values(byId);
+
     // Update both central storage and state
-    setNOCRequests(allNOCRequests);
-    localStorage.setItem("centralNOCRequests", JSON.stringify(allNOCRequests));
+    setNOCRequests(merged as NOCRequest[]);
+    localStorage.setItem("centralNOCRequests", JSON.stringify(merged));
   };
 
   const handleViewRequest = (request: NOCRequest) => {

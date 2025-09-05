@@ -15,7 +15,7 @@ import PaymentRequestApproval from "@/components/ministry/PaymentRequestApproval
 import MinistryReports from "./MinistryReports";
 import { formatCurrency } from "@/lib/utils";
 import {
-  getCentralClarifications,
+  getMinistryClarifications,
   type ClarificationRecord,
 } from "@/lib/clarificationsStorage";
 import { logUserAction } from "@/lib/auditLogStorage";
@@ -2649,10 +2649,7 @@ export default function MinistryDashboard() {
 
     setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
-    const centralClars = getCentralClarifications();
-    const filtered = centralClars.filter(
-      (c) => c.ministryCode === currentMinistry.code,
-    );
+    const filtered = getMinistryClarifications(currentMinistry.code);
     const mappedFromCentral = filtered.map((c) => ({
       id: c.id,
       vendorId: c.vendorEmail,
@@ -3228,7 +3225,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-003",
           companyName: "Golden Gates Healthcare",
-          bidAmount: "₦875,000,000",
+          bidAmount: "���875,000,000",
           technicalScore: 85,
           financialScore: 82,
           totalScore: 83.5,
@@ -8217,7 +8214,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                     <li>����� Company Registration</li>
                                   )}
                                   {!workflowStatus?.loginVerificationCompleted && (
-                                    <li>• Login & Verification</li>
+                                    <li>�� Login & Verification</li>
                                   )}
                                   {!workflowStatus?.biddingCompleted && (
                                     <li>• Bidding Process</li>
@@ -10273,7 +10270,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                           htmlFor="autoExecution"
                           className="text-sm font-medium text-gray-900 cursor-pointer"
                         >
-                          🤖 Smart Contract Auto-Execution
+                          ��� Smart Contract Auto-Execution
                         </label>
                         <p className="text-sm text-gray-600 mt-1">
                           Automated milestone verification and payment triggers
@@ -10827,6 +10824,7 @@ Blockchain Timestamp: ${Date.now()}
     return (
       <NOCRequestsModule
         ministryCode={ministry.code}
+        ministryName={ministry.name}
         ministryName={ministry.name}
       />
     );
