@@ -83,7 +83,7 @@ import {
 } from "@/lib/tenderIdGenerator";
 import RealTimeVerificationTool from "./RealTimeVerificationTool";
 import {
-  getCentralClarifications,
+  getMinistryClarifications,
   updateClarification,
   type ClarificationRecord,
 } from "@/lib/clarificationsStorage";
@@ -262,9 +262,7 @@ const TenderManagement = () => {
       }
     } catch {}
 
-    const initial = getCentralClarifications().filter(
-      (c) => c.ministryCode === ministryCode,
-    );
+    const initial = getMinistryClarifications(ministryCode);
     setClarifications(initial);
 
     const onClarification = (e: any) => {
@@ -291,12 +289,27 @@ const TenderManagement = () => {
 
   const handleRespondToClarification = () => {
     if (!selectedClarification) return;
-    const updated = updateClarification(selectedClarification.id, {
+    updateClarification(selectedClarification.id, {
       response: responseText,
       responseDate: new Date().toISOString(),
       status: "Responded",
     });
-    setClarifications(updated);
+
+    // Refresh ministry-specific clarifications to maintain isolation
+    try {
+      const ministryUser = localStorage.getItem("ministryUser");
+      let ministryCode = "MOH";
+      if (ministryUser) {
+        const data = JSON.parse(ministryUser);
+        const m = getMinistryById(data.ministryId);
+        if (m?.code) ministryCode = m.code;
+      }
+      const refreshed = getMinistryClarifications(ministryCode);
+      setClarifications(refreshed);
+    } catch {
+      // Fallback: keep previous state if any error occurs
+    }
+
     setClarDialogOpen(false);
   };
 
