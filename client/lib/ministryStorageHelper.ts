@@ -3,6 +3,8 @@
  * All ministry-specific data should use this helper to prevent cross-contamination
  */
 
+import { getMinistryById } from "@shared/ministries";
+
 export interface MinistryContext {
   ministryId: string;
   ministryCode: string;
@@ -17,11 +19,11 @@ export const getCurrentMinistryContext = (): MinistryContext => {
     const ministryUser = localStorage.getItem("ministryUser");
     if (ministryUser) {
       const userData = JSON.parse(ministryUser);
+      const cfg = getMinistryById(userData.ministryId);
       return {
         ministryId: userData.ministryId,
-        ministryCode:
-          userData.ministryCode || userData.ministryId?.toUpperCase() || "MOH",
-        ministryName: userData.ministryName,
+        ministryCode: userData.ministryCode || cfg?.code || "MOH",
+        ministryName: userData.ministryName || cfg?.name || "Ministry of Health",
       };
     }
   } catch (error) {
