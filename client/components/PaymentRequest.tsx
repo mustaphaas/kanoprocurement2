@@ -219,7 +219,8 @@ export default function PaymentRequest({
           contractId: "CON-2024-002",
           contractTitle: "Hospital Equipment Supply",
           requestedAmount: 120000000,
-          workDescription: "Delivery of diagnostic equipment and initial training",
+          workDescription:
+            "Delivery of diagnostic equipment and initial training",
           workPeriod: { from: "2024-01-01", to: "2024-01-31" },
           supportingDocuments: [],
           charges: calculateCharges(120000000),
@@ -227,7 +228,12 @@ export default function PaymentRequest({
           totalAmount: 120000000,
           status: "Submitted",
           submittedDate: new Date().toISOString(),
-          companyDetails: { name: companyName, email: companyEmail, contactPerson: "", bankDetails: { accountName: "", accountNumber: "", bankName: "" } },
+          companyDetails: {
+            name: companyName,
+            email: companyEmail,
+            contactPerson: "",
+            bankDetails: { accountName: "", accountNumber: "", bankName: "" },
+          },
           workCompletionPercentage: 50,
           requestType: "Interim",
           invoiceNumber: "INV-MOH-001",
@@ -246,7 +252,12 @@ export default function PaymentRequest({
           totalAmount: 300000000,
           status: "Under Review",
           submittedDate: new Date().toISOString(),
-          companyDetails: { name: companyName, email: companyEmail, contactPerson: "", bankDetails: { accountName: "", accountNumber: "", bankName: "" } },
+          companyDetails: {
+            name: companyName,
+            email: companyEmail,
+            contactPerson: "",
+            bankDetails: { accountName: "", accountNumber: "", bankName: "" },
+          },
           workCompletionPercentage: 55,
           requestType: "Milestone",
           invoiceNumber: "INV-MOWI-001",
@@ -265,7 +276,12 @@ export default function PaymentRequest({
           totalAmount: 80000000,
           status: "Submitted",
           submittedDate: new Date().toISOString(),
-          companyDetails: { name: companyName, email: companyEmail, contactPerson: "", bankDetails: { accountName: "", accountNumber: "", bankName: "" } },
+          companyDetails: {
+            name: companyName,
+            email: companyEmail,
+            contactPerson: "",
+            bankDetails: { accountName: "", accountNumber: "", bankName: "" },
+          },
           workCompletionPercentage: 30,
           requestType: "Interim",
           invoiceNumber: "INV-MOE-001",
@@ -290,10 +306,34 @@ export default function PaymentRequest({
         ministryCode: "MOWI",
         status: "Active",
         milestones: [
-          { id: "M1", title: "Survey & Design", percentage: 20, status: "Completed", dueDate: "2024-01-31" },
-          { id: "M2", title: "Earthworks & Drainage", percentage: 35, status: "In Progress", dueDate: "2024-03-15" },
-          { id: "M3", title: "Pavement & Surfacing", percentage: 35, status: "Pending", dueDate: "2024-05-30" },
-          { id: "M4", title: "Markings & Handover", percentage: 10, status: "Pending", dueDate: "2024-06-30" },
+          {
+            id: "M1",
+            title: "Survey & Design",
+            percentage: 20,
+            status: "Completed",
+            dueDate: "2024-01-31",
+          },
+          {
+            id: "M2",
+            title: "Earthworks & Drainage",
+            percentage: 35,
+            status: "In Progress",
+            dueDate: "2024-03-15",
+          },
+          {
+            id: "M3",
+            title: "Pavement & Surfacing",
+            percentage: 35,
+            status: "Pending",
+            dueDate: "2024-05-30",
+          },
+          {
+            id: "M4",
+            title: "Markings & Handover",
+            percentage: 10,
+            status: "Pending",
+            dueDate: "2024-06-30",
+          },
         ],
       },
       {
@@ -304,8 +344,20 @@ export default function PaymentRequest({
         ministryCode: "MOH",
         status: "Active",
         milestones: [
-          { id: "M1", title: "Equipment Procurement", percentage: 50, status: "Completed", dueDate: "2024-01-31" },
-          { id: "M2", title: "Installation and Training", percentage: 50, status: "In Progress", dueDate: "2024-03-31" },
+          {
+            id: "M1",
+            title: "Equipment Procurement",
+            percentage: 50,
+            status: "Completed",
+            dueDate: "2024-01-31",
+          },
+          {
+            id: "M2",
+            title: "Installation and Training",
+            percentage: 50,
+            status: "In Progress",
+            dueDate: "2024-03-31",
+          },
         ],
       },
       {
@@ -316,9 +368,27 @@ export default function PaymentRequest({
         ministryCode: "MOE",
         status: "Active",
         milestones: [
-          { id: "M1", title: "Structural Repairs", percentage: 30, status: "In Progress", dueDate: "2024-02-28" },
-          { id: "M2", title: "Furniture Production", percentage: 40, status: "Pending", dueDate: "2024-04-15" },
-          { id: "M3", title: "Delivery & Installation", percentage: 30, status: "Pending", dueDate: "2024-05-31" },
+          {
+            id: "M1",
+            title: "Structural Repairs",
+            percentage: 30,
+            status: "In Progress",
+            dueDate: "2024-02-28",
+          },
+          {
+            id: "M2",
+            title: "Furniture Production",
+            percentage: 40,
+            status: "Pending",
+            dueDate: "2024-04-15",
+          },
+          {
+            id: "M3",
+            title: "Delivery & Installation",
+            percentage: 30,
+            status: "Pending",
+            dueDate: "2024-05-31",
+          },
         ],
       },
       {
@@ -329,9 +399,27 @@ export default function PaymentRequest({
         ministryCode: "MOWI",
         status: "Active",
         milestones: [
-          { id: "M1", title: "Structural Assessment", percentage: 25, status: "Completed", dueDate: "2024-01-20" },
-          { id: "M2", title: "Reinforcement & Decking", percentage: 50, status: "In Progress", dueDate: "2024-03-25" },
-          { id: "M3", title: "Finishing & Load Tests", percentage: 25, status: "Pending", dueDate: "2024-05-10" },
+          {
+            id: "M1",
+            title: "Structural Assessment",
+            percentage: 25,
+            status: "Completed",
+            dueDate: "2024-01-20",
+          },
+          {
+            id: "M2",
+            title: "Reinforcement & Decking",
+            percentage: 50,
+            status: "In Progress",
+            dueDate: "2024-03-25",
+          },
+          {
+            id: "M3",
+            title: "Finishing & Load Tests",
+            percentage: 25,
+            status: "Pending",
+            dueDate: "2024-05-10",
+          },
         ],
       },
     ];
@@ -473,7 +561,9 @@ export default function PaymentRequest({
       workCompletionPercentage: formData.workCompletionPercentage,
       requestType: formData.requestType,
       invoiceNumber: formData.invoiceNumber,
-      ministryCode: selectedContract.ministryCode || resolveMinistryCode(selectedContract.ministry),
+      ministryCode:
+        selectedContract.ministryCode ||
+        resolveMinistryCode(selectedContract.ministry),
       ministryCode: resolveMinistryCode(selectedContract.ministry),
     };
 
@@ -1045,7 +1135,10 @@ export default function PaymentRequest({
                           {request.contractTitle}
                         </div>
                         <div className="text-xs text-gray-500 mt-0.5">
-                          Ministry: <span className="font-medium">{request.ministryCode || ""}</span>
+                          Ministry:{" "}
+                          <span className="font-medium">
+                            {request.ministryCode || ""}
+                          </span>
                         </div>
                         {request.milestoneTitle && (
                           <div className="text-sm text-gray-500">
@@ -1129,7 +1222,9 @@ export default function PaymentRequest({
                     <p className="text-sm">
                       {selectedRequest.contractTitle}
                       {selectedRequest.ministryCode && (
-                        <span className="ml-2 text-xs text-gray-500">({selectedRequest.ministryCode})</span>
+                        <span className="ml-2 text-xs text-gray-500">
+                          ({selectedRequest.ministryCode})
+                        </span>
                       )}
                     </p>
                   </div>

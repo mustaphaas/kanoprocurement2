@@ -257,7 +257,10 @@ export default function PaymentRequestApproval({
       const companies: string[] = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i) || "";
-        if (key.startsWith("paymentRequests_") && key !== `paymentRequests_ministry`) {
+        if (
+          key.startsWith("paymentRequests_") &&
+          key !== `paymentRequests_ministry`
+        ) {
           const email = key.replace("paymentRequests_", "");
           if (email) companies.push(email);
         }
@@ -272,7 +275,8 @@ export default function PaymentRequestApproval({
           // Find requests that should be in this ministry but aren't yet
           const relevantRequests = companyRequests.filter((req) => {
             const detected = (req.ministryCode || "").toUpperCase();
-            const fallback = detected || determineMinistryFromContract(req.contractTitle);
+            const fallback =
+              detected || determineMinistryFromContract(req.contractTitle);
             return (
               fallback === effectiveMinistryCode &&
               !allRequests.find((existingReq) => existingReq.id === req.id)
@@ -317,7 +321,8 @@ export default function PaymentRequestApproval({
   const determineMinistryFromContract = (contractTitle: string): string => {
     const title = contractTitle.toLowerCase();
     if (title.includes("health") || title.includes("medical")) return "MOH";
-    if (title.includes("road") || title.includes("infrastructure")) return "MOWI";
+    if (title.includes("road") || title.includes("infrastructure"))
+      return "MOWI";
     if (title.includes("education") || title.includes("school")) return "MOE";
     if (title.includes("ict") || title.includes("technology")) return "MOST";
     return ""; // Unknown if not matched
