@@ -95,6 +95,7 @@ interface PaymentRequest {
   workCompletionPercentage: number;
   requestType: "Milestone" | "Interim" | "Final" | "Advance";
   invoiceNumber?: string;
+  ministryCode?: string;
   // Ministry-specific fields
   ministryComments?: string;
   financeComments?: string;
@@ -261,12 +262,10 @@ export default function PaymentRequestApproval({
 
           // Find requests that should be in this ministry but aren't yet
           const relevantRequests = companyRequests.filter((req) => {
-            // Extract ministry from contract title or use other logic to determine ministry
-            const contractMinistry = determineMinistryFromContract(
-              req.contractTitle,
-            );
+            const detected = (req.ministryCode || "").toUpperCase();
+            const fallback = detected || determineMinistryFromContract(req.contractTitle);
             return (
-              contractMinistry === effectiveMinistryCode &&
+              fallback === effectiveMinistryCode &&
               !allRequests.find((existingReq) => existingReq.id === req.id)
             );
           });
@@ -307,31 +306,12 @@ export default function PaymentRequestApproval({
 
   // Helper function to determine ministry from contract title
   const determineMinistryFromContract = (contractTitle: string): string => {
-    if (
-      contractTitle.toLowerCase().includes("health") ||
-      contractTitle.toLowerCase().includes("medical")
-    ) {
-      return "MOH";
-    }
-    if (
-      contractTitle.toLowerCase().includes("road") ||
-      contractTitle.toLowerCase().includes("infrastructure")
-    ) {
-      return "MOWI";
-    }
-    if (
-      contractTitle.toLowerCase().includes("education") ||
-      contractTitle.toLowerCase().includes("school")
-    ) {
-      return "MOE";
-    }
-    if (
-      contractTitle.toLowerCase().includes("ict") ||
-      contractTitle.toLowerCase().includes("technology")
-    ) {
-      return "MOST";
-    }
-    return "MOH"; // Default fallback
+    const title = contractTitle.toLowerCase();
+    if (title.includes("health") || title.includes("medical")) return "MOH";
+    if (title.includes("road") || title.includes("infrastructure")) return "MOWI";
+    if (title.includes("education") || title.includes("school")) return "MOE";
+    if (title.includes("ict") || title.includes("technology")) return "MOST";
+    return ""; // Unknown if not matched
   };
 
   // Helper function to determine priority
