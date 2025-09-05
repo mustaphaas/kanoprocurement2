@@ -2649,10 +2649,7 @@ export default function MinistryDashboard() {
 
     setMDAUsers(mockMDAUsers);
     setBidEvaluations(mockBidEvaluations);
-    const centralClars = getCentralClarifications();
-    const filtered = centralClars.filter(
-      (c) => c.ministryCode === currentMinistry.code,
-    );
+    const filtered = getMinistryClarifications(currentMinistry.code);
     const mappedFromCentral = filtered.map((c) => ({
       id: c.id,
       vendorId: c.vendorEmail,
