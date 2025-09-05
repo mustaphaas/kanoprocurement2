@@ -3290,17 +3290,30 @@ export default function CompanyDashboard() {
                           const inferCode = (tender: any): string => {
                             if (!tender) return "";
                             // 1) Prefer ID prefix if it matches known codes
-                            const idStr = typeof tender.id === "string" ? tender.id : "";
+                            const idStr =
+                              typeof tender.id === "string" ? tender.id : "";
                             const prefix = idStr.includes("-")
                               ? idStr.split("-")[0].toUpperCase()
                               : "";
                             const known = ["MOH", "MOWI", "MOE"];
                             if (known.includes(prefix)) return prefix;
                             // 2) Fall back to explicit ministry code fields
-                            const explicit = (tender.ministryCode || tender.sourceMinistry || "").toString().toUpperCase();
+                            const explicit = (
+                              tender.ministryCode ||
+                              tender.sourceMinistry ||
+                              ""
+                            )
+                              .toString()
+                              .toUpperCase();
                             if (known.includes(explicit)) return explicit;
                             // 3) Infer from procuring entity/name
-                            const name = (tender.procuringEntity || tender.ministry || "").toString().toLowerCase();
+                            const name = (
+                              tender.procuringEntity ||
+                              tender.ministry ||
+                              ""
+                            )
+                              .toString()
+                              .toLowerCase();
                             if (name.includes("works")) return "MOWI";
                             if (name.includes("education")) return "MOE";
                             if (name.includes("health")) return "MOH";
