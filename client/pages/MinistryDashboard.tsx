@@ -2568,6 +2568,7 @@ export default function MinistryDashboard() {
             status: tender.status === "Published" ? "Open" : "Draft",
             publishDate: tender.publishDate,
             closeDate: tender.closeDate,
+            sourceMinistry: syncMinistry.code,
             createdAt: Date.now(),
           };
           existingRecent.unshift(recentTender);
@@ -4140,6 +4141,7 @@ export default function MinistryDashboard() {
         closingDate: tender.closeDate,
         tenderFee: formatCurrency(25000),
         procuringEntity: ministryInfo.name,
+        sourceMinistry: ministryInfo.code,
         duration: "12 months",
         eligibility: "Qualified contractors with relevant experience",
         requirements: [
