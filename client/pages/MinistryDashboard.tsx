@@ -3228,7 +3228,7 @@ export default function MinistryDashboard() {
         {
           id: "BID-003",
           companyName: "Golden Gates Healthcare",
-          bidAmount: "₦875,000,000",
+          bidAmount: "���875,000,000",
           technicalScore: 85,
           financialScore: 82,
           totalScore: 83.5,
@@ -8217,7 +8217,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
                                     <li>����� Company Registration</li>
                                   )}
                                   {!workflowStatus?.loginVerificationCompleted && (
-                                    <li>• Login & Verification</li>
+                                    <li>�� Login & Verification</li>
                                   )}
                                   {!workflowStatus?.biddingCompleted && (
                                     <li>• Bidding Process</li>
@@ -10827,6 +10827,7 @@ Blockchain Timestamp: ${Date.now()}
     return (
       <NOCRequestsModule
         ministryCode={ministry.code}
+        ministryName={ministry.name}
         ministryName={ministry.name}
       />
     );
