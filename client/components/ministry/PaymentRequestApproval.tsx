@@ -251,8 +251,17 @@ export default function PaymentRequestApproval({
       );
 
       // Also check for any new requests from companies that need to be imported
-      const companies = ["approved@company.com", "company@example.com"]; // In real app, this would come from a proper source
+      // Discover all companies with paymentRequests_* keys
       let allRequests = [...ministryRequests];
+
+      const companies: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i) || "";
+        if (key.startsWith("paymentRequests_") && key !== `paymentRequests_ministry`) {
+          const email = key.replace("paymentRequests_", "");
+          if (email) companies.push(email);
+        }
+      }
 
       companies.forEach((companyEmail) => {
         try {
