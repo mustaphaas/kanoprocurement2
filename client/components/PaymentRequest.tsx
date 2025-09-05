@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/StaticAuthContext";
 import { formatCurrency } from "@/lib/utils";
+import { getAllMinistries } from "@shared/ministries";
 
 // Payment Request Interfaces
 export interface PaymentRequest {
@@ -87,6 +88,7 @@ export interface PaymentRequest {
   workCompletionPercentage: number;
   requestType: "Milestone" | "Interim" | "Final" | "Advance";
   invoiceNumber?: string;
+  ministryCode?: string;
 }
 
 interface PaymentDocument {
@@ -316,6 +318,23 @@ export default function PaymentRequest({
     }
   };
 
+  const resolveMinistryCode = (ministryName: string): string => {
+    try {
+      const ministries = getAllMinistries();
+      const exact = ministries.find(
+        (m) => m.name.toLowerCase() === ministryName.toLowerCase(),
+      );
+      if (exact) return exact.code;
+      const lowered = ministryName.toLowerCase();
+      if (lowered.includes("works")) return "MOWI";
+      if (lowered.includes("education")) return "MOE";
+      if (lowered.includes("health")) return "MOH";
+      return "";
+    } catch {
+      return "";
+    }
+  };
+
   const handleCreateRequest = async () => {
     if (
       !formData.contractId ||
@@ -397,6 +416,7 @@ export default function PaymentRequest({
       workCompletionPercentage: formData.workCompletionPercentage,
       requestType: formData.requestType,
       invoiceNumber: formData.invoiceNumber,
+      ministryCode: resolveMinistryCode(selectedContract.ministry),
     };
 
     const updatedRequests = [...paymentRequests, newRequest];
