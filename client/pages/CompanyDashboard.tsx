@@ -688,7 +688,7 @@ export default function CompanyDashboard() {
           if (!formatted.find((t: Tender) => t.id === d.id)) finalTenders.push(d);
         });
         setTenders(finalTenders);
-      }, [where('status','==','Published') as any]);
+      });
       return () => {
         if (typeof unsubscribe === 'function') unsubscribe();
       };
