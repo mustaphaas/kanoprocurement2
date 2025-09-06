@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 // Your Firebase config (same as in client/lib/firebase.ts)
@@ -80,24 +80,42 @@ async function createInitialUsers() {
       const user = userCredential.user;
       console.log(`✅ Auth user created with UID: ${user.uid}`);
 
-      // Create user profile in Firestore
-      const userProfile = {
+      // Create user profile in Firestore (omit undefined fields)
+      const userProfile: any = {
         uid: user.uid,
         email: user.email,
         displayName: userData.displayName,
         role: userData.role,
-        ministryId: userData.ministryId,
         createdAt: new Date(),
         lastLoginAt: new Date(),
         emailVerified: false,
       };
+      if (userData.ministryId) userProfile.ministryId = userData.ministryId;
 
       await setDoc(doc(db, "users", user.uid), userProfile);
       console.log(`✅ Firestore profile created for ${userData.displayName}`);
       console.log("---");
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
-        console.log(`⚠️  User ${userData.email} already exists, skipping...`);
+        console.log(`⚠️  User ${userData.email} already exists, ensuring profile...`);
+        try {
+          const cred = await signInWithEmailAndPassword(auth, userData.email, userData.password);
+          const uid = cred.user.uid;
+          const profile: any = {
+            uid,
+            email: userData.email,
+            displayName: userData.displayName,
+            role: userData.role,
+            createdAt: new Date(),
+            lastLoginAt: new Date(),
+            emailVerified: false,
+          };
+          if (userData.ministryId) profile.ministryId = userData.ministryId;
+          await setDoc(doc(db, "users", uid), profile);
+          console.log(`✅ Profile ensured for ${userData.email}`);
+        } catch (e) {
+          console.error(`❌ Failed to ensure profile for ${userData.email}:`, (e as any).message || e);
+        }
       } else {
         console.error(
           `❌ Error creating user ${userData.email}:`,
