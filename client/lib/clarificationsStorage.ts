@@ -113,6 +113,8 @@ export const addClarificationAsync = async (
         vendorEmail: item.vendorEmail.toLowerCase(),
         vendorName: item.vendorName,
         ministryCode: item.ministryCode,
+        // extra cross-reference field retained in Firestore
+        localId: item.id,
         submittedDate: undefined as any,
       } as any);
     }
