@@ -3,7 +3,7 @@
 
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, doc, setDoc, Timestamp } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 // Firebase config from environment variables
 const firebaseConfig = {
@@ -22,6 +22,16 @@ const auth = getAuth(app);
 async function seedData() {
   try {
     console.log('Starting Firestore seeding...');
+
+    // Authenticate as admin to satisfy Firestore security rules
+    const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@kanostate.gov.ng';
+    const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'Admin123!@#';
+    try {
+      await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+      console.log(`Authenticated as ${adminEmail} for seeding.`);
+    } catch (e) {
+      console.warn('Admin sign-in failed, proceeding to create admin accounts then retry writes.');
+    }
 
     // Create admin users
     const adminUsers = [
