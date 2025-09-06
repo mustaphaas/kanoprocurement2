@@ -12,8 +12,8 @@ import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import PaymentRequest from "@/components/PaymentRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  addClarification,
-  getCompanyClarifications,
+  addClarificationAsync,
+  getCompanyClarificationsAsync,
   type ClarificationRecord,
 } from "@/lib/clarificationsStorage";
 import { dispatchClarificationSubmitted } from "@/lib/clarificationEvents";
@@ -163,7 +163,7 @@ export default function CompanyDashboard() {
     [statusUpdateTrigger],
   );
 
-  const handleSubmitClarification = () => {
+  const handleSubmitClarification = async () => {
     if (
       !clarTender ||
       !clarCategory ||
@@ -189,7 +189,7 @@ export default function CompanyDashboard() {
       vendorName: companyData.name,
       ministryCode: clarMinistryCode,
     };
-    addClarification(record);
+    await addClarificationAsync(record);
     logUserAction(
       companyData.email.toLowerCase(),
       "company_user",
@@ -539,11 +539,16 @@ export default function CompanyDashboard() {
     return getCompanyDetails();
   }, [statusUpdateTrigger, user?.email]);
 
-  // Clarification stats for the company
-  const companyClarifications = useMemo(
-    () => getCompanyClarifications(companyData.email),
-    [companyData.email, statusUpdateTrigger],
-  );
+  // Clarification stats for the company (Firestore-aware)
+  const [companyClarifications, setCompanyClarifications] = useState<ClarificationRecord[]>([]);
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const list = await getCompanyClarificationsAsync(companyData.email);
+      if (active) setCompanyClarifications(list);
+    })();
+    return () => { active = false; };
+  }, [companyData.email, statusUpdateTrigger]);
   const totalClarifications = companyClarifications.length;
   const pendingClarifications = companyClarifications.filter(
     (c) => c.status === "Pending Response",
