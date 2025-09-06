@@ -5,14 +5,14 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, doc, setDoc, Timestamp } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
-// Firebase config - replace with your actual config
+// Firebase config from environment variables
 const firebaseConfig = {
-  apiKey: "your_api_key",
-  authDomain: "your_project.firebaseapp.com",
-  projectId: "your_project_id",
-  storageBucket: "your_project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your_app_id"
+  apiKey: process.env.VITE_FIREBASE_API_KEY as string,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN as string,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID as string,
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET as string,
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID as string,
+  appId: process.env.VITE_FIREBASE_APP_ID as string,
 };
 
 const app = initializeApp(firebaseConfig);
