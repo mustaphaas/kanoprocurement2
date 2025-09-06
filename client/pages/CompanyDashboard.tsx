@@ -3506,7 +3506,7 @@ export default function CompanyDashboard() {
               </div>
               <div className="p-6">
                 <div className="space-y-4">
-                  {getCompanyClarifications(companyData.email).map(
+                  {companyClarifications.map(
                     (clarification) => (
                       <div
                         key={clarification.id}
