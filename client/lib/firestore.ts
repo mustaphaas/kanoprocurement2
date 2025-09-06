@@ -455,10 +455,76 @@ export const auditService = {
 export const firestoreUtils = {
   // Convert Firestore Timestamp to Date
   timestampToDate: (timestamp: Timestamp): Date => timestamp.toDate(),
-  
+
   // Convert Date to Firestore Timestamp
   dateToTimestamp: (date: Date): Timestamp => Timestamp.fromDate(date),
-  
+
   // Get server timestamp
   getServerTimestamp: () => serverTimestamp()
+};
+
+// Clarification operations
+export type ClarificationStatus = 'Pending Response' | 'Responded' | 'Closed';
+
+export interface Clarification {
+  id?: string;
+  tender: string;
+  subject: string;
+  category: string;
+  message: string;
+  urgent: boolean;
+  submittedDate: Timestamp;
+  responseDate?: Timestamp | null;
+  response?: string | null;
+  status: ClarificationStatus;
+  vendorEmail: string;
+  vendorName: string;
+  ministryCode: string;
+}
+
+export const clarificationService = {
+  async create(clar: Omit<Clarification, 'id' | 'submittedDate'>): Promise<string> {
+    const docRef = await addDoc(collection(db, 'clarifications'), {
+      ...clar,
+      submittedDate: serverTimestamp(),
+    });
+    return docRef.id;
+  },
+
+  async update(id: string, updates: Partial<Clarification>): Promise<void> {
+    const ref = doc(db, 'clarifications', id);
+    await updateDoc(ref, updates);
+  },
+
+  async getByVendorEmail(email: string): Promise<(Clarification & { id: string })[]> {
+    const q = query(
+      collection(db, 'clarifications'),
+      where('vendorEmail', '==', email.toLowerCase()),
+      orderBy('submittedDate', 'desc')
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Clarification & { id: string }));
+  },
+
+  async getByMinistry(ministryCode: string): Promise<(Clarification & { id: string })[]> {
+    const q = query(
+      collection(db, 'clarifications'),
+      where('ministryCode', '==', ministryCode),
+      orderBy('submittedDate', 'desc')
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Clarification & { id: string }));
+  },
+
+  onSnapshotByVendor(email: string, callback: (cls: (Clarification & { id: string })[]) => void) {
+    const qy = query(
+      collection(db, 'clarifications'),
+      where('vendorEmail', '==', email.toLowerCase()),
+      orderBy('submittedDate', 'desc')
+    );
+    return onSnapshot(qy, (snapshot) => {
+      const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Clarification & { id: string }));
+      callback(list);
+    });
+  }
 };
