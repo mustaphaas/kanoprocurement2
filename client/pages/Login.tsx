@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/StaticAuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { getMinistryByCredentials } from "@shared/ministries";
 import {
   Building2,
@@ -63,10 +63,10 @@ const userTypes: UserTypeConfig[] = [
     icon: <Shield className="h-6 w-6" />,
     bgGradient: "from-blue-50 to-blue-100",
     iconBg: "bg-blue-100 text-blue-600",
-    useEmail: false,
+    useEmail: true,
     demoCredentials: {
-      identifier: "admin",
-      password: "password",
+      identifier: "admin@kanostate.gov.ng",
+      password: "Admin123!@#",
     },
     navigation: "/admin/dashboard",
   },
@@ -77,10 +77,10 @@ const userTypes: UserTypeConfig[] = [
     icon: <Crown className="h-6 w-6" />,
     bgGradient: "from-purple-50 to-purple-100",
     iconBg: "bg-purple-100 text-purple-600",
-    useEmail: false,
+    useEmail: true,
     demoCredentials: {
-      identifier: "superuser",
-      password: "admin123",
+      identifier: "superuser@kanostate.gov.ng",
+      password: "Super123!@#",
     },
     navigation: "/superuser/dashboard",
   },
@@ -105,10 +105,10 @@ const userTypes: UserTypeConfig[] = [
     icon: <Users className="h-6 w-6" />,
     bgGradient: "from-orange-50 to-orange-100",
     iconBg: "bg-orange-100 text-orange-600",
-    useEmail: false,
+    useEmail: true,
     demoCredentials: {
-      identifier: "ministry/ministry2/ministry3",
-      password: "ministry123",
+      identifier: "ministry@works.kano.gov.ng",
+      password: "Ministry123!",
     },
     navigation: "/ministry/dashboard",
   },
@@ -176,68 +176,12 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      if (selectedUserType === "ministry") {
-        // Handle ministry login with dynamic ministry system
-        setTimeout(() => {
-          const identifier = currentConfig.useEmail
-            ? formData.email!
-            : formData.username!;
-
-          const ministry = getMinistryByCredentials(
-            identifier,
-            formData.password,
-          );
-
-          if (ministry) {
-            localStorage.setItem(
-              "ministryUser",
-              JSON.stringify({
-                username: identifier,
-                role: "ministry",
-                ministryId: ministry.id,
-                ministryName: ministry.name,
-                ministryCode: ministry.code,
-              }),
-            );
-            navigate(currentConfig.navigation);
-          } else {
-            // Check for dynamic MDA credentials
-            const mdas = JSON.parse(localStorage.getItem("mdas") || "[]");
-
-            // Simplified MDA login: just check if it's an MDA ID with mda123 password
-            const mda = mdas.find(
-              (m: any) => m.id.toLowerCase() === identifier.toLowerCase(),
-            );
-
-            if (mda && formData.password === "mda123") {
-              localStorage.setItem(
-                "ministryUser",
-                JSON.stringify({
-                  username: identifier,
-                  role: "mda",
-                  ministryId: mda.id,
-                  ministryName: mda.name,
-                  ministryCode: mda.id.toUpperCase(),
-                  mdaType: mda.type,
-                }),
-              );
-              navigate(currentConfig.navigation);
-            } else {
-              setErrors({
-                general: `Invalid credentials. Available accounts: ministry, ministry2, ministry3 (password: ministry123) OR use your MDA ID with password: mda123`,
-              });
-            }
-          }
-          setIsLoading(false);
-        }, 1000);
-      } else {
-        // Handle other login types with auth context
-        const identifier = currentConfig.useEmail
-          ? formData.email!
-          : formData.username!;
-        await signIn(identifier, formData.password);
-        navigate(currentConfig.navigation);
-      }
+      // Firebase-only login: all roles use email/password via AuthContext
+      const identifier = currentConfig.useEmail
+        ? formData.email!
+        : formData.username!;
+      await signIn(identifier, formData.password);
+      navigate(currentConfig.navigation);
     } catch (error) {
       setErrors({
         general:
