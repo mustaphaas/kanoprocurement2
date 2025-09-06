@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 // Your Firebase config (same as in client/lib/firebase.ts)
@@ -97,9 +101,15 @@ async function createInitialUsers() {
       console.log("---");
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
-        console.log(`⚠️  User ${userData.email} already exists, ensuring profile...`);
+        console.log(
+          `⚠️  User ${userData.email} already exists, ensuring profile...`,
+        );
         try {
-          const cred = await signInWithEmailAndPassword(auth, userData.email, userData.password);
+          const cred = await signInWithEmailAndPassword(
+            auth,
+            userData.email,
+            userData.password,
+          );
           const uid = cred.user.uid;
           const profile: any = {
             uid,
@@ -114,7 +124,10 @@ async function createInitialUsers() {
           await setDoc(doc(db, "users", uid), profile);
           console.log(`✅ Profile ensured for ${userData.email}`);
         } catch (e) {
-          console.error(`❌ Failed to ensure profile for ${userData.email}:`, (e as any).message || e);
+          console.error(
+            `❌ Failed to ensure profile for ${userData.email}:`,
+            (e as any).message || e,
+          );
         }
       } else {
         console.error(

@@ -452,8 +452,8 @@ export default function CompanyDashboardModern() {
           location: "Kano State",
           status: "Open",
           hasExpressedInterest:
-            tenderStates[(t.id as string)]?.hasExpressedInterest || false,
-          hasBid: tenderStates[(t.id as string)]?.hasBid || false,
+            tenderStates[t.id as string]?.hasExpressedInterest || false,
+          hasBid: tenderStates[t.id as string]?.hasBid || false,
           unspscCode: "72141100",
           procurementMethod: t.procurementMethod || "Open Tendering",
         }));
@@ -461,11 +461,14 @@ export default function CompanyDashboardModern() {
         const defaults = getDefaultTenders();
         const finalTenders = [...formatted];
         defaults.forEach((d) => {
-          if (!formatted.find((t: Tender) => t.id === d.id)) finalTenders.push(d);
+          if (!formatted.find((t: Tender) => t.id === d.id))
+            finalTenders.push(d);
         });
         setTenders(finalTenders);
       });
-      return () => { if (typeof unsubscribe === 'function') unsubscribe(); };
+      return () => {
+        if (typeof unsubscribe === "function") unsubscribe();
+      };
     }
 
     const loadTenders = () => {
