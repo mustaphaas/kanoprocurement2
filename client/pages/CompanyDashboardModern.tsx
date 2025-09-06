@@ -8,6 +8,8 @@ import { logUserAction } from "@/lib/auditLogStorage";
 import { tenderStatusChecker, TenderStatusInfo } from "@/lib/tenderSettings";
 import { messageService } from "@/lib/messageService";
 import { getAggregatedMinistryTenders } from "@/lib/companyTenderAggregator";
+import { hasFirebaseConfig } from "@/lib/firebase";
+import { tenderService, type Tender as FBTender } from "@/lib/firestore";
 import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import PaymentRequest from "@/components/PaymentRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -408,8 +410,64 @@ export default function CompanyDashboardModern() {
 
   const [tenders, setTenders] = useState<Tender[]>(getDefaultTenders());
 
-  // Load tenders from localStorage
+  // Load tenders from Firestore when available, fallback to localStorage
   useEffect(() => {
+    if (hasFirebaseConfig) {
+      const unsubscribe = tenderService.onSnapshot((fbTenders: FBTender[]) => {
+        const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+        const storedTenderStates = localStorage.getItem(statesKey) || "{}";
+        const tenderStates = JSON.parse(storedTenderStates);
+        const lastProcessedTenders = JSON.parse(
+          localStorage.getItem("lastProcessedTenders") || "[]",
+        );
+
+        const published = fbTenders.filter((t) => t.status === "Published");
+        published.forEach((t) => {
+          if (!lastProcessedTenders.includes(t.id as string)) {
+            messageService.createBidCreatedMessage(
+              {
+                id: t.id as string,
+                title: t.title,
+                ministry: t.ministry || "Kano State Government",
+                category: t.category || "General",
+                value: formatCurrency(Number(t.estimatedValue || "0")),
+                deadline: t.closeDate?.toDate().toISOString(),
+              },
+              companyData.email,
+            );
+          }
+        });
+        localStorage.setItem(
+          "lastProcessedTenders",
+          JSON.stringify(published.map((t) => t.id)),
+        );
+
+        const formatted = published.map((t) => ({
+          id: t.id as string,
+          title: t.title,
+          ministry: t.ministry || "Kano State Government",
+          category: t.category || "General",
+          value: formatCurrency(Number(t.estimatedValue || "0")),
+          deadline: t.closeDate?.toDate().toISOString(),
+          location: "Kano State",
+          status: "Open",
+          hasExpressedInterest:
+            tenderStates[(t.id as string)]?.hasExpressedInterest || false,
+          hasBid: tenderStates[(t.id as string)]?.hasBid || false,
+          unspscCode: "72141100",
+          procurementMethod: t.procurementMethod || "Open Tendering",
+        }));
+
+        const defaults = getDefaultTenders();
+        const finalTenders = [...formatted];
+        defaults.forEach((d) => {
+          if (!formatted.find((t: Tender) => t.id === d.id)) finalTenders.push(d);
+        });
+        setTenders(finalTenders);
+      });
+      return () => { if (typeof unsubscribe === 'function') unsubscribe(); };
+    }
+
     const loadTenders = () => {
       const mainTenders = localStorage.getItem("kanoproc_tenders");
       let allTenders: any[] = [];
