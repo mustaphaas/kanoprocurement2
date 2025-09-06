@@ -539,6 +539,22 @@ export default function CompanyDashboard() {
     return getCompanyDetails();
   }, [statusUpdateTrigger, user?.email]);
 
+  // Clarification stats for the company
+  const companyClarifications = useMemo(
+    () => getCompanyClarifications(companyData.email),
+    [companyData.email, statusUpdateTrigger],
+  );
+  const totalClarifications = companyClarifications.length;
+  const pendingClarifications = companyClarifications.filter(
+    (c) => c.status === "Pending Response",
+  ).length;
+  const respondedClarifications = companyClarifications.filter(
+    (c) => c.status === "Responded",
+  ).length;
+  const closedClarifications = companyClarifications.filter(
+    (c) => c.status === "Closed",
+  ).length;
+
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
@@ -974,7 +990,7 @@ export default function CompanyDashboard() {
       tenderId: selectedTender.id,
       tenderTitle: selectedTender.title,
       companyName: companyData.name,
-      bidAmount: "₦850,000,000", // Mock amount for simplicity
+      bidAmount: "��850,000,000", // Mock amount for simplicity
       status: "Submitted",
       submittedAt: new Date().toISOString(),
       technicalScore: null,
@@ -3591,7 +3607,7 @@ export default function CompanyDashboard() {
                     <p className="text-sm font-medium text-gray-600">
                       Total Submitted
                     </p>
-                    <p className="text-2xl font-bold text-gray-900">24</p>
+                    <p className="text-2xl font-bold text-gray-900">{totalClarifications}</p>
                   </div>
                 </div>
               </div>
@@ -3602,7 +3618,7 @@ export default function CompanyDashboard() {
                     <p className="text-sm font-medium text-gray-600">
                       Pending Response
                     </p>
-                    <p className="text-2xl font-bold text-gray-900">3</p>
+                    <p className="text-2xl font-bold text-gray-900">{pendingClarifications}</p>
                   </div>
                 </div>
               </div>
@@ -3613,7 +3629,7 @@ export default function CompanyDashboard() {
                     <p className="text-sm font-medium text-gray-600">
                       Responded
                     </p>
-                    <p className="text-2xl font-bold text-gray-900">18</p>
+                    <p className="text-2xl font-bold text-gray-900">{respondedClarifications}</p>
                   </div>
                 </div>
               </div>
@@ -3622,7 +3638,7 @@ export default function CompanyDashboard() {
                   <Archive className="h-8 w-8 text-gray-600" />
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-600">Closed</p>
-                    <p className="text-2xl font-bold text-gray-900">3</p>
+                    <p className="text-2xl font-bold text-gray-900">{closedClarifications}</p>
                   </div>
                 </div>
               </div>
