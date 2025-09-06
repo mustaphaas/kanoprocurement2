@@ -8,6 +8,8 @@ import { logUserAction } from "@/lib/auditLogStorage";
 import { tenderStatusChecker, TenderStatusInfo } from "@/lib/tenderSettings";
 import { messageService } from "@/lib/messageService";
 import { getAggregatedMinistryTenders } from "@/lib/companyTenderAggregator";
+import { hasFirebaseConfig } from "@/lib/firebase";
+import { tenderService, type Tender as FBTender } from "@/lib/firestore";
 import CompanyMessageCenter from "@/components/CompanyMessageCenter";
 import PaymentRequest from "@/components/PaymentRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -632,35 +634,86 @@ export default function CompanyDashboard() {
 
   const [tenders, setTenders] = useState<Tender[]>(getDefaultTenders());
 
-  // Load tenders from localStorage (ALL tenders from main storage for companies)
+  // Load tenders from Firestore when available, fallback to localStorage
   useEffect(() => {
+    if (hasFirebaseConfig) {
+      const unsubscribe = tenderService.onSnapshot(async (fbTenders: FBTender[]) => {
+        const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
+        const storedTenderStates = localStorage.getItem(statesKey) || "{}";
+        const tenderStates = JSON.parse(storedTenderStates);
+        const lastProcessedTenders = JSON.parse(
+          localStorage.getItem("lastProcessedTenders") || "[]",
+        );
+
+        const published = fbTenders.filter((t) => t.status === "Published");
+        published.forEach((t) => {
+          if (!lastProcessedTenders.includes(t.id as string)) {
+            messageService.createBidCreatedMessage(
+              {
+                id: t.id as string,
+                title: t.title,
+                ministry: t.ministry || "Kano State Government",
+                category: t.category || "General",
+                value: formatCurrency(Number(t.estimatedValue || "0")),
+                deadline: t.closeDate?.toDate().toISOString(),
+              },
+              companyData.email,
+            );
+          }
+        });
+        localStorage.setItem(
+          "lastProcessedTenders",
+          JSON.stringify(published.map((t) => t.id)),
+        );
+
+        const formatted = published.map((t) => ({
+          id: t.id as string,
+          title: t.title,
+          ministry: t.ministry || "Kano State Government",
+          category: t.category || "General",
+          value: formatCurrency(Number(t.estimatedValue || "0")),
+          deadline: t.closeDate?.toDate().toISOString(),
+          location: "Kano State",
+          status: "Open",
+          hasExpressedInterest:
+            tenderStates[(t.id as string)]?.hasExpressedInterest || false,
+          hasBid: tenderStates[(t.id as string)]?.hasBid || false,
+          unspscCode: "72141100",
+          procurementMethod: t.procurementMethod || "Open Tendering",
+        }));
+
+        const defaults = getDefaultTenders();
+        const finalTenders = [...formatted];
+        defaults.forEach((d) => {
+          if (!formatted.find((t: Tender) => t.id === d.id)) finalTenders.push(d);
+        });
+        setTenders(finalTenders);
+      }, [where('status','==','Published') as any]);
+      return () => {
+        if (typeof unsubscribe === 'function') unsubscribe();
+      };
+    }
+
+    // Fallback to localStorage path
     const loadTenders = () => {
-      // Companies should see ALL tenders from ALL ministries
       const mainTenders = localStorage.getItem("kanoproc_tenders");
       let allTenders: any[] = [];
-
       if (mainTenders) {
         try {
           allTenders = JSON.parse(mainTenders);
-          console.log(
-            `🏢 CompanyDashboard: Loaded ${allTenders.length} tenders from ALL ministries`,
-          );
         } catch (error) {
           console.error("Error parsing main tenders:", error);
         }
       }
       const statesKey = `companyTenderStates_${companyData.email.toLowerCase()}`;
-      const storedTenderStates = localStorage.getItem(statesKey) || "{}";
-      const tenderStates = JSON.parse(storedTenderStates);
+      const tenderStates = JSON.parse(localStorage.getItem(statesKey) || "{}");
       const lastProcessedTenders = JSON.parse(
         localStorage.getItem("lastProcessedTenders") || "[]",
       );
 
       if (allTenders.length > 0) {
-        // Check for new tenders and create notifications
         allTenders.forEach((tender: any) => {
           if (!lastProcessedTenders.includes(tender.id)) {
-            // This is a new tender, create a "bid created" notification
             messageService.createBidCreatedMessage(
               {
                 id: tender.id,
@@ -674,15 +727,11 @@ export default function CompanyDashboard() {
             );
           }
         });
-
-        // Update processed tenders list
         const currentTenderIds = allTenders.map((t: any) => t.id);
         localStorage.setItem(
           "lastProcessedTenders",
           JSON.stringify(currentTenderIds),
         );
-
-        // Convert main tender format to company dashboard tender format
         const formattedTenders = allTenders.map((tender: any) => ({
           id: tender.id,
           title: tender.title,
@@ -698,33 +747,21 @@ export default function CompanyDashboard() {
           hasExpressedInterest:
             tenderStates[tender.id]?.hasExpressedInterest || false,
           hasBid: tenderStates[tender.id]?.hasBid || false,
-          unspscCode: "72141100", // Default UNSPSC code
+          unspscCode: "72141100",
           procurementMethod: "Open Tendering",
         }));
-
-        // Combine with default tenders, avoid duplicates
-        const defaultTenders = getDefaultTenders();
+        const defaults = getDefaultTenders();
         const finalTenders = [...formattedTenders];
-
-        // Add default tenders that don't exist in stored tenders
-        defaultTenders.forEach((defaultTender) => {
-          if (
-            !formattedTenders.find((t: Tender) => t.id === defaultTender.id)
-          ) {
-            finalTenders.push(defaultTender);
-          }
+        defaults.forEach((d) => {
+          if (!formattedTenders.find((t: Tender) => t.id === d.id))
+            finalTenders.push(d);
         });
-
         setTenders(finalTenders);
       } else {
-        // If no main tenders, use defaults
         setTenders(getDefaultTenders());
       }
     };
-
     loadTenders();
-
-    // Set up interval to refresh tenders every 30 seconds
     const interval = setInterval(loadTenders, 30000);
     return () => clearInterval(interval);
   }, [companyData.email]);
