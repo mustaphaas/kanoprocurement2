@@ -106,7 +106,9 @@ try {
   if (hasFirebaseConfig) {
     console.log("✅ Firebase services initialized successfully");
   } else if (defaultConfig.projectId !== "demo-project") {
-    console.log("✅ Firebase services initialized with fallback production config");
+    console.log(
+      "✅ Firebase services initialized with fallback production config",
+    );
   } else {
     console.log("⚠️ Firebase services initialized in demo mode");
   }
