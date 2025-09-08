@@ -21,18 +21,40 @@ const defaultConfig = {
   measurementId: "G-DEMO123",
 };
 
+// Helper to ensure a valid storageBucket
+function normalizeConfig(cfg: any) {
+  const projectId = cfg?.projectId;
+  let storageBucket = cfg?.storageBucket;
+  if (!storageBucket && projectId) {
+    storageBucket = `${projectId}.appspot.com`;
+  }
+  if (
+    typeof storageBucket === "string" &&
+    storageBucket.includes("firebasestorage.app") &&
+    projectId
+  ) {
+    storageBucket = `${projectId}.appspot.com`;
+  }
+  return {
+    ...cfg,
+    storageBucket,
+  };
+}
+
 // Your web app's Firebase configuration
-const firebaseConfig = hasFirebaseConfig
-  ? {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-      appId: import.meta.env.VITE_FIREBASE_APP_ID,
-      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-    }
-  : defaultConfig;
+const firebaseConfig = normalizeConfig(
+  hasFirebaseConfig
+    ? {
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: import.meta.env.VITE_FIREBASE_APP_ID,
+        measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+      }
+    : defaultConfig,
+);
 
 // Initialize Firebase
 let app: any = null;
@@ -44,6 +66,12 @@ try {
   if (hasFirebaseConfig) {
     console.log("🔥 Initializing Firebase with production config");
     app = initializeApp(firebaseConfig);
+    if (!firebaseConfig.storageBucket && firebaseConfig.projectId) {
+      console.warn(
+        "storageBucket missing or invalid; defaulted to",
+        `${firebaseConfig.projectId}.appspot.com`,
+      );
+    }
   } else {
     console.log("⚠️ Firebase config missing, running in demo mode");
     console.log(
