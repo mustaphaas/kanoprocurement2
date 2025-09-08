@@ -10,29 +10,51 @@ const hasFirebaseConfig = Boolean(
     import.meta.env.VITE_FIREBASE_PROJECT_ID,
 );
 
-// Default configuration for development/demo mode
+// Default configuration now falls back to Kano production config when env is missing
 const defaultConfig = {
-  apiKey: "demo-api-key",
-  authDomain: "demo-project.firebaseapp.com",
-  projectId: "demo-project",
-  storageBucket: "demo-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:demo",
-  measurementId: "G-DEMO123",
+  apiKey: "AIzaSyAigbniqp1r3mvMMyY8LJxscs2XXfjirRg",
+  authDomain: "kanostateeprocurement.firebaseapp.com",
+  projectId: "kanostateeprocurement",
+  storageBucket: "kanostateeprocurement.appspot.com",
+  messagingSenderId: "166809348033",
+  appId: "1:166809348033:web:e41beea1cca42f5873f140",
+  measurementId: "G-G5K62PCKQV",
 };
 
+// Helper to ensure a valid storageBucket
+function normalizeConfig(cfg: any) {
+  const projectId = cfg?.projectId;
+  let storageBucket = cfg?.storageBucket;
+  if (!storageBucket && projectId) {
+    storageBucket = `${projectId}.appspot.com`;
+  }
+  if (
+    typeof storageBucket === "string" &&
+    storageBucket.includes("firebasestorage.app") &&
+    projectId
+  ) {
+    storageBucket = `${projectId}.appspot.com`;
+  }
+  return {
+    ...cfg,
+    storageBucket,
+  };
+}
+
 // Your web app's Firebase configuration
-const firebaseConfig = hasFirebaseConfig
-  ? {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-      appId: import.meta.env.VITE_FIREBASE_APP_ID,
-      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-    }
-  : defaultConfig;
+const firebaseConfig = normalizeConfig(
+  hasFirebaseConfig
+    ? {
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: import.meta.env.VITE_FIREBASE_APP_ID,
+        measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+      }
+    : defaultConfig,
+);
 
 // Initialize Firebase
 let app: any = null;
@@ -44,16 +66,29 @@ try {
   if (hasFirebaseConfig) {
     console.log("🔥 Initializing Firebase with production config");
     app = initializeApp(firebaseConfig);
+    if (!firebaseConfig.storageBucket && firebaseConfig.projectId) {
+      console.warn(
+        "storageBucket missing or invalid; defaulted to",
+        `${firebaseConfig.projectId}.appspot.com`,
+      );
+    }
   } else {
-    console.log("⚠️ Firebase config missing, running in demo mode");
-    console.log(
-      "ℹ️ Some features may be limited. To enable full Firebase functionality:",
-    );
-    console.log("1. Set up a Firebase project");
-    console.log("2. Add Firebase environment variables to .env file");
-    console.log("3. See FIREBASE_SETUP.md for detailed instructions");
+    const isDemo = defaultConfig.projectId === "demo-project";
+    if (isDemo) {
+      console.log("⚠️ Firebase config missing, running in demo mode");
+      console.log(
+        "ℹ️ Some features may be limited. To enable full Firebase functionality:",
+      );
+      console.log("1. Set up a Firebase project");
+      console.log("2. Add Firebase environment variables to .env file");
+      console.log("3. See FIREBASE_SETUP.md for detailed instructions");
+    } else {
+      console.log(
+        "✅ Firebase env not found; using fallback production config for project:",
+        defaultConfig.projectId,
+      );
+    }
 
-    // Initialize with demo config for basic functionality
     app = initializeApp(defaultConfig);
   }
 } catch (error) {
@@ -70,6 +105,10 @@ try {
 
   if (hasFirebaseConfig) {
     console.log("✅ Firebase services initialized successfully");
+  } else if (defaultConfig.projectId !== "demo-project") {
+    console.log(
+      "✅ Firebase services initialized with fallback production config",
+    );
   } else {
     console.log("⚠️ Firebase services initialized in demo mode");
   }
@@ -93,7 +132,7 @@ if (
   } catch (error) {
     console.log("⚠️ Firebase emulators not available or already connected");
   }
-} else if (hasFirebaseConfig) {
+} else if (hasFirebaseConfig || firebaseConfig.projectId !== "demo-project") {
   console.log("🌐 Using production Firebase services");
 } else {
   console.log("🎭 Running in demo mode - Firebase features limited");
