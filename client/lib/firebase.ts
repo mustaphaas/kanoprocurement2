@@ -28,7 +28,11 @@ function normalizeConfig(cfg: any) {
   if (!storageBucket && projectId) {
     storageBucket = `${projectId}.appspot.com`;
   }
-  if (typeof storageBucket === "string" && storageBucket.includes("firebasestorage.app") && projectId) {
+  if (
+    typeof storageBucket === "string" &&
+    storageBucket.includes("firebasestorage.app") &&
+    projectId
+  ) {
     storageBucket = `${projectId}.appspot.com`;
   }
   return {
