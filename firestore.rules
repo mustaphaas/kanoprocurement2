@@ -71,5 +71,10 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/users/$(userId)) &&
         get(/databases/$(database)/documents/users/$(userId)).data.role == 'superuser';
     }
+
+    function hasMinistryRole(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId)) &&
+        get(/databases/$(database)/documents/users/$(userId)).data.role == 'ministry';
+    }
   }
 }
