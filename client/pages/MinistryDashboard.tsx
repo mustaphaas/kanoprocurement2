@@ -558,6 +558,14 @@ export default function MinistryDashboard() {
   ]);
   const navigate = useNavigate();
 
+  // Redirect to login if no ministry session (avoid navigating during render)
+  useEffect(() => {
+    const mu = localStorage.getItem("ministryUser");
+    if (!mu) {
+      navigate("/login", { replace: true });
+    }
+  }, [navigate]);
+
   // Mobile detection and responsive behavior
   useEffect(() => {
     const checkMobile = () => {
@@ -604,7 +612,6 @@ export default function MinistryDashboard() {
   const getMinistryInfo = (): MinistryInfo => {
     const ministryUser = localStorage.getItem("ministryUser");
     if (!ministryUser) {
-      navigate("/login");
       return {
         name: "Ministry of Health",
         code: "MOH",
@@ -5134,7 +5141,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
         ministryId === "ministry2"
           ? "₦50.0B"
           : ministryId === "ministry3"
-            ? "₦12.5B"
+            ? "��12.5B"
             : "₦3.2B",
       utilizedBudget:
         ministryId === "ministry2"
@@ -8042,7 +8049,7 @@ Penalty Clause: 0.5% per week for delayed completion`,
             <div className="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
-                  🏆 Award Tender - {selectedTenderForAward.title}
+                  ���� Award Tender - {selectedTenderForAward.title}
                 </h3>
                 <button
                   onClick={() => {
