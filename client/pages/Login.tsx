@@ -205,7 +205,8 @@ export default function Login() {
       // Fallback for network failures (Firebase unreachable)
       const msg = error?.message || String(error);
       const isNetworkFailure =
-        msg.includes("Failed to fetch") || msg.includes("network") ||
+        msg.includes("Failed to fetch") ||
+        msg.includes("network") ||
         msg.includes("auth/network-request-failed");
 
       if (selectedUserType === "ministry" && isNetworkFailure) {
@@ -217,7 +218,11 @@ export default function Login() {
             : "ministry";
         localStorage.setItem(
           "ministryUser",
-          JSON.stringify({ username: email || "ministry", role: "ministry", ministryId }),
+          JSON.stringify({
+            username: email || "ministry",
+            role: "ministry",
+            ministryId,
+          }),
         );
         navigate(currentConfig.navigation);
         return;

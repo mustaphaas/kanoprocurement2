@@ -91,7 +91,14 @@ class AuthService {
         let ministryId: string | undefined;
         if (lower.includes("superuser")) role = "superuser";
         else if (lower.includes("admin")) role = "admin";
-        else if (lower.includes("@") && lower.includes("kano") && (lower.includes("ministry") || lower.includes("works") || lower.includes("health") || lower.includes("education"))) {
+        else if (
+          lower.includes("@") &&
+          lower.includes("kano") &&
+          (lower.includes("ministry") ||
+            lower.includes("works") ||
+            lower.includes("health") ||
+            lower.includes("education"))
+        ) {
           role = "ministry";
           if (lower.includes("works")) ministryId = "ministry2";
           else if (lower.includes("education")) ministryId = "ministry3";

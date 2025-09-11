@@ -40,7 +40,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const profile = await authService.signIn(email, password);
       // Ensure context reflects the latest profile even in fallback mode
-      setUser((prev) => prev || ({ uid: profile.uid, email: profile.email } as unknown as User));
+      setUser(
+        (prev) =>
+          prev ||
+          ({ uid: profile.uid, email: profile.email } as unknown as User),
+      );
       setUserProfile(profile);
       return profile;
     } finally {
