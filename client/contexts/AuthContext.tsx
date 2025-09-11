@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { User } from "firebase/auth";
+import { Navigate } from "react-router-dom";
 import authService, { UserProfile, AuthContextType } from "@/lib/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -120,9 +121,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (!user || !userProfile) {
-    // Redirect to login
-    window.location.href = "/login";
-    return null;
+    return <Navigate to="/login" replace />;
   }
 
   if (
