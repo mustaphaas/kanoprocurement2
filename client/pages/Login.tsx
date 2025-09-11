@@ -190,9 +190,7 @@ export default function Login() {
             : "Login failed. Please try again.",
       });
     } finally {
-      if (selectedUserType !== "ministry") {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   };
 
