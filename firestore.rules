@@ -20,14 +20,15 @@ service cloud.firestore {
     // Tenders collection - read access for all authenticated users
     match /tenders/{tenderId} {
       allow read: if request.auth != null;
-      allow write: if hasAdminRole(request.auth.uid) || hasSuperUserRole(request.auth.uid);
-      
+      // Allow admins, superusers, and ministries to create/update tenders
+      allow write: if hasAdminRole(request.auth.uid) || hasSuperUserRole(request.auth.uid) || hasMinistryRole(request.auth.uid);
+
       // Bids subcollection
       match /bids/{bidId} {
-        allow read: if request.auth != null && 
-          (request.auth.uid == resource.data.companyUserId || 
+        allow read: if request.auth != null &&
+          (request.auth.uid == resource.data.companyUserId ||
            hasAdminRole(request.auth.uid));
-        allow write: if request.auth != null && 
+        allow write: if request.auth != null &&
           request.auth.uid == resource.data.companyUserId;
       }
     }
@@ -69,6 +70,11 @@ service cloud.firestore {
     function hasSuperUserRole(userId) {
       return exists(/databases/$(database)/documents/users/$(userId)) &&
         get(/databases/$(database)/documents/users/$(userId)).data.role == 'superuser';
+    }
+
+    function hasMinistryRole(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId)) &&
+        get(/databases/$(database)/documents/users/$(userId)).data.role == 'ministry';
     }
   }
 }

@@ -485,19 +485,35 @@ export const notificationService = {
 // Audit log operations
 export const auditService = {
   async log(auditData: Omit<AuditLog, "id">): Promise<string> {
-    const docRef = await addDoc(collection(db, "auditLogs"), {
-      ...auditData,
-      timestamp: serverTimestamp(),
-    });
-    return docRef.id;
+    try {
+      const docRef = await addDoc(collection(db, "auditLogs"), {
+        ...auditData,
+        timestamp: serverTimestamp(),
+      });
+      return docRef.id;
+    } catch (err: any) {
+      console.warn(
+        "Audit log write skipped due to permissions or connectivity:",
+        err?.code || err?.message || err,
+      );
+      return "";
+    }
   },
 
   async getAll(constraints: QueryConstraint[] = []): Promise<AuditLog[]> {
-    const q = query(collection(db, "auditLogs"), ...constraints);
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as AuditLog,
-    );
+    try {
+      const q = query(collection(db, "auditLogs"), ...constraints);
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() }) as AuditLog,
+      );
+    } catch (err: any) {
+      console.warn(
+        "Audit log read skipped due to permissions or connectivity:",
+        err?.code || err?.message || err,
+      );
+      return [];
+    }
   },
 
   async getRecent(limitCount: number = 100): Promise<AuditLog[]> {
