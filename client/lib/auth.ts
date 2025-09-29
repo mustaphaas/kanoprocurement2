@@ -46,11 +46,13 @@ class AuthService {
   // Sign in with email and password
   async signIn(email: string, password: string): Promise<UserProfile> {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("auth-timeout")), 2500)
       );
+      const userCredential = (await Promise.race([
+        signInWithEmailAndPassword(auth, email, password),
+        timeout,
+      ])) as Awaited<ReturnType<typeof signInWithEmailAndPassword>>;
       const user = userCredential.user;
 
       // Get user profile from Firestore
