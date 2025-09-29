@@ -108,7 +108,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 // HOC for protecting routes
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "company" | "admin" | "superuser" | "ministry" | "governor";
+  requiredRole?: "company" | "admin" | "superuser" | "ministry" | "governor" | "finance";
   fallback?: React.ReactNode;
 }
 
