@@ -16,9 +16,16 @@ import {
   Crown,
   Users,
   Zap,
+  DollarSign,
 } from "lucide-react";
 
-type UserType = "company" | "admin" | "superuser" | "ministry" | "governor";
+type UserType =
+  | "company"
+  | "admin"
+  | "superuser"
+  | "ministry"
+  | "governor"
+  | "finance";
 
 interface LoginData {
   email?: string;
@@ -111,6 +118,20 @@ const userTypes: UserTypeConfig[] = [
       password: "Ministry123!",
     },
     navigation: "/ministry/dashboard",
+  },
+  {
+    id: "finance",
+    title: "Finance Login",
+    subtitle: "Process Ministry-approved payments and disburse funds",
+    icon: <DollarSign className="h-6 w-6" />,
+    bgGradient: "from-emerald-50 to-emerald-100",
+    iconBg: "bg-emerald-100 text-emerald-600",
+    useEmail: true,
+    demoCredentials: {
+      identifier: "finance@kanostate.gov.ng",
+      password: "Finance123!",
+    },
+    navigation: "/finance/dashboard",
   },
 ];
 

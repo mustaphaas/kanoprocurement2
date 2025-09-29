@@ -16,7 +16,7 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName?: string;
-  role: "company" | "admin" | "superuser" | "ministry";
+  role: "company" | "admin" | "superuser" | "ministry" | "finance";
   companyId?: string;
   ministryId?: string;
   createdAt: Date;
@@ -46,11 +46,13 @@ class AuthService {
   // Sign in with email and password
   async signIn(email: string, password: string): Promise<UserProfile> {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("auth-timeout")), 2500),
       );
+      const userCredential = (await Promise.race([
+        signInWithEmailAndPassword(auth, email, password),
+        timeout,
+      ])) as Awaited<ReturnType<typeof signInWithEmailAndPassword>>;
       const user = userCredential.user;
 
       // Get user profile from Firestore
@@ -82,7 +84,8 @@ class AuthService {
       const networkFail =
         msg.includes("Failed to fetch") ||
         msg.includes("network") ||
-        msg.includes("auth/network-request-failed");
+        msg.includes("auth/network-request-failed") ||
+        msg.includes("auth-timeout");
 
       if (networkFail) {
         // Offline/demo fallback based on email pattern
@@ -104,6 +107,7 @@ class AuthService {
           else if (lower.includes("education")) ministryId = "ministry3";
           else ministryId = "ministry";
         }
+        if (lower.includes("finance")) role = "finance";
 
         const profile: UserProfile = {
           uid: `demo-${Date.now()}`,
@@ -350,6 +354,8 @@ class AuthService {
         return "/superuser/dashboard";
       case "ministry":
         return "/ministry/dashboard";
+      case "finance":
+        return "/finance/dashboard";
       default:
         return "/";
     }

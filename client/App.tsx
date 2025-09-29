@@ -18,6 +18,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
 import MinistryReports from "./pages/MinistryReports";
+import FinanceDashboard from "./pages/FinanceDashboard";
 import UserLogin from "./pages/UserLogin";
 import UserDashboard from "./pages/UserDashboard";
 import GovernorDashboard from "./pages/GovernorDashboard";
@@ -127,6 +128,14 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRole="governor">
                   <GovernorDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/finance/dashboard"
+              element={
+                <ProtectedRoute requiredRole="finance">
+                  <FinanceDashboard />
                 </ProtectedRoute>
               }
             />
