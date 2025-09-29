@@ -84,7 +84,8 @@ class AuthService {
       const networkFail =
         msg.includes("Failed to fetch") ||
         msg.includes("network") ||
-        msg.includes("auth/network-request-failed");
+        msg.includes("auth/network-request-failed") ||
+        msg.includes("auth-timeout");
 
       if (networkFail) {
         // Offline/demo fallback based on email pattern
