@@ -126,6 +126,30 @@ const demoCredentials: Record<
       companyName: "Blacklisted Test Ltd",
     },
   },
+  ministry: {
+    password: "password",
+    profile: {
+      role: "ministry",
+      email: "ministry@kanoproc.gov.ng",
+      name: "Ministry User",
+    },
+  },
+  ministry2: {
+    password: "password",
+    profile: {
+      role: "ministry",
+      email: "ministry2@kanoproc.gov.ng",
+      name: "Ministry User 2",
+    },
+  },
+  ministry3: {
+    password: "password",
+    profile: {
+      role: "ministry",
+      email: "ministry3@kanoproc.gov.ng",
+      name: "Ministry User 3",
+    },
+  },
 };
 
 // Helper function to determine role for company logins
