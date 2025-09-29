@@ -104,6 +104,7 @@ class AuthService {
           else if (lower.includes("education")) ministryId = "ministry3";
           else ministryId = "ministry";
         }
+        if (lower.includes("finance")) role = "finance";
 
         const profile: UserProfile = {
           uid: `demo-${Date.now()}`,
