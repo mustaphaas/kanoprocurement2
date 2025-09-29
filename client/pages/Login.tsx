@@ -16,6 +16,7 @@ import {
   Crown,
   Users,
   Zap,
+  DollarSign,
 } from "lucide-react";
 
 type UserType = "company" | "admin" | "superuser" | "ministry" | "governor";
