@@ -4,11 +4,44 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CheckCircle, XCircle, Eye, Search, Clock, AlertTriangle, FileText, DollarSign, Building2, Calendar } from "lucide-react";
-import { getMinistryCodesWithData, readMinistryData, writeMinistryData } from "@/lib/ministryStorageHelper";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  CheckCircle,
+  XCircle,
+  Eye,
+  Search,
+  Clock,
+  AlertTriangle,
+  FileText,
+  DollarSign,
+  Building2,
+  Calendar,
+} from "lucide-react";
+import {
+  getMinistryCodesWithData,
+  readMinistryData,
+  writeMinistryData,
+} from "@/lib/ministryStorageHelper";
 import { formatCurrency } from "@/lib/utils";
 
 interface BankDetails {
@@ -31,7 +64,12 @@ interface PaymentCharges {
 interface PaymentDocument {
   id: string;
   name: string;
-  type: "Invoice" | "Work Completion Certificate" | "Progress Report" | "Photos" | "Other";
+  type:
+    | "Invoice"
+    | "Work Completion Certificate"
+    | "Progress Report"
+    | "Photos"
+    | "Other";
   uploadDate: string;
   size: string;
   url?: string;
@@ -50,7 +88,14 @@ export interface PaymentRequest {
   charges: PaymentCharges;
   netAmount: number;
   totalAmount: number;
-  status: "Draft" | "Submitted" | "Under Review" | "Ministry Approved" | "Finance Approved" | "Paid" | "Rejected";
+  status:
+    | "Draft"
+    | "Submitted"
+    | "Under Review"
+    | "Ministry Approved"
+    | "Finance Approved"
+    | "Paid"
+    | "Rejected";
   submittedDate?: string;
   ministryApprovalDate?: string;
   financeApprovalDate?: string;
@@ -121,17 +166,29 @@ export default function FinanceDashboard() {
   const [amountMin, setAmountMin] = useState<string>("");
   const [amountMax, setAmountMax] = useState<string>("");
   const [dateRange, setDateRange] = useState<string>("all");
-  const [dateField, setDateField] = useState<keyof PaymentRequest | "submittedDate" | "ministryApprovalDate" | "financeApprovalDate" | "paymentDate">("ministryApprovalDate");
+  const [dateField, setDateField] = useState<
+    | keyof PaymentRequest
+    | "submittedDate"
+    | "ministryApprovalDate"
+    | "financeApprovalDate"
+    | "paymentDate"
+  >("ministryApprovalDate");
   const [selected, setSelected] = useState<FinanceQueueItem | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const loadQueue = () => {
     try {
-      const ministryCodes = getMinistryCodesWithData("paymentRequests_ministry");
+      const ministryCodes = getMinistryCodesWithData(
+        "paymentRequests_ministry",
+      );
       const all: FinanceQueueItem[] = [];
       ministryCodes.forEach((code) => {
-        const list = readMinistryData<PaymentRequest[]>("paymentRequests_ministry", [], code);
+        const list = readMinistryData<PaymentRequest[]>(
+          "paymentRequests_ministry",
+          [],
+          code,
+        );
         list.forEach((req) => {
           all.push({ ...(req as PaymentRequest), __ministryCode: code });
         });
@@ -156,16 +213,37 @@ export default function FinanceDashboard() {
 
   const metrics = useMemo(() => {
     const total = queue.length;
-    const ministryApprovedList = queue.filter((q) => q.status === "Ministry Approved");
-    const financeApprovedList = queue.filter((q) => q.status === "Finance Approved");
+    const ministryApprovedList = queue.filter(
+      (q) => q.status === "Ministry Approved",
+    );
+    const financeApprovedList = queue.filter(
+      (q) => q.status === "Finance Approved",
+    );
     const paidList = queue.filter((q) => q.status === "Paid");
     const ministryApproved = ministryApprovedList.length;
     const financeApproved = financeApprovedList.length;
     const paid = paidList.length;
-    const pendingAmount = ministryApprovedList.reduce((s, r) => s + (r.requestedAmount || 0), 0);
-    const approvedAmount = financeApprovedList.reduce((s, r) => s + (r.requestedAmount || 0), 0);
-    const paidAmount = paidList.reduce((s, r) => s + (r.requestedAmount || 0), 0);
-    return { total, ministryApproved, financeApproved, paid, pendingAmount, approvedAmount, paidAmount };
+    const pendingAmount = ministryApprovedList.reduce(
+      (s, r) => s + (r.requestedAmount || 0),
+      0,
+    );
+    const approvedAmount = financeApprovedList.reduce(
+      (s, r) => s + (r.requestedAmount || 0),
+      0,
+    );
+    const paidAmount = paidList.reduce(
+      (s, r) => s + (r.requestedAmount || 0),
+      0,
+    );
+    return {
+      total,
+      ministryApproved,
+      financeApproved,
+      paid,
+      pendingAmount,
+      approvedAmount,
+      paidAmount,
+    };
   }, [queue]);
 
   const filtered = useMemo(() => {
@@ -200,30 +278,70 @@ export default function FinanceDashboard() {
         q.id.toLowerCase().includes(search.toLowerCase()) ||
         q.contractTitle.toLowerCase().includes(search.toLowerCase()) ||
         q.companyDetails.name.toLowerCase().includes(search.toLowerCase());
-      const matchStatus = statusFilter === "all" ? true : q.status === statusFilter;
-      const matchMinistry = ministryFilter === "all" ? true : q.__ministryCode === ministryFilter;
-      const matchPriority = priorityFilter === "all" ? true : (q.priority || "").toLowerCase() === priorityFilter.toLowerCase();
+      const matchStatus =
+        statusFilter === "all" ? true : q.status === statusFilter;
+      const matchMinistry =
+        ministryFilter === "all" ? true : q.__ministryCode === ministryFilter;
+      const matchPriority =
+        priorityFilter === "all"
+          ? true
+          : (q.priority || "").toLowerCase() === priorityFilter.toLowerCase();
       const min = amountMin ? parseFloat(amountMin) : -Infinity;
       const max = amountMax ? parseFloat(amountMax) : Infinity;
-      const matchAmount = (q.requestedAmount || 0) >= min && (q.requestedAmount || 0) <= max;
+      const matchAmount =
+        (q.requestedAmount || 0) >= min && (q.requestedAmount || 0) <= max;
       const dateValue = (q as any)[dateField] as string | undefined;
       const matchDate = inRange(dateValue);
-      return matchText && matchStatus && matchMinistry && matchPriority && matchAmount && matchDate;
+      return (
+        matchText &&
+        matchStatus &&
+        matchMinistry &&
+        matchPriority &&
+        matchAmount &&
+        matchDate
+      );
     });
-  }, [queue, search, statusFilter, ministryFilter, priorityFilter, amountMin, amountMax, dateRange, dateField]);
+  }, [
+    queue,
+    search,
+    statusFilter,
+    ministryFilter,
+    priorityFilter,
+    amountMin,
+    amountMax,
+    dateRange,
+    dateField,
+  ]);
 
   const updateEverywhere = (updated: FinanceQueueItem) => {
     // Update ministry store
-    const ministryList = readMinistryData<PaymentRequest[]>("paymentRequests_ministry", [], updated.__ministryCode);
-    const newMinistryList = ministryList.map((r) => (r.id === updated.id ? updated : r));
-    writeMinistryData("paymentRequests_ministry", newMinistryList, updated.__ministryCode);
+    const ministryList = readMinistryData<PaymentRequest[]>(
+      "paymentRequests_ministry",
+      [],
+      updated.__ministryCode,
+    );
+    const newMinistryList = ministryList.map((r) =>
+      r.id === updated.id ? updated : r,
+    );
+    writeMinistryData(
+      "paymentRequests_ministry",
+      newMinistryList,
+      updated.__ministryCode,
+    );
 
     // Update company copy
     try {
       const email = updated.companyDetails.email;
-      const companyList = JSON.parse(localStorage.getItem(`paymentRequests_${email}`) || "[]") as PaymentRequest[];
-      const newCompanyList = companyList.map((r) => (r.id === updated.id ? updated : r));
-      localStorage.setItem(`paymentRequests_${email}`, JSON.stringify(newCompanyList));
+      const companyList = JSON.parse(
+        localStorage.getItem(`paymentRequests_${email}`) || "[]",
+      ) as PaymentRequest[];
+      const newCompanyList = companyList.map((r) =>
+        r.id === updated.id ? updated : r,
+      );
+      localStorage.setItem(
+        `paymentRequests_${email}`,
+        JSON.stringify(newCompanyList),
+      );
     } catch (e) {
       console.error("Failed to update company copy", e);
     }
@@ -244,28 +362,48 @@ export default function FinanceDashboard() {
 
   const toCSV = (rows: FinanceQueueItem[]) => {
     const headers = [
-      "Request ID","Ministry Code","Contract","Company","Requested Amount","Net Amount","Status","Request Type","Submitted","Ministry Approved","Finance Approved","Paid","Invoice Number"
+      "Request ID",
+      "Ministry Code",
+      "Contract",
+      "Company",
+      "Requested Amount",
+      "Net Amount",
+      "Status",
+      "Request Type",
+      "Submitted",
+      "Ministry Approved",
+      "Finance Approved",
+      "Paid",
+      "Invoice Number",
     ];
     const escape = (v: any) => {
       const s = v === null || v === undefined ? "" : String(v);
       if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
       return s;
     };
-    const lines = rows.map((r) => [
-      r.id,
-      r.__ministryCode,
-      r.contractTitle,
-      r.companyDetails?.name,
-      r.requestedAmount,
-      r.netAmount,
-      r.status,
-      r.requestType,
-      r.submittedDate ? new Date(r.submittedDate).toISOString() : "",
-      r.ministryApprovalDate ? new Date(r.ministryApprovalDate).toISOString() : "",
-      r.financeApprovalDate ? new Date(r.financeApprovalDate).toISOString() : "",
-      r.paymentDate ? new Date(r.paymentDate).toISOString() : "",
-      r.invoiceNumber || "",
-    ].map(escape).join(","));
+    const lines = rows.map((r) =>
+      [
+        r.id,
+        r.__ministryCode,
+        r.contractTitle,
+        r.companyDetails?.name,
+        r.requestedAmount,
+        r.netAmount,
+        r.status,
+        r.requestType,
+        r.submittedDate ? new Date(r.submittedDate).toISOString() : "",
+        r.ministryApprovalDate
+          ? new Date(r.ministryApprovalDate).toISOString()
+          : "",
+        r.financeApprovalDate
+          ? new Date(r.financeApprovalDate).toISOString()
+          : "",
+        r.paymentDate ? new Date(r.paymentDate).toISOString() : "",
+        r.invoiceNumber || "",
+      ]
+        .map(escape)
+        .join(","),
+    );
     return [headers.join(","), ...lines].join("\n");
   };
 
@@ -307,8 +445,13 @@ export default function FinanceDashboard() {
               <DollarSign className="h-6 w-6 text-emerald-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Finance Dashboard</h1>
-              <p className="text-sm text-gray-600">Process ministry-approved payment requests and manage disbursements</p>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Finance Dashboard
+              </h1>
+              <p className="text-sm text-gray-600">
+                Process ministry-approved payment requests and manage
+                disbursements
+              </p>
             </div>
           </div>
         </div>
@@ -316,40 +459,87 @@ export default function FinanceDashboard() {
         {/* Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
           <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Total Requests</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold">{metrics.total}</div></CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Waiting for Finance</CardTitle></CardHeader>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600">
+                Total Requests
+              </CardTitle>
+            </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-700">{metrics.ministryApproved}</div>
-              <div className="text-xs text-gray-600 mt-1">{formatCurrency(metrics.pendingAmount)} pending</div>
+              <div className="text-2xl font-bold">{metrics.total}</div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Finance Approved</CardTitle></CardHeader>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600">
+                Waiting for Finance
+              </CardTitle>
+            </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-emerald-700">{metrics.financeApproved}</div>
-              <div className="text-xs text-gray-600 mt-1">{formatCurrency(metrics.approvedAmount)} approved</div>
+              <div className="text-2xl font-bold text-purple-700">
+                {metrics.ministryApproved}
+              </div>
+              <div className="text-xs text-gray-600 mt-1">
+                {formatCurrency(metrics.pendingAmount)} pending
+              </div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Paid</CardTitle></CardHeader>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600">
+                Finance Approved
+              </CardTitle>
+            </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-emerald-700">{metrics.paid}</div>
-              <div className="text-xs text-gray-600 mt-1">{formatCurrency(metrics.paidAmount)} paid out</div>
+              <div className="text-2xl font-bold text-emerald-700">
+                {metrics.financeApproved}
+              </div>
+              <div className="text-xs text-gray-600 mt-1">
+                {formatCurrency(metrics.approvedAmount)} approved
+              </div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Avg Request Size</CardTitle></CardHeader>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600">Paid</CardTitle>
+            </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(queue.length ? queue.reduce((s,r)=>s+(r.requestedAmount||0),0)/queue.length : 0)}</div>
+              <div className="text-2xl font-bold text-emerald-700">
+                {metrics.paid}
+              </div>
+              <div className="text-xs text-gray-600 mt-1">
+                {formatCurrency(metrics.paidAmount)} paid out
+              </div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Queue Value</CardTitle></CardHeader>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600">
+                Avg Request Size
+              </CardTitle>
+            </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(queue.reduce((s,r)=>s+(r.requestedAmount||0),0))}</div>
+              <div className="text-2xl font-bold">
+                {formatCurrency(
+                  queue.length
+                    ? queue.reduce((s, r) => s + (r.requestedAmount || 0), 0) /
+                        queue.length
+                    : 0,
+                )}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600">
+                Queue Value
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {formatCurrency(
+                  queue.reduce((s, r) => s + (r.requestedAmount || 0), 0),
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -360,7 +550,12 @@ export default function FinanceDashboard() {
             <div className="flex flex-col md:flex-row md:items-center gap-3">
               <div className="relative w-full md:w-1/2">
                 <Search className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
-                <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by ID, contract or company" className="pl-9" />
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search by ID, contract or company"
+                  className="pl-9"
+                />
               </div>
               <div className="w-full md:w-64">
                 <Label className="text-xs text-gray-600">Status</Label>
@@ -370,8 +565,12 @@ export default function FinanceDashboard() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="Ministry Approved">Ministry Approved</SelectItem>
-                    <SelectItem value="Finance Approved">Finance Approved</SelectItem>
+                    <SelectItem value="Ministry Approved">
+                      Ministry Approved
+                    </SelectItem>
+                    <SelectItem value="Finance Approved">
+                      Finance Approved
+                    </SelectItem>
                     <SelectItem value="Paid">Paid</SelectItem>
                     <SelectItem value="Rejected">Rejected</SelectItem>
                   </SelectContent>
@@ -379,21 +578,29 @@ export default function FinanceDashboard() {
               </div>
               <div className="w-full md:w-64">
                 <Label className="text-xs text-gray-600">Ministry</Label>
-                <Select value={ministryFilter} onValueChange={setMinistryFilter}>
+                <Select
+                  value={ministryFilter}
+                  onValueChange={setMinistryFilter}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="All ministries" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All</SelectItem>
                     {ministryCodes.map((c) => (
-                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="w-full md:w-64">
                 <Label className="text-xs text-gray-600">Priority</Label>
-                <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <Select
+                  value={priorityFilter}
+                  onValueChange={setPriorityFilter}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="All" />
                   </SelectTrigger>
@@ -411,22 +618,39 @@ export default function FinanceDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div>
                 <Label className="text-xs text-gray-600">Amount Min (₦)</Label>
-                <Input value={amountMin} onChange={(e) => setAmountMin(e.target.value)} placeholder="0" />
+                <Input
+                  value={amountMin}
+                  onChange={(e) => setAmountMin(e.target.value)}
+                  placeholder="0"
+                />
               </div>
               <div>
                 <Label className="text-xs text-gray-600">Amount Max (₦)</Label>
-                <Input value={amountMax} onChange={(e) => setAmountMax(e.target.value)} placeholder="Any" />
+                <Input
+                  value={amountMax}
+                  onChange={(e) => setAmountMax(e.target.value)}
+                  placeholder="Any"
+                />
               </div>
               <div>
                 <Label className="text-xs text-gray-600">Date Field</Label>
-                <Select value={dateField as string} onValueChange={(v) => setDateField(v as any)}>
+                <Select
+                  value={dateField as string}
+                  onValueChange={(v) => setDateField(v as any)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Date Field" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="submittedDate">Submitted Date</SelectItem>
-                    <SelectItem value="ministryApprovalDate">Ministry Approval Date</SelectItem>
-                    <SelectItem value="financeApprovalDate">Finance Approval Date</SelectItem>
+                    <SelectItem value="submittedDate">
+                      Submitted Date
+                    </SelectItem>
+                    <SelectItem value="ministryApprovalDate">
+                      Ministry Approval Date
+                    </SelectItem>
+                    <SelectItem value="financeApprovalDate">
+                      Finance Approval Date
+                    </SelectItem>
                     <SelectItem value="paymentDate">Payment Date</SelectItem>
                   </SelectContent>
                 </Select>
@@ -450,8 +674,27 @@ export default function FinanceDashboard() {
             </div>
 
             <div className="flex justify-end gap-3">
-              <Button variant="outline" onClick={() => { setSearch(""); setStatusFilter("all"); setMinistryFilter("all"); setPriorityFilter("all"); setAmountMin(""); setAmountMax(""); setDateRange("all"); setDateField("ministryApprovalDate"); }}>Reset Filters</Button>
-              <Button onClick={handleExportCSV} className="bg-emerald-600 hover:bg-emerald-700">Export CSV</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSearch("");
+                  setStatusFilter("all");
+                  setMinistryFilter("all");
+                  setPriorityFilter("all");
+                  setAmountMin("");
+                  setAmountMax("");
+                  setDateRange("all");
+                  setDateField("ministryApprovalDate");
+                }}
+              >
+                Reset Filters
+              </Button>
+              <Button
+                onClick={handleExportCSV}
+                className="bg-emerald-600 hover:bg-emerald-700"
+              >
+                Export CSV
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -473,7 +716,12 @@ export default function FinanceDashboard() {
               <TableBody>
                 {filtered.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">No requests found</TableCell>
+                    <TableCell
+                      colSpan={6}
+                      className="text-center py-8 text-gray-500"
+                    >
+                      No requests found
+                    </TableCell>
                   </TableRow>
                 ) : (
                   filtered.map((item) => (
@@ -481,7 +729,9 @@ export default function FinanceDashboard() {
                       <TableCell className="font-medium">{item.id}</TableCell>
                       <TableCell>
                         <div className="font-medium">{item.contractTitle}</div>
-                        <div className="text-xs text-gray-500">{item.requestType}</div>
+                        <div className="text-xs text-gray-500">
+                          {item.requestType}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -490,8 +740,12 @@ export default function FinanceDashboard() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="font-medium">{formatCurrency(item.requestedAmount)}</div>
-                        <div className="text-xs text-gray-500">Net: {formatCurrency(item.netAmount)}</div>
+                        <div className="font-medium">
+                          {formatCurrency(item.requestedAmount)}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          Net: {formatCurrency(item.netAmount)}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Badge className={statusBadge(item.status)}>
@@ -501,16 +755,33 @@ export default function FinanceDashboard() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm" onClick={() => { setSelected(item); setShowDetails(true); }}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelected(item);
+                              setShowDetails(true);
+                            }}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
                           {item.status === "Ministry Approved" && (
-                            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" disabled={loading} onClick={() => handleFinanceApprove(item)}>
+                            <Button
+                              size="sm"
+                              className="bg-emerald-600 hover:bg-emerald-700"
+                              disabled={loading}
+                              onClick={() => handleFinanceApprove(item)}
+                            >
                               Approve
                             </Button>
                           )}
                           {item.status === "Finance Approved" && (
-                            <Button size="sm" className="bg-green-600 hover:bg-green-700" disabled={loading} onClick={() => handleMarkPaid(item)}>
+                            <Button
+                              size="sm"
+                              className="bg-green-600 hover:bg-green-700"
+                              disabled={loading}
+                              onClick={() => handleMarkPaid(item)}
+                            >
                               Mark Paid
                             </Button>
                           )}
@@ -530,7 +801,9 @@ export default function FinanceDashboard() {
             {selected && (
               <>
                 <DialogHeader>
-                  <DialogTitle>Payment Request Details - {selected.id}</DialogTitle>
+                  <DialogTitle>
+                    Payment Request Details - {selected.id}
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3 text-sm">
@@ -547,13 +820,22 @@ export default function FinanceDashboard() {
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-gray-400" />
                         <span>
-                          {new Date(selected.workPeriod.from).toLocaleDateString()} - {new Date(selected.workPeriod.to).toLocaleDateString()}
+                          {new Date(
+                            selected.workPeriod.from,
+                          ).toLocaleDateString()}{" "}
+                          -{" "}
+                          {new Date(
+                            selected.workPeriod.to,
+                          ).toLocaleDateString()}
                         </span>
                       </div>
                     </div>
                     <div>
                       <Label className="text-gray-700">Amount</Label>
-                      <div>{formatCurrency(selected.requestedAmount)} (Net {formatCurrency(selected.netAmount)})</div>
+                      <div>
+                        {formatCurrency(selected.requestedAmount)} (Net{" "}
+                        {formatCurrency(selected.netAmount)})
+                      </div>
                     </div>
                     <div>
                       <Label className="text-gray-700">Status</Label>
@@ -566,14 +848,25 @@ export default function FinanceDashboard() {
                   <div className="space-y-3 text-sm">
                     <div>
                       <Label className="text-gray-700">Work Description</Label>
-                      <div className="whitespace-pre-wrap">{selected.workDescription}</div>
+                      <div className="whitespace-pre-wrap">
+                        {selected.workDescription}
+                      </div>
                     </div>
                     <div>
                       <Label className="text-gray-700">Bank Details</Label>
                       <div className="space-y-1">
-                        <div><strong>Account:</strong> {selected.companyDetails.bankDetails.accountName}</div>
-                        <div><strong>Number:</strong> {selected.companyDetails.bankDetails.accountNumber}</div>
-                        <div><strong>Bank:</strong> {selected.companyDetails.bankDetails.bankName}</div>
+                        <div>
+                          <strong>Account:</strong>{" "}
+                          {selected.companyDetails.bankDetails.accountName}
+                        </div>
+                        <div>
+                          <strong>Number:</strong>{" "}
+                          {selected.companyDetails.bankDetails.accountNumber}
+                        </div>
+                        <div>
+                          <strong>Bank:</strong>{" "}
+                          {selected.companyDetails.bankDetails.bankName}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -47,7 +47,7 @@ class AuthService {
   async signIn(email: string, password: string): Promise<UserProfile> {
     try {
       const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("auth-timeout")), 2500)
+        setTimeout(() => reject(new Error("auth-timeout")), 2500),
       );
       const userCredential = (await Promise.race([
         signInWithEmailAndPassword(auth, email, password),
