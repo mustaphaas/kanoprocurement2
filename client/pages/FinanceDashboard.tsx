@@ -116,6 +116,12 @@ export default function FinanceDashboard() {
   const [queue, setQueue] = useState<FinanceQueueItem[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("Ministry Approved");
+  const [ministryFilter, setMinistryFilter] = useState<string>("all");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [amountMin, setAmountMin] = useState<string>("");
+  const [amountMax, setAmountMax] = useState<string>("");
+  const [dateRange, setDateRange] = useState<string>("all");
+  const [dateField, setDateField] = useState<keyof PaymentRequest | "submittedDate" | "ministryApprovalDate" | "financeApprovalDate" | "paymentDate">("ministryApprovalDate");
   const [selected, setSelected] = useState<FinanceQueueItem | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -140,24 +146,71 @@ export default function FinanceDashboard() {
     loadQueue();
   }, []);
 
+  const ministryCodes = useMemo(() => {
+    try {
+      return getMinistryCodesWithData("paymentRequests_ministry");
+    } catch {
+      return [] as string[];
+    }
+  }, [queue.length]);
+
   const metrics = useMemo(() => {
     const total = queue.length;
-    const ministryApproved = queue.filter((q) => q.status === "Ministry Approved").length;
-    const financeApproved = queue.filter((q) => q.status === "Finance Approved").length;
-    const paid = queue.filter((q) => q.status === "Paid").length;
-    return { total, ministryApproved, financeApproved, paid };
+    const ministryApprovedList = queue.filter((q) => q.status === "Ministry Approved");
+    const financeApprovedList = queue.filter((q) => q.status === "Finance Approved");
+    const paidList = queue.filter((q) => q.status === "Paid");
+    const ministryApproved = ministryApprovedList.length;
+    const financeApproved = financeApprovedList.length;
+    const paid = paidList.length;
+    const pendingAmount = ministryApprovedList.reduce((s, r) => s + (r.requestedAmount || 0), 0);
+    const approvedAmount = financeApprovedList.reduce((s, r) => s + (r.requestedAmount || 0), 0);
+    const paidAmount = paidList.reduce((s, r) => s + (r.requestedAmount || 0), 0);
+    return { total, ministryApproved, financeApproved, paid, pendingAmount, approvedAmount, paidAmount };
   }, [queue]);
 
   const filtered = useMemo(() => {
+    const inRange = (dateStr?: string) => {
+      if (!dateStr || dateRange === "all") return true;
+      const d = new Date(dateStr);
+      const now = new Date();
+      const start = new Date();
+      switch (dateRange) {
+        case "today":
+          start.setHours(0, 0, 0, 0);
+          return d >= start;
+        case "week":
+          start.setDate(now.getDate() - 7);
+          return d >= start;
+        case "month":
+          start.setMonth(now.getMonth() - 1);
+          return d >= start;
+        case "quarter":
+          start.setMonth(now.getMonth() - 3);
+          return d >= start;
+        case "year":
+          start.setFullYear(now.getFullYear() - 1);
+          return d >= start;
+        default:
+          return true;
+      }
+    };
+
     return queue.filter((q) => {
       const matchText =
         q.id.toLowerCase().includes(search.toLowerCase()) ||
         q.contractTitle.toLowerCase().includes(search.toLowerCase()) ||
         q.companyDetails.name.toLowerCase().includes(search.toLowerCase());
       const matchStatus = statusFilter === "all" ? true : q.status === statusFilter;
-      return matchText && matchStatus;
+      const matchMinistry = ministryFilter === "all" ? true : q.__ministryCode === ministryFilter;
+      const matchPriority = priorityFilter === "all" ? true : (q.priority || "").toLowerCase() === priorityFilter.toLowerCase();
+      const min = amountMin ? parseFloat(amountMin) : -Infinity;
+      const max = amountMax ? parseFloat(amountMax) : Infinity;
+      const matchAmount = (q.requestedAmount || 0) >= min && (q.requestedAmount || 0) <= max;
+      const dateValue = (q as any)[dateField] as string | undefined;
+      const matchDate = inRange(dateValue);
+      return matchText && matchStatus && matchMinistry && matchPriority && matchAmount && matchDate;
     });
-  }, [queue, search, statusFilter]);
+  }, [queue, search, statusFilter, ministryFilter, priorityFilter, amountMin, amountMax, dateRange, dateField]);
 
   const updateEverywhere = (updated: FinanceQueueItem) => {
     // Update ministry store
@@ -189,6 +242,50 @@ export default function FinanceDashboard() {
     loadQueue();
   };
 
+  const toCSV = (rows: FinanceQueueItem[]) => {
+    const headers = [
+      "Request ID","Ministry Code","Contract","Company","Requested Amount","Net Amount","Status","Request Type","Submitted","Ministry Approved","Finance Approved","Paid","Invoice Number"
+    ];
+    const escape = (v: any) => {
+      const s = v === null || v === undefined ? "" : String(v);
+      if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    };
+    const lines = rows.map((r) => [
+      r.id,
+      r.__ministryCode,
+      r.contractTitle,
+      r.companyDetails?.name,
+      r.requestedAmount,
+      r.netAmount,
+      r.status,
+      r.requestType,
+      r.submittedDate ? new Date(r.submittedDate).toISOString() : "",
+      r.ministryApprovalDate ? new Date(r.ministryApprovalDate).toISOString() : "",
+      r.financeApprovalDate ? new Date(r.financeApprovalDate).toISOString() : "",
+      r.paymentDate ? new Date(r.paymentDate).toISOString() : "",
+      r.invoiceNumber || "",
+    ].map(escape).join(","));
+    return [headers.join(","), ...lines].join("\n");
+  };
+
+  const handleExportCSV = () => {
+    try {
+      const csv = toCSV(filtered);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `finance_requests_${Date.now()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("CSV export failed", e);
+    }
+  };
+
   const handleMarkPaid = (item: FinanceQueueItem) => {
     setLoading(true);
     const updated: FinanceQueueItem = {
@@ -217,28 +314,49 @@ export default function FinanceDashboard() {
         </div>
 
         {/* Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Total Requests</CardTitle></CardHeader>
             <CardContent><div className="text-2xl font-bold">{metrics.total}</div></CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Waiting for Finance</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold text-purple-700">{metrics.ministryApproved}</div></CardContent>
+            <CardContent>
+              <div className="text-2xl font-bold text-purple-700">{metrics.ministryApproved}</div>
+              <div className="text-xs text-gray-600 mt-1">{formatCurrency(metrics.pendingAmount)} pending</div>
+            </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Finance Approved</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold text-emerald-700">{metrics.financeApproved}</div></CardContent>
+            <CardContent>
+              <div className="text-2xl font-bold text-emerald-700">{metrics.financeApproved}</div>
+              <div className="text-xs text-gray-600 mt-1">{formatCurrency(metrics.approvedAmount)} approved</div>
+            </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Paid</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold text-emerald-700">{metrics.paid}</div></CardContent>
+            <CardContent>
+              <div className="text-2xl font-bold text-emerald-700">{metrics.paid}</div>
+              <div className="text-xs text-gray-600 mt-1">{formatCurrency(metrics.paidAmount)} paid out</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Avg Request Size</CardTitle></CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatCurrency(queue.length ? queue.reduce((s,r)=>s+(r.requestedAmount||0),0)/queue.length : 0)}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-gray-600">Queue Value</CardTitle></CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatCurrency(queue.reduce((s,r)=>s+(r.requestedAmount||0),0))}</div>
+            </CardContent>
           </Card>
         </div>
 
         {/* Filters */}
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-6 space-y-4">
             <div className="flex flex-col md:flex-row md:items-center gap-3">
               <div className="relative w-full md:w-1/2">
                 <Search className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
@@ -259,6 +377,81 @@ export default function FinanceDashboard() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="w-full md:w-64">
+                <Label className="text-xs text-gray-600">Ministry</Label>
+                <Select value={ministryFilter} onValueChange={setMinistryFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All ministries" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    {ministryCodes.map((c) => (
+                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full md:w-64">
+                <Label className="text-xs text-gray-600">Priority</Label>
+                <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="Low">Low</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="High">High</SelectItem>
+                    <SelectItem value="Urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div>
+                <Label className="text-xs text-gray-600">Amount Min (₦)</Label>
+                <Input value={amountMin} onChange={(e) => setAmountMin(e.target.value)} placeholder="0" />
+              </div>
+              <div>
+                <Label className="text-xs text-gray-600">Amount Max (₦)</Label>
+                <Input value={amountMax} onChange={(e) => setAmountMax(e.target.value)} placeholder="Any" />
+              </div>
+              <div>
+                <Label className="text-xs text-gray-600">Date Field</Label>
+                <Select value={dateField as string} onValueChange={(v) => setDateField(v as any)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Date Field" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="submittedDate">Submitted Date</SelectItem>
+                    <SelectItem value="ministryApprovalDate">Ministry Approval Date</SelectItem>
+                    <SelectItem value="financeApprovalDate">Finance Approval Date</SelectItem>
+                    <SelectItem value="paymentDate">Payment Date</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs text-gray-600">Date Range</Label>
+                <Select value={dateRange} onValueChange={setDateRange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All time</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="week">Last 7 days</SelectItem>
+                    <SelectItem value="month">Last 30 days</SelectItem>
+                    <SelectItem value="quarter">Last 90 days</SelectItem>
+                    <SelectItem value="year">Last year</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={() => { setSearch(""); setStatusFilter("all"); setMinistryFilter("all"); setPriorityFilter("all"); setAmountMin(""); setAmountMax(""); setDateRange("all"); setDateField("ministryApprovalDate"); }}>Reset Filters</Button>
+              <Button onClick={handleExportCSV} className="bg-emerald-600 hover:bg-emerald-700">Export CSV</Button>
             </div>
           </CardContent>
         </Card>
