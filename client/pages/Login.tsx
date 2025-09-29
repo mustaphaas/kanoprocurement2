@@ -113,6 +113,20 @@ const userTypes: UserTypeConfig[] = [
     },
     navigation: "/ministry/dashboard",
   },
+  {
+    id: "finance",
+    title: "Finance Login",
+    subtitle: "Process Ministry-approved payments and disburse funds",
+    icon: <DollarSign className="h-6 w-6" />,
+    bgGradient: "from-emerald-50 to-emerald-100",
+    iconBg: "bg-emerald-100 text-emerald-600",
+    useEmail: true,
+    demoCredentials: {
+      identifier: "finance@kanostate.gov.ng",
+      password: "Finance123!",
+    },
+    navigation: "/finance/dashboard",
+  },
 ];
 
 export default function Login() {
