@@ -6,7 +6,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, ProtectedRoute } from "@/contexts/AuthContext";
+import { AuthProvider, ProtectedRoute } from "@/contexts/StaticAuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AllTenders from "./pages/AllTenders";
@@ -18,10 +18,11 @@ import AdminDashboard from "./pages/AdminDashboard";
 import SuperUserDashboard from "./pages/SuperUserDashboard";
 import MinistryDashboard from "./pages/MinistryDashboard";
 import MinistryReports from "./pages/MinistryReports";
+import FinanceDashboard from "./pages/FinanceDashboard";
 import UserLogin from "./pages/UserLogin";
 import UserDashboard from "./pages/UserDashboard";
 import GovernorDashboard from "./pages/GovernorDashboard";
-import FirebaseSetup from "./pages/FirebaseSetup";
+// Firebase setup page removed for localStorage-only mode
 import ProcurementWorkflowValidation from "./pages/ProcurementWorkflowValidation";
 import TenderStatusDemo from "./pages/TenderStatusDemo";
 import TenderScoring from "./pages/TenderScoring";
@@ -123,6 +124,14 @@ const App = () => (
               }
             />
             <Route
+              path="/finance/dashboard"
+              element={
+                <ProtectedRoute requiredRole="finance">
+                  <FinanceDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/governor/dashboard"
               element={
                 <ProtectedRoute requiredRole="governor">
@@ -130,7 +139,7 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route path="/firebase-setup" element={<FirebaseSetup />} />
+            {/* Firebase setup removed */}
             <Route
               path="/validation"
               element={<ProcurementWorkflowValidation />}

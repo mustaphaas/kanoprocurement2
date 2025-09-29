@@ -11,7 +11,7 @@ interface User {
 }
 
 interface UserProfile {
-  role: "admin" | "superuser" | "company" | "ministry" | "governor";
+  role: "admin" | "superuser" | "company" | "ministry" | "governor" | "finance";
   email: string;
   name: string;
   companyName?: string;
@@ -53,7 +53,7 @@ const demoCredentials: Record<
     },
   },
   superuser: {
-    password: "admin123",
+    password: "password",
     profile: {
       role: "superuser",
       email: "superuser@kanoproc.gov.ng",
@@ -61,11 +61,19 @@ const demoCredentials: Record<
     },
   },
   governor: {
-    password: "governor123",
+    password: "password",
     profile: {
       role: "governor",
       email: "governor@kanoproc.gov.ng",
       name: "Governor of Kano State",
+    },
+  },
+  finance: {
+    password: "password",
+    profile: {
+      role: "finance",
+      email: "finance@kanoproc.gov.ng",
+      name: "Finance Officer",
     },
   },
   // Test company users for superuser testing
@@ -124,6 +132,30 @@ const demoCredentials: Record<
       email: "blacklisted@company.com",
       name: "Blacklisted Company",
       companyName: "Blacklisted Test Ltd",
+    },
+  },
+  ministry: {
+    password: "password",
+    profile: {
+      role: "ministry",
+      email: "ministry@kanoproc.gov.ng",
+      name: "Ministry User",
+    },
+  },
+  ministry2: {
+    password: "password",
+    profile: {
+      role: "ministry",
+      email: "ministry2@kanoproc.gov.ng",
+      name: "Ministry User 2",
+    },
+  },
+  ministry3: {
+    password: "password",
+    profile: {
+      role: "ministry",
+      email: "ministry3@kanoproc.gov.ng",
+      name: "Ministry User 3",
     },
   },
 };
@@ -240,7 +272,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredRole?: "admin" | "superuser" | "company" | "ministry" | "governor";
+  requiredRole?:
+    | "admin"
+    | "superuser"
+    | "company"
+    | "ministry"
+    | "governor"
+    | "finance";
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -266,7 +304,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               <div className="mt-4 p-4 bg-orange-50 rounded-lg text-sm text-orange-700">
                 <p>
                   <strong>
-                    Ministry Demo Credentials (Password: ministry123):
+                    Ministry Demo Credentials (Password: password):
                   </strong>
                 </p>
                 <div className="space-y-1 mt-2">
@@ -340,11 +378,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               </p>
               <p>
                 Super User: username <code>superuser</code> / password{" "}
-                <code>admin123</code>
+                <code>password</code>
               </p>
               <p>
                 Governor: username <code>governor</code> / password{" "}
-                <code>governor123</code>
+                <code>password</code>
               </p>
               <p className="mt-2">
                 <strong>Company Approval Status:</strong>

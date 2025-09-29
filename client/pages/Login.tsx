@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/StaticAuthContext";
 import { getMinistryByCredentials } from "@shared/ministries";
 import {
   Building2,
@@ -16,9 +16,16 @@ import {
   Crown,
   Users,
   Zap,
+  CreditCard,
 } from "lucide-react";
 
-type UserType = "company" | "admin" | "superuser" | "ministry" | "governor";
+type UserType =
+  | "company"
+  | "admin"
+  | "superuser"
+  | "ministry"
+  | "governor"
+  | "finance";
 
 interface LoginData {
   email?: string;
@@ -63,10 +70,10 @@ const userTypes: UserTypeConfig[] = [
     icon: <Shield className="h-6 w-6" />,
     bgGradient: "from-blue-50 to-blue-100",
     iconBg: "bg-blue-100 text-blue-600",
-    useEmail: true,
+    useEmail: false,
     demoCredentials: {
-      identifier: "admin@kanostate.gov.ng",
-      password: "Admin123!@#",
+      identifier: "admin",
+      password: "password",
     },
     navigation: "/admin/dashboard",
   },
@@ -77,10 +84,10 @@ const userTypes: UserTypeConfig[] = [
     icon: <Crown className="h-6 w-6" />,
     bgGradient: "from-purple-50 to-purple-100",
     iconBg: "bg-purple-100 text-purple-600",
-    useEmail: true,
+    useEmail: false,
     demoCredentials: {
-      identifier: "superuser@kanostate.gov.ng",
-      password: "Super123!@#",
+      identifier: "superuser",
+      password: "password",
     },
     navigation: "/superuser/dashboard",
   },
@@ -94,7 +101,7 @@ const userTypes: UserTypeConfig[] = [
     useEmail: false,
     demoCredentials: {
       identifier: "governor",
-      password: "governor123",
+      password: "password",
     },
     navigation: "/governor/dashboard",
   },
@@ -105,12 +112,26 @@ const userTypes: UserTypeConfig[] = [
     icon: <Users className="h-6 w-6" />,
     bgGradient: "from-orange-50 to-orange-100",
     iconBg: "bg-orange-100 text-orange-600",
-    useEmail: true,
+    useEmail: false,
     demoCredentials: {
-      identifier: "ministry@works.kano.gov.ng",
-      password: "Ministry123!",
+      identifier: "ministry",
+      password: "password",
     },
     navigation: "/ministry/dashboard",
+  },
+  {
+    id: "finance",
+    title: "Finance Login",
+    subtitle: "Finance & Payments Processing",
+    icon: <CreditCard className="h-6 w-6" />,
+    bgGradient: "from-amber-50 to-yellow-100",
+    iconBg: "bg-yellow-100 text-yellow-600",
+    useEmail: false,
+    demoCredentials: {
+      identifier: "finance",
+      password: "password",
+    },
+    navigation: "/finance/dashboard",
   },
 ];
 
@@ -176,7 +197,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      // Firebase-only login: all roles use email/password via AuthContext
+      // LocalStorage-only login via StaticAuthContext
       const identifier = currentConfig.useEmail
         ? formData.email!
         : formData.username!;
@@ -573,13 +594,13 @@ export default function Login() {
                           <strong>{ministry.name}:</strong>{" "}
                           <button
                             onClick={() =>
-                              fillTestAccount(ministry.username, "ministry123")
+                              fillTestAccount(ministry.username, "password")
                             }
                             className="bg-gray-50 px-2 py-1 rounded text-xs hover:bg-gray-100 cursor-pointer transition-colors border mx-1"
                           >
                             {ministry.username}
                           </button>
-                          <span className="text-gray-500">/ ministry123</span>
+                          <span className="text-gray-500">/ password</span>
                         </p>
                       </div>
                     ))}

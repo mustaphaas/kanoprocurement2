@@ -77,6 +77,9 @@ interface PaymentRequest {
     | "Under Review"
     | "Ministry Approved"
     | "Finance Approved"
+    | "Processing"
+    | "On Hold"
+    | "Failed"
     | "Paid"
     | "Rejected";
   submittedDate?: string;
@@ -441,6 +444,12 @@ export default function PaymentRequestApproval({
         return "bg-purple-100 text-purple-800";
       case "Finance Approved":
         return "bg-green-100 text-green-800";
+      case "Processing":
+        return "bg-amber-100 text-amber-800";
+      case "On Hold":
+        return "bg-orange-100 text-orange-800";
+      case "Failed":
+        return "bg-red-100 text-red-800";
       case "Paid":
         return "bg-green-100 text-green-800";
       case "Rejected":
@@ -460,6 +469,12 @@ export default function PaymentRequestApproval({
         return <CheckCircle className="h-4 w-4" />;
       case "Finance Approved":
         return <CheckCircle className="h-4 w-4" />;
+      case "Processing":
+        return <Clock className="h-4 w-4" />;
+      case "On Hold":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "Failed":
+        return <XCircle className="h-4 w-4" />;
       case "Paid":
         return <CheckCircle className="h-4 w-4" />;
       case "Rejected":
