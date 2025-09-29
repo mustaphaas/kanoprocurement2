@@ -53,7 +53,7 @@ const demoCredentials: Record<
     },
   },
   superuser: {
-    password: "admin123",
+    password: "password",
     profile: {
       role: "superuser",
       email: "superuser@kanoproc.gov.ng",
@@ -61,7 +61,7 @@ const demoCredentials: Record<
     },
   },
   governor: {
-    password: "governor123",
+    password: "password",
     profile: {
       role: "governor",
       email: "governor@kanoproc.gov.ng",
@@ -290,7 +290,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               <div className="mt-4 p-4 bg-orange-50 rounded-lg text-sm text-orange-700">
                 <p>
                   <strong>
-                    Ministry Demo Credentials (Password: ministry123):
+                    Ministry Demo Credentials (Password: password):
                   </strong>
                 </p>
                 <div className="space-y-1 mt-2">
