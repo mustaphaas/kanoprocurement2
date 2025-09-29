@@ -19,7 +19,13 @@ import {
   CreditCard,
 } from "lucide-react";
 
-type UserType = "company" | "admin" | "superuser" | "ministry" | "governor" | "finance";
+type UserType =
+  | "company"
+  | "admin"
+  | "superuser"
+  | "ministry"
+  | "governor"
+  | "finance";
 
 interface LoginData {
   email?: string;
