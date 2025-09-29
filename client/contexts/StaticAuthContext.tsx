@@ -11,7 +11,7 @@ interface User {
 }
 
 interface UserProfile {
-  role: "admin" | "superuser" | "company" | "ministry" | "governor";
+  role: "admin" | "superuser" | "company" | "ministry" | "governor" | "finance";
   email: string;
   name: string;
   companyName?: string;
@@ -66,6 +66,14 @@ const demoCredentials: Record<
       role: "governor",
       email: "governor@kanoproc.gov.ng",
       name: "Governor of Kano State",
+    },
+  },
+  finance: {
+    password: "password",
+    profile: {
+      role: "finance",
+      email: "finance@kanoproc.gov.ng",
+      name: "Finance Officer",
     },
   },
   // Test company users for superuser testing
@@ -264,7 +272,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredRole?: "admin" | "superuser" | "company" | "ministry" | "governor";
+  requiredRole?: "admin" | "superuser" | "company" | "ministry" | "governor" | "finance";
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({

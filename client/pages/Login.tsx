@@ -16,9 +16,10 @@ import {
   Crown,
   Users,
   Zap,
+  CreditCard,
 } from "lucide-react";
 
-type UserType = "company" | "admin" | "superuser" | "ministry" | "governor";
+type UserType = "company" | "admin" | "superuser" | "ministry" | "governor" | "finance";
 
 interface LoginData {
   email?: string;
@@ -111,6 +112,20 @@ const userTypes: UserTypeConfig[] = [
       password: "password",
     },
     navigation: "/ministry/dashboard",
+  },
+  {
+    id: "finance",
+    title: "Finance Login",
+    subtitle: "Finance & Payments Processing",
+    icon: <CreditCard className="h-6 w-6" />,
+    bgGradient: "from-amber-50 to-yellow-100",
+    iconBg: "bg-yellow-100 text-yellow-600",
+    useEmail: false,
+    demoCredentials: {
+      identifier: "finance",
+      password: "password",
+    },
+    navigation: "/finance/dashboard",
   },
 ];
 
