@@ -351,6 +351,8 @@ class AuthService {
         return "/superuser/dashboard";
       case "ministry":
         return "/ministry/dashboard";
+      case "finance":
+        return "/finance/dashboard";
       default:
         return "/";
     }
