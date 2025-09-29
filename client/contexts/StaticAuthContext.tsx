@@ -363,10 +363,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 <code>password</code>
               </p>
               <p>
-                Super User: username <code>superuser</code> / password <code>password</code>
+                Super User: username <code>superuser</code> / password{" "}
+                <code>password</code>
               </p>
               <p>
-                Governor: username <code>governor</code> / password <code>password</code>
+                Governor: username <code>governor</code> / password{" "}
+                <code>password</code>
               </p>
               <p className="mt-2">
                 <strong>Company Approval Status:</strong>
